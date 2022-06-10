@@ -1,0 +1,41 @@
+Initialize engine version: 5.6.6f2 (6bac21139588)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: NVIDIA NVS 5200M (ID=0xdfc)
+    Vendor:   NVIDIA
+    VRAM:     979 MB
+    Driver:   23.21.13.8795
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\phucp\source\repos\Dragonboy\Game\Game_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\phucp\source\repos\Dragonboy\Game\Game_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\phucp\source\repos\Dragonboy\Game\Game_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\phucp\source\repos\Dragonboy\Game\Game_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\phucp\source\repos\Dragonboy\Game\Game_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\phucp\source\repos\Dragonboy\Game\Game_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\phucp\source\repos\Dragonboy\Game\Game_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\phucp\source\repos\Dragonboy\Game\Game_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+- Completed reload, in  0.389 seconds
+Platform assembly: C:\Users\phucp\source\repos\Dragonboy\Game\Game_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\phucp\source\repos\Dragonboy\Game\Game_Data\Managed\System.dll (this message is harmless)
+<RI> Initializing input.
+XInput1_3.dll not found. Trying XInput9_1_0.dll instead...
+<RI> Input initialized.
+desktop: 1366x768 60Hz; virtual: 1366x768 at 0,0
+<RI> Initialized touch support.
+UnloadTime: 1.368300 ms
+APP QUIT
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+init Session_ME
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+init Session_ME
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Setting up 2 worker threads for Enlighten.
+  Thread -> id: 1224 -> priority: 1 
+  Thread -> id: 1d0c -> priority: 1 
