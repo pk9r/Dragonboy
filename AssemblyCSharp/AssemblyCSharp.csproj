@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>Assembl-CSharp</AssemblyName>
+    <AssemblyName>Assembly-CSharp</AssemblyName>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <TargetFramework>net35</TargetFramework>
   </PropertyGroup>
@@ -20,6 +20,6 @@
     </Reference>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(TargetDir)\Assembl-CSharp.dll&quot; &quot;$(SolutionDir)\Game\Game_Data\Managed\&quot;" />
+    <Exec Command="copy &quot;$(TargetDir)Assembly-CSharp.dll&quot; &quot;$(SolutionDir)Game\Game_Data\Managed\&quot;" />
   </Target>
 </Project>
