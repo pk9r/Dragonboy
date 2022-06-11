@@ -107,6 +107,8 @@ public class Main : MonoBehaviour
 				Screen.SetResolution(1024, 600, fullscreen: false);
 			}
 		}
+
+		Mod.GameEvents.onGameStarted();
 	}
 
 	private void SetInit()

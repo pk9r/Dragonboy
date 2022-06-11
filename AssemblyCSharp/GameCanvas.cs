@@ -1782,6 +1782,10 @@ public class GameCanvas : IActionListener
 		{
 			keyAsciiPress = keyCode;
 		}
+        else if (keyCode == 47)
+        {
+            keyAsciiPress = keyCode;
+        }
 		mapKeyPress(keyCode);
 	}
 
