@@ -20,6 +20,11 @@ namespace Mod
 
         public bool canExecute(string args)
         {
+            if (args == "" && this.parameterInfos.Length == 0)
+            {
+                return true;
+            }
+            
             var arguments = args.Split(this.delimiter);
 
             if (this.parameterInfos.Length != arguments.Length)

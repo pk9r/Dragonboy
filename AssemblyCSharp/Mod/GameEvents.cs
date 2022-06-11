@@ -43,7 +43,7 @@ namespace Mod
         /// </summary>
         public static void onGameScrPressHotkeysUnassigned()
         {
-            Utilities.AddHotkeys()
+            Utilities.AddHotkeys();
         }
     }
 }
