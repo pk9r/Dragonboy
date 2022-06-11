@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Assets.src.g;
 
 public class Service
@@ -1550,7 +1550,35 @@ public class Service
 		}
 	}
 
-	public void sendPlayerAttack(MyVector vMob, MyVector vChar, int type)
+    /// <summary>
+    /// Gửi sự tấn công của người chơi.
+    /// </summary>
+	/// <example>Tấn công quái hoặc người chơi đang focus:
+	/// <code>
+	/// var vMob = new MyVector();
+	/// var vChar = new MyVector();
+	/// 
+	/// if (Char.myCharz().mobFocus != null)
+	///		vMob.addElement(Char.myCharz().mobFocus);
+	///	else if (Char.myCharz().charFocus != null)
+	///		vChar.addElement(Char.myCharz().charFocus);
+	///		
+	/// if (vMob.size() > 0 || vChar.size() > 0)
+	///		Service.gI().sendPlayerAttack(vMob, vChar, -1); // type = -1 -> auto
+	/// </code>
+	/// </example>
+    /// <param name="vMob">MyVector chứa Mob bị tấn công.</param>
+    /// <param name="vChar">MyVector chứa Char bị tấn công.</param>
+    /// <param name="type">
+    /// Kiểu tấn công.
+    /// <list type="bullet">
+	/// <item><description>0: Không tấn công.</description></item>
+	/// <item><description>1: Tấn công Mob.</description></item>
+	/// <item><description>2: Tấn công Char.</description></item>
+	/// <item><description>Khác: Tự động ưu tiên tấn công Mob.</description></item>
+	/// </list>
+    /// </param>
+    public void sendPlayerAttack(MyVector vMob, MyVector vChar, int type)
 	{
 		try
 		{
