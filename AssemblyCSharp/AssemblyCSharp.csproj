@@ -10,8 +10,10 @@
   </PropertyGroup>
   <PropertyGroup>
     <RootNamespace />
-    <BaseOutputPath>bin\</BaseOutputPath>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
       <HintPath>..\Game\Game_Data\Managed\UnityEngine.dll</HintPath>
