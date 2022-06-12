@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ namespace Mod
     public class Utilities
     {
         [ChatCommand("tdc")]
+        [ChatCommand("cspeed")]
         public static void editSpeedRun(int speed)
         {
             Char.myCharz().cspeed = speed;
@@ -40,12 +42,28 @@ namespace Mod
             Service.gI().selectSkill(idSkill);
         }
 
-        public static void AddKeyMap(Hashtable h)
+        public static void test()
+        {
+            GameScr.info1.addInfo("hoho", 0);
+        }
+
+        public static void test2()
+        {
+            GameScr.info1.addInfo("hoho haha", 0);
+        }
+
+        //public static void reloadChatCommands()
+        //{
+        //    var assembly = Assembly.LoadFile("Game_Data\\Managed\\Assembly-CSharp.dll");
+
+        //}
+
+        public static void addKeyMap(Hashtable h)
         {
             h.Add(KeyCode.Slash, 47);
         }
 
-        public static void AddHotkeys()
+        public static void addHotkeys()
         {
             if (GameCanvas.keyAsciiPress == '/')
             {

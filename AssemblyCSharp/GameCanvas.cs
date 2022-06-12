@@ -1778,14 +1778,10 @@ public class GameCanvas : IActionListener
 	public void keyPressedz(int keyCode)
 	{
 		lastTimePress = mSystem.currentTimeMillis();
-		if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 122) || keyCode == 10 || keyCode == 8 || keyCode == 13 || keyCode == 32 || keyCode == 31)
+		if ((keyCode >= 46 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 122) || keyCode == 10 || keyCode == 8 || keyCode == 13 || keyCode == 32 || keyCode == 31)
 		{
 			keyAsciiPress = keyCode;
 		}
-        else if (keyCode == 47)
-        {
-            keyAsciiPress = keyCode;
-        }
 		mapKeyPress(keyCode);
 	}
 

@@ -9,17 +9,19 @@ namespace Mod
     public class ChatCommand
     {
         public string command;
-        public string type;
-        public string name;
+        public string fullCommand;
         public char delimiter = ' ';
 
+        [LitJSON.JsonSkip]
         public MethodInfo method;
+        [LitJSON.JsonSkip]
         public ParameterInfo[] parameterInfos;
         
         private object[] parameters;
 
         public bool canExecute(string args)
         {
+            args = args.Trim();
             if (args == "" && this.parameterInfos.Length == 0)
             {
                 return true;
@@ -55,33 +57,6 @@ namespace Mod
         public void execute()
         {
             method.Invoke(null, parameters);
-        }
-
-        public bool findMethod(string text)
-        {
-            string args = text.Substring(this.command.Length);
-
-            var type = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(x => x.GetTypes())
-                .FirstOrDefault(x => x.FullName == this.type);
-
-            var methods = type?.GetMethods(
-                BindingFlags.Public |
-                BindingFlags.Static |
-                BindingFlags.IgnoreReturn);
-
-            if (methods != null)
-            {
-                foreach (var m in methods)
-                {
-                    if (this.canExecute(args))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
         }
     }
 }

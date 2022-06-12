@@ -26,16 +26,16 @@ namespace Mod
         /// </summary>
         public static void onGameStarted()
         {
-            ChatCommandHandler.loadDefalutCommands();
+            ChatCommandHandler.loadDefalutChatCommands();
         }
 
         /// <summary>
-        /// Kích hoạt sau khi load xong KeyMap
+        /// Kích hoạt sau khi load xong KeyMap.
         /// </summary>
         /// <param name="h"></param>
         public static void onKeyMapLoaded(Hashtable h)
         {
-            Utilities.AddKeyMap(h);
+            Utilities.addKeyMap(h);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Mod
         /// </summary>
         public static void onGameScrPressHotkeysUnassigned()
         {
-            Utilities.AddHotkeys();
+            Utilities.addHotkeys();
         }
     }
 }

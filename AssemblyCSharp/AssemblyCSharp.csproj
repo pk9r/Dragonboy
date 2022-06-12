@@ -15,6 +15,9 @@
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="LitJSON">
+      <HintPath>..\Lib\LitJson.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\Game\Game_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
