@@ -20,65 +20,79 @@ namespace Mod
         #endregion Singleton
 
         /// <summary>
-        /// Chiều cao hiển thị mỗi gợi ý
+        /// Chiều cao hiển thị một gợi ý.
         /// </summary>
-        public const int HEIGHT_ITEM = 10;
+        public const int HEIGHT_HINT_ITEM = 10;
 
         /// <summary>
-		/// Số lượng tối da các gợi ý hiển thị
+		/// Số lượng tối da các gợi ý hiển thị.
 		/// </summary>
-		public const int MAX_ITEM = 10;
+		public const int MAX_HINTS_ITEM = 10;
 
         /// <summary>
-        /// Chiều rộng cho phần text của commnad
+        /// Danh sách gợi ý.
         /// </summary>
-        public const int WIDTH_COMMAND = 80;
-
-        /// <summary>
-        /// Chiều rộng cho phần text của info
-        /// </summary>
-        public const int WIDTH_INFO = 40;
-
-        public int height;
-
         public List<string> hints;
 
-        public List<string> histories;
-
-        public int index;
-
-        public bool isShow;
-
-        public int lenghtShow;
-
-        public int scrollValue;
-
-        public int width;
-
-        public int x;
-
-        public int y;
-
-        private string chatBack;
-
-        private bool isFixDoubleEnter;
+        /// <summary>
+        /// Thứ tự lệnh gợi ý lựa chọn.
+        /// </summary>
+        public int selectedIndex;
 
         /// <summary>
-        /// Chiều rộng tối da của khung gợi ý
+        /// Trạng thái hiển thị.
         /// </summary>
-        public int MaxWidth => mGraphics.zoomLevel > 1 ? 280 : 350;
+        public bool isShow;
+
+        /// <summary>
+        /// Số lượng gợi ý hiển thị
+        /// </summary>
+        public int lenghtHintsShow;
+
+        /// <summary>
+        /// Giá trị thanh cuộn.
+        /// </summary>
+        public int scrollValue;
+
+        /// <summary>
+        /// Chiều rộng khung gợi ý.
+        /// </summary>
+        public int width;
+
+        /// <summary>
+        /// Chiều cao khung gợi ý.
+        /// </summary>
+        public int height;
+
+        /// <summary>
+        /// Toạ độ x khung gợi ý.
+        /// </summary>
+        public int x;
+
+        /// <summary>
+        /// Toạ độ y khung gợi ý.
+        /// </summary>
+        public int y;
+
+        /// <summary>
+        /// Lưu chuỗi chat cũ.
+        /// </summary>
+        private string chatBack;
+
+        /// <summary>
+        /// Chiều rộng tối da của khung gợi ý.
+        /// </summary>
+        public int maxWidth => mGraphics.zoomLevel > 1 ? 280 : 350;
 
         public void append(string text)
         {
+            var histories = new List<string>();
             try
             {
                 histories = LitJson.JsonMapper.ToObject<List<string>>(
                         File.ReadAllText(Properties.Resources.PathChatHistory));
             }
-            catch
-            {
-                histories = new List<string>();
-            }
+            catch { }
 
             histories.Remove(text);
             histories.Insert(0, text);
@@ -91,14 +105,14 @@ namespace Mod
             var chatTextField = ChatTextField.gI();
 
             // Số lượng gợi ý hiển thị
-            lenghtShow = hints.Count > MAX_ITEM ? MAX_ITEM : hints.Count;
+            lenghtHintsShow = hints.Count < MAX_HINTS_ITEM ? hints.Count : MAX_HINTS_ITEM;
 
             // Kích thước bảng gợi ý
-            height = (lenghtShow + 1) * HEIGHT_ITEM; // Chừa 1 chỗ cho title
-            width = GameCanvas.w - 10 > MaxWidth ? MaxWidth : GameCanvas.w - 10;
+            height = (lenghtHintsShow + 1) * HEIGHT_HINT_ITEM; // Chừa 1 chỗ cho title
+            width = GameCanvas.w - 10 > maxWidth ? maxWidth : GameCanvas.w - 10;
 
             // Chiều dài của Scrollbar
-            int lenghtScrollbar = lenghtShow * (height - HEIGHT_ITEM) / hints.Count;
+            int lenghtScrollbar = lenghtHintsShow * (height - HEIGHT_HINT_ITEM) / hints.Count;
 
             // Vị trí của bảng gợi ý
             x = (GameCanvas.w - width) / 2;
@@ -110,9 +124,9 @@ namespace Mod
 
             // Title
             g.setColor(0, 1f);
-            g.fillRect(x, y, width, HEIGHT_ITEM);
+            g.fillRect(x, y, width, HEIGHT_HINT_ITEM);
             mFont.tahoma_7_white_pSmall.drawString(g, "Gần đây", x + 5, y, 0);
-            if (this.chatBack != hints[index])
+            if (this.chatBack != hints[selectedIndex])
             {
                 int x = this.x + this.width - mFont.tahoma_7_white_pSmall.getWidth("Nhấn Tab để lựa chọn") - 5;
                 mFont.tahoma_7_white_pSmall.drawString(g, "Nhấn Tab để lựa chọn", x, y, 0);
@@ -120,43 +134,34 @@ namespace Mod
 
             // Đường ngăn cách title với lệnh gợi ý
             g.setColor(0xffffff, 0.5f);
-            g.fillRect(x, y + HEIGHT_ITEM - 1, this.width, 1);
+            g.fillRect(x, y + HEIGHT_HINT_ITEM - 1, this.width, 1);
 
             // History đang chọn
             g.setColor(0x838383, 0.75f);
-            g.fillRect(x, y + HEIGHT_ITEM + HEIGHT_ITEM * (index - scrollValue), width - 5, HEIGHT_ITEM);
+            g.fillRect(x, y + HEIGHT_HINT_ITEM + HEIGHT_HINT_ITEM * (selectedIndex - scrollValue), width - 5, HEIGHT_HINT_ITEM);
             g.setColor(0xffffff, 0.75f);
-            g.fillRect(x, y + HEIGHT_ITEM + HEIGHT_ITEM * (index - scrollValue), 2, HEIGHT_ITEM);
+            g.fillRect(x, y + HEIGHT_HINT_ITEM + HEIGHT_HINT_ITEM * (selectedIndex - scrollValue), 2, HEIGHT_HINT_ITEM);
 
             // Đường ngăn cách danh sách gợi ý với Scrollbar
             g.setColor(0xffffff, 0.75f);
-            g.fillRect(x + width - 5, y + HEIGHT_ITEM, 1, height - HEIGHT_ITEM);
+            g.fillRect(x + width - 5, y + HEIGHT_HINT_ITEM, 1, height - HEIGHT_HINT_ITEM);
 
             // Scrollbar
             g.setColor(0xffffff, 0.75f);
-            g.fillRect(x + width - 3, y + HEIGHT_ITEM + scrollValue * (height - HEIGHT_ITEM) / hints.Count, 2, lenghtScrollbar);
+            g.fillRect(x + width - 3, y + HEIGHT_HINT_ITEM + scrollValue * (height - HEIGHT_HINT_ITEM) / hints.Count, 2, lenghtScrollbar);
 
             // Danh sách gợi ý
-            for (int i = scrollValue; i < scrollValue + lenghtShow; i++)
+            for (int i = scrollValue; i < scrollValue + lenghtHintsShow; i++)
             {
-                mFont.tahoma_7_white_pSmall.drawString(g, hints[i], x + 5, y + HEIGHT_ITEM + HEIGHT_ITEM * (i - scrollValue), 0);
+                mFont.tahoma_7_white_pSmall.drawString(g, hints[i], x + 5, y + HEIGHT_HINT_ITEM + HEIGHT_HINT_ITEM * (i - scrollValue), 0);
             }
         }
 
         public void show()
         {
-            try
-            {
-                histories = LitJson.JsonMapper.ToObject<List<string>>(
-                        File.ReadAllText(Properties.Resources.PathChatHistory));
-            }
-            catch
-            {
-                histories = new List<string>();
-            }
-
             isShow = true;
-            index = 0;
+            selectedIndex = 0;
+            loadHints();
         }
 
         public void update()
@@ -172,7 +177,7 @@ namespace Mod
             if (chatBack != tfChat.getText())
             {
                 chatBack = tfChat.getText();
-                index = 0;
+                selectedIndex = 0;
                 scrollValue = 0;
                 loadHints();
             }
@@ -193,18 +198,18 @@ namespace Mod
             // Down Arrow
             if (GameCanvas.keyPressed[22])
             {
-                index++;
+                selectedIndex++;
 
-                if (index >= hints.Count)
+                if (selectedIndex >= hints.Count)
                 {
-                    index = hints.Count - 1;
+                    selectedIndex = hints.Count - 1;
                 }
-                if (index >= scrollValue + MAX_ITEM)
+                if (selectedIndex >= scrollValue + MAX_HINTS_ITEM)
                 {
-                    scrollValue = index - (MAX_ITEM - 1);
+                    scrollValue = selectedIndex - (MAX_HINTS_ITEM - 1);
                 }
 
-                tfChat.setText(startStr + hints[index]);
+                tfChat.setText(startStr + hints[selectedIndex]);
 
                 // Cập nhập chatBak tránh sự phát hiện thay đổi làm mất danh sách đã gợi ý
                 chatBack = tfChat.getText();
@@ -217,17 +222,17 @@ namespace Mod
             // Up Arrow
             if (GameCanvas.keyPressed[21])
             {
-                index--;
-                if (index <= 0)
+                selectedIndex--;
+                if (selectedIndex <= 0)
                 {
-                    index = 0;
+                    selectedIndex = 0;
                 }
-                if (index < scrollValue)
+                if (selectedIndex < scrollValue)
                 {
-                    scrollValue = index;
+                    scrollValue = selectedIndex;
                 }
 
-                tfChat.setText(startStr + hints[index]);
+                tfChat.setText(startStr + hints[selectedIndex]);
 
                 // Cập nhập chatBack tránh sự phát hiện thay đổi làm mất danh sách đã gợi ý
                 chatBack = ChatTextField.gI().tfChat.getText();
@@ -240,9 +245,9 @@ namespace Mod
             // Tab
             if (GameCanvas.keyPressed[16])
             {
-                if (endStr != hints[index])
+                if (endStr != hints[selectedIndex])
                 {
-                    tfChat.setText(startStr + hints[index]);
+                    tfChat.setText(startStr + hints[selectedIndex]);
                 }
 
                 GameCanvas.keyPressed[16] = false;
@@ -253,17 +258,33 @@ namespace Mod
 
         private void loadHints()
         {
-            // Thêm chuỗi đang copy vào phần gợi ý
-            var histories = new List<string>(this.histories);
-            histories.Remove(UnityEngine.GUIUtility.systemCopyBuffer);
-            histories.Insert(0, UnityEngine.GUIUtility.systemCopyBuffer);
+            var histories = new List<string>();
 
-            string endStr = chatBack;
-            int indexLastCommandChat = chatBack.LastIndexOf('/');
-            if (indexLastCommandChat != -1)
+            try
             {
-                endStr = chatBack.Substring(indexLastCommandChat);
+                histories = LitJson.JsonMapper.ToObject<List<string>>(
+                        File.ReadAllText(Properties.Resources.PathChatHistory));
             }
+            catch { }
+
+            // Thêm đoạn copy vào lịch sử chat.
+            int copyIndex = histories.IndexOf(UnityEngine.GUIUtility.systemCopyBuffer);
+            if (copyIndex == -1)
+            {
+                histories.Insert(0, UnityEngine.GUIUtility.systemCopyBuffer);
+            }
+            else if (copyIndex > 10)
+            {
+                histories.RemoveAt(copyIndex);
+                histories.Insert(0, UnityEngine.GUIUtility.systemCopyBuffer);
+            }
+
+            var tfChat = ChatTextField.gI().tfChat;
+
+            string endStr = tfChat.getText();
+            int indexLastCommandChat = endStr.LastIndexOf('/');
+            if (indexLastCommandChat != -1)
+                endStr = endStr.Substring(indexLastCommandChat);
 
             hints = histories.FindAll(x => x.StartsWith(endStr));
         }
