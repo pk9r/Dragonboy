@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 Game/Game_Data/output_log.txt
+Game/ModData/chat.txt

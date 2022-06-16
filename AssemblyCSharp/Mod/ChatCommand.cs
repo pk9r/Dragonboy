@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace Mod
 {
@@ -14,9 +11,10 @@ namespace Mod
 
         [LitJSON.JsonSkip]
         public MethodInfo method;
+
         [LitJSON.JsonSkip]
         public ParameterInfo[] parameterInfos;
-        
+
         private object[] parameters;
 
         public bool canExecute(string args)
@@ -26,7 +24,7 @@ namespace Mod
             {
                 return true;
             }
-            
+
             var arguments = args.Split(this.delimiter);
 
             if (this.parameterInfos.Length != arguments.Length)

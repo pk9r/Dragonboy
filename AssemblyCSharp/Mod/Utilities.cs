@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace Mod
@@ -71,5 +66,4 @@ namespace Mod
             }
         }
     }
-
 }

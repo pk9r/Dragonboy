@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using System.Collections;
 
 namespace Mod
 {
@@ -16,6 +11,7 @@ namespace Mod
         /// <returns>true nếu huỷ bỏ nội dung chat.</returns>
         public static bool onSendChat(string text)
         {
+            HistoryChat.gI.append(text);
             bool result = ChatCommandHandler.checkAndExecuteChatCommand(text);
 
             return result;
@@ -44,6 +40,32 @@ namespace Mod
         public static void onGameScrPressHotkeysUnassigned()
         {
             Utilities.addHotkeys();
+        }
+
+        /// <summary>
+        /// Kích hoạt trong khi vẽ khung chat.
+        /// </summary>
+        /// <param name="g"></param>
+        public static void onPaintChatTextField(mGraphics g)
+        {
+            HistoryChat.gI.paint(g);
+        }
+
+        /// <summary>
+        /// Kích hoạt khi bắt đầu chat.
+        /// </summary>
+        public static void onStartChatTextField()
+        {
+            HistoryChat.gI.show();
+        }
+
+        public static void onUpdateChatTextField()
+        {
+        }
+
+        public static void onUpdateGameScr()
+        {
+            HistoryChat.gI.update();
         }
     }
 }
