@@ -59,6 +59,8 @@ public class MyKeyMap
 		h.Add(KeyCode.Period, 46);
 		h.Add(KeyCode.At, 64);
 		h.Add(KeyCode.Tab, -26);
+		h.Add(KeyCode.Slash, 47);
+		Mod.GameEvents.onKeyMapLoaded(h);
 	}
 
 	public static int map(KeyCode k)
