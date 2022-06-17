@@ -12,6 +12,9 @@ namespace Mod
     {
         public static List<ChatCommand> chatCommands = new List<ChatCommand>();
 
+        /// <summary>
+        /// Tải lệnh chat mặc định.
+        /// </summary>
         public static void loadDefalutChatCommands()
         {
             var methods = AppDomain.CurrentDomain.GetAssemblies()
@@ -39,10 +42,12 @@ namespace Mod
             saveChatCommands();
         }
 
+        /// <summary>
+        /// Lưu lệnh chat.
+        /// </summary>
         public static void saveChatCommands()
         {
-            var json = LitJson.JsonMapper.ToJson(chatCommands);
-            File.WriteAllText("ModData\\chatCommands.json", json);
+            File.WriteAllText("ModData\\chatCommands.json", LitJson.JsonMapper.ToJson(chatCommands));
         }
 
 

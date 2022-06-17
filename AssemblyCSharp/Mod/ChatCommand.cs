@@ -14,10 +14,12 @@ namespace Mod
 
         [LitJSON.JsonSkip]
         public MethodInfo method;
+
         [LitJSON.JsonSkip]
         public ParameterInfo[] parameterInfos;
-        
-        private object[] parameters;
+
+        [LitJSON.JsonSkip]
+        public object[] parameters;
 
         public bool canExecute(string args)
         {
@@ -26,7 +28,7 @@ namespace Mod
             {
                 return true;
             }
-            
+
             var arguments = args.Split(this.delimiter);
 
             if (this.parameterInfos.Length != arguments.Length)
