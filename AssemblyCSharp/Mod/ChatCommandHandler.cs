@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Mod
@@ -49,7 +48,6 @@ namespace Mod
         {
             File.WriteAllText("ModData\\chatCommands.json", LitJson.JsonMapper.ToJson(chatCommands));
         }
-
 
         /// <summary>
         /// Tìm và thực hiện lệnh chat.

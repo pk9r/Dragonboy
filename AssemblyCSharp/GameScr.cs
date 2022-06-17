@@ -4340,6 +4340,8 @@ public class GameScr : mScreen, IChatable
 
 	public override void update()
 	{
+		Mod.GameEvents.onUpdateGameScr();
+
 		if (GameCanvas.keyPressed[16])
 		{
 			GameCanvas.keyPressed[16] = false;

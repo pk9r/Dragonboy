@@ -134,6 +134,8 @@ public class mFont
 
 	public static mFont tahoma_7b_greenSmall;
 
+	public static mFont tahoma_7_white_pSmall;
+    
 	public Font myFont;
 
 	private int height;
@@ -233,6 +235,39 @@ public class mFont
 		wO = getWidthExactOf("o");
 	}
 
+	public mFont(sbyte id, int zoomLevel)
+	{
+		string text = "chelthm";
+		if ((id > 0 && id < 10) || id == 19)
+		{
+			yAdd = 1;
+			text = "barmeneb";
+		}
+		else if (id >= 10 && id <= 18)
+		{
+			text = "chelthm";
+			yAdd = 2;
+		}
+		else if (id > 24)
+		{
+			text = "staccato";
+		}
+		this.id = id;
+		text = "FontSys/x" + zoomLevel + "/" + text;
+		myFont = (Font)Resources.Load(text);
+		if (id < 25)
+		{
+			color1 = setColorFont(id);
+			color2 = setColorFont(id);
+		}
+		else
+		{
+			color1 = bigColor(id);
+			color2 = bigColor(id);
+		}
+		wO = getWidthExactOf("o");
+	}
+
 	public static void init()
 	{
 		if (mGraphics.zoomLevel == 1)
@@ -277,6 +312,7 @@ public class mFont
 			tahoma_7_whiteSmall = tahoma_7_white;
 			tahoma_7b_greenSmall = tahoma_7b_green;
 			tahoma_7_blue1Small = tahoma_7_blue1;
+			tahoma_7_white_pSmall = tahoma_7_white;
 			return;
 		}
 		gI = new mFont(0);
@@ -321,6 +357,7 @@ public class mFont
 		tahoma_7b_green2Small = tahoma_7b_green2;
 		tahoma_7_whiteSmall = tahoma_7_white;
 		tahoma_7b_greenSmall = tahoma_7b_green;
+		tahoma_7_white_pSmall = new mFont(3, zoomLevel: 1);
 		yAddFont = 1;
 		if (mGraphics.zoomLevel == 1)
 		{
