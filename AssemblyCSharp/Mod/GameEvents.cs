@@ -69,6 +69,8 @@ namespace Mod
         /// </summary>
         public static void onUpdateGameScr()
         {
+            Char.myCharz().cspeed = Utilities.speedRun;
+            
             HistoryChat.gI.update();
         }
     }

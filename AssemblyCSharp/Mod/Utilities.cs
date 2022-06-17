@@ -10,6 +10,17 @@ namespace Mod
     {
         public const sbyte ID_SKILL_BUFF = 7;
 
+        public static int speedRun = 8;
+        
+        [ChatCommand("tdc")]
+        [ChatCommand("cspeed")]
+        public static void setSpeedRun(int speed)
+        {
+            speedRun = speed;
+
+            GameScr.info1.addInfo("Tốc độ chạy: " + speed, 0);
+        }
+
         /// <summary>
 		/// Sử dụng skill Trị thương của namec vào bản thân
 		/// </summary>
