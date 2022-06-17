@@ -46,7 +46,8 @@ namespace Mod
         /// </summary>
         public static void saveChatCommands()
         {
-            File.WriteAllText("ModData\\chatCommands.json", LitJson.JsonMapper.ToJson(chatCommands));
+            File.WriteAllText(Properties.Resources.PathCommandChat,
+                LitJson.JsonMapper.ToJson(chatCommands));
         }
 
         /// <summary>
@@ -92,44 +93,43 @@ namespace Mod
             string pattern = @"^(([A-Za-z.]+)\.([A-Za-z]+))(.*)$";
             var match = Regex.Match(command, pattern);
 
-            if (match.Success)
+            if (!match.Success)
             {
-                string fullCommand = match.Groups[1].Value;
-                string typeFullName = match.Groups[2].Value;
-                string methodName = match.Groups[3].Value;
-                string args = match.Groups[4].Value;
+                return false;
+            }
 
-                var type = AppDomain.CurrentDomain.GetAssemblies()
-                    .First(x => x.ManifestModule.Name == "Assembly-CSharp.dll")
-                    .GetTypes().FirstOrDefault(x => x.FullName.ToLower() == typeFullName.ToLower());
+            string fullCommand = match.Groups[1].Value;
+            string typeFullName = match.Groups[2].Value;
+            string methodName = match.Groups[3].Value;
+            string args = match.Groups[4].Value;
 
-                if (type != null)
+            var methods = Utilities.getMethods(typeFullName);
+
+            if (methods == null)
+            {
+                return false;
+            }
+
+            foreach (var m in methods)
+            {
+                if (m.Name.ToLower() != methodName.ToLower())
                 {
-                    var methods = type.GetMethods(
-                        BindingFlags.Public |
-                        BindingFlags.Static |
-                        BindingFlags.IgnoreReturn);
+                    continue;
+                }
 
-                    foreach (var m in methods)
-                    {
-                        if (m.Name.ToLower() == methodName.ToLower())
-                        {
-                            var c = new ChatCommand()
-                            {
-                                command = null,
-                                fullCommand = fullCommand,
-                                method = m,
-                                parameterInfos = m.GetParameters()
-                            };
+                var c = new ChatCommand()
+                {
+                    command = null,
+                    fullCommand = fullCommand,
+                    method = m,
+                    parameterInfos = m.GetParameters()
+                };
 
-                            if (c.canExecute(args))
-                            {
-                                //chatCommands.Add(c);
-                                c.execute();
-                                return true;
-                            }
-                        }
-                    }
+                if (c.canExecute(args))
+                {
+                    //chatCommands.Add(c);
+                    c.execute();
+                    return true;
                 }
             }
 
@@ -143,16 +143,13 @@ namespace Mod
         /// <returns>true nếu lệnh thực hiện thành công.</returns>
         public static bool checkAndExecuteChatCommand(string text)
         {
-            if (text.StartsWith("/"))
+            if (!text.StartsWith("/"))
             {
-                text = text.Substring(1);
-                if (executeCommand(text))
-                {
-                    return true;
-                }
+                return false;
             }
 
-            return false;
+            text = text.Substring(1);
+            return executeCommand(text);
         }
     }
 }

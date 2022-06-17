@@ -2660,7 +2660,11 @@ public class GameScr : mScreen, IChatable
 						{
 							ChatTextField.gI().startChat(this, string.Empty);
 						}
-                        else
+						else if (GameCanvas.keyAsciiPress == '/')
+						{
+							ChatTextField.gI().startChat('/', GameScr.gI(), string.Empty);
+						}
+						else
                         {
 							Mod.GameEvents.onGameScrPressHotkeysUnassigned();
 						}

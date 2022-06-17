@@ -1,18 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace Mod
 {
     public class Utilities
     {
-        [ChatCommand("tdc")]
-        [ChatCommand("cspeed")]
-        public static void editSpeedRun(int speed)
-        {
-            Char.myCharz().cspeed = speed;
-
-            GameScr.info1.addInfo("Tốc độ chạy: " + speed, 0);
-        }
+        public const sbyte ID_SKILL_BUFF = 7;
 
         /// <summary>
 		/// Sử dụng skill Trị thương của namec vào bản thân
@@ -20,50 +16,71 @@ namespace Mod
 		[ChatCommand("hsme")]
         public static void buffMe()
         {
-            sbyte idSkill = Char.myCharz().myskill.template.id;
-
-            SkillTemplate skillTemplate = new();
-            skillTemplate.id = 7;
-            Skill skill = Char.myCharz().getSkill(skillTemplate);
-
-            Service.gI().selectSkill(skillTemplate.id);
-
-            MyVector vMe = new();
-            vMe.addElement(Char.myCharz());
-
-            Service.gI().sendPlayerAttack(new MyVector(), vMe, -1);
-
-            skill.lastTimeUseThisSkill = mSystem.currentTimeMillis();
-            Service.gI().selectSkill(idSkill);
-        }
-
-        public static void test()
-        {
-            GameScr.info1.addInfo("hoho", 0);
-        }
-
-        public static void test2()
-        {
-            GameScr.info1.addInfo("hoho haha", 0);
-        }
-
-        //public static void reloadChatCommands()
-        //{
-        //    var assembly = Assembly.LoadFile("Game_Data\\Managed\\Assembly-CSharp.dll");
-
-        //}
-
-        public static void addKeyMap(Hashtable h)
-        {
-            h.Add(KeyCode.Slash, 47);
-        }
-
-        public static void addHotkeys()
-        {
-            if (GameCanvas.keyAsciiPress == '/')
+            if (!canBuffMe(out Skill skillBuff))
             {
-                ChatTextField.gI().startChat('/', GameScr.gI(), string.Empty);
+                return;
             }
+
+            // Đổi sang skill hồi sinh
+            Service.gI().selectSkill(ID_SKILL_BUFF);
+            
+            // Tự tấn công vào bản thân
+            Service.gI().sendPlayerAttack(new MyVector(), getMyVectorMe(), -1);
+
+            // Trả về skill cũ
+            Service.gI().selectSkill(Char.myCharz().myskill.template.id);
+
+            // Đặt thời gian hồi cho skill
+            skillBuff.lastTimeUseThisSkill = mSystem.currentTimeMillis();
+        }
+
+        /// <summary>
+        /// Kiểm tra khả năng sử dụng skill Trị thương vào bản thân.
+        /// </summary>
+        /// <param name="skillBuff">Skill trị thương.</param>
+        /// <returns>true nếu có thể sử dụng skill trị thương vào bản thân.</returns>
+        public static bool canBuffMe(out Skill skillBuff)
+        {
+            skillBuff = Char.myCharz().
+                getSkill(new SkillTemplate { id = ID_SKILL_BUFF });
+
+            if (skillBuff == null)
+            {
+                GameScr.info1.addInfo("Không tìm thấy kỹ năng Trị thương", 0);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Lấy MyVector chứa nhân vật của người chơi.
+        /// </summary>
+        /// <returns></returns>
+        public static MyVector getMyVectorMe()
+        {
+            var vMe = new MyVector();
+            vMe.addElement(Char.myCharz());
+            return vMe;
+        }
+        
+        /// <summary>
+        /// Lấy danh sách các hàm trong theo tên của class.
+        /// </summary>
+        /// <remarks> Lưu ý:
+        /// <list type="bullet">
+        /// <item><description>Chỉ lấy các hàm public static void.</description></item>
+        /// <item><description>Tên class phải bao gồm cả namespace.</description></item>
+        /// </list>
+        /// </remarks>
+        /// <param name="typeFullName"></param>
+        /// <returns>Danh sách các hàm trong class.</returns>
+        public static MethodInfo[] getMethods(string typeFullName)
+        {
+            return AppDomain.CurrentDomain.GetAssemblies()
+                            .First(x => x.ManifestModule.Name == Properties.Resources.ManifestModuleName)
+                            .GetTypes().FirstOrDefault(x => x.FullName.ToLower() == typeFullName.ToLower())
+                            .GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreReturn);
         }
     }
 }

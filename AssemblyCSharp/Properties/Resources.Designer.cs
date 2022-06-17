@@ -61,11 +61,29 @@ namespace Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Assembly-CSharp.dll.
+        /// </summary>
+        public static string ManifestModuleName {
+            get {
+                return ResourceManager.GetString("ManifestModuleName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ModData\chat.txt.
         /// </summary>
         public static string PathChatHistory {
             get {
                 return ResourceManager.GetString("PathChatHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ModData\chatCommands.json.
+        /// </summary>
+        public static string PathCommandChat {
+            get {
+                return ResourceManager.GetString("PathCommandChat", resourceCulture);
             }
         }
     }

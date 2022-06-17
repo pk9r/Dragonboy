@@ -31,7 +31,6 @@ namespace Mod
         /// <param name="h"></param>
         public static void onKeyMapLoaded(Hashtable h)
         {
-            Utilities.addKeyMap(h);
         }
 
         /// <summary>
@@ -39,7 +38,6 @@ namespace Mod
         /// </summary>
         public static void onGameScrPressHotkeysUnassigned()
         {
-            Utilities.addHotkeys();
         }
 
         /// <summary>
@@ -59,10 +57,16 @@ namespace Mod
             HistoryChat.gI.show();
         }
 
+        /// <summary>
+        /// Kích hoạt khi có ChatTextField update.
+        /// </summary>
         public static void onUpdateChatTextField()
         {
         }
 
+        /// <summary>
+        /// Kích hoạt khi GameScr update.
+        /// </summary>
         public static void onUpdateGameScr()
         {
             HistoryChat.gI.update();
