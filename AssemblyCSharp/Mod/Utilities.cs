@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -9,6 +10,8 @@ namespace Mod
     public class Utilities
     {
         public const sbyte ID_SKILL_BUFF = 7;
+
+        private const BindingFlags PUBLIC_STATIC_VOID = BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod;
 
         public static int speedRun = 8;
         
@@ -25,6 +28,8 @@ namespace Mod
 		/// Sử dụng skill Trị thương của namec vào bản thân
 		/// </summary>
 		[ChatCommand("hsme")]
+		[ChatCommand("buffme")]
+        [HotkeyCommand('b')]
         public static void buffMe()
         {
             if (!canBuffMe(out Skill skillBuff))
@@ -91,7 +96,25 @@ namespace Mod
             return AppDomain.CurrentDomain.GetAssemblies()
                             .First(x => x.ManifestModule.Name == Properties.Resources.ManifestModuleName)
                             .GetTypes().FirstOrDefault(x => x.FullName.ToLower() == typeFullName.ToLower())
-                            .GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreReturn);
+                            .GetMethods(PUBLIC_STATIC_VOID);
+        }
+
+        /// <summary>
+        /// Lấy danh sách tất cả các hàm của tệp Assembly-CSharp.dll.
+        /// </summary>
+        /// <remarks> Lưu ý:
+        /// <list type="bullet">
+        /// <item><description>Chỉ lấy các hàm public static void.</description></item>
+        /// <item><description>Tên class phải bao gồm cả namespace.</description></item>
+        /// </list>
+        /// </remarks>
+        /// <returns>Danh sách các hàm của tệp Assembly-CSharp.dll.</returns>
+        public static IEnumerable<MethodInfo> GetMethods()
+        {
+            return AppDomain.CurrentDomain.GetAssemblies()
+                .First           (x => x.ManifestModule.Name == Properties.Resources.ManifestModuleName)
+                .GetTypes().Where(x => x.IsClass)
+                .SelectMany      (x => x.GetMethods(PUBLIC_STATIC_VOID));
         }
     }
 }

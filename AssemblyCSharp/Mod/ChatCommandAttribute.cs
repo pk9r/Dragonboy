@@ -2,8 +2,7 @@
 
 namespace Mod
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class ChatCommandAttribute : Attribute
+    public class ChatCommandAttribute : BaseCommandAttribute
     {
         public string command;
 

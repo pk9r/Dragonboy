@@ -70,6 +70,15 @@ namespace Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ModData\chatCommands.json.
+        /// </summary>
+        public static string PathChatCommand {
+            get {
+                return ResourceManager.GetString("PathChatCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ModData\chat.txt.
         /// </summary>
         public static string PathChatHistory {
@@ -79,11 +88,11 @@ namespace Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ModData\chatCommands.json.
+        ///   Looks up a localized string similar to ModData\hotkeyCommands.json.
         /// </summary>
-        public static string PathCommandChat {
+        public static string PathHotkeyCommand {
             get {
-                return ResourceManager.GetString("PathCommandChat", resourceCulture);
+                return ResourceManager.GetString("PathHotkeyCommand", resourceCulture);
             }
         }
     }

@@ -12,7 +12,7 @@ namespace Mod
         public static bool onSendChat(string text)
         {
             HistoryChat.gI.append(text);
-            bool result = ChatCommandHandler.checkAndExecuteChatCommand(text);
+            bool result = ChatCommandHandler.handleChatText(text);
 
             return result;
         }
@@ -22,7 +22,8 @@ namespace Mod
         /// </summary>
         public static void onGameStarted()
         {
-            ChatCommandHandler.loadDefalutChatCommands();
+            ChatCommandHandler.loadDefalut();
+            HotkeyCommandHandler.loadDefalut();
         }
 
         /// <summary>
@@ -38,6 +39,7 @@ namespace Mod
         /// </summary>
         public static void onGameScrPressHotkeysUnassigned()
         {
+            HotkeyCommandHandler.handleHotkey(GameCanvas.keyAsciiPress);
         }
 
         /// <summary>
