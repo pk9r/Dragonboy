@@ -2662,7 +2662,7 @@ public class GameScr : mScreen, IChatable
 						}
 						else if (GameCanvas.keyAsciiPress == '/')
 						{
-							ChatTextField.gI().startChat('/', GameScr.gI(), string.Empty);
+							ChatTextField.gI().startChat('/', gI(), string.Empty);
 						}
 						else
                         {

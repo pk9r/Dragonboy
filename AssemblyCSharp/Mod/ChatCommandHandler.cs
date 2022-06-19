@@ -12,13 +12,11 @@ namespace Mod
         public static List<ChatCommand> chatCommands = new List<ChatCommand>();
 
         /// <summary>
-        /// Tải lệnh chat mặc định.
+        /// Tải lệnh chat mặc định. (các lệnh được định nghĩa trên code)
         /// </summary>
-        public static void loadDefalutChatCommands()
+        public static void loadDefalut()
         {
-            var methods = AppDomain.CurrentDomain.GetAssemblies()
-                .First(x => x.ManifestModule.Name == "Assembly-CSharp.dll").GetTypes()
-                .Where(x => x.IsClass).SelectMany(x => x.GetMethods());
+            var methods = Utilities.GetMethods();
 
             foreach (var m in methods)
             {
@@ -30,6 +28,7 @@ namespace Mod
                         chatCommands.Add(new ChatCommand()
                         {
                             command = cca.command,
+                            delimiter = cca.delimiter,
                             fullCommand = m.DeclaringType.FullName + "." + m.Name,
                             method = m,
                             parameterInfos = m.GetParameters()
@@ -38,15 +37,15 @@ namespace Mod
                 }
             }
 
-            saveChatCommands();
+            save();
         }
 
         /// <summary>
         /// Lưu lệnh chat.
         /// </summary>
-        public static void saveChatCommands()
+        public static void save()
         {
-            File.WriteAllText(Properties.Resources.PathCommandChat,
+            File.WriteAllText(Properties.Resources.PathChatCommand,
                 LitJson.JsonMapper.ToJson(chatCommands));
         }
 
@@ -55,7 +54,7 @@ namespace Mod
         /// </summary>
         /// <param name="command">Nội dung lệnh.</param>
         /// <returns>true nếu lệnh thực hiện thành công.</returns>
-        public static bool executeCommand(string command)
+        public static bool execute(string command)
         {
             foreach (var c in chatCommands)
             {
@@ -67,15 +66,14 @@ namespace Mod
 
                 if (args != null)
                 {
-                    if (c.canExecute(args))
+                    if (c.execute(args))
                     {
-                        c.execute();
                         return true;
                     }
                 }
             }
 
-            if (executeWithoutChatCommand(command))
+            if (executeFull(command))
             {
                 return true;
             }
@@ -84,11 +82,11 @@ namespace Mod
         }
 
         /// <summary>
-        /// Thực hiện lệnh ngoài danh sách.
+        /// Tìm và thực hiện các lệnh chat dạng đầy đủ (namespace.class.method)
         /// </summary>
         /// <param name="command">Nội dung lệnh.</param>
         /// <returns>true nếu lệnh thực hiện thành công.</returns>
-        public static bool executeWithoutChatCommand(string command)
+        public static bool executeFull(string command)
         {
             string pattern = @"^(([A-Za-z.]+)\.([A-Za-z]+))(.*)$";
             var match = Regex.Match(command, pattern);
@@ -125,10 +123,8 @@ namespace Mod
                     parameterInfos = m.GetParameters()
                 };
 
-                if (c.canExecute(args))
+                if (c.execute(args))
                 {
-                    //chatCommands.Add(c);
-                    c.execute();
                     return true;
                 }
             }
@@ -137,19 +133,20 @@ namespace Mod
         }
 
         /// <summary>
-        /// Kiểm tra và thực hiện lệnh chat.
+        /// Xử lý câu chat.
         /// </summary>
         /// <param name="text">Nội dung chat.</param>
-        /// <returns>true nếu lệnh thực hiện thành công.</returns>
-        public static bool checkAndExecuteChatCommand(string text)
+        /// <returns>true nếu có lệnh được thực hiện thành công.</returns>
+        public static bool handleChatText(string text)
         {
+            // Lệnh chat phải bắt đầu bằng / để phân biệt với chat bình thường
             if (!text.StartsWith("/"))
             {
                 return false;
             }
 
             text = text.Substring(1);
-            return executeCommand(text);
+            return execute(text);
         }
     }
 }

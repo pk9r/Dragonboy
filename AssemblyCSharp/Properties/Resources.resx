@@ -120,10 +120,13 @@
   <data name="ManifestModuleName" xml:space="preserve">
     <value>Assembly-CSharp.dll</value>
   </data>
+  <data name="PathChatCommand" xml:space="preserve">
+    <value>ModData\chatCommands.json</value>
+  </data>
   <data name="PathChatHistory" xml:space="preserve">
     <value>ModData\chat.txt</value>
   </data>
-  <data name="PathCommandChat" xml:space="preserve">
-    <value>ModData\chatCommands.json</value>
+  <data name="PathHotkeyCommand" xml:space="preserve">
+    <value>ModData\hotkeyCommands.json</value>
   </data>
 </root>

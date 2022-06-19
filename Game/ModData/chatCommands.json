@@ -1,1 +1,1 @@
-[{"command":"cspeed","fullCommand":"Mod.Utilities.setSpeedRun","delimiter":" "},{"command":"tdc","fullCommand":"Mod.Utilities.setSpeedRun","delimiter":" "},{"command":"hsme","fullCommand":"Mod.Utilities.buffMe","delimiter":" "}]
+[{"command":"cspeed","fullCommand":"Mod.Utilities.setSpeedRun","delimiter":" "},{"command":"tdc","fullCommand":"Mod.Utilities.setSpeedRun","delimiter":" "},{"command":"buffme","fullCommand":"Mod.Utilities.buffMe","delimiter":" "},{"command":"hsme","fullCommand":"Mod.Utilities.buffMe","delimiter":" "}]
