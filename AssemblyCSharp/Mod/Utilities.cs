@@ -7,11 +7,21 @@ using UnityEngine;
 
 namespace Mod
 {
-    public class Utilities
+    public class Utilities : IActionListener
     {
         public const sbyte ID_SKILL_BUFF = 7;
+        public const int ID_ICON_ITEM_TDLT = 4387;
+        
+        private const BindingFlags PUBLIC_STATIC_VOID = 
+            BindingFlags.Public | 
+            BindingFlags.Static | 
+            BindingFlags.InvokeMethod;
 
-        private const BindingFlags PUBLIC_STATIC_VOID = BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod;
+        #region Singleton
+        private Utilities() { }
+        static Utilities() { }
+        public static Utilities gI { get; } = new Utilities(); 
+        #endregion
 
         public static int speedRun = 8;
         
@@ -70,6 +80,47 @@ namespace Mod
         }
 
         /// <summary>
+        /// Dịch chuyển tới một toạ độ cụ thể trong map.
+        /// </summary>
+        /// <param name="x">Toạ độ x.</param>
+        /// <param name="y">Toạ độ y.</param>
+        public static void teleportMyChar(int x, int y)
+        {
+            Char.myCharz().cx = x;
+            Char.myCharz().cy = y;
+            Service.gI().charMove();
+
+            if (isUsingTDLT())
+                return;
+
+            Char.myCharz().cx = x;
+            Char.myCharz().cy = y + 1;
+            Service.gI().charMove();
+            Char.myCharz().cx = x;
+            Char.myCharz().cy = y;
+            Service.gI().charMove();
+        }        
+
+        [HotkeyCommand('n')]
+        public static void showMenuTeleNpc()
+        {
+            if (GameScr.vNpc.size() == 0)
+            {
+                GameScr.info1.addInfo("Không có npc nào", 0);
+                return;
+            }
+
+            MyVector myVector = new MyVector();
+            for (int i = 0; i < GameScr.vNpc.size(); i++)
+            {
+                var npc = (Npc)GameScr.vNpc.elementAt(i);
+                myVector.addElement(new Command(npc.template.name,
+                    gI, (int)IdAction.MoveToNpc, npc));
+            }
+            GameCanvas.menu.startAt(myVector, 3);
+        }
+
+        /// <summary>
         /// Lấy MyVector chứa nhân vật của người chơi.
         /// </summary>
         /// <returns></returns>
@@ -79,7 +130,14 @@ namespace Mod
             vMe.addElement(Char.myCharz());
             return vMe;
         }
-        
+
+        /// <summary>
+        /// Kiểm tra trạng thái sử dụng TĐLT.
+        /// </summary>
+        /// <returns>true nếu đang sử dụng tự động luyên tập</returns>
+        public static bool isUsingTDLT() =>
+            ItemTime.isExistItem(ID_ICON_ITEM_TDLT);
+
         /// <summary>
         /// Lấy danh sách các hàm trong theo tên của class.
         /// </summary>
@@ -115,6 +173,31 @@ namespace Mod
                 .First           (x => x.ManifestModule.Name == Properties.Resources.ManifestModuleName)
                 .GetTypes().Where(x => x.IsClass)
                 .SelectMany      (x => x.GetMethods(PUBLIC_STATIC_VOID));
+        }
+
+        public void perform(int idAction, object p)
+        {
+            IdAction id = (IdAction)idAction;
+            switch (id)
+            {
+                case IdAction.None:
+                    break;
+                case IdAction.MoveToNpc:
+                    moveToNpc((Npc)p);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Dịch chuyển tới npc trong map.
+        /// </summary>
+        /// <param name="npc">Npc cần dịch chuyển tới</param>
+        private static void moveToNpc(Npc npc)
+        {
+            teleportMyChar(npc.cx, npc.ySd - npc.ySd % 24);
+            Char.myCharz().npcFocus = npc;
         }
     }
 }

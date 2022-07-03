@@ -1,0 +1,5 @@
+﻿enum IdAction
+{
+    None,
+    MoveToNpc
+}
