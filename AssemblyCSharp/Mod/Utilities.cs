@@ -33,7 +33,12 @@ namespace Mod
 
             GameScr.info1.addInfo("Tốc độ chạy: " + speed, 0);
         }
-
+        [ChatCommand("speed")]
+        public static void setSpeedGame(float speed)
+        {
+            Time.timeScale = speed;
+            GameScr.info1.addInfo("Tốc độ game: " + speed, 0);
+        }
         /// <summary>
 		/// Sử dụng skill Trị thương của namec vào bản thân
 		/// </summary>
@@ -198,6 +203,43 @@ namespace Mod
         {
             teleportMyChar(npc.cx, npc.ySd - npc.ySd % 24);
             Char.myCharz().npcFocus = npc;
+        }
+        [ChatCommand("csb")]
+        public static void useCapsule()
+        {
+            try
+            {
+                for (sbyte b = 0; b < Char.myCharz().arrItemBag.Length; b = (sbyte)(b + 1))
+                {
+                    if (Char.myCharz().arrItemBag[b].template.id == 193 || Char.myCharz().arrItemBag[b].template.id == 194)
+                    {
+                        Service.gI().useItem(0, 1, b, -1);
+                        break;
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+        [ChatCommand("bt")]
+        public static void usePorata()
+        {
+            try
+            {
+                for (sbyte b = 0; b < Char.myCharz().arrItemBag.Length; b = (sbyte)(b + 1))
+                {
+                    if (Char.myCharz().arrItemBag[b].template.id == 921 || Char.myCharz().arrItemBag[b].template.id == 454)
+                    {
+                        Service.gI().useItem(0, 1, b, -1);
+                        //GameScr.info1.addInfo(b.ToString(), 0);
+                        break;
+                    }
+                }
+            }
+            catch
+            {
+            }
         }
     }
 }
