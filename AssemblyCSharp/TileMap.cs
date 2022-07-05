@@ -222,6 +222,15 @@ public class TileMap
 		return false;
 	}
 
+	public static bool mapPhuBang()
+	{
+		if (GameScr.phuban_Info != null && mapID == GameScr.phuban_Info.idmapPaint)
+		{
+			return true;
+		}
+		return false;
+	}
+
 	public static BgItem getBIById(int id)
 	{
 		for (int i = 0; i < vItemBg.size(); i++)

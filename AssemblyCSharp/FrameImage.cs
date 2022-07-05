@@ -16,6 +16,19 @@ public class FrameImage
 
 	public int numHeight;
 
+	public FrameImage(int ID)
+	{
+		Id = ID;
+		Image image = Effect_End.getImage(ID);
+		if (image != null)
+		{
+			imgFrame = image;
+			frameWidth = Effect_End.arrInfoEff[ID][0];
+			frameHeight = Effect_End.arrInfoEff[ID][1] / Effect_End.arrInfoEff[ID][2];
+			nFrame = Effect_End.arrInfoEff[ID][2];
+		}
+	}
+
 	public FrameImage(Image img, int width, int height)
 	{
 		if (img != null)

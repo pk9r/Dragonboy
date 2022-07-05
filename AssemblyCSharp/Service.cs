@@ -1368,25 +1368,6 @@ public class Service
 		}
 	}
 
-	public void boxCoinIn(int coinIn)
-	{
-		Message message = null;
-		try
-		{
-			message = messageSubCommand(20);
-			message.writer().writeInt(coinIn);
-			session.sendMessage(message);
-		}
-		catch (Exception ex)
-		{
-			Cout.println(ex.Message + ex.StackTrace);
-		}
-		finally
-		{
-			message.cleanup();
-		}
-	}
-
 	public void boxCoinOut(int coinOut)
 	{
 		Message message = null;
@@ -3023,7 +3004,7 @@ public class Service
 		try
 		{
 			message = new Message((sbyte)(-113));
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < GameScr.onScreenSkill.Length; i++)
 			{
 				message.writer().writeByte(skill[i]);
 			}

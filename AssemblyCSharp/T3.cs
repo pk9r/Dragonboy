@@ -209,8 +209,20 @@ public class T3 : mResources
 				string.Empty
 			}
 		};
-		mResources.key_skill_qwerty = new string[5] { "Tambah\nQ", "Tambah\nW", "Tambah\nE", "Tambah\nR", "Tambah\nT" };
-		mResources.key_skill = new string[5] { "Tambah\n7", "Tambah\n8", "Tambah\n9", "Tambah\n1", "Tambah\n3" };
+		mResources.key_skill_qwerty = new string[10] { "Tambah\n1", "Tambah\n2", "Tambah\n3", "Tambah\n4", "Tambah\n5", "Tambah\n6", "Tambah\n7", "Tambah\n8", "Tambah\n9", "Tambah\n0" };
+		mResources.key_skill = new string[10]
+		{
+			"Tambah\n7",
+			"Tambah\n8",
+			"Tambah\n9",
+			"Tambah\n10",
+			"Tambah\n11",
+			string.Empty,
+			string.Empty,
+			string.Empty,
+			string.Empty,
+			string.Empty
+		};
 		mResources.SKILL_FAIL = "Teknik seranganmu tidak menambah point";
 		mResources.HP_EMPTY = "Senzu Bean habis. Datang kembali untuk mengambil lagi";
 		mResources.ZONE_HERE = "Kamu sudah di daerah ini";

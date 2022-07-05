@@ -213,8 +213,20 @@ public class T2 : mResources
 				string.Empty
 			}
 		};
-		mResources.key_skill_qwerty = new string[5] { "Add\nkey 1", "Add\nkey 2", "Add\nkey 3", "Add\nkey 4", "Add\nkey 5" };
-		mResources.key_skill = new string[5] { "Add\nkey 7", "Add\nkey 8", "Add\nkey 9", "Add\nkey 10", "Add\nkey 11" };
+		mResources.key_skill_qwerty = new string[10] { "Add\nkey 1", "Add\nkey 2", "Add\nkey 3", "Add\nkey 4", "Add\nkey 5", "Add\nkey 6", "Add\nkey 7", "Add\nkey 8", "Add\nkey 9", "Add\nkey 0" };
+		mResources.key_skill = new string[10]
+		{
+			"Add\nkey 7",
+			"Add\nkey 8",
+			"Add\nkey 9",
+			"Add\nkey 10",
+			"Add\nkey 11",
+			string.Empty,
+			string.Empty,
+			string.Empty,
+			string.Empty,
+			string.Empty
+		};
 		mResources.SKILL_FAIL = "Your current attack skill didn't add points";
 		mResources.HP_EMPTY = "Out of Senzu Bean. Come back and harvest more";
 		mResources.ZONE_HERE = "You are already in this zone";

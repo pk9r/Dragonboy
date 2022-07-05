@@ -181,8 +181,20 @@ public class T1 : mResources
 			new string[2] { "Đệ", "Tử" },
 			new string[2] { "Trạng", "Thái" }
 		};
-		mResources.key_skill_qwerty = new string[5] { "Vào\nphím 1", "Vào\nphím 2", "Vào\nphím 3", "Vào\nphím 4", "Vào\nphím 5" };
-		mResources.key_skill = new string[5] { "Vào\nphím 7", "Vào\nphím 8", "Vào\nphím 9", "Vào\nphím 10", "Vào\nphím 11" };
+		mResources.key_skill_qwerty = new string[10] { "Vào\nphím 1", "Vào\nphím 2", "Vào\nphím 3", "Vào\nphím 4", "Vào\nphím 5", "Vào\nphím 6", "Vào\nphím 7", "Vào\nphím 8", "Vào\nphím 9", "Vào\nphím 0" };
+		mResources.key_skill = new string[10]
+		{
+			"Vào\nphím 7",
+			"Vào\nphím 8",
+			"Vào\nphím 9",
+			"Vào\nphím 10",
+			"Vào\nphím 11",
+			string.Empty,
+			string.Empty,
+			string.Empty,
+			string.Empty,
+			string.Empty
+		};
 		mResources.SKILL_FAIL = "Chiêu đánh hiện tại của bạn chưa nâng cấp độ";
 		mResources.HP_EMPTY = "Đã hết đậu thần. Cậu hãy về thu hoạch thêm";
 		mResources.ZONE_HERE = "Bạn đang ở khu vực này";

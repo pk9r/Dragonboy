@@ -449,9 +449,13 @@ public class GameScr : mScreen, IChatable
 
 	public static bool isUseTouch;
 
-	public static Skill[] keySkill = new Skill[5];
+	public const int numSkill = 10;
 
-	public static Skill[] onScreenSkill = new Skill[5];
+	public const int numSkill_2 = 5;
+
+	public static Skill[] keySkill = new Skill[10];
+
+	public static Skill[] onScreenSkill = new Skill[10];
 
 	public Command cmdMenu;
 
@@ -893,6 +897,20 @@ public class GameScr : mScreen, IChatable
 
 	private string[] strPaint;
 
+	public static Image imgHP_NEW;
+
+	public static InfoPhuBan phuban_Info;
+
+	public static FrameImage fra_PVE_Bar_0;
+
+	public static FrameImage fra_PVE_Bar_1;
+
+	public static Image imgVS;
+
+	public static Image imgBall;
+
+	public static Image imgKhung;
+
 	public GameScr()
 	{
 		if (GameCanvas.w == 128 || GameCanvas.h <= 208)
@@ -929,6 +947,12 @@ public class GameScr : mScreen, IChatable
 
 	public static void loadBg()
 	{
+		fra_PVE_Bar_0 = new FrameImage(mSystem.loadImage("/mainImage/i_pve_bar_0.png"), 6, 15);
+		fra_PVE_Bar_1 = new FrameImage(mSystem.loadImage("/mainImage/i_pve_bar_1.png"), 38, 21);
+		imgVS = mSystem.loadImage("/mainImage/i_vs.png");
+		imgBall = mSystem.loadImage("/mainImage/i_charlife.png");
+		imgHP_NEW = mSystem.loadImage("/mainImage/i_hp.png");
+		imgKhung = mSystem.loadImage("/mainImage/i_khung.png");
 		imgLbtn = GameCanvas.loadImage("/mainImage/myTexture2dbtnl.png");
 		imgLbtnFocus = GameCanvas.loadImage("/mainImage/myTexture2dbtnlf.png");
 		imgLbtn2 = GameCanvas.loadImage("/mainImage/myTexture2dbtnl2.png");
@@ -1121,7 +1145,7 @@ public class GameScr : mScreen, IChatable
 	public void onOSkill(sbyte[] oSkillID)
 	{
 		Cout.println("GET onScreenSkill!");
-		onScreenSkill = new Skill[5];
+		onScreenSkill = new Skill[10];
 		if (oSkillID == null)
 		{
 			loadDefaultonScreenSkill();
@@ -1144,7 +1168,7 @@ public class GameScr : mScreen, IChatable
 	public void onKSkill(sbyte[] kSkillID)
 	{
 		Cout.println("GET KEYSKILL!");
-		keySkill = new Skill[5];
+		keySkill = new Skill[10];
 		if (kSkillID == null)
 		{
 			loadDefaultKeySkill();
@@ -1219,7 +1243,7 @@ public class GameScr : mScreen, IChatable
 	{
 		Skill skill = Char.myCharz().getSkill(skillTemplate);
 		MyVector myVector = new MyVector();
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			myVector.addElement(new Command(p: new object[2]
 			{
@@ -1236,7 +1260,7 @@ public class GameScr : mScreen, IChatable
 		Skill skill = Char.myCharz().getSkill(skillTemplate);
 		string[] array = ((!TField.isQwerty) ? mResources.key_skill : mResources.key_skill_qwerty);
 		MyVector myVector = new MyVector();
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			myVector.addElement(new Command(p: new object[2]
 			{
@@ -1817,6 +1841,11 @@ public class GameScr : mScreen, IChatable
 			{
 				xS[i] = i * (25 + padSkill);
 				yS[i] = ySkill;
+				if (xS.Length > 5 && i >= xS.Length / 2)
+				{
+					xS[i] = (i - xS.Length / 2) * (25 + padSkill);
+					yS[i] = ySkill - 32;
+				}
 			}
 			xHP = array.Length * (25 + padSkill);
 			yHP = ySkill;
@@ -1839,29 +1868,40 @@ public class GameScr : mScreen, IChatable
 			{
 				xS[j] = j * wSkill;
 				yS[j] = ySkill;
+				if (xS.Length > 5 && j >= xS.Length / 2)
+				{
+					xS[j] = (j - xS.Length / 2) * wSkill;
+					yS[j] = ySkill - 32;
+				}
 			}
 			xHP = array.Length * wSkill;
 			yHP = ySkill;
 		}
-		if (GameCanvas.isTouch)
+		if (!GameCanvas.isTouch)
 		{
-			xSkill = 17;
-			ySkill = GameCanvas.h - 40;
-			if (gamePad.isSmallGamePad && isAnalog == 1)
+			return;
+		}
+		xSkill = 17;
+		ySkill = GameCanvas.h - 40;
+		if (gamePad.isSmallGamePad && isAnalog == 1)
+		{
+			xHP = array.Length * wSkill;
+			yHP = ySkill;
+		}
+		else
+		{
+			xHP = GameCanvas.w - 45;
+			yHP = GameCanvas.h - 45;
+		}
+		setTouchBtn();
+		for (int k = 0; k < xS.Length; k++)
+		{
+			xS[k] = k * wSkill;
+			yS[k] = ySkill;
+			if (xS.Length > 5 && k >= xS.Length / 2)
 			{
-				xHP = array.Length * wSkill;
-				yHP = ySkill;
-			}
-			else
-			{
-				xHP = GameCanvas.w - 45;
-				yHP = GameCanvas.h - 45;
-			}
-			setTouchBtn();
-			for (int k = 0; k < xS.Length; k++)
-			{
-				xS[k] = k * wSkill;
-				yS[k] = ySkill;
+				xS[k] = (k - xS.Length / 2) * wSkill;
+				yS[k] = ySkill - 32;
 			}
 		}
 	}
@@ -2654,6 +2694,41 @@ public class GameScr : mScreen, IChatable
 							if (keySkill[4] != null)
 							{
 								doSelectSkill(keySkill[4], isShortcut: true);
+							}
+						}
+						else if (GameCanvas.keyPressed[6])
+						{
+							if (keySkill[5] != null)
+							{
+								doSelectSkill(keySkill[5], isShortcut: true);
+							}
+						}
+						else if (GameCanvas.keyPressed[7])
+						{
+							if (keySkill[6] != null)
+							{
+								doSelectSkill(keySkill[6], isShortcut: true);
+							}
+						}
+						else if (GameCanvas.keyPressed[8])
+						{
+							if (keySkill[7] != null)
+							{
+								doSelectSkill(keySkill[7], isShortcut: true);
+							}
+						}
+						else if (GameCanvas.keyPressed[9])
+						{
+							if (keySkill[8] != null)
+							{
+								doSelectSkill(keySkill[8], isShortcut: true);
+							}
+						}
+						else if (GameCanvas.keyPressed[0])
+						{
+							if (keySkill[9] != null)
+							{
+								doSelectSkill(keySkill[9], isShortcut: true);
 							}
 						}
 						else if (GameCanvas.keyAsciiPress == 114)
@@ -3834,7 +3909,11 @@ public class GameScr : mScreen, IChatable
 	{
 		Npc npc = new Npc(5, 0, -100, 100, 5, info1.charId[Char.myCharz().cgender][2]);
 		string nhatvatpham = mResources.nhatvatpham;
-		string[] menu = new string[2] { "Có", "Không" };
+		string[] menu = new string[2]
+		{
+			mResources.YES,
+			mResources.NO
+		};
 		npc.idItem = 673;
 		gI().createMenu(menu, npc);
 		ChatPopup.addChatPopupWithIcon(nhatvatpham, 100000, npc, 5820);
@@ -4166,11 +4245,21 @@ public class GameScr : mScreen, IChatable
 				return;
 			}
 			keyTouchSkill = -1;
-			if (GameCanvas.isPointerHoldIn(xSkill + xS[0] - wSkill / 2 + 12, yS[0] - wSkill / 2 + 12, onScreenSkill.Length * wSkill, wSkill) || (!GameCanvas.isTouchControl && GameCanvas.isPointerHoldIn(xSkill + xS[0] - wSkill / 2 + 12, yS[0] - wSkill / 2 + 12, wSkill, onScreenSkill.Length * wSkill)))
+			bool flag = false;
+			if (onScreenSkill.Length > 5 && (GameCanvas.isPointerHoldIn(xSkill + xS[0] - wSkill / 2 + 12, yS[0] - wSkill / 2 + 12, 5 * wSkill, wSkill) || GameCanvas.isPointerHoldIn(xSkill + xS[5] - wSkill / 2 + 12, yS[5] - wSkill / 2 + 12, 5 * wSkill, wSkill)))
+			{
+				flag = true;
+			}
+			if (flag || GameCanvas.isPointerHoldIn(xSkill + xS[0] - wSkill / 2 + 12, yS[0] - wSkill / 2 + 12, 5 * wSkill, wSkill) || (!GameCanvas.isTouchControl && GameCanvas.isPointerHoldIn(xSkill + xS[0] - wSkill / 2 + 12, yS[0] - wSkill / 2 + 12, wSkill, onScreenSkill.Length * wSkill)))
 			{
 				GameCanvas.isPointerJustDown = false;
 				isPointerDowning = false;
-				int num = (keyTouchSkill = (GameCanvas.pxLast - (xSkill + xS[0] - wSkill / 2 + 12)) / wSkill);
+				int num = (GameCanvas.pxLast - (xSkill + xS[0] - wSkill / 2 + 12)) / wSkill;
+				if (flag && GameCanvas.pyLast < yS[0])
+				{
+					num += 5;
+				}
+				keyTouchSkill = num;
 				if (GameCanvas.isPointerClick && GameCanvas.isPointerJustRelease)
 				{
 					GameCanvas.isPointerClick = (GameCanvas.isPointerJustDown = (GameCanvas.isPointerJustRelease = false));
@@ -4587,6 +4676,7 @@ public class GameScr : mScreen, IChatable
 		{
 			checkRemoveImage();
 		}
+		EffectManager.update();
 	}
 
 	public void updateKeyChatPopUp()
@@ -4772,6 +4862,7 @@ public class GameScr : mScreen, IChatable
 		GameCanvas.debug("PA4", 1);
 		GameCanvas.debug("PA5", 1);
 		BackgroudEffect.paintBackAll(g);
+		EffectManager.lowEffects.paintAll(g);
 		for (int i = 0; i < Effect2.vEffectFeet.size(); i++)
 		{
 			Effect2 effect = (Effect2)Effect2.vEffectFeet.elementAt(i);
@@ -4871,6 +4962,7 @@ public class GameScr : mScreen, IChatable
 		GameCanvas.debug("PA11", 1);
 		GameCanvas.debug("PA13", 1);
 		paintEffect(g);
+		EffectManager.midEffects.paintAll(g);
 		paintBgItem(g, 3);
 		for (int i = 0; i < vNpc.size(); i++)
 		{
@@ -4997,196 +5089,203 @@ public class GameScr : mScreen, IChatable
 			paintInfoBar(g);
 		}
 		resetTranslate(g);
-		if (isPaintOther)
+		if (!isPaintOther)
 		{
-			return;
-		}
-		if (GameCanvas.open3Hour)
-		{
-			if (GameCanvas.w > 250)
+			if (GameCanvas.open3Hour)
 			{
-				g.drawImage(GameCanvas.img12, 160, 6, 0);
-				mFont.tahoma_7_white.drawString(g, "Dành cho người chơi trên 12 tuổi.", 180, 2, 0);
-				mFont.tahoma_7_white.drawString(g, "Chơi quá 180 phút mỗi ngày ", 180, 12, 0);
-				mFont.tahoma_7_white.drawString(g, "sẽ hại sức khỏe.", 180, 22, 0);
+				if (GameCanvas.w > 250)
+				{
+					g.drawImage(GameCanvas.img12, 160, 6, 0);
+					mFont.tahoma_7_white.drawString(g, "Dành cho người chơi trên 12 tuổi.", 180, 2, 0);
+					mFont.tahoma_7_white.drawString(g, "Chơi quá 180 phút mỗi ngày ", 180, 12, 0);
+					mFont.tahoma_7_white.drawString(g, "sẽ hại sức khỏe.", 180, 22, 0);
+				}
+				else
+				{
+					g.drawImage(GameCanvas.img12, 5, GameCanvas.h - 67, 0);
+					mFont.tahoma_7_white.drawString(g, "Dành cho người chơi trên 12 tuổi.", 25, GameCanvas.h - 70, 0);
+					mFont.tahoma_7_white.drawString(g, "Chơi quá 180 phút mỗi ngày sẽ hại sức khỏe.", 25, GameCanvas.h - 60, 0);
+				}
 			}
-			else
+			GameCanvas.debug("PA21", 1);
+			GameCanvas.debug("PA18", 1);
+			g.translate(-g.getTranslateX(), -g.getTranslateY());
+			if ((TileMap.mapID == 128 || TileMap.mapID == 127) && mabuPercent != 0)
 			{
-				g.drawImage(GameCanvas.img12, 5, GameCanvas.h - 67, 0);
-				mFont.tahoma_7_white.drawString(g, "Dành cho người chơi trên 12 tuổi.", 25, GameCanvas.h - 70, 0);
-				mFont.tahoma_7_white.drawString(g, "Chơi quá 180 phút mỗi ngày sẽ hại sức khỏe.", 25, GameCanvas.h - 60, 0);
+				int num5 = 30;
+				int num6 = 200;
+				g.setColor(0);
+				g.fillRect(num5 - 27, num6 - 112, 54, 8);
+				g.setColor(16711680);
+				g.setClip(num5 - 25, num6 - 110, mabuPercent, 4);
+				g.fillRect(num5 - 25, num6 - 110, 50, 4);
+				g.setClip(0, 0, 3000, 3000);
+				mFont.tahoma_7b_white.drawString(g, "Mabu", num5, num6 - 112 + 10, 2, mFont.tahoma_7b_dark);
 			}
-		}
-		GameCanvas.debug("PA21", 1);
-		GameCanvas.debug("PA18", 1);
-		g.translate(-g.getTranslateX(), -g.getTranslateY());
-		if ((TileMap.mapID == 128 || TileMap.mapID == 127) && mabuPercent != 0)
-		{
-			int num5 = 30;
-			int num6 = 200;
-			g.setColor(0);
-			g.fillRect(num5 - 27, num6 - 112, 54, 8);
-			g.setColor(16711680);
-			g.setClip(num5 - 25, num6 - 110, mabuPercent, 4);
-			g.fillRect(num5 - 25, num6 - 110, 50, 4);
-			g.setClip(0, 0, 3000, 3000);
-			mFont.tahoma_7b_white.drawString(g, "Mabu", num5, num6 - 112 + 10, 2, mFont.tahoma_7b_dark);
-		}
-		if (Char.myCharz().isFusion)
-		{
-			Char.myCharz().tFusion++;
-			if (GameCanvas.gameTick % 3 == 0)
+			if (Char.myCharz().isFusion)
 			{
-				g.setColor(16777215);
-				g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
-			}
-			if (Char.myCharz().tFusion >= 100)
-			{
-				Char.myCharz().fusionComplete();
-			}
-		}
-		for (int i = 0; i < vCharInMap.size(); i++)
-		{
-			Char char6 = null;
-			try
-			{
-				char6 = (Char)vCharInMap.elementAt(i);
-			}
-			catch (Exception)
-			{
-			}
-			if (char6 != null && char6.isFusion && Char.isCharInScreen(char6))
-			{
-				char6.tFusion++;
+				Char.myCharz().tFusion++;
 				if (GameCanvas.gameTick % 3 == 0)
 				{
 					g.setColor(16777215);
 					g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
 				}
-				if (char6.tFusion >= 100)
+				if (Char.myCharz().tFusion >= 100)
 				{
-					char6.fusionComplete();
+					Char.myCharz().fusionComplete();
 				}
 			}
-		}
-		GameCanvas.paintz.paintTabSoft(g);
-		GameCanvas.debug("PA19", 1);
-		GameCanvas.debug("PA20", 1);
-		resetTranslate(g);
-		paintSelectedSkill(g);
-		GameCanvas.debug("PA22", 1);
-		resetTranslate(g);
-		if (GameCanvas.isTouch && GameCanvas.isTouchControl)
-		{
-			paintTouchControl(g);
-		}
-		resetTranslate(g);
-		paintChatVip(g);
-		if (!GameCanvas.panel.isShow && GameCanvas.currentDialog == null && ChatPopup.currChatPopup == null && ChatPopup.serverChatPopUp == null && GameCanvas.currentScreen.Equals(instance))
-		{
-			base.paint(g);
-			if (mScreen.keyMouse == 1 && cmdMenu != null)
-			{
-				g.drawImage(ItemMap.imageFlare, cmdMenu.x + 7, cmdMenu.y + 15, 3);
-			}
-		}
-		resetTranslate(g);
-		int num7 = 100 + ((Char.vItemTime.size() != 0) ? (textTime.size() * 12) : 0);
-		if (Char.myCharz().clan != null)
-		{
-			int num8 = 0;
-			int num9 = 0;
-			int num10 = (GameCanvas.h - 100 - 60) / 12;
 			for (int i = 0; i < vCharInMap.size(); i++)
 			{
-				Char char7 = (Char)vCharInMap.elementAt(i);
-				if (char7.clanID == -1 || char7.clanID != Char.myCharz().clan.ID)
+				Char char6 = null;
+				try
 				{
-					continue;
+					char6 = (Char)vCharInMap.elementAt(i);
 				}
-				if (char7.isOutX() && char7.cx < Char.myCharz().cx)
+				catch (Exception)
 				{
-					int num11 = num10;
-					if (Char.vItemTime.size() != 0)
+				}
+				if (char6 != null && char6.isFusion && Char.isCharInScreen(char6))
+				{
+					char6.tFusion++;
+					if (GameCanvas.gameTick % 3 == 0)
 					{
-						num11 -= textTime.size();
+						g.setColor(16777215);
+						g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
 					}
-					if (num8 <= num11)
+					if (char6.tFusion >= 100)
 					{
-						mFont.tahoma_7_green.drawString(g, char7.cName, 20, num7 - 12 + num8 * 12, mFont.LEFT, mFont.tahoma_7_grey);
-						char7.paintHp(g, 10, num7 + num8 * 12 - 5);
-						num8++;
+						char6.fusionComplete();
 					}
 				}
-				else if (char7.isOutX() && char7.cx > Char.myCharz().cx && num9 <= num10)
+			}
+			GameCanvas.paintz.paintTabSoft(g);
+			GameCanvas.debug("PA19", 1);
+			GameCanvas.debug("PA20", 1);
+			resetTranslate(g);
+			paintSelectedSkill(g);
+			GameCanvas.debug("PA22", 1);
+			resetTranslate(g);
+			if (GameCanvas.isTouch && GameCanvas.isTouchControl)
+			{
+				paintTouchControl(g);
+			}
+			resetTranslate(g);
+			paintChatVip(g);
+			if (!GameCanvas.panel.isShow && GameCanvas.currentDialog == null && ChatPopup.currChatPopup == null && ChatPopup.serverChatPopUp == null && GameCanvas.currentScreen.Equals(instance))
+			{
+				base.paint(g);
+				if (mScreen.keyMouse == 1 && cmdMenu != null)
 				{
-					mFont.tahoma_7_green.drawString(g, char7.cName, GameCanvas.w - 25, num7 - 12 + num9 * 12, mFont.RIGHT, mFont.tahoma_7_grey);
-					char7.paintHp(g, GameCanvas.w - 15, num7 + num9 * 12 - 5);
-					num9++;
+					g.drawImage(ItemMap.imageFlare, cmdMenu.x + 7, cmdMenu.y + 15, 3);
 				}
 			}
-		}
-		ChatTextField.gI().paint(g);
-		if (isNewClanMessage && !GameCanvas.panel.isShow && GameCanvas.gameTick % 4 == 0)
-		{
-			g.drawImage(ItemMap.imageFlare, cmdMenu.x + 15, cmdMenu.y + 30, mGraphics.BOTTOM | mGraphics.HCENTER);
-		}
-		if (isSuperPower)
-		{
-			dxPower += 5;
-			if (tPower >= 0)
+			resetTranslate(g);
+			int num7 = 100 + ((Char.vItemTime.size() != 0) ? (textTime.size() * 12) : 0);
+			if (Char.myCharz().clan != null)
 			{
-				tPower += dxPower;
-			}
-			Res.outz("x power= " + xPower);
-			if (tPower < 0)
-			{
-				tPower--;
-				if (tPower == -20)
+				int num8 = 0;
+				int num9 = 0;
+				int num10 = (GameCanvas.h - 100 - 60) / 12;
+				for (int i = 0; i < vCharInMap.size(); i++)
 				{
-					isSuperPower = false;
-					tPower = 0;
-					dxPower = 0;
+					Char char7 = (Char)vCharInMap.elementAt(i);
+					if (char7.clanID == -1 || char7.clanID != Char.myCharz().clan.ID)
+					{
+						continue;
+					}
+					if (char7.isOutX() && char7.cx < Char.myCharz().cx)
+					{
+						int num11 = num10;
+						if (Char.vItemTime.size() != 0)
+						{
+							num11 -= textTime.size();
+						}
+						if (num8 <= num11)
+						{
+							mFont.tahoma_7_green.drawString(g, char7.cName, 20, num7 - 12 + num8 * 12, mFont.LEFT, mFont.tahoma_7_grey);
+							char7.paintHp(g, 10, num7 + num8 * 12 - 5);
+							num8++;
+						}
+					}
+					else if (char7.isOutX() && char7.cx > Char.myCharz().cx && num9 <= num10)
+					{
+						mFont.tahoma_7_green.drawString(g, char7.cName, GameCanvas.w - 25, num7 - 12 + num9 * 12, mFont.RIGHT, mFont.tahoma_7_grey);
+						char7.paintHp(g, GameCanvas.w - 15, num7 + num9 * 12 - 5);
+						num9++;
+					}
 				}
 			}
-			else if ((xPower - tPower > 0 || tPower < TileMap.pxw) && tPower > 0)
+			ChatTextField.gI().paint(g);
+			if (isNewClanMessage && !GameCanvas.panel.isShow && GameCanvas.gameTick % 4 == 0)
 			{
-				g.setColor(16777215);
-				if (!GameCanvas.lowGraphic)
+				g.drawImage(ItemMap.imageFlare, cmdMenu.x + 15, cmdMenu.y + 30, mGraphics.BOTTOM | mGraphics.HCENTER);
+			}
+			if (isSuperPower)
+			{
+				dxPower += 5;
+				if (tPower >= 0)
 				{
-					g.fillArg(0, 0, GameCanvas.w, GameCanvas.h, 0, 0);
+					tPower += dxPower;
+				}
+				Res.outz("x power= " + xPower);
+				if (tPower < 0)
+				{
+					tPower--;
+					if (tPower == -20)
+					{
+						isSuperPower = false;
+						tPower = 0;
+						dxPower = 0;
+					}
+				}
+				else if ((xPower - tPower > 0 || tPower < TileMap.pxw) && tPower > 0)
+				{
+					g.setColor(16777215);
+					if (!GameCanvas.lowGraphic)
+					{
+						g.fillArg(0, 0, GameCanvas.w, GameCanvas.h, 0, 0);
+					}
+					else
+					{
+						g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
+					}
 				}
 				else
 				{
-					g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
+					tPower = -1;
 				}
 			}
-			else
+			for (int i = 0; i < Char.vItemTime.size(); i++)
 			{
-				tPower = -1;
+				((ItemTime)Char.vItemTime.elementAt(i)).paint(g, cmdMenu.x + 32 + i * 24, 55);
+			}
+			for (int i = 0; i < textTime.size(); i++)
+			{
+				((ItemTime)textTime.elementAt(i)).paintText(g, cmdMenu.x + ((Char.vItemTime.size() == 0) ? 25 : 5), ((Char.vItemTime.size() == 0) ? 45 : 90) + i * 12);
+			}
+			paintXoSo(g);
+			if (mResources.language == 1)
+			{
+				long second = mSystem.currentTimeMillis() + deltaTime;
+				mFont.tahoma_7b_white.drawString(g, NinjaUtil.getDate2(second), 10, GameCanvas.h - 65, 0, mFont.tahoma_7b_dark);
+			}
+			if (!yourNumber.Equals(string.Empty))
+			{
+				for (int i = 0; i < strPaint.Length; i++)
+				{
+					mFont.tahoma_7b_white.drawString(g, strPaint[i], 5, 85 + i * 18, 0, mFont.tahoma_7b_dark);
+				}
 			}
 		}
-		for (int i = 0; i < Char.vItemTime.size(); i++)
+		int num12 = 0;
+		int num13 = GameCanvas.hw;
+		if (num13 > 200)
 		{
-			((ItemTime)Char.vItemTime.elementAt(i)).paint(g, cmdMenu.x + 32 + i * 24, 55);
+			num13 = 200;
 		}
-		for (int i = 0; i < textTime.size(); i++)
-		{
-			((ItemTime)textTime.elementAt(i)).paintText(g, cmdMenu.x + ((Char.vItemTime.size() == 0) ? 25 : 5), ((Char.vItemTime.size() == 0) ? 45 : 90) + i * 12);
-		}
-		paintXoSo(g);
-		if (mResources.language == 1)
-		{
-			long second = mSystem.currentTimeMillis() + deltaTime;
-			mFont.tahoma_7b_white.drawString(g, NinjaUtil.getDate2(second), 10, GameCanvas.h - 65, 0, mFont.tahoma_7b_dark);
-		}
-		if (!yourNumber.Equals(string.Empty))
-		{
-			for (int i = 0; i < strPaint.Length; i++)
-			{
-				mFont.tahoma_7b_white.drawString(g, strPaint[i], 5, 85 + i * 18, 0, mFont.tahoma_7b_dark);
-			}
-		}
+		paintPhuBanBar(g, num12 + GameCanvas.w / 2, 0, num13);
+		EffectManager.hiEffects.paintAll(g);
 	}
 
 	private void paintXoSo(mGraphics g)
@@ -5672,6 +5771,10 @@ public class GameScr : mScreen, IChatable
 			findCharVS1().paintHeadWithXY(g, 15, 20, 0);
 			findCharVS2().paintHeadWithXY(g, GameCanvas.w - 15, 20, 2);
 		}
+		else if (ispaintPhubangBar() && isSmallScr())
+		{
+			paintHPBar_NEW(g, 1, 1, Char.myCharz());
+		}
 		else
 		{
 			paintImageBar(g, isLeft: true, Char.myCharz());
@@ -5837,9 +5940,14 @@ public class GameScr : mScreen, IChatable
 				{
 					if (Main.isPC)
 					{
-						string[] array2 = (TField.isQwerty ? new string[5] { "1", "2", "3", "4", "5" } : new string[5] { "7", "8", "9", "10", "11" });
-						mFont.tahoma_7b_dark.drawString(g, array2[i], xSkill + xS[i] + 14, yS[i] - 13, mFont.CENTER);
-						mFont.tahoma_7b_white.drawString(g, array2[i], xSkill + xS[i] + 14, yS[i] - 14, mFont.CENTER);
+						string[] array2 = (TField.isQwerty ? new string[10] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" } : new string[5] { "7", "8", "9", "10", "11" });
+						int num5 = -13;
+						if (num4 > 5 && i < 5)
+						{
+							num5 = 27;
+						}
+						mFont.tahoma_7b_dark.drawString(g, array2[i], xSkill + xS[i] + 14, yS[i] + num5, mFont.CENTER);
+						mFont.tahoma_7b_white.drawString(g, array2[i], xSkill + xS[i] + 14, yS[i] + num5 + 1, mFont.CENTER);
 					}
 					Skill skill = array[i];
 					if (skill != Char.myCharz().myskill)
@@ -6887,5 +6995,266 @@ public class GameScr : mScreen, IChatable
 		ChatPopup.serverChatPopUp.cmdMsg1 = new Command(mResources.CLOSE, ChatPopup.serverChatPopUp, 1001, null);
 		ChatPopup.serverChatPopUp.cmdMsg1.x = GameCanvas.w / 2 - 35;
 		ChatPopup.serverChatPopUp.cmdMsg1.y = GameCanvas.h - 35;
+	}
+
+	public static bool ispaintPhubangBar()
+	{
+		if (TileMap.mapPhuBang() && phuban_Info.type_PB == 0)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	public void paintPhuBanBar(mGraphics g, int x, int y, int w)
+	{
+		if (phuban_Info == null || isPaintOther || isPaintRada != 1 || GameCanvas.panel.isShow || !ispaintPhubangBar())
+		{
+			return;
+		}
+		if (w < fra_PVE_Bar_1.frameWidth + fra_PVE_Bar_0.frameWidth * 4)
+		{
+			w = fra_PVE_Bar_1.frameWidth + fra_PVE_Bar_0.frameWidth * 4;
+		}
+		if (x > GameCanvas.w - w / 2)
+		{
+			x = GameCanvas.w - w / 2;
+		}
+		if (x < mGraphics.getImageWidth(imgKhung) + w / 2 + 10)
+		{
+			x = mGraphics.getImageWidth(imgKhung) + w / 2 + 10;
+		}
+		int frameHeight = fra_PVE_Bar_0.frameHeight;
+		int num = y + frameHeight + imgBall.getHeight() / 2 + 2;
+		int frameWidth = fra_PVE_Bar_1.frameWidth;
+		int num2 = w / 2 - frameWidth / 2;
+		int num3 = x - w / 2;
+		int num4 = x + frameWidth / 2;
+		int y2 = y + 3;
+		int num5 = num2 - fra_PVE_Bar_0.frameWidth;
+		int num6 = num5 / fra_PVE_Bar_0.frameWidth;
+		if (num5 % fra_PVE_Bar_0.frameWidth > 0)
+		{
+			num6++;
+		}
+		for (int i = 0; i < num6; i++)
+		{
+			if (i < num6 - 1)
+			{
+				fra_PVE_Bar_0.drawFrame(1, num3 + fra_PVE_Bar_0.frameWidth + i * fra_PVE_Bar_0.frameWidth, y2, 0, 0, g);
+			}
+			else
+			{
+				fra_PVE_Bar_0.drawFrame(1, num3 + num5, y2, 0, 0, g);
+			}
+			if (i < num6 - 1)
+			{
+				fra_PVE_Bar_0.drawFrame(1, num4 + i * fra_PVE_Bar_0.frameWidth, y2, 0, 0, g);
+			}
+			else
+			{
+				fra_PVE_Bar_0.drawFrame(1, num4 + num5 - fra_PVE_Bar_0.frameWidth, y2, 0, 0, g);
+			}
+		}
+		fra_PVE_Bar_0.drawFrame(0, num3, y2, 2, 0, g);
+		fra_PVE_Bar_0.drawFrame(0, num4 + num5, y2, 0, 0, g);
+		if (phuban_Info.pointTeam1 > 0)
+		{
+			int idx = 2;
+			int idx2 = 3;
+			if (phuban_Info.color_1 == 4)
+			{
+				idx = 4;
+				idx2 = 5;
+			}
+			int num7 = phuban_Info.pointTeam1 * num2 / phuban_Info.maxPoint;
+			if (num7 < 0)
+			{
+				num7 = 0;
+			}
+			if (num7 > num2)
+			{
+				num7 = num2;
+			}
+			g.setClip(num3 + num2 - num7, y2, num7, frameHeight);
+			for (int j = 0; j < num6; j++)
+			{
+				if (j < num6 - 1)
+				{
+					fra_PVE_Bar_0.drawFrame(idx2, num3 + fra_PVE_Bar_0.frameWidth + j * fra_PVE_Bar_0.frameWidth, y2, 0, 0, g);
+				}
+				else
+				{
+					fra_PVE_Bar_0.drawFrame(idx2, num3 + num5, y2, 0, 0, g);
+				}
+			}
+			fra_PVE_Bar_0.drawFrame(idx, num3, y2, 2, 0, g);
+			GameCanvas.resetTrans(g);
+		}
+		if (phuban_Info.pointTeam2 > 0)
+		{
+			int idx3 = 2;
+			int idx4 = 3;
+			if (phuban_Info.color_2 == 4)
+			{
+				idx3 = 4;
+				idx4 = 5;
+			}
+			int num8 = phuban_Info.pointTeam2 * num2 / phuban_Info.maxPoint;
+			if (num8 < 0)
+			{
+				num8 = 0;
+			}
+			if (num8 > num2)
+			{
+				num8 = num2;
+			}
+			g.setClip(num4, y2, num8, frameHeight);
+			for (int k = 0; k < num6; k++)
+			{
+				if (k < num6 - 1)
+				{
+					fra_PVE_Bar_0.drawFrame(idx4, num4 + k * fra_PVE_Bar_0.frameWidth, y2, 0, 0, g);
+				}
+				else
+				{
+					fra_PVE_Bar_0.drawFrame(idx4, num4 + num5 - fra_PVE_Bar_0.frameWidth, y2, 0, 0, g);
+				}
+			}
+			fra_PVE_Bar_0.drawFrame(idx3, num4 + num5, y2, 0, 0, g);
+			GameCanvas.resetTrans(g);
+		}
+		fra_PVE_Bar_1.drawFrame(0, x - frameWidth / 2, y, 0, 0, g);
+		string timeCountDown = mSystem.getTimeCountDown(phuban_Info.timeStart, phuban_Info.timeSecond, isOnlySecond: true, isShortText: false);
+		mFont.tahoma_7b_yellow.drawString(g, timeCountDown, x + 1, y + fra_PVE_Bar_1.frameHeight / 2 - mFont.tahoma_7b_green2.getHeight() / 2, 2);
+		Panel.setTextColor(phuban_Info.color_1, 1).drawString(g, phuban_Info.nameTeam1, x - 5, num + 5, 1);
+		Panel.setTextColor(phuban_Info.color_2, 1).drawString(g, phuban_Info.nameTeam2, x + 5, num + 5, 0);
+		if (phuban_Info.type_PB != 0)
+		{
+			int y3 = y + frameHeight / 2 - 2;
+			mFont.bigNumber_While.drawString(g, string.Empty + phuban_Info.pointTeam1, num3 + num2 / 2, y3, 2);
+			mFont.bigNumber_While.drawString(g, string.Empty + phuban_Info.pointTeam2, num4 + num2 / 2, y3, 2);
+		}
+		g.drawImage(imgVS, x, y + fra_PVE_Bar_1.frameHeight + 2, 3);
+		if (phuban_Info.type_PB == 0)
+		{
+			paintChienTruong_Life(g, phuban_Info.maxLife, phuban_Info.color_1, phuban_Info.lifeTeam1, x - 13, phuban_Info.color_2, phuban_Info.lifeTeam2, x + 13, num);
+		}
+	}
+
+	public static void paintChienTruong_Life(mGraphics g, int maxLife, int cl1, int lifeTeam1, int x1, int cl2, int lifeTeam2, int x2, int y)
+	{
+		if (imgBall == null)
+		{
+			return;
+		}
+		int num = imgBall.getHeight() / 2;
+		for (int i = 0; i < maxLife; i++)
+		{
+			int num2 = 0;
+			if (i < lifeTeam1)
+			{
+				num2 = 1;
+			}
+			g.drawRegion(imgBall, 0, num2 * num, imgBall.getWidth(), num, 0, x1 - i * (num + 1), y, mGraphics.VCENTER | mGraphics.HCENTER);
+		}
+		for (int j = 0; j < maxLife; j++)
+		{
+			int num3 = 0;
+			if (j < lifeTeam2)
+			{
+				num3 = 1;
+			}
+			g.drawRegion(imgBall, 0, num3 * num, imgBall.getWidth(), num, 0, x2 + j * (num + 1), y, mGraphics.VCENTER | mGraphics.HCENTER);
+		}
+	}
+
+	public static void paintHPBar_NEW(mGraphics g, int x, int y, Char c)
+	{
+		g.drawImage(imgKhung, x, y, 0);
+		int x2 = x + 3;
+		int num = y + 19;
+		int num2 = 0;
+		int num3 = 0;
+		int width = imgHP_NEW.getWidth();
+		int num4 = imgHP_NEW.getHeight() / 2;
+		num2 = c.cHP * width / c.cHPFull;
+		if (num2 <= 0)
+		{
+			num2 = 1;
+		}
+		else if (num2 > width)
+		{
+			num2 = width;
+		}
+		g.drawRegion(imgHP_NEW, 0, num4, num2, num4, 0, x2, num, 0);
+		num3 = c.cMP * width / c.cMPFull;
+		if (num3 <= 0)
+		{
+			num3 = 1;
+		}
+		else if (num3 > width)
+		{
+			num3 = width;
+		}
+		g.drawRegion(imgHP_NEW, 0, 0, num3, num4, 0, x2, num + 6, 0);
+		int x3 = x + imgKhung.getWidth() / 2 + 1;
+		int y2 = num + 13;
+		mFont.tahoma_7_green2.drawString(g, c.cName, x3, y + 4, 2);
+		if (c.mobFocus != null)
+		{
+			if (c.mobFocus.getTemplate() != null)
+			{
+				mFont.tahoma_7_green2.drawString(g, c.mobFocus.getTemplate().name, x3, y2, 2);
+			}
+		}
+		else if (c.npcFocus != null)
+		{
+			mFont.tahoma_7_green2.drawString(g, c.npcFocus.template.name, x3, y2, 2);
+		}
+		else if (c.charFocus != null)
+		{
+			mFont.tahoma_7_green2.drawString(g, c.charFocus.cName, x3, y2, 2);
+		}
+	}
+
+	public static void addEffectEnd(int type, int subtype, int x, int y, int levelPaint, int dir)
+	{
+		Effect_End eff = new Effect_End(type, subtype, x, y, levelPaint, dir);
+		addEffect2Vector(eff);
+	}
+
+	public static void addEffect2Vector(Effect_End eff)
+	{
+		if (eff.levelPaint == 0)
+		{
+			EffectManager.addHiEffect(eff);
+		}
+		else if (eff.levelPaint == 1)
+		{
+			EffectManager.addMidEffects(eff);
+		}
+		else
+		{
+			EffectManager.addLowEffect(eff);
+		}
+	}
+
+	public static bool setIsInScreen(int x, int y, int wOne, int hOne)
+	{
+		if (x < cmx - wOne || x > cmx + GameCanvas.w + wOne || y < cmy - hOne || y > cmy + GameCanvas.h + hOne * 3 / 2)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	public static bool isSmallScr()
+	{
+		if (GameCanvas.w <= 320)
+		{
+			return true;
+		}
+		return false;
 	}
 }

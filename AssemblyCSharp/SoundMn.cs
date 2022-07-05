@@ -18,7 +18,7 @@ public class SoundMn
 
 	public static bool isSound = true;
 
-	public static int volume;
+	public static float volume = 0.5f;
 
 	private static int MAX_VOLUME = 10;
 
@@ -94,6 +94,8 @@ public class SoundMn
 
 	public static int RADAR_ITEM = 29;
 
+	public static int FIREWORK = 30;
+
 	public bool freePool;
 
 	public int poolCount;
@@ -116,11 +118,12 @@ public class SoundMn
 
 	public void loadSound(int mapID)
 	{
-		Sound.init(new int[3] { AIR_SHIP, RAIN, TAITAONANGLUONG }, new int[30]
+		Sound.init(new int[3] { AIR_SHIP, RAIN, TAITAONANGLUONG }, new int[31]
 		{
 			GET_ITEM, MOVE, LOW_PUNCH, LOW_KICK, FLY, JUMP, PANEL_OPEN, BUTTON_CLOSE, BUTTON_CLICK, MEDIUM_PUNCH,
 			MEDIUM_KICK, PANEL_OPEN, EAT_PEAN, OPEN_DIALOG, NORMAL_KAME, NAMEK_KAME, XAYDA_KAME, EXPLODE_1, EXPLODE_2, TRAIDAT_KAME,
-			HP_UP, THAIDUONGHASAN, HOISINH, GONG, KHICHAY, BIG_EXPLODE, NAMEK_LAZER, NAMEK_CHARGE, RADAR_CLICK, RADAR_ITEM
+			HP_UP, THAIDUONGHASAN, HOISINH, GONG, KHICHAY, BIG_EXPLODE, NAMEK_LAZER, NAMEK_CHARGE, RADAR_CLICK, RADAR_ITEM,
+			FIREWORK
 		});
 	}
 
@@ -223,7 +226,7 @@ public class SoundMn
 	{
 		if (!Char.myCharz().me)
 		{
-			volume /= 2;
+			volume /= 2f;
 		}
 		if (volumn <= 0f)
 		{
@@ -377,7 +380,7 @@ public class SoundMn
 	{
 		if (!Char.myCharz().me)
 		{
-			volume /= 2;
+			volume /= 2f;
 			if (volumn <= 0f)
 			{
 				volumn = 0.01f;
@@ -545,5 +548,10 @@ public class SoundMn
 	public void radarItem()
 	{
 		Sound.playSound(RADAR_ITEM, 0.5f);
+	}
+
+	public static void playSound(int x, int y, int id, float volume)
+	{
+		Sound.playSound(id, volume);
 	}
 }

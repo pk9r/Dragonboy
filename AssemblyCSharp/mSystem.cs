@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class mSystem
 {
+	public static bool isTest;
+
 	public static string strAdmob;
 
 	public static bool loadAdOk;
@@ -39,6 +41,118 @@ public class mSystem
 	public static void resetCurInapp()
 	{
 		curINAPP = 0;
+	}
+
+	public static void LogCMD(string st)
+	{
+	}
+
+	public static string getTimeCountDown(long timeStart, int secondCount, bool isOnlySecond, bool isShortText)
+	{
+		string result = string.Empty;
+		long num = (timeStart + secondCount * 1000 - currentTimeMillis()) / 1000;
+		if (num <= 0)
+		{
+			return string.Empty;
+		}
+		long num2 = 0L;
+		long num3 = 0L;
+		long num4 = num / 60;
+		long num5 = num;
+		if (isOnlySecond)
+		{
+			return num5 + string.Empty;
+		}
+		if (num >= 86400)
+		{
+			num2 = num / 86400;
+			num3 = num % 86400 / 3600;
+		}
+		else if (num >= 3600)
+		{
+			num3 = num / 3600;
+			num4 = num % 3600 / 60;
+		}
+		else if (num >= 60)
+		{
+			num4 = num / 60;
+			num5 = num % 60;
+		}
+		else
+		{
+			num5 = num;
+		}
+		if (isShortText)
+		{
+			if (num2 > 0)
+			{
+				return num2 + "d";
+			}
+			if (num3 > 0)
+			{
+				return num3 + "h";
+			}
+			if (num4 > 0)
+			{
+				return num4 + "m";
+			}
+			if (num5 > 0)
+			{
+				return num5 + "s";
+			}
+		}
+		if (num2 > 0)
+		{
+			if (num2 >= 10)
+			{
+				result = ((num3 < 1) ? (num2 + "d") : ((num3 >= 10) ? (num2 + "d" + num3 + "h") : (num2 + "d0" + num3 + "h")));
+			}
+			else if (num2 < 10)
+			{
+				result = ((num3 < 1) ? (num2 + "d") : ((num3 >= 10) ? (num2 + "d" + num3 + "h") : (num2 + "d0" + num3 + "h")));
+			}
+		}
+		else if (num3 > 0)
+		{
+			if (num3 >= 10)
+			{
+				result = ((num4 < 1) ? (num3 + "h") : ((num4 >= 10) ? (num3 + "h" + num4 + "m") : (num3 + "h0" + num4 + "m")));
+			}
+			else if (num3 < 10)
+			{
+				result = ((num4 < 1) ? (num3 + "h") : ((num4 >= 10) ? (num3 + "h" + num4 + "m") : (num3 + "h0" + num4 + "m")));
+			}
+		}
+		else if (num4 > 0)
+		{
+			if (num4 >= 10)
+			{
+				if (num5 >= 10)
+				{
+					result = num4 + "m" + num5 + string.Empty;
+				}
+				else if (num5 < 10)
+				{
+					result = num4 + "m0" + num5 + string.Empty;
+				}
+			}
+			else if (num4 < 10)
+			{
+				if (num5 >= 10)
+				{
+					result = num4 + "m" + num5 + string.Empty;
+				}
+				else if (num5 < 10)
+				{
+					result = num4 + "m0" + num5 + string.Empty;
+				}
+			}
+		}
+		else
+		{
+			result = ((num5 >= 10) ? (num5 + string.Empty) : ("0" + num5 + string.Empty));
+		}
+		return result;
 	}
 
 	public static string numberTostring2(int aa)

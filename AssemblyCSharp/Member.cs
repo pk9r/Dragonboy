@@ -4,6 +4,8 @@ public class Member
 
 	public short head;
 
+	public short headICON = -1;
+
 	public short leg;
 
 	public short body;
