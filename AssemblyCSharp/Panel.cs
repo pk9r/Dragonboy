@@ -4424,7 +4424,6 @@ public class Panel : IActionListener, IChatable
 				}
 			}
 			g.fillRect(num5, num6, num7, num8);
-			mFont.tahoma_7_yellow.drawString(g, i.ToString(), num2 - 35, num3, 0);
 			if (item == null)
 			{
 				continue;
@@ -4481,6 +4480,7 @@ public class Panel : IActionListener, IChatable
 			{
 				mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num5 + num7 - 15, num6 + 6, 0);
 			}
+			mFont.tahoma_7_yellow.drawString(g, i.ToString(), num2 - 35, num3, 0);
 		}
 		paintScrollArrow(g);
 	}
@@ -5125,7 +5125,6 @@ public class Panel : IActionListener, IChatable
 				g.setColor((i != selected) ? 6047789 : 7040779);
 				g.fillRect(num6, num7, num8, num9);
 			}
-			mFont.tahoma_7_yellow.drawString(g, i.ToString(), num3 - 35, num4, 0);
 			if (item == null)
 			{
 				continue;
@@ -5182,6 +5181,7 @@ public class Panel : IActionListener, IChatable
 			{
 				mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num6 + num8, num7 + num9 - mFont.tahoma_7_yellow.getHeight(), 1);
 			}
+			mFont.tahoma_7_yellow.drawString(g, i.ToString(), num3 - 35, num4, 0);
 		}
 		paintScrollArrow(g);
 	}
