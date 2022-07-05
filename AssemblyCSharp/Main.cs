@@ -146,6 +146,7 @@ public class Main : MonoBehaviour
 			checkInput();
 			Session_ME.update();
 			Session_ME2.update();
+			Mod.ThreadHelper.MainThreadDispatcher.update();
 			if (Event.current.type.Equals(EventType.Repaint) && paintCount <= updateCount)
 			{
 				GameMidlet.gameCanvas.paint(g);

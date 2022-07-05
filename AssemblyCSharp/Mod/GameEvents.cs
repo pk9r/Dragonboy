@@ -24,6 +24,8 @@ namespace Mod
         {
             ChatCommandHandler.loadDefalut();
             HotkeyCommandHandler.loadDefalut();
+
+
         }
 
         /// <summary>
