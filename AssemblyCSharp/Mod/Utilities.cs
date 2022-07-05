@@ -11,20 +11,20 @@ namespace Mod
     {
         public const sbyte ID_SKILL_BUFF = 7;
         public const int ID_ICON_ITEM_TDLT = 4387;
-        
-        private const BindingFlags PUBLIC_STATIC_VOID = 
-            BindingFlags.Public | 
-            BindingFlags.Static | 
+
+        private const BindingFlags PUBLIC_STATIC_VOID =
+            BindingFlags.Public |
+            BindingFlags.Static |
             BindingFlags.InvokeMethod;
 
         #region Singleton
         private Utilities() { }
         static Utilities() { }
-        public static Utilities gI { get; } = new Utilities(); 
+        public static Utilities gI { get; } = new Utilities();
         #endregion
 
         public static int speedRun = 8;
-        
+
         [ChatCommand("tdc")]
         [ChatCommand("cspeed")]
         public static void setSpeedRun(int speed)
@@ -34,11 +34,18 @@ namespace Mod
             GameScr.info1.addInfo("Tốc độ chạy: " + speed, 0);
         }
 
+        [ChatCommand("speed")]
+        public static void setSpeedGame(float speed)
+        {
+            Time.timeScale = speed;
+            GameScr.info1.addInfo("Tốc độ game: " + speed, 0);
+        }
+
         /// <summary>
 		/// Sử dụng skill Trị thương của namec vào bản thân
 		/// </summary>
 		[ChatCommand("hsme")]
-		[ChatCommand("buffme")]
+        [ChatCommand("buffme")]
         [HotkeyCommand('b')]
         public static void buffMe()
         {
@@ -49,7 +56,7 @@ namespace Mod
 
             // Đổi sang skill hồi sinh
             Service.gI().selectSkill(ID_SKILL_BUFF);
-            
+
             // Tự tấn công vào bản thân
             Service.gI().sendPlayerAttack(new MyVector(), getMyVectorMe(), -1);
 
@@ -99,7 +106,7 @@ namespace Mod
             Char.myCharz().cx = x;
             Char.myCharz().cy = y;
             Service.gI().charMove();
-        }        
+        }
 
         [HotkeyCommand('n')]
         public static void showMenuTeleNpc()
@@ -152,9 +159,9 @@ namespace Mod
         public static MethodInfo[] getMethods(string typeFullName)
         {
             return AppDomain.CurrentDomain.GetAssemblies()
-                            .First(x => x.ManifestModule.Name == Properties.Resources.ManifestModuleName)
-                            .GetTypes().FirstOrDefault(x => x.FullName.ToLower() == typeFullName.ToLower())
-                            .GetMethods(PUBLIC_STATIC_VOID);
+                .First(x => x.ManifestModule.Name == Properties.Resources.ManifestModuleName)
+                .GetTypes().FirstOrDefault(x => x.FullName.ToLower() == typeFullName.ToLower())
+                .GetMethods(PUBLIC_STATIC_VOID);
         }
 
         /// <summary>
@@ -170,9 +177,9 @@ namespace Mod
         public static IEnumerable<MethodInfo> GetMethods()
         {
             return AppDomain.CurrentDomain.GetAssemblies()
-                .First           (x => x.ManifestModule.Name == Properties.Resources.ManifestModuleName)
+                .First(x => x.ManifestModule.Name == Properties.Resources.ManifestModuleName)
                 .GetTypes().Where(x => x.IsClass)
-                .SelectMany      (x => x.GetMethods(PUBLIC_STATIC_VOID));
+                .SelectMany(x => x.GetMethods(PUBLIC_STATIC_VOID));
         }
 
         public void perform(int idAction, object p)
@@ -198,6 +205,43 @@ namespace Mod
         {
             teleportMyChar(npc.cx, npc.ySd - npc.ySd % 24);
             Char.myCharz().npcFocus = npc;
+        }
+
+        [ChatCommand("csb")]
+        public static void useCapsule()
+        {
+            if (useItem(193, 194))
+                return;
+
+            GameScr.info1.addInfo("Không tìm thấy capsule", 0);
+        }
+
+        [ChatCommand("bt")]
+        public static void usePorata()
+        {
+            if (useItem(921, 454))
+                return;
+
+            GameScr.info1.addInfo("Không tìm thấy bông tai", 0);
+        }
+
+        /// <summary>
+        /// Sử dụng một item có id là một trong số các id truyền vào.
+        /// </summary>
+        /// <param name="templatesId">Mảng chứa các id của các item muốn sử dụng.</param>
+        /// <returns>true nếu có vật phẩm được sử dụng.</returns>
+        public static bool useItem(params short[] templatesId)
+        {
+            for (sbyte i = 0; i < Char.myCharz().arrItemBag.Length; i++)
+            {
+                var item = Char.myCharz().arrItemBag[i];
+                if (item != null && templatesId.Contains(item.template.id))
+                {
+                    Service.gI().useItem(0, 1, i, -1);
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
