@@ -2,6 +2,8 @@ public class TopInfo
 {
 	public int headID;
 
+	public int headICON = -1;
+
 	public short body;
 
 	public short leg;

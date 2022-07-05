@@ -206,6 +206,15 @@ public class Res
 		return r.nextInt(a);
 	}
 
+	public static int random_Am_0(int a)
+	{
+		int num;
+		for (num = 0; num == 0; num = r.nextInt() % a)
+		{
+		}
+		return num;
+	}
+
 	public static int s2tick(int currentTimeMillis)
 	{
 		int num = 0;

@@ -142,8 +142,6 @@ public class Cmd
 
 	public const sbyte BOX_SORT = 19;
 
-	public const sbyte BOX_COIN_IN = 20;
-
 	public const sbyte BOX_COIN_OUT = 21;
 
 	public const sbyte REQUEST_ITEM = 22;
@@ -354,7 +352,7 @@ public class Cmd
 
 	public const sbyte UPDATE_ACHIEVEMENT = 19;
 
-	public const sbyte MOVE_FAST_NPC = 20;
+	public const sbyte PHUBANG_INFO = 20;
 
 	public const sbyte ZONE_CHANGE = 21;
 

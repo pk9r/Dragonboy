@@ -676,6 +676,8 @@ public class Panel : IActionListener, IChatable
 
 	public const sbyte COLOR_RED = 6;
 
+	public const sbyte COLOR_BLACK = 7;
+
 	public static int[][] colorUpgradeEffect = new int[7][]
 	{
 		new int[6] { 16777215, 15000805, 13487823, 11711155, 9671828, 7895160 },
@@ -3487,8 +3489,15 @@ public class Panel : IActionListener, IChatable
 			g.setColor((i != selected) ? 9993045 : 9541120);
 			g.fillRect(num3, num4, num5, h);
 			TopInfo topInfo = (TopInfo)vTop.elementAt(i);
-			Part part = GameScr.parts[topInfo.headID];
-			SmallImage.drawSmallImage(g, part.pi[Char.CharInfo[0][0][0]].id, num3 + part.pi[Char.CharInfo[0][0][0]].dx, num4 + num9 - 1, 0, mGraphics.BOTTOM | mGraphics.LEFT);
+			if (topInfo.headICON != -1)
+			{
+				SmallImage.drawSmallImage(g, topInfo.headICON, num3, num4, 0, 0);
+			}
+			else
+			{
+				Part part = GameScr.parts[topInfo.headID];
+				SmallImage.drawSmallImage(g, part.pi[Char.CharInfo[0][0][0]].id, num3 + part.pi[Char.CharInfo[0][0][0]].dx, num4 + num9 - 1, 0, mGraphics.BOTTOM | mGraphics.LEFT);
+			}
 			g.setClip(xScroll, yScroll + cmy, wScroll, hScroll);
 			if (topInfo.pId != Char.myCharz().charID)
 			{
@@ -4643,9 +4652,13 @@ public class Panel : IActionListener, IChatable
 			g.setColor((i != selected) ? 9993045 : 9541120);
 			g.fillRect(num, num2, num3, h);
 			InfoItem infoItem = (InfoItem)vEnemy.elementAt(i);
-			Part part = GameScr.parts[infoItem.charInfo.head];
-			if (mSystem.clientType != 7)
+			if (infoItem.charInfo.headICON != -1)
 			{
+				SmallImage.drawSmallImage(g, infoItem.charInfo.headICON, num, num2, 0, 0);
+			}
+			else
+			{
+				Part part = GameScr.parts[infoItem.charInfo.head];
 				SmallImage.drawSmallImage(g, part.pi[Char.CharInfo[0][0][0]].id, num + part.pi[Char.CharInfo[0][0][0]].dx, num2 + 3 + part.pi[Char.CharInfo[0][0][0]].dy, 0, 0);
 			}
 			g.setClip(xScroll, yScroll + cmy, wScroll, hScroll);
@@ -4688,9 +4701,13 @@ public class Panel : IActionListener, IChatable
 			g.setColor((i != selected) ? 9993045 : 9541120);
 			g.fillRect(num, num2, num3, h);
 			InfoItem infoItem = (InfoItem)vFriend.elementAt(i);
-			Part part = GameScr.parts[infoItem.charInfo.head];
-			if (mSystem.clientType != 7)
+			if (infoItem.charInfo.headICON != -1)
 			{
+				SmallImage.drawSmallImage(g, infoItem.charInfo.headICON, num, num2, 0, 0);
+			}
+			else
+			{
+				Part part = GameScr.parts[infoItem.charInfo.head];
 				SmallImage.drawSmallImage(g, part.pi[Char.CharInfo[0][0][0]].id, num + part.pi[Char.CharInfo[0][0][0]].dx, num2 + 3 + part.pi[Char.CharInfo[0][0][0]].dy, 0, 0);
 			}
 			g.setClip(xScroll, yScroll + cmy, wScroll, hScroll);
@@ -4830,8 +4847,15 @@ public class Panel : IActionListener, IChatable
 				g.setColor((j != selected) ? 9993045 : 9541120);
 				g.fillRect(num2, num3, num4, num5);
 				Member member = ((this.member == null) ? ((Member)myMember.elementAt(j - 2)) : ((Member)this.member.elementAt(j - 2)));
-				Part part = GameScr.parts[member.head];
-				SmallImage.drawSmallImage(g, part.pi[Char.CharInfo[0][0][0]].id, num2 + part.pi[Char.CharInfo[0][0][0]].dx, num3 + 3 + part.pi[Char.CharInfo[0][0][0]].dy, 0, 0);
+				if (member.headICON != -1)
+				{
+					SmallImage.drawSmallImage(g, member.headICON, num2, num3, 0, 0);
+				}
+				else
+				{
+					Part part = GameScr.parts[member.head];
+					SmallImage.drawSmallImage(g, part.pi[Char.CharInfo[0][0][0]].id, num2 + part.pi[Char.CharInfo[0][0][0]].dx, num3 + 3 + part.pi[Char.CharInfo[0][0][0]].dy, 0, 0);
+				}
 				g.setClip(xScroll, yScroll + cmy, wScroll, hScroll);
 				mFont mFont2 = mFont.tahoma_7b_dark;
 				if (member.role == 0)
@@ -9741,5 +9765,33 @@ public class Panel : IActionListener, IChatable
 			int nline = param - ChatPopup.numSlot;
 			paintUpgradeEffect(x, y, w, h, nline, color_Item_Upgrade, g);
 		}
+	}
+
+	public static mFont setTextColor(int id, int type)
+	{
+		if (type == 0)
+		{
+			return id switch
+			{
+				0 => mFont.bigNumber_While, 
+				1 => mFont.bigNumber_green, 
+				3 => mFont.bigNumber_orange, 
+				4 => mFont.bigNumber_blue, 
+				5 => mFont.bigNumber_yellow, 
+				6 => mFont.bigNumber_red, 
+				_ => mFont.bigNumber_While, 
+			};
+		}
+		return id switch
+		{
+			0 => mFont.tahoma_7b_white, 
+			1 => mFont.tahoma_7b_green, 
+			3 => mFont.tahoma_7b_yellowSmall2, 
+			4 => mFont.tahoma_7b_blue, 
+			5 => mFont.tahoma_7b_yellow, 
+			6 => mFont.tahoma_7b_red, 
+			7 => mFont.tahoma_7b_dark, 
+			_ => mFont.tahoma_7b_white, 
+		};
 	}
 }

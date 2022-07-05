@@ -859,6 +859,8 @@ public class Char : IMapObject
 
 	private string strMount = "mount_";
 
+	public int headICON = -1;
+
 	public int head;
 
 	public int leg;
@@ -5769,47 +5771,12 @@ public class Char : IMapObject
 			num = -1;
 			num2 = 17;
 		}
-		if (!isPaintChar)
+		sbyte b = (sbyte)(GameCanvas.gameTick / 4 % id.Length);
+		if (!isPaintChar && b == 0)
 		{
-			if (id.Length == 2)
-			{
-				SmallImage.drawSmallImage(g, id[1], x + ((dir != 1) ? num : (-num)), y - num2, num3, num4);
-			}
-			else
-			{
-				if (id.Length != 3)
-				{
-					return;
-				}
-				if (id[2] >= 0)
-				{
-					if (GameCanvas.gameTick % 10 > 5)
-					{
-						SmallImage.drawSmallImage(g, id[1], x + ((dir != 1) ? num : (-num)), y - num2, num3, num4);
-					}
-					else
-					{
-						SmallImage.drawSmallImage(g, id[2], x + ((dir != 1) ? num : (-num)), y - num2, num3, num4);
-					}
-				}
-				else
-				{
-					SmallImage.drawSmallImage(g, id[1], x + ((dir != 1) ? num : (-num)), y - num2, num3, num4);
-				}
-			}
+			b = 1;
 		}
-		else if (id.Length == 1)
-		{
-			SmallImage.drawSmallImage(g, id[0], x + ((dir != 1) ? num : (-num)), y - num2, num3, num4);
-		}
-		else if (GameCanvas.gameTick % 10 > 5)
-		{
-			SmallImage.drawSmallImage(g, id[0], x + ((dir != 1) ? num : (-num)), y - num2, num3, num4);
-		}
-		else
-		{
-			SmallImage.drawSmallImage(g, id[1], x + ((dir != 1) ? num : (-num)), y - num2, num3, num4);
-		}
+		SmallImage.drawSmallImage(g, id[b], x + ((dir != 1) ? num : (-num)), y - num2, num3, num4);
 	}
 
 	public bool isCharBodyImageID(int id)
