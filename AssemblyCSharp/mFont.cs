@@ -512,14 +512,14 @@ public class mFont
 
 	public void drawStringBd(mGraphics g, string st, int x, int y, int align, mFont font)
 	{
-		setTypePaint(g, st, x - 1, y - 1, align, 0);
-		setTypePaint(g, st, x - 1, y + 1, align, 0);
-		setTypePaint(g, st, x + 1, y - 1, align, 0);
-		setTypePaint(g, st, x + 1, y + 1, align, 0);
-		setTypePaint(g, st, x, y - 1, align, 0);
-		setTypePaint(g, st, x, y + 1, align, 0);
-		setTypePaint(g, st, x + 1, y, align, 0);
-		setTypePaint(g, st, x - 1, y, align, 0);
+		setTypePaint(g, st, x - 1, y - 1, align, font.id);
+		setTypePaint(g, st, x - 1, y + 1, align, font.id);
+		setTypePaint(g, st, x + 1, y - 1, align, font.id);
+		setTypePaint(g, st, x + 1, y + 1, align, font.id);
+		setTypePaint(g, st, x, y - 1, align, font.id);
+		setTypePaint(g, st, x, y + 1, align, font.id);
+		setTypePaint(g, st, x + 1, y, align, font.id);
+		setTypePaint(g, st, x - 1, y, align, font.id);
 		setTypePaint(g, st, x, y, align, 0);
 	}
 
