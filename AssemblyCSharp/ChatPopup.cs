@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 public class ChatPopup : Effect2, IActionListener
 {
@@ -124,6 +124,11 @@ public class ChatPopup : Effect2, IActionListener
 
 	public static void addChatPopupMultiLine(string chat, int howLong, Npc c)
 	{
+		if (chat.ToLower().Contains("chưa thể chuyển khu"))
+        {
+			GameScr.info1.addInfo(chat,0);
+			return;
+        }			
 		string[] array = Res.split(chat, "\n", 0);
 		Char.isLockKey = true;
 		currChatPopup = addChatPopup(array[0], howLong, c);

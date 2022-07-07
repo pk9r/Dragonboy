@@ -1,1 +1,1 @@
-[{"key":"b","fullCommand":"Mod.Utilities.buffMe","delimiter":" "},{"key":"n","fullCommand":"Mod.Utilities.showMenuTeleNpc","delimiter":" "}]
+[{"key":"b","fullCommand":"Mod.Utilities.buffMe","delimiter":" "},{"key":"n","fullCommand":"Mod.Utilities.showMenuTeleNpc","delimiter":" "},{"key":"j","fullCommand":"Mod.Utilities.LoadTrai","delimiter":" "},{"key":"k","fullCommand":"Mod.Utilities.LoadGiua","delimiter":" "},{"key":"l","fullCommand":"Mod.Utilities.LoadPhai","delimiter":" "},{"key":"g","fullCommand":"Mod.Utilities.sendGiaoDichtoCharFocusing","delimiter":" "}]

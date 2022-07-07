@@ -84,6 +84,7 @@ public class Main : MonoBehaviour
 
 	private void Start()
 	{
+		Time.timeScale = 1.5f;
 		if (started)
 		{
 			return;
@@ -329,14 +330,51 @@ public class Main : MonoBehaviour
 			int num = MyKeyMap.map(Event.current.keyCode);
 			if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
 			{
+				if (num >= 97 && num <= 122)
+				{
+					num -= 32;
+				}
 				switch (Event.current.keyCode)
 				{
-				case KeyCode.Alpha2:
-					num = 64;
-					break;
-				case KeyCode.Minus:
-					num = 95;
-					break;
+					case KeyCode.Minus:
+						num = 95;
+						break;
+					case KeyCode.Equals:
+						num = 43;
+						break;
+					case KeyCode.Semicolon:
+						num = 58;
+						break;
+					case KeyCode.Alpha0:
+						num = 41;
+						break;
+					case KeyCode.Alpha9:
+						num = 40;
+						break;
+					case KeyCode.Alpha8:
+						num = 42;
+						break;
+					case KeyCode.Alpha7:
+						num = 38;
+						break;
+					case KeyCode.Alpha6:
+						num = 94;
+						break;
+					case KeyCode.Alpha5:
+						num = 37;
+						break;
+					case KeyCode.Alpha4:
+						num = 36;
+						break;
+					case KeyCode.Alpha3:
+						num = 35;
+						break;
+					case KeyCode.Alpha2:
+						num = 64;
+						break;
+					case KeyCode.Alpha1:
+						num = 33;
+						break;
 				}
 			}
 			if (num != 0)
