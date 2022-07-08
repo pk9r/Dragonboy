@@ -1,3 +1,4 @@
+using Mod;
 using System;
 using System.IO;
 using System.Threading;
@@ -158,6 +159,9 @@ public class Rms
 
 	public static int loadRMSInt(string file)
 	{
+        if (GameEvents.onLoadRMSInt(file, out int result))
+            return result;
+
 		sbyte[] array = loadRMS(file);
 		return (array != null) ? array[0] : (-1);
 	}
@@ -175,6 +179,9 @@ public class Rms
 
 	public static string GetiPhoneDocumentsPath()
 	{
+		if (GameEvents.onGetRMSPath(out string result))
+			return result;
+
 		return Application.persistentDataPath;
 	}
 

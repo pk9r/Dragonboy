@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QLTK", "QLTK\QLTK.csproj", "{9A285822-4864-4B3D-AFBF-C7519AB47F27}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{3A053238-20BE-4424-9B4B-FBBE5BEB8087}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A053238-20BE-4424-9B4B-FBBE5BEB8087}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A053238-20BE-4424-9B4B-FBBE5BEB8087}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A285822-4864-4B3D-AFBF-C7519AB47F27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A285822-4864-4B3D-AFBF-C7519AB47F27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A285822-4864-4B3D-AFBF-C7519AB47F27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A285822-4864-4B3D-AFBF-C7519AB47F27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

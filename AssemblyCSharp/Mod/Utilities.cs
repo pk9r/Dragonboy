@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LitJson;
+using Mod.ModHelper;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +27,11 @@ namespace Mod
 
         public static int speedRun = 8;
 
+        public static string username = "";
+        public static string password = "";
+        public static JsonData server = null;
+        public static JsonData sizeData = null;
+
         [ChatCommand("tdc")]
         [ChatCommand("cspeed")]
         public static void setSpeedRun(int speed)
@@ -42,7 +49,7 @@ namespace Mod
         }
 
         /// <summary>
-		/// Sử dụng skill Trị thương của namec vào bản thân
+		/// Sử dụng skill Trị thương của namec vào bản thân.
 		/// </summary>
 		[ChatCommand("hsme")]
         [ChatCommand("buffme")]
@@ -242,6 +249,15 @@ namespace Mod
                 }
             }
             return false;
+        [ChatCommand("test")]
+        public static void test(string text)
+        {
+            SocketClient.gI.sendMessage(new
+            {
+                action = "test",
+                Char.myCharz().cName,
+                text
+            });
         }
     }
 }
