@@ -1,4 +1,4 @@
-public class ServerScr : mScreen, IActionListener
+﻿public class ServerScr : mScreen, IActionListener
 {
 	private int mainSelect;
 
@@ -43,10 +43,10 @@ public class ServerScr : mScreen, IActionListener
 		w2c = 5;
 		wc = 76;
 		hc = mScreen.cmdH;
-		numw = 2;
-		if (GameCanvas.w > 3 * (wc + w2c))
+		numw = 4;	//Số cột Server
+        if (GameCanvas.w <= 3 * (wc + w2c))
 		{
-			numw = 3;
+			numw = 2;
 		}
 		numh = vecServer.Length / numw + ((vecServer.Length % numw != 0) ? 1 : 0);
 		for (int j = 0; j < vecServer.Length; j++)

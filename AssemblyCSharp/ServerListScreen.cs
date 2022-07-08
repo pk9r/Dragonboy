@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 public class ServerListScreen : mScreen, IActionListener
 {
@@ -44,7 +45,7 @@ public class ServerListScreen : mScreen, IActionListener
 
 	public static string linkGetHost = "http://sv1.ngocrongonline.com/game/ngocrong031_t.php";
 
-	public static string linkDefault = javaVN;
+	public static string linkDefault = "Vũ trụ 1:dragon1.teamobi.com:14445:0,Vũ trụ 2:dragon2.teamobi.com:14445:0,Vũ trụ 3:dragon3.teamobi.com:14445:0,Vũ trụ 4:dragon4.teamobi.com:14445:0,Vũ trụ 5:dragon5.teamobi.com:14445:0,Vũ trụ 6:dragon6.teamobi.com:14445:0,Vũ trụ 7:dragon7.teamobi.com:14445:0,Vũ trụ 8:dragon8.teamobi.com:14445:0,Vũ trụ 9:dragon9.teamobi.com:14445:0,Vũ trụ 10:dragon10.teamobi.com:14445:0,Võ đài liên vũ trụ:dragonwar.teamobi.com:20000:0,Blue 01:103.48.194.146:14445:0,Blue 02:103.48.194.152:14445:0,Blue 03:45.119.81.28:14445:0,Blue 04:45.119.81.51:14445:0,Blue 05:103.48.194.173:14445:0,Blue 06:103.48.194.137:14445:0,Blue 07:103.48.194.159:14445:0,Blue 08:103.48.194.139:14445:0,Green 01:103.48.194.46:14445:0,Dream 1:14.225.198.30:14446:0,Dream 2:14.225.198.30:14447:0,NroZ 1:222.255.214.169:14445:0,NroZ 2:222.255.214.169:14445:0,Vũ Trụ Kakarot:103.90.224.247:14445:0,NROLOVE 1:sv1.nrolove.com:14445:0,NROLOVE 2:103.27.236.54:14446:0,Private:222.255.214.140:14445:0,SUPER 1:103.90.224.245:14446:0,SUPER 2:103.90.224.245:14447:0,Naga:dragon.indonaga.com:14446:0,Universe 1:dragon.indonaga.com:14445:0,0,9";
 
 	public const sbyte languageVersion = 2;
 
@@ -979,15 +980,16 @@ public class ServerListScreen : mScreen, IActionListener
 		}
 		else
 		{
-			linkDefault = javaVN;
-			if (mSystem.clientType == 1)
-			{
-				linkDefault = javaVN;
-			}
-			else
-			{
-				linkDefault = smartPhoneVN;
-			}
+			linkDefault = File.ReadAllLines("ModData\\ServerList.txt")[0];
+			//linkDefault = javaVN;
+			//if (mSystem.clientType == 1)
+			//{
+			//	linkDefault = javaVN;
+			//}
+			//else
+			//{
+			//	linkDefault = smartPhoneVN;
+			//}
 		}
 	}
 }

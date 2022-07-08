@@ -5204,19 +5204,19 @@ public class Controller : IMessageHandler
 			{
 				return;
 			}
-			string text = msg.reader().readUTF();
-			if (mSystem.isTest)
-			{
-				text = "88:192.168.1.88:20000:0,53:112.213.85.53:20000:0," + text;
-			}
-			if (mSystem.clientType == 1)
-			{
-				ServerListScreen.linkDefault = text;
-			}
-			else
-			{
-				ServerListScreen.linkDefault = text;
-			}
+			//string text = msg.reader().readUTF();
+			//if (mSystem.isTest)
+			//{
+			//	text = "88:192.168.1.88:20000:0,53:112.213.85.53:20000:0," + text;
+			//}
+			//if (mSystem.clientType == 1)
+			//{
+			//	ServerListScreen.linkDefault = text;
+			//}
+			//else
+			//{
+			//	ServerListScreen.linkDefault = text;
+			//}
 			ServerListScreen.getServerList(ServerListScreen.linkDefault);
 			try
 			{

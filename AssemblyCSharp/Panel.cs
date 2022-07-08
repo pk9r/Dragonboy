@@ -5387,10 +5387,10 @@ public class Panel : IActionListener, IChatable
 			g.fillRect(X + 1, H - 15, W - 2, 1);
 			g.drawImage(imgXu, X + 11, H - 7, 3);
 			g.drawImage(imgLuong, X + 75, H - 8, 3);
-			mFont.tahoma_7_yellow.drawString(g, Char.myCharz().xuStr + string.Empty, X + 24, H - 13, mFont.LEFT, mFont.tahoma_7_grey);
-			mFont.tahoma_7_yellow.drawString(g, Char.myCharz().luongStr + string.Empty, X + 85, H - 13, mFont.LEFT, mFont.tahoma_7_grey);
+			mFont.tahoma_7_yellow.drawString(g, NinjaUtil.getMoneys(Char.myCharz().xu) + string.Empty, X + 24, H - 13, mFont.LEFT, mFont.tahoma_7_grey);
+			mFont.tahoma_7_yellow.drawString(g, NinjaUtil.getMoneys(Char.myCharz().luong) + string.Empty, X + 85, H - 13, mFont.LEFT, mFont.tahoma_7_grey);
 			g.drawImage(imgLuongKhoa, X + 130, H - 8, 3);
-			mFont.tahoma_7_yellow.drawString(g, Char.myCharz().luongKhoaStr + string.Empty, X + 140, H - 13, mFont.LEFT, mFont.tahoma_7_grey);
+			mFont.tahoma_7_yellow.drawString(g, NinjaUtil.getMoneys(Char.myCharz().luongKhoa) + string.Empty, X + 140, H - 13, mFont.LEFT, mFont.tahoma_7_grey);
 		}
 	}
 
