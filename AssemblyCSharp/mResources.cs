@@ -1117,8 +1117,9 @@ public class mResources
 	public static string den;
 
 	public static string nhatvatpham;
+    internal static string changeCauHinh;
 
-	public static void loadLanguague()
+    public static void loadLanguague()
 	{
 		loadLanguague(1);
 	}

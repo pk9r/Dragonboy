@@ -2,6 +2,8 @@ public class T2 : mResources
 {
 	public static void load()
 	{
+		changeCauHinh = "Do you want to exit game to change graphics option?";
+
 		mResources.notiINAPP = "You bought many gems today. Let's try again tomorrow!";
 		mResources.notiRuby = "When selling successfully, you will receive Ruby non Gem. Do you want to continue consign?";
 		mResources.equip = "Equip";

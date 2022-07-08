@@ -147,11 +147,11 @@ public class Panel : IActionListener, IChatable
 
 	public static string[] strCauhinh = new string[4]
 	{
+		(!Char.isPaintAura) ? mResources.aura_on : mResources.aura_off,
 		(!GameCanvas.isPlaySound) ? mResources.turnOnSound : mResources.turnOffSound,
-		mResources.increase_vga,
-		mResources.analog,
-		(mGraphics.zoomLevel <= 1) ? mResources.x2Screen : mResources.x1Screen
-	};
+		GameCanvas.lowGraphic ? mResources.cauhinhcao : mResources.cauhinhthap,
+		(mGraphics.zoomLevel <= 1) ? mResources.x2Screen : mResources.x1Screen,
+    };
 
 	public static string[] strAccount = new string[5]
 	{
@@ -8095,18 +8095,16 @@ public class Panel : IActionListener, IChatable
 		}
 		if (idAction == 170391)
 		{
-			Rms.clearAll();
-			if (mGraphics.zoomLevel > 1)
-			{
-				Rms.saveRMSInt("levelScreenKN", 1);
-			}
-			else
-			{
-				Rms.saveRMSInt("levelScreenKN", 0);
-			}
-			GameMidlet.instance.exit();
+            Rms.clearAll();
+            Rms.saveRMSInt("levelScreenKN", Rms.loadRMSInt("levelScreenKN") == 1 ? 0 : 1);
+            GameMidlet.instance.exit();
 		}
-		if (idAction == 6001)
+        if (idAction == 170392)
+        {
+            Rms.saveRMSInt("lowGraphic", Rms.loadRMSInt("lowGraphic") == 1 ? 0 : 1);
+            GameMidlet.instance.exit();
+        }
+        if (idAction == 6001)
 		{
 			Item item = (Item)p;
 			item.isSelect = false;
@@ -9281,7 +9279,7 @@ public class Panel : IActionListener, IChatable
 			{
 				g.setColor((i != selected) ? 15196114 : 16383818);
 				g.fillRect(x, num, num2, h);
-				mFont.tahoma_7b_dark.drawString(g, strCauhinh[i], xScroll + wScroll / 2, num + 6, mFont.CENTER);
+				mFont.tahoma_7b_dark.drawString(g, strCauhinh[i].Replace("\r\n", ""), xScroll + wScroll / 2, num + 6, mFont.CENTER);
 			}
 		}
 		paintScrollArrow(g);
@@ -9302,26 +9300,30 @@ public class Panel : IActionListener, IChatable
 			SoundMn.gI().soundToolOption();
 			break;
 		case 2:
-			if (Main.isPC)
-			{
-				GameCanvas.startYesNoDlg(mResources.changeSizeScreen, new Command(mResources.YES, this, 170391, null), new Command(mResources.NO, this, 4005, null));
-			}
-			else if (GameScr.isAnalog == 0)
-			{
-				strCauhinh[2] = mResources.turnOffAnalog;
-				GameScr.isAnalog = 1;
-				Rms.saveRMSInt("analog", GameScr.isAnalog);
-				GameScr.setSkillBarPosition();
-			}
-			else
-			{
-				strCauhinh[2] = mResources.turnOnAnalog;
-				GameScr.isAnalog = 0;
-				Rms.saveRMSInt("analog", GameScr.isAnalog);
-				GameScr.setSkillBarPosition();
-			}
+            //if (Main.isPC)
+            //{
+            //GameCanvas.startYesNoDlg(mResources.changeSizeScreen, new Command(mResources.YES, this, 170391, null), new Command(mResources.NO, this, 4005, null));
+            //}
+            //else if (GameScr.isAnalog == 0)
+            //{
+            //	strCauhinh[2] = mResources.turnOffAnalog;
+            //	GameScr.isAnalog = 1;
+            //	Rms.saveRMSInt("analog", GameScr.isAnalog);
+            //	GameScr.setSkillBarPosition();
+            //}
+            //else
+            //{
+            //	strCauhinh[2] = mResources.turnOnAnalog;
+            //	GameScr.isAnalog = 0;
+            //	Rms.saveRMSInt("analog", GameScr.isAnalog);
+            //	GameScr.setSkillBarPosition();
+            //}
+            GameCanvas.startYesNoDlg(mResources.changeCauHinh, new Command(mResources.YES, this, 170392, null), new Command(mResources.NO, this, 4005, null));
+            break;
+		case 3:
+            GameCanvas.startYesNoDlg(mResources.changeSizeScreen, new Command(mResources.YES, this, 170391, null), new Command(mResources.NO, this, 4005, null));
 			break;
-		}
+        }
 	}
 
 	public void setTypeAccount()

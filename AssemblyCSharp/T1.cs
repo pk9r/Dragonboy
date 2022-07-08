@@ -2,7 +2,9 @@ public class T1 : mResources
 {
 	public static void load()
 	{
-		mResources.notiINAPP = "Hôm nay bạn đã nạp nhiều ngọc. Ngày mai hãy nạp tiếp nhé!";
+		changeCauHinh = "Bạn có muốn thoát game để thay đổi cấu hình không ?";
+
+        mResources.notiINAPP = "Hôm nay bạn đã nạp nhiều ngọc. Ngày mai hãy nạp tiếp nhé!";
 		mResources.notiRuby = "Khi bán thành công sẽ nhận lại Hồng Ngọc không phải Ngọc, bạn có muốn tiếp tục kí gửi?";
 		mResources.equip = "Sử dụng";
 		mResources.unlock = "Mở khóa";

@@ -199,11 +199,12 @@ public class SoundMn
 	{
 		if (Main.isPC)
 		{
-			Panel.strCauhinh = new string[3]
+			Panel.strCauhinh = new string[4]
 			{
 				(!Char.isPaintAura) ? mResources.aura_on : mResources.aura_off,
 				(!GameCanvas.isPlaySound) ? mResources.turnOnSound : mResources.turnOffSound,
-				(mGraphics.zoomLevel <= 1) ? mResources.x2Screen : mResources.x1Screen
+				GameCanvas.lowGraphic ? mResources.cauhinhcao : mResources.cauhinhthap,
+				(mGraphics.zoomLevel <= 1) ? mResources.x2Screen : mResources.x1Screen,
 			};
 		}
 		else

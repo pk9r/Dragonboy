@@ -18,8 +18,20 @@
     <Reference Include="LitJSON">
       <HintPath>..\Lib\LitJson.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Security">
+      <HintPath>D:\repos\Dragonboy\Game\Game_Data\Managed\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib">
+      <HintPath>D:\repos\Dragonboy\Game\Game_Data\Managed\mscorlib.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\Game\Game_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>D:\repos\Dragonboy\Game\Game_Data\Managed\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>D:\repos\Dragonboy\Game\Game_Data\Managed\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

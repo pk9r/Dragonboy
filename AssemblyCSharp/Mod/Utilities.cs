@@ -243,5 +243,11 @@ namespace Mod
             }
             return false;
         }
+
+        public static bool isBlueOrGreenServer()
+        {
+            string str = ServerListScreen.nameServer[ServerListScreen.ipSelect].ToLower();
+            return str.Contains("blue") || str.Contains("green");
+        }
     }
 }

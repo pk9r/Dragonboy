@@ -206,7 +206,7 @@ public class ServerListScreen : mScreen, IActionListener
 		{
 			nCmdPlay = 1;
 		}
-		cmd = new Command[(mGraphics.zoomLevel <= 1) ? (4 + nCmdPlay) : (3 + nCmdPlay)];
+		cmd = new Command[4 + nCmdPlay];
 		int num = GameCanvas.hh - 15 * cmd.Length + 28;
 		for (int i = 0; i < cmd.Length; i++)
 		{
@@ -242,8 +242,7 @@ public class ServerListScreen : mScreen, IActionListener
 			case 1:
 				if (nCmdPlay == 1)
 				{
-					cmd[1] = new Command(string.Empty, this, 10100, null);
-					cmd[1].caption = mResources.playNew;
+					cmd[1] = new Command(mResources.playNew, this, 10100, null);
 				}
 				else
 				{
@@ -822,29 +821,24 @@ public class ServerListScreen : mScreen, IActionListener
 		}
 		if (idAction == 8)
 		{
-			bool flag3 = Rms.loadRMSInt("lowGraphic") == 1;
 			MyVector myVector2 = new MyVector("cau hinh");
-			myVector2.addElement(new Command(mResources.cauhinhthap, this, 9, null));
-			myVector2.addElement(new Command(mResources.cauhinhcao, this, 10, null));
-			GameCanvas.menu.startAt(myVector2, 0);
-			if (flag3)
-			{
-				GameCanvas.menu.menuSelectedItem = 0;
-			}
-			else
-			{
-				GameCanvas.menu.menuSelectedItem = 1;
-			}
-		}
-		if (idAction == 9)
+			string str = Rms.loadRMSInt("lowGraphic") == 1 ? mResources.cauhinhcao : mResources.cauhinhthap;
+            myVector2.addElement(new Command(str, this, 9, null));
+			string str2 = Rms.loadRMSInt("levelScreenKN") == 1 ? mResources.x2Screen : mResources.x1Screen;
+            myVector2.addElement(new Command(str2, this, 10, null));
+            GameCanvas.menu.startAt(myVector2, 0);
+            GameCanvas.menu.menuSelectedItem = -1;
+        }
+        if (idAction == 9)
 		{
-			Rms.saveRMSInt("lowGraphic", 1);
+			Rms.saveRMSInt("lowGraphic", Rms.loadRMSInt("lowGraphic") == 1 ? 0 : 1);
 			GameCanvas.startOK(mResources.plsRestartGame, 8885, null);
 		}
 		if (idAction == 10)
 		{
-			Rms.saveRMSInt("lowGraphic", 0);
-			GameCanvas.startOK(mResources.plsRestartGame, 8885, null);
+            Rms.clearAll();
+            Rms.saveRMSInt("levelScreenKN", Rms.loadRMSInt("levelScreenKN") == 1 ? 0 : 1);
+            GameCanvas.startOK(mResources.plsRestartGame, 8885, null);
 		}
 		if (idAction == 11)
 		{
@@ -899,7 +893,7 @@ public class ServerListScreen : mScreen, IActionListener
 		}
 		if (idAction == 15)
 		{
-			Rms.clearAll();
+			Rms.clearAll2();
 			GameCanvas.startOK(mResources.plsRestartGame, 8885, null);
 		}
 		if (idAction == 16)
@@ -980,7 +974,8 @@ public class ServerListScreen : mScreen, IActionListener
 		}
 		else
 		{
-			linkDefault = File.ReadAllLines("ModData\\ServerList.txt")[0];
+			//linkDefault = File.ReadAllLines("ModData\\ServerList.txt")[0];
+
 			//linkDefault = javaVN;
 			//if (mSystem.clientType == 1)
 			//{

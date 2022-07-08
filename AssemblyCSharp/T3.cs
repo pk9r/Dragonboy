@@ -2,7 +2,9 @@ public class T3 : mResources
 {
 	public static void load()
 	{
-		mResources.notiINAPP = "Anda membeli banyak permata hari ini. Mari kita coba lagi besok!";
+		changeCauHinh = "Do you want to exit game to change graphics option?";
+
+        mResources.notiINAPP = "Anda membeli banyak permata hari ini. Mari kita coba lagi besok!";
 		mResources.notiRuby = "Saat menjual dengan sukses, Anda akan menerima Ruby non Gem. Apakah Anda ingin melanjutkan menyerahkan?";
 		mResources.equip = "Mengalati";
 		mResources.unlock = "Membuka kunci";
