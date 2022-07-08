@@ -655,8 +655,8 @@ public class ServerListScreen : mScreen, IActionListener
 		mSystem.resetCurInapp();
 		base.switchToMe();
 
-		GameEvents.onServerListScreenLoaded();
-	}
+        GameEvents.onServerListScreenLoaded();
+    }
 
 	public void switchToMe2()
 	{
@@ -953,6 +953,8 @@ public class ServerListScreen : mScreen, IActionListener
 		strWait = mResources.PLEASEWAIT;
 		init();
 		base.switchToMe();
+
+		GameEvents.onSceenDownloadDataShow();
 	}
 
 	public void setLinkDefault(sbyte language)

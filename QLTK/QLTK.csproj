@@ -73,6 +73,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Server.cs" />
     <Compile Include="RECT.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="AsynchronousSocketListener.cs" />

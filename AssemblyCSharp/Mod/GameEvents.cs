@@ -1,5 +1,7 @@
 ﻿using Mod.ModHelper;
 using System.Collections;
+using System.IO;
+using UnityEngine;
 
 namespace Mod
 {
@@ -33,9 +35,7 @@ namespace Mod
         {
             ChatCommandHandler.loadDefalut();
             HotkeyCommandHandler.loadDefalut();
-            SocketClient.gI.loadPort();
-            
-            SocketClient.gI.performAction();
+            SocketClient.gI.initSender();
         }
 
         /// <summary>
@@ -62,6 +62,13 @@ namespace Mod
         /// <returns></returns>
         public static bool onSetResolution()
         {
+            if (Utilities.sizeData != null)
+            {
+                int width = (int)Utilities.sizeData["width"];
+                int height = (int)Utilities.sizeData["height"];
+                Screen.SetResolution(width, height, fullscreen: false);
+                return true;
+            }
             return false;
         }
 
@@ -95,6 +102,33 @@ namespace Mod
             return false;
         }
 
+        public static bool onLoadRMSInt(string file, out int result)
+        {
+            if (file == "lowGraphic" && Utilities.sizeData != null)
+            {
+                result = (int)Utilities.sizeData["lowGraphic"];
+                return true;
+            }
+
+            result = -1;
+            return false;
+        }
+
+        internal static bool onGetRMSPath(out string result)
+        {
+            if (Utilities.server != null)
+            {
+                GameMidlet.IP = (string)Utilities.server["ip"];
+                GameMidlet.PORT = (int)Utilities.server["port"];
+            }
+            result = $"asset\\{GameMidlet.IP}_{GameMidlet.PORT}_x{mGraphics.zoomLevel}\\";
+            if (!Directory.Exists(result))
+            {
+                Directory.CreateDirectory(result);
+            }
+            return true;
+        }
+
         /// <summary>
         /// Kích hoạt khi có ChatTextField update.
         /// </summary>
@@ -124,6 +158,9 @@ namespace Mod
             pass = Utilities.password == "" ? pass : Utilities.password;
         }
 
+        /// <summary>
+        /// Kích hoạt sau khi màn hình chọn server được load.
+        /// </summary>
         public static void onServerListScreenLoaded()
         {
             if (GameCanvas.loginScr == null)
@@ -133,6 +170,36 @@ namespace Mod
 
             GameCanvas.loginScr.switchToMe();
             Service.gI().login("", "", GameMidlet.VERSION, 0);
+            GameCanvas.startWaitDlg();
+        }
+
+        /// <summary>
+        /// Kích hoạt khi Session kết nối đến server.
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="port"></param>
+        public static void onSessionConnecting(ref string host, ref int port)
+        {
+            if (Utilities.server != null)
+            {
+                host = (string)Utilities.server["ip"];
+                port = (int)Utilities.server["port"];
+            }
+        }
+
+        public static void onSceenDownloadDataShow()
+        {
+            GameCanvas.serverScreen.perform(2, null);
+        }
+
+        public static bool onCheckZoomLevel()
+        {
+            if (Utilities.sizeData != null)
+            {
+                mGraphics.zoomLevel = (int)Utilities.sizeData["typeSize"];
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,6 +19,8 @@ namespace QLTK
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static object sizeData = null;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -27,11 +29,30 @@ namespace QLTK
             {
                 IsBackground = true
             }.Start();
-            
+
+            ComboBoxServer.ItemsSource = Servers;
+            ComboBoxServer.DisplayMemberPath = "name";
             ComboBoxServer.SelectedIndex = 0;
 
             LoadAccounts();
         }
+
+        public static List<Server> Servers = new List<Server>()
+        {
+            new Server() { name = "Vũ trụ 1", ip = "dragon1.teamobi.com", port = 14445, language = 0},
+            new Server() { name = "Vũ trụ 2", ip = "dragon2.teamobi.com", port = 14445, language = 0 },
+            new Server() { name = "Vũ trụ 3", ip = "dragon3.teamobi.com", port = 14445, language = 0 },
+            new Server() { name = "Vũ trụ 4", ip = "dragon4.teamobi.com", port = 14445, language = 0 },
+            new Server() { name = "Vũ trụ 5", ip = "dragon5.teamobi.com", port = 14445, language = 0 },
+            new Server() { name = "Vũ trụ 6", ip = "dragon6.teamobi.com", port = 14445, language = 0 },
+            new Server() { name = "Vũ trụ 7", ip = "dragon7.teamobi.com", port = 14445, language = 0 },
+            new Server() { name = "Vũ trụ 8", ip = "dragon8.teamobi.com", port = 14445, language = 0 },
+            new Server() { name = "Vũ trụ 9", ip = "dragon9.teamobi.com", port = 14445, language = 0 },
+            new Server() { name = "Vũ trụ 10", ip = "dragon10.teamobi.com", port = 14445, language = 0 },
+            new Server() { name = "Võ đài Liên Trụ", ip = "dragonwar.teamobi.com", port = 20000, language = 0 },
+            new Server() { name = "Naga", ip = "dragon.indonaga.com", port = 14446, language = 2 },
+            new Server() { name = "Universe 1", ip = "dragon.indonaga.com", port = 14445, language = 2 },
+        };
 
         private void LoadAccounts()
         {
@@ -265,6 +286,25 @@ namespace QLTK
                 return;
             }
 
+            string sizeStr = TextBoxSize.Text;
+            var match = Regex.Match(sizeStr, @"^\s*(\d+)x(\d+)\s*$");
+            if (!match.Success)
+            {
+                MessageBox.Show("Kích thước cửa sổ không hợp lệ");
+                return;
+            }
+
+            int width = int.Parse(match.Groups[1].Value);
+            int height = int.Parse(match.Groups[2].Value);
+
+            sizeData = new
+            {
+                width,
+                height,
+                typeSize = ComboBoxTypeSize.SelectedIndex + 1,
+                lowGraphic = ComboBoxLowGraphic.SelectedIndex
+            };
+
             GridMain.IsEnabled = false;
             await OpenGamesAsync(accounts);
             GridMain.IsEnabled = true;
@@ -274,9 +314,28 @@ namespace QLTK
         {
             var accounts = GetAccounts();
 
+            string sizeStr = TextBoxSize.Text;
+            var match = Regex.Match(sizeStr, @"^\s*(\d+)x(\d+)\s*$");
+            if (!match.Success)
+            {
+                MessageBox.Show("Kích thước cửa sổ không hợp lệ");
+                return;
+            }
+
+            int width = int.Parse(match.Groups[1].Value);
+            int height = int.Parse(match.Groups[2].Value);
+
+            sizeData = new
+            {
+                width,
+                height,
+                typeSize = ComboBoxTypeSize.SelectedIndex + 1,
+                lowGraphic = ComboBoxLowGraphic.SelectedIndex
+            };
+
             GridMain.IsEnabled = false;
             await OpenGamesAsync(accounts);
-            GridMain.IsEnabled = false;
+            GridMain.IsEnabled = true;
         }
 
         private void ButtonKill_Click(object sender, RoutedEventArgs e)
@@ -316,17 +375,10 @@ namespace QLTK
             {
                 if (account.workSocket?.Connected == true)
                 {
-                    //AsynchronousSocketListener.sendMessage(account, new
-                    //{
-                    //    action = "test",
-                    //    text = "Hoho"
-                    //});
-
                     AsynchronousSocketListener.sendMessage(account, new
                     {
-                        action = "login",
-                        account.username,
-                        account.password,
+                        action = "test",
+                        text = "Hoho"
                     });
                 }
             }

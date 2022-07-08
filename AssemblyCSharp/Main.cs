@@ -150,9 +150,9 @@ public class Main : MonoBehaviour
 			}
 			fps++;
 			checkInput();
+			MainThreadDispatcher.update();
 			Session_ME.update();
 			Session_ME2.update();
-			MainThreadDispatcher.update();
 			if (Event.current.type.Equals(EventType.Repaint) && paintCount <= updateCount)
 			{
 				GameMidlet.gameCanvas.paint(g);

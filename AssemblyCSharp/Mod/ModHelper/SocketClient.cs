@@ -24,20 +24,55 @@ namespace Mod.ModHelper
 
         private const string pathLogSocket = "ModData\\log_socket_client.txt";
         public int port = -1;
+        public bool isConnected = false;
 
         private Socket sender;
 
-        public void loadPort()
+        public void initSender()
         {
-            var args = Environment.GetCommandLineArgs();
-            var index = Array.IndexOf(args, "-port") + 1;
+            loadPort();
+            if (this.port == -1)
+            {
+                return;
+            }
+
             try
             {
-                port = int.Parse(args[index]);
+                var ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+                var ipAddress = ipHostInfo.AddressList[0];
+                var remoteEP = new IPEndPoint(ipAddress, port);
+
+                sender = new Socket(ipAddress.AddressFamily,
+                    SocketType.Stream, ProtocolType.Tcp);
+
+                sender.Connect(remoteEP);
+
+                this.sendMessage(new
+                {
+                    action = "connected",
+                    id = Process.GetCurrentProcess().Id,
+                });
+
+                byte[] bytes = new byte[1024];
+                JsonData msg;
+                
+                int bytesRec = sender.Receive(bytes);
+                string receive = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                msg = JsonMapper.ToObject(receive);
+
+                Utilities.username = (string)msg["username"];
+                Utilities.password = (string)msg["password"];
+                Utilities.server = msg["server"];
+                Utilities.sizeData = msg["sizeData"];
+
+                isConnected = true;
+
+                performAction();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                writeLog(e.ToString());
+                writeLog(ex.ToString());
+                return;
             }
         }
 
@@ -50,11 +85,8 @@ namespace Mod.ModHelper
                     string text = (string)msg["text"];
                     GameScr.info1.addInfo(text, 0);
                     break;
-                case "setAccount":
-                    Utilities.username = (string)msg["username"];
-                    Utilities.password = (string)msg["password"];
-                    break;
                 default:
+                    writeLog($">> Lost action {action} \n");
                     break;
             }
         }
@@ -77,33 +109,8 @@ namespace Mod.ModHelper
 
         protected override void action()
         {
-            if (this.port == -1)
-            {
+            if (!isConnected)
                 return;
-            }
-
-            try
-            {
-                var ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-                var ipAddress = ipHostInfo.AddressList[0];
-                var remoteEP = new IPEndPoint(ipAddress, port);
-
-                sender = new Socket(ipAddress.AddressFamily,
-                    SocketType.Stream, ProtocolType.Tcp);
-
-                sender.Connect(remoteEP);
-            }
-            catch (Exception ex)
-            {
-                writeLog(ex.ToString());
-                return;
-            }
-
-            this.sendMessage(new
-            {
-                action = "connected",
-                id = Process.GetCurrentProcess().Id,
-            });
 
             byte[] bytes = new byte[1024];
 
@@ -121,6 +128,11 @@ namespace Mod.ModHelper
                     GameCanvas.startOKDlg("Mất kết nối với QLTK");
                     return;
                 }
+                catch (ObjectDisposedException)
+                {
+                    GameCanvas.startOKDlg("Mất kết nối với QLTK");
+                    return;
+                }
                 catch (Exception e)
                 {
                     writeLog(e.ToString());
@@ -129,6 +141,20 @@ namespace Mod.ModHelper
 
                 MainThreadDispatcher.dispatcher(() => onMessage(msg));
                 //onMessage(msg);
+            }
+        }
+
+        private void loadPort()
+        {
+            var args = Environment.GetCommandLineArgs();
+            var index = Array.IndexOf(args, "-port") + 1;
+            try
+            {
+                port = int.Parse(args[index]);
+            }
+            catch (Exception e)
+            {
+                writeLog(e.ToString());
             }
         }
 

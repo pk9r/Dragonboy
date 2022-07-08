@@ -40,7 +40,8 @@ namespace QLTK
             {
                 case "test":
                     string text = (string)msg["text"];
-                    MessageBox.Show(text + " form " + state.account.username);
+                    string cName = (string)msg["cName"];
+                    MessageBox.Show(text + " form " + cName);
                     break;
                 case "setStatus":
                     string status = (string)msg["status"];
@@ -53,9 +54,10 @@ namespace QLTK
 
                     sendMessage(state.account, new
                     {
-                        action = "setAccount",
                         state.account.username,
-                        state.account.password
+                        state.account.password,
+                        state.account.server,
+                        MainWindow.sizeData
                     });
 
                     Utilities.UpdateStatus(state.account, "Đã kết nối");

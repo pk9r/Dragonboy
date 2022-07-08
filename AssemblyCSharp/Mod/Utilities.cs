@@ -1,4 +1,5 @@
-﻿using Mod.ModHelper;
+﻿using LitJson;
+using Mod.ModHelper;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,6 +29,8 @@ namespace Mod
 
         public static string username = "";
         public static string password = "";
+        public static JsonData server = null;
+        public static JsonData sizeData = null;
 
         [ChatCommand("tdc")]
         [ChatCommand("cspeed")]
@@ -210,6 +213,7 @@ namespace Mod
             SocketClient.gI.sendMessage(new
             {
                 action = "test",
+                Char.myCharz().cName,
                 text
             });
         }

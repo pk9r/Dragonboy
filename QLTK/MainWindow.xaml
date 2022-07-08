@@ -43,7 +43,7 @@
           <DataGrid.Columns>
             <DataGridTextColumn Binding="{Binding number}" Header="STT" />
             <DataGridTextColumn Binding="{Binding username}" Header="Tài khoản" />
-            <DataGridTextColumn Header="Máy chủ" />
+            <DataGridTextColumn Binding="{Binding server.name}" Header="Máy chủ" />
             <DataGridTextColumn
               Width="*"
               Binding="{Binding status}"
@@ -93,7 +93,16 @@
               Click="ButtonDeleteAccount_Click"
               Content="Xoá" />
           </Grid>
+        </StackPanel>
+      </materialDesign:Card>
+
+      <materialDesign:Card Margin="5">
+        <StackPanel Grid.Column="1">
           <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition />
+              <RowDefinition />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
               <ColumnDefinition />
               <ColumnDefinition />
@@ -117,8 +126,38 @@
               Margin="5"
               Click="ButtonKill_Click"
               Content="Quit" />
-          </Grid>
 
+            <TextBox
+              x:Name="TextBoxSize"
+              Grid.Row="1"
+              Margin="5"
+              materialDesign:HintAssist.Hint="Kích thước"
+              Text="1024x600" />
+            <ComboBox
+              x:Name="ComboBoxLowGraphic"
+              Grid.Row="1"
+              Grid.Column="1"
+              Margin="5"
+              materialDesign:HintAssist.Hint="Cấu hình"
+              SelectedIndex="1">
+              <ComboBoxItem Content="Cao" />
+              <ComboBoxItem Content="Thấp" />
+            </ComboBox>
+            <ComboBox
+              x:Name="ComboBoxTypeSize"
+              Grid.Row="1"
+              Grid.Column="2"
+              materialDesign:HintAssist.Hint="Màn hình"
+              SelectedIndex="1">
+              <ComboBoxItem Content="Nhỏ" />
+              <ComboBoxItem Content="Lớn" />
+            </ComboBox>
+          </Grid>
+        </StackPanel>
+      </materialDesign:Card>
+
+      <materialDesign:Card Margin="5">
+        <StackPanel Grid.Column="1">
           <Button
             x:Name="ButtonArrangeWindows"
             Margin="5"

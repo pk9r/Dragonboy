@@ -1,3 +1,4 @@
+using Mod;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -307,7 +308,8 @@ public class Session_ME : ISession
 
 	public void connect(string host, int port)
 	{
-		if (!connected && !connecting)
+        GameEvents.onSessionConnecting(ref host, ref port);
+        if (!connected && !connecting)
 		{
 			if (isMainSession)
 			{
