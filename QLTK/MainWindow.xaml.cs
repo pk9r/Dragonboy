@@ -115,7 +115,7 @@ namespace QLTK
             Utilities.RefreshAccounts();
 
             AsynchronousSocketListener.waitingAccounts.Add(account);
-            
+
             account.process = Process.Start(Settings.Default.PathGame,
                 $"-port {Settings.Default.PortListener}");
 
@@ -123,7 +123,7 @@ namespace QLTK
             {
                 await Task.Delay(50);
             }
-            
+
             Utilities.SetWindowText(
                 hWnd: account.process.MainWindowHandle,
                 text: account.username);
@@ -218,6 +218,7 @@ namespace QLTK
                 PasswordBoxPassword.Password = account.password;
                 ComboBoxServer.SelectedIndex = account.indexServer;
             }
+            GridControl.Focus();
         }
 
         private void ListViewAccount_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -362,7 +363,12 @@ namespace QLTK
             ArrangeWindows();
         }
 
-        private void ButtonTest_Click(object sender, RoutedEventArgs e)
+        private void ListViewAccount_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            ((Account)e.Row.Item).number = e.Row.GetIndex();
+        }
+
+        private void ButtonChat_Click(object sender, RoutedEventArgs e)
         {
             var accounts = GetSelectedAccounts();
             if (accounts.Count() == 0)
@@ -377,16 +383,191 @@ namespace QLTK
                 {
                     AsynchronousSocketListener.sendMessage(account, new
                     {
-                        action = "test",
-                        text = "Hoho"
+                        action = "chat",
+                        text = TextBoxChat.Text
                     });
                 }
             }
         }
 
-        private void ListViewAccount_LoadingRow(object sender, DataGridRowEventArgs e)
+        private static int GetKeyCode(Button button)
         {
-            ((Account)e.Row.Item).number = e.Row.GetIndex();
+            int keyCode;
+            switch (button.Content)
+            {
+                case "▲":
+                    keyCode = -1;
+                    break;
+                case "▼":
+                    keyCode = -2;
+                    break;
+                case "◀":
+                    keyCode = -3;
+                    break;
+                case "▶":
+                    keyCode = -4;
+                    break;
+                case "↲":
+                    keyCode = -5;
+                    break;
+                case "F1":
+                    keyCode = -21;
+                    break;
+                case "F2":
+                    keyCode = -22;
+                    break;
+                default:
+                    keyCode = ((string)button.Content)[0];
+                    break;
+            }
+            return keyCode;
+        }
+
+        private static int GetKeyCode(KeyEventArgs e)
+        {
+            int keyCode;
+            switch (e.Key)
+            {
+                case Key.Up:
+                    keyCode = -1;
+                    break;
+                case Key.Down:
+                    keyCode = -2;
+                    break;
+                case Key.Left:
+                    keyCode = -3;
+                    break;
+                case Key.Right:
+                    keyCode = -4;
+                    break;
+                case Key.Enter:
+                    keyCode = -5;
+                    break;
+                case Key.F1:
+                    keyCode = -21;
+                    break;
+                case Key.F2:
+                    keyCode = -22;
+                    break;
+                case Key.Tab:
+                    keyCode = -26;
+                    break;
+                case Key.Space:
+                    keyCode = 32;
+                    break;
+                default:
+                    keyCode = (int)e.Key;
+                    if (keyCode >= 34 && keyCode <= 43)
+                        keyCode += 14;
+                    else if (keyCode >= 44 && keyCode <= 69)
+                        keyCode += 53;
+                    break;
+            }
+            return keyCode;
+        }
+
+        private void ButtonKeyPress_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var button = (Button)sender;
+            int keyCode = GetKeyCode(button);
+
+            var accounts = GetSelectedAccounts();
+            if (accounts.Count() == 0)
+            {
+                MessageBox.Show("Vui lòng chọn tài khoản");
+                return;
+            }
+
+            foreach (var account in accounts)
+            {
+                if (account.workSocket?.Connected == true)
+                {
+                    AsynchronousSocketListener.sendMessage(account, new
+                    {
+                        action = "keyPress",
+                        keyCode
+                    });
+                }
+            }
+        }
+
+        private void ButtonKeyPress_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var button = (Button)sender;
+            int keyCode = GetKeyCode(button);
+
+            var accounts = GetSelectedAccounts();
+            if (accounts.Count() == 0)
+            {
+                MessageBox.Show("Vui lòng chọn tài khoản");
+                return;
+            }
+
+            foreach (var account in accounts)
+            {
+                if (account.workSocket?.Connected == true)
+                {
+                    AsynchronousSocketListener.sendMessage(account, new
+                    {
+                        action = "keyRelease",
+                        keyCode
+                    });
+                }
+            }
+        }
+
+        private void GridControl_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            int keyCode = GetKeyCode(e);
+            e.Handled = true;
+
+            var accounts = GetSelectedAccounts();
+            if (accounts.Count() == 0)
+            {
+                MessageBox.Show("Vui lòng chọn tài khoản");
+                return;
+            }
+
+            foreach (var account in accounts)
+            {
+                if (account.workSocket?.Connected == true)
+                {
+                    AsynchronousSocketListener.sendMessage(account, new
+                    {
+                        action = "keyPress",
+                        keyCode
+                    });
+                }
+            }
+        }
+
+        private void GridControl_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            int keyCode = GetKeyCode(e);
+
+            var accounts = GetSelectedAccounts();
+            if (accounts.Count() == 0)
+            {
+                MessageBox.Show("Vui lòng chọn tài khoản");
+                return;
+            }
+
+            foreach (var account in accounts)
+            {
+                if (account.workSocket?.Connected == true)
+                {
+                    AsynchronousSocketListener.sendMessage(account, new
+                    {
+                        action = "keyRelease",
+                        keyCode
+                    });
+                }
+            }
+        }
+
+        private void ButtonControl_Click(object sender, RoutedEventArgs e)
+        {
+            GridControl.Focus();
         }
     }
 }

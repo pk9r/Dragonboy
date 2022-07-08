@@ -55,7 +55,7 @@ namespace Mod.ModHelper
 
                 byte[] bytes = new byte[1024];
                 JsonData msg;
-                
+
                 int bytesRec = sender.Receive(bytes);
                 string receive = Encoding.ASCII.GetString(bytes, 0, bytesRec);
                 msg = JsonMapper.ToObject(receive);
@@ -82,8 +82,16 @@ namespace Mod.ModHelper
             switch (action)
             {
                 case "test":
-                    string text = (string)msg["text"];
-                    GameScr.info1.addInfo(text, 0);
+                    GameScr.info1.addInfo((string)msg["text"], 0);
+                    break;
+                case "chat":
+                    Service.gI().chat((string)msg["text"]);
+                    break;
+                case "keyPress":
+                    GameMidlet.gameCanvas.keyPressedz((int)msg["keyCode"]);
+                    break;
+                case "keyRelease":
+                    GameMidlet.gameCanvas.keyReleasedz((int)msg["keyCode"]);
                     break;
                 default:
                     writeLog($">> Lost action {action} \n");
@@ -140,7 +148,14 @@ namespace Mod.ModHelper
                 }
 
                 MainThreadDispatcher.dispatcher(() => onMessage(msg));
-                //onMessage(msg);
+                //try
+                //{
+                //    onMessage(msg);
+                //}
+                //catch (Exception ex)
+                //{
+                //    writeLog(ex.ToString());
+                //}
             }
         }
 

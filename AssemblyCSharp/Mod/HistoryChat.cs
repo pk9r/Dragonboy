@@ -96,8 +96,13 @@ namespace Mod
 
             histories.Remove(text);
             histories.Insert(0, text);
-            File.WriteAllText(Properties.Resources.PathChatHistory,
-                LitJson.JsonMapper.ToJson(histories));
+
+            try
+            {
+                File.WriteAllText(Properties.Resources.PathChatHistory,
+                    LitJson.JsonMapper.ToJson(histories));
+            }
+            catch { }
         }
 
         public void paint(mGraphics g)
