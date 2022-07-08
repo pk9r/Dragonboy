@@ -62,7 +62,7 @@ public class Rms
 		{
             string text = GetiPhoneDocumentsPath() + "\\" + filename;
             FileStream fileStream = new FileStream(text, FileMode.Create);
-			byte[] bytes = EncryptString(data, Key, "S0mhHovm0JKKk7r5");
+			byte[] bytes = EncryptString(data, Key, IV);
             fileStream.Write(bytes, 0, bytes.Length);
             fileStream.Flush();
             fileStream.Close();
@@ -88,18 +88,19 @@ public class Rms
         {
             return null;
         }
-		try
-		{
-			if (fileName == "acc" || fileName == "pass")
+        if (fileName == "acc" || fileName == "pass")
+        {
+            try
 			{
+			
 				string text = GetiPhoneDocumentsPath() + "\\" + fileName;
-				return DecryptString(File.ReadAllBytes(text), Key, "S0mhHovm0JKKk7r5");
+				return DecryptString(File.ReadAllBytes(text), Key, IV);
 			}
-		}
-		catch (Exception ex)
-		{
-			Debug.LogError(ex);
-		}
+            catch (Exception) 
+			{
+				return null;
+			}
+        }
         DataInputStream dataInputStream = new DataInputStream(array);
         try
         {
@@ -317,51 +318,56 @@ public class Rms
 		return text;
 	}
 
-    static byte[] EncryptString(string data, string key, string iv)
+    static byte[] EncryptString(string data, byte[] key, byte[] iv)
     {
-        if (iv.Length != 16)
+        TripleDESCryptoServiceProvider tripleDESCryptoServiceProvider = new TripleDESCryptoServiceProvider
         {
-            throw new ArgumentOutOfRangeException(iv, "Iv length must be 16");
-        }
-        RijndaelManaged rijndaelManaged = new RijndaelManaged
-        {
-            KeySize = 256,
-            BlockSize = 128,
+            KeySize = 128,
+            BlockSize = 64,
             Padding = PaddingMode.PKCS7,
             Mode = CipherMode.CBC,
-            Key = Encoding.ASCII.GetBytes(key),
-            IV = Encoding.ASCII.GetBytes(iv)
+            Key = key,
+            IV = iv
         };
-        ICryptoTransform cryptoTransform = rijndaelManaged.CreateEncryptor(rijndaelManaged.Key, rijndaelManaged.IV);
+        ICryptoTransform cryptoTransform = tripleDESCryptoServiceProvider.CreateEncryptor();
         byte[] bytes = Encoding.UTF8.GetBytes(data);
         return Encoding.UTF8.GetBytes(Convert.ToBase64String(cryptoTransform.TransformFinalBlock(bytes, 0, bytes.Length)));
     }
 
-    static string DecryptString(byte[] data, string key, string iv)
+    static string DecryptString(byte[] data, byte[] key, byte[] iv)
     {
-        if (iv.Length != 16)
+        TripleDESCryptoServiceProvider tripleDESCryptoServiceProvider = new TripleDESCryptoServiceProvider
         {
-            throw new ArgumentOutOfRangeException(iv, "Iv length must be 16");
-        }
-        RijndaelManaged rijndaelManaged = new RijndaelManaged
-        {
-            KeySize = 256,
-            BlockSize = 128,
+            KeySize = 128,
+            BlockSize = 64,
             Padding = PaddingMode.PKCS7,
             Mode = CipherMode.CBC,
-            Key = Encoding.ASCII.GetBytes(key),
-            IV = Encoding.ASCII.GetBytes(iv)
+            Key = key,
+            IV = iv
         };
-        ICryptoTransform cryptoTransform = rijndaelManaged.CreateDecryptor(rijndaelManaged.Key, rijndaelManaged.IV);
+        ICryptoTransform cryptoTransform = tripleDESCryptoServiceProvider.CreateDecryptor(tripleDESCryptoServiceProvider.Key, tripleDESCryptoServiceProvider.IV);
         byte[] array = Convert.FromBase64String(Encoding.UTF8.GetString(data));
         return Encoding.UTF8.GetString(cryptoTransform.TransformFinalBlock(array, 0, array.Length));
     }
 
-	static string Key 
+	static byte[] Key 
 	{ 
 		get
 		{
-            return Encoding.UTF8.GetString(new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(SystemInfo.deviceUniqueIdentifier + Key)));
+            return new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(SystemInfo.deviceUniqueIdentifier + "ErZSAaqeCqOvabdeaa6rVNj0vUjM5mJm"));
         }
+	}
+
+	static byte[] IV
+	{
+		get
+		{
+			byte[] bytes = new byte[8];
+			byte[] bytes1 = new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(SystemInfo.deviceUniqueIdentifier + "AclwSmcKdm81H7fcm30dVN22dmXmCo01"));
+			for (int i = 0; i < bytes1.Length; i++) bytes1[i] ^= 11;
+            System.Random random = new System.Random(~BitConverter.ToInt32(bytes1, 0));
+			random.NextBytes(bytes);
+			return bytes;
+		}
 	}
 }
