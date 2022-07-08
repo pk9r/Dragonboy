@@ -6,8 +6,7 @@
   xmlns:local="clr-namespace:QLTK"
   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  xmlns:models="clr-namespace:QLTK.Models"
-  Title="QLTK - Chuyển Bột"
+  Title="QLTK - NRO"
   Width="1300"
   Height="700"
   Background="{DynamicResource MaterialDesignPaper}"
@@ -18,7 +17,7 @@
   TextElement.Foreground="{DynamicResource MaterialDesignBody}"
   WindowStartupLocation="CenterScreen"
   mc:Ignorable="d">
-  <Grid>
+  <Grid x:Name="GridMain">
     <Grid.ColumnDefinitions>
       <ColumnDefinition />
       <ColumnDefinition Width="400" />
@@ -30,21 +29,27 @@
           <RowDefinition />
           <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <ListView
+        <DataGrid
           x:Name="ListViewAccount"
           Margin="5"
           d:ItemsSource="{d:SampleData ItemCount=5}"
+          AutoGenerateColumns="False"
+          CanUserAddRows="False"
+          CanUserDeleteRows="False"
+          IsReadOnly="True"
+          LoadingRow="ListViewAccount_LoadingRow"
           MouseDoubleClick="ListViewAccount_MouseDoubleClick"
           SelectionChanged="ListViewAccount_SelectionChanged">
-          <ListView.View>
-            <GridView>
-              <GridViewColumn DisplayMemberBinding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Converter={local:RowToIndexConverter}}" Header="STT" />
-              <GridViewColumn DisplayMemberBinding="{Binding username}" Header="Tài khoản" />
-              <GridViewColumn DisplayMemberBinding="{Binding nameServer}" Header="Máy chủ" />
-              <GridViewColumn DisplayMemberBinding="{Binding status}" Header="Trạng thái" />
-            </GridView>
-          </ListView.View>
-        </ListView>
+          <DataGrid.Columns>
+            <DataGridTextColumn Binding="{Binding number}" Header="STT" />
+            <DataGridTextColumn Binding="{Binding username}" Header="Tài khoản" />
+            <DataGridTextColumn Header="Máy chủ" />
+            <DataGridTextColumn
+              Width="*"
+              Binding="{Binding status}"
+              Header="Trạng thái" />
+          </DataGrid.Columns>
+        </DataGrid>
       </Grid>
     </materialDesign:Card>
 
@@ -119,6 +124,12 @@
             Margin="5"
             Click="ButtonArrangeWindows_Click"
             Content="Sắp xếp cửa sổ" />
+
+          <Button
+            x:Name="ButtonTest"
+            Margin="5"
+            Click="ButtonTest_Click"
+            Content="Test" />
         </StackPanel>
       </materialDesign:Card>
     </StackPanel>

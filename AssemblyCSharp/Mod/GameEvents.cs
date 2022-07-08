@@ -1,14 +1,23 @@
-﻿using System.Collections;
+﻿using Mod.ModHelper;
+using System.Collections;
 
 namespace Mod
 {
-    public class GameEvents
+    /// <summary>
+    /// Định nghĩa các sự kiện của game.
+    /// </summary>
+    /// <remarks>
+    /// - Các hàm bool trả về true thì sự kiện game sẽ không được thực hiện, 
+    /// trả về false thì sự kiện sẽ được kích hoạt như bình thường.<br/>
+    /// - Các hàm void hỗ trợ thực hiện các lệnh cùng với sự kiện.
+    /// </remarks>
+    public static class GameEvents
     {
         /// <summary>
         /// Kích hoạt khi người chơi chat.
         /// </summary>
         /// <param name="text">Nội dung chat.</param>
-        /// <returns>true nếu huỷ bỏ nội dung chat.</returns>
+        /// <returns></returns>
         public static bool onSendChat(string text)
         {
             HistoryChat.gI.append(text);
@@ -18,22 +27,42 @@ namespace Mod
         }
 
         /// <summary>
-        /// Kích hoạt sau khi game khởi động thành công.
+        /// Kích hoạt sau khi game khởi động.
         /// </summary>
         public static void onGameStarted()
         {
             ChatCommandHandler.loadDefalut();
             HotkeyCommandHandler.loadDefalut();
-
-
+            SocketClient.gI.loadPort();
+            
+            SocketClient.gI.performAction();
         }
 
         /// <summary>
-        /// Kích hoạt sau khi load xong KeyMap.
+        /// Kích hoạt khi game đóng
+        /// </summary>
+        /// <returns></returns>
+        public static bool onGameClosing()
+        {
+            SocketClient.gI.close();
+            return false;
+        }
+
+        /// <summary>
+        /// Kích hoạt sau khi load KeyMap.
         /// </summary>
         /// <param name="h"></param>
         public static void onKeyMapLoaded(Hashtable h)
         {
+        }
+
+        /// <summary>
+        /// Kích hoạt khi cài đăt kích thước màn hình.
+        /// </summary>
+        /// <returns></returns>
+        public static bool onSetResolution()
+        {
+            return false;
         }
 
         /// <summary>
@@ -45,7 +74,7 @@ namespace Mod
         }
 
         /// <summary>
-        /// Kích hoạt trong khi vẽ khung chat.
+        /// Kích hoạt sau khi vẽ khung chat.
         /// </summary>
         /// <param name="g"></param>
         public static void onPaintChatTextField(mGraphics g)
@@ -54,28 +83,56 @@ namespace Mod
         }
 
         /// <summary>
-        /// Kích hoạt khi bắt đầu chat.
+        /// Kích hoạt khi mở khung chat.
         /// </summary>
-        public static void onStartChatTextField()
+        public static bool onStartChatTextField(ChatTextField sender)
         {
-            HistoryChat.gI.show();
+            if (sender == ChatTextField.gI())
+            {
+                HistoryChat.gI.show();
+            }
+
+            return false;
         }
 
         /// <summary>
         /// Kích hoạt khi có ChatTextField update.
         /// </summary>
-        public static void onUpdateChatTextField()
+        public static void onUpdateChatTextField(ChatTextField sender)
         {
         }
 
         /// <summary>
-        /// Kích hoạt khi GameScr update.
+        /// Kích hoạt khi GameScr.gI() update.
         /// </summary>
         public static void onUpdateGameScr()
         {
             Char.myCharz().cspeed = Utilities.speedRun;
-            
-            HistoryChat.gI.update();
+
+            //NOTE onUpdateChatTextField không thể bấm tab.
+            HistoryChat.gI.update(); 
+        }
+
+        /// <summary>
+        /// Kích hoạt khi gửi yêu cầu đăng nhập.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="pass"></param>
+        public static void onLogin(ref string username, ref string pass)
+        {
+            username = Utilities.username == "" ? username : Utilities.username;
+            pass = Utilities.password == "" ? pass : Utilities.password;
+        }
+
+        public static void onServerListScreenLoaded()
+        {
+            if (GameCanvas.loginScr == null)
+            {
+                GameCanvas.loginScr = new LoginScr();
+            }
+
+            GameCanvas.loginScr.switchToMe();
+            Service.gI().login("", "", GameMidlet.VERSION, 0);
         }
     }
 }

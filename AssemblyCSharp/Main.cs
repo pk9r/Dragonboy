@@ -1,3 +1,5 @@
+using Mod;
+using Mod.ModHelper;
 using System.Net.NetworkInformation;
 using System.Threading;
 using UnityEngine;
@@ -95,7 +97,13 @@ public class Main : MonoBehaviour
 		mainThreadName = Thread.CurrentThread.Name;
 		isPC = true;
 		started = true;
-		if (isPC)
+		GameEvents.onGameStarted();
+		if (GameEvents.onSetResolution())
+        {
+            return;
+        }
+
+        if (isPC)
 		{
 			level = Rms.loadRMSInt("levelScreenKN");
 			if (level == 1)
@@ -107,8 +115,6 @@ public class Main : MonoBehaviour
 				Screen.SetResolution(1024, 600, fullscreen: false);
 			}
 		}
-
-		Mod.GameEvents.onGameStarted();
 	}
 
 	private void SetInit()
@@ -146,7 +152,7 @@ public class Main : MonoBehaviour
 			checkInput();
 			Session_ME.update();
 			Session_ME2.update();
-			Mod.ThreadHelper.MainThreadDispatcher.update();
+			MainThreadDispatcher.update();
 			if (Event.current.type.Equals(EventType.Repaint) && paintCount <= updateCount)
 			{
 				GameMidlet.gameCanvas.paint(g);
@@ -365,8 +371,14 @@ public class Main : MonoBehaviour
 	}
 
 	private void OnApplicationQuit()
-	{
-		Debug.LogWarning("APP QUIT");
+    {
+        if (GameEvents.onGameClosing())
+        {
+			return;
+        }
+
+
+        Debug.LogWarning("APP QUIT");
 		GameCanvas.bRun = false;
 		Session_ME.gI().close();
 		Session_ME2.gI().close();

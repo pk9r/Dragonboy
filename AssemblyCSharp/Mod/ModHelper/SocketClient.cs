@@ -1,0 +1,162 @@
+﻿using LitJson;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using UnityEngine;
+
+namespace Mod.ModHelper
+{
+    public class SocketClient : ThreadAction
+    {
+        #region singleton
+        public static SocketClient gI { get; } = new();
+
+        static SocketClient() { }
+
+        private SocketClient() { }
+        #endregion
+
+        private const string pathLogSocket = "ModData\\log_socket_client.txt";
+        public int port = -1;
+
+        private Socket sender;
+
+        public void loadPort()
+        {
+            var args = Environment.GetCommandLineArgs();
+            var index = Array.IndexOf(args, "-port") + 1;
+            try
+            {
+                port = int.Parse(args[index]);
+            }
+            catch (Exception e)
+            {
+                writeLog(e.ToString());
+            }
+        }
+
+        private void onMessage(JsonData msg)
+        {
+            string action = (string)msg["action"];
+            switch (action)
+            {
+                case "test":
+                    string text = (string)msg["text"];
+                    GameScr.info1.addInfo(text, 0);
+                    break;
+                case "setAccount":
+                    Utilities.username = (string)msg["username"];
+                    Utilities.password = (string)msg["password"];
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void setStatus(string status)
+        {
+            this.sendMessage(new
+            {
+                action = "setStatus",
+                status
+            });
+        }
+
+        public void sendMessage(object obj)
+        {
+            var json = JsonMapper.ToJson(obj);
+            byte[] msg = Encoding.ASCII.GetBytes(json);
+            _ = this.sender.Send(msg);
+        }
+
+        protected override void action()
+        {
+            if (this.port == -1)
+            {
+                return;
+            }
+
+            try
+            {
+                var ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+                var ipAddress = ipHostInfo.AddressList[0];
+                var remoteEP = new IPEndPoint(ipAddress, port);
+
+                sender = new Socket(ipAddress.AddressFamily,
+                    SocketType.Stream, ProtocolType.Tcp);
+
+                sender.Connect(remoteEP);
+            }
+            catch (Exception ex)
+            {
+                writeLog(ex.ToString());
+                return;
+            }
+
+            this.sendMessage(new
+            {
+                action = "connected",
+                id = Process.GetCurrentProcess().Id,
+            });
+
+            byte[] bytes = new byte[1024];
+
+            while (true)
+            {
+                JsonData msg;
+                try
+                {
+                    int bytesRec = sender.Receive(bytes);
+                    string receive = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                    msg = JsonMapper.ToObject(receive);
+                }
+                catch (SocketException)
+                {
+                    GameCanvas.startOKDlg("Mất kết nối với QLTK");
+                    return;
+                }
+                catch (Exception e)
+                {
+                    writeLog(e.ToString());
+                    continue;
+                }
+
+                MainThreadDispatcher.dispatcher(() => onMessage(msg));
+                //onMessage(msg);
+            }
+        }
+
+        /// <summary>
+        /// Đóng kết nối socket.
+        /// </summary>
+        public void close()
+        {
+            if (sender?.Connected == true)
+            {
+                sendMessage(new { action = "close-socket" });
+
+                sender.Shutdown(SocketShutdown.Both);
+                sender.Close();
+            }
+        }
+
+        /// <summary>
+        /// Ghi log cho SocketClient.
+        /// </summary>
+        /// <param name="log"></param>
+        private void writeLog(string log)
+        {
+            try
+            {
+                File.AppendAllText(pathLogSocket, log + "\n");
+            }
+            catch { }
+        }
+    }
+}

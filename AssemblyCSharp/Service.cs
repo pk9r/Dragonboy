@@ -1,5 +1,6 @@
 ﻿using System;
 using Assets.src.g;
+using Mod;
 
 public class Service
 {
@@ -838,6 +839,7 @@ public class Service
 
 	public void login(string username, string pass, string version, sbyte type)
 	{
+		GameEvents.onLogin(ref username, ref pass);
 		try
 		{
 			Message message = messageNotLogin(0);
@@ -1727,8 +1729,7 @@ public class Service
 
 	public void chat(string text)
 	{
-        var isCancelChat = Mod.GameEvents.onSendChat(text);
-		if (isCancelChat)
+        if (Mod.GameEvents.onSendChat(text))
         {
             return;
         }

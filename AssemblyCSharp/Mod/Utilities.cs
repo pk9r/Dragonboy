@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mod.ModHelper;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,20 +12,23 @@ namespace Mod
     {
         public const sbyte ID_SKILL_BUFF = 7;
         public const int ID_ICON_ITEM_TDLT = 4387;
-        
-        private const BindingFlags PUBLIC_STATIC_VOID = 
-            BindingFlags.Public | 
-            BindingFlags.Static | 
+
+        private const BindingFlags PUBLIC_STATIC_VOID =
+            BindingFlags.Public |
+            BindingFlags.Static |
             BindingFlags.InvokeMethod;
 
         #region Singleton
         private Utilities() { }
         static Utilities() { }
-        public static Utilities gI { get; } = new Utilities(); 
+        public static Utilities gI { get; } = new Utilities();
         #endregion
 
         public static int speedRun = 8;
-        
+
+        public static string username = "";
+        public static string password = "";
+
         [ChatCommand("tdc")]
         [ChatCommand("cspeed")]
         public static void setSpeedRun(int speed)
@@ -35,10 +39,10 @@ namespace Mod
         }
 
         /// <summary>
-		/// Sử dụng skill Trị thương của namec vào bản thân
+		/// Sử dụng skill Trị thương của namec vào bản thân.
 		/// </summary>
 		[ChatCommand("hsme")]
-		[ChatCommand("buffme")]
+        [ChatCommand("buffme")]
         [HotkeyCommand('b')]
         public static void buffMe()
         {
@@ -49,7 +53,7 @@ namespace Mod
 
             // Đổi sang skill hồi sinh
             Service.gI().selectSkill(ID_SKILL_BUFF);
-            
+
             // Tự tấn công vào bản thân
             Service.gI().sendPlayerAttack(new MyVector(), getMyVectorMe(), -1);
 
@@ -99,7 +103,7 @@ namespace Mod
             Char.myCharz().cx = x;
             Char.myCharz().cy = y;
             Service.gI().charMove();
-        }        
+        }
 
         [HotkeyCommand('n')]
         public static void showMenuTeleNpc()
@@ -152,9 +156,9 @@ namespace Mod
         public static MethodInfo[] getMethods(string typeFullName)
         {
             return AppDomain.CurrentDomain.GetAssemblies()
-                            .First(x => x.ManifestModule.Name == Properties.Resources.ManifestModuleName)
-                            .GetTypes().FirstOrDefault(x => x.FullName.ToLower() == typeFullName.ToLower())
-                            .GetMethods(PUBLIC_STATIC_VOID);
+                .First(x => x.ManifestModule.Name == Properties.Resources.ManifestModuleName)
+                .GetTypes().FirstOrDefault(x => x.FullName.ToLower() == typeFullName.ToLower())
+                .GetMethods(PUBLIC_STATIC_VOID);
         }
 
         /// <summary>
@@ -170,9 +174,9 @@ namespace Mod
         public static IEnumerable<MethodInfo> GetMethods()
         {
             return AppDomain.CurrentDomain.GetAssemblies()
-                .First           (x => x.ManifestModule.Name == Properties.Resources.ManifestModuleName)
+                .First(x => x.ManifestModule.Name == Properties.Resources.ManifestModuleName)
                 .GetTypes().Where(x => x.IsClass)
-                .SelectMany      (x => x.GetMethods(PUBLIC_STATIC_VOID));
+                .SelectMany(x => x.GetMethods(PUBLIC_STATIC_VOID));
         }
 
         public void perform(int idAction, object p)
@@ -198,6 +202,16 @@ namespace Mod
         {
             teleportMyChar(npc.cx, npc.ySd - npc.ySd % 24);
             Char.myCharz().npcFocus = npc;
+        }
+
+        [ChatCommand("test")]
+        public static void test(string text)
+        {
+            SocketClient.gI.sendMessage(new
+            {
+                action = "test",
+                text
+            });
         }
     }
 }

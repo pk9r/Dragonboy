@@ -1,3 +1,4 @@
+using Mod;
 using System;
 
 public class ServerListScreen : mScreen, IActionListener
@@ -653,6 +654,8 @@ public class ServerListScreen : mScreen, IActionListener
 		}
 		mSystem.resetCurInapp();
 		base.switchToMe();
+
+		GameEvents.onServerListScreenLoaded();
 	}
 
 	public void switchToMe2()

@@ -46,5 +46,17 @@ namespace QLTK.Properties {
                 this["PathGame"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("22327")]
+        public int PortListener {
+            get {
+                return ((int)(this["PortListener"]));
+            }
+            set {
+                this["PortListener"] = value;
+            }
+        }
     }
 }

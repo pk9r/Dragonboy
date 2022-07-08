@@ -74,8 +74,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="RECT.cs" />
-    <Compile Include="RowToIndexConverter.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="AsynchronousSocketListener.cs" />
     <Compile Include="Utilities.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

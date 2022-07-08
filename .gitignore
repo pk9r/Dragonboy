@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 Game/Game_Data/output_log.txt
 Game/ModData/chat.txt
+Game/ModData/Accounts.json
+Game/ModData/chatCommands.json
+Game/ModData/log_socket_client.txt

@@ -158,7 +158,10 @@ public class ChatTextField : IActionListener
 
     public void startChat(int firstCharacter, IChatable parentScreen, string to)
     {
-        Mod.GameEvents.onStartChatTextField();
+        if (Mod.GameEvents.onStartChatTextField(this))
+        {
+            return;
+        }
 
         right.caption = mResources.CLOSE;
         this.to = to;
@@ -180,7 +183,10 @@ public class ChatTextField : IActionListener
 
     public void startChat(IChatable parentScreen, string to)
     {
-        Mod.GameEvents.onStartChatTextField();
+        if (Mod.GameEvents.onStartChatTextField(this))
+        {
+            return;
+        }
 
         right.caption = mResources.CLOSE;
         this.to = to;
@@ -244,8 +250,8 @@ public class ChatTextField : IActionListener
         {
             return;
         }
+        Mod.GameEvents.onUpdateChatTextField(this);
         tfChat.update();
-        Mod.GameEvents.onUpdateChatTextField();
         if (Main.isWindowsPhone)
         {
             updateWhenKeyBoardVisible();
