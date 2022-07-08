@@ -249,6 +249,8 @@ namespace Mod
                 }
             }
             return false;
+        }
+
         [ChatCommand("test")]
         public static void test(string text)
         {
