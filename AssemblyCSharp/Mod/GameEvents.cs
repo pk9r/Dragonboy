@@ -201,5 +201,33 @@ namespace Mod
             }
             return false;
         }
+
+        public static bool onKeyPressedz(int keyCode, bool isFromSync)
+        {
+            if (Utilities.channelSyncKey != -1 && !isFromSync)
+            {
+                SocketClient.gI.sendMessage(new 
+                {
+                    action = "syncKeyPressed",
+                    keyCode,
+                    Utilities.channelSyncKey
+                });
+            }
+            return false;
+        }
+
+        public static bool onKeyReleasedz(int keyCode, bool isFromAsync)
+        {
+            if (Utilities.channelSyncKey != -1 && !isFromAsync)
+            {
+                SocketClient.gI.sendMessage(new
+                {
+                    action = "syncKeyReleased",
+                    keyCode,
+                    Utilities.channelSyncKey
+                });
+            }
+            return false;
+        }
     }
 }

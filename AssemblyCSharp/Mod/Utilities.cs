@@ -32,6 +32,8 @@ namespace Mod
         public static JsonData server = null;
         public static JsonData sizeData = null;
 
+        public static int channelSyncKey = -1;
+
         [ChatCommand("tdc")]
         [ChatCommand("cspeed")]
         public static void setSpeedRun(int speed)
@@ -260,6 +262,20 @@ namespace Mod
                 Char.myCharz().cName,
                 text
             });
+        }
+
+        [ChatCommand("skey")]
+        public static void syncKey(int channel)
+        {
+            channelSyncKey = channel;
+            if (channel == -1)
+            {
+                GameScr.info1.addInfo($"Đã tắt đồng bộ phím", 0);
+                return;
+            }
+            
+            GameScr.info1.addInfo($"Đồng bộ phím với kênh {channel}", 0);
+
         }
     }
 }

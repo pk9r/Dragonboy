@@ -88,10 +88,22 @@ namespace Mod.ModHelper
                     Service.gI().chat((string)msg["text"]);
                     break;
                 case "keyPress":
-                    GameMidlet.gameCanvas.keyPressedz((int)msg["keyCode"]);
+                    GameMidlet.gameCanvas.keyPressedz((int)msg["keyCode"], isFromSync: true);
                     break;
                 case "keyRelease":
-                    GameMidlet.gameCanvas.keyReleasedz((int)msg["keyCode"]);
+                    GameMidlet.gameCanvas.keyReleasedz((int)msg["keyCode"], isFromAsync: true);
+                    break;
+                case "syncKeyPressed":
+                    if (Utilities.channelSyncKey == (int)msg["channelSyncKey"])
+                    {
+                        GameMidlet.gameCanvas.keyPressedz((int)msg["keyCode"], isFromSync: true);
+                    }
+                    break;
+                case "syncKeyReleased":
+                    if (Utilities.channelSyncKey == (int)msg["channelSyncKey"])
+                    {
+                        GameMidlet.gameCanvas.keyReleasedz((int)msg["keyCode"], isFromAsync: true);
+                    }
                     break;
                 default:
                     writeLog($">> Lost action {action} \n");

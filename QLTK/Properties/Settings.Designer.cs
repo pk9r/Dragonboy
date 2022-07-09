@@ -25,7 +25,7 @@ namespace QLTK.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ModData\\Accounts.json")]
+        [global::System.Configuration.DefaultSettingValueAttribute("ModData\\accounts.json")]
         public string PathAccounts {
             get {
                 return ((string)(this["PathAccounts"]));
@@ -56,6 +56,18 @@ namespace QLTK.Properties {
             }
             set {
                 this["PortListener"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ModData\\sizeSettings.json")]
+        public string PathSizeSettings {
+            get {
+                return ((string)(this["PathSizeSettings"]));
+            }
+            set {
+                this["PathSizeSettings"] = value;
             }
         }
     }

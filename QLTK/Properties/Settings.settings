@@ -3,13 +3,16 @@
   <Profiles />
   <Settings>
     <Setting Name="PathAccounts" Type="System.String" Scope="User">
-      <Value Profile="(Default)">ModData\Accounts.json</Value>
+      <Value Profile="(Default)">ModData\accounts.json</Value>
     </Setting>
     <Setting Name="PathGame" Type="System.String" Scope="User">
       <Value Profile="(Default)">Game.exe</Value>
     </Setting>
     <Setting Name="PortListener" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">22327</Value>
+    </Setting>
+    <Setting Name="PathSizeSettings" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ModData\sizeSettings.json</Value>
     </Setting>
   </Settings>
 </SettingsFile>

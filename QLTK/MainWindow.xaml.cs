@@ -21,22 +21,6 @@ namespace QLTK
     {
         public static object sizeData = null;
 
-        public MainWindow()
-        {
-            InitializeComponent();
-
-            new Thread(() => AsynchronousSocketListener.StartListening())
-            {
-                IsBackground = true
-            }.Start();
-
-            ComboBoxServer.ItemsSource = Servers;
-            ComboBoxServer.DisplayMemberPath = "name";
-            ComboBoxServer.SelectedIndex = 0;
-
-            LoadAccounts();
-        }
-
         public static List<Server> Servers = new List<Server>()
         {
             new Server() { name = "Vũ trụ 1", ip = "dragon1.teamobi.com", port = 14445, language = 0},
@@ -54,31 +38,65 @@ namespace QLTK
             new Server() { name = "Universe 1", ip = "dragon.indonaga.com", port = 14445, language = 2 },
         };
 
+        public MainWindow()
+        {
+            InitializeComponent();
+
+            new Thread(() => AsynchronousSocketListener.StartListening())
+            {
+                IsBackground = true
+            }.Start();
+
+            ComboBoxServer.ItemsSource = Servers;
+            ComboBoxServer.DisplayMemberPath = "name";
+            ComboBoxServer.SelectedIndex = 0;
+
+            LoadAccounts();
+            LoadSizeSettings();
+        }
+
+        private void LoadSizeSettings()
+        {
+            var sizeSettings = new SizeSettings();
+            try
+            {
+                sizeSettings = LitJson.JsonMapper.ToObject<SizeSettings>(
+                    File.ReadAllText(Settings.Default.PathSizeSettings));
+            }
+            catch
+            {
+            }
+
+            TextBoxSize.Text = sizeSettings.size;
+            ComboBoxLowGraphic.SelectedIndex = sizeSettings.lowGraphic;
+            ComboBoxTypeSize.SelectedIndex = sizeSettings.typeSize;
+        }
+
         private void LoadAccounts()
         {
             try
             {
-                this.ListViewAccount.ItemsSource = LitJson.JsonMapper.ToObject<List<Account>>(
+                this.DataGridAccount.ItemsSource = LitJson.JsonMapper.ToObject<List<Account>>(
                     File.ReadAllText(Settings.Default.PathAccounts));
             }
             catch
             {
-                this.ListViewAccount.ItemsSource = new List<Account>();
+                this.DataGridAccount.ItemsSource = new List<Account>();
                 SaveAccounts();
             }
         }
 
         public void RefreshAccounts()
-            => this.ListViewAccount.Items.Refresh();
+            => this.DataGridAccount.Items.Refresh();
 
-        private List<Account> GetAccounts()
-            => (List<Account>)this.ListViewAccount.ItemsSource;
+        public List<Account> GetAccounts()
+            => (List<Account>)this.DataGridAccount.ItemsSource;
 
         private List<Account> GetSelectedAccounts()
-            => this.ListViewAccount.SelectedItems.Cast<Account>().ToList();
+            => this.DataGridAccount.SelectedItems.Cast<Account>().ToList();
 
         private Account GetSelectedAccount()
-            => (Account)this.ListViewAccount.SelectedItem;
+            => (Account)this.DataGridAccount.SelectedItem;
 
         private Account GetInputAccount() => new Account()
         {
@@ -92,7 +110,27 @@ namespace QLTK
             try
             {
                 File.WriteAllText(Settings.Default.PathAccounts,
-                    LitJson.JsonMapper.ToJson(this.ListViewAccount.ItemsSource));
+                    LitJson.JsonMapper.ToJson(this.DataGridAccount.ItemsSource));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+        
+        private void SaveSizeSettings()
+        {
+            try
+            {
+                var sizeSettings = new SizeSettings()
+                {
+                    size = this.TextBoxSize.Text,
+                    lowGraphic = this.ComboBoxLowGraphic.SelectedIndex,
+                    typeSize = this.ComboBoxTypeSize.SelectedIndex,
+                };
+
+                File.WriteAllText(Settings.Default.PathSizeSettings,
+                    LitJson.JsonMapper.ToJson(sizeSettings));
             }
             catch (Exception ex)
             {
@@ -208,11 +246,12 @@ namespace QLTK
                 }
             }
             SaveAccounts();
+            SaveSizeSettings();
         }
 
         private void ListViewAccount_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ListViewAccount.SelectedItem is Account account)
+            if (DataGridAccount.SelectedItem is Account account)
             {
                 TextBoxUsername.Text = account.username;
                 PasswordBoxPassword.Password = account.password;
@@ -223,7 +262,7 @@ namespace QLTK
 
         private void ListViewAccount_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (ListViewAccount.SelectedItem is Account account)
+            if (DataGridAccount.SelectedItem is Account account)
             {
                 if (ExistedWindow(account, out IntPtr hWnd))
                 {
@@ -247,7 +286,7 @@ namespace QLTK
         private void ButtonAddAccount_Click(object sender, RoutedEventArgs e)
         {
             GetAccounts().Add(GetInputAccount());
-            ListViewAccount.Items.Refresh();
+            DataGridAccount.Items.Refresh();
             SaveAccounts();
         }
 
@@ -264,7 +303,7 @@ namespace QLTK
             account.password = inputAccount.password;
             account.indexServer = inputAccount.indexServer;
 
-            ListViewAccount.Items.Refresh();
+            DataGridAccount.Items.Refresh();
             SaveAccounts();
         }
 
@@ -275,7 +314,7 @@ namespace QLTK
                 GetAccounts().Remove(account);
 
             SaveAccounts();
-            ListViewAccount.Items.Refresh();
+            DataGridAccount.Items.Refresh();
         }
 
         private async void ButtonLogin_Click(object sender, RoutedEventArgs e)
@@ -471,6 +510,9 @@ namespace QLTK
             var button = (Button)sender;
             int keyCode = GetKeyCode(button);
 
+            if (keyCode == 0)
+                return;
+
             var accounts = GetSelectedAccounts();
             if (accounts.Count() == 0)
             {
@@ -495,6 +537,9 @@ namespace QLTK
         {
             var button = (Button)sender;
             int keyCode = GetKeyCode(button);
+
+            if (keyCode == 0)
+                return;
 
             var accounts = GetSelectedAccounts();
             if (accounts.Count() == 0)
@@ -521,6 +566,9 @@ namespace QLTK
             int keyCode = GetKeyCode(e);
             e.Handled = true;
 
+            if (keyCode == 0)
+                return;
+
             var accounts = GetSelectedAccounts();
             if (accounts.Count() == 0)
             {
@@ -544,6 +592,10 @@ namespace QLTK
         private void GridControl_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             int keyCode = GetKeyCode(e);
+            e.Handled = true;
+            
+            if (keyCode == 0)
+                return;
 
             var accounts = GetSelectedAccounts();
             if (accounts.Count() == 0)
@@ -568,6 +620,13 @@ namespace QLTK
         private void ButtonControl_Click(object sender, RoutedEventArgs e)
         {
             GridControl.Focus();
+        }
+
+        private void ButtonSelecteAll_Click(object sender, RoutedEventArgs e)
+        {
+            DataGridAccount.SelectedItems.Clear();
+            this.GetAccounts().ForEach(
+                a => DataGridAccount.SelectedItems.Add(a));
         }
     }
 }

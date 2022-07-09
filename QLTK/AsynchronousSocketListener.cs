@@ -32,7 +32,7 @@ namespace QLTK
 
         // Thread signal.  
         public static ManualResetEvent allDone = new ManualResetEvent(false);
-        
+
         private static void onMessage(JsonData msg, StateObject state)
         {
             string action = (string)msg["action"];
@@ -46,6 +46,25 @@ namespace QLTK
                 case "setStatus":
                     string status = (string)msg["status"];
                     Utilities.UpdateStatus(state.account, status);
+                    break;
+                case "syncKeyPressed":
+                case "syncKeyReleased":
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        var mainWindow = Utilities.GetMainWindow();
+                        mainWindow.GetAccounts().ForEach(a =>
+                        {
+                            if (a.workSocket?.Connected == true && a != state.account)
+                            {
+                                sendMessage(a, new
+                                {
+                                    action = (string)msg["action"],
+                                    keyCode = (int)msg["keyCode"],
+                                    channelSyncKey = (int)msg["channelSyncKey"]
+                                });
+                            }
+                        });
+                    });
                     break;
                 case "connected":
                     int id = (int)msg["id"];
@@ -111,7 +130,7 @@ namespace QLTK
                 }
 
                 // Start listening for connections.  
-                
+
             }
             catch (Exception e)
             {
@@ -152,7 +171,7 @@ namespace QLTK
             {
                 bytesRead = handler.EndReceive(ar);
             }
-            catch (SocketException) 
+            catch (SocketException)
             {
                 Utilities.UpdateStatus(state.account, "-");
             }
@@ -195,7 +214,7 @@ namespace QLTK
                 Console.WriteLine(e.ToString());
             }
         }
-        
+
         private static void Send(Socket handler, string data)
         {
             // Convert the string data to byte data using ASCII encoding.  

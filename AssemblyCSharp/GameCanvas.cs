@@ -1,5 +1,6 @@
 using System;
 using Assets.src.g;
+using Mod;
 using UnityEngine;
 
 public class GameCanvas : IActionListener
@@ -1775,8 +1776,11 @@ public class GameCanvas : IActionListener
 		}
 	}
 
-	public void keyPressedz(int keyCode)
+	public void keyPressedz(int keyCode, bool isFromSync = false)
 	{
+		if (GameEvents.onKeyPressedz(keyCode, isFromSync))
+			return;
+        
 		lastTimePress = mSystem.currentTimeMillis();
 		if ((keyCode >= 46 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 122) || keyCode == 10 || keyCode == 8 || keyCode == 13 || keyCode == 32 || keyCode == 31)
 		{
@@ -1953,8 +1957,11 @@ public class GameCanvas : IActionListener
 		}
 	}
 
-	public void keyReleasedz(int keyCode)
+	public void keyReleasedz(int keyCode, bool isFromAsync = false)
 	{
+		if (GameEvents.onKeyReleasedz(keyCode, isFromAsync))
+			return;
+
 		keyAsciiPress = 0;
 		mapKeyRelease(keyCode);
 	}

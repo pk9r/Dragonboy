@@ -7,20 +7,21 @@
   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   Title="QLTK - NRO"
-  Width="1300"
-  Height="700"
+  Width="auto"
+  Height="600"
   Background="{DynamicResource MaterialDesignPaper}"
   Closed="Window_Closed"
   FontFamily="{materialDesign:MaterialDesignFont}"
+  SizeToContent="Width"
   TextElement.FontSize="14"
   TextElement.FontWeight="Medium"
   TextElement.Foreground="{DynamicResource MaterialDesignBody}"
   WindowStartupLocation="CenterScreen"
   mc:Ignorable="d">
-  <Grid x:Name="GridMain">
+  <Grid x:Name="GridMain" Width="auto">
     <Grid.ColumnDefinitions>
-      <ColumnDefinition />
-      <ColumnDefinition Width="400" />
+      <ColumnDefinition Width="500" />
+      <ColumnDefinition Width="auto" />
     </Grid.ColumnDefinitions>
 
     <materialDesign:Card Margin="5">
@@ -30,7 +31,7 @@
           <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <DataGrid
-          x:Name="ListViewAccount"
+          x:Name="DataGridAccount"
           Margin="5"
           d:ItemsSource="{d:SampleData ItemCount=5}"
           AutoGenerateColumns="False"
@@ -40,6 +41,14 @@
           LoadingRow="ListViewAccount_LoadingRow"
           MouseDoubleClick="ListViewAccount_MouseDoubleClick"
           SelectionChanged="ListViewAccount_SelectionChanged">
+          <DataGrid.ContextMenu>
+            <ContextMenu>
+              <MenuItem Click="ButtonSelecteAll_Click" Header="Chọn tất cả" />
+              <MenuItem Click="ButtonLogin_Click" Header="Đăng nhập" />
+              <MenuItem Click="ButtonArrangeWindows_Click" Header="Sắp xếp" />
+              <MenuItem Click="ButtonKill_Click" Header="Thoát" />
+            </ContextMenu>
+          </DataGrid.ContextMenu>
           <DataGrid.Columns>
             <DataGridTextColumn Binding="{Binding number}" Header="STT" />
             <DataGridTextColumn Binding="{Binding username}" Header="Tài khoản" />
@@ -50,280 +59,290 @@
               Header="Trạng thái" />
           </DataGrid.Columns>
         </DataGrid>
+
+        <materialDesign:Card Grid.Row="1" Margin="5">
+          <StackPanel>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+              </Grid.ColumnDefinitions>
+
+              <TextBox
+                x:Name="TextBoxChat"
+                Margin="5"
+                materialDesign:HintAssist.Hint="Nội dung chat" />
+
+              <Button
+                x:Name="ButtonChat"
+                Grid.Column="1"
+                Margin="5"
+                Click="ButtonChat_Click"
+                Content="Chat" />
+            </Grid>
+
+            <Grid
+              x:Name="GridControl"
+              Focusable="True"
+              PreviewKeyDown="GridControl_PreviewKeyDown"
+              PreviewKeyUp="GridControl_PreviewKeyUp">
+              <Grid.Resources>
+                <Style BasedOn="{StaticResource MaterialDesignRaisedButton}" TargetType="Button">
+                  <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ButtonKeyPress_PreviewMouseLeftButtonDown" />
+                  <EventSetter Event="PreviewMouseLeftButtonUp" Handler="ButtonKeyPress_PreviewMouseLeftButtonUp" />
+                </Style>
+              </Grid.Resources>
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition />
+                  <ColumnDefinition />
+                  <ColumnDefinition />
+                  <ColumnDefinition />
+                  <ColumnDefinition />
+                  <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                  <RowDefinition />
+                  <RowDefinition />
+                  <RowDefinition />
+                  <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Button
+                  x:Name="ButtonControl"
+                  Grid.Column="1"
+                  Margin="5"
+                  Click="ButtonControl_Click"
+                  Content="▢" />
+
+                <Button
+                  x:Name="ButtonF1"
+                  Grid.Row="2"
+                  Margin="5"
+                  Content="F1" />
+                <Button
+                  x:Name="ButtonF2"
+                  Grid.Row="2"
+                  Grid.Column="2"
+                  Margin="5"
+                  Content="F2" />
+
+                <Button
+                  x:Name="ButtonUp"
+                  Grid.Row="2"
+                  Grid.Column="1"
+                  Margin="5"
+                  Content="▲" />
+                <Button
+                  x:Name="ButtonDown"
+                  Grid.Row="3"
+                  Grid.Column="1"
+                  Margin="5"
+                  Content="▼" />
+                <Button
+                  x:Name="ButtonLeft"
+                  Grid.Row="3"
+                  Margin="5"
+                  Content="◀" />
+                <Button
+                  x:Name="ButtonRight"
+                  Grid.Row="3"
+                  Grid.Column="2"
+                  Margin="5"
+                  Content="▶" />
+
+                <Button
+                  x:Name="Button0"
+                  Grid.Row="4"
+                  Grid.Column="3"
+                  Margin="5"
+                  Content="0" />
+                <Button
+                  x:Name="Button1"
+                  Grid.Column="3"
+                  Margin="5"
+                  Content="1" />
+                <Button
+                  x:Name="Button2"
+                  Grid.Column="4"
+                  Margin="5"
+                  Content="2" />
+                <Button
+                  x:Name="Button3"
+                  Grid.Column="5"
+                  Margin="5"
+                  Content="3" />
+                <Button
+                  x:Name="Button4"
+                  Grid.Row="1"
+                  Grid.Column="3"
+                  Margin="5"
+                  Content="4" />
+                <Button
+                  x:Name="Button5"
+                  Grid.Row="1"
+                  Grid.Column="4"
+                  Margin="5"
+                  Content="5" />
+                <Button
+                  x:Name="Button6"
+                  Grid.Row="1"
+                  Grid.Column="5"
+                  Margin="5"
+                  Content="6" />
+                <Button
+                  x:Name="Button7"
+                  Grid.Row="2"
+                  Grid.Column="3"
+                  Margin="5"
+                  Content="7" />
+                <Button
+                  x:Name="Button8"
+                  Grid.Row="2"
+                  Grid.Column="4"
+                  Margin="5"
+                  Content="8" />
+                <Button
+                  x:Name="Button9"
+                  Grid.Row="2"
+                  Grid.Column="5"
+                  Margin="5"
+                  Content="9" />
+                <Button
+                  x:Name="ButtonEnter"
+                  Grid.Row="3"
+                  Grid.Column="4"
+                  Grid.ColumnSpan="2"
+                  Margin="5"
+                  Content="↲" />
+              </Grid>
+            </Grid>
+          </StackPanel>
+        </materialDesign:Card>
       </Grid>
     </materialDesign:Card>
 
-    <StackPanel Grid.Column="1">
-      <materialDesign:Card Margin="5">
-        <StackPanel>
-          <TextBox
-            x:Name="TextBoxUsername"
-            Margin="5"
-            materialDesign:HintAssist.Hint="Tên đăng nhập" />
-          <PasswordBox
-            x:Name="PasswordBoxPassword"
-            Margin="5"
-            materialDesign:HintAssist.Hint="Mật khẩu" />
-          <ComboBox
-            x:Name="ComboBoxServer"
-            Margin="5"
-            materialDesign:HintAssist.Hint="Máy chủ" />
-          <Grid>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition />
-              <ColumnDefinition />
-              <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-
-            <Button
-              x:Name="ButtonAddAccount"
-              Margin="5"
-              Click="ButtonAddAccount_Click"
-              Content="Thêm" />
-            <Button
-              x:Name="ButtonEditAccount"
-              Grid.Column="1"
-              Margin="5"
-              Click="ButtonEditAccount_Click"
-              Content="Sửa" />
-            <Button
-              x:Name="ButtonDeleteAccount"
-              Grid.Column="2"
-              Margin="5"
-              Click="ButtonDeleteAccount_Click"
-              Content="Xoá" />
-          </Grid>
-        </StackPanel>
-      </materialDesign:Card>
-
-      <materialDesign:Card Margin="5">
-        <StackPanel Grid.Column="1">
-          <Grid>
-            <Grid.RowDefinitions>
-              <RowDefinition />
-              <RowDefinition />
-              <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition />
-              <ColumnDefinition />
-              <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-
-            <Button
-              x:Name="ButtonLogin"
-              Margin="5"
-              Click="ButtonLogin_Click"
-              Content="Login" />
-            <Button
-              x:Name="ButtonLoginAll"
-              Grid.Column="1"
-              Margin="5"
-              Click="ButtonLoginAll_Click"
-              Content="Login All" />
-            <Button
-              x:Name="ButtonKill"
-              Grid.Column="2"
-              Margin="5"
-              Click="ButtonKill_Click"
-              Content="Quit" />
-
-            <Button
-              x:Name="ButtonArrangeWindows"
-              Grid.Row="1"
-              Grid.ColumnSpan="3"
-              Margin="5"
-              Click="ButtonArrangeWindows_Click"
-              Content="Sắp xếp cửa sổ" />
-
+    <Expander Grid.Column="1" ExpandDirection="Right">
+      <Expander.Header>
+        <TextBlock RenderTransformOrigin=".5,.5" Text="Tài khoản">
+          <TextBlock.LayoutTransform>
+            <RotateTransform Angle="90" />
+          </TextBlock.LayoutTransform>
+        </TextBlock>
+      </Expander.Header>
+      <StackPanel>
+        <materialDesign:Card Margin="5">
+          <StackPanel Margin="5">
             <TextBox
-              x:Name="TextBoxSize"
-              Grid.Row="2"
+              x:Name="TextBoxUsername"
               Margin="5"
-              materialDesign:HintAssist.Hint="Kích thước"
-              Text="1024x600" />
+              materialDesign:HintAssist.Hint="Tên đăng nhập" />
+            <PasswordBox
+              x:Name="PasswordBoxPassword"
+              Margin="5"
+              materialDesign:HintAssist.Hint="Mật khẩu" />
             <ComboBox
-              x:Name="ComboBoxLowGraphic"
-              Grid.Row="2"
-              Grid.Column="1"
+              x:Name="ComboBoxServer"
               Margin="5"
-              materialDesign:HintAssist.Hint="Cấu hình"
-              SelectedIndex="1">
-              <ComboBoxItem Content="Cao" />
-              <ComboBoxItem Content="Thấp" />
-            </ComboBox>
-            <ComboBox
-              x:Name="ComboBoxTypeSize"
-              Grid.Row="2"
-              Grid.Column="2"
-              materialDesign:HintAssist.Hint="Màn hình"
-              SelectedIndex="1">
-              <ComboBoxItem Content="Nhỏ" />
-              <ComboBoxItem Content="Lớn" />
-            </ComboBox>
-          </Grid>
-        </StackPanel>
-      </materialDesign:Card>
-
-      <materialDesign:Card Margin="5">
-        <StackPanel>
-          <Grid>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition />
-              <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-
-            <TextBox
-              x:Name="TextBoxChat"
-              Margin="5"
-              materialDesign:HintAssist.Hint="Nội dung chat" />
-
-            <Button
-              x:Name="ButtonChat"
-              Grid.Column="1"
-              Margin="5"
-              Click="ButtonChat_Click"
-              Content="Chat" />
-          </Grid>
-
-          <Grid
-            x:Name="GridControl"
-            Focusable="True"
-            PreviewKeyDown="GridControl_PreviewKeyDown"
-            PreviewKeyUp="GridControl_PreviewKeyUp">
-            <Grid.Resources>
-              <Style BasedOn="{StaticResource MaterialDesignRaisedButton}" TargetType="Button">
-                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ButtonKeyPress_PreviewMouseLeftButtonDown" />
-                <EventSetter Event="PreviewMouseLeftButtonUp" Handler="ButtonKeyPress_PreviewMouseLeftButtonUp" />
-              </Style>
-            </Grid.Resources>
+              materialDesign:HintAssist.Hint="Máy chủ" />
             <Grid>
               <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
                 <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
               </Grid.ColumnDefinitions>
+
+              <Button
+                x:Name="ButtonAddAccount"
+                Margin="5"
+                Click="ButtonAddAccount_Click"
+                Content="Thêm" />
+              <Button
+                x:Name="ButtonEditAccount"
+                Grid.Column="1"
+                Margin="5"
+                Click="ButtonEditAccount_Click"
+                Content="Sửa" />
+              <Button
+                x:Name="ButtonDeleteAccount"
+                Grid.Column="2"
+                Margin="5"
+                Click="ButtonDeleteAccount_Click"
+                Content="Xoá" />
+            </Grid>
+          </StackPanel>
+        </materialDesign:Card>
+
+        <materialDesign:Card Margin="5">
+          <StackPanel Grid.Column="1">
+            <Grid>
               <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
-                <RowDefinition />
               </Grid.RowDefinitions>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+              </Grid.ColumnDefinitions>
 
               <Button
-                x:Name="ButtonControl"
+                x:Name="ButtonLogin"
+                Margin="5"
+                Click="ButtonLogin_Click"
+                Content="Login" />
+              <Button
+                x:Name="ButtonLoginAll"
                 Grid.Column="1"
                 Margin="5"
-                Click="ButtonControl_Click"
-                Content="▢" />
+                Click="ButtonLoginAll_Click"
+                Content="Login All" />
+              <Button
+                x:Name="ButtonKill"
+                Grid.Column="2"
+                Margin="5"
+                Click="ButtonKill_Click"
+                Content="Quit" />
 
               <Button
-                x:Name="ButtonF1"
+                x:Name="ButtonArrangeWindows"
+                Grid.Row="1"
+                Grid.ColumnSpan="3"
+                Margin="5"
+                Click="ButtonArrangeWindows_Click"
+                Content="Sắp xếp cửa sổ" />
+
+              <TextBox
+                x:Name="TextBoxSize"
                 Grid.Row="2"
                 Margin="5"
-                Content="F1" />
-              <Button
-                x:Name="ButtonF2"
+                materialDesign:HintAssist.Hint="Kích thước"
+                Text="1024x600" />
+              <ComboBox
+                x:Name="ComboBoxLowGraphic"
+                Grid.Row="2"
+                Grid.Column="1"
+                Margin="5"
+                materialDesign:HintAssist.Hint="Cấu hình"
+                SelectedIndex="1">
+                <ComboBoxItem Content="Cao" />
+                <ComboBoxItem Content="Thấp" />
+              </ComboBox>
+              <ComboBox
+                x:Name="ComboBoxTypeSize"
                 Grid.Row="2"
                 Grid.Column="2"
                 Margin="5"
-                Content="F2" />
-
-              <Button
-                x:Name="ButtonUp"
-                Grid.Row="2"
-                Grid.Column="1"
-                Margin="5"
-                Content="▲" />
-              <Button
-                x:Name="ButtonDown"
-                Grid.Row="3"
-                Grid.Column="1"
-                Margin="5"
-                Content="▼" />
-              <Button
-                x:Name="ButtonLeft"
-                Grid.Row="3"
-                Margin="5"
-                Content="◀" />
-              <Button
-                x:Name="ButtonRight"
-                Grid.Row="3"
-                Grid.Column="2"
-                Margin="5"
-                Content="▶" />
-
-              <Button
-                x:Name="Button0"
-                Grid.Row="4"
-                Grid.Column="3"
-                Margin="5"
-                Content="0" />
-              <Button
-                x:Name="Button1"
-                Grid.Column="3"
-                Margin="5"
-                Content="1" />
-              <Button
-                x:Name="Button2"
-                Grid.Column="4"
-                Margin="5"
-                Content="2" />
-              <Button
-                x:Name="Button3"
-                Grid.Column="5"
-                Margin="5"
-                Content="3" />
-              <Button
-                x:Name="Button4"
-                Grid.Row="1"
-                Grid.Column="3"
-                Margin="5"
-                Content="4" />
-              <Button
-                x:Name="Button5"
-                Grid.Row="1"
-                Grid.Column="4"
-                Margin="5"
-                Content="5" />
-              <Button
-                x:Name="Button6"
-                Grid.Row="1"
-                Grid.Column="5"
-                Margin="5"
-                Content="6" />
-              <Button
-                x:Name="Button7"
-                Grid.Row="2"
-                Grid.Column="3"
-                Margin="5"
-                Content="7" />
-              <Button
-                x:Name="Button8"
-                Grid.Row="2"
-                Grid.Column="4"
-                Margin="5"
-                Content="8" />
-              <Button
-                x:Name="Button9"
-                Grid.Row="2"
-                Grid.Column="5"
-                Margin="5"
-                Content="9" />
-              <Button
-                x:Name="ButtonEnter"
-                Grid.Row="3"
-                Grid.Column="4"
-                Grid.ColumnSpan="2"
-                Margin="5"
-                Content="↲" />
+                materialDesign:HintAssist.Hint="Màn hình"
+                SelectedIndex="1">
+                <ComboBoxItem Content="Nhỏ" />
+                <ComboBoxItem Content="Lớn" />
+              </ComboBox>
             </Grid>
-          </Grid>
-        </StackPanel>
-      </materialDesign:Card>
-    </StackPanel>
+          </StackPanel>
+        </materialDesign:Card>
+      </StackPanel>
+    </Expander>
   </Grid>
 </Window>
