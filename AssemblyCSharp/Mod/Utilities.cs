@@ -243,7 +243,7 @@ namespace Mod
             }
             return false;
         }
-        public static string GetTextPopup(PopUp popUp)
+        public static string getTextPopup(PopUp popUp)
         {
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < popUp.says.Length; i++)
@@ -254,7 +254,7 @@ namespace Mod
             return stringBuilder.ToString().Trim();
         }
 
-        public static void RequestChangeMap(Waypoint waypoint)
+        public static void requestChangeMap(Waypoint waypoint)
         {
             if (waypoint.isOffline)
             {
@@ -265,9 +265,10 @@ namespace Mod
         }
 
 
-        public static Waypoint FindWaypoint(int type)
+        public static Waypoint findWaypoint(int type)
         {
             Waypoint result;
+            var vGoSize = TileMap.vGo.size();
             if (TileMap.vGo.size() == 1)
             {
                 result = (Waypoint)TileMap.vGo.elementAt(0);
@@ -277,9 +278,10 @@ namespace Mod
                 for (int i = 0; i < TileMap.vGo.size(); i++)
                 {
                     Waypoint waypoint = (Waypoint)TileMap.vGo.elementAt(i);
+                    var textPopup = getTextPopup(waypoint.popup);
                     if (type == 0)
                     {
-                        if ((TileMap.mapID == 70 && GetTextPopup(waypoint.popup) == "Vực cấm") || (TileMap.mapID == 73 && GetTextPopup(waypoint.popup) == "Vực chết") || (TileMap.mapID == 110 && GetTextPopup(waypoint.popup) == "Rừng tuyết"))
+                        if ((TileMap.mapID == 70 && getTextPopup(waypoint.popup) == "Vực cấm") || (TileMap.mapID == 73 && getTextPopup(waypoint.popup) == "Vực chết") || (TileMap.mapID == 110 && getTextPopup(waypoint.popup) == "Rừng tuyết"))
                         {
                             return waypoint;
                         }
@@ -290,7 +292,7 @@ namespace Mod
                     }
                     if (type == 1)
                     {
-                        if (((TileMap.mapID == 106 || TileMap.mapID == 107) && GetTextPopup(waypoint.popup) == "Hang băng") || ((TileMap.mapID == 105 || TileMap.mapID == 108) && GetTextPopup(waypoint.popup) == "Rừng băng") || (TileMap.mapID == 109 && GetTextPopup(waypoint.popup) == "Cánh đồng tuyết"))
+                        if (((TileMap.mapID == 106 || TileMap.mapID == 107) && getTextPopup(waypoint.popup) == "Hang băng") || ((TileMap.mapID == 105 || TileMap.mapID == 108) && getTextPopup(waypoint.popup) == "Rừng băng") || (TileMap.mapID == 109 && getTextPopup(waypoint.popup) == "Cánh đồng tuyết"))
                         {
                             return waypoint;
                         }
@@ -305,7 +307,7 @@ namespace Mod
                     }
                     if (type == 2)
                     {
-                        if (TileMap.mapID == 70 && GetTextPopup(waypoint.popup) == "Căn cứ Raspberry")
+                        if (TileMap.mapID == 70 && getTextPopup(waypoint.popup) == "Căn cứ Raspberry")
                         {
                             return waypoint;
                         }
@@ -318,11 +320,6 @@ namespace Mod
                 result = null;
             }
             return result;
-        }
-
-        public static void requestChangeMap(Waypoint w)
-        {
-            w.popup.command.performAction();
         }
 
         public static int getXWayPoint(Waypoint waypoint)
@@ -348,9 +345,9 @@ namespace Mod
             return (int)waypoint.maxY;
         }
         [HotkeyCommand('j')]
-        public static void LoadTrai()
+        public static void changeMapLeft()
         {
-            Waypoint waypoint = FindWaypoint(0);
+            Waypoint waypoint = findWaypoint(0);
             if (waypoint != null)
             {
                 teleportMyChar(getXWayPoint(waypoint), getYWayPoint(waypoint));
@@ -358,9 +355,9 @@ namespace Mod
             }
         }
         [HotkeyCommand('k')]
-        public static void LoadGiua()
+        public static void changeMapMiddle()
         {
-            Waypoint waypoint = FindWaypoint(1);
+            Waypoint waypoint = findWaypoint(1);
             if (waypoint != null)
             {
                 teleportMyChar(getXWayPoint(waypoint), getYWayPoint(waypoint));
@@ -368,9 +365,9 @@ namespace Mod
             }
         }
         [HotkeyCommand('l')]
-        public static void LoadPhai()
+        public static void changeMapRight()
         {
-            Waypoint waypoint = FindWaypoint(2);
+            Waypoint waypoint = findWaypoint(2);
             if (waypoint != null)
             {
                 teleportMyChar(getXWayPoint(waypoint), getYWayPoint(waypoint));
@@ -378,7 +375,7 @@ namespace Mod
             }
         }
         [HotkeyCommand('g')]
-        public static void sendGiaoDichtoCharFocusing()
+        public static void sendGiaoDichToCharFocusing()
         {
             if (Char.myCharz().charFocus == null)
             {
@@ -387,11 +384,11 @@ namespace Mod
             else
             {
                 Service.gI().giaodich(0, Char.myCharz().charFocus.charID, -1, -1);
-                GameScr.info1.addInfo("Đã gửi lời mời giao dich đến " + Char.myCharz().charFocus.cName, 0);
+                GameScr.info1.addInfo("Đã gửi lời mời giao giao dịch đến " + Char.myCharz().charFocus.cName, 0);
             }       
         }
-        [ChatCommand("kz")]
-        public static void changZone(int zone)
+        [ChatCommand("k")]
+        public static void changeZone(int zone)
         {
             Service.gI().requestChangeZone(zone, -1);
         }
