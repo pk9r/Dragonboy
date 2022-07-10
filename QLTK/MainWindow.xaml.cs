@@ -33,9 +33,37 @@ namespace QLTK
             new Server() { name = "Vũ trụ 8", ip = "dragon8.teamobi.com", port = 14445, language = 0 },
             new Server() { name = "Vũ trụ 9", ip = "dragon9.teamobi.com", port = 14445, language = 0 },
             new Server() { name = "Vũ trụ 10", ip = "dragon10.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Võ đài Liên Trụ", ip = "dragonwar.teamobi.com", port = 20000, language = 0 },
-            new Server() { name = "Naga", ip = "dragon.indonaga.com", port = 14446, language = 2 },
+            new Server() { name = "Võ đài Liên Vũ Trụ", ip = "dragonwar.teamobi.com", port = 20000, language = 0 },
+            new Server() { name = "Indonaga", ip = "dragon.indonaga.com", port = 14446, language = 2 },
             new Server() { name = "Universe 1", ip = "dragon.indonaga.com", port = 14445, language = 2 },
+            //Server Blue không chạy được phiên bản 217
+            //Các server lậu khác chưa test
+            new Server("Blue 01", "103.48.194.146", 14445),
+            new Server("Blue 02", "103.48.194.152", 14445),
+            new Server("Blue 03", "45.119.81.28", 14445),
+            new Server("Blue 04", "45.119.81.51", 14445),
+            new Server("Blue 05", "103.48.194.173", 14445),
+            new Server("Blue 06", "103.48.194.137", 14445),
+            new Server("Blue 07", "103.48.194.159", 14445),
+            new Server("Blue 08", "103.48.194.139", 14445),
+
+            new Server("Green 01", "103.48.194.46", 14445),
+
+            new Server("Dream 1", "14.225.198.30", 14446),
+            new Server("Dream 2", "14.225.198.30", 14447),
+
+            new Server("NroZ 1", "222.255.214.169", 14445),
+            new Server("NroZ 2", "222.255.214.169", 14445),
+
+            new Server("Vũ Trụ Kakarot", "103.90.224.247", 14445),
+
+            new Server("NROLOVE 1", "103.200.22.220", 14446),
+            new Server("NROLOVE 2", "103.27.236.54", 14446),
+
+            new Server("Private 1", "222.255.214.140", 14445),
+
+            new Server("SUPER 1", "103.90.224.245", 14446),
+            new Server("SUPER 2", "103.90.224.245", 14447),
         };
 
         public MainWindow()
@@ -76,33 +104,33 @@ namespace QLTK
         {
             try
             {
-                this.DataGridAccount.ItemsSource = LitJson.JsonMapper.ToObject<List<Account>>(
-                    File.ReadAllText(Settings.Default.PathAccounts));
+                DataGridAccount.ItemsSource = LitJson.JsonMapper.ToObject<List<Account>>(
+                    Utilities.DecryptString(File.ReadAllText(Settings.Default.PathAccounts)));
             }
             catch
             {
-                this.DataGridAccount.ItemsSource = new List<Account>();
+                DataGridAccount.ItemsSource = new List<Account>();
                 SaveAccounts();
             }
         }
 
         public void RefreshAccounts()
-            => this.DataGridAccount.Items.Refresh();
+            => DataGridAccount.Items.Refresh();
 
         public List<Account> GetAccounts()
-            => (List<Account>)this.DataGridAccount.ItemsSource;
+            => (List<Account>)DataGridAccount.ItemsSource;
 
         private List<Account> GetSelectedAccounts()
-            => this.DataGridAccount.SelectedItems.Cast<Account>().ToList();
+            => DataGridAccount.SelectedItems.Cast<Account>().ToList();
 
         private Account GetSelectedAccount()
-            => (Account)this.DataGridAccount.SelectedItem;
+            => (Account)DataGridAccount.SelectedItem;
 
         private Account GetInputAccount() => new Account()
         {
-            username = this.TextBoxUsername.Text,
-            password = this.PasswordBoxPassword.Password,
-            indexServer = this.ComboBoxServer.SelectedIndex,
+            username = TextBoxUsername.Text,
+            password = PasswordBoxPassword.Password,
+            indexServer = ComboBoxServer.SelectedIndex,
         };
 
         private void SaveAccounts()
@@ -110,7 +138,7 @@ namespace QLTK
             try
             {
                 File.WriteAllText(Settings.Default.PathAccounts,
-                    LitJson.JsonMapper.ToJson(this.DataGridAccount.ItemsSource));
+                    Utilities.EncryptString(LitJson.JsonMapper.ToJson(DataGridAccount.ItemsSource)));
             }
             catch (Exception ex)
             {
@@ -124,9 +152,9 @@ namespace QLTK
             {
                 var sizeSettings = new SizeSettings()
                 {
-                    size = this.TextBoxSize.Text,
-                    lowGraphic = this.ComboBoxLowGraphic.SelectedIndex,
-                    typeSize = this.ComboBoxTypeSize.SelectedIndex,
+                    size = TextBoxSize.Text,
+                    lowGraphic = ComboBoxLowGraphic.SelectedIndex,
+                    typeSize = ComboBoxTypeSize.SelectedIndex,
                 };
 
                 File.WriteAllText(Settings.Default.PathSizeSettings,
@@ -189,7 +217,7 @@ namespace QLTK
 
         private async Task ShowWindowsAsync()
         {
-            var accounts = this.GetAccounts();
+            var accounts = GetAccounts();
             foreach (var account in accounts)
             {
                 if (ExistedWindow(account, out IntPtr hWnd))
@@ -203,7 +231,7 @@ namespace QLTK
 
         private void ArrangeWindows()
         {
-            var accounts = this.GetAccounts();
+            var accounts = GetAccounts();
 
             var maxWidth = SystemParameters.PrimaryScreenWidth;
             var maxHeight = SystemParameters.PrimaryScreenHeight;
@@ -625,7 +653,7 @@ namespace QLTK
         private void ButtonSelecteAll_Click(object sender, RoutedEventArgs e)
         {
             DataGridAccount.SelectedItems.Clear();
-            this.GetAccounts().ForEach(
+            GetAccounts().ForEach(
                 a => DataGridAccount.SelectedItems.Add(a));
         }
     }
