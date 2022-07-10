@@ -251,7 +251,7 @@ public class Main : MonoBehaviour
 			int num = Rms.loadRMSInt("lastZoomlevel");
 			if (num != mGraphics.zoomLevel)
 			{
-				Rms.clearAll();
+				Rms.clearAllExceptImportantData();
 				Rms.saveRMSInt("lastZoomlevel", mGraphics.zoomLevel);
 				Rms.saveRMSInt("levelScreenKN", level);
 			}

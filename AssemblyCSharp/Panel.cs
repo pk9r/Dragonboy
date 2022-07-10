@@ -8095,7 +8095,7 @@ public class Panel : IActionListener, IChatable
 		}
 		if (idAction == 170391)
 		{
-			Rms.clearAll();
+			Rms.clearAllExceptImportantData();
 			if (mGraphics.zoomLevel > 1)
 			{
 				Rms.saveRMSInt("levelScreenKN", 1);

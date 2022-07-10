@@ -37,8 +37,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HID">
-      <HintPath>..\..\..\..\Desktop\Dumps\HID.dll</HintPath>
+    <Reference Include="HardwareID">
+      <HintPath>D:\DLL\HardwareID.dll</HintPath>
     </Reference>
     <Reference Include="LitJson">
       <HintPath>..\Lib\LitJson.dll</HintPath>

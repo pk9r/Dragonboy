@@ -509,7 +509,7 @@ public class Controller : IMessageHandler
 			}
 			case -92:
 				Main.typeClient = msg.reader().readByte();
-				Rms.clearAll();
+				Rms.clearAllExceptImportantData();
 				Rms.saveRMSInt("clienttype", Main.typeClient);
 				Rms.saveRMSInt("lastZoomlevel", mGraphics.zoomLevel);
 				GameCanvas.startOK(mResources.plsRestartGame, 8885, null);
