@@ -52,7 +52,7 @@ namespace QLTK
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         var mainWindow = Utilities.GetMainWindow();
-                        mainWindow.GetAccounts().ForEach(a =>
+                        mainWindow.GetAllAccounts().ForEach(a =>
                         {
                             if (a.workSocket?.Connected == true && a != state.account)
                             {
@@ -86,16 +86,13 @@ namespace QLTK
             }
         }
 
-        public static void sendMessage(Account account, object obj)
+        public static void sendMessage(this Account account, object obj)
         {
             Send(account.workSocket, JsonMapper.ToJson(obj));
         }
 
         public static void StartListening()
         {
-            // Data buffer for incoming data.  
-            ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[1024]);
-
             // Establish the local endpoint for the socket.  
             // Dns.GetHostName returns the name of the
             // host running the application.  
@@ -112,7 +109,7 @@ namespace QLTK
             try
             {
                 listener.Bind(localEndPoint);
-                listener.Listen(20);
+                listener.Listen(100);
 
                 while (true)
                 {
