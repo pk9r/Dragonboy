@@ -48,6 +48,12 @@ namespace Mod
             return false;
         }
 
+        public static void onSaveRMSString(ref string filename, ref string data)
+        {
+            if (filename is "acc" or "pass")
+                data = "pk9r327";
+        }
+
         /// <summary>
         /// Kích hoạt sau khi load KeyMap.
         /// </summary>
@@ -134,6 +140,16 @@ namespace Mod
         /// </summary>
         public static void onUpdateChatTextField(ChatTextField sender)
         {
+        }
+
+        public static bool onClearAllRMS()
+        {
+            FileInfo[] files = new DirectoryInfo(Rms.GetiPhoneDocumentsPath() + "/").GetFiles();
+            foreach (FileInfo fileInfo in files) 
+                if (fileInfo.Name != "isPlaySound")
+                    fileInfo.Delete();
+
+            return true;
         }
 
         /// <summary>

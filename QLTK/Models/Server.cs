@@ -13,10 +13,7 @@ namespace QLTK.Models
         public int port { get; set; }
         public int language { get; set; }
 
-        public Server()
-        {
-
-        }
+        public Server() { }
 
         public Server(string name, string ip, int port, int language)
         {
@@ -25,12 +22,13 @@ namespace QLTK.Models
             this.port = port;
             this.language = language;
         }
+        
         public Server(string name, string ip, int port)
-    {
-        this.name = name;
-        this.ip = ip;
-        this.port = port;
-        language = 0;
-    }
+        {
+            this.name = name;
+            this.ip = ip;
+            this.port = port;
+            language = 0;
+        }
     }
 }

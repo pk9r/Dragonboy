@@ -50,7 +50,12 @@ namespace QLTK
         {
             get
             {
-                return new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(Convert.ToBase64String(Encoding.UTF8.GetBytes(HWID.getHWID(true, false, true, true))) + "6VRRnrPsZfd6FtAqlqNUixYO7spOLu8P"));
+                return new MD5CryptoServiceProvider()
+                    .ComputeHash(Encoding.UTF8.GetBytes(
+                        Convert.ToBase64String(
+                            Encoding.UTF8.GetBytes(
+                                HWID.getHWID(true, false, true, true))) + 
+                                "6VRRnrPsZfd6FtAqlqNUixYO7spOLu8P"));
             }
         }
 
@@ -66,6 +71,7 @@ namespace QLTK
                 return bytes;
             }
         }
+
         public static void UpdateStatus(Account account, string status)
         {
             account.status = status;

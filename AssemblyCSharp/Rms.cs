@@ -1,8 +1,6 @@
 using Mod;
 using System;
 using System.IO;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
 using UnityEngine;
 
@@ -46,20 +44,7 @@ public class Rms
 		{
 			return null;
 		}
-        if (fileName == "acc" || fileName == "pass")
-        {
-            try
-            {
-
-                string text = GetiPhoneDocumentsPath() + "\\" + fileName;
-                return DecryptString(File.ReadAllBytes(text));
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-        DataInputStream dataInputStream = new DataInputStream(array);
+		DataInputStream dataInputStream = new DataInputStream(array);
 		try
 		{
 			string result = dataInputStream.readUTF();
@@ -92,17 +77,9 @@ public class Rms
 
 	public static void saveRMSString(string filename, string data)
 	{
-        if (filename == "acc" || filename == "pass")
-        {
-            string text = GetiPhoneDocumentsPath() + "\\" + filename;
-            FileStream fileStream = new FileStream(text, FileMode.Create);
-            byte[] bytes = EncryptString(data);
-            fileStream.Write(bytes, 0, bytes.Length);
-            fileStream.Flush();
-            fileStream.Close();
-            return;
-        }
-        DataOutputStream dataOutputStream = new DataOutputStream();
+		GameEvents.onSaveRMSString(ref filename, ref data);
+
+		DataOutputStream dataOutputStream = new DataOutputStream();
 		try
 		{
 			dataOutputStream.writeUTF(data);
@@ -184,8 +161,8 @@ public class Rms
 
 	public static int loadRMSInt(string file)
 	{
-        if (GameEvents.onLoadRMSInt(file, out int result))
-            return result;
+		if (GameEvents.onLoadRMSInt(file, out int result))
+			return result;
 
 		sbyte[] array = loadRMS(file);
 		return (array != null) ? array[0] : (-1);
@@ -204,7 +181,9 @@ public class Rms
 
 	public static string GetiPhoneDocumentsPath()
 	{
-		if (GameEvents.onGetRMSPath(out string result)) return result;
+		if (GameEvents.onGetRMSPath(out string result))
+			return result;
+
 		return Application.persistentDataPath;
 	}
 
@@ -235,19 +214,20 @@ public class Rms
 		}
 	}
 
-	public static void clearAllExceptImportantData()
+	public static void clearAll()
 	{
-        FileInfo[] files = new DirectoryInfo(GetiPhoneDocumentsPath() + "/").GetFiles();
-        foreach (FileInfo fileInfo in files) if (fileInfo.Name != "acc" && fileInfo.Name != "pass" && fileInfo.Name != "levelScreenKN" && fileInfo.Name != "lowGraphic" && fileInfo.Name != "isPlaySound" && fileInfo.Name != "NRlink2" && fileInfo.Name != "svselect") fileInfo.Delete();
-    }
+		if (GameEvents.onClearAllRMS())
+			 return;
+        
+		Cout.LogError3("clean rms");
+		FileInfo[] files = new DirectoryInfo(GetiPhoneDocumentsPath() + "/").GetFiles();
+		foreach (FileInfo fileInfo in files)
+		{
+			fileInfo.Delete();
+		}
+	}
 
-    public static void clearAll()
-    {
-        FileInfo[] files = new DirectoryInfo(GetiPhoneDocumentsPath() + "/").GetFiles();
-        foreach (FileInfo fileInfo in files) fileInfo.Delete();
-    }
-
-    public static void DeleteStorage(string path)
+	public static void DeleteStorage(string path)
 	{
 		try
 		{
@@ -313,56 +293,4 @@ public class Rms
 		}
 		return text;
 	}
-    static byte[] EncryptString(string data)
-    {
-        TripleDESCryptoServiceProvider tripleDESCryptoServiceProvider = new TripleDESCryptoServiceProvider
-        {
-            KeySize = 128,
-            BlockSize = 64,
-            Padding = PaddingMode.PKCS7,
-            Mode = CipherMode.CBC,
-            Key = Key,
-            IV = IV
-        };
-        ICryptoTransform cryptoTransform = tripleDESCryptoServiceProvider.CreateEncryptor();
-        byte[] bytes = Encoding.UTF8.GetBytes(data);
-        return Encoding.UTF8.GetBytes(Convert.ToBase64String(cryptoTransform.TransformFinalBlock(bytes, 0, bytes.Length)));
-    }
-
-    static string DecryptString(byte[] data)
-    {
-        TripleDESCryptoServiceProvider tripleDESCryptoServiceProvider = new TripleDESCryptoServiceProvider
-        {
-            KeySize = 128,
-            BlockSize = 64,
-            Padding = PaddingMode.PKCS7,
-            Mode = CipherMode.CBC,
-            Key = Key,
-            IV = IV
-        };
-        ICryptoTransform cryptoTransform = tripleDESCryptoServiceProvider.CreateDecryptor(tripleDESCryptoServiceProvider.Key, tripleDESCryptoServiceProvider.IV);
-        byte[] array = Convert.FromBase64String(Encoding.UTF8.GetString(data));
-        return Encoding.UTF8.GetString(cryptoTransform.TransformFinalBlock(array, 0, array.Length));
-    }
-
-    static byte[] Key
-    {
-        get
-        {
-            return new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(SystemInfo.deviceUniqueIdentifier + "lKVAZvyzsENttZaMJe71PqHxgtVocbcM"));
-        }
-    }
-
-    static byte[] IV
-    {
-        get
-        {
-            byte[] bytes = new byte[8];
-            byte[] bytes1 = new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(SystemInfo.deviceUniqueIdentifier + "0s3ZhPjkN83LqSunVimI4yAaMHj1iIIM"));
-            for (int i = 0; i < bytes1.Length; i++) bytes1[i] ^= 113;
-            System.Random random = new System.Random(~BitConverter.ToInt32(bytes1, 0));
-            random.NextBytes(bytes);
-            return bytes;
-        }
-    }
 }

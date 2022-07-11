@@ -37,8 +37,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HardwareID">
-      <HintPath>D:\DLL\HardwareID.dll</HintPath>
+    <Reference Include="HardwareID, Version=1.0.5907.7257, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\HardwareID.dll</HintPath>
     </Reference>
     <Reference Include="LitJson">
       <HintPath>..\Lib\LitJson.dll</HintPath>

@@ -36,6 +36,7 @@ namespace QLTK
             new Server() { name = "Võ đài Liên Vũ Trụ", ip = "dragonwar.teamobi.com", port = 20000, language = 0 },
             new Server() { name = "Indonaga", ip = "dragon.indonaga.com", port = 14446, language = 2 },
             new Server() { name = "Universe 1", ip = "dragon.indonaga.com", port = 14445, language = 2 },
+            
             //Server Blue không chạy được phiên bản 217
             //Các server lậu khác chưa test
             new Server("Blue 01", "103.48.194.146", 14445),
