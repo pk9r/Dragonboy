@@ -1,3 +1,4 @@
+﻿using Mod;
 using System;
 
 public class ChatPopup : Effect2, IActionListener
@@ -124,7 +125,12 @@ public class ChatPopup : Effect2, IActionListener
 
 	public static void addChatPopupMultiLine(string chat, int howLong, Npc c)
 	{
-		string[] array = Res.split(chat, "\n", 0);
+		if (GameEvents.onChatPopupMultiLine(chat))
+        {
+            return;
+        }
+
+        string[] array = Res.split(chat, "\n", 0);
 		Char.isLockKey = true;
 		currChatPopup = addChatPopup(array[0], howLong, c);
 		currChatPopup.currentLine = 0;

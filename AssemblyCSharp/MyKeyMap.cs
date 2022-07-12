@@ -47,7 +47,6 @@ public class MyKeyMap
 		h.Add(KeyCode.Space, 32);
 		h.Add(KeyCode.F1, -21);
 		h.Add(KeyCode.F2, -22);
-		h.Add(KeyCode.Equals, -25);
 		h.Add(KeyCode.Minus, 45);
 		h.Add(KeyCode.F3, -23);
 		h.Add(KeyCode.UpArrow, -1);
@@ -59,8 +58,23 @@ public class MyKeyMap
 		h.Add(KeyCode.Period, 46);
 		h.Add(KeyCode.At, 64);
 		h.Add(KeyCode.Tab, -26);
+		h.Add(KeyCode.Keypad0, 48);
+		h.Add(KeyCode.Keypad1, 49);
+		h.Add(KeyCode.Keypad2, 50);
+		h.Add(KeyCode.Keypad3, 51);
+		h.Add(KeyCode.Keypad4, 52);
+		h.Add(KeyCode.Keypad5, 53);
+		h.Add(KeyCode.Keypad6, 54);
+		h.Add(KeyCode.Keypad7, 55);
+		h.Add(KeyCode.Keypad8, 56);
+		h.Add(KeyCode.Keypad9, 57);
+		h.Add(KeyCode.BackQuote, -30);
+		h.Add(KeyCode.LeftShift, 304);
+		h.Add(KeyCode.Semicolon, 59);
+		h.Add(KeyCode.Comma, 44);
+		h.Add(KeyCode.Equals, 61);
+		h.Add(KeyCode.Quote, 96);
 		h.Add(KeyCode.Slash, 47);
-		Mod.GameEvents.onKeyMapLoaded(h);
 	}
 
 	public static int map(KeyCode k)

@@ -48,7 +48,7 @@ namespace Mod
         /// </summary>
         public static void save()
         {
-            File.WriteAllText(Properties.Resources.PathHotkeyCommand,
+            File.WriteAllText(Utilities.PathHotkeyCommand,
                 LitJson.JsonMapper.ToJson(hotkeyCommands));
         }
 
