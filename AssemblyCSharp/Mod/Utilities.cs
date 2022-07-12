@@ -31,6 +31,10 @@ namespace Mod
 
         public static int speedRun = 8;
 
+        public static Waypoint waypointLeft;
+        public static Waypoint waypointMiddle;
+        public static Waypoint waypointRight;
+
         public static string username = "";
         public static string password = "";
         public static JsonData server = null;
@@ -139,67 +143,6 @@ namespace Mod
         public static bool isUsingTDLT() =>
             ItemTime.isExistItem(ID_ICON_ITEM_TDLT);
 
-        public static Waypoint findWaypoint(int type)
-        {
-            var vGoSize = TileMap.vGo.size();
-            if (vGoSize == 1)
-            {
-                return (Waypoint)TileMap.vGo.elementAt(0);
-            }
-
-            for (int i = 0; i < vGoSize; i++)
-            {
-                Waypoint waypoint = (Waypoint)TileMap.vGo.elementAt(i);
-                var textPopup = getTextPopup(waypoint.popup);
-
-                if (type == 0)
-                {
-                    if ((TileMap.mapID == 70 && textPopup == "Vực cấm") ||
-                        (TileMap.mapID == 73 && textPopup == "Vực chết") ||
-                        (TileMap.mapID == 110 && textPopup == "Rừng tuyết"))
-                    {
-                        return waypoint;
-                    }
-
-                    if (waypoint.maxX < 60)
-                    {
-                        return waypoint;
-                    }
-                }
-
-                if (type == 1)
-                {
-                    if (((TileMap.mapID is 106 or 107) && textPopup == "Hang băng") ||
-                        ((TileMap.mapID is 105 or 108) && textPopup == "Rừng băng") ||
-                        (TileMap.mapID == 109 && textPopup == "Cánh đồng tuyết"))
-                    {
-                        return waypoint;
-                    }
-
-                    if (TileMap.mapID == 27)
-                    {
-                        return null;
-                    }
-
-                    if (waypoint.minX < TileMap.pxw - 60 && waypoint.maxX >= 60)
-                    {
-                        return waypoint;
-                    }
-                }
-
-                if (TileMap.mapID == 70 && textPopup == "Căn cứ Raspberry")
-                {
-                    return waypoint;
-                }
-                if (waypoint.minX > TileMap.pxw - 60)
-                {
-                    return waypoint;
-                }
-            }
-
-            return null;
-        }
-
         public static int getXWayPoint(Waypoint waypoint)
         {
             return waypoint.maxX < 60 ? 15 :
@@ -253,6 +196,63 @@ namespace Mod
             }
 
             Service.gI().requestChangeMap();
+        }
+
+        public static void setWaypointChangeMap(Waypoint waypoint)
+        {
+            int cMapID = TileMap.mapID;
+            var textPopup = getTextPopup(waypoint.popup);
+
+            if (cMapID == 27 && textPopup == "Tường thành 1")
+                return;
+            
+            if (cMapID == 70 && textPopup == "Vực cấm" ||
+                cMapID == 73 && textPopup == "Vực chết" ||
+                cMapID == 110 && textPopup == "Rừng tuyết")
+            {
+                waypointLeft = waypoint;
+                return;
+            }
+
+            if (((cMapID is 106 or 107) && textPopup == "Hang băng") ||
+                ((cMapID is 105 or 108) && textPopup == "Rừng băng") ||
+                (cMapID == 109 && textPopup == "Cánh đồng tuyết"))
+            {
+                waypointMiddle = waypoint;
+                return;
+            }
+
+            if (cMapID == 70 && textPopup == "Căn cứ Raspberry")
+            {
+                waypointRight = waypoint;
+                return;
+            }
+
+            if (waypoint.maxX < 60)
+            {
+                waypointLeft = waypoint;
+                return;
+            }
+
+            if (waypoint.minX > TileMap.pxw - 60)
+            {
+                waypointRight = waypoint;
+                return;
+            }
+
+            waypointMiddle = waypoint;
+        }
+
+        public static void updateWaypointChangeMap()
+        {
+            waypointLeft = waypointMiddle = waypointRight = null;
+
+            var vGoSize = TileMap.vGo.size();
+            for (int i = 0; i < vGoSize; i++)
+            {
+                Waypoint waypoint = (Waypoint)TileMap.vGo.elementAt(i);
+                setWaypointChangeMap(waypoint);
+            }
         }
 
         [ChatCommand("tdc")]
@@ -393,7 +393,7 @@ namespace Mod
         [HotkeyCommand('j')]
         public static void changeMapLeft()
         {
-            Waypoint waypoint = findWaypoint(0);
+            Waypoint waypoint = waypointLeft;
             if (waypoint != null)
             {
                 teleportMyChar(getXWayPoint(waypoint), getYWayPoint(waypoint));
@@ -404,7 +404,7 @@ namespace Mod
         [HotkeyCommand('k')]
         public static void changeMapMiddle()
         {
-            Waypoint waypoint = findWaypoint(1);
+            Waypoint waypoint = waypointMiddle;
             if (waypoint != null)
             {
                 teleportMyChar(getXWayPoint(waypoint), getYWayPoint(waypoint));
@@ -415,7 +415,7 @@ namespace Mod
         [HotkeyCommand('l')]
         public static void changeMapRight()
         {
-            Waypoint waypoint = findWaypoint(2);
+            Waypoint waypoint = waypointRight;
             if (waypoint != null)
             {
                 teleportMyChar(getXWayPoint(waypoint), getYWayPoint(waypoint));

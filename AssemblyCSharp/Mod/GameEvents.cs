@@ -256,5 +256,10 @@ namespace Mod
 
             return false;
         }
+
+        public static void onInfoMapLoaded()
+        {
+            Utilities.updateWaypointChangeMap();
+        }
     }
 }

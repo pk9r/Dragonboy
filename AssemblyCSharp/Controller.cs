@@ -2,6 +2,7 @@ using System;
 using Assets.src.e;
 using Assets.src.f;
 using Assets.src.g;
+using Mod;
 using UnityEngine;
 
 public class Controller : IMessageHandler
@@ -4872,6 +4873,7 @@ public class Controller : IMessageHandler
 		{
 			Cout.LogError("LOI TAI LOADMAP INFO " + ex.ToString());
 		}
+		GameEvents.onInfoMapLoaded();
 	}
 
 	public void keyValueAction(string key, string value)
