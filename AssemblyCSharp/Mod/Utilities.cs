@@ -37,6 +37,20 @@ namespace Mod
         public static JsonData sizeData = null;
 
         public static int channelSyncKey = -1;
+        public void perform(int idAction, object p)
+        {
+            IdAction id = (IdAction)idAction;
+            switch (id)
+            {
+                case IdAction.None:
+                    break;
+                case IdAction.TeleToNpc:
+                    teleToNpc((Npc)p);
+                    break;
+                default:
+                    break;
+            }
+        }
 
         #region Get Methods
         /// <summary>
@@ -76,21 +90,6 @@ namespace Mod
                 .SelectMany(x => x.GetMethods(PUBLIC_STATIC_VOID));
         }
         #endregion
-
-        public void perform(int idAction, object p)
-        {
-            IdAction id = (IdAction)idAction;
-            switch (id)
-            {
-                case IdAction.None:
-                    break;
-                case IdAction.TeleToNpc:
-                    teleToNpc((Npc)p);
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #region Get info
         /// <summary>
