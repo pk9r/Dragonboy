@@ -128,7 +128,7 @@ public class ServerListScreen : mScreen, IActionListener
 			}
 		}
 		cmdUpdateServer = new Command();
-		cmdUpdateServer.actionChat = delegate(string str)
+		cmdUpdateServer.actionChat = delegate (string str)
 		{
 			string text = str;
 			string text2 = str;
@@ -212,67 +212,67 @@ public class ServerListScreen : mScreen, IActionListener
 		{
 			switch (i)
 			{
-			case 0:
-				cmd[0] = new Command(string.Empty, this, 3, null);
-				if (text == null)
-				{
-					cmd[0].caption = mResources.playNew;
-					if (Rms.loadRMS("userAo" + ipSelect) != null)
+				case 0:
+					cmd[0] = new Command(string.Empty, this, 3, null);
+					if (text == null)
 					{
-						cmd[0].caption = mResources.choitiep;
+						cmd[0].caption = mResources.playNew;
+						if (Rms.loadRMS("userAo" + ipSelect) != null)
+						{
+							cmd[0].caption = mResources.choitiep;
+						}
+						break;
+					}
+					if (text.Equals(string.Empty))
+					{
+						cmd[0].caption = mResources.playNew;
+						if (Rms.loadRMS("userAo" + ipSelect) != null)
+						{
+							cmd[0].caption = mResources.choitiep;
+						}
+						break;
+					}
+					cmd[0].caption = mResources.playAcc + ": " + text;
+					if (cmd[0].caption.Length > 23)
+					{
+						cmd[0].caption = cmd[0].caption.Substring(0, 23);
+						cmd[0].caption += "...";
 					}
 					break;
-				}
-				if (text.Equals(string.Empty))
-				{
-					cmd[0].caption = mResources.playNew;
-					if (Rms.loadRMS("userAo" + ipSelect) != null)
+				case 1:
+					if (nCmdPlay == 1)
 					{
-						cmd[0].caption = mResources.choitiep;
+						cmd[1] = new Command(string.Empty, this, 10100, null);
+						cmd[1].caption = mResources.playNew;
+					}
+					else
+					{
+						cmd[1] = new Command(mResources.change_account, this, 7, null);
 					}
 					break;
-				}
-				cmd[0].caption = mResources.playAcc + ": " + text;
-				if (cmd[0].caption.Length > 23)
-				{
-					cmd[0].caption = cmd[0].caption.Substring(0, 23);
-					cmd[0].caption += "...";
-				}
-				break;
-			case 1:
-				if (nCmdPlay == 1)
-				{
-					cmd[1] = new Command(string.Empty, this, 10100, null);
-					cmd[1].caption = mResources.playNew;
-				}
-				else
-				{
-					cmd[1] = new Command(mResources.change_account, this, 7, null);
-				}
-				break;
-			case 2:
-				if (nCmdPlay == 1)
-				{
-					cmd[2] = new Command(mResources.change_account, this, 7, null);
-				}
-				else
-				{
-					cmd[2] = new Command(string.Empty, this, 17, null);
-				}
-				break;
-			case 3:
-				if (nCmdPlay == 1)
-				{
-					cmd[3] = new Command(string.Empty, this, 17, null);
-				}
-				else
-				{
-					cmd[3] = new Command(mResources.option, this, 8, null);
-				}
-				break;
-			case 4:
-				cmd[4] = new Command(mResources.option, this, 8, null);
-				break;
+				case 2:
+					if (nCmdPlay == 1)
+					{
+						cmd[2] = new Command(mResources.change_account, this, 7, null);
+					}
+					else
+					{
+						cmd[2] = new Command(string.Empty, this, 17, null);
+					}
+					break;
+				case 3:
+					if (nCmdPlay == 1)
+					{
+						cmd[3] = new Command(string.Empty, this, 17, null);
+					}
+					else
+					{
+						cmd[3] = new Command(mResources.option, this, 8, null);
+					}
+					break;
+				case 4:
+					cmd[4] = new Command(mResources.option, this, 8, null);
+					break;
 			}
 			cmd[i].y = num;
 			cmd[i].setType();
@@ -655,8 +655,8 @@ public class ServerListScreen : mScreen, IActionListener
 		mSystem.resetCurInapp();
 		base.switchToMe();
 
-        GameEvents.onServerListScreenLoaded();
-    }
+		GameEvents.onServerListScreenLoaded();
+	}
 
 	public void switchToMe2()
 	{
@@ -878,19 +878,19 @@ public class ServerListScreen : mScreen, IActionListener
 		{
 			switch (mSystem.clientType)
 			{
-			case 1:
-				mSystem.callHotlineJava();
-				break;
-			case 3:
-			case 5:
-				mSystem.callHotlineIphone();
-				break;
-			case 6:
-				mSystem.callHotlineWindowsPhone();
-				break;
-			case 4:
-				mSystem.callHotlinePC();
-				break;
+				case 1:
+					mSystem.callHotlineJava();
+					break;
+				case 3:
+				case 5:
+					mSystem.callHotlineIphone();
+					break;
+				case 6:
+					mSystem.callHotlineWindowsPhone();
+					break;
+				case 4:
+					mSystem.callHotlinePC();
+					break;
 			}
 		}
 		if (idAction == 14)

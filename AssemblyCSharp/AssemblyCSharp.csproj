@@ -21,6 +21,9 @@
     <Reference Include="UnityEngine">
       <HintPath>..\Game\Game_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
+	<Reference Include="mscorlib">
+      <HintPath>..\Game\Game_Data\Managed\mscorlib.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="copy &quot;$(TargetDir)Assembly-CSharp.dll&quot; &quot;$(SolutionDir)Game\Game_Data\Managed\&quot;" />

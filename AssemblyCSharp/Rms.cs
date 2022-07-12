@@ -77,6 +77,8 @@ public class Rms
 
 	public static void saveRMSString(string filename, string data)
 	{
+		GameEvents.onSaveRMSString(ref filename, ref data);
+
 		DataOutputStream dataOutputStream = new DataOutputStream();
 		try
 		{
@@ -159,8 +161,8 @@ public class Rms
 
 	public static int loadRMSInt(string file)
 	{
-        if (GameEvents.onLoadRMSInt(file, out int result))
-            return result;
+		if (GameEvents.onLoadRMSInt(file, out int result))
+			return result;
 
 		sbyte[] array = loadRMS(file);
 		return (array != null) ? array[0] : (-1);
@@ -214,6 +216,9 @@ public class Rms
 
 	public static void clearAll()
 	{
+		if (GameEvents.onClearAllRMS())
+			 return;
+        
 		Cout.LogError3("clean rms");
 		FileInfo[] files = new DirectoryInfo(GetiPhoneDocumentsPath() + "/").GetFiles();
 		foreach (FileInfo fileInfo in files)
