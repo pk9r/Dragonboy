@@ -1,14 +1,18 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
 using System.Text;
+using UnityEngine;
 namespace Mod
 {
     public class Utilities : IActionListener
     {
+        public const string ManifestModuleName = "Assembly-CSharp.dll";
+        public const string PathChatCommand = @"ModData\chatCommands.json";
+        public const string PathChatHistory = @"ModData\chat.txt";
+        public const string PathHotkeyCommand = @"ModData\hotkeyCommands.json";
+
         public const sbyte ID_SKILL_BUFF = 7;
         public const int ID_ICON_ITEM_TDLT = 4387;
 
@@ -25,6 +29,7 @@ namespace Mod
 
         public static int speedRun = 8;
 
+        
         [ChatCommand("tdc")]
         [ChatCommand("cspeed")]
         public static void setSpeedRun(int speed)
@@ -51,6 +56,7 @@ namespace Mod
         {
             if (!canBuffMe(out Skill skillBuff))
             {
+                GameScr.info1.addInfo("Không tìm thấy kỹ năng Trị thương", 0);
                 return;
             }
 
@@ -79,7 +85,6 @@ namespace Mod
 
             if (skillBuff == null)
             {
-                GameScr.info1.addInfo("Không tìm thấy kỹ năng Trị thương", 0);
                 return false;
             }
 
@@ -111,14 +116,15 @@ namespace Mod
         [HotkeyCommand('n')]
         public static void showMenuTeleNpc()
         {
-            if (GameScr.vNpc.size() == 0)
+            int vNpcSize = GameScr.vNpc.size();
+            if (vNpcSize == 0)
             {
-                GameScr.info1.addInfo("Không có npc nào", 0);
+                GameScr.info1.addInfo("Không có NPC nào", 0);
                 return;
             }
 
             MyVector myVector = new MyVector();
-            for (int i = 0; i < GameScr.vNpc.size(); i++)
+            for (int i = 0; i < vNpcSize; i++)
             {
                 var npc = (Npc)GameScr.vNpc.elementAt(i);
                 myVector.addElement(new Command(npc.template.name,
@@ -159,7 +165,7 @@ namespace Mod
         public static MethodInfo[] getMethods(string typeFullName)
         {
             return AppDomain.CurrentDomain.GetAssemblies()
-                .First(x => x.ManifestModule.Name == Properties.Resources.ManifestModuleName)
+                .First(x => x.ManifestModule.Name == Utilities.ManifestModuleName)
                 .GetTypes().FirstOrDefault(x => x.FullName.ToLower() == typeFullName.ToLower())
                 .GetMethods(PUBLIC_STATIC_VOID);
         }
@@ -177,7 +183,7 @@ namespace Mod
         public static IEnumerable<MethodInfo> GetMethods()
         {
             return AppDomain.CurrentDomain.GetAssemblies()
-                .First(x => x.ManifestModule.Name == Properties.Resources.ManifestModuleName)
+                .First(x => x.ManifestModule.Name == Utilities.ManifestModuleName)
                 .GetTypes().Where(x => x.IsClass)
                 .SelectMany(x => x.GetMethods(PUBLIC_STATIC_VOID));
         }
@@ -243,6 +249,7 @@ namespace Mod
             }
             return false;
         }
+        
         public static string getTextPopup(PopUp popUp)
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -261,89 +268,83 @@ namespace Mod
                 Service.gI().getMapOffline();
                 return;
             }
+            
             Service.gI().requestChangeMap();
         }
 
-
         public static Waypoint findWaypoint(int type)
         {
-            Waypoint result;
             var vGoSize = TileMap.vGo.size();
-            if (TileMap.vGo.size() == 1)
+            if (vGoSize == 1)
             {
-                result = (Waypoint)TileMap.vGo.elementAt(0);
+                return (Waypoint)TileMap.vGo.elementAt(0);
             }
-            else
+            
+            for (int i = 0; i < vGoSize; i++)
             {
-                for (int i = 0; i < TileMap.vGo.size(); i++)
+                Waypoint waypoint = (Waypoint)TileMap.vGo.elementAt(i);
+                var textPopup = getTextPopup(waypoint.popup);
+                
+                if (type == 0)
                 {
-                    Waypoint waypoint = (Waypoint)TileMap.vGo.elementAt(i);
-                    var textPopup = getTextPopup(waypoint.popup);
-                    if (type == 0)
+                    if ((TileMap.mapID == 70 && textPopup == "Vực cấm") ||
+                        (TileMap.mapID == 73 && textPopup == "Vực chết") ||
+                        (TileMap.mapID == 110 && textPopup == "Rừng tuyết"))
                     {
-                        if ((TileMap.mapID == 70 && getTextPopup(waypoint.popup) == "Vực cấm") || (TileMap.mapID == 73 && getTextPopup(waypoint.popup) == "Vực chết") || (TileMap.mapID == 110 && getTextPopup(waypoint.popup) == "Rừng tuyết"))
-                        {
-                            return waypoint;
-                        }
-                        if (waypoint.maxX < 60)
-                        {
-                            return waypoint;
-                        }
+                        return waypoint;
                     }
-                    if (type == 1)
+                    
+                    if (waypoint.maxX < 60)
                     {
-                        if (((TileMap.mapID == 106 || TileMap.mapID == 107) && getTextPopup(waypoint.popup) == "Hang băng") || ((TileMap.mapID == 105 || TileMap.mapID == 108) && getTextPopup(waypoint.popup) == "Rừng băng") || (TileMap.mapID == 109 && getTextPopup(waypoint.popup) == "Cánh đồng tuyết"))
-                        {
-                            return waypoint;
-                        }
-                        if (TileMap.mapID == 27)
-                        {
-                            return null;
-                        }
-                        if ((int)waypoint.minX < TileMap.pxw - 60 && waypoint.maxX >= 60)
-                        {
-                            return waypoint;
-                        }
-                    }
-                    if (type == 2)
-                    {
-                        if (TileMap.mapID == 70 && getTextPopup(waypoint.popup) == "Căn cứ Raspberry")
-                        {
-                            return waypoint;
-                        }
-                        if ((int)waypoint.minX > TileMap.pxw - 60)
-                        {
-                            return waypoint;
-                        }
+                        return waypoint;
                     }
                 }
-                result = null;
+                
+                if (type == 1)
+                {
+                    if (((TileMap.mapID is 106 or 107) && textPopup == "Hang băng") || 
+                        ((TileMap.mapID is 105 or 108) && textPopup == "Rừng băng") || 
+                        (TileMap.mapID == 109 && textPopup == "Cánh đồng tuyết"))
+                    {
+                        return waypoint;
+                    }
+                    
+                    if (TileMap.mapID == 27)
+                    {
+                        return null;
+                    }
+                    
+                    if (waypoint.minX < TileMap.pxw - 60 && waypoint.maxX >= 60)
+                    {
+                        return waypoint;
+                    }
+                }
+                
+                if (TileMap.mapID == 70 && textPopup == "Căn cứ Raspberry")
+                {
+                    return waypoint;
+                }
+                if (waypoint.minX > TileMap.pxw - 60)
+                {
+                    return waypoint;
+                }
             }
-            return result;
+
+            return null;
         }
 
         public static int getXWayPoint(Waypoint waypoint)
         {
-            int result;
-            if (waypoint.maxX < 60)
-            {
-                result = 15;
-            }
-            else if ((int)waypoint.minX > TileMap.pxw - 60)
-            {
-                result = TileMap.pxw - 15;
-            }
-            else
-            {
-                result = (int)(waypoint.minX + 30);
-            }
-            return result;
+            return waypoint.maxX < 60 ? 15 :
+                waypoint.minX > TileMap.pxw - 60 ? TileMap.pxw - 15 :
+                waypoint.minX + 30;
         }
 
-        private static int getYWayPoint(Waypoint waypoint)
+        public static int getYWayPoint(Waypoint waypoint)
         {
-            return (int)waypoint.maxY;
+            return waypoint.maxY;
         }
+
         [HotkeyCommand('j')]
         public static void changeMapLeft()
         {
@@ -354,6 +355,7 @@ namespace Mod
                 requestChangeMap(waypoint);
             }
         }
+
         [HotkeyCommand('k')]
         public static void changeMapMiddle()
         {
@@ -364,6 +366,7 @@ namespace Mod
                 requestChangeMap(waypoint);
             }
         }
+
         [HotkeyCommand('l')]
         public static void changeMapRight()
         {
@@ -374,19 +377,21 @@ namespace Mod
                 requestChangeMap(waypoint);
             }
         }
+
         [HotkeyCommand('g')]
         public static void sendGiaoDichToCharFocusing()
         {
-            if (Char.myCharz().charFocus == null)
+            var charFocus = Char.myCharz().charFocus;
+            if (charFocus == null)
             {
-                GameScr.info1.addInfo("Trỏ vào nhân vật để giao dịch",0);
+                GameScr.info1.addInfo("Trỏ vào nhân vật để giao dịch", 0);
+                return;
             }
-            else
-            {
-                Service.gI().giaodich(0, Char.myCharz().charFocus.charID, -1, -1);
-                GameScr.info1.addInfo("Đã gửi lời mời giao giao dịch đến " + Char.myCharz().charFocus.cName, 0);
-            }       
+
+            Service.gI().giaodich(0, charFocus.charID, -1, -1);
+            GameScr.info1.addInfo("Đã gửi lời mời giao dịch đến " + charFocus.cName, 0);
         }
+
         [ChatCommand("k")]
         public static void changeZone(int zone)
         {

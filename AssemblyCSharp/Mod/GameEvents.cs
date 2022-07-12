@@ -75,5 +75,16 @@ namespace Mod
             
             HistoryChat.gI.update();
         }
+
+        public static bool onChatPopupMultiLine(string chat)
+        {
+            if (chat.ToLower().Contains("chưa thể chuyển khu"))
+            {
+                GameScr.info1.addInfo(chat, 0);
+                return true;
+            }
+
+            return false;
+        }
     }
 }

@@ -90,13 +90,13 @@ namespace Mod
             try
             {
                 histories = LitJson.JsonMapper.ToObject<List<string>>(
-                        File.ReadAllText(Properties.Resources.PathChatHistory));
+                        File.ReadAllText(Utilities.PathChatHistory));
             }
             catch { }
 
             histories.Remove(text);
             histories.Insert(0, text);
-            File.WriteAllText(Properties.Resources.PathChatHistory,
+            File.WriteAllText(Utilities.PathChatHistory,
                 LitJson.JsonMapper.ToJson(histories));
         }
 
@@ -263,7 +263,7 @@ namespace Mod
             try
             {
                 histories = LitJson.JsonMapper.ToObject<List<string>>(
-                        File.ReadAllText(Properties.Resources.PathChatHistory));
+                        File.ReadAllText(Utilities.PathChatHistory));
             }
             catch { }
 

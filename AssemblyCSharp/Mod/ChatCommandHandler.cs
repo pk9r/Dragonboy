@@ -45,7 +45,7 @@ namespace Mod
         /// </summary>
         public static void save()
         {
-            File.WriteAllText(Properties.Resources.PathChatCommand,
+            File.WriteAllText(Utilities.PathChatCommand,
                 LitJson.JsonMapper.ToJson(chatCommands));
         }
 
