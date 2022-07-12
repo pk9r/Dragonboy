@@ -135,6 +135,31 @@ namespace Mod
             return true;
         }
 
+        public static bool onTeleportUpdate(Teleport teleport)
+        {
+            if (teleport.isMe)
+            {
+                if (teleport.type == 0)
+                    Controller.isStopReadMessage = false;
+                else
+                    Char.myCharz().isTeleport = false;
+            }
+            else
+            {
+                var @char = GameScr.findCharInMap(teleport.id);
+                if (@char != null)
+                {
+                    if (teleport.type == 0)
+                        GameScr.vCharInMap.removeElement(@char);
+                    else
+                        @char.isTeleport = false;
+                }
+            }
+
+            Teleport.vTeleport.removeElement(teleport);
+            return true;
+        }
+
         /// <summary>
         /// Kích hoạt khi có ChatTextField update.
         /// </summary>
@@ -145,7 +170,7 @@ namespace Mod
         public static bool onClearAllRMS()
         {
             FileInfo[] files = new DirectoryInfo(Rms.GetiPhoneDocumentsPath() + "/").GetFiles();
-            foreach (FileInfo fileInfo in files) 
+            foreach (FileInfo fileInfo in files)
                 if (fileInfo.Name != "isPlaySound")
                     fileInfo.Delete();
 
@@ -160,7 +185,7 @@ namespace Mod
             Char.myCharz().cspeed = Utilities.speedRun;
 
             //NOTE onUpdateChatTextField không thể bấm tab.
-            HistoryChat.gI.update(); 
+            HistoryChat.gI.update();
         }
 
         /// <summary>
@@ -222,7 +247,7 @@ namespace Mod
         {
             if (Utilities.channelSyncKey != -1 && !isFromSync)
             {
-                SocketClient.gI.sendMessage(new 
+                SocketClient.gI.sendMessage(new
                 {
                     action = "syncKeyPressed",
                     keyCode,

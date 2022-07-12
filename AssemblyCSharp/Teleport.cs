@@ -1,3 +1,5 @@
+using Mod;
+
 public class Teleport
 {
 	public static MyVector vTeleport = new MyVector();
@@ -171,6 +173,9 @@ public class Teleport
 
 	public void update()
 	{
+		if (GameEvents.onTeleportUpdate(this))
+			return;
+
 		if (planet > 2 && paintFire && y != -80)
 		{
 			if (isDown && tPrepare == 0)
