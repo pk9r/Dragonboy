@@ -293,4 +293,22 @@ public class Rms
 		}
 		return text;
 	}
+
+	public static void saveRMSBool(string name, bool status)
+	{
+		if (!Directory.Exists("Data")) Directory.CreateDirectory("Data");
+        FileStream fileStream = new FileStream("Data\\" + name, FileMode.Create);
+        fileStream.Write(new byte[] { (byte)(status ? 1 : 0) }, 0, 1);
+        fileStream.Flush();
+        fileStream.Close();
+	}
+
+	public static bool loadRMSBool(string name)
+	{
+        FileStream fileStream = new FileStream("Data\\" + name, FileMode.Open);
+        byte[] array = new byte[1];
+        fileStream.Read(array, 0, 1);
+        fileStream.Close();
+		return array[0] == 1;
+    }
 }

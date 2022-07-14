@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using Assets.src.g;
 using UnityEngine;
+using Mod;
 
 public class Panel : IActionListener, IChatable
 {
@@ -134,8 +135,9 @@ public class Panel : IActionListener, IChatable
 
 	public string[] planetNames;
 
-	public static string[] strTool = new string[7]
+	public static string[] strTool = new string[]
 	{
+		"Menu Mod",
 		mResources.gameInfo,
 		mResources.change_flag,
 		mResources.change_zone,
@@ -1884,7 +1886,10 @@ public class Panel : IActionListener, IChatable
 			case 22:
 				updateKeyAuto();
 				break;
-			}
+			case 26:
+                updateKeyScrollView();
+				break;
+            }
 			GameCanvas.clearKeyHold();
 			for (int i = 0; i < GameCanvas.keyPressed.Length; i++)
 			{
@@ -3673,6 +3678,9 @@ public class Panel : IActionListener, IChatable
 		case 22:
 			paintAuto(g);
 			break;
+		case 26:
+			paintModMenu(g);
+			break;
 		}
 		GameScr.resetTranslate(g);
 		paintDetail(g);
@@ -5345,7 +5353,14 @@ public class Panel : IActionListener, IChatable
 			g.fillRect(X + 1, 78, W - 2, 1);
 			return;
 		}
-		if (currentTabIndex == 3 && mainTabName.Length != 4)
+        if (type == 26)
+        {
+            g.setColor(13524492);
+            g.fillRect(X + 1, 78, W - 2, 1);
+            mFont.tahoma_7b_dark.drawString(g, "Menu Mod", xScroll + wScroll / 2, 59, mFont.CENTER);
+            return;
+        }
+        if (currentTabIndex == 3 && mainTabName.Length != 4)
 		{
 			g.translate(-cmx, 0);
 		}
@@ -5459,11 +5474,11 @@ public class Panel : IActionListener, IChatable
 		}
 		if (Char.myPetz().cMaxStamina > 0)
 		{
-			mFont.tahoma_7_yellow.drawString(g, mResources.vitality, X + 60, 38, mFont.LEFT, mFont.tahoma_7_grey);
-			g.drawImage(GameScr.imgMPLost, X + 100, 41, 0);
-			int num = Char.myPetz().cStamina * mGraphics.getImageWidth(GameScr.imgMP) / Char.myPetz().cMaxStamina;
-			g.setClip(100, X + 41, num, 20);
-			g.drawImage(GameScr.imgMP, X + 100, 41, 0);
+			mFont.tahoma_7_yellow.drawString(g, mResources.vitality + Char.myPetz().cStamina + "/" + Char.myPetz().cMaxStamina + "(" + (Char.myPetz().cStamina / Char.myPetz().cMaxStamina * 100) + ")", X + 60, 38, mFont.LEFT, mFont.tahoma_7_grey);
+			//g.drawImage(GameScr.imgMPLost, X + 100, 41, 0);
+			//int num = Char.myPetz().cStamina * mGraphics.getImageWidth(GameScr.imgMP) / Char.myPetz().cMaxStamina;
+			//g.setClip(100, X + 41, num, 20);
+			//g.drawImage(GameScr.imgMP, X + 100, 41, 0);
 		}
 		g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
 	}
@@ -5829,6 +5844,10 @@ public class Panel : IActionListener, IChatable
 		case 5:
 		case 6:
 			break;
+		case 26:
+            SmallImage.drawSmallImage(g, Char.myCharz().avatarz(), X + 25, 50, 0, 33);
+            paintToolInfo(g);
+            break;
 		}
 	}
 
@@ -6532,6 +6551,9 @@ public class Panel : IActionListener, IChatable
 				case 22:
 					doFireAuto();
 					break;
+				case 26:
+					doFireModMenu();
+					break;
 				}
 			}
 		}
@@ -7032,20 +7054,23 @@ public class Panel : IActionListener, IChatable
 			switch (selected)
 			{
 			case 0:
-				doRada();
+				setTypeModMenu();
 				break;
 			case 1:
+				doRada();
+				break;
+			case 2:
 				hide();
 				Service.gI().openMenu(54);
 				break;
-			case 2:
+			case 3:
 				setTypeGameInfo();
 				break;
-			case 3:
+			case 4:
 				Service.gI().getFlag(0, -1);
 				InfoDlg.showWait();
 				break;
-			case 4:
+			case 5:
 				if (Char.myCharz().statusMe == 14)
 				{
 					GameCanvas.startOKDlg(mResources.can_not_do_when_die);
@@ -7055,7 +7080,7 @@ public class Panel : IActionListener, IChatable
 					Service.gI().openUIZone();
 				}
 				break;
-			case 5:
+			case 6:
 				GameCanvas.endDlg();
 				if (Char.myCharz().checkLuong() < 5)
 				{
@@ -7088,16 +7113,16 @@ public class Panel : IActionListener, IChatable
 					chatTField.tfChat.doChangeToTextBox();
 				}
 				break;
-			case 6:
+			case 7:
 				setTypeAccount();
 				break;
-			case 7:
+			case 8:
 				setTypeOption();
 				break;
-			case 8:
+			case 9:
 				GameCanvas.loginScr.backToRegister();
 				break;
-			case 9:
+			case 10:
 				if (GameCanvas.loginScr.isLogin2)
 				{
 					SoundMn.gI().backToRegister();
@@ -7108,24 +7133,27 @@ public class Panel : IActionListener, IChatable
 		}
 		switch (selected)
 		{
-		case 0:
+        case 0:
+            setTypeModMenu();
+            break;
+        case 1:
 			doRada();
 			break;
-		case 1:
+		case 2:
 			hide();
 			Service.gI().openMenu(54);
 			break;
-		case 2:
+		case 3:
 			setTypeGameInfo();
 			break;
-		case 3:
+		case 4:
 			doFirePet();
 			break;
-		case 4:
+		case 5:
 			Service.gI().getFlag(0, -1);
 			InfoDlg.showWait();
 			break;
-		case 5:
+		case 6:
 			if (Char.myCharz().statusMe == 14)
 			{
 				GameCanvas.startOKDlg(mResources.can_not_do_when_die);
@@ -7135,7 +7163,7 @@ public class Panel : IActionListener, IChatable
 				Service.gI().openUIZone();
 			}
 			break;
-		case 6:
+		case 7:
 			GameCanvas.endDlg();
 			if (Char.myCharz().checkLuong() < 5)
 			{
@@ -7168,16 +7196,16 @@ public class Panel : IActionListener, IChatable
 				chatTField.tfChat.doChangeToTextBox();
 			}
 			break;
-		case 7:
+		case 8:
 			setTypeAccount();
 			break;
-		case 8:
+		case 9:
 			setTypeOption();
 			break;
-		case 9:
+		case 10:
 			GameCanvas.loginScr.backToRegister();
 			break;
-		case 10:
+		case 11:
 			if (GameCanvas.loginScr.isLogin2)
 			{
 				SoundMn.gI().backToRegister();
@@ -9796,4 +9824,67 @@ public class Panel : IActionListener, IChatable
 			_ => mFont.tahoma_7b_white, 
 		};
 	}
+
+	private void setTypeModMenu()
+	{
+        setType(0);
+        type = 26;
+		setTabModMenu();
+    }
+
+    private void setTabModMenu()
+    {
+        SoundMn.gI().getSoundOption();
+        currentListLength = ModMenu.modMenuItems.Length;
+        ITEM_HEIGHT = 24;
+        selected = (GameCanvas.isTouch ? (-1) : 0);
+        cmyLim = currentListLength * ITEM_HEIGHT - hScroll;
+        if (cmyLim < 0) cmyLim = 0;
+        cmy = (cmtoY = cmyLast[currentTabIndex]);
+        if (cmy < 0) cmy = (cmtoY = 0);
+        if (cmy > cmyLim) cmy = (cmtoY = cmyLim);
+    }
+
+	private void doFireModMenu()
+	{
+		if (selected < 0) return;
+		ModMenu.modMenuItems[selected].Status = !ModMenu.modMenuItems[selected].Status;
+	}
+    private void paintModMenu(mGraphics g)
+    {
+		g.setClip(xScroll, yScroll, wScroll, hScroll);
+		g.translate(0, -cmy);
+		g.setColor(0);
+		if (ModMenu.modMenuItems == null || ModMenu.modMenuItems.Length != currentListLength) return;
+		bool isReset = true;
+        for (int i = 0; i < currentListLength; i++)
+		{
+			int num = xScroll;
+			int num2 = yScroll + i * ITEM_HEIGHT;
+			int num3 = wScroll;
+			int num4 = ITEM_HEIGHT - 1;
+			g.setColor((i != selected) ? 15196114 : 16383818);
+			g.fillRect(num, num2, num3, num4);
+			ModMenuItem modMenuItem = ModMenu.modMenuItems[i];
+			if (modMenuItem != null)
+			{
+				mFont.tahoma_7_green2.drawString(g, (i + 1) + ". " + modMenuItem.Title, num + 5, num2, 0);
+				string description = modMenuItem.Description.Length > 26 ? (modMenuItem.Description.Substring(0, 25) + "...") : modMenuItem.Description;
+				if (i == selected && modMenuItem.Description.Length > 26)
+				{
+					TextInfo.paint(g, modMenuItem.Description, num + 5, num2 + 11, 118, 15, mFont.tahoma_7_blue);
+					isReset = false;
+                    g.setClip(xScroll, yScroll, wScroll, hScroll);
+                    g.translate(0, -cmy);
+                }
+				else mFont.tahoma_7_blue.drawString(g, description, num + 5, num2 + 11, 0);
+                mFont mf = mFont.tahoma_7_grey;
+				if (modMenuItem.Status) mf = mFont.tahoma_7b_red;
+				string str = mResources.status + ": ";
+                mf.drawString(g, (str == "Trạng thái: " ? "Đang " : str) + (modMenuItem.Status ? mResources.ON.ToLower() : mResources.OFF.ToLower()), num + num3 - 2, num2 + ITEM_HEIGHT - 14, mFont.RIGHT);
+			}
+		}
+		if (isReset) TextInfo.reset();
+        paintScrollArrow(g);
+    }
 }

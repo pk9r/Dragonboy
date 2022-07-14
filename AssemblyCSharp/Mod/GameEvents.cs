@@ -36,6 +36,7 @@ namespace Mod
             ChatCommandHandler.loadDefalut();
             HotkeyCommandHandler.loadDefalut();
             SocketClient.gI.initSender();
+            ModMenu.LoadData();
         }
 
         /// <summary>
@@ -45,6 +46,7 @@ namespace Mod
         public static bool onGameClosing()
         {
             SocketClient.gI.close();
+            ModMenu.SaveData();
             return false;
         }
 

@@ -168,14 +168,14 @@ public class Info : IActionListener
 					return;
 				}
 				info.charInfo.paintHead(g, X + 10, Y + H / 2, 0);
-				if (mGraphics.zoomLevel == 1)
-				{
+				//if (mGraphics.zoomLevel == 1)
+				//{
 					((!info.isChatServer) ? mFont.tahoma_7b_greenSmall : mFont.tahoma_7b_yellowSmall2).drawString(g, info.charInfo.cName, X + 12, Y + 3, 0);
-				}
-				else
-				{
-					((!info.isChatServer) ? mFont.tahoma_7b_greenSmall : mFont.tahoma_7b_yellowSmall2).drawString(g, info.charInfo.cName, X + 12, Y - 3, 0);
-				}
+				//}
+				//else
+				//{
+				//	((!info.isChatServer) ? mFont.tahoma_7b_greenSmall : mFont.tahoma_7b_yellowSmall2).drawString(g, info.charInfo.cName, X + 12, Y - 3, 0);
+				//}
 				if (!GameCanvas.isTouch)
 				{
 					if (!TField.isQwerty)
@@ -187,17 +187,17 @@ public class Info : IActionListener
 						mFont.tahoma_7b_green2Small.drawString(g, "Nhấn Y để chat", X + W / 2 + 10, Y + H, mFont.CENTER);
 					}
 				}
-				if (mGraphics.zoomLevel == 1)
-				{
+				//if (mGraphics.zoomLevel == 1)
+				//{
 					TextInfo.paint(g, text, X + 14, Y + H / 2 + 2, W - 16, H, mFont.tahoma_7_whiteSmall);
-					continue;
-				}
-				string[] array2 = mFont.tahoma_7_whiteSmall.splitFontArray(text, 120);
-				for (int j = 0; j < array2.Length; j++)
-				{
-					mFont.tahoma_7_whiteSmall.drawString(g, array2[j], X + 12, Y + 12 + j * 12 - 3, 0);
-				}
-				GameCanvas.resetTrans(g);
+				//	continue;
+				//}
+				//string[] array2 = mFont.tahoma_7_whiteSmall.splitFontArray(text, 120);
+				//for (int j = 0; j < array2.Length; j++)
+				//{
+				//	mFont.tahoma_7_whiteSmall.drawString(g, array2[j], X + 12, Y + 12 + j * 12 - 3, 0);
+				//}
+				//GameCanvas.resetTrans(g);
 			}
 			if (info.charInfo == null)
 			{
@@ -236,15 +236,15 @@ public class Info : IActionListener
 		if (info.charInfo != null)
 		{
 			says = new string[1] { info.s };
-			if (mGraphics.zoomLevel == 1)
-			{
+			//if (mGraphics.zoomLevel == 1)
+			//{
 				num = says.Length;
-			}
-			else
-			{
-				string[] array = mFont.tahoma_7_whiteSmall.splitFontArray(info.s, 120);
-				num = array.Length;
-			}
+			//}
+			//else
+			//{
+			//	string[] array = mFont.tahoma_7_whiteSmall.splitFontArray(info.s, 120);
+			//	num = array.Length;
+			//}
 		}
 		else
 		{
