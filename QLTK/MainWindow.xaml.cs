@@ -82,6 +82,7 @@ namespace QLTK
 
             LoadAccounts();
             LoadSizeSettings();
+            LoadHotkeys();
         }
 
         private static bool ExistedWindow(Account account, out IntPtr hWnd)
@@ -162,6 +163,19 @@ namespace QLTK
                 {
                     cy = 0;
                 }
+            }
+        }
+
+        private void LoadHotkeys()
+        {
+            try
+            {
+                DataGridHotkeys.ItemsSource = LitJson.JsonMapper.ToObject<List<HotkeyCommand>>(
+                    File.ReadAllText(Settings.Default.PathHotkeys));
+            }
+            catch
+            {
+                this.DataGridHotkeys.ItemsSource = new List<HotkeyCommand>();
             }
         }
 

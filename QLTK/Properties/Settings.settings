@@ -14,5 +14,8 @@
     <Setting Name="PathSizeSettings" Type="System.String" Scope="User">
       <Value Profile="(Default)">ModData\sizeSettings.json</Value>
     </Setting>
+    <Setting Name="PathHotkeys" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ModData\hotkeyCommands.json</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

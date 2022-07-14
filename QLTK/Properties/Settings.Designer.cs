@@ -70,5 +70,17 @@ namespace QLTK.Properties {
                 this["PathSizeSettings"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ModData\\hotkeyCommands.json")]
+        public string PathHotkeys {
+            get {
+                return ((string)(this["PathHotkeys"]));
+            }
+            set {
+                this["PathHotkeys"] = value;
+            }
+        }
     }
 }
