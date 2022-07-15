@@ -4,36 +4,36 @@ using System.Linq;
 using System.Text;
 
 namespace Mod;
-public class ModMenuItem
+public class ModMenuItemBoolean
 {
     public string Title { get; set; }
 
     public string Description { get; set; }
 
-    public bool Status { get; set; }
+    public bool Value { get; set; }
 
     public string RMSName { get; set; }
 
-    public ModMenuItem(string title, string description, bool status, string rmsName)
+    public ModMenuItemBoolean(string title, string description, bool value, string rmsName)
     {
         Title = title;
         Description = description;
-        Status = status;
+        Value = value;
         RMSName = rmsName;
     }
-    public ModMenuItem(string title, string description, string rmsName)
+    public ModMenuItemBoolean(string title, string description, string rmsName)
     {
         Title = title;
         Description = description;
-        Status = false;
+        Value = false;
         RMSName = rmsName;
     }
 
     public override bool Equals(object obj)
     {
-        if (obj is ModMenuItem modMenuItem)
+        if (obj is ModMenuItemBoolean modMenuItem)
         {
-            return modMenuItem.Title == Title && modMenuItem.Description == Description && modMenuItem.Status == Status && modMenuItem.RMSName == RMSName;
+            return modMenuItem.Title == Title && modMenuItem.Description == Description && modMenuItem.Value == Value && modMenuItem.RMSName == RMSName;
         }
         return false;
     }

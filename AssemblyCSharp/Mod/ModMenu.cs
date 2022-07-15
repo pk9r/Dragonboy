@@ -7,46 +7,66 @@ namespace Mod;
 public class ModMenu
 {
     /// <summary>
-    /// Thêm chức năng mod ở đây
+    /// Thêm bật/tắt chức năng mod ở đây
     /// </summary>
-    public static ModMenuItem[] modMenuItems = new ModMenuItem[]
+    public static ModMenuItemBoolean[] modMenuItemBools = new ModMenuItemBoolean[]
     {
-        new ModMenuItem("Auto 1", "abcdefflefiofqwhoqhoqeoqwwkndwnkd", "auto1"),
-        new ModMenuItem("Auto 2", "regrhtrhrthffedg", "auto2"),
-        new ModMenuItem("Auto 3", "ww lkn2jepqw eferdgreg rejyuliukyt", "auto3"),
-        new ModMenuItem("Auto 4", "sfwfsdfsfdsdsfsdffvfdvfdfd", "auto4"),
-        new ModMenuItem("Auto 5", "dfdsdfffdsggfhjhjkujhkedweq2w", "auto5"),
-        new ModMenuItem("Auto 6", "auto", "auto6"),
-        new ModMenuItem("Auto 7", "auto", "auto7"),
-        new ModMenuItem("Auto 8", "eqwerewfewferfregr", "auto8"),
-        new ModMenuItem("Auto 9", "a", "auto9"),
+        new ModMenuItemBoolean("Auto thở", "Nếu không thở, bạn sẽ chết vì thiếu oxi!", true, "autobreathe"),
+    };
+
+    /// <summary>
+    /// Thêm điều chỉnh chỉ số chức năng mod ở đây
+    /// </summary>
+    public static ModMenuItemConfig[] modMenuItemConfigs = new ModMenuItemConfig[]
+    {
+        new ModMenuItemConfig("Xóa địa hình", new string[]{ "Tắt", "Mức 1", "Mức 2", "Mức 3" }, "xdhLevel"),
     };
 
     public static void SaveData()
     {
-        foreach (ModMenuItem modMenuItem in modMenuItems) Rms.saveRMSBool(modMenuItem.RMSName, modMenuItem.Status);    
+        foreach (ModMenuItemBoolean modMenuItem in modMenuItemBools) Rms.saveRMSBool(modMenuItem.RMSName, modMenuItem.Value);    
+        foreach (ModMenuItemConfig modMenuItem in modMenuItemConfigs) Rms.saveRMSInt(modMenuItem.RMSName, modMenuItem.SelectedValue);    
     }
 
     public static void LoadData()
     {
         try
         {
-            foreach (ModMenuItem modMenuItem in modMenuItems) modMenuItem.Status = Rms.loadRMSBool(modMenuItem.RMSName);
+            foreach (ModMenuItemBoolean modMenuItem in modMenuItemBools) modMenuItem.Value = Rms.loadRMSBool(modMenuItem.RMSName);
+            foreach (ModMenuItemConfig modMenuItem in modMenuItemConfigs)
+            {
+                int data = Rms.loadRMSInt(modMenuItem.RMSName);
+                modMenuItem.SelectedValue = data == -1 ? 0 : data;
+            }
         }
         catch { }
     }
 
-    public static bool getStatus(string rmsName)
+    public static bool getStatusBool(string rmsName)
     {
-        foreach (ModMenuItem modMenuItem in modMenuItems)
+        foreach (ModMenuItemBoolean modMenuItem in modMenuItemBools)
         {
-            if (modMenuItem.RMSName == rmsName) return modMenuItem.Status;
+            if (modMenuItem.RMSName == rmsName) return modMenuItem.Value;
         }
-        throw new Exception("Not found any ModMenuItem with RMSName \"" + rmsName + "\"!");
+        throw new Exception("Not found any ModMenuItemBoolean with RMSName \"" + rmsName + "\"!");
     }
 
-    public static bool getStatus(int index)
+    public static bool getStatusBool(int index)
     {
-        return modMenuItems[index].Status;
+        return modMenuItemBools[index].Value;
+    }
+
+    public static int getStatusInt(string rmsName)
+    {
+        foreach (ModMenuItemConfig modMenuItem in modMenuItemConfigs)
+        {
+            if (modMenuItem.RMSName == rmsName) return modMenuItem.SelectedValue;
+        }
+        throw new Exception("Not found any ModMenuItemOther with RMSName \"" + rmsName + "\"!");
+    }
+
+    public static int getStatusInt(int index)
+    {
+        return modMenuItemConfigs[index].SelectedValue;
     }
 }
