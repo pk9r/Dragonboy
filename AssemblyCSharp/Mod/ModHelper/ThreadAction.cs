@@ -9,17 +9,20 @@ namespace Mod.ModHelper
     /// <summary>
     /// Kế thừa class này để tạo chức năng sử dụng Thread.
     /// </summary>
-    public abstract class ThreadAction
+    public abstract class ThreadAction<T> 
+        where T : ThreadAction<T>, new()
     {
-        /// <summary>
-        /// Thread sử dụng để thực thi hành động.
-        /// </summary>
-        public Thread threadAction;
+        public static T gI { get; } = new();
 
         /// <summary>
         /// Kiểm tra hành động còn thực hiện.
         /// </summary>
-        public bool isActing => this.threadAction?.IsAlive == true;
+        public bool IsActing => this.threadAction?.IsAlive == true;
+
+        /// <summary>
+        /// Thread sử dụng để thực thi hành động.
+        /// </summary>
+        protected Thread threadAction;
 
         /// <summary>
         /// Hành động cần thực hiện.
@@ -31,7 +34,7 @@ namespace Mod.ModHelper
         /// </summary>
         public void performAction()
         {
-            if (this.isActing)
+            if (this.IsActing)
                 this.threadAction.Abort();
 
             this.executeAction();

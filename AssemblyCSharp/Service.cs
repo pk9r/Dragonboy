@@ -1558,7 +1558,7 @@ public class Service
 	/// <item><description>0: Không tấn công.</description></item>
 	/// <item><description>1: Tấn công Mob.</description></item>
 	/// <item><description>2: Tấn công Char.</description></item>
-	/// <item><description>Khác: Tự động ưu tiên tấn công Mob.</description></item>
+	/// <item><description>Khác: Tự động, ưu tiên tấn công Mob.</description></item>
 	/// </list>
     /// </param>
     public void sendPlayerAttack(MyVector vMob, MyVector vChar, int type)

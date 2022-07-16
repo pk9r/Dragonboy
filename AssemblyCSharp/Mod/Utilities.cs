@@ -442,5 +442,16 @@ namespace Mod
         {
             Service.gI().requestChangeZone(zone, -1);
         }
+
+        [ChatCommand("ak")]
+        public static void toggleAutoAttack()
+        {
+            AutoAttack.gI.toggle();
+
+            if (AutoAttack.gI.IsActing)
+                GameScr.info1.addInfo("Đang tự tấn công", 0);
+            else
+                GameScr.info1.addInfo("Đã tắt tự tấn công", 0);
+        }
     }
 }

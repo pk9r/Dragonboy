@@ -9,21 +9,24 @@ namespace Mod.ModHelper
     /// <summary>
     /// Hỗ trợ tạo thread thực hiện cách hành động lặp đi lặp lại.
     /// </summary>
-    public abstract class ThreadActionUpdate : ThreadAction
+    public abstract class ThreadActionUpdate<T> : ThreadAction<T>
+        where T : ThreadActionUpdate<T>, new()
     {
-        public new bool isActing;
+        private bool isActing;
+
+        public new bool IsActing => isActing;
 
         /// <summary>
         /// Thời gian nghỉ giữa các lần thực thi.
         /// </summary>
-        public int interval;
-
+        public abstract int Interval { get; }
+        
         protected override void action()
         {
             while (isActing)
             {
                 update();
-                Thread.Sleep(interval);
+                Thread.Sleep(Interval);
             }
         }
 
@@ -36,7 +39,7 @@ namespace Mod.ModHelper
         /// Chuyển đổi trạng thái hành động
         /// </summary>
         /// <param name="isActing">Trạng thái hành động muốn chuyển đổi, nếu null thì sẽ đổi qua lại giữa bật và tắt</param>
-        public void toggleAction(bool? isActing = null)
+        public void toggle(bool? isActing = null)
         {
             if (isActing == null)
             {
@@ -49,7 +52,7 @@ namespace Mod.ModHelper
             }
             else
             {
-                if (base.isActing)
+                if (base.IsActing)
                 {
                     this.threadAction.Abort();
                 }

@@ -1,27 +1,15 @@
 ﻿using LitJson;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
-using UnityEngine;
 
 namespace Mod.ModHelper
 {
-    public class SocketClient : ThreadAction
+    public class SocketClient : ThreadAction<SocketClient>
     {
-        #region singleton
-        public static SocketClient gI { get; } = new();
-
-        static SocketClient() { }
-
-        private SocketClient() { }
-        #endregion
-
         private const string pathLogSocket = "ModData\\log_socket_client.txt";
         public int port = -1;
         public bool isConnected = false;
