@@ -2,44 +2,63 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Mod;
 public class ModMenu
 {
+    public const int TYPE_MOD_MENU = 26;
+
     /// <summary>
     /// Thêm bật/tắt chức năng mod ở đây
     /// </summary>
     public static ModMenuItemBoolean[] modMenuItemBools = new ModMenuItemBoolean[]
     {
-        new ModMenuItemBoolean("Auto thở", "Nếu không thở, bạn sẽ chết vì thiếu oxi!", true, "autobreathe"),
+        new ModMenuItemBoolean("Vsync", "Tắt Vsync nếu bạn muốn điều chỉnh FPS!", true, "isvsync"),
     };
 
     /// <summary>
     /// Thêm điều chỉnh chỉ số chức năng mod ở đây
     /// </summary>
-    public static ModMenuItemConfig[] modMenuItemConfigs = new ModMenuItemConfig[]
+    public static ModMenuItemInt[] modMenuItemInts = new ModMenuItemInt[]
     {
-        new ModMenuItemConfig("Xóa địa hình", new string[]{ "Tắt", "Mức 1", "Mức 2", "Mức 3" }, "xdhLevel"),
+        new ModMenuItemInt("FPS", "FPS mục tiêu (cần tắt Vsync để thay đổi có hiệu lực)", 60, "targetfps"),
+        new ModMenuItemInt("Test", new string[]{"Đang tắt", "Đang bật mức 1", "Đang bật mức 2", "Đang bật mức 3"}, 0, "test")
+    };
+
+    public static string[][] inputModMenuItemInts = new string[][]
+    {
+        new string[]{"Nhập mức FPS", "FPS"},
     };
 
     public static void SaveData()
     {
         foreach (ModMenuItemBoolean modMenuItem in modMenuItemBools) Rms.saveRMSBool(modMenuItem.RMSName, modMenuItem.Value);    
-        foreach (ModMenuItemConfig modMenuItem in modMenuItemConfigs) Rms.saveRMSInt(modMenuItem.RMSName, modMenuItem.SelectedValue);    
+        foreach (ModMenuItemInt modMenuItem in modMenuItemInts) Rms.saveRMSInt2(modMenuItem.RMSName, modMenuItem.SelectedValue);    
     }
 
     public static void LoadData()
     {
-        try
-        {
-            foreach (ModMenuItemBoolean modMenuItem in modMenuItemBools) modMenuItem.Value = Rms.loadRMSBool(modMenuItem.RMSName);
-            foreach (ModMenuItemConfig modMenuItem in modMenuItemConfigs)
+        foreach (ModMenuItemBoolean modMenuItem in modMenuItemBools) 
+        { 
+            try
             {
-                int data = Rms.loadRMSInt(modMenuItem.RMSName);
+                modMenuItem.Value = Rms.loadRMSBool(modMenuItem.RMSName);
+            }
+            catch { }
+        }
+        QualitySettings.vSyncCount = modMenuItemBools[0].Value ? 1 : 0;
+        foreach (ModMenuItemInt modMenuItem in modMenuItemInts)
+        {
+            try
+            {
+                int data = Rms.loadRMSInt2(modMenuItem.RMSName);
                 modMenuItem.SelectedValue = data == -1 ? 0 : data;
             }
+            catch { }
         }
-        catch { }
+        if (modMenuItemInts[0].SelectedValue < 5 || modMenuItemInts[0].SelectedValue > 60) modMenuItemInts[0].SelectedValue = 60;
+        Application.targetFrameRate = modMenuItemInts[0].SelectedValue;
     }
 
     public static bool getStatusBool(string rmsName)
@@ -58,7 +77,7 @@ public class ModMenu
 
     public static int getStatusInt(string rmsName)
     {
-        foreach (ModMenuItemConfig modMenuItem in modMenuItemConfigs)
+        foreach (ModMenuItemInt modMenuItem in modMenuItemInts)
         {
             if (modMenuItem.RMSName == rmsName) return modMenuItem.SelectedValue;
         }
@@ -67,6 +86,6 @@ public class ModMenu
 
     public static int getStatusInt(int index)
     {
-        return modMenuItemConfigs[index].SelectedValue;
+        return modMenuItemInts[index].SelectedValue;
     }
 }

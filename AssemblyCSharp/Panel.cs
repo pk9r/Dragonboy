@@ -2890,7 +2890,11 @@ public class Panel : IActionListener, IChatable
 				setTabGiaoDich(isMe: false);
 			}
 			break;
-		}
+		case ModMenu.TYPE_MOD_MENU:
+			ModMenuPanel.setTabModMenu();
+			break;
+
+        }
 		selected = lastSelect[currentTabIndex];
 	}
 
