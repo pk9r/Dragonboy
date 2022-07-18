@@ -38,10 +38,28 @@ namespace QLTK
             string action = (string)msg["action"];
             switch (action)
             {
-                case "test":
-                    string text = (string)msg["text"];
-                    string cName = (string)msg["cName"];
-                    MessageBox.Show(text + " form " + cName);
+                case "updateInfo":
+                    state.account.cName = (string)msg["cName"];
+                    state.account.cgender = (int)msg["cgender"];
+                    state.account.mapName = (string)msg["mapName"];
+                    state.account.mapID = (int)msg["mapID"];
+                    state.account.zoneID = (int)msg["zoneID"];
+                    state.account.cx = (int)msg["cx"];
+                    state.account.cy = (int)msg["cy"];
+                    state.account.cHP = (int)msg["cHP"];
+                    state.account.cHPFull = (int)msg["cHPFull"];
+                    state.account.cMP = (int)msg["cMP"];
+                    state.account.cMPFull = (int)msg["cMPFull"];
+                    state.account.cStamina = (int)msg["cStamina"];
+                    state.account.cPower = (long)msg["cPower"];
+                    state.account.cTiemNang = (long)msg["cTiemNang"];
+                    state.account.cHPGoc = (int)msg["cHPGoc"];
+                    state.account.cMPGoc = (int)msg["cMPGoc"];
+                    state.account.cDefGoc = (int)msg["cDefGoc"];
+                    state.account.cCriticalGoc = (int)msg["cCriticalGoc"];
+                    state.account.xu = (long)msg["xu"];
+                    state.account.luong = (int)msg["luong"];
+                    state.account.luongKhoa = (int)msg["luongKhoa"];
                     break;
                 case "setStatus":
                     string status = (string)msg["status"];

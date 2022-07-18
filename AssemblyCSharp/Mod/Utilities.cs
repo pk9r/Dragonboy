@@ -367,13 +367,33 @@ namespace Mod
         }
 
         [ChatCommand("test")]
-        public static void test(string text)
+        public static void test()
         {
+            var myChar = Char.myCharz();
             SocketClient.gI.sendMessage(new
             {
-                action = "test",
-                Char.myCharz().cName,
-                text
+                action = "updateInfo",
+                myChar.cName,
+                myChar.cgender,
+                TileMap.mapName,
+                TileMap.mapID,
+                TileMap.zoneID,
+                myChar.cx,
+                myChar.cy,
+                myChar.cHP,
+                myChar.cHPFull,
+                myChar.cMP,
+                myChar.cMPFull,
+                myChar.cStamina,
+                myChar.cPower,
+                myChar.cTiemNang,
+                myChar.cHPGoc,
+                myChar.cMPGoc,
+                myChar.cDefGoc,
+                myChar.cCriticalGoc,
+                myChar.xu,
+                myChar.luong,
+                myChar.luongKhoa
             });
         }
 

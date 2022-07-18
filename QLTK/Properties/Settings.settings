@@ -11,8 +11,11 @@
     <Setting Name="PortListener" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">22327</Value>
     </Setting>
-    <Setting Name="PathSizeSettings" Type="System.String" Scope="User">
-      <Value Profile="(Default)">ModData\sizeSettings.json</Value>
+    <Setting Name="PathSettings" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ModData\settings.json</Value>
+    </Setting>
+    <Setting Name="LinkNotification" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://raw.githubusercontent.com/pk9r327/Dragonboy/master/notification.txt</Value>
     </Setting>
   </Settings>
 </SettingsFile>

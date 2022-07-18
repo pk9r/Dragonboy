@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -67,6 +69,8 @@ namespace QLTK
             new Server("SUPER 2", "103.90.224.245", 14447),
         };
 
+        public static object settings;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -81,7 +85,25 @@ namespace QLTK
             ComboBoxServer.SelectedIndex = 0;
 
             LoadAccounts();
-            LoadSizeSettings();
+            LoadSaveSettings();
+
+            using (WebClient client = new WebClient())
+            {
+                var data = client.DownloadData(Settings.Default.LinkNotification);
+                var strings = Encoding.UTF8.GetString(data).Split('\n');
+                if (SaveSettings.Instance.versionNotification != strings[0])
+                {
+                    for (int i = 1; i < strings.Length; i++)
+                    {
+                        strings[i] = strings[i].Trim();
+                        if (strings[i] != "")
+                        {
+                            MessageBox.Show(strings[i], "Thông báo", MessageBoxButton.OK);
+                        }
+                    }
+                    SaveSettings.Instance.versionNotification = strings[0];
+                }
+            }
         }
 
         private static bool ExistedWindow(Account account, out IntPtr hWnd)
@@ -94,29 +116,6 @@ namespace QLTK
 
             hWnd = account.process.MainWindowHandle;
             return hWnd != IntPtr.Zero;
-        }
-
-        private static async Task ShowWindowAsync(IntPtr hWnd)
-        {
-            Utilities.ShowWindowAsync(hWnd, 1);
-            Utilities.SetForegroundWindow(hWnd);
-            await Task.Delay(100);
-
-            Utilities.GetWindowRect(hWnd, out RECT rect);
-
-            double primaryScreenWidth = SystemParameters.PrimaryScreenWidth;
-            double primaryScreenHeight = SystemParameters.PrimaryScreenHeight;
-
-            if (rect.left < 0 || rect.right > primaryScreenWidth ||
-                rect.top < 0 || rect.bottom > primaryScreenHeight)
-            {
-                Utilities.MoveWindow(
-                    hWnd: hWnd,
-                    x: 0, y: 0,
-                    width: rect.right - rect.left,
-                    height: rect.bottom - rect.top,
-                    bRepaint: true);
-            }
         }
 
         private static async Task ShowWindowsAsync(List<Account> accounts)
@@ -132,12 +131,14 @@ namespace QLTK
             await Task.Delay(1000);
         }
 
-        private static void ArrangeWindows(List<Account> accounts, int type)
+        private void ArrangeWindows(List<Account> accounts, int type)
         {
             var maxWidth = SystemParameters.PrimaryScreenWidth;
             var maxHeight = SystemParameters.PrimaryScreenHeight;
 
-            int cx = 0, cy = 0;
+            int xBase = (int)this.ActualWidth;
+
+            int cx = xBase, cy = 0;
 
             for (int i = 0; i < accounts.Count; i++)
             {
@@ -155,7 +156,7 @@ namespace QLTK
                 cx += width / type;
                 if (cx + width / type > maxWidth)
                 {
-                    cx = 0;
+                    cx = xBase;
                     cy += height - 5;
                 }
                 if (cy + height > maxHeight)
@@ -165,21 +166,11 @@ namespace QLTK
             }
         }
 
-        private void LoadSizeSettings()
+        private void LoadSaveSettings()
         {
-            var sizeSettings = new SizeSettings();
-            try
-            {
-                sizeSettings = LitJson.JsonMapper.ToObject<SizeSettings>(
-                    File.ReadAllText(Settings.Default.PathSizeSettings));
-            }
-            catch
-            {
-            }
-
-            TextBoxSize.Text = sizeSettings.size;
-            ComboBoxLowGraphic.SelectedIndex = sizeSettings.lowGraphic;
-            ComboBoxTypeSize.SelectedIndex = sizeSettings.typeSize;
+            TextBoxSize.Text = SaveSettings.Instance.size;
+            ComboBoxLowGraphic.SelectedIndex = SaveSettings.Instance.lowGraphic;
+            ComboBoxTypeSize.SelectedIndex = SaveSettings.Instance.typeSize;
         }
 
         private void LoadAccounts()
@@ -238,26 +229,6 @@ namespace QLTK
             {
                 File.WriteAllText(Settings.Default.PathAccounts,
                     Utilities.EncryptString(LitJson.JsonMapper.ToJson(DataGridAccount.ItemsSource)));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-        }
-
-        private void SaveSizeSettings()
-        {
-            try
-            {
-                var sizeSettings = new SizeSettings()
-                {
-                    size = this.TextBoxSize.Text,
-                    lowGraphic = this.ComboBoxLowGraphic.SelectedIndex,
-                    typeSize = this.ComboBoxTypeSize.SelectedIndex,
-                };
-
-                File.WriteAllText(Settings.Default.PathSizeSettings,
-                    LitJson.JsonMapper.ToJson(sizeSettings));
             }
             catch (Exception ex)
             {
@@ -341,6 +312,31 @@ namespace QLTK
         #endregion
 
         #region Processes
+        private async Task ShowWindowAsync(IntPtr hWnd)
+        {
+            Utilities.ShowWindowAsync(hWnd, 1);
+            Utilities.SetForegroundWindow(hWnd);
+            await Task.Delay(100);
+
+            Utilities.GetWindowRect(hWnd, out RECT rect);
+
+            int xBase = (int)this.ActualWidth;
+
+            double primaryScreenWidth = SystemParameters.PrimaryScreenWidth;
+            double primaryScreenHeight = SystemParameters.PrimaryScreenHeight;
+
+            if (rect.left < xBase || rect.right > primaryScreenWidth ||
+                rect.top < 0 || rect.bottom > primaryScreenHeight)
+            {
+                Utilities.MoveWindow(
+                    hWnd: hWnd,
+                    x: xBase, y: 0,
+                    width: rect.right - rect.left,
+                    height: rect.bottom - rect.top,
+                    bRepaint: true);
+            }
+        }
+
         private async Task ShowAllWindowsAsync()
         {
             var accounts = this.GetAllAccounts();
@@ -589,7 +585,7 @@ namespace QLTK
             KillAllProcesses();
 
             SaveAccounts();
-            SaveSizeSettings();
+            SaveSettings.Save();
         }
 
         private void DataGridAccount_LoadingRow(object sender, DataGridRowEventArgs e)
