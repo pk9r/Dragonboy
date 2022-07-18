@@ -1,0 +1,2 @@
+v1
+Các server lậu chưa thể chạy ổn định trên phiên bản 217
