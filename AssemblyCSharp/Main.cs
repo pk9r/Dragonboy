@@ -157,7 +157,8 @@ public class Main : MonoBehaviour
 			if (Event.current.type.Equals(EventType.Repaint) && paintCount <= updateCount)
 			{
 				GameMidlet.gameCanvas.paint(g);
-				paintCount++;
+                mFont.tahoma_7b_red.drawString(g, $"{System.Math.Round(1f / Time.smoothDeltaTime * Time.timeScale, 1):0.#}", 2, 0, 0);
+                paintCount++;
 				g.reset();
 			}
 		}
@@ -169,7 +170,6 @@ public class Main : MonoBehaviour
 		{
 			Screen.orientation = ScreenOrientation.LandscapeLeft;
 			Application.runInBackground = true;
-			Application.targetFrameRate = 35;
 			base.useGUILayout = false;
 			isCompactDevice = detectCompactDevice();
 			if (main == null)

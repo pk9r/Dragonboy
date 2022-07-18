@@ -36,6 +36,7 @@ namespace Mod
             ChatCommandHandler.loadDefalut();
             HotkeyCommandHandler.loadDefalut();
             SocketClient.gI.initSender();
+            ModMenu.LoadData();
         }
 
         /// <summary>
@@ -45,6 +46,7 @@ namespace Mod
         public static bool onGameClosing()
         {
             SocketClient.gI.close();
+            ModMenu.SaveData();
             return false;
         }
 
@@ -92,6 +94,7 @@ namespace Mod
         /// <param name="g"></param>
         public static void onPaintChatTextField(mGraphics g)
         {
+            if (ChatTextField.gI().strChat != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.paint(g);
         }
 
@@ -100,6 +103,7 @@ namespace Mod
         /// </summary>
         public static bool onStartChatTextField(ChatTextField sender)
         {
+            if (ChatTextField.gI().strChat != "Chat" || ChatTextField.gI().tfChat.name != "chat") return false;
             if (sender == ChatTextField.gI())
             {
                 HistoryChat.gI.show();
@@ -185,6 +189,7 @@ namespace Mod
             Char.myCharz().cspeed = Utilities.speedRun;
 
             //NOTE onUpdateChatTextField không thể bấm tab.
+            if (ChatTextField.gI().strChat != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();
         }
 

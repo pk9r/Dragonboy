@@ -131,9 +131,10 @@ public class SoundMn
 	{
 		if (GameCanvas.loginScr.isLogin2 && Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId >= 2)
 		{
-			Panel.strTool = new string[10]
+			Panel.strTool = new string[11]
 			{
-				mResources.radaCard,
+				"Menu Mod",
+                mResources.radaCard,
 				mResources.quayso,
 				mResources.gameInfo,
 				mResources.change_flag,
@@ -146,9 +147,10 @@ public class SoundMn
 			};
 			if (Char.myCharz().havePet)
 			{
-				Panel.strTool = new string[11]
+				Panel.strTool = new string[12]
 				{
-					mResources.radaCard,
+                    "Menu Mod",
+                    mResources.radaCard,
 					mResources.quayso,
 					mResources.gameInfo,
 					mResources.pet,
@@ -164,8 +166,9 @@ public class SoundMn
 		}
 		else
 		{
-			Panel.strTool = new string[9]
+			Panel.strTool = new string[10]
 			{
+				"Menu Mod",
 				mResources.radaCard,
 				mResources.quayso,
 				mResources.gameInfo,
@@ -178,9 +181,10 @@ public class SoundMn
 			};
 			if (Char.myCharz().havePet)
 			{
-				Panel.strTool = new string[10]
+				Panel.strTool = new string[11]
 				{
-					mResources.radaCard,
+                    "Menu Mod",
+                    mResources.radaCard,
 					mResources.quayso,
 					mResources.gameInfo,
 					mResources.pet,
