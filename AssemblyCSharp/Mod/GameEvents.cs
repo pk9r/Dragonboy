@@ -94,7 +94,7 @@ namespace Mod
         /// <param name="g"></param>
         public static void onPaintChatTextField(mGraphics g)
         {
-            if (ChatTextField.gI().strChat != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
+            if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.paint(g);
         }
 
@@ -103,7 +103,7 @@ namespace Mod
         /// </summary>
         public static bool onStartChatTextField(ChatTextField sender)
         {
-            if (ChatTextField.gI().strChat != "Chat" || ChatTextField.gI().tfChat.name != "chat") return false;
+            if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return false;
             if (sender == ChatTextField.gI())
             {
                 HistoryChat.gI.show();
@@ -189,7 +189,7 @@ namespace Mod
             Char.myCharz().cspeed = Utilities.speedRun;
             CharEffect.Update();
             //NOTE onUpdateChatTextField không thể bấm tab.
-            if (ChatTextField.gI().strChat != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
+            if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();
         }
 
