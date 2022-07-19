@@ -16,6 +16,7 @@ public class ModMenu
     {
         new ModMenuItemBoolean("Vsync", "Tắt Vsync nếu bạn muốn điều chỉnh FPS!", true, "isvsync"),
         new ModMenuItemBoolean("Hiện thông tin nhân vật", "Hiện gần chính xác thời gian NRD, khiên, khỉ, huýt sáo... của nhân vật đang focus", true, "ishowinfochar"),
+        new ModMenuItemBoolean("Tự đánh", "Bật/tắt tự đánh", false, ""),
     };
 
     /// <summary>
@@ -34,8 +35,8 @@ public class ModMenu
 
     public static void SaveData()
     {
-        foreach (ModMenuItemBoolean modMenuItem in modMenuItemBools) Rms.saveRMSBool(modMenuItem.RMSName, modMenuItem.Value);    
-        foreach (ModMenuItemInt modMenuItem in modMenuItemInts) Rms.saveRMSInt2(modMenuItem.RMSName, modMenuItem.SelectedValue);    
+        foreach (ModMenuItemBoolean modMenuItem in modMenuItemBools) if (!string.IsNullOrEmpty(modMenuItem.RMSName)) Rms.saveRMSBool(modMenuItem.RMSName, modMenuItem.Value);    
+        foreach (ModMenuItemInt modMenuItem in modMenuItemInts) if (!string.IsNullOrEmpty(modMenuItem.RMSName)) Rms.saveRMSInt2(modMenuItem.RMSName, modMenuItem.SelectedValue);    
     }
 
     public static void LoadData()
@@ -44,7 +45,7 @@ public class ModMenu
         { 
             try
             {
-                modMenuItem.Value = Rms.loadRMSBool(modMenuItem.RMSName);
+                if (!string.IsNullOrEmpty(modMenuItem.RMSName)) modMenuItem.Value = Rms.loadRMSBool(modMenuItem.RMSName);
             }
             catch { }
         }
