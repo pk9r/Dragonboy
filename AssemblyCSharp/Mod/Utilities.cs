@@ -453,5 +453,10 @@ namespace Mod
             else
                 GameScr.info1.addInfo("Đã tắt tự tấn công", 0);
         }
+
+        public static bool isMeInNRDMap()
+        {
+            return TileMap.mapID >= 85 && TileMap.mapID <= 91;
+        }
     }
 }

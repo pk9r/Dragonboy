@@ -15,6 +15,7 @@ public class ModMenu
     public static ModMenuItemBoolean[] modMenuItemBools = new ModMenuItemBoolean[]
     {
         new ModMenuItemBoolean("Vsync", "Tắt Vsync nếu bạn muốn điều chỉnh FPS!", true, "isvsync"),
+        new ModMenuItemBoolean("Hiện thông tin nhân vật", "Hiện gần chính xác thời gian NRD, khiên, khỉ, huýt sáo... của nhân vật đang focus", true, "ishowinfochar"),
     };
 
     /// <summary>
@@ -48,6 +49,7 @@ public class ModMenu
             catch { }
         }
         QualitySettings.vSyncCount = modMenuItemBools[0].Value ? 1 : 0;
+        CharEffect.isEnabled = modMenuItemBools[1].Value;
         foreach (ModMenuItemInt modMenuItem in modMenuItemInts)
         {
             try

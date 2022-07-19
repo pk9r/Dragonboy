@@ -187,7 +187,7 @@ namespace Mod
         public static void onUpdateGameScr()
         {
             Char.myCharz().cspeed = Utilities.speedRun;
-
+            CharEffect.Update();
             //NOTE onUpdateChatTextField không thể bấm tab.
             if (ChatTextField.gI().strChat != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();
@@ -290,6 +290,11 @@ namespace Mod
         public static void onInfoMapLoaded()
         {
             Utilities.updateWaypointChangeMap();
+        }
+
+        public static void onPaintGameScr(mGraphics g)
+        {
+            CharEffect.Paint(g);
         }
     }
 }
