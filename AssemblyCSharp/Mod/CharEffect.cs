@@ -26,6 +26,12 @@ public class CharEffect
         }
     }
 
+    public static bool isContains(int charId)
+    {
+        foreach (Char c in storedChars) if (c.charID == charId) return true;
+        return false;
+    }
+
     public static void Paint(mGraphics g)
     {
         if (!isEnabled) return;

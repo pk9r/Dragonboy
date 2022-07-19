@@ -95,7 +95,7 @@ public static class CharExtensions
 
     public static int getTimeMobMe(this Char @char)
     {
-        int num = 61;
+        int num = 64;
         try
         {
             if (!@char.me)
@@ -103,36 +103,36 @@ public static class CharExtensions
                 switch (@char.mobMe.templateId)
                 {
                     case 8:
-                        num = 61;
+                        num = 64;
                         break;
                     case 11:
-                        num = 96;
+                        num = 99;
                         break;
                     case 32:
-                        num = 131;
+                        num = 134;
                         break;
                     case 25:
-                        num = 166;
+                        num = 169;
                         break;
                     case 43:
-                        num = 201;
+                        num = 204;
                         break;
                     case 49:
-                        num = 236;
+                        num = 239;
                         break;
                     case 50:
-                        num = 271;
+                        num = 274;
                         break;
                 }
             }
             else if (Char.myCharz().cgender == 1)
             {
-                num = (Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[4]).point - 1) * 35 + 61;
+                num = (Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[4]).point - 1) * 35 + 64;
             }
         }
         catch
         {
-            num = 271;
+            num = 274;
         }
         return num;
     }

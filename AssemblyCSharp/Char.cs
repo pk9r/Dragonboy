@@ -1627,7 +1627,7 @@ public class Char : IMapObject
 
 	public virtual void update()
 	{
-		if (charEffectTime.HasAnyEffect()) CharEffect.storedChars.Add(this);
+		if (charEffectTime.HasAnyEffect() && !CharEffect.isContains(charID)) CharEffect.storedChars.Add(this);
 		charEffectTime.Update();
         if (Utilities.isMeInNRDMap() && bag >= 0 && ClanImage.idImages.containsKey(bag.ToString() + string.Empty))
         {
