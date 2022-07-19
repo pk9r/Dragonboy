@@ -236,6 +236,7 @@ namespace QLTK
         {
             try
             {
+                if (!Directory.Exists("ModData")) Directory.CreateDirectory("ModData");
                 File.WriteAllText(Settings.Default.PathAccounts,
                     Utilities.EncryptString(LitJson.JsonMapper.ToJson(DataGridAccount.ItemsSource)));
             }
