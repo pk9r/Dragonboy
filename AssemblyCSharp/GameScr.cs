@@ -1,5 +1,6 @@
 using System;
 using Assets.src.g;
+using Mod;
 
 public class GameScr : mScreen, IChatable
 {
@@ -5286,9 +5287,10 @@ public class GameScr : mScreen, IChatable
 		}
 		paintPhuBanBar(g, num12 + GameCanvas.w / 2, 0, num13);
 		EffectManager.hiEffects.paintAll(g);
-	}
+        GameEvents.onPaintGameScr(g);
+    }
 
-	private void paintXoSo(mGraphics g)
+    private void paintXoSo(mGraphics g)
 	{
 		if (tShow != 0)
 		{

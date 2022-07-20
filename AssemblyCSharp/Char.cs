@@ -1,9 +1,12 @@
 using System;
 using Assets.src.e;
 using Assets.src.g;
+using Mod;
 
 public class Char : IMapObject
 {
+	public CharEffectTime charEffectTime = new CharEffectTime(); 
+
 	public string xuStr;
 
 	public string luongStr;
@@ -1624,7 +1627,35 @@ public class Char : IMapObject
 
 	public virtual void update()
 	{
-		if (isHide || isMabuHold)
+		if (charEffectTime.HasAnyEffect() && !CharEffect.isContains(charID)) CharEffect.storedChars.Add(this);
+		charEffectTime.Update();
+        if (Utilities.isMeInNRDMap() && bag >= 0 && ClanImage.idImages.containsKey(bag.ToString() + string.Empty))
+        {
+            ClanImage clanImage = (ClanImage)ClanImage.idImages.get(bag.ToString() + string.Empty);
+            bool isResetNRD = true;
+            if (clanImage.idImage != null)
+            {                
+                for (int i = 0; i < clanImage.idImage.Length; i++)
+                {
+                    if (clanImage.idImage[i] == 2322)
+                    {
+                        charEffectTime.hasNRD = true;
+                        isResetNRD = false;
+                        if (charEffectTime.timeHoldingNRD == 0)
+                        {
+                            charEffectTime.timeHoldingNRD = 301;
+                        }
+                        break;
+                    }
+                }
+            }
+            if (isResetNRD)
+            {
+                charEffectTime.hasNRD = false;
+                charEffectTime.timeHoldingNRD = 0;
+            }
+        }
+        if (isHide || isMabuHold)
 		{
 			return;
 		}
@@ -1702,33 +1733,80 @@ public class Char : IMapObject
 		{
 			return;
 		}
-		if (sleepEff && GameCanvas.gameTick % 10 == 0)
-		{
-			EffecMn.addEff(new Effect(41, cx, cy, 3, 1, 1));
-		}
-		if (huytSao)
+        if (sleepEff)
+        {
+            if (!charEffectTime.isSleep)
+            {
+                charEffectTime.isSleep = true;
+                charEffectTime.timeSleep = 12;
+            }
+            if (GameCanvas.gameTick % 10 == 0)
+            {
+                EffecMn.addEff(new Effect(41, this.cx, this.cy, 3, 1, 1));
+            }
+        }
+        else
+        {
+            charEffectTime.isSleep = false;
+        }
+        if (isMonkey == 1)
+        {
+            if (!charEffectTime.hasMonkey)
+            {
+                charEffectTime.hasMonkey = true;
+                charEffectTime.timeMonkey = CharExtensions.getTimeMonkey(this);
+            }
+        }
+        else
+        {
+            charEffectTime.hasMonkey = false;
+        }
+        if (huytSao)
 		{
 			huytSao = false;
-			EffecMn.addEff(new Effect(39, cx, cy, 3, 3, 1));
+			charEffectTime.hasHuytSao = true;
+            charEffectTime.timeHuytSao = 31;
+            EffecMn.addEff(new Effect(39, cx, cy, 3, 3, 1));
 		}
-		if (blindEff && GameCanvas.gameTick % 5 == 0)
-		{
-			ServerEffect.addServerEffect(113, this, 1);
-		}
-		if (protectEff)
-		{
-			if (GameCanvas.gameTick % 5 == 0)
-			{
-				eProtect = new Effect(33, cx, cy + 37, 3, 3, 1);
-			}
-			if (eProtect != null)
-			{
-				eProtect.update();
-				eProtect.x = cx;
-				eProtect.y = cy + 37;
-			}
-		}
-		if (charFocus != null && charFocus.cy < 0)
+        if (blindEff)
+        {
+            if (!charEffectTime.isBlind)
+            {
+                charEffectTime.isBlind = true;
+                charEffectTime.timeBlind = 5;
+            }
+            if (GameCanvas.gameTick % 5 == 0)
+            {
+                ServerEffect.addServerEffect(113, this, 1);
+            }
+        }
+        else
+        {
+            charEffectTime.isBlind = false;
+        }
+        if (protectEff)
+        {
+            if (!charEffectTime.hasShield)
+            {
+                charEffectTime.hasShield = true;
+                charEffectTime.timeShield = CharExtensions.getTimeShield(this);
+            }
+            if (GameCanvas.gameTick % 5 == 0)
+            {
+                eProtect = new Effect(33, cx, cy + 37, 3, 3, 1);
+            }
+            if (eProtect != null)
+            {
+                eProtect.update();
+                eProtect.x = cx;
+                eProtect.y = cy + 37;
+            }
+        }
+        else
+        {
+            charEffectTime.hasShield = false;
+        }
+        if (charFocus != null && charFocus.cy < 0)
 		{
 			charFocus = null;
 		}
@@ -1789,6 +1867,12 @@ public class Char : IMapObject
 		}
 		if (isFreez)
 		{
+			charEffectTime.isTDHS = true;
+			if (me && meDead)
+			{
+				freezSeconds = 0;
+			}
+			charEffectTime.timeTDHS = freezSeconds;
 			if (GameCanvas.gameTick % 5 == 0)
 			{
 				ServerEffect.addServerEffect(113, cx, cy, 1);
@@ -1824,7 +1908,8 @@ public class Char : IMapObject
 			}
 			return;
 		}
-		if (isWaitMonkey)
+		else charEffectTime.isTDHS = false;
+        if (isWaitMonkey)
 		{
 			isLockMove = true;
 			cf = 17;
@@ -2030,8 +2115,20 @@ public class Char : IMapObject
 		if (mobMe != null)
 		{
 			updateMobMe();
+            if (mobMe.isDie || mobMe.hp <= 0)
+			{
+				charEffectTime.hasMobMe = false;
+				mobMe = null;
+            }
+			else if (!charEffectTime.hasMobMe)
+			{
+                charEffectTime.hasMobMe = true;
+                charEffectTime.lastTimeMobMe = mSystem.currentTimeMillis();
+                charEffectTime.timeMobMe = CharExtensions.getTimeMobMe(this);
+            }
 		}
-		if (arr != null)
+		else charEffectTime.hasMobMe = false;
+        if (arr != null)
 		{
 			arr.update();
 		}
@@ -2068,6 +2165,7 @@ public class Char : IMapObject
 					holder = false;
 					charHold = null;
 					mobHold = null;
+					charEffectTime.isHold = false;
 				}
 				if (TileMap.tileTypeAt(cx, cy, 2))
 				{
@@ -2803,7 +2901,7 @@ public class Char : IMapObject
 		if (tMobMeBorn != 0)
 		{
 			tMobMeBorn--;
-		}
+        }
 		if (tMobMeBorn == 0)
 		{
 			mobMe.xFirst = ((cdir != 1) ? (cx + 30) : (cx - 30));
@@ -6514,7 +6612,9 @@ public class Char : IMapObject
 		}
 		charHold = r;
 		holder = true;
-	}
+		charEffectTime.isHold = true;
+		charEffectTime.timeHold = CharExtensions.getTimeHold(this);
+    }
 
 	public void setHoldMob(Mob r)
 	{
@@ -6528,9 +6628,11 @@ public class Char : IMapObject
 		}
 		mobHold = r;
 		holder = true;
-	}
+        charEffectTime.isHold = true;
+        charEffectTime.timeHold = CharExtensions.getTimeHold(this);
+    }
 
-	public void findNextFocusByKey()
+    public void findNextFocusByKey()
 	{
 		Res.outz("focus size= " + focus.size());
 		if ((myCharz().skillPaint != null || myCharz().arr != null || myCharz().dart != null || myCharz().skillInfoPaint() != null) && focus.size() == 0)
@@ -7067,6 +7169,7 @@ public class Char : IMapObject
 			charHold = null;
 			mobHold = null;
 		}
+		charEffectTime.isHold = false;
 	}
 
 	public void removeProtectEff()
@@ -7089,10 +7192,12 @@ public class Char : IMapObject
 		if (holder)
 		{
 			holder = false;
+			charEffectTime.isHold = false;
 		}
 		if (protectEff)
 		{
 			protectEff = false;
+			charEffectTime.hasShield = false;
 		}
 		eProtect = null;
 		charHold = null;

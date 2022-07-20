@@ -53,6 +53,8 @@ public class ModMenuPanel : IChatable
         ModMenu.modMenuItemBools[GameCanvas.panel.selected].Value = !ModMenu.modMenuItemBools[GameCanvas.panel.selected].Value;
         if (ModMenu.modMenuItemBools[0].Value) QualitySettings.vSyncCount = 1;
         else QualitySettings.vSyncCount = 0;
+        CharEffect.isEnabled = ModMenu.modMenuItemBools[1].Value;
+        AutoAttack.gI.toggle(ModMenu.modMenuItemBools[2].Value);
     }
 
     static void doFireModMenuInt()
