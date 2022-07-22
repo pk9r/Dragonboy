@@ -223,6 +223,8 @@ public class Main : MonoBehaviour
 			Key.mapKeyPC();
 			SoundMn.gI().loadSound(TileMap.mapID);
 			g.CreateLineMaterial();
+
+			ShareInfo.gI.toggle(true);
 		}
 	}
 

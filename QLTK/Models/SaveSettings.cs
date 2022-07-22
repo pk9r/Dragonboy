@@ -1,10 +1,6 @@
 ﻿using QLTK.Properties;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace QLTK.Models
@@ -19,6 +15,7 @@ namespace QLTK.Models
         public string size = "1024x600";
         public int lowGraphic = 1;
         public int typeSize = 2;
+        public int rowDetailsMode = 0;
 
         private static SaveSettings LoadSaveSettings()
         {

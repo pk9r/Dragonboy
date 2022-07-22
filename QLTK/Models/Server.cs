@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace QLTK.Models
+﻿namespace QLTK.Models
 {
     public class Server
     {
@@ -22,13 +16,13 @@ namespace QLTK.Models
             this.port = port;
             this.language = language;
         }
-        
+
         public Server(string name, string ip, int port)
         {
             this.name = name;
             this.ip = ip;
             this.port = port;
-            language = 0;
+            this.language = 0;
         }
     }
 }
