@@ -57,10 +57,16 @@ namespace QLTK
                     state.account.cMPGoc = (int)msg["cMPGoc"];
                     state.account.cDefGoc = (int)msg["cDefGoc"];
                     state.account.cCriticalGoc = (int)msg["cCriticalGoc"];
+                    state.account.cDamFull = (int)msg["cDamFull"];
+                    state.account.cDefull = (int)msg["cDefull"];
+                    state.account.cCriticalFull = (int)msg["cCriticalFull"];
                     state.account.cPetHP = (int)msg["cPetHP"];
                     state.account.cPetHPFull = (int)msg["cPetHPFull"];
                     state.account.cPetMP = (int)msg["cPetMP"];
                     state.account.cPetMPFull = (int)msg["cPetMPFull"];
+                    state.account.cPetDamFull = (int)msg["cPetDamFull"];
+                    state.account.cPetDefull = (int)msg["cPetDefull"];
+                    state.account.cPetCriticalFull = (int)msg["cPetCriticalFull"];
                     state.account.cPetStamina = (int)msg["cPetStamina"];
                     state.account.cPetPower = (long)msg["cPetPower"];
                     state.account.cPetTiemNang = (long)msg["cPetTiemNang"];

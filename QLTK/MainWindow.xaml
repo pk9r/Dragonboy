@@ -91,18 +91,30 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel>
+
               <TextBlock Margin="5">
                 <Run Text="HP: " />
                 <Run Text="{Binding cHP, StringFormat=N0}" />
                 <Run Text="/" />
                 <Run Text="{Binding cHPFull, StringFormat=N0}" />
               </TextBlock>
+
               <TextBlock Margin="5">
                 <Run Text="MP: " />
                 <Run Text="{Binding cMP, StringFormat=N0}" />
                 <Run Text="/" />
                 <Run Text="{Binding cMPFull, StringFormat=N0}" />
               </TextBlock>
+
+              <TextBlock Margin="5">
+                <Run Text="SĐ, G, CM: " />
+                <Run Text="{Binding cDamFull, StringFormat=N0}" />
+                <Run Text=", " />
+                <Run Text="{Binding cDefull, StringFormat=N0}" />
+                <Run Text=", " />
+                <Run Text="{Binding cCriticalFull, StringFormat=N0}" />
+              </TextBlock>
+
               <TextBlock Margin="5">
                 <Run Text="Thể lực: " />
                 <Run Text="{Binding cStamina}" />
@@ -110,22 +122,35 @@
             </StackPanel>
 
             <StackPanel Grid.Column="1">
+
               <TextBlock Margin="5">
                 <Run Text="HP: " />
                 <Run Text="{Binding cPetHP, StringFormat=N0}" />
                 <Run Text="/" />
                 <Run Text="{Binding cPetHPFull, StringFormat=N0}" />
               </TextBlock>
+
               <TextBlock Margin="5">
                 <Run Text="MP: " />
                 <Run Text="{Binding cPetMP, StringFormat=N0}" />
                 <Run Text="/" />
                 <Run Text="{Binding cPetMPFull, StringFormat=N0}" />
               </TextBlock>
+
+              <TextBlock Margin="5">
+                <Run Text="SĐ, G, CM: " />
+                <Run Text="{Binding cPetDamFull, StringFormat=N0}" />
+                <Run Text=", " />
+                <Run Text="{Binding cPetDefull, StringFormat=N0}" />
+                <Run Text=", " />
+                <Run Text="{Binding cPetCriticalFull, StringFormat=N0}" />
+              </TextBlock>
+
               <TextBlock Margin="5">
                 <Run Text="Thể lực: " />
                 <Run Text="{Binding cPetStamina}" />
               </TextBlock>
+
             </StackPanel>
 
           </Grid>

@@ -28,10 +28,16 @@ namespace QLTK.Models
         private int _cMPGoc = -1;
         private int _cDefGoc = -1;
         private int _cCriticalGoc = -1;
+        private int _cDamFull = -1;
+        private int _cDefull = -1;
+        private int _cCriticalFull = -1;
         private int _cPetHP = -1;
         private int _cPetHPFull = -1;
         private int _cPetMP = -1;
         private int _cPetMPFull = -1;
+        private int _cPetDamFull = -1;
+        private int _cPetDefull = -1;
+        private int _cPetCriticalFull = -1;
         private int _cPetStamina = -1;
         private long _cPetPower = -1;
         private long _cPetTiemNang = -1;
@@ -144,6 +150,21 @@ namespace QLTK.Models
             get => this._cCriticalGoc;
             set { this._cCriticalGoc = value; this.OnPropertyChanged("cCriticalGoc"); }
         }
+        public int cDamFull
+        {
+            get => this._cDamFull;
+            set { this._cDamFull = value; this.OnPropertyChanged("cDamFull"); }
+        }
+        public int cDefull
+        {
+            get => this._cDefull;
+            set { this._cDefull = value; this.OnPropertyChanged("cDefull"); }
+        }
+        public int cCriticalFull
+        {
+            get => this._cCriticalFull;
+            set { this._cCriticalFull = value; this.OnPropertyChanged("cCriticalFull"); }
+        }
         public int cPetHP
         {
             get => this._cPetHP;
@@ -163,6 +184,21 @@ namespace QLTK.Models
         {
             get => this._cPetMPFull;
             set { this._cPetMPFull = value; this.OnPropertyChanged("cPetMPFull"); }
+        }
+        public int cPetDamFull
+        {
+            get => this._cPetDamFull;
+            set { this._cPetDamFull = value; this.OnPropertyChanged("cPetDamFull"); }
+        }
+        public int cPetDefull
+        {
+            get => this._cPetDefull;
+            set { this._cPetDefull = value; this.OnPropertyChanged("cPetDefull"); }
+        }
+        public int cPetCriticalFull
+        {
+            get => this._cPetCriticalFull;
+            set { this._cPetCriticalFull = value; this.OnPropertyChanged("cPetCriticalFull"); }
         }
         public int cPetStamina
         {
