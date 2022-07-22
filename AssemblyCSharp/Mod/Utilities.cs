@@ -23,6 +23,8 @@ namespace Mod
             BindingFlags.Static |
             BindingFlags.InvokeMethod;
 
+        public static string status = "Đã kết nối";
+
         #region Singleton
         private Utilities() { }
         static Utilities() { }
@@ -367,14 +369,9 @@ namespace Mod
         }
 
         [ChatCommand("test")]
-        public static void test(string text)
+        public static void test()
         {
-            SocketClient.gI.sendMessage(new
-            {
-                action = "test",
-                Char.myCharz().cName,
-                text
-            });
+            
         }
 
         [ChatCommand("skey")]

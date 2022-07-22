@@ -3,7 +3,6 @@ using QLTK.Models;
 using QLTK.Properties;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -38,14 +37,39 @@ namespace QLTK
             string action = (string)msg["action"];
             switch (action)
             {
-                case "test":
-                    string text = (string)msg["text"];
-                    string cName = (string)msg["cName"];
-                    MessageBox.Show(text + " form " + cName);
+                case "updateInfo":
+                    state.account.status = (string)msg["status"];
+                    state.account.cName = (string)msg["cName"];
+                    state.account.cgender = (int)msg["cgender"];
+                    state.account.mapName = (string)msg["mapName"];
+                    state.account.mapID = (int)msg["mapID"];
+                    state.account.zoneID = (int)msg["zoneID"];
+                    state.account.cx = (int)msg["cx"];
+                    state.account.cy = (int)msg["cy"];
+                    state.account.cHP = (int)msg["cHP"];
+                    state.account.cHPFull = (int)msg["cHPFull"];
+                    state.account.cMP = (int)msg["cMP"];
+                    state.account.cMPFull = (int)msg["cMPFull"];
+                    state.account.cStamina = (int)msg["cStamina"];
+                    state.account.cPower = (long)msg["cPower"];
+                    state.account.cTiemNang = (long)msg["cTiemNang"];
+                    state.account.cHPGoc = (int)msg["cHPGoc"];
+                    state.account.cMPGoc = (int)msg["cMPGoc"];
+                    state.account.cDefGoc = (int)msg["cDefGoc"];
+                    state.account.cCriticalGoc = (int)msg["cCriticalGoc"];
+                    state.account.cPetHP = (int)msg["cPetHP"];
+                    state.account.cPetHPFull = (int)msg["cPetHPFull"];
+                    state.account.cPetMP = (int)msg["cPetMP"];
+                    state.account.cPetMPFull = (int)msg["cPetMPFull"];
+                    state.account.cPetStamina = (int)msg["cPetStamina"];
+                    state.account.cPetPower = (long)msg["cPetPower"];
+                    state.account.cPetTiemNang = (long)msg["cPetTiemNang"];
+                    state.account.xu = (long)msg["xu"];
+                    state.account.luong = (int)msg["luong"];
+                    state.account.luongKhoa = (int)msg["luongKhoa"];
                     break;
                 case "setStatus":
-                    string status = (string)msg["status"];
-                    Utilities.UpdateStatus(state.account, status);
+                    state.account.status = (string)msg["status"];
                     break;
                 case "syncKeyPressed":
                 case "syncKeyReleased":
@@ -78,8 +102,6 @@ namespace QLTK
                         state.account.server,
                         MainWindow.sizeData
                     });
-
-                    Utilities.UpdateStatus(state.account, "Đã kết nối");
                     break;
                 default:
                     break;
@@ -170,7 +192,7 @@ namespace QLTK
             }
             catch (SocketException)
             {
-                Utilities.UpdateStatus(state.account, "-");
+                state.account.status = "-";
             }
 
             if (bytesRead > 0)
@@ -185,7 +207,7 @@ namespace QLTK
                 {
                     handler.Shutdown(SocketShutdown.Both);
                     handler.Close();
-                    Utilities.UpdateStatus(state.account, "-");
+                    state.account.status = "-";
                     return;
                 }
 

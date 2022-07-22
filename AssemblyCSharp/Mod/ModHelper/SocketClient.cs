@@ -41,6 +41,12 @@ namespace Mod.ModHelper
                     id = Process.GetCurrentProcess().Id,
                 });
 
+                this.sendMessage(new
+                {
+                    action = "setStatus",
+                    Utilities.status
+                });
+
                 byte[] bytes = new byte[1024];
                 JsonData msg;
 
@@ -97,15 +103,6 @@ namespace Mod.ModHelper
                     writeLog($">> Lost action {action} \n");
                     break;
             }
-        }
-
-        public void setStatus(string status)
-        {
-            this.sendMessage(new
-            {
-                action = "setStatus",
-                status
-            });
         }
 
         public void sendMessage(object obj)

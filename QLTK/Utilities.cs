@@ -1,13 +1,9 @@
-﻿using LitJson;
-using QLTK.Models;
+﻿using HardwareId;
 using System;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows;
-using HardwareId;
 using System.Security.Cryptography;
+using System.Text;
+using System.Windows;
 
 namespace QLTK
 {
@@ -54,7 +50,7 @@ namespace QLTK
                     .ComputeHash(Encoding.UTF8.GetBytes(
                         Convert.ToBase64String(
                             Encoding.UTF8.GetBytes(
-                                HWID.getHWID(true, false, true, true))) + 
+                                HWID.getHWID(true, false, true, true))) +
                                 "6VRRnrPsZfd6FtAqlqNUixYO7spOLu8P"));
             }
         }
@@ -70,20 +66,6 @@ namespace QLTK
                 random.NextBytes(bytes);
                 return bytes;
             }
-        }
-
-        public static void UpdateStatus(Account account, string status)
-        {
-            account.status = status;
-            RefreshAccounts();
-        }
-
-        public static async void RefreshAccounts()
-        {
-            await Application.Current.Dispatcher.InvokeAsync(() =>
-            {
-                GetMainWindow().RefreshAccounts();
-            });
         }
 
         public static MainWindow GetMainWindow()

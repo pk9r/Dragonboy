@@ -61,13 +61,25 @@ namespace QLTK.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ModData\\sizeSettings.json")]
-        public string PathSizeSettings {
+        [global::System.Configuration.DefaultSettingValueAttribute("ModData\\settings.json")]
+        public string PathSettings {
             get {
-                return ((string)(this["PathSizeSettings"]));
+                return ((string)(this["PathSettings"]));
             }
             set {
-                this["PathSizeSettings"] = value;
+                this["PathSettings"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://raw.githubusercontent.com/pk9r327/Dragonboy/master/notification.txt")]
+        public string LinkNotification {
+            get {
+                return ((string)(this["LinkNotification"]));
+            }
+            set {
+                this["LinkNotification"] = value;
             }
         }
     }

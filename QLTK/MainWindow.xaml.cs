@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -67,56 +69,51 @@ namespace QLTK
             new Server("SUPER 2", "103.90.224.245", 14447),
         };
 
+        public static object settings;
+
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
             new Thread(() => AsynchronousSocketListener.StartListening())
             {
                 IsBackground = true
             }.Start();
 
-            ComboBoxServer.ItemsSource = Servers;
-            ComboBoxServer.DisplayMemberPath = "name";
-            ComboBoxServer.SelectedIndex = 0;
+            this.ServerComboBox.ItemsSource = Servers;
+            this.ServerComboBox.DisplayMemberPath = "name";
+            this.ServerComboBox.SelectedIndex = 0;
 
-            LoadAccounts();
-            LoadSizeSettings();
+            this.LoadAccounts();
+            this.LoadSaveSettings();
+
+            using (WebClient client = new WebClient())
+            {
+                var data = client.DownloadData(Settings.Default.LinkNotification);
+                var strings = Encoding.UTF8.GetString(data).Split('\n');
+                if (SaveSettings.Instance.versionNotification != strings[0])
+                {
+                    for (int i = 1; i < strings.Length; i++)
+                    {
+                        strings[i] = strings[i].Trim();
+                        if (strings[i] != "")
+                        {
+                            MessageBox.Show(strings[i], "Thông báo", MessageBoxButton.OK);
+                        }
+                    }
+                    SaveSettings.Instance.versionNotification = strings[0];
+                }
+            }
         }
 
         private static bool ExistedWindow(Account account, out IntPtr hWnd)
         {
             hWnd = IntPtr.Zero;
             if (account.process == null || account.process.HasExited)
-            {
                 return false;
-            }
 
             hWnd = account.process.MainWindowHandle;
             return hWnd != IntPtr.Zero;
-        }
-
-        private static async Task ShowWindowAsync(IntPtr hWnd)
-        {
-            Utilities.ShowWindowAsync(hWnd, 1);
-            Utilities.SetForegroundWindow(hWnd);
-            await Task.Delay(100);
-
-            Utilities.GetWindowRect(hWnd, out RECT rect);
-
-            double primaryScreenWidth = SystemParameters.PrimaryScreenWidth;
-            double primaryScreenHeight = SystemParameters.PrimaryScreenHeight;
-
-            if (rect.left < 0 || rect.right > primaryScreenWidth ||
-                rect.top < 0 || rect.bottom > primaryScreenHeight)
-            {
-                Utilities.MoveWindow(
-                    hWnd: hWnd,
-                    x: 0, y: 0,
-                    width: rect.right - rect.left,
-                    height: rect.bottom - rect.top,
-                    bRepaint: true);
-            }
         }
 
         private static async Task ShowWindowsAsync(List<Account> accounts)
@@ -132,12 +129,28 @@ namespace QLTK
             await Task.Delay(1000);
         }
 
-        private static void ArrangeWindows(List<Account> accounts, int type)
+        private static void SendMessageToAccounts(List<Account> accounts, object message)
+        {
+            var connectedAccounts = accounts.Where(account => account.workSocket?.Connected == true);
+            foreach (var account in connectedAccounts)
+                account.sendMessage(message);
+        }
+
+        private static void KillProcesses(List<Account> accounts)
+        {
+            var runningAccounts = accounts.Where(account => account.process?.HasExited == false);
+            foreach (var account in runningAccounts)
+                account.process.Kill();
+        }
+
+        private void ArrangeWindows(List<Account> accounts, int type)
         {
             var maxWidth = SystemParameters.PrimaryScreenWidth;
             var maxHeight = SystemParameters.PrimaryScreenHeight;
 
-            int cx = 0, cy = 0;
+            int xBase = (int)this.ActualWidth;
+
+            int cx = xBase, cy = 0;
 
             for (int i = 0; i < accounts.Count; i++)
             {
@@ -155,7 +168,7 @@ namespace QLTK
                 cx += width / type;
                 if (cx + width / type > maxWidth)
                 {
-                    cx = 0;
+                    cx = xBase;
                     cy += height - 5;
                 }
                 if (cy + height > maxHeight)
@@ -165,40 +178,9 @@ namespace QLTK
             }
         }
 
-        private void LoadSizeSettings()
-        {
-            var sizeSettings = new SizeSettings();
-            try
-            {
-                sizeSettings = LitJson.JsonMapper.ToObject<SizeSettings>(
-                    File.ReadAllText(Settings.Default.PathSizeSettings));
-            }
-            catch
-            {
-            }
-
-            TextBoxSize.Text = sizeSettings.size;
-            ComboBoxLowGraphic.SelectedIndex = sizeSettings.lowGraphic;
-            ComboBoxTypeSize.SelectedIndex = sizeSettings.typeSize;
-        }
-
-        private void LoadAccounts()
-        {
-            try
-            {
-                this.DataGridAccount.ItemsSource = LitJson.JsonMapper.ToObject<List<Account>>(
-                    Utilities.DecryptString(File.ReadAllText(Settings.Default.PathAccounts)));
-            }
-            catch
-            {
-                this.DataGridAccount.ItemsSource = new List<Account>();
-                SaveAccounts();
-            }
-        }
-
         private bool UpdateSizeData()
         {
-            var match = Regex.Match(TextBoxSize.Text, @"^\s*(\d+)x(\d+)\s*$");
+            var match = Regex.Match(this.TextBoxSize.Text, @"^\s*(\d+)x(\d+)\s*$");
             if (!match.Success)
                 return false;
 
@@ -206,39 +188,36 @@ namespace QLTK
             {
                 width = int.Parse(match.Groups[1].Value),
                 height = int.Parse(match.Groups[2].Value),
-                typeSize = ComboBoxTypeSize.SelectedIndex + 1,
-                lowGraphic = ComboBoxLowGraphic.SelectedIndex
+                typeSize = this.ComboBoxTypeSize.SelectedIndex + 1,
+                lowGraphic = this.ComboBoxLowGraphic.SelectedIndex
             };
             return true;
         }
 
-        public void RefreshAccounts()
-            => this.DataGridAccount.Items.Refresh();
-
         public List<Account> GetAllAccounts()
-            => (List<Account>)this.DataGridAccount.ItemsSource;
+            => (List<Account>)this.AccountsDataGrid.ItemsSource;
 
         private Account GetSelectedAccount()
-            => (Account)this.DataGridAccount.SelectedItem;
+            => (Account)this.AccountsDataGrid.SelectedItem;
 
         private List<Account> GetSelectedAccounts()
-            => this.DataGridAccount.SelectedItems.Cast<Account>().ToList();
+            => this.AccountsDataGrid.SelectedItems.Cast<Account>().ToList();
 
         private Account GetInputAccount() => new Account()
         {
-            username = this.TextBoxUsername.Text,
-            password = this.PasswordBoxPassword.Password,
-            indexServer = this.ComboBoxServer.SelectedIndex,
+            username = this.UsernameTextBox.Text,
+            password = this.PasswordPasswordBox.Password,
+            indexServer = this.ServerComboBox.SelectedIndex,
         };
 
         #region Save
-        private void SaveAccounts()
+        private void DoSaveAccounts()
         {
             try
             {
                 if (!Directory.Exists("ModData")) Directory.CreateDirectory("ModData");
                 File.WriteAllText(Settings.Default.PathAccounts,
-                    Utilities.EncryptString(LitJson.JsonMapper.ToJson(DataGridAccount.ItemsSource)));
+                    Utilities.EncryptString(LitJson.JsonMapper.ToJson(this.AccountsDataGrid.ItemsSource)));
             }
             catch (Exception ex)
             {
@@ -246,68 +225,82 @@ namespace QLTK
             }
         }
 
-        private void SaveSizeSettings()
+        private void DoSaveSettings()
+        {
+            SaveSettings.Instance.size = this.TextBoxSize.Text;
+            SaveSettings.Instance.lowGraphic = this.ComboBoxLowGraphic.SelectedIndex;
+            SaveSettings.Instance.typeSize = this.ComboBoxTypeSize.SelectedIndex;
+            SaveSettings.Instance.rowDetailsMode = this.RowDetailsModeComboBox.SelectedIndex;
+
+            SaveSettings.Save();
+        }
+        #endregion
+
+        #region Load
+        private void LoadAccounts()
         {
             try
             {
-                var sizeSettings = new SizeSettings()
-                {
-                    size = this.TextBoxSize.Text,
-                    lowGraphic = this.ComboBoxLowGraphic.SelectedIndex,
-                    typeSize = this.ComboBoxTypeSize.SelectedIndex,
-                };
-
-                File.WriteAllText(Settings.Default.PathSizeSettings,
-                    LitJson.JsonMapper.ToJson(sizeSettings));
+                this.AccountsDataGrid.ItemsSource = LitJson.JsonMapper.ToObject<List<Account>>(
+                    Utilities.DecryptString(File.ReadAllText(Settings.Default.PathAccounts)));
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show(ex.ToString());
+                this.AccountsDataGrid.ItemsSource = new List<Account>();
+                this.DoSaveAccounts();
             }
+        }
+
+        private void LoadSaveSettings()
+        {
+            this.TextBoxSize.Text = SaveSettings.Instance.size;
+            this.ComboBoxLowGraphic.SelectedIndex = SaveSettings.Instance.lowGraphic;
+            this.ComboBoxTypeSize.SelectedIndex = SaveSettings.Instance.typeSize;
+            this.RowDetailsModeComboBox.SelectedIndex = SaveSettings.Instance.rowDetailsMode;
         }
         #endregion
 
         #region Open Game
         private async Task LoginSelectedAccountsAsync()
         {
-            if (!UpdateSizeData())
+            if (!this.UpdateSizeData())
             {
                 MessageBox.Show("Kích thước cửa sổ không hợp lệ");
                 return;
             }
 
-            var accounts = GetSelectedAccounts();
+            var accounts = this.GetSelectedAccounts();
             if (accounts.Count() == 0)
             {
                 MessageBox.Show("Vui lòng chọn tài khoản");
                 return;
             }
 
-            GridMain.IsEnabled = false;
-            await OpenGamesAsync(accounts);
-            GridMain.IsEnabled = true;
+            this.MainGrid.IsEnabled = false;
+            await this.OpenGamesAsync(accounts);
+            this.MainGrid.IsEnabled = true;
         }
 
         private async Task LoginAllAccountsAsync()
         {
-            if (!UpdateSizeData())
+            if (!this.UpdateSizeData())
             {
                 MessageBox.Show("Kích thước cửa sổ không hợp lệ");
                 return;
             }
 
-            var accounts = GetAllAccounts();
+            var accounts = this.GetAllAccounts();
 
-            GridMain.IsEnabled = false;
-            await OpenGamesAsync(accounts);
-            GridMain.IsEnabled = true;
+            this.MainGrid.IsEnabled = false;
+            await this.OpenGamesAsync(accounts);
+            this.MainGrid.IsEnabled = true;
         }
 
         private async Task OpenGamesAsync(List<Account> accounts)
         {
             foreach (var account in accounts)
             {
-                await OpenGameAsync(account);
+                await this.OpenGameAsync(account);
             }
         }
 
@@ -316,7 +309,7 @@ namespace QLTK
             if (account.process == null || account.process.HasExited)
             {
                 account.status = "Đang khởi động...";
-                RefreshAccounts();
+                this.AccountsDataGrid.Items.Refresh();
 
                 AsynchronousSocketListener.waitingAccounts.Add(account);
 
@@ -342,6 +335,31 @@ namespace QLTK
         #endregion
 
         #region Processes
+        private async Task ShowWindowAsync(IntPtr hWnd)
+        {
+            Utilities.ShowWindowAsync(hWnd, 1);
+            Utilities.SetForegroundWindow(hWnd);
+            await Task.Delay(100);
+
+            Utilities.GetWindowRect(hWnd, out RECT rect);
+
+            int xBase = (int)this.ActualWidth;
+
+            double primaryScreenWidth = SystemParameters.PrimaryScreenWidth;
+            double primaryScreenHeight = SystemParameters.PrimaryScreenHeight;
+
+            if (rect.left < xBase || rect.right > primaryScreenWidth ||
+                rect.top < 0 || rect.bottom > primaryScreenHeight)
+            {
+                Utilities.MoveWindow(
+                    hWnd: hWnd,
+                    x: xBase, y: 0,
+                    width: rect.right - rect.left,
+                    height: rect.bottom - rect.top,
+                    bRepaint: true);
+            }
+        }
+
         private async Task ShowAllWindowsAsync()
         {
             var accounts = this.GetAllAccounts();
@@ -350,110 +368,72 @@ namespace QLTK
 
         private void ArrangeAllWindows(int type)
         {
-            var accounts = this.GetAllAccounts();
-
-            ArrangeWindows(accounts, type);
+            this.ArrangeWindows(this.GetAllAccounts(), type);
         }
 
         private async Task ShowAndArrangeWindows(int type)
         {
-            var accounts = GetSelectedAccounts();
+            var accounts = this.GetSelectedAccounts();
             if (accounts.Count <= 1)
-            {
-                await ShowAllWindowsAsync();
-                this.ArrangeAllWindows(type);
-                return;
-            }
+                accounts = this.GetAllAccounts();
 
             await ShowWindowsAsync(accounts);
-            ArrangeWindows(accounts, type);
+            this.ArrangeWindows(accounts, type);
         }
 
         private void KillSelectedProcesses()
         {
-            var accounts = GetSelectedAccounts();
+            var accounts = this.GetSelectedAccounts();
             if (accounts.Count() == 0)
             {
                 MessageBox.Show("Vui lòng chọn tài khoản");
                 return;
             }
 
-            foreach (var account in accounts)
-            {
-                if (account.process?.HasExited == false)
-                {
-                    account.process.Kill();
-                }
-            }
+            KillProcesses(accounts);
         }
 
         private void KillAllProcesses()
         {
-            foreach (var account in GetAllAccounts())
-            {
+            foreach (var account in this.GetAllAccounts())
                 if (account.process?.HasExited == false)
-                {
                     account.process.Kill();
-                }
-            }
         }
         #endregion
 
         #region Send
         private void SendChatToSelectedAccounts()
         {
-            var accounts = GetSelectedAccounts();
+            var accounts = this.GetSelectedAccounts();
             if (accounts.Count() == 0)
             {
                 MessageBox.Show("Vui lòng chọn tài khoản");
                 return;
             }
 
-            foreach (var account in accounts)
+            SendMessageToAccounts(accounts, new
             {
-                if (account.workSocket?.Connected == true)
-                {
-                    account.sendMessage(new
-                    {
-                        action = "chat",
-                        text = TextBoxChat.Text
-                    });
-                }
-            }
+                action = "chat",
+                text = this.TextBoxChat.Text
+            });
         }
 
         private void SendKeyPressToSelectedAccounts(int keyCode)
         {
-            var accounts = GetSelectedAccounts();
-
-            foreach (var account in accounts)
+            SendMessageToAccounts(this.GetSelectedAccounts(), new
             {
-                if (account.workSocket?.Connected == true)
-                {
-                    account.sendMessage(new
-                    {
-                        action = "keyPress",
-                        keyCode
-                    });
-                }
-            }
+                action = "keyPress",
+                keyCode
+            });
         }
 
         private void SendKeyReleaseToSelectedAccounts(int keyCode)
         {
-            var accounts = GetSelectedAccounts();
-
-            foreach (var account in accounts)
+            SendMessageToAccounts(this.GetSelectedAccounts(), new
             {
-                if (account.workSocket?.Connected == true)
-                {
-                    account.sendMessage(new
-                    {
-                        action = "keyRelease",
-                        keyCode
-                    });
-                }
-            }
+                action = "keyRelease",
+                keyCode
+            });
         }
         #endregion
 
@@ -540,7 +520,7 @@ namespace QLTK
             return keyCode;
         }
 
-        private void ButtonKeyPress_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void KeyPressButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var button = (Button)sender;
             int keyCode = GetKeyCode(button);
@@ -548,10 +528,10 @@ namespace QLTK
             if (keyCode == 0)
                 return;
 
-            SendKeyPressToSelectedAccounts(keyCode);
+            this.SendKeyPressToSelectedAccounts(keyCode);
         }
 
-        private void ButtonKeyPress_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void KeyPressButton_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             var button = (Button)sender;
             int keyCode = GetKeyCode(button);
@@ -559,7 +539,7 @@ namespace QLTK
             if (keyCode == 0)
                 return;
 
-            SendKeyReleaseToSelectedAccounts(keyCode);
+            this.SendKeyReleaseToSelectedAccounts(keyCode);
         }
 
         private void Control_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -570,7 +550,7 @@ namespace QLTK
             if (keyCode == 0)
                 return;
 
-            SendKeyPressToSelectedAccounts(keyCode);
+            this.SendKeyPressToSelectedAccounts(keyCode);
         }
 
         private void Control_PreviewKeyUp(object sender, KeyEventArgs e)
@@ -581,142 +561,152 @@ namespace QLTK
             if (keyCode == 0)
                 return;
 
-            SendKeyReleaseToSelectedAccounts(keyCode);
+            this.SendKeyReleaseToSelectedAccounts(keyCode);
         }
         #endregion
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            KillAllProcesses();
+            this.KillAllProcesses();
 
-            SaveAccounts();
-            SaveSizeSettings();
+            this.DoSaveAccounts();
+            this.DoSaveSettings();
         }
 
-        private void DataGridAccount_LoadingRow(object sender, DataGridRowEventArgs e)
+        private void AccountsDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             ((Account)e.Row.Item).number = e.Row.GetIndex();
         }
 
-        private void DataGirdAccount_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void AccountsDataGird_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (DataGridAccount.SelectedItem is Account account)
+            if (this.AccountsDataGrid.SelectedItem is Account account)
             {
-                TextBoxUsername.Text = account.username;
-                PasswordBoxPassword.Password = account.password;
-                ComboBoxServer.SelectedIndex = account.indexServer;
+                this.UsernameTextBox.Text = account.username;
+                this.PasswordPasswordBox.Password = account.password;
+                this.ServerComboBox.SelectedIndex = account.indexServer;
             }
         }
 
-        private async void DataGridAccount_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private async void AccountsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (DataGridAccount.SelectedItem is Account account)
+            if (this.AccountsDataGrid.SelectedItem is Account account)
             {
-                GridMain.IsEnabled = false;
-
+                this.MainGrid.IsEnabled = false;
+                
                 if (ExistedWindow(account, out IntPtr hWnd))
                 {
-                    await ShowWindowAsync(hWnd);
-                    GridMain.IsEnabled = true;
+                    await this.ShowWindowAsync(hWnd);
+                    this.MainGrid.IsEnabled = true;
                     return;
                 }
 
-                if (!UpdateSizeData())
+                if (!this.UpdateSizeData())
                 {
                     MessageBox.Show("Kích thước cửa sổ không hợp lệ");
-                    GridMain.IsEnabled = true;
+                    this.MainGrid.IsEnabled = true;
                     return;
                 }
 
-                await OpenGameAsync(account);
-                GridMain.IsEnabled = true;
+                await this.OpenGameAsync(account);
+                
+                this.MainGrid.IsEnabled = true;
             }
         }
 
-        private void ButtonSelecteAll_Click(object sender, RoutedEventArgs e)
+        private void SelectAllButton_Click(object sender, RoutedEventArgs e)
         {
-            DataGridAccount.SelectedItems.Clear();
+            this.AccountsDataGrid.SelectedItems.Clear();
             this.GetAllAccounts().ForEach(
-                a => DataGridAccount.SelectedItems.Add(a));
+                a => this.AccountsDataGrid.SelectedItems.Add(a));
         }
 
-        private void ButtonAddAccount_Click(object sender, RoutedEventArgs e)
+        private void AddAccountButton_Click(object sender, RoutedEventArgs e)
         {
-            GetAllAccounts().Add(GetInputAccount());
-            DataGridAccount.Items.Refresh();
-            SaveAccounts();
+            this.GetAllAccounts().Add(this.GetInputAccount());
+            this.AccountsDataGrid.Items.Refresh();
+            this.DoSaveAccounts();
         }
 
-        private void ButtonEditAccount_Click(object sender, RoutedEventArgs e)
+        private void EditAccountButton_Click(object sender, RoutedEventArgs e)
         {
-            var account = GetSelectedAccount();
+            var account = this.GetSelectedAccount();
             if (account == null)
             {
                 MessageBox.Show("Vui lòng chọn tài khoản");
                 return;
             }
 
-            var inputAccount = GetInputAccount();
+            var inputAccount = this.GetInputAccount();
             account.username = inputAccount.username;
             account.password = inputAccount.password;
             account.indexServer = inputAccount.indexServer;
 
-            DataGridAccount.Items.Refresh();
-            SaveAccounts();
+            this.DoSaveAccounts();
+            this.AccountsDataGrid.Items.Refresh();
         }
 
-        private void ButtonDeleteAccount_Click(object sender, RoutedEventArgs e)
+        private void DeleteAccountsButton_Click(object sender, RoutedEventArgs e)
         {
-            var accounts = GetSelectedAccounts();
+            var accounts = this.GetSelectedAccounts();
             foreach (var account in accounts)
-                GetAllAccounts().Remove(account);
+                this.GetAllAccounts().Remove(account);
 
-            SaveAccounts();
-            DataGridAccount.Items.Refresh();
+            this.DoSaveAccounts();
+            this.AccountsDataGrid.Items.Refresh();
         }
 
-        private async void ButtonLogin_Click(object sender, RoutedEventArgs e)
+        private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            await LoginSelectedAccountsAsync();
+            await this.LoginSelectedAccountsAsync();
         }
 
-        private async void ButtonLoginAll_Click(object sender, RoutedEventArgs e)
+        private async void LoginAllButton_Click(object sender, RoutedEventArgs e)
         {
-            await LoginAllAccountsAsync();
+            await this.LoginAllAccountsAsync();
         }
 
-        private void ButtonKill_Click(object sender, RoutedEventArgs e)
+        private void KillButton_Click(object sender, RoutedEventArgs e)
         {
-            KillSelectedProcesses();
+            this.KillSelectedProcesses();
         }
 
-
-        private async void ButtonArrangeWindows1_Click(object sender, RoutedEventArgs e)
+        private async void ArrangeWindows1Button_Click(object sender, RoutedEventArgs e)
         {
-            GridMain.IsEnabled = false;
-            await ShowAndArrangeWindows(1);
-            GridMain.IsEnabled = true;
+            this.MainGrid.IsEnabled = false;
+            await this.ShowAndArrangeWindows(1);
+            this.MainGrid.IsEnabled = true;
         }
 
-        private async void ButtonArrangeWindows2_Click(object sender, RoutedEventArgs e)
+        private async void ArrangeWindows2Button_Click(object sender, RoutedEventArgs e)
         {
-            GridMain.IsEnabled = false;
-            await ShowAndArrangeWindows(1);
-            GridMain.IsEnabled = true;
+            this.MainGrid.IsEnabled = false;
+            await this.ShowAndArrangeWindows(1);
+            this.MainGrid.IsEnabled = true;
         }
 
-        private void ButtonChat_Click(object sender, RoutedEventArgs e)
+        private void ChatButton_Click(object sender, RoutedEventArgs e)
         {
-            SendChatToSelectedAccounts();
+            this.SendChatToSelectedAccounts();
         }
 
-        private void TextBoxChat_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void ChatTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {
-                ButtonChat_Click(sender, null);
+                this.ChatButton_Click(sender, null);
                 e.Handled = true;
             }
+        }
+
+        private void AccountsDataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            var args = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta)
+            {
+                RoutedEvent = MouseWheelEvent
+            };
+
+            AccountsScrollViewer.RaiseEvent(args);
         }
     }
 }

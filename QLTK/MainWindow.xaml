@@ -8,18 +8,235 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   Title="QLTK - NRO"
   Width="auto"
-  Height="600"
+  Height="700"
   Background="{DynamicResource MaterialDesignPaper}"
   Closed="Window_Closed"
   FontFamily="{materialDesign:MaterialDesignFont}"
+  Left="0"
   SizeToContent="Width"
   TextElement.FontSize="14"
   TextElement.FontWeight="Medium"
   TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+  Top="0"
   Topmost="True"
   WindowStartupLocation="Manual"
   mc:Ignorable="d">
-  <Grid x:Name="GridMain" Width="auto">
+
+  <Window.Resources>
+
+    <DataTemplate x:Key="DetailsAccountTemplate">
+      <StackPanel>
+        <materialDesign:Card Margin="5" Visibility="{Binding IsChecked, ElementName=InfoCharacterCheckBox, Converter={StaticResource BooleanToVisibilityConverter}}">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Margin="5">
+              <Run Text="Tên nhân vật: " />
+              <Run Text="{Binding cName}" />
+            </TextBlock>
+
+            <TextBlock Grid.Column="1" Margin="5">
+              <Run Text="Hệ: " />
+              <Run Text="{Binding planet, Mode=OneWay}" />
+            </TextBlock>
+          </Grid>
+        </materialDesign:Card>
+
+        <materialDesign:Card Margin="5" Visibility="{Binding IsChecked, ElementName=InfoLocationCheckBox, Converter={StaticResource BooleanToVisibilityConverter}}">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition />
+              <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <TextBlock Margin="5">
+              <Run Text="Map: " />
+              <Run Text="{Binding mapName}" />
+              <Run Text="[" />
+              <Run Text="{Binding mapID}" />
+              <Run Text="]" />
+            </TextBlock>
+
+            <TextBlock Grid.Row="1" Margin="5">
+              <Run Text="Khu: " />
+              <Run Text="{Binding zoneID}" />
+            </TextBlock>
+
+            <TextBlock
+              Grid.RowSpan="2"
+              Grid.Column="1"
+              Margin="5"
+              VerticalAlignment="Center">
+              <Run Text="Toạ độ: " />
+              <Run Text="{Binding cx}" />
+              <Run Text="," />
+              <Run Text="{Binding cy}" />
+            </TextBlock>
+
+          </Grid>
+        </materialDesign:Card>
+
+        <materialDesign:Card Margin="5" Visibility="{Binding IsChecked, ElementName=InfoMHPCheckBox, Converter={StaticResource BooleanToVisibilityConverter}}">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel>
+              <TextBlock Margin="5">
+                <Run Text="HP: " />
+                <Run Text="{Binding cHP, StringFormat=N0}" />
+                <Run Text="/" />
+                <Run Text="{Binding cHPFull, StringFormat=N0}" />
+              </TextBlock>
+              <TextBlock Margin="5">
+                <Run Text="MP: " />
+                <Run Text="{Binding cMP, StringFormat=N0}" />
+                <Run Text="/" />
+                <Run Text="{Binding cMPFull, StringFormat=N0}" />
+              </TextBlock>
+              <TextBlock Margin="5">
+                <Run Text="Thể lực: " />
+                <Run Text="{Binding cStamina}" />
+              </TextBlock>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1">
+              <TextBlock Margin="5">
+                <Run Text="HP: " />
+                <Run Text="{Binding cPetHP, StringFormat=N0}" />
+                <Run Text="/" />
+                <Run Text="{Binding cPetHPFull, StringFormat=N0}" />
+              </TextBlock>
+              <TextBlock Margin="5">
+                <Run Text="MP: " />
+                <Run Text="{Binding cPetMP, StringFormat=N0}" />
+                <Run Text="/" />
+                <Run Text="{Binding cPetMPFull, StringFormat=N0}" />
+              </TextBlock>
+              <TextBlock Margin="5">
+                <Run Text="Thể lực: " />
+                <Run Text="{Binding cPetStamina}" />
+              </TextBlock>
+            </StackPanel>
+
+          </Grid>
+        </materialDesign:Card>
+
+        <materialDesign:Card Margin="5" Visibility="{Binding IsChecked, ElementName=InfoPowerCheckBox, Converter={StaticResource BooleanToVisibilityConverter}}">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel>
+
+              <TextBlock Margin="5">
+                <Run Text="Sức mạnh: " />
+                <Run Text="{Binding cPower, StringFormat=N0}" />
+              </TextBlock>
+
+              <TextBlock Margin="5">
+                <Run Text="Tiềm năng: " />
+                <Run Text="{Binding cTiemNang, StringFormat=N0}" />
+              </TextBlock>
+
+            </StackPanel>
+
+            <StackPanel Grid.Column="1">
+
+              <TextBlock Margin="5">
+                <Run Text="Sức mạnh: " />
+                <Run Text="{Binding cPetPower, StringFormat=N0}" />
+              </TextBlock>
+
+              <TextBlock Margin="5">
+                <Run Text="Tiềm năng: " />
+                <Run Text="{Binding cPetTiemNang, StringFormat=N0}" />
+              </TextBlock>
+
+            </StackPanel>
+
+          </Grid>
+        </materialDesign:Card>
+
+        <materialDesign:Card Margin="5" Visibility="{Binding IsChecked, ElementName=InfoMoneyCheckBox, Converter={StaticResource BooleanToVisibilityConverter}}">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition />
+              <ColumnDefinition />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Margin="5">
+              <Run Text="Vàng: " />
+              <Run Text="{Binding xu, StringFormat=N0}" />
+            </TextBlock>
+
+            <TextBlock Grid.Column="1" Margin="5">
+              <Run Text="Ngọc xanh: " />
+              <Run Text="{Binding luong, StringFormat=N0}" />
+            </TextBlock>
+
+            <TextBlock Grid.Column="2" Margin="5">
+              <Run Text="Ngọc hồng: " />
+              <Run Text="{Binding luongKhoa, StringFormat=N0}" />
+            </TextBlock>
+          </Grid>
+        </materialDesign:Card>
+
+      </StackPanel>
+    </DataTemplate>
+
+    <ContextMenu x:Key="AccountContextMenu">
+      <MenuItem Click="SelectAllButton_Click" Header="Chọn tất cả">
+        <MenuItem.Icon>
+          <materialDesign:PackIcon Kind="SelectAll" />
+        </MenuItem.Icon>
+      </MenuItem>
+
+      <Separator />
+
+      <MenuItem Click="LoginButton_Click" Header="Đăng nhập">
+        <MenuItem.Icon>
+          <materialDesign:PackIcon Kind="Login" />
+        </MenuItem.Icon>
+      </MenuItem>
+
+      <MenuItem Click="ArrangeWindows1Button_Click" Header="Sắp xếp cửa sổ 1">
+        <MenuItem.Icon>
+          <materialDesign:PackIcon Kind="ArrangeBringForward" />
+        </MenuItem.Icon>
+      </MenuItem>
+
+      <MenuItem Click="ArrangeWindows2Button_Click" Header="Sắp xếp cửa sổ 2">
+        <MenuItem.Icon>
+          <materialDesign:PackIcon Kind="ArrangeBringToFront" />
+        </MenuItem.Icon>
+      </MenuItem>
+
+      <Separator />
+
+      <MenuItem Click="KillButton_Click" Header="Thoát">
+        <MenuItem.Icon>
+          <materialDesign:PackIcon Kind="ExitToApp" />
+        </MenuItem.Icon>
+      </MenuItem>
+
+    </ContextMenu>
+
+  </Window.Resources>
+
+  <Grid x:Name="MainGrid" Width="auto">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="500" />
       <ColumnDefinition Width="auto" />
@@ -28,43 +245,63 @@
     <materialDesign:Card Margin="5">
       <Grid>
         <Grid.RowDefinitions>
+          <RowDefinition Height="auto" />
           <RowDefinition />
           <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <DataGrid
-          x:Name="DataGridAccount"
-          Margin="5"
-          d:ItemsSource="{d:SampleData ItemCount=5}"
-          AutoGenerateColumns="False"
-          CanUserAddRows="False"
-          CanUserDeleteRows="False"
-          IsReadOnly="True"
-          LoadingRow="DataGridAccount_LoadingRow"
-          MouseDoubleClick="DataGridAccount_MouseDoubleClick"
-          PreviewKeyDown="Control_PreviewKeyDown"
-          PreviewKeyUp="Control_PreviewKeyUp"
-          SelectionChanged="DataGirdAccount_SelectionChanged">
-          <DataGrid.ContextMenu>
-            <ContextMenu>
-              <MenuItem Click="ButtonSelecteAll_Click" Header="Chọn tất cả" />
-              <MenuItem Click="ButtonLogin_Click" Header="Đăng nhập" />
-              <MenuItem Click="ButtonArrangeWindows2_Click" Header="Sắp xếp" />
-              <MenuItem Click="ButtonKill_Click" Header="Thoát" />
-            </ContextMenu>
-          </DataGrid.ContextMenu>
-          <DataGrid.Columns>
-            <DataGridTextColumn Binding="{Binding number}" Header="STT" />
-            <DataGridTextColumn Binding="{Binding username}" Header="Tài khoản" />
-            <DataGridTextColumn Binding="{Binding server.name}" Header="Máy chủ" />
-            <DataGridTextColumn
-              Width="*"
-              Binding="{Binding status}"
-              Header="Trạng thái" />
-          </DataGrid.Columns>
-        </DataGrid>
 
-        <materialDesign:Card Grid.Row="1" Margin="5">
+        <ComboBox
+          x:Name="RowDetailsModeComboBox"
+          Margin="5"
+          materialDesign:HintAssist.Hint="Chi tiết tài khoản"
+          SelectedIndex="0"
+          SelectedValuePath="Tag">
+          <ComboBoxItem Content="Hiển thị khi lựa chọn" Tag="VisibleWhenSelected" />
+          <ComboBoxItem Content="Hiển thị tất cả" Tag="Visible" />
+          <ComboBoxItem Content="Ẩn" Tag="Collapsed" />
+        </ComboBox>
+
+        <ScrollViewer
+          x:Name="AccountsScrollViewer"
+          Grid.Row="1"
+          PreviewKeyDown="Control_PreviewKeyDown"
+          PreviewKeyUp="Control_PreviewKeyUp">
+          <DataGrid
+            x:Name="AccountsDataGrid"
+            Margin="5"
+            d:ItemsSource="{d:SampleData ItemCount=5}"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            CanUserDeleteRows="False"
+            ContextMenu="{StaticResource AccountContextMenu}"
+            IsReadOnly="True"
+            LoadingRow="AccountsDataGrid_LoadingRow"
+            MouseDoubleClick="AccountsDataGrid_MouseDoubleClick"
+            PreviewMouseWheel="AccountsDataGrid_PreviewMouseWheel"
+            RowDetailsTemplate="{StaticResource DetailsAccountTemplate}"
+            RowDetailsVisibilityMode="{Binding SelectedValue, ElementName=RowDetailsModeComboBox}"
+            SelectionChanged="AccountsDataGird_SelectionChanged">
+
+            <DataGrid.Columns>
+              <DataGridTextColumn Binding="{Binding number}" Header="STT" />
+
+              <DataGridTextColumn Binding="{Binding username}" Header="Tài khoản" />
+
+              <DataGridTextColumn Binding="{Binding server.name}" Header="Máy chủ" />
+
+              <DataGridTextColumn
+                Width="*"
+                Binding="{Binding status}"
+                Header="Trạng thái" />
+
+            </DataGrid.Columns>
+
+          </DataGrid>
+        </ScrollViewer>
+
+        <materialDesign:Card Grid.Row="2" Margin="5">
           <StackPanel>
+
             <Grid>
               <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -75,14 +312,15 @@
                 x:Name="TextBoxChat"
                 Margin="5"
                 materialDesign:HintAssist.Hint="Nội dung chat"
-                PreviewKeyDown="TextBoxChat_PreviewKeyDown" />
+                PreviewKeyDown="ChatTextBox_PreviewKeyDown" />
 
               <Button
                 x:Name="ButtonChat"
                 Grid.Column="1"
                 Margin="5"
-                Click="ButtonChat_Click"
+                Click="ChatButton_Click"
                 Content="Chat" />
+
             </Grid>
 
             <Expander Header="Điều khiển">
@@ -91,12 +329,15 @@
                 Focusable="True"
                 PreviewKeyDown="Control_PreviewKeyDown"
                 PreviewKeyUp="Control_PreviewKeyUp">
+
                 <Grid.Resources>
                   <Style BasedOn="{StaticResource MaterialDesignRaisedButton}" TargetType="Button">
-                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ButtonKeyPress_PreviewMouseLeftButtonDown" />
-                    <EventSetter Event="PreviewMouseLeftButtonUp" Handler="ButtonKeyPress_PreviewMouseLeftButtonUp" />
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="KeyPressButton_PreviewMouseLeftButtonDown" />
+                    <EventSetter Event="PreviewMouseLeftButtonUp" Handler="KeyPressButton_PreviewMouseLeftButtonUp" />
+                    <Setter Property="Margin" Value="5" />
                   </Style>
                 </Grid.Resources>
+
                 <Grid>
                   <Grid.ColumnDefinitions>
                     <ColumnDefinition />
@@ -116,32 +357,33 @@
                   <Button
                     x:Name="ButtonF1"
                     Grid.Row="2"
-                    Margin="5"
                     Content="F1" />
+
                   <Button
                     x:Name="ButtonF2"
                     Grid.Row="2"
                     Grid.Column="2"
-                    Margin="5"
                     Content="F2" />
 
                   <Button
                     x:Name="ButtonUp"
                     Grid.Row="2"
                     Grid.Column="1"
-                    Margin="5"
                     Content="▲" />
+
                   <Button
                     x:Name="ButtonDown"
                     Grid.Row="3"
                     Grid.Column="1"
                     Margin="5"
                     Content="▼" />
+
                   <Button
                     x:Name="ButtonLeft"
                     Grid.Row="3"
                     Margin="5"
                     Content="◀" />
+
                   <Button
                     x:Name="ButtonRight"
                     Grid.Row="3"
@@ -155,57 +397,67 @@
                     Grid.Column="3"
                     Margin="5"
                     Content="0" />
+
                   <Button
                     x:Name="Button1"
                     Grid.Column="3"
                     Margin="5"
                     Content="1" />
+
                   <Button
                     x:Name="Button2"
                     Grid.Column="4"
                     Margin="5"
                     Content="2" />
+
                   <Button
                     x:Name="Button3"
                     Grid.Column="5"
                     Margin="5"
                     Content="3" />
+
                   <Button
                     x:Name="Button4"
                     Grid.Row="1"
                     Grid.Column="3"
                     Margin="5"
                     Content="4" />
+
                   <Button
                     x:Name="Button5"
                     Grid.Row="1"
                     Grid.Column="4"
                     Margin="5"
                     Content="5" />
+
                   <Button
                     x:Name="Button6"
                     Grid.Row="1"
                     Grid.Column="5"
                     Margin="5"
                     Content="6" />
+
                   <Button
                     x:Name="Button7"
                     Grid.Row="2"
                     Grid.Column="3"
                     Margin="5"
                     Content="7" />
+
                   <Button
                     x:Name="Button8"
                     Grid.Row="2"
                     Grid.Column="4"
                     Margin="5"
                     Content="8" />
+
                   <Button
                     x:Name="Button9"
                     Grid.Row="2"
                     Grid.Column="5"
                     Margin="5"
                     Content="9" />
+
                   <Button
                     x:Name="ButtonEnter"
                     Grid.Row="3"
@@ -213,6 +465,7 @@
                     Grid.ColumnSpan="2"
                     Margin="5"
                     Content="↲" />
+
                 </Grid>
               </Grid>
             </Expander>
@@ -234,15 +487,15 @@
         <materialDesign:Card Margin="5">
           <StackPanel Margin="5">
             <TextBox
-              x:Name="TextBoxUsername"
+              x:Name="UsernameTextBox"
               Margin="5"
               materialDesign:HintAssist.Hint="Tên đăng nhập" />
             <PasswordBox
-              x:Name="PasswordBoxPassword"
+              x:Name="PasswordPasswordBox"
               Margin="5"
               materialDesign:HintAssist.Hint="Mật khẩu" />
             <ComboBox
-              x:Name="ComboBoxServer"
+              x:Name="ServerComboBox"
               Margin="5"
               materialDesign:HintAssist.Hint="Máy chủ" />
             <Grid>
@@ -255,26 +508,26 @@
               <Button
                 x:Name="ButtonAddAccount"
                 Margin="5"
-                Click="ButtonAddAccount_Click"
+                Click="AddAccountButton_Click"
                 Content="Thêm" />
               <Button
                 x:Name="ButtonEditAccount"
                 Grid.Column="1"
                 Margin="5"
-                Click="ButtonEditAccount_Click"
+                Click="EditAccountButton_Click"
                 Content="Sửa" />
               <Button
                 x:Name="ButtonDeleteAccount"
                 Grid.Column="2"
                 Margin="5"
-                Click="ButtonDeleteAccount_Click"
+                Click="DeleteAccountsButton_Click"
                 Content="Xoá" />
             </Grid>
           </StackPanel>
         </materialDesign:Card>
 
         <materialDesign:Card Margin="5">
-          <StackPanel Grid.Column="1">
+          <StackPanel>
             <Grid>
               <Grid.RowDefinitions>
                 <RowDefinition />
@@ -290,26 +543,26 @@
               <Button
                 x:Name="ButtonLogin"
                 Margin="5"
-                Click="ButtonLogin_Click"
+                Click="LoginButton_Click"
                 Content="Login" />
               <Button
                 x:Name="ButtonLoginAll"
                 Grid.Column="1"
                 Margin="5"
-                Click="ButtonLoginAll_Click"
+                Click="LoginAllButton_Click"
                 Content="Login All" />
               <Button
                 x:Name="ButtonKill"
                 Grid.Column="2"
                 Margin="5"
-                Click="ButtonKill_Click"
+                Click="KillButton_Click"
                 Content="Quit" />
 
               <Button
                 x:Name="ButtonArrangeWindows1"
                 Grid.Row="1"
                 Margin="5"
-                Click="ButtonArrangeWindows1_Click"
+                Click="ArrangeWindows1Button_Click"
                 Content="Sắp xếp 1" />
 
               <Button
@@ -317,7 +570,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 Margin="5"
-                Click="ButtonArrangeWindows2_Click"
+                Click="ArrangeWindows2Button_Click"
                 Content="Sắp xếp 2" />
 
               <TextBox
@@ -347,6 +600,36 @@
                 <ComboBoxItem Content="Lớn" />
               </ComboBox>
             </Grid>
+          </StackPanel>
+        </materialDesign:Card>
+
+        <materialDesign:Card Margin="5">
+          <StackPanel>
+            <CheckBox
+              x:Name="InfoCharacterCheckBox"
+              Margin="5"
+              Content="Thông tin nhân vật"
+              IsChecked="True" />
+            <CheckBox
+              x:Name="InfoLocationCheckBox"
+              Margin="5"
+              Content="Vị trí"
+              IsChecked="True" />
+            <CheckBox
+              x:Name="InfoMHPCheckBox"
+              Margin="5"
+              Content="HP, MP, Thể lực"
+              IsChecked="True" />
+            <CheckBox
+              x:Name="InfoPowerCheckBox"
+              Margin="5"
+              Content="Thông tin sức mạnh"
+              IsChecked="True" />
+            <CheckBox
+              x:Name="InfoMoneyCheckBox"
+              Margin="5"
+              Content="Tiền"
+              IsChecked="True" />
           </StackPanel>
         </materialDesign:Card>
       </StackPanel>
