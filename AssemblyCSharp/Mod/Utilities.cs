@@ -515,10 +515,8 @@ namespace Mod
         {
             if (!Directory.Exists("Data")) Directory.CreateDirectory("Data");
             FileStream fileStream = new FileStream("Data\\" + name, FileMode.Create);
-            StreamWriter streamWriter = new StreamWriter(fileStream);
-            streamWriter.Write(data);
-            streamWriter.Flush();
-            streamWriter.Close();
+            byte[] buffer = Encoding.UTF8.GetBytes(data);
+            fileStream.Write(buffer, 0, buffer.Length);
             fileStream.Flush();
             fileStream.Close();
         }

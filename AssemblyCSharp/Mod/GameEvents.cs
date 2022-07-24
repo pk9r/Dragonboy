@@ -37,7 +37,6 @@ namespace Mod
             HotkeyCommandHandler.loadDefalut();
             SocketClient.gI.initSender();
             ModMenu.LoadData();
-            TeleportList.LoadData();
         }
 
         /// <summary>
@@ -220,6 +219,8 @@ namespace Mod
             GameCanvas.loginScr.switchToMe();
             Service.gI().login("", "", GameMidlet.VERSION, 0);
             GameCanvas.startWaitDlg();
+            TeleportList.LoadData();
+
         }
 
         /// <summary>

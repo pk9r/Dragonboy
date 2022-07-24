@@ -15,7 +15,9 @@ public class TeleportList : IChatable, IActionListener
 
     public const int TYPE_TELEPORT_LIST = 27;
 
-    static bool? currentState = null;
+    static bool currentState;
+
+    public static bool isDataLoaded;
 
     public static TeleportList getInstance()
     {
@@ -140,18 +142,25 @@ public class TeleportList : IChatable, IActionListener
 
     public static void LoadData()
     {
-        foreach (string str in Utilities.loadRMSString($"teleportlist_{GameMidlet.IP}_{GameMidlet.PORT}").Split('|'))
+        try
         {
-            try
+            if (!isDataLoaded) foreach (string str in Utilities.loadRMSString($"teleportlist_{GameMidlet.IP}_{GameMidlet.PORT}").Split('|'))
             {
-                if (!string.IsNullOrEmpty(str))
+                try
                 {
-                    string[] s = str.Split(',');
-                    listTeleportChars.Add(new TeleportChar(s[0], int.Parse(s[1])));
+                    if (!string.IsNullOrEmpty(str))
+                    {
+                        string[] s = str.Split(',');
+                        TeleportChar teleportChar = new TeleportChar(s[0], int.Parse(s[1]));
+                        if (listTeleportChars.Contains(teleportChar)) continue;
+                        listTeleportChars.Add(teleportChar);
+                    }
                 }
+                catch (Exception) { }
             }
-            catch (Exception) { }
+            isDataLoaded = true;
         }
+        catch (Exception) { }
     }
 
     public static void SaveData()
