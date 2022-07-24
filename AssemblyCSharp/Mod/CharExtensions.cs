@@ -140,7 +140,7 @@ public static class CharExtensions
 
     public static string getNameWithoutClanTag(Char @char)
     {
-        return @char.cName.Remove(0, @char.cName.IndexOf(']') + 1);
+        return @char.cName.Remove(0, @char.cName.IndexOf(']') + 1).Replace(" ", "");
     }
 
     public static bool isNormalChar(Char @char)

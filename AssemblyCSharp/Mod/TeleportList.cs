@@ -146,7 +146,7 @@ public class TeleportList : IChatable, IActionListener
             {
                 if (!string.IsNullOrEmpty(str))
                 {
-                    string[] s = str.Split(' ');
+                    string[] s = str.Split(',');
                     listTeleportChars.Add(new TeleportChar(s[0], int.Parse(s[1])));
                 }
             }
@@ -159,7 +159,7 @@ public class TeleportList : IChatable, IActionListener
         string data = string.Empty;
         foreach (TeleportChar teleportChar in listTeleportChars)
         {
-            data += teleportChar.cName + " " + teleportChar.charID + "|"; 
+            data += teleportChar.cName + "," + teleportChar.charID + "|"; 
         }
         Utilities.saveRMSString($"teleportlist_{GameMidlet.IP}_{GameMidlet.PORT}", data);
     }
