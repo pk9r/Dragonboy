@@ -35,8 +35,8 @@ public class ModMenu
 
     public static void SaveData()
     {
-        foreach (ModMenuItemBoolean modMenuItem in modMenuItemBools) if (!string.IsNullOrEmpty(modMenuItem.RMSName)) Rms.saveRMSBool(modMenuItem.RMSName, modMenuItem.Value);    
-        foreach (ModMenuItemInt modMenuItem in modMenuItemInts) if (!string.IsNullOrEmpty(modMenuItem.RMSName)) Rms.saveRMSInt2(modMenuItem.RMSName, modMenuItem.SelectedValue);    
+        foreach (ModMenuItemBoolean modMenuItem in modMenuItemBools) if (!string.IsNullOrEmpty(modMenuItem.RMSName)) Utilities.saveRMSBool(modMenuItem.RMSName, modMenuItem.Value);    
+        foreach (ModMenuItemInt modMenuItem in modMenuItemInts) if (!string.IsNullOrEmpty(modMenuItem.RMSName)) Utilities.saveRMSInt(modMenuItem.RMSName, modMenuItem.SelectedValue);    
     }
 
     public static void LoadData()
@@ -45,7 +45,7 @@ public class ModMenu
         { 
             try
             {
-                if (!string.IsNullOrEmpty(modMenuItem.RMSName)) modMenuItem.Value = Rms.loadRMSBool(modMenuItem.RMSName);
+                if (!string.IsNullOrEmpty(modMenuItem.RMSName)) modMenuItem.Value = Utilities.loadRMSBool(modMenuItem.RMSName);
             }
             catch { }
         }
@@ -55,7 +55,7 @@ public class ModMenu
         {
             try
             {
-                int data = Rms.loadRMSInt2(modMenuItem.RMSName);
+                int data = Utilities.loadRMSInt(modMenuItem.RMSName);
                 modMenuItem.SelectedValue = data == -1 ? 0 : data;
             }
             catch { }

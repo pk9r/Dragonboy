@@ -2,6 +2,7 @@
 using Mod.ModHelper;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -454,6 +455,72 @@ namespace Mod
         public static bool isMeInNRDMap()
         {
             return TileMap.mapID >= 85 && TileMap.mapID <= 91;
+        }
+
+        public static void ResetTF()
+        {
+            ChatTextField.gI().strChat = "Chat";
+            ChatTextField.gI().tfChat.name = "chat";
+            ChatTextField.gI().isShow = false;
+        }
+
+
+        public static void saveRMSInt(string name, int value)
+        {
+            if (!Directory.Exists("Data")) Directory.CreateDirectory("Data");
+            FileStream fileStream = new FileStream("Data\\" + name, FileMode.Create);
+            fileStream.Write(BitConverter.GetBytes(value), 0, 4);
+            fileStream.Flush();
+            fileStream.Close();
+        }
+
+        public static int loadRMSInt(string name)
+        {
+            FileStream fileStream = new FileStream("Data\\" + name, FileMode.Open);
+            byte[] array = new byte[4];
+            fileStream.Read(array, 0, 4);
+            fileStream.Close();
+            return BitConverter.ToInt32(array, 0);
+        }
+
+        public static void saveRMSBool(string name, bool status)
+        {
+            if (!Directory.Exists("Data")) Directory.CreateDirectory("Data");
+            FileStream fileStream = new FileStream("Data\\" + name, FileMode.Create);
+            fileStream.Write(new byte[] { (byte)(status ? 1 : 0) }, 0, 1);
+            fileStream.Flush();
+            fileStream.Close();
+        }
+
+        public static bool loadRMSBool(string name)
+        {
+            FileStream fileStream = new FileStream("Data\\" + name, FileMode.Open);
+            byte[] array = new byte[1];
+            fileStream.Read(array, 0, 1);
+            fileStream.Close();
+            return array[0] == 1;
+        }
+
+        public static string loadRMSString(string name)
+        {
+            FileStream fileStream = new FileStream("Data\\" + name, FileMode.Open);
+            StreamReader streamReader = new StreamReader(fileStream);
+            string result = streamReader.ReadToEnd();
+            streamReader.Close();
+            fileStream.Close();
+            return result;
+        }
+
+        public static void saveRMSString(string name, string data)
+        {
+            if (!Directory.Exists("Data")) Directory.CreateDirectory("Data");
+            FileStream fileStream = new FileStream("Data\\" + name, FileMode.Create);
+            StreamWriter streamWriter = new StreamWriter(fileStream);
+            streamWriter.Write(data);
+            streamWriter.Flush();
+            streamWriter.Close();
+            fileStream.Flush();
+            fileStream.Close();
         }
     }
 }

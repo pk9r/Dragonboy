@@ -37,6 +37,7 @@ namespace Mod
             HotkeyCommandHandler.loadDefalut();
             SocketClient.gI.initSender();
             ModMenu.LoadData();
+            TeleportList.LoadData();
         }
 
         /// <summary>
@@ -47,6 +48,7 @@ namespace Mod
         {
             SocketClient.gI.close();
             ModMenu.SaveData();
+            TeleportList.SaveData();
             return false;
         }
 
@@ -188,6 +190,7 @@ namespace Mod
         {
             Char.myCharz().cspeed = Utilities.speedRun;
             CharEffect.Update();
+            TeleportList.Update();
             //NOTE onUpdateChatTextField không thể bấm tab.
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();
