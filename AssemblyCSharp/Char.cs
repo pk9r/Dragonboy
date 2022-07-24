@@ -7581,14 +7581,4 @@ public class Char : IMapObject
 			}
 		}
 	}
-
-	public string getNameWithoutClanTag()
-	{
-		 return cName.Remove(0, cName.IndexOf(']') + 1);
-	}
-
-	public bool isNormalChar()
-	{
-		return !string.IsNullOrEmpty(cName) && !char.IsUpper(getNameWithoutClanTag()[0]) && charID >= 0 && !isPet && !isMiniPet && !cName.StartsWith("#") && !cName.StartsWith("$");
-	}
 }

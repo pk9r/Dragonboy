@@ -28,7 +28,7 @@ public class TeleportList : IChatable, IActionListener
     {
         MyVector myVector = new MyVector();
         if (listTeleportChars.Count > 0) myVector.addElement(new Command("Danh sách\nnhân vật\nđã lưu", getInstance(), 1, null));
-        if (Char.myCharz().charFocus != null && Char.myCharz().charFocus.isNormalChar())
+        if (Char.myCharz().charFocus != null && CharExtensions.isNormalChar(Char.myCharz().charFocus))
         {
             TeleportChar teleportChar = new TeleportChar(Char.myCharz().charFocus);
             if (!listTeleportChars.Contains(teleportChar)) myVector.addElement(new Command($"Thêm\n{teleportChar.cName}\n[{teleportChar.charID}]", getInstance(), 2, teleportChar));
@@ -101,7 +101,7 @@ public class TeleportList : IChatable, IActionListener
                 for (int i = 0; i < GameScr.vCharInMap.size(); i++)
                 {
                     Char @char = (Char)GameScr.vCharInMap.elementAt(i);
-                    if (@char.isNormalChar())
+                    if (CharExtensions.isNormalChar(@char))
                     {
                         TeleportChar teleportChar1 = new TeleportChar(@char);
                         if (!listTeleportChars.Contains(teleportChar1)) listTeleportChars.Add(teleportChar1);
@@ -140,7 +140,7 @@ public class TeleportList : IChatable, IActionListener
 
     public static void LoadData()
     {
-        foreach (string str in Utilities.loadRMSString("teleportlist").Split('|'))
+        foreach (string str in Utilities.loadRMSString($"teleportlist_{GameMidlet.IP}_{GameMidlet.PORT}").Split('|'))
         {
             try
             {
@@ -161,7 +161,7 @@ public class TeleportList : IChatable, IActionListener
         {
             data += teleportChar.cName + " " + teleportChar.charID + "|"; 
         }
-        Utilities.saveRMSString("teleportlist", data);
+        Utilities.saveRMSString($"teleportlist_{GameMidlet.IP}_{GameMidlet.PORT}", data);
     }
 
     static void ShowListChars(bool isDelete)

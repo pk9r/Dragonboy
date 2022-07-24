@@ -27,7 +27,7 @@ public class TeleportChar
     }
     public TeleportChar(Char @char) 
     {
-        cName = @char.getNameWithoutClanTag();
+        cName = CharExtensions.getNameWithoutClanTag(@char);
         charID = @char.charID;
         lastTimeTeleportTo = mSystem.currentTimeMillis();
     }
