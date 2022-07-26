@@ -139,10 +139,12 @@ public class TeleportMenu : IChatable, IActionListener
             case 10:
                 currentState = false;
                 setTypeTeleportListPanel();
+                GameCanvas.panel.show();
                 break;
             case 11:
                 currentState = true;
                 setTypeTeleportListPanel();
+                GameCanvas.panel.show();
                 break;
         }
         SortList();
@@ -217,7 +219,6 @@ public class TeleportMenu : IChatable, IActionListener
         GameCanvas.panel.setType(0);
         SoundMn.gI().getSoundOption();
         setTabTeleportListPanel();
-        GameCanvas.panel.show();
     }
 
     public static void setTabTeleportListPanel()
