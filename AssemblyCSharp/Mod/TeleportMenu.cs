@@ -30,12 +30,20 @@ public class TeleportMenu : IChatable, IActionListener
     {
         MyVector myVector = new MyVector();
         if (listTeleportChars.Count > 0) myVector.addElement(new Command("Danh sách\nnhân vật\nđã lưu", getInstance(), 1, null));
+        Char c;
+        if (Char.myCharz().charFocus != null && CharExtensions.isNormalChar(Char.myCharz().charFocus)) c = Char.myCharz().charFocus;
+        else c = CharExtensions.ClosestChar(70, true);
+        if (c != null)
+        {
+            TeleportChar teleportChar = new TeleportChar(c);
+            if (!listTeleportChars.Contains(teleportChar)) myVector.addElement(new Command($"Thêm\n{teleportChar.cName}\n[{teleportChar.charID}]", getInstance(), 2, teleportChar));
+        }
         if (Char.myCharz().charFocus != null && CharExtensions.isNormalChar(Char.myCharz().charFocus))
         {
             TeleportChar teleportChar = new TeleportChar(Char.myCharz().charFocus);
-            if (!listTeleportChars.Contains(teleportChar)) myVector.addElement(new Command($"Thêm\n{teleportChar.cName}\n[{teleportChar.charID}]", getInstance(), 2, teleportChar));
-            else myVector.addElement(new Command($"Xóa\n{teleportChar.cName}\n[{teleportChar.charID}]", getInstance(), 3, teleportChar));
+            if (listTeleportChars.Contains(teleportChar)) myVector.addElement(new Command($"Xóa\n{teleportChar.cName}\n[{teleportChar.charID}]", getInstance(), 3, teleportChar));
         }
+
         myVector.addElement(new Command("Thêm nhân\nvật bằng\ncharID", getInstance(), 4, null));
         if (GameScr.vCharInMap.size() > 1) myVector.addElement(new Command("Thêm tất\ncả người\ntrong map", getInstance(), 5, null));
         if (listTeleportChars.Count > 0)
