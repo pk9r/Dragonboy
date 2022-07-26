@@ -168,7 +168,7 @@ public class TeleportMenu : IChatable, IActionListener
         string data = string.Empty;
         foreach (TeleportChar teleportChar in listTeleportChars)
         {
-            data += teleportChar.cName + "," + teleportChar.charID + teleportChar.lastTimeTeleportTo + "|"; 
+            data += teleportChar.cName + "," + teleportChar.charID + "," + teleportChar.lastTimeTeleportTo + "|"; 
         }
         Utilities.saveRMSString($"teleportlist_{GameMidlet.IP}_{GameMidlet.PORT}", data);
     }
