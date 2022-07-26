@@ -12,11 +12,13 @@ public class CharEffectTime
 
     public long lastTimeHoldNRD;
 
-    public bool isSleep;
+    public bool isHypnotized;
 
-    public int timeSleep;
+    public int timeHypnotized;
 
-    public long lastTimeSleep;
+    public long lastTimeHypnotized;
+
+    public bool isHypnotizedByMe;
 
     public bool hasMonkey;
 
@@ -36,17 +38,19 @@ public class CharEffectTime
 
     public long lastTimeShield;
 
-    public bool isBlind;
+    public bool isTeleported;
 
-    public int timeBlind;
+    public int timeTeleported;
 
-    public long lastTimeBlind;
+    public long lastTimeTeleported;
 
-    public bool isHold;
+    public bool isTied;
 
-    public int timeHold;
+    public int timeTied;
 
-    public long lastTimeHold;
+    public long lastTimeTied;
+
+    public bool isTiedByMe;
 
     public bool hasMobMe;
 
@@ -67,10 +71,11 @@ public class CharEffectTime
             timeHoldingNRD--;
             lastTimeHoldNRD = mSystem.currentTimeMillis();
         }
-        if (timeSleep > 0 && mSystem.currentTimeMillis() - lastTimeSleep >= 1000)
+        if (timeHypnotized > 0 && mSystem.currentTimeMillis() - lastTimeHypnotized >= 1000)
         {
-            timeSleep--;
-            lastTimeSleep = mSystem.currentTimeMillis();
+            timeHypnotized--;
+            if (timeHypnotized == 0) isHypnotizedByMe = false;
+            lastTimeHypnotized = mSystem.currentTimeMillis();
         }
         if (timeMonkey > 0 && mSystem.currentTimeMillis() - lastTimeMonkey >= 1000)
         {
@@ -87,15 +92,16 @@ public class CharEffectTime
             timeShield--;
             lastTimeShield = mSystem.currentTimeMillis();
         }
-        if (timeBlind > 0 && mSystem.currentTimeMillis() - lastTimeBlind >= 1000)
+        if (timeTeleported > 0 && mSystem.currentTimeMillis() - lastTimeTeleported >= 1000)
         {
-            timeBlind--;
-            lastTimeBlind = mSystem.currentTimeMillis();
+            timeTeleported--;
+            lastTimeTeleported = mSystem.currentTimeMillis();
         }
-        if (timeHold > 0 && mSystem.currentTimeMillis() - lastTimeHold >= 1000)
+        if (timeTied > 0 && mSystem.currentTimeMillis() - lastTimeTied >= 1000)
         {
-            timeHold--;
-            lastTimeHold = mSystem.currentTimeMillis();
+            timeTied--;
+            if (timeTied == 0) isTiedByMe = false;
+            lastTimeTied = mSystem.currentTimeMillis();
         }
         if (timeMobMe > 0 && mSystem.currentTimeMillis() - lastTimeMobMe >= 1000)
         {
@@ -112,6 +118,6 @@ public class CharEffectTime
 
     public bool HasAnyEffect()
     {
-        return timeBlind + timeHold + timeHoldingNRD + timeHuytSao + timeMobMe + timeMonkey + timeShield + timeSleep + timeTDHS > 0;
+        return timeTeleported + timeTied + timeHoldingNRD + timeHuytSao + timeMobMe + timeMonkey + timeShield + timeHypnotized + timeTDHS > 0;
     }
 }

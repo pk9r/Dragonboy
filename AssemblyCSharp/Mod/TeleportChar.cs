@@ -32,6 +32,13 @@ public class TeleportChar
         lastTimeTeleportTo = mSystem.currentTimeMillis();
     }
 
+    public TeleportChar(string cName, int charID, long lastTimeTeleportTo)
+    {
+        this.cName = cName;
+        this.charID = charID;
+        this.lastTimeTeleportTo = lastTimeTeleportTo;
+    }
+
     public override string ToString()
     {
         return cName + " [" + charID + "]";
@@ -44,5 +51,14 @@ public class TeleportChar
             return teleportChar.cName == cName && teleportChar.charID == charID;
         }
         return false;
+    }
+
+    public override int GetHashCode()
+    {
+        int hashCode = 837992511;
+        hashCode = hashCode * -1521134295 + charID.GetHashCode();
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(cName);
+        hashCode = hashCode * -1521134295 + lastTimeTeleportTo.GetHashCode();
+        return hashCode;
     }
 }

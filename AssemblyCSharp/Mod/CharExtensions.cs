@@ -10,21 +10,20 @@ public static class CharExtensions
     //Đéo có cách nào lấy thời gian trói cả :))
     public static int getTimeHold(Char @char)
     {
+        
         int num = 36;
         try
         {
             if (!@char.me)
             {
-                num = 121;
+                num = 36;
+                if (@char.charEffectTime.isTiedByMe && Char.myCharz().cgender == 2) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point * 5 + 1;
             }
-            else if (Char.myCharz().cgender == 2)
-            {
-                num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point * 5 + 1;
-            }
+            else if (Char.myCharz().cgender == 2) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point * 5 + 1;
         }
         catch
         {
-            num = 31;
+            num = 36;
         }
         return num;
     }
@@ -134,6 +133,25 @@ public static class CharExtensions
         catch
         {
             num = 274;
+        }
+        return num;
+    }
+
+    public static int getTimeHypnotize(Char @char)
+    {
+        int num = 12;
+        try
+        {
+            if (!@char.me)
+            {
+                num = 12;
+                if (@char.charEffectTime.isHypnotizedByMe) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point + 5;
+            }
+            else if (Char.myCharz().cgender == 0) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point + 5;
+        }
+        catch
+        {
+            num = 12;
         }
         return num;
     }

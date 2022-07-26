@@ -5,11 +5,11 @@ using System.Text;
 using UnityEngine;
 
 namespace Mod;
-public class TeleportList : IChatable, IActionListener
+public class TeleportMenu : IChatable, IActionListener
 {
     public static List<TeleportChar> listTeleportChars = new List<TeleportChar>();
 
-    static TeleportList _Instance;
+    static TeleportMenu _Instance;
 
     static string[] inputCharID = new string[2] { "Nhập CharID", "CharID" };
 
@@ -19,9 +19,9 @@ public class TeleportList : IChatable, IActionListener
 
     public static bool isDataLoaded;
 
-    public static TeleportList getInstance()
+    public static TeleportMenu getInstance()
     {
-        _Instance ??= new TeleportList();
+        _Instance ??= new TeleportMenu();
         return _Instance;
     }
 
@@ -151,7 +151,7 @@ public class TeleportList : IChatable, IActionListener
                     if (!string.IsNullOrEmpty(str))
                     {
                         string[] s = str.Split(',');
-                        TeleportChar teleportChar = new TeleportChar(s[0], int.Parse(s[1]));
+                        TeleportChar teleportChar = new TeleportChar(s[0], int.Parse(s[1]), long.Parse(s[3]));
                         if (listTeleportChars.Contains(teleportChar)) continue;
                         listTeleportChars.Add(teleportChar);
                     }
@@ -168,7 +168,7 @@ public class TeleportList : IChatable, IActionListener
         string data = string.Empty;
         foreach (TeleportChar teleportChar in listTeleportChars)
         {
-            data += teleportChar.cName + "," + teleportChar.charID + "|"; 
+            data += teleportChar.cName + "," + teleportChar.charID + teleportChar.lastTimeTeleportTo + "|"; 
         }
         Utilities.saveRMSString($"teleportlist_{GameMidlet.IP}_{GameMidlet.PORT}", data);
     }

@@ -1890,7 +1890,7 @@ public class Panel : IActionListener, IChatable
 			case ModMenu.TYPE_MOD_MENU:
                 updateKeyScrollView();
 				break;
-            case TeleportList.TYPE_TELEPORT_LIST:
+            case TeleportMenu.TYPE_TELEPORT_LIST:
                 updateKeyScrollView();
                 break;
             }
@@ -2897,8 +2897,8 @@ public class Panel : IActionListener, IChatable
 		case ModMenu.TYPE_MOD_MENU:
 			ModMenuPanel.setTabModMenu();
 			break;
-		case TeleportList.TYPE_TELEPORT_LIST:
-			TeleportList.setTabTeleportListPanel();
+		case TeleportMenu.TYPE_TELEPORT_LIST:
+			TeleportMenu.setTabTeleportListPanel();
 			break;
         }
 		selected = lastSelect[currentTabIndex];
@@ -3691,8 +3691,8 @@ public class Panel : IActionListener, IChatable
 		case ModMenu.TYPE_MOD_MENU:
 			ModMenuPanel.paintModMenu(g);
 			break;
-		case TeleportList.TYPE_TELEPORT_LIST:
-			TeleportList.paintTeleportListPanel(g);
+		case TeleportMenu.TYPE_TELEPORT_LIST:
+			TeleportMenu.paintTeleportListPanel(g);
 			break;
 		}
 		GameScr.resetTranslate(g);
@@ -5366,7 +5366,7 @@ public class Panel : IActionListener, IChatable
 			g.fillRect(X + 1, 78, W - 2, 1);
 			return;
 		}
-		if (type == TeleportList.TYPE_TELEPORT_LIST)
+		if (type == TeleportMenu.TYPE_TELEPORT_LIST)
 		{
 			g.setColor(13524492);
 			g.fillRect(X + 1, 78, W - 2, 1);
@@ -5861,7 +5861,7 @@ public class Panel : IActionListener, IChatable
             SmallImage.drawSmallImage(g, Char.myCharz().avatarz(), X + 25, 50, 0, 33);
             paintToolInfo(g);
             break;
-		case TeleportList.TYPE_TELEPORT_LIST:
+		case TeleportMenu.TYPE_TELEPORT_LIST:
             SmallImage.drawSmallImage(g, Char.myCharz().avatarz(), X + 25, 50, 0, 33);
             paintToolInfo(g);
             break;
@@ -6571,8 +6571,8 @@ public class Panel : IActionListener, IChatable
 				case ModMenu.TYPE_MOD_MENU:
                     ModMenuPanel.doFireModMenu();
 					break;
-				case TeleportList.TYPE_TELEPORT_LIST:
-					TeleportList.doFireTeleportListPanel();
+				case TeleportMenu.TYPE_TELEPORT_LIST:
+					TeleportMenu.doFireTeleportListPanel();
 					break;
 				}
 			}

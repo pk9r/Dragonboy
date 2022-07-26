@@ -1735,10 +1735,10 @@ public class Char : IMapObject
 		}
         if (sleepEff)
         {
-            if (!charEffectTime.isSleep)
+            if (!charEffectTime.isHypnotized)
             {
-                charEffectTime.isSleep = true;
-                charEffectTime.timeSleep = 12;
+                charEffectTime.isHypnotized = true;
+                charEffectTime.timeHypnotized = CharExtensions.getTimeHypnotize(this);
             }
             if (GameCanvas.gameTick % 10 == 0)
             {
@@ -1747,7 +1747,7 @@ public class Char : IMapObject
         }
         else
         {
-            charEffectTime.isSleep = false;
+            charEffectTime.isHypnotized = false;
         }
         if (isMonkey == 1)
         {
@@ -1770,10 +1770,10 @@ public class Char : IMapObject
 		}
         if (blindEff)
         {
-            if (!charEffectTime.isBlind)
+            if (!charEffectTime.isTeleported)
             {
-                charEffectTime.isBlind = true;
-                charEffectTime.timeBlind = 5;
+                charEffectTime.isTeleported = true;
+                charEffectTime.timeTeleported = 5;
             }
             if (GameCanvas.gameTick % 5 == 0)
             {
@@ -1782,7 +1782,7 @@ public class Char : IMapObject
         }
         else
         {
-            charEffectTime.isBlind = false;
+            charEffectTime.isTeleported = false;
         }
         if (protectEff)
         {
@@ -1872,7 +1872,7 @@ public class Char : IMapObject
 			{
 				freezSeconds = 0;
 			}
-			charEffectTime.timeTDHS = freezSeconds;
+			charEffectTime.timeTDHS = freezSeconds + 1;
 			if (GameCanvas.gameTick % 5 == 0)
 			{
 				ServerEffect.addServerEffect(113, cx, cy, 1);
@@ -2123,7 +2123,6 @@ public class Char : IMapObject
 			else if (!charEffectTime.hasMobMe)
 			{
                 charEffectTime.hasMobMe = true;
-                charEffectTime.lastTimeMobMe = mSystem.currentTimeMillis();
                 charEffectTime.timeMobMe = CharExtensions.getTimeMobMe(this);
             }
 		}
@@ -2165,7 +2164,8 @@ public class Char : IMapObject
 					holder = false;
 					charHold = null;
 					mobHold = null;
-					charEffectTime.isHold = false;
+					charEffectTime.isTied = false;
+					charEffectTime.isTiedByMe = false;
 				}
 				if (TileMap.tileTypeAt(cx, cy, 2))
 				{
@@ -4787,7 +4787,8 @@ public class Char : IMapObject
 
 	public void setSkillPaint(SkillPaint skillPaint, int sType)
 	{
-		hasSendAttack = false;
+        if (me && GameEvents.onUseSkill(myskill)) return;
+        hasSendAttack = false;
 		if (stone || (me && myskill.template.id == 9 && cHP <= cHPFull / 10))
 		{
 			return;
@@ -6612,8 +6613,8 @@ public class Char : IMapObject
 		}
 		charHold = r;
 		holder = true;
-		charEffectTime.isHold = true;
-		charEffectTime.timeHold = CharExtensions.getTimeHold(this);
+		r.charEffectTime.isTied = true;
+		r.charEffectTime.timeTied = CharExtensions.getTimeHold(r);
     }
 
 	public void setHoldMob(Mob r)
@@ -6628,8 +6629,6 @@ public class Char : IMapObject
 		}
 		mobHold = r;
 		holder = true;
-        charEffectTime.isHold = true;
-        charEffectTime.timeHold = CharExtensions.getTimeHold(this);
     }
 
     public void findNextFocusByKey()
@@ -7169,7 +7168,8 @@ public class Char : IMapObject
 			charHold = null;
 			mobHold = null;
 		}
-		charEffectTime.isHold = false;
+		charEffectTime.isTied = false;
+		charEffectTime.isTiedByMe = false;
 	}
 
 	public void removeProtectEff()
@@ -7192,7 +7192,8 @@ public class Char : IMapObject
 		if (holder)
 		{
 			holder = false;
-			charEffectTime.isHold = false;
+			charEffectTime.isTied = false;
+			charEffectTime.isTiedByMe = false;
 		}
 		if (protectEff)
 		{
