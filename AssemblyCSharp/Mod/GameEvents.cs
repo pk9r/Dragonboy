@@ -47,6 +47,7 @@ namespace Mod
         {
             SocketClient.gI.close();
             ModMenu.SaveData();
+            TeleportMenu.SaveData();
             return false;
         }
 
@@ -188,6 +189,7 @@ namespace Mod
         {
             Char.myCharz().cspeed = Utilities.speedRun;
             CharEffect.Update();
+            TeleportMenu.Update();
             //NOTE onUpdateChatTextField không thể bấm tab.
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();
@@ -217,6 +219,8 @@ namespace Mod
             GameCanvas.loginScr.switchToMe();
             Service.gI().login("", "", GameMidlet.VERSION, 0);
             GameCanvas.startWaitDlg();
+            TeleportMenu.LoadData();
+
         }
 
         /// <summary>
@@ -295,6 +299,12 @@ namespace Mod
         public static void onPaintGameScr(mGraphics g)
         {
             CharEffect.Paint(g);
+        }
+
+        public static bool onUseSkill(Skill skill)
+        {
+            CharEffect.AddEffectCreatedByMe(skill);
+            return false;
         }
     }
 }

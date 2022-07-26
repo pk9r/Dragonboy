@@ -37,4 +37,14 @@ public class ModMenuItemBoolean
         }
         return false;
     }
+
+    public override int GetHashCode()
+    {
+        int hashCode = -1012648466;
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Title);
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Description);
+        hashCode = hashCode * -1521134295 + Value.GetHashCode();
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(RMSName);
+        return hashCode;
+    }
 }

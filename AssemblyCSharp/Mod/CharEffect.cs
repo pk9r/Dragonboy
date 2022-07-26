@@ -47,15 +47,24 @@ public class CharEffect
             if (focus.charEffectTime.hasMonkey) strs.Add("Khỉ còn: " + focus.charEffectTime.timeMonkey + " giây");
             if (focus.charEffectTime.hasHuytSao) strs.Add("Huýt sáo còn: " + focus.charEffectTime.timeHuytSao + " giây");
             if (focus.charEffectTime.hasMobMe) strs.Add("Đẻ trứng còn: " + focus.charEffectTime.timeMobMe + " giây");
-            if (focus.charEffectTime.isSleep) strs.Add("Bị thôi miên: khoảng " + focus.charEffectTime.timeSleep + " giây");
-            if (focus.charEffectTime.isBlind) strs.Add("Bị DCTT: " + focus.charEffectTime.timeBlind + " giây");
+            if (focus.charEffectTime.isHypnotized) strs.Add(focus.charEffectTime.isHypnotizedByMe ? "Bị bạn thôi miên: " : "Bị thôi miên: khoảng " + focus.charEffectTime.timeHypnotized + " giây");
+            if (focus.charEffectTime.isTeleported) strs.Add("Bị DCTT: " + focus.charEffectTime.timeTeleported + " giây");
             if (focus.charEffectTime.isTDHS) strs.Add("Bị TDHS: khoảng " + focus.charEffectTime.timeTDHS + " giây");
-            if (focus.charEffectTime.isHold) strs.Add("Bị trói: khoảng " + focus.charEffectTime.timeHold + " giây");
+            if (focus.charEffectTime.isTied) strs.Add(focus.charEffectTime.isTiedByMe ? "Bị bạn trói: " : "Bị trói: khoảng " + focus.charEffectTime.timeTied + " giây");
         }
         foreach (string str in strs)
         {
             mFont.tahoma_7b_red.drawString(g, str, GameCanvas.w / 2, y, mFont.CENTER);
             y += 10;
+        }
+    }
+
+    public static void AddEffectCreatedByMe(Skill skill)
+    {
+        if (Char.myCharz().charFocus != null)
+        {
+            if (skill.template.id == 22) Char.myCharz().charFocus.charEffectTime.isHypnotizedByMe = true;
+            if (skill.template.id == 23) Char.myCharz().charFocus.charEffectTime.isTiedByMe = true;
         }
     }
 }

@@ -80,4 +80,15 @@ public class ModMenuItemInt
     {
         SelectedValue = value;
     }
+
+    public override int GetHashCode()
+    {
+        int hashCode = -1820188900;
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Title);
+        hashCode = hashCode * -1521134295 + EqualityComparer<string[]>.Default.GetHashCode(Values);
+        hashCode = hashCode * -1521134295 + SelectedValue.GetHashCode();
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(RMSName);
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Description);
+        return hashCode;
+    }
 }

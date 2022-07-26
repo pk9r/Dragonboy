@@ -24,6 +24,12 @@
 	<Reference Include="mscorlib">
       <HintPath>..\Game\Game_Data\Managed\mscorlib.dll</HintPath>
     </Reference>
+	<Reference Include="System.Core">
+      <HintPath>..\Game\Game_Data\Managed\System.Core.dll</HintPath>
+    </Reference>
+	<Reference Include="System">
+      <HintPath>..\Game\Game_Data\Managed\System.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="copy &quot;$(TargetDir)Assembly-CSharp.dll&quot; &quot;$(SolutionDir)Game\Game_Data\Managed\&quot;" />

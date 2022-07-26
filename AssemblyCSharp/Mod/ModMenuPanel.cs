@@ -31,33 +31,30 @@ public class ModMenuPanel : IChatable
     public static void setTabModMenu()
     {
         GameCanvas.panel.ITEM_HEIGHT = 24;
+        if (GameCanvas.panel.currentTabIndex == 0) GameCanvas.panel.currentListLength = ModMenu.modMenuItemBools.Length;
+        else GameCanvas.panel.currentListLength = ModMenu.modMenuItemInts.Length;
         GameCanvas.panel.selected = (GameCanvas.isTouch ? (-1) : 0);
         GameCanvas.panel.cmyLim = GameCanvas.panel.currentListLength * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.hScroll;
         if (GameCanvas.panel.cmyLim < 0) GameCanvas.panel.cmyLim = 0;
         GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = GameCanvas.panel.cmyLast[GameCanvas.panel.currentTabIndex];
         if (GameCanvas.panel.cmy < 0) GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = 0;
         if (GameCanvas.panel.cmy > GameCanvas.panel.cmyLim) GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = GameCanvas.panel.cmyLim;
-        if (GameCanvas.panel.currentTabIndex == 0) GameCanvas.panel.currentListLength = ModMenu.modMenuItemBools.Length;
-        else GameCanvas.panel.currentListLength = ModMenu.modMenuItemInts.Length;
     }
 
     public static void doFireModMenu()
     {
         if (GameCanvas.panel.currentTabIndex == 0) doFireModMenuBools();
-        else doFireModMenuInt();
+        else doFireModMenuInts();
     }
 
     static void doFireModMenuBools()
     {
         if (GameCanvas.panel.selected < 0) return;
         ModMenu.modMenuItemBools[GameCanvas.panel.selected].Value = !ModMenu.modMenuItemBools[GameCanvas.panel.selected].Value;
-        if (ModMenu.modMenuItemBools[0].Value) QualitySettings.vSyncCount = 1;
-        else QualitySettings.vSyncCount = 0;
-        CharEffect.isEnabled = ModMenu.modMenuItemBools[1].Value;
-        AutoAttack.gI.toggle(ModMenu.modMenuItemBools[2].Value);
+        onModMenuBoolsValueChanged();
     }
 
-    static void doFireModMenuInt()
+    static void doFireModMenuInts()
     {
         if (GameCanvas.panel.selected < 0) return;
         int selected = GameCanvas.panel.selected;
@@ -188,32 +185,40 @@ public class ModMenuPanel : IChatable
                     int value = int.Parse(text);
                     if (value > 60 || value < 5) throw new Exception();
                     ModMenu.modMenuItemInts[selected].setValue(value);
-                    Application.targetFrameRate = value;
+                    onModMenuChatFromMe();
+                    GameScr.info1.addInfo("Đã thay đổi mức FPS!", 0);
                 }
                 catch
                 {
                     GameCanvas.startOKDlg("Mức FPS không hợp lệ!");
                 }
-                ResetTF();
             }
         }
-        else
-        {
-            ChatTextField.gI().isShow = false;
-            ResetTF();
-        }
+        else ChatTextField.gI().isShow = false;
+        Utilities.ResetTF();
+    }
+
+    private void onModMenuChatFromMe()
+    {
+        Application.targetFrameRate = ModMenu.modMenuItemInts[0].SelectedValue;
     }
 
     public void onCancelChat()
     {
         ChatTextField.gI().isShow = false;
-        ResetTF();
+        Utilities.ResetTF();
     }
 
-    private static void ResetTF()
+    static void onModMenuBoolsValueChanged()
     {
-        ChatTextField.gI().strChat = "Chat";
-        ChatTextField.gI().tfChat.name = "chat";
-        ChatTextField.gI().isShow = false;
+        if (ModMenu.modMenuItemBools[0].Value) QualitySettings.vSyncCount = 1;
+        else QualitySettings.vSyncCount = 0;
+        CharEffect.isEnabled = ModMenu.modMenuItemBools[1].Value;
+        AutoAttack.gI.toggle(ModMenu.modMenuItemBools[2].Value);
+    }
+
+    static void onModMenuIntsValueChanged()
+    {
+
     }
 }

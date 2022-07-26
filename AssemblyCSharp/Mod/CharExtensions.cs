@@ -2,33 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace Mod;
 public static class CharExtensions
 {
     //Đéo có cách nào lấy thời gian trói cả :))
-    public static int getTimeHold(this Char @char)
+    public static int getTimeHold(Char @char)
     {
+        
         int num = 36;
         try
         {
             if (!@char.me)
             {
-                num = 121;
+                num = 36;
+                if (@char.charEffectTime.isTiedByMe && Char.myCharz().cgender == 2) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point * 5 + 1;
             }
-            else if (Char.myCharz().cgender == 2)
-            {
-                num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point * 5 + 1;
-            }
+            else if (Char.myCharz().cgender == 2) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point * 5 + 1;
         }
         catch
         {
-            num = 31;
+            num = 36;
         }
         return num;
     }
 
-    public static int getTimeMonkey(this Char @char)
+    public static int getTimeMonkey(Char @char)
     {
         int num = 61;
         try
@@ -72,7 +72,7 @@ public static class CharExtensions
         return num;
     }
     //Đéo có cách nào lấy thời gian khiên cả :))
-    public static int getTimeShield(this Char @char)
+    public static int getTimeShield(Char @char)
     {
         int num;
         try
@@ -93,7 +93,7 @@ public static class CharExtensions
         return num;
     }
 
-    public static int getTimeMobMe(this Char @char)
+    public static int getTimeMobMe(Char @char)
     {
         int num = 64;
         try
@@ -135,5 +135,34 @@ public static class CharExtensions
             num = 274;
         }
         return num;
+    }
+
+    public static int getTimeHypnotize(Char @char)
+    {
+        int num = 12;
+        try
+        {
+            if (!@char.me)
+            {
+                num = 12;
+                if (@char.charEffectTime.isHypnotizedByMe) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point + 5;
+            }
+            else if (Char.myCharz().cgender == 0) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point + 5;
+        }
+        catch
+        {
+            num = 12;
+        }
+        return num;
+    }
+
+    public static string getNameWithoutClanTag(Char @char)
+    {
+        return @char.cName.Remove(0, @char.cName.IndexOf(']') + 1).Replace(" ", "");
+    }
+
+    public static bool isNormalChar(Char @char)
+    {
+        return !string.IsNullOrEmpty(@char.cName) && !char.IsUpper(getNameWithoutClanTag(@char)[0]) && @char.charID >= 0 && !@char.cName.StartsWith("#") && !@char.cName.StartsWith("$");
     }
 }
