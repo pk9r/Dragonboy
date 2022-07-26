@@ -161,7 +161,7 @@ public class TeleportMenu : IChatable, IActionListener
                     if (!string.IsNullOrEmpty(str))
                     {
                         string[] s = str.Split(',');
-                        TeleportChar teleportChar = new TeleportChar(s[0], int.Parse(s[1]), long.Parse(s[3]));
+                        TeleportChar teleportChar = new TeleportChar(s[0], int.Parse(s[1]), long.Parse(s[2]));
                         if (listTeleportChars.Contains(teleportChar)) continue;
                         listTeleportChars.Add(teleportChar);
                     }
