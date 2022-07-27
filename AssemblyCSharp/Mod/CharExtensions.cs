@@ -165,4 +165,23 @@ public static class CharExtensions
     {
         return !string.IsNullOrEmpty(@char.cName) && !char.IsUpper(getNameWithoutClanTag(@char)[0]) && @char.charID >= 0 && !@char.cName.StartsWith("#") && !@char.cName.StartsWith("$");
     }
+
+    public static Char ClosestChar(int maxDistance, bool isNormalCharOnly)
+    {
+        int smallestDistance = 9999;
+        Char result = null;
+        for (int i = 0; i < GameScr.vCharInMap.size(); i++)
+        {
+            Char c = (Char)GameScr.vCharInMap.elementAt(i);
+            if (isNormalCharOnly && !isNormalChar(c)) continue;
+            int distance = Res.distance(Char.myCharz().cx, Char.myCharz().cy, c.cx, c.cy);
+            if (!c.me && distance < smallestDistance)
+            {
+                smallestDistance = distance;
+                result = c;
+            }
+        }
+        if (Res.distance(Char.myCharz().cx, Char.myCharz().cy, result.cx, result.cy) > maxDistance) result = null;
+        return result;
+    }
 }

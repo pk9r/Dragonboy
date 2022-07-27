@@ -55,10 +55,9 @@ public class TeleportChar
 
     public override int GetHashCode()
     {
-        int hashCode = 837992511;
+        int hashCode = 2137564001;
         hashCode = hashCode * -1521134295 + charID.GetHashCode();
         hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(cName);
-        hashCode = hashCode * -1521134295 + lastTimeTeleportTo.GetHashCode();
         return hashCode;
     }
 }
