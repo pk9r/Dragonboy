@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using UnityEngine;
 
 namespace Mod;
@@ -148,7 +149,7 @@ public class TeleportMenu : IChatable, IActionListener
                 break;
             case 9:
                 GameScr.info1.addInfo($"Dịch chuyển đến nhân vật {teleportChar.cName}!", 0);
-                Service.gI().gotoPlayer(teleportChar.charID);
+                TeleportToPlayer(teleportChar.charID);
                 listTeleportChars[listTeleportChars.FindIndex(tC => tC == teleportChar)].lastTimeTeleportTo = mSystem.currentTimeMillis();
                 break;
             case 10:
@@ -257,7 +258,7 @@ public class TeleportMenu : IChatable, IActionListener
             }
             if (!isCharInMap)
             {
-                Service.gI().gotoPlayer(charAutoTeleportTo.charID);
+                TeleportToPlayer(charAutoTeleportTo.charID);
                 listTeleportChars[listTeleportChars.FindIndex(tC => tC == charAutoTeleportTo)].lastTimeTeleportTo = mSystem.currentTimeMillis();
             }
         }
@@ -363,6 +364,51 @@ public class TeleportMenu : IChatable, IActionListener
             }
         }
         GameCanvas.panel.paintScrollArrow(g);
+    }
+
+    static void TeleportToPlayer(int charId)
+    {
+        new Thread(delegate ()
+        {
+            int previousDisguiseId = -1;
+            if (Char.myCharz().arrItemBody[5] == null || (Char.myCharz().arrItemBody[5] != null && (Char.myCharz().arrItemBody[5].template.id < 592 || Char.myCharz().arrItemBody[5].template.id > 594)))
+            {
+                if (Char.myCharz().arrItemBody[5] != null) previousDisguiseId = Char.myCharz().arrItemBody[5].template.id;
+                for (int i = 0; i < Char.myCharz().arrItemBag.Length; i++)
+                {
+                    Item item = Char.myCharz().arrItemBag[i];
+                    if (item != null && item.template.id >= 592 && item.template.id <= 594)
+                    {
+                        do
+                        {
+                            Service.gI().getItem(4, (sbyte)i);
+                            Thread.Sleep(250);
+                        }
+                        while (Char.myCharz().arrItemBody[5].template.id < 592 || Char.myCharz().arrItemBody[5].template.id > 594);
+                        break;
+                    }
+                }
+            }
+            Service.gI().gotoPlayer(charId);
+            if (previousDisguiseId != -1)
+            {
+                Thread.Sleep(500);
+                for (int j = 0; j < Char.myCharz().arrItemBag.Length; j++)
+                {
+                    Item item = Char.myCharz().arrItemBag[j];
+                    if (item != null && item.template.id == previousDisguiseId)
+                    {
+                        do
+                        {
+                            Service.gI().getItem(4, (sbyte)j);
+                            Thread.Sleep(250);
+                        }
+                        while (Char.myCharz().arrItemBody[5].template.id != previousDisguiseId);
+                        break;
+                    }
+                }
+            }
+        }).Start();
     }
 
     public enum TeleportStatus
