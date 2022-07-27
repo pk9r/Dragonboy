@@ -1,3 +1,6 @@
+using Mod;
+using UnityEngine;
+
 public class Npc : Char
 {
 	public const sbyte BINH_KHI = 0;
@@ -197,7 +200,7 @@ public class Npc : Char
 
 	public override void paint(mGraphics g)
 	{
-		if (Char.isLoadingMap || isHide || !isPaint() || statusMe == 15)
+		if (isLoadingMap || isHide || !isPaint() || statusMe == 15)
 		{
 			return;
 		}
@@ -215,10 +218,21 @@ public class Npc : Char
 			{
 				g.drawImage(TileMap.bong, cx, cy, 3);
 			}
-			if (template.npcTemplateId == 3)
+			if (ModMenu.getStatusInt("levelreducegraphics") > 1)
+			{
+                g.setColor(Color.green);
+                g.drawRect(cx - 12, cy - ch, 24, ch);
+                if (myCharz().npcFocus != null && myCharz().npcFocus.Equals(this) && ChatPopup.currChatPopup == null) g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx, cy - ch - 3, mGraphics.BOTTOM | mGraphics.HCENTER);
+            }
+			else if (ModMenu.getStatusInt("levelreducegraphics") > 2)
+			{
+                g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx, cy - ch - 3, mGraphics.BOTTOM | mGraphics.HCENTER);
+				return;
+            }
+			else if (template.npcTemplateId == 3)
 			{
 				SmallImage.drawSmallImage(g, 265, cx, cy, 0, mGraphics.BOTTOM | mGraphics.HCENTER);
-				if (Char.myCharz().npcFocus != null && Char.myCharz().npcFocus.Equals(this) && ChatPopup.currChatPopup == null)
+				if (myCharz().npcFocus != null && myCharz().npcFocus.Equals(this) && ChatPopup.currChatPopup == null)
 				{
 					g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx, cy - ch + 4, mGraphics.BOTTOM | mGraphics.HCENTER);
 				}

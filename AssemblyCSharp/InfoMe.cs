@@ -1,3 +1,6 @@
+using Mod;
+using UnityEngine;
+
 public class InfoMe
 {
 	public static InfoMe me;
@@ -91,7 +94,20 @@ public class InfoMe
 		}
 		if (info.info != null && info.info.charInfo == null && charId != null)
 		{
-			SmallImage.drawSmallImage(g, charId[Char.myCharz().cgender][f], cmx, cmy + 3 + ((GameCanvas.gameTick % 10 > 5) ? 1 : 0), (dir != 1) ? 2 : 0, StaticObj.VCENTER_HCENTER);
+			if (ModMenu.getStatusInt("levelreducegraphics") > 1)
+			{
+                g.setColor(14381226);
+                if (Char.myCharz().cgender == 0)
+                {
+                    g.setColor(new Color(0.2f, 0.66f, 0.92f));
+                }
+                if (Char.myCharz().cgender == 1)
+                {
+                    g.setColor(4560421);
+                }
+                g.drawRect(cmtoX - 10, cmtoY - 4 + ((GameCanvas.gameTick % 10 <= 5) ? 0 : 1), 15, 15);
+            }
+			else SmallImage.drawSmallImage(g, charId[Char.myCharz().cgender][f], cmx, cmy + 3 + ((GameCanvas.gameTick % 10 > 5) ? 1 : 0), (dir != 1) ? 2 : 0, StaticObj.VCENTER_HCENTER);
 		}
 		g.translate(-g.getTranslateX(), -g.getTranslateY());
 	}

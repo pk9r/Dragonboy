@@ -1,3 +1,6 @@
+using Mod;
+using UnityEngine;
+
 public class ItemMap : IMapObject
 {
 	public int x;
@@ -154,7 +157,14 @@ public class ItemMap : IMapObject
 	{
 		if (isAuraItem())
 		{
+			if (ModMenu.getStatusInt("levelreducegraphics") > 2) return;
 			g.drawImage(TileMap.bong, x + 3, y, mGraphics.VCENTER | mGraphics.HCENTER);
+			if (ModMenu.getStatusInt("levelreducegraphics") > 1)
+			{
+                g.setColor(Color.gray);
+                g.drawRect(x - 12, y - Image.getImageHeight(imageAuraItem1), 24, Image.getImageHeight(imageAuraItem1));
+                return;
+            }
 			if (status <= 0)
 			{
 				if (countAura < 10)

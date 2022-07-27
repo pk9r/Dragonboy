@@ -1101,12 +1101,12 @@ public class GameCanvas : IActionListener
 
 	public static void paintBGGameScr(mGraphics g)
 	{
-		if (!isLoadBGok)
+		if (!isLoadBGok || ModMenu.getStatusInt("levelreducegraphics") > 0)
 		{
 			g.setColor(0);
 			g.fillRect(0, 0, w, h);
 		}
-		if (Char.isLoadingMap)
+		if (Char.isLoadingMap || ModMenu.getStatusInt("levelreducegraphics") > 0)
 		{
 			return;
 		}

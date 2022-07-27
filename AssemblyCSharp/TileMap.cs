@@ -1,3 +1,4 @@
+using Mod;
 using System;
 
 public class TileMap
@@ -533,10 +534,42 @@ public class TileMap
 
 	public static void paintTilemap(mGraphics g)
 	{
-		if (Char.isLoadingMap)
+		if (Char.isLoadingMap || ModMenu.getStatusInt("levelreducegraphics") > 2)
 		{
 			return;
 		}
+		if (ModMenu.getStatusInt("levelreducegraphics") > 0)
+		{
+            int num = -1;
+            for (int i = GameScr.gssx; i < GameScr.gssxe; i++)
+            {
+                for (int j = GameScr.gssy; j < GameScr.gssye; j++)
+                {
+                    if (maps[j * tmw + i] - 1 != -1)
+                    {
+                        g.setColor(15615232);
+                        if (tileTypeAt(i * 24, j * 24, 2))
+                        {
+                            g.fillRect(i * size, j * size + 5, 24, 1);
+                            if (num >= 50 && num != j * size + 5 && i * size > 24)
+                            {
+                                if (j * size + 5 - num > 0)
+                                {
+                                    g.fillRect(i * size, num, 1, j * size + 5 - num);
+                                }
+                                else
+                                {
+                                    g.fillRect(i * size, j * size + 5, 1, Math.abs(j * size + 5 - num));
+                                }
+                            }
+                            num = j * size + 5;
+                            break;
+                        }
+                    }
+                }
+            }
+			return;
+        }
 		GameScr.gI().paintBgItem(g, 1);
 		for (int i = 0; i < GameScr.vItemMap.size(); i++)
 		{
@@ -644,7 +677,7 @@ public class TileMap
 
 	public static void paintOutTilemap(mGraphics g)
 	{
-		if (GameCanvas.lowGraphic)
+		if (GameCanvas.lowGraphic || ModMenu.getStatusInt("levelreducegraphics") > 0)
 		{
 			return;
 		}

@@ -25,7 +25,7 @@ public class ModMenu
     public static ModMenuItemInt[] modMenuItemInts = new ModMenuItemInt[]
     {
         new ModMenuItemInt("FPS", "FPS mục tiêu (cần tắt Vsync để thay đổi có hiệu lực)", 60, "targetfps"),
-        new ModMenuItemInt("Test", new string[]{"Đang tắt", "Đang bật mức 1", "Đang bật mức 2", "Đang bật mức 3"}, 0, "test")
+        new ModMenuItemInt("Giảm đồ họa", new string[]{"Đang tắt", "Đang bật mức 1", "Đang bật mức 2", "Đang bật mức 3"}, 0, "levelreducegraphics")
     };
 
     public static string[][] inputModMenuItemInts = new string[][]

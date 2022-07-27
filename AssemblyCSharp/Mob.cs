@@ -1,5 +1,7 @@
 using System;
 using Assets.src.g;
+using Mod;
+using UnityEngine;
 
 public class Mob : IMapObject
 {
@@ -1373,18 +1375,27 @@ public class Mob : IMapObject
 			return;
 		}
 		g.translate(0, GameCanvas.transY);
-		if (!changBody)
+		if (ModMenu.getStatusInt("levelreducegraphics") == 2)
 		{
-			arrMobTemplate[templateId].data.paintFrame(g, frame, x, y + fy, (dir != 1) ? 1 : 0, 2);
+			g.setColor(Color.yellow);
+			if (levelBoss != 0) g.setColor(Color.red);
+			g.drawRect(Mathf.RoundToInt((x - w / 2)), y - h - 15, w, h);
 		}
-		else
-		{
-			SmallImage.drawSmallImage(g, smallBody, x, y + fy - 14, 0, 3);
+		else if (ModMenu.getStatusInt("levelreducegraphics") < 3)
+        {
+		    if (!changBody)
+			{
+				arrMobTemplate[templateId].data.paintFrame(g, frame, x, y + fy, (dir != 1) ? 1 : 0, 2);
+			}
+			else
+			{
+				SmallImage.drawSmallImage(g, smallBody, x, y + fy - 14, 0, 3);
+			}
 		}
 		g.translate(0, -GameCanvas.transY);
 		if (Char.myCharz().mobFocus != null && Char.myCharz().mobFocus.Equals(this) && status != 1)
 		{
-			int num = (int)((long)hp * 100L / maxHp) / 10 - 1;
+			int num = (int)(hp * 100L / maxHp) / 10 - 1;
 			if (num < 0)
 			{
 				num = 0;
