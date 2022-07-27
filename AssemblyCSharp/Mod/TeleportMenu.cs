@@ -15,9 +15,13 @@ public class TeleportMenu : IChatable, IActionListener
 
     public const int TYPE_TELEPORT_LIST = 27;
 
-    static bool currentState;
+    static TeleportStatus currentTeleportStatus;
 
-    public static bool isDataLoaded;
+    static bool isDataLoaded, isAutoTeleportTo;
+
+    static TeleportChar charAutoTeleportTo;
+
+    private static long lastTimeAutoTeleportTo;
 
     public static TeleportMenu getInstance()
     {
@@ -41,15 +45,15 @@ public class TeleportMenu : IChatable, IActionListener
         if (Char.myCharz().charFocus != null && CharExtensions.isNormalChar(Char.myCharz().charFocus))
         {
             TeleportChar teleportChar = new TeleportChar(Char.myCharz().charFocus);
-            if (listTeleportChars.Contains(teleportChar)) myVector.addElement(new Command($"Xóa\n{teleportChar.cName}\n[{teleportChar.charID}]", getInstance(), 3, teleportChar));
+            if (listTeleportChars.Contains(teleportChar) && ((isAutoTeleportTo && charAutoTeleportTo != teleportChar) || !isAutoTeleportTo))myVector.addElement(new Command($"Xóa\n{teleportChar.cName}\n[{teleportChar.charID}]", getInstance(), 3, teleportChar));
         }
-
-        myVector.addElement(new Command("Thêm nhân\nvật bằng\ncharID", getInstance(), 4, null));
-        if (GameScr.vCharInMap.size() > 1) myVector.addElement(new Command("Thêm tất\ncả người\ntrong map", getInstance(), 5, null));
+        if (listTeleportChars.Count > 0) myVector.addElement(new Command(isAutoTeleportTo ? "Dừng auto\ndịch chuyển" : "Auto dịch\nchuyển đến\nnhân vật", getInstance(), 4, null));
+        myVector.addElement(new Command("Thêm nhân\nvật bằng\ncharID", getInstance(), 5, null));
+        if (GameScr.vCharInMap.size() > 1) myVector.addElement(new Command("Thêm tất\ncả người\ntrong map", getInstance(), 6, null));
         if (listTeleportChars.Count > 0)
         {
-            myVector.addElement(new Command("Xóa\nnhân vật\nđã lưu", getInstance(), 6, null));
-            myVector.addElement(new Command("Xóa tất\ncả", getInstance(), 7, null));
+            myVector.addElement(new Command("Xóa\nnhân vật\nđã lưu", getInstance(), 7, null));
+            myVector.addElement(new Command("Xóa tất\ncả", getInstance(), 8, null));
         }
         GameCanvas.menu.startAt(myVector, 3);
     }
@@ -92,22 +96,35 @@ public class TeleportMenu : IChatable, IActionListener
         switch (idAction)
         {
             case 1:
-                ShowListChars(false);
+                ShowListChars(TeleportStatus.TeleportTo);
                 break;
             case 2:
                 listTeleportChars.Insert(0, teleportChar);
                 GameScr.info1.addInfo($"Đã thêm {teleportChar}!", 0);
                 break;
             case 3:
-                listTeleportChars.Remove(teleportChar);
-                GameScr.info1.addInfo($"Đã xóa nhân vật {teleportChar}!", 0);
+                if (isAutoTeleportTo && teleportChar != charAutoTeleportTo)
+                {
+                    listTeleportChars.Remove(teleportChar);
+                    GameScr.info1.addInfo($"Đã xóa nhân vật {teleportChar}!", 0);
+                }
+                else GameScr.info1.addInfo($"Không thể xóa nhân vật đang auto dịch chuyển!", 0);
                 break;
             case 4:
+                if (!isAutoTeleportTo) ShowListChars(TeleportStatus.AutoTeleportTo);
+                else
+                {
+                    isAutoTeleportTo = false;
+                    charAutoTeleportTo = null;
+                    GameScr.info1.addInfo($"Đã dừng auto dịch chuyển đến nhân vật {charAutoTeleportTo.cName}!", 0);
+                }
+                break;
+            case 5:
                 ChatTextField.gI().strChat = inputCharID[0];
                 ChatTextField.gI().tfChat.name = inputCharID[1];
                 ChatTextField.gI().startChat2(getInstance(), string.Empty);
                 break;
-            case 5:
+            case 6:
                 for (int i = 0; i < GameScr.vCharInMap.size(); i++)
                 {
                     Char @char = (Char)GameScr.vCharInMap.elementAt(i);
@@ -119,30 +136,47 @@ public class TeleportMenu : IChatable, IActionListener
                 }
                 GameScr.info1.addInfo("Đã thêm toàn bộ nhân vật trong map!", 0);
                 break;
-            case 6:
-                ShowListChars(true);
-                break;
             case 7:
-                listTeleportChars.Clear();
-                GameScr.info1.addInfo("Đã xóa toàn bộ nhân vật đã lưu!", 0);
+                ShowListChars(TeleportStatus.Delete);
                 break;
             case 8:
+                for (int i = listTeleportChars.Count - 1; i >= 0; i--)
+                {
+                    if (listTeleportChars[i] != charAutoTeleportTo) listTeleportChars.RemoveAt(i);
+                }
+                GameScr.info1.addInfo("Đã xóa toàn bộ nhân vật đã lưu!", 0);
+                break;
+            case 9:
                 GameScr.info1.addInfo($"Dịch chuyển đến nhân vật {teleportChar.cName}!", 0);
                 Service.gI().gotoPlayer(teleportChar.charID);
                 listTeleportChars[listTeleportChars.FindIndex(tC => tC == teleportChar)].lastTimeTeleportTo = mSystem.currentTimeMillis();
                 break;
-            case 9:
-                listTeleportChars.Remove(teleportChar);
-                GameScr.info1.addInfo($"Đã xóa nhân vật {teleportChar.cName}!", 0);
-                setTypeTeleportListPanel();
-                break;
             case 10:
-                currentState = false;
+                if (isAutoTeleportTo && teleportChar != charAutoTeleportTo)
+                {
+                    listTeleportChars.Remove(teleportChar);
+                    GameScr.info1.addInfo($"Đã xóa nhân vật {teleportChar.cName}!", 0);
+                    setTypeTeleportListPanel();
+                }
+                else GameCanvas.startOKDlg("Không thể xóa nhân vật đang auto dịch chuyển!");
+                break;
+            case 11:
+                isAutoTeleportTo = true;
+                charAutoTeleportTo = teleportChar;
+                GameScr.info1.addInfo($"Auto dịch chuyển đến nhân vật {teleportChar.cName}!", 0);
+                break;
+            case 12:
+                currentTeleportStatus = TeleportStatus.TeleportTo;
                 setTypeTeleportListPanel();
                 GameCanvas.panel.show();
                 break;
-            case 11:
-                currentState = true;
+            case 13:
+                currentTeleportStatus = TeleportStatus.Delete;
+                setTypeTeleportListPanel();
+                GameCanvas.panel.show();
+                break;
+            case 14:
+                currentTeleportStatus = TeleportStatus.AutoTeleportTo;
                 setTypeTeleportListPanel();
                 GameCanvas.panel.show();
                 break;
@@ -183,16 +217,18 @@ public class TeleportMenu : IChatable, IActionListener
         Utilities.saveRMSString($"teleportlist_{GameMidlet.IP}_{GameMidlet.PORT}", data);
     }
 
-    static void ShowListChars(bool isDelete)
+    static void ShowListChars(TeleportStatus status)
     {
         MyVector myVector = new MyVector();
         for (int i = 0; i < (listTeleportChars.Count > 5 ? 5 : listTeleportChars.Count); i++)
         {
             TeleportChar teleportChar = listTeleportChars.ElementAt(i);
-            myVector.addElement(new Command(teleportChar.cName + "\n[" + teleportChar.charID + "]", getInstance(), 8 + (isDelete ? 1 : 0), teleportChar));
+            if (status == TeleportStatus.Delete && teleportChar == charAutoTeleportTo) continue;
+            myVector.addElement(new Command(teleportChar.cName + "\n[" + teleportChar.charID + "]", getInstance(), 9 + (int)status, teleportChar));
         }
-        if (listTeleportChars.Count > 5) myVector.addElement(new Command("Thêm nữa", getInstance(), 10 + (isDelete ? 1 : 0), null));
-        GameCanvas.menu.startAt(myVector, 3);
+        if (listTeleportChars.Count > 5) myVector.addElement(new Command("Thêm nữa", getInstance(), 12 + (int)status, null));
+        if (myVector.size() <= 0) GameScr.info1.addInfo("Danh sách nhân vật xóa được trống!", 0);
+        else GameCanvas.menu.startAt(myVector, 3);
     }
 
     public static void Update()
@@ -204,6 +240,25 @@ public class TeleportMenu : IChatable, IActionListener
                 Char c = GameScr.findCharInMap(teleportChar.charID);
                 if (c == null) continue;
                 listTeleportChars[listTeleportChars.FindIndex(tC => tC == teleportChar)].cName = c.cName;
+            }
+        }
+        if (isAutoTeleportTo && mSystem.currentTimeMillis() - lastTimeAutoTeleportTo >= 1000)
+        {
+            bool isCharInMap = false;
+            lastTimeAutoTeleportTo = mSystem.currentTimeMillis();
+            for (int i = 0; i < GameScr.vCharInMap.size(); i++)
+            {
+                Char c = (Char)GameScr.vCharInMap.elementAt(i);
+                if (c.charID == charAutoTeleportTo.charID)
+                {
+                    isCharInMap = true;
+                    break;
+                }
+            }
+            if (!isCharInMap)
+            {
+                Service.gI().gotoPlayer(charAutoTeleportTo.charID);
+                listTeleportChars[listTeleportChars.FindIndex(tC => tC == charAutoTeleportTo)].lastTimeTeleportTo = mSystem.currentTimeMillis();
             }
         }
     }
@@ -239,15 +294,20 @@ public class TeleportMenu : IChatable, IActionListener
         MyVector myVector = new MyVector();
         string str = "";
         int cmd = 0;
-        if (currentState == true)
-        {
-            str = mResources.DELETE;
-            cmd = 9;
-        }
-        if (currentState == false)
+        if (currentTeleportStatus == TeleportStatus.TeleportTo)
         {
             str = mResources.den;
-            cmd = 8;
+            cmd = 9;
+        }
+        if (currentTeleportStatus == TeleportStatus.Delete)
+        {
+            str = mResources.DELETE;
+            cmd = 10;
+        }
+        if (currentTeleportStatus == TeleportStatus.AutoTeleportTo)
+        {
+            str = "Auto " + mResources.den.ToLower();
+            cmd = 11;
         }
         myVector.addElement(new Command(str, getInstance(), cmd, listTeleportChars.OrderBy(tC => tC.cName).ToList()[GameCanvas.panel.selected]));
         GameCanvas.menu.startAt(myVector, GameCanvas.panel.X, (GameCanvas.panel.selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
@@ -303,5 +363,12 @@ public class TeleportMenu : IChatable, IActionListener
             }
         }
         GameCanvas.panel.paintScrollArrow(g);
+    }
+
+    public enum TeleportStatus
+    {
+        TeleportTo,
+        Delete,
+        AutoTeleportTo
     }
 }
