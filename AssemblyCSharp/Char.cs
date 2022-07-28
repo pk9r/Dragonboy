@@ -2,6 +2,7 @@ using System;
 using Assets.src.e;
 using Assets.src.g;
 using Mod;
+using UnityEngine;
 
 public class Char : IMapObject
 {
@@ -3527,7 +3528,8 @@ public class Char : IMapObject
 
 	public void updateSuperEff()
 	{
-		if (GameCanvas.panel.isShow || isCopy || isFusion || isSetPos || isPet || isMiniPet || isMonkey == 1)
+        if (ModMenu.getStatusInt("levelreducegraphics") > 1) return;
+        if (GameCanvas.panel.isShow || isCopy || isFusion || isSetPos || isPet || isMiniPet || isMonkey == 1)
 		{
 			return;
 		}
@@ -5281,7 +5283,7 @@ public class Char : IMapObject
 
 	public virtual void paint(mGraphics g)
 	{
-		if (isHide)
+		if (isHide || ModMenu.getStatusInt("levelreducegraphics") > 2)
 		{
 			return;
 		}
@@ -5307,7 +5309,12 @@ public class Char : IMapObject
 			{
 				petFollow.paint(g);
 			}
-			paintMount1(g);
+			if (ModMenu.getStatusInt("levelreducegraphics") > 1)
+			{
+                g.setColor(65421);
+                g.drawRect(xMount - 20, yMount, 40, 15);
+            }
+			else paintMount1(g);
 			if ((TileMap.isInAirMap() && cy >= TileMap.pxh - 48) || isTeleport)
 			{
 				return;
@@ -5324,10 +5331,13 @@ public class Char : IMapObject
 					g.drawLine(cx, cy - ch / 2, mobHold.x, mobHold.y - mobHold.h / 2);
 				}
 			}
-			paintSuperEffBehind(g);
-			paintAuraBehind(g);
-			paintEffBehind(g);
-			paintEff_Lvup_behind(g);
+			if (ModMenu.getStatusInt("levelreducegraphics") <= 1)
+			{
+				paintSuperEffBehind(g);
+				paintAuraBehind(g);
+				paintEffBehind(g);
+				paintEff_Lvup_behind(g);
+			}
 			if (shadowLife > 0)
 			{
 				if (GameCanvas.gameTick % 2 == 0)
@@ -5367,15 +5377,18 @@ public class Char : IMapObject
 				{
 					dart.paint(g);
 				}
-				paintEffect(g);
+                if (ModMenu.getStatusInt("levelreducegraphics") <= 1) paintEffect(g);
 				if (mobMe != null)
 				{
 				}
-				paintMount2(g);
-				paintEff_Lvup_front(g);
-				paintSuperEffFront(g);
-				paintAuraFront(g);
-				paintEffFront(g);
+				if (ModMenu.getStatusInt("levelreducegraphics") <= 1)
+				{
+					paintMount2(g);
+					paintEff_Lvup_front(g);
+					paintSuperEffFront(g);
+					paintAuraFront(g);
+					paintEffFront(g);
+				}
 			}
 		}
 	}
@@ -5915,7 +5928,59 @@ public class Char : IMapObject
 
 	public void paintCharBody(mGraphics g, int cx, int cy, int cdir, int cf, bool isPaintBag)
 	{
-		Part part = GameScr.parts[head];
+		if (ModMenu.getStatusInt("levelreducegraphics") > 2) return;
+		if (ModMenu.getStatusInt("levelreducegraphics") > 1)
+		{
+			if (bag >= 0 && statusMe != 14 && isMonkey == 0)
+			{
+				if (!ClanImage.idImages.containsKey(bag.ToString() + string.Empty))
+				{
+					ClanImage.idImages.put(bag.ToString() + string.Empty, new ClanImage());
+					Service.gI().requestBagImage((sbyte)bag);
+				}
+				else
+				{
+					ClanImage clanImage = (ClanImage)ClanImage.idImages.get(bag.ToString() + string.Empty);
+					if (clanImage.idImage != null && isPaintBag) paintBag(g, clanImage.idImage, cx, cy, cdir, true);
+				}
+			}
+			g.setColor(Color.white);
+			if (me) g.setColor(Color.blue);
+			if (isPet || isMiniPet) g.setColor(Color.cyan);
+			else if (cTypePk == 5)
+			{
+				g.setColor(Color.red);
+				if ((isCharge || isFlyAndCharge) && GameCanvas.gameTick % 8 >= 4) g.setColor(Color.white);
+			}
+			int height = 35;
+			int width = 12;
+			if (isPet || isMiniPet) height = 30;
+			if (cTypePk == 5)
+			{
+				width = 15;
+				height = 40;
+			}
+			g.drawRect(cx - width, cy - height, width * 2, height);
+			if (statusMe == 14)
+			{
+				if (GameCanvas.gameTick % 4 > 0) g.drawImage(ItemMap.imageFlare, cx, cy - ch - 11, mGraphics.HCENTER | mGraphics.VCENTER);
+				SmallImage.drawSmallImage(g, 79, cx, cy - ch - 8, 0, mGraphics.HCENTER | mGraphics.BOTTOM);
+			}
+			if (eProtect != null) eProtect.paint(g);
+			if (bag >= 0 && statusMe != 14 && isMonkey == 0)
+			{
+				if (!ClanImage.idImages.containsKey(bag.ToString() + string.Empty))
+				{
+					ClanImage.idImages.put(bag.ToString() + string.Empty, new ClanImage());
+					Service.gI().requestBagImage((sbyte)bag);
+				}
+				ClanImage clanImage2 = (ClanImage)ClanImage.idImages.get(bag.ToString() + string.Empty);
+				if (clanImage2.idImage != null && isPaintBag) paintBag(g, clanImage2.idImage, cx, cy, cdir, true);
+			}
+			paintPKFlag(g);
+			return;
+		}
+        Part part = GameScr.parts[head];
 		Part part2 = GameScr.parts[leg];
 		Part part3 = GameScr.parts[body];
 		if (bag >= 0 && statusMe != 14 && isMonkey == 0)

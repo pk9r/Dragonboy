@@ -1,4 +1,6 @@
+using Mod;
 using System;
+using UnityEngine;
 
 public class MagicTree : Npc, IActionListener
 {
@@ -68,7 +70,12 @@ public class MagicTree : Npc, IActionListener
 		{
 			return;
 		}
-		SmallImage.drawSmallImage(g, id, cx, cy, 0, StaticObj.BOTTOM_HCENTER);
+		if (ModMenu.getStatusInt("levelreducegraphics") == 2)
+		{
+            g.setColor(Color.green);
+            g.drawRect(cx - 12, cy - SmallImage.smallImg[id][4], 24, SmallImage.smallImg[id][4]);
+        }
+		if (ModMenu.getStatusInt("levelreducegraphics") < 2) SmallImage.drawSmallImage(g, id, cx, cy, 0, StaticObj.BOTTOM_HCENTER);
 		if (Char.myCharz().npcFocus != null && Char.myCharz().npcFocus.Equals(this))
 		{
 			g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx, cy - SmallImage.smallImg[id][4] - 1, mGraphics.BOTTOM | mGraphics.HCENTER);
@@ -85,7 +92,12 @@ public class MagicTree : Npc, IActionListener
 		{
 			for (int i = 0; i < currPeas; i++)
 			{
-				g.drawImage(pea, cx + peaPostionX[i] - SmallImage.smallImg[id][3] / 2, cy + peaPostionY[i] - SmallImage.smallImg[id][4], 0);
+				if (ModMenu.getStatusInt("levelreducegraphics") == 2)
+				{
+                    g.setColor(Color.cyan);
+                    g.drawRect(cx + peaPostionX[i] - SmallImage.smallImg[id][3] / 2, cy + peaPostionY[i] - SmallImage.smallImg[id][4], Image.getImageWidth(pea), Image.getImageHeight(pea));
+                }
+				if (ModMenu.getStatusInt("levelreducegraphics") < 2) g.drawImage(pea, cx + peaPostionX[i] - SmallImage.smallImg[id][3] / 2, cy + peaPostionY[i] - SmallImage.smallImg[id][4], 0);
 			}
 		}
 		catch (Exception)
