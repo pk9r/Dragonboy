@@ -550,19 +550,19 @@ public class TileMap
                         g.setColor(15615232);
                         if (tileTypeAt(i * 24, j * 24, 2))
                         {
-                            g.fillRect(i * size, j * size + 5, 24, 1);
-                            if (num >= 50 && num != j * size + 5 && i * size > 24)
+                            g.fillRect(i * size, j * size + 8, 24, 1);
+                            if (num >= 50 && num != j * size + 8 && i * size > 24)
                             {
-                                if (j * size + 5 - num > 0)
+                                if (j * size + 8 - num > 0)
                                 {
-                                    g.fillRect(i * size, num, 1, j * size + 5 - num);
+                                    g.fillRect(i * size, num, 1, j * size + 8 - num);
                                 }
                                 else
                                 {
-                                    g.fillRect(i * size, j * size + 5, 1, Math.abs(j * size + 5 - num));
+                                    g.fillRect(i * size, j * size + 8, 1, Math.abs(j * size + 8 - num));
                                 }
                             }
-                            num = j * size + 5;
+                            num = j * size + 8;
                             break;
                         }
                     }
