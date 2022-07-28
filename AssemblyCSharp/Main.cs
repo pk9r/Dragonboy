@@ -295,6 +295,7 @@ public class Main : MonoBehaviour
 			DataInputStream.update();
 			SMS.update();
 			Net.update();
+			GameEvents.onFixedUpdateMain();
 			f++;
 			if (f > 8)
 			{

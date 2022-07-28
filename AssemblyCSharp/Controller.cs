@@ -3,6 +3,7 @@ using Assets.src.e;
 using Assets.src.f;
 using Assets.src.g;
 using Mod;
+using Mod.Xmap;
 using UnityEngine;
 
 public class Controller : IMessageHandler
@@ -525,8 +526,9 @@ public class Controller : IMessageHandler
 					GameCanvas.panel.mapNames[num72] = msg.reader().readUTF();
 					GameCanvas.panel.planetNames[num72] = msg.reader().readUTF();
 				}
-				GameCanvas.panel.setTypeMapTrans();
-				GameCanvas.panel.show();
+				Pk9rXmap.ShowPanelMapTrans();
+				//GameCanvas.panel.setTypeMapTrans();
+				//GameCanvas.panel.show();
 				break;
 			}
 			case -90:
@@ -4872,7 +4874,8 @@ public class Controller : IMessageHandler
 		catch (Exception ex)
 		{
 			Cout.LogError("LOI TAI LOADMAP INFO " + ex.ToString());
-		}
+            Pk9rXmap.FixBlackScreen();
+        }
 		GameEvents.onInfoMapLoaded();
 	}
 

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.IO;
 using UnityEngine;
+using Mod.Xmap;
 
 namespace Mod
 {
@@ -23,6 +24,7 @@ namespace Mod
         public static bool onSendChat(string text)
         {
             HistoryChat.gI.append(text);
+            if (Pk9rXmap.Chat(text)) return true;
             bool result = ChatCommandHandler.handleChatText(text);
 
             return result;
@@ -305,6 +307,16 @@ namespace Mod
         {
             CharEffect.AddEffectCreatedByMe(skill);
             return false;
+        }
+
+        public static void onFixedUpdateMain()
+        {
+            Pk9rXmap.Update();
+        }
+
+        public static void onAddInfoMe(string str)
+        {
+            Pk9rXmap.Info(str);
         }
     }
 }

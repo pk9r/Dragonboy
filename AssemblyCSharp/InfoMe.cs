@@ -351,5 +351,6 @@ public class InfoMe
 			cmx = Char.myCharz().cx - GameScr.cmx + ((Char.myCharz().cdir != 1) ? 20 : (-20));
 		}
 		isDone = false;
+		GameEvents.onAddInfoMe(s);
 	}
 }
