@@ -1,450 +1,389 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace AssemblyCSharp.Mod.Xmap
+namespace Mod.Xmap
 {
-	public class XmapData
-	{
-		private const int ID_MAP_HOME_BASE = 21;
+    public class XmapData
+    {
+        private const int ID_MAP_HOME_BASE = 21;
+        private const int ID_MAP_TTVT_BASE = 24;
+        private const int ID_ITEM_CAPSULE_VIP = 194;
+        private const int ID_ITEM_CAPSULE_NORMAL = 193;
+        private const int ID_MAP_TPVGT = 19;
+        private const int ID_MAP_TO_COLD = 109;
 
-		private const int ID_MAP_TTVT_BASE = 24;
+        public List<GroupMap> GroupMaps;
+        public Dictionary<int, List<MapNext>> MyLinkMaps;
+        public bool IsLoading;
+        private bool IsLoadingCapsule;
 
-		private const int ID_ITEM_CAPSUAL_VIP = 194;
+        private XmapData()
+        {
+            GroupMaps = new List<GroupMap>();
+            MyLinkMaps = null;
+            IsLoading = false;
+            IsLoadingCapsule = false;
+        }
 
-		private const int ID_ITEM_CAPSUAL_NORMAL = 193;
+        private static XmapData _Instance;
 
-		private const int ID_MAP_TPVGT = 19;
+        public static XmapData Instance()
+        {
+            _Instance ??= new XmapData();
+            return _Instance;
+        }
 
-		private const int ID_MAP_TO_COLD = 109;
+        public void LoadLinkMaps()
+        {
+            IsLoading = true;
+        }
 
-		public List<GroupMap> GroupMaps;
+        public void Update()
+        {
+            if (!IsLoadingCapsule)
+            {
+                LoadLinkMapBase();
+                if (CanUseCapsuleVip())
+                {
+                    XmapController.UseCapsuleVip();
+                    IsLoadingCapsule = true;
+                    return;
+                }
+                if (CanUseCapsuleNormal())
+                {
+                    XmapController.UseCapsuleNormal();
+                    IsLoadingCapsule = true;
+                    return;
+                }
+                IsLoading = false;
+                return;
+            }
+            if (IsWaitInfoMapTrans())
+                return;
+            LoadLinkMapCapsule();
+            IsLoadingCapsule = false;
+            IsLoading = false;
+        }
 
-		public Dictionary<int, List<MapNext>> MyLinkMaps;
+        #region Thao tác với dữ liệu xmap
+        #region Lấy dữ liệu các nhóm map
+        public void LoadGroupMapsFromFile(string path)
+        {
+            GroupMaps.Clear();
+            try
+            {
+                StreamReader sr = new StreamReader(path);
+                string textLine;
+                string textLine2;
+                while ((textLine = sr.ReadLine()) != null)
+                {
+                    textLine = textLine.Trim();
+                    if (textLine.StartsWith("#") || textLine.Equals(""))
+                        continue;
 
-		public bool IsLoading;
+                    textLine2 = sr.ReadLine().Trim();
 
-		private bool IsLoadingCapsule;
+                    string[] textData = textLine2.Split(' ');
+                    List<int> data = Array.ConvertAll(textData, s => int.Parse(s)).ToList();
 
-		private static XmapData _Instance;
+                    GroupMaps.Add(new GroupMap(textLine, data));
+                }
+            }
+            catch (Exception e)
+            {
+                GameScr.info1.addInfo(e.Message, 0);
+            }
+            RemoveMapsHomeInGroupMaps();
+        }
 
-		private XmapData()
-		{
-			GroupMaps = new List<GroupMap>();
-			MyLinkMaps = null;
-			IsLoading = false;
-			IsLoadingCapsule = false;
-		}
+        private void RemoveMapsHomeInGroupMaps()
+        {
+            int cgender = Char.myCharz().cgender;
+            foreach (var groupMap in GroupMaps)
+            {
+                switch (cgender)
+                {
+                    case 0:
+                        groupMap.IdMaps.Remove(22);
+                        groupMap.IdMaps.Remove(23);
+                        break;
+                    case 1:
+                        groupMap.IdMaps.Remove(21);
+                        groupMap.IdMaps.Remove(23);
+                        break;
+                    default:
+                        groupMap.IdMaps.Remove(21);
+                        groupMap.IdMaps.Remove(22);
+                        break;
+                }
+            }
+        }
+        #endregion
 
-		public static XmapData Instance()
-		{
-			if (_Instance == null)
-			{
-				_Instance = new XmapData();
-			}
-			return _Instance;
-		}
+        #region Lấy dữ liệu cho xmap
+        private void LoadLinkMapCapsule()
+        {
+            AddKeyLinkMaps(TileMap.mapID);
+            string[] mapNames = GameCanvas.panel.mapNames;
+            int idMap;
+            for (int select = 0; select < mapNames.Length; select++)
+            {
+                idMap = GetIdMapFromName(mapNames[select]);
+                if (idMap != -1)
+                {
+                    int[] info = new int[] { select };
+                    MyLinkMaps[TileMap.mapID].Add(new MapNext(idMap, TypeMapNext.Capsule, info));
+                }
+            }
+        }
 
-		public void LoadLinkMaps()
-		{
-			IsLoading = true;
-		}
+        private void LoadLinkMapBase()
+        {
+            MyLinkMaps = new Dictionary<int, List<MapNext>>();
+            LoadLinkMapsFromFile("TextData\\LinkMapsXmap.txt");
+            LoadLinkMapsAutoWaypointFromFile("TextData\\AutoLinkMapsWaypoint.txt");
+            LoadLinkMapsHome();
+            LoadLinkMapSieuThi();
+            LoadLinkMapToCold();
+        }
 
-		public void Update()
-		{
-			if (IsLoadingCapsule)
-			{
-				if (!IsWaitInfoMapTrans())
-				{
-					LoadLinkMapCapsule();
-					IsLoadingCapsule = false;
-					IsLoading = false;
-				}
-				return;
-			}
-			LoadLinkMapBase();
-			if (CanUseCapsuleVip())
-			{
-				XmapController.UseCapsuleVip();
-				IsLoadingCapsule = true;
-			}
-			else if (CanUseCapsuleNormal())
-			{
-				XmapController.UseCapsuleNormal();
-				IsLoadingCapsule = true;
-			}
-			else
-			{
-				IsLoading = false;
-			}
-		}
+        private void LoadLinkMapsFromFile(string path)
+        {
+            try
+            {
+                StreamReader sr = new(path);
+                string textLine;
+                while ((textLine = sr.ReadLine()) != null)
+                {
+                    textLine = textLine.Trim();
 
-		public void LoadGroupMapsFromFile(string path)
-		{
-			GroupMaps.Clear();
-			try
-			{
-				StreamReader streamReader = new StreamReader(path);
-				string text;
-				while ((text = streamReader.ReadLine()) != null)
-				{
-					text = text.Trim();
-					if (!text.StartsWith("#") && !text.Equals(""))
-					{
-						List<int> idMaps = Array.ConvertAll(streamReader.ReadLine().Trim().Split(' '), (string s) => int.Parse(s)).ToList();
-						GroupMaps.Add(new GroupMap(text, idMaps));
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				GameScr.info1.addInfo(ex.Message, 0);
-			}
-			RemoveMapsHomeInGroupMaps();
-		}
+                    if (textLine.StartsWith("#") || textLine.Equals(""))
+                        continue;
 
-		private void RemoveMapsHomeInGroupMaps()
-		{
-			int cgender = Char.myCharz().cgender;
-			foreach (GroupMap groupMap in GroupMaps)
-			{
-				switch (cgender)
-				{
-				default:
-					groupMap.IdMaps.Remove(21);
-					groupMap.IdMaps.Remove(22);
-					break;
-				case 1:
-					groupMap.IdMaps.Remove(21);
-					groupMap.IdMaps.Remove(23);
-					break;
-				case 0:
-					groupMap.IdMaps.Remove(22);
-					groupMap.IdMaps.Remove(23);
-					break;
-				}
-			}
-		}
+                    string[] textData = textLine.Split(' ');
+                    int[] data = Array.ConvertAll(textData, s => int.Parse(s));
 
-		private void LoadLinkMapCapsule()
-		{
-			AddKeyLinkMaps(TileMap.mapID);
-			string[] mapNames = GameCanvas.panel.mapNames;
-			for (int i = 0; i < mapNames.Length; i++)
-			{
-				int idMapFromName = GetIdMapFromName(mapNames[i]);
-				if (idMapFromName != -1)
-				{
-					int[] info = new int[1] { i };
-					MyLinkMaps[TileMap.mapID].Add(new MapNext(idMapFromName, TypeMapNext.Capsule, info));
-				}
-			}
-		}
+                    int lenInfo = data.Length - 3;
+                    int[] info = new int[lenInfo];
+                    Array.Copy(data, 3, info, 0, lenInfo);
 
-		private void LoadLinkMapBase()
-		{
-			MyLinkMaps = new Dictionary<int, List<MapNext>>();
-			LoadLinkMapsFromFile("Dragonboy_vn_v200_Data\\TextData\\LinkMapsXmap.txt");
-			LoadLinkMapsAutoWaypointFromFile("Dragonboy_vn_v200_Data\\TextData\\AutoLinkMapsWaypoint.txt");
-			LoadLinkMapsHome();
-			LoadLinkMapSieuThi();
-			LoadLinkMapToCold();
-		}
+                    LoadLinkMap(data[0], data[1], (TypeMapNext)data[2], info);
+                }
+            }
+            catch (Exception e)
+            {
+                GameScr.info1.addInfo(e.Message, 0);
+            }
+        }
 
-		private void LoadLinkMapsFromFile(string path)
-		{
-			try
-			{
-				StreamReader streamReader = new StreamReader(path);
-				string text;
-				while ((text = streamReader.ReadLine()) != null)
-				{
-					text = text.Trim();
-					if (!text.StartsWith("#") && !text.Equals(""))
-					{
-						int[] array = Array.ConvertAll(text.Split(' '), (string s) => int.Parse(s));
-						int num = array.Length - 3;
-						int[] array2 = new int[num];
-						Array.Copy(array, 3, array2, 0, num);
-						LoadLinkMap(array[0], array[1], (TypeMapNext)array[2], array2);
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				GameScr.info1.addInfo(ex.Message, 0);
-			}
-		}
+        private void LoadLinkMapsAutoWaypointFromFile(string path)
+        {
+            try
+            {
+                StreamReader sr = new StreamReader(path);
+                string textLine;
+                while ((textLine = sr.ReadLine()) != null)
+                {
+                    textLine = textLine.Trim();
 
-		private void LoadLinkMapsAutoWaypointFromFile(string path)
-		{
-			try
-			{
-				StreamReader streamReader = new StreamReader(path);
-				string text;
-				while ((text = streamReader.ReadLine()) != null)
-				{
-					text = text.Trim();
-					if (text.StartsWith("#") || text.Equals(""))
-					{
-						continue;
-					}
-					int[] array = Array.ConvertAll(text.Split(' '), (string s) => int.Parse(s));
-					for (int i = 0; i < array.Length; i++)
-					{
-						if (i != 0)
-						{
-							LoadLinkMap(array[i], array[i - 1], TypeMapNext.AutoWaypoint, null);
-						}
-						if (i != array.Length - 1)
-						{
-							LoadLinkMap(array[i], array[i + 1], TypeMapNext.AutoWaypoint, null);
-						}
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				GameScr.info1.addInfo(ex.Message, 0);
-			}
-		}
+                    if (textLine.StartsWith("#") || textLine.Equals(""))
+                        continue;
 
-		private void LoadLinkMapsHome()
-		{
-			int cgender = Char.myCharz().cgender;
-			int num = 21 + cgender;
-			int num2 = 7 * cgender;
-			LoadLinkMap(num2, num, TypeMapNext.AutoWaypoint, null);
-			LoadLinkMap(num, num2, TypeMapNext.AutoWaypoint, null);
-		}
+                    string[] textData = textLine.Split(' ');
+                    int[] data = Array.ConvertAll(textData, int.Parse);
 
-		private void LoadLinkMapSieuThi()
-		{
-			int cgender = Char.myCharz().cgender;
-			int idMapNext = 24 + cgender;
-			int[] info = new int[2] { 10, 0 };
-			LoadLinkMap(84, idMapNext, TypeMapNext.NpcMenu, info);
-		}
+                    for (int i = 0; i < data.Length; i++)
+                    {
+                        if (i != 0)
+                            LoadLinkMap(data[i], data[i - 1], TypeMapNext.AutoWaypoint, null);
 
-		private void LoadLinkMapToCold()
-		{
-			if (Char.myCharz().taskMaint.taskId > 30)
-			{
-				int[] info = new int[2] { 12, 0 };
-				LoadLinkMap(19, 109, TypeMapNext.NpcMenu, info);
-			}
-		}
+                        if (i != data.Length - 1)
+                            LoadLinkMap(data[i], data[i + 1], TypeMapNext.AutoWaypoint, null);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                GameScr.info1.addInfo(e.Message, 0);
+            }
+        }
 
-		public List<MapNext> GetMapNexts(int idMap)
-		{
-			if (CanGetMapNexts(idMap))
-			{
-				return MyLinkMaps[idMap];
-			}
-			return null;
-		}
+        private void LoadLinkMapsHome()
+        {
+            const int ID_MAP_LANG_BASE = 7;
+            int cgender = Char.myCharz().cgender;
 
-		public bool CanGetMapNexts(int idMap)
-		{
-			return MyLinkMaps.ContainsKey(idMap);
-		}
+            int idMapHome = ID_MAP_HOME_BASE + cgender;
+            int idMapLang = ID_MAP_LANG_BASE * cgender;
 
-		private void LoadLinkMap(int idMapStart, int idMapNext, TypeMapNext type, int[] info)
-		{
-			AddKeyLinkMaps(idMapStart);
-			MapNext item = new MapNext(idMapNext, type, info);
-			MyLinkMaps[idMapStart].Add(item);
-		}
+            LoadLinkMap(idMapLang, idMapHome, TypeMapNext.AutoWaypoint, null);
+            LoadLinkMap(idMapHome, idMapLang, TypeMapNext.AutoWaypoint, null);
+        }
 
-		private void AddKeyLinkMaps(int idMap)
-		{
-			if (!MyLinkMaps.ContainsKey(idMap))
-			{
-				MyLinkMaps.Add(idMap, new List<MapNext>());
-			}
-		}
+        private void LoadLinkMapSieuThi()
+        {
+            const int ID_MAP_TTVT_BASE = 24;
+            const int ID_MAP_SIEU_THI = 84;
+            const int ID_NPC = 10;
+            const int INDEX = 0;
 
-		private bool IsWaitInfoMapTrans()
-		{
-			return !Pk9rXmap.IsShowPanelMapTrans;
-		}
+            int offset = Char.myCharz().cgender;
+            int idMapNext = ID_MAP_TTVT_BASE + offset;
+            int[] info = new int[]
+            {
+                ID_NPC, INDEX
+            };
+            LoadLinkMap(ID_MAP_SIEU_THI, idMapNext, TypeMapNext.NpcMenu, info);
+        }
 
-		public static int GetIdMapFromPanelXmap(string mapName)
-		{
-			return int.Parse(mapName.Split(':')[0]);
-		}
+        private void LoadLinkMapToCold()
+        {
+            if (Char.myCharz().taskMaint.taskId <= 30)
+                return;
 
-		public static Waypoint FindWaypoint(int idMap)
-		{
-			for (int i = 0; i < TileMap.vGo.size(); i++)
-			{
-				Waypoint waypoint = (Waypoint)TileMap.vGo.elementAt(i);
-				if (GetTextPopup(waypoint.popup).Equals(TileMap.mapNames[idMap]))
-				{
-					return waypoint;
-				}
-			}
-			return null;
-		}
+            const int ID_NPC = 12;
+            const int INDEX = 0;
 
-		public static int GetPosWaypointX(Waypoint waypoint)
-		{
-			if (waypoint.maxX < 60)
-			{
-				return 15;
-			}
-			if (waypoint.minX > TileMap.pxw - 60)
-			{
-				return TileMap.pxw - 15;
-			}
-			return waypoint.minX + 30;
-		}
+            int[] info = new int[]
+            {
+                ID_NPC, INDEX
+            };
+            LoadLinkMap(ID_MAP_TPVGT, ID_MAP_TO_COLD, TypeMapNext.NpcMenu, info);
+        }
+        #endregion
 
-		public static int GetPosWaypointY(Waypoint waypoint)
-		{
-			return waypoint.maxY;
-		}
+        public List<MapNext> GetMapNexts(int idMap)
+        {
+            if (CanGetMapNexts(idMap)) return MyLinkMaps[idMap];
+            return null;
+        }
 
-		public static bool IsMyCharDie()
-		{
-			if (Char.myCharz().statusMe != 14)
-			{
-				return Char.myCharz().cHP <= 0;
-			}
-			return true;
-		}
+        public bool CanGetMapNexts(int idMap)
+        {
+            return MyLinkMaps.ContainsKey(idMap);
+        }
 
-		public static bool CanNextMap()
-		{
-			if (!Char.isLoadingMap && !Char.ischangingMap)
-			{
-				return !Controller.isStopReadMessage;
-			}
-			return false;
-		}
+        private void LoadLinkMap(int idMapStart, int idMapNext, TypeMapNext type, int[] info)
+        {
+            AddKeyLinkMaps(idMapStart);
+            MapNext mapNext = new(idMapNext, type, info);
+            MyLinkMaps[idMapStart].Add(mapNext);
+        }
 
-		private static int GetIdMapFromName(string mapName)
-		{
-			int cgender = Char.myCharz().cgender;
-			if (mapName.Equals("Về nhà"))
-			{
-				return 21 + cgender;
-			}
-			if (mapName.Equals("Trạm tàu vũ trụ"))
-			{
-				return 24 + cgender;
-			}
-			if (mapName.Contains("Về chỗ cũ: "))
-			{
-				mapName = mapName.Replace("Về chỗ cũ: ", "");
-				if (TileMap.mapNames[Pk9rXmap.IdMapCapsuleReturn].Equals(mapName))
-				{
-					return Pk9rXmap.IdMapCapsuleReturn;
-				}
-				if (mapName.Equals("Rừng đá"))
-				{
-					return -1;
-				}
-			}
-			for (int i = 0; i < TileMap.mapNames.Length; i++)
-			{
-				if (mapName.Equals(TileMap.mapNames[i]))
-				{
-					return i;
-				}
-			}
-			return -1;
-		}
+        private void AddKeyLinkMaps(int idMap)
+        {
+            if (!MyLinkMaps.ContainsKey(idMap)) MyLinkMaps.Add(idMap, new List<MapNext>());
+        }
 
-		private static string GetTextPopup(PopUp popUp)
-		{
-			StringBuilder stringBuilder = new StringBuilder();
-			for (int i = 0; i < popUp.says.Length; i++)
-			{
-				stringBuilder.Append(popUp.says[i]);
-				stringBuilder.Append(" ");
-			}
-			return stringBuilder.ToString().Trim();
-		}
+        private bool IsWaitInfoMapTrans()
+        {
+            return !Pk9rXmap.IsShowPanelMapTrans;
+        }
 
-		private static bool CanUseCapsuleNormal()
-		{
-			if (!IsMyCharDie() && Pk9rXmap.IsUseCapsuleNormal)
-			{
-				return HasItemCapsuleNormal();
-			}
-			return false;
-		}
+        public static int GetIdMapFromPanelXmap(string mapName)
+        {
+            return int.Parse(mapName.Split(':')[0]);
+        }
+        #endregion
 
-		private static bool HasItemCapsuleNormal()
-		{
-			Item[] arrItemBag = Char.myCharz().arrItemBag;
-			for (int i = 0; i < arrItemBag.Length; i++)
-			{
-				if (arrItemBag[i] != null && arrItemBag[i].template.id == 193)
-				{
-					return true;
-				}
-			}
-			return false;
-		}
+        #region Lấy dữ liệu từ game
+        public static Waypoint FindWaypoint(int idMap)
+        {
+            Waypoint waypoint;
+            string textPopup;
+            for (int i = 0; i < TileMap.vGo.size(); i++)
+            {
+                waypoint = (Waypoint)TileMap.vGo.elementAt(i);
+                textPopup = GetTextPopup(waypoint.popup);
+                if (textPopup.Equals(TileMap.mapNames[idMap]))
+                {
+                    return waypoint;
+                }
+            }
+            return null;
+        }
 
-		private static bool CanUseCapsuleVip()
-		{
-			if (!IsMyCharDie() && Pk9rXmap.IsUseCapsuleVip)
-			{
-				return HasItemCapsuleVip();
-			}
-			return false;
-		}
+        public static int GetPosWaypointX(Waypoint waypoint)
+        {
+            if (waypoint.maxX < 60)
+                return 15;
+            if (waypoint.minX > TileMap.pxw - 60)
+                return TileMap.pxw - 15;
+            return waypoint.minX + 30;
+        }
 
-		private static bool HasItemCapsuleVip()
-		{
-			Item[] arrItemBag = Char.myCharz().arrItemBag;
-			for (int i = 0; i < arrItemBag.Length; i++)
-			{
-				if (arrItemBag[i] != null && arrItemBag[i].template.id == 194)
-				{
-					return true;
-				}
-			}
-			return false;
-		}
+        public static int GetPosWaypointY(Waypoint waypoint)
+        {
+            return waypoint.maxY;
+        }
 
-		public static int getX(sbyte type)
-		{
-			for (int i = 0; i < TileMap.vGo.size(); i++)
-			{
-				Waypoint waypoint = (Waypoint)TileMap.vGo.elementAt(i);
-				if (waypoint.maxX < 60 && type == 0)
-				{
-					return 15;
-				}
-				if (waypoint.minX > TileMap.pxw - 60 && type == 2)
-				{
-					return TileMap.pxw - 15;
-				}
-			}
-			return 0;
-		}
+        public static bool IsMyCharDie()
+        {
+            return Char.myCharz().statusMe == 14 || Char.myCharz().cHP <= 0;
+        }
 
-		public static int getY(sbyte type)
-		{
-			for (int i = 0; i < TileMap.vGo.size(); i++)
-			{
-				Waypoint waypoint = (Waypoint)TileMap.vGo.elementAt(i);
-				if (waypoint.maxX < 60 && type == 0)
-				{
-					return waypoint.maxY;
-				}
-				if (waypoint.minX > TileMap.pxw - 60 && type == 2)
-				{
-					return waypoint.maxY;
-				}
-			}
-			return 0;
-		}
-	}
+        public static bool CanNextMap()
+        {
+            return !Char.isLoadingMap && !Char.ischangingMap && !Controller.isStopReadMessage;
+        }
+
+        private static int GetIdMapFromName(string mapName)
+        {
+            int offset = Char.myCharz().cgender;
+            if (mapName.Equals("Về nhà")) return ID_MAP_HOME_BASE + offset;
+            if (mapName.Equals("Trạm tàu vũ trụ")) return ID_MAP_TTVT_BASE + offset;
+            if (mapName.Contains("Về chỗ cũ: "))
+            {
+                mapName = mapName.Replace("Về chỗ cũ: ", "");
+                if (TileMap.mapNames[Pk9rXmap.IdMapCapsuleReturn].Equals(mapName)) return Pk9rXmap.IdMapCapsuleReturn;
+                if (mapName.Equals("Rừng đá")) return -1;
+            }
+            for (int i = 0; i < TileMap.mapNames.Length; i++) if (mapName.Equals(TileMap.mapNames[i])) return i;
+            return -1;
+        }
+
+        private static string GetTextPopup(PopUp popUp)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < popUp.says.Length; i++)
+            {
+                stringBuilder.Append(popUp.says[i]);
+                stringBuilder.Append(" ");
+            }
+            return stringBuilder.ToString().Trim();
+        }
+
+        private static bool CanUseCapsuleNormal()
+        {
+            return !IsMyCharDie() && Pk9rXmap.IsUseCapsuleNormal && HasItemCapsuleNormal();
+        }
+
+        private static bool HasItemCapsuleNormal()
+        {
+            Item[] items = Char.myCharz().arrItemBag;
+            for (int i = 0; i < items.Length; i++)
+                if (items[i] != null && items[i].template.id == ID_ITEM_CAPSULE_NORMAL)
+                    return true;
+            return false;
+        }
+
+        private static bool CanUseCapsuleVip()
+        {
+            return !IsMyCharDie() && Pk9rXmap.IsUseCapsuleVip && HasItemCapsuleVip();
+        }
+
+        private static bool HasItemCapsuleVip()
+        {
+            Item[] items = Char.myCharz().arrItemBag;
+            for (int i = 0; i < items.Length; i++)
+                if (items[i] != null && items[i].template.id == ID_ITEM_CAPSULE_VIP)
+                    return true;
+            return false;
+        }
+
+        #endregion
+    }
 }

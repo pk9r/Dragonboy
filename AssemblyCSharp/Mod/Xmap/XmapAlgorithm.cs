@@ -1,101 +1,104 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace AssemblyCSharp.Mod.Xmap
+namespace Mod.Xmap
 {
-	public class XmapAlgorithm
-	{
-		public static List<int> FindWay(int idMapStart, int idMapEnd)
-		{
-			List<int> wayPassedStart = GetWayPassedStart(idMapStart);
-			return FindWay(idMapEnd, wayPassedStart);
-		}
+    public class XmapAlgorithm
+    {
+        public static List<int> FindWay(int idMapStart, int idMapEnd)
+        {
+            List<int> wayPassed = GetWayPassedStart(idMapStart);
+            List<int> way = FindWay(idMapEnd, wayPassed);
+            return way;
+        }
 
-		private static List<int> FindWay(int idMapEnd, List<int> wayPassed)
-		{
-			int num = wayPassed[wayPassed.Count - 1];
-			if (num == idMapEnd)
-			{
-				return wayPassed;
-			}
-			if (!XmapData.Instance().CanGetMapNexts(num))
-			{
-				return null;
-			}
-			List<List<int>> list = new List<List<int>>();
-			foreach (MapNext mapNext in XmapData.Instance().GetMapNexts(num))
-			{
-				List<int> list2 = null;
-				if (!wayPassed.Contains(mapNext.MapID))
-				{
-					List<int> wayPassedNext = GetWayPassedNext(wayPassed, mapNext.MapID);
-					list2 = FindWay(idMapEnd, wayPassedNext);
-				}
-				if (list2 != null)
-				{
-					list.Add(list2);
-				}
-			}
-			return GetBestWay(list);
-		}
+        private static List<int> FindWay(int idMapEnd, List<int> wayPassed)
+        {
+            int idMapLast = wayPassed[wayPassed.Count - 1];
 
-		private static List<int> GetBestWay(List<List<int>> ways)
-		{
-			if (ways.Count == 0)
-			{
-				return null;
-			}
-			List<int> list = ways[0];
-			for (int i = 1; i < ways.Count; i++)
-			{
-				if (IsWayBetter(ways[i], list))
-				{
-					list = ways[i];
-				}
-			}
-			return list;
-		}
+            if (idMapLast == idMapEnd)
+                return wayPassed;
+            if (!XmapData.Instance().CanGetMapNexts(idMapLast))
+                return null;
 
-		private static List<int> GetWayPassedStart(int idMapStart)
-		{
-			return new List<int> { idMapStart };
-		}
+            List<List<int>> ways = new();
+            List<MapNext> mapNexts = XmapData.Instance().GetMapNexts(idMapLast);
+            foreach (MapNext map in mapNexts)
+            {
+                List<int> wayContinue = null;
+                if (!wayPassed.Contains(map.MapID))
+                {
+                    var wayPassedNext = GetWayPassedNext(wayPassed, map.MapID);
+                    wayContinue = FindWay(idMapEnd, wayPassedNext);
+                }
 
-		private static List<int> GetWayPassedNext(List<int> wayPassed, int idMapNext)
-		{
-			return new List<int>(wayPassed) { idMapNext };
-		}
+                if (wayContinue != null)
+                    ways.Add(wayContinue);
+            }
+            List<int> bestWay = GetBestWay(ways);
+            return bestWay;
+        }
 
-		private static bool IsWayBetter(List<int> way1, List<int> way2)
-		{
-			bool flag = IsBadWay(way1);
-			bool flag2 = IsBadWay(way2);
-			if (!flag || flag2)
-			{
-				if (!(!flag && flag2))
-				{
-					return way1.Count < way2.Count;
-				}
-				return true;
-			}
-			return false;
-		}
+        private static List<int> GetBestWay(List<List<int>> ways)
+        {
+            if (ways.Count == 0)
+                return null;
 
-		private static bool IsBadWay(List<int> way)
-		{
-			return IsWayGoFutureAndBack(way);
-		}
+            List<int> bestWay = ways[0];
+            for (int i = 1; i < ways.Count; i++)
+                if (IsWayBetter(ways[i], bestWay))
+                    bestWay = ways[i];
+            return bestWay;
+        }
 
-		private static bool IsWayGoFutureAndBack(List<int> way)
-		{
-			List<int> list = new List<int> { 27, 28, 29 };
-			for (int i = 1; i < way.Count - 1; i++)
-			{
-				if (way[i] == 102 && way[i + 1] == 24 && list.Contains(way[i - 1]))
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-	}
+        private static List<int> GetWayPassedStart(int idMapStart)
+        {
+            List<int> wayPassed = new()
+            {
+                idMapStart
+            };
+            return wayPassed;
+        }
+
+        private static List<int> GetWayPassedNext(List<int> wayPassed, int idMapNext)
+        {
+            List<int> wayNext = new(wayPassed)
+            {
+                idMapNext
+            };
+            return wayNext;
+        }
+
+        /// <summary>
+        /// Kiểm tra way1 có tốt hơn way2 không
+        /// </summary>
+        /// <param name="way1"></param>
+        /// <param name="way2"></param>
+        /// <returns></returns>
+        private static bool IsWayBetter(List<int> way1, List<int> way2)
+        {
+            bool flag1 = IsBadWay(way1);
+            bool flag2 = IsBadWay(way2);
+            if (flag1 && !flag2)
+                return false;
+            if (!flag1 && flag2)
+                return true;
+            if (way1.Count >= way2.Count)
+                return false;
+            return true;
+        }
+
+        private static bool IsBadWay(List<int> way)
+        {
+            return IsWayGoFutureAndBack(way);
+        }
+
+        private static bool IsWayGoFutureAndBack(List<int> way)
+        {
+            List<int> mapsGoFuture = new() { 27, 28, 29 };
+            for (int i = 1; i < way.Count - 1; i++)
+                if (way[i] == 102 && way[i + 1] == 24 && mapsGoFuture.Contains(way[i - 1]))
+                    return true;
+            return false;
+        }
+    }
 }
