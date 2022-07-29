@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using UnityEngine;
 using Mod.Xmap;
+using Vietpad.InputMethod;
 
 namespace Mod
 {
@@ -39,6 +40,9 @@ namespace Mod
             HotkeyCommandHandler.loadDefalut();
             SocketClient.gI.initSender();
             ModMenu.LoadData();
+            VietKeyHandler.InputMethod = InputMethods.Telex;
+            VietKeyHandler.VietModeEnabled = true;
+            VietKeyHandler.SmartMark = true;
         }
 
         /// <summary>

@@ -1,6 +1,5 @@
 using System;
 using System.Threading;
-
 public class TField : IActionListener
 {
 	public bool isFocus;
@@ -407,8 +406,10 @@ public class TField : IActionListener
 				text += this.text.Substring(caretPos, this.text.Length - caretPos);
 			}
 			this.text = text;
-			caretPos++;
-			setPasswordTest();
+			Mod.Utilities.toVietnamese(ref this.text);
+            caretPos = this.text.Length;
+            //caretPos++;
+            setPasswordTest();
 			setOffset(0);
 		}
 		if (kb != null)
