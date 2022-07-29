@@ -218,16 +218,16 @@ public class Npc : Char
 			{
 				g.drawImage(TileMap.bong, cx, cy, 3);
 			}
-			if (ModMenu.getStatusInt("levelreducegraphics") > 1)
+			if (ModMenu.getStatusInt("levelreducegraphics") == 2)
 			{
                 g.setColor(Color.green);
                 g.drawRect(cx - 12, cy - ch, 24, ch);
-                if (myCharz().npcFocus != null && myCharz().npcFocus.Equals(this) && ChatPopup.currChatPopup == null) g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx, cy - ch - 3, mGraphics.BOTTOM | mGraphics.HCENTER);
+                if (myCharz().npcFocus != null && myCharz().npcFocus.Equals(this) && ChatPopup.currChatPopup == null) g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx, cy - ch - 7, mGraphics.BOTTOM | mGraphics.HCENTER);
             }
 			else if (ModMenu.getStatusInt("levelreducegraphics") > 2)
 			{
-                g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx, cy - ch - 3, mGraphics.BOTTOM | mGraphics.HCENTER);
-				return;
+                if (myCharz().npcFocus != null && myCharz().npcFocus.Equals(this) && ChatPopup.currChatPopup == null) g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx, cy - ch - 7, mGraphics.BOTTOM | mGraphics.HCENTER);
+                return;
             }
 			else if (template.npcTemplateId == 3)
 			{

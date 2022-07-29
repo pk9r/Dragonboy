@@ -7,6 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
+using static System.Net.Mime.MediaTypeNames;
+using Vietpad.InputMethod;
+
 namespace Mod
 {
     public class Utilities : IActionListener
@@ -44,6 +47,9 @@ namespace Mod
         public static JsonData sizeData = null;
 
         public static int channelSyncKey = -1;
+
+        public static VietKeyHandler vietKeyHandler = new VietKeyHandler();
+
         public void perform(int idAction, object p)
         {
             IdAction id = (IdAction)idAction;
@@ -519,6 +525,11 @@ namespace Mod
             fileStream.Write(buffer, 0, buffer.Length);
             fileStream.Flush();
             fileStream.Close();
+        }
+
+        public static void toVietnamese(ref string str)
+        {
+            str = vietKeyHandler.toVietnamese(str);
         }
     }
 }

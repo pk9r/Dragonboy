@@ -1756,21 +1756,21 @@ public class Controller : IMessageHandler
 					Char.myPetz().arrPetSkill[m].template = null;
 					Char.myPetz().arrPetSkill[m].moreInfo = msg.reader().readUTF();
 				}
-				if (GameCanvas.w > 2 * Panel.WIDTH_PANEL)
-				{
-					GameCanvas.panel2 = new Panel();
-					GameCanvas.panel2.tabName[7] = new string[1][] { new string[1] { string.Empty } };
-					GameCanvas.panel2.setTypeBodyOnly();
-					GameCanvas.panel2.show();
-					GameCanvas.panel.setTypePetMain();
-					GameCanvas.panel.show();
-				}
-				else
-				{
-					GameCanvas.panel.tabName[21] = mResources.petMainTab;
-					GameCanvas.panel.setTypePetMain();
-					GameCanvas.panel.show();
-				}
+				//if (GameCanvas.w > 2 * Panel.WIDTH_PANEL)
+				//{
+				//	GameCanvas.panel2 = new Panel();
+				//	GameCanvas.panel2.tabName[7] = new string[1][] { new string[1] { string.Empty } };
+				//	GameCanvas.panel2.setTypeBodyOnly();
+				//	GameCanvas.panel2.show();
+				//	GameCanvas.panel.setTypePetMain();
+				//	GameCanvas.panel.show();
+				//}
+				//else
+				//{
+				//	GameCanvas.panel.tabName[21] = mResources.petMainTab;
+				//	GameCanvas.panel.setTypePetMain();
+				//	GameCanvas.panel.show();
+				//}
 				break;
 			}
 			case -37:

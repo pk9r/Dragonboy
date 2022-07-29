@@ -30,6 +30,9 @@
 	<Reference Include="System">
       <HintPath>..\Game\Game_Data\Managed\System.dll</HintPath>
     </Reference>
+	<Reference Include="VietKey.NET">
+	  <HintPath>..\Game\Game_Data\Managed\VietKey.NET.dll</HintPath>
+	</Reference>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="copy &quot;$(TargetDir)Assembly-CSharp.dll&quot; &quot;$(SolutionDir)Game\Game_Data\Managed\&quot;" />

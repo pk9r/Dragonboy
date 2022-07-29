@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using UnityEngine;
 using Mod.Xmap;
+using Vietpad.InputMethod;
 
 namespace Mod
 {
@@ -39,6 +40,9 @@ namespace Mod
             HotkeyCommandHandler.loadDefalut();
             SocketClient.gI.initSender();
             ModMenu.LoadData();
+            VietKeyHandler.InputMethod = InputMethods.Telex;
+            VietKeyHandler.VietModeEnabled = true;
+            VietKeyHandler.SmartMark = true;
         }
 
         /// <summary>
@@ -192,6 +196,7 @@ namespace Mod
             Char.myCharz().cspeed = Utilities.speedRun;
             CharEffect.Update();
             TeleportMenu.Update();
+            if (GameCanvas.gameTick % (10 * Time.timeScale) == 0) Service.gI().petInfo();
             //NOTE onUpdateChatTextField không thể bấm tab.
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();
