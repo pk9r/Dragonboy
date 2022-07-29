@@ -31,7 +31,7 @@
       <HintPath>..\Game\Game_Data\Managed\System.dll</HintPath>
     </Reference>
 	<Reference Include="VietKey.NET">
-	  <HintPath>bin\Debug\net35\VietKey.NET.dll</HintPath>
+	  <HintPath>..\Game\Game_Data\Managed\VietKey.NET.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
