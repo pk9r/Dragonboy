@@ -538,8 +538,30 @@ public class TileMap
 		{
 			return;
 		}
-		if (ModMenu.getStatusInt("levelreducegraphics") > 0)
+		else if (ModMenu.getStatusInt("levelreducegraphics") == 1)
 		{
+            g.setColor(15615232);
+            for (int i = GameScr.gssx; i < GameScr.gssxe; i++)
+            {
+                bool isContinueFill = false;
+                for (int j = GameScr.gssy; j < GameScr.gssye; j++)
+                {
+                    if (maps[j * tmw + i] - 1 != -1)
+                    {
+						if (tileTypeAt(i * 24, j * 24, 2) || isContinueFill)
+						{
+							isContinueFill = true;
+							g.fillRect(i * size, j * size + 8, 24, 24);
+						}
+                    }
+                    else isContinueFill = false;
+                }
+            }
+            return;
+        }
+		else if (ModMenu.getStatusInt("levelreducegraphics") == 2)
+		{
+            g.setColor(15615232);
             int num = -1;
             for (int i = GameScr.gssx; i < GameScr.gssxe; i++)
             {
@@ -547,7 +569,6 @@ public class TileMap
                 {
                     if (maps[j * tmw + i] - 1 != -1)
                     {
-                        g.setColor(15615232);
                         if (tileTypeAt(i * 24, j * 24, 2))
                         {
                             g.fillRect(i * size, j * size + 8, 24, 1);

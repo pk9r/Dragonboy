@@ -366,6 +366,7 @@ public class mGraphics
 		b = color.b;
 		g = color.g;
 		r = color.r;
+		a = color.a;
 	}
 
 	public void setBgColor(int rgb)

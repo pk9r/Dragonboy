@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Mod;
 public class ModMenuItemBoolean
@@ -14,12 +15,21 @@ public class ModMenuItemBoolean
 
     public string RMSName { get; set; }
 
-    public ModMenuItemBoolean(string title, string description, bool value, string rmsName)
+    public bool isDisabled { get; set; }
+
+    public ModMenuItemBoolean(string title, string description, bool value, string rMSName, bool isDisabled) : this(title, description, rMSName, value)
     {
-        Title = title;
-        Description = description;
+        this.isDisabled = isDisabled;
+    }
+
+    public ModMenuItemBoolean(string title, string description, bool value, string rmsName) : this(title, description, rmsName)
+    {
         Value = value;
-        RMSName = rmsName;
+        isDisabled = false;
+    }
+    public ModMenuItemBoolean(string title, string description, string rmsName, bool isDisabled) : this(title, description, rmsName)
+    {
+        this.isDisabled = isDisabled;
     }
     public ModMenuItemBoolean(string title, string description, string rmsName)
     {
@@ -27,6 +37,7 @@ public class ModMenuItemBoolean
         Description = description;
         Value = false;
         RMSName = rmsName;
+        isDisabled = false;
     }
 
     public override bool Equals(object obj)
