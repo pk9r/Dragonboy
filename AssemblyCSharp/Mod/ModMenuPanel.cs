@@ -50,7 +50,7 @@ public class ModMenuPanel : IChatable
     static void doFireModMenuBools()
     {
         if (GameCanvas.panel.selected < 0) return;
-        ModMenu.modMenuItemBools[GameCanvas.panel.selected].Value = !ModMenu.modMenuItemBools[GameCanvas.panel.selected].Value;
+        if (!ModMenu.modMenuItemBools[GameCanvas.panel.selected].isDisabled) ModMenu.modMenuItemBools[GameCanvas.panel.selected].Value = !ModMenu.modMenuItemBools[GameCanvas.panel.selected].Value;
         onModMenuBoolsValueChanged();
     }
 
@@ -89,9 +89,10 @@ public class ModMenuPanel : IChatable
             int num2 = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
             int num3 = GameCanvas.panel.wScroll;
             int num4 = GameCanvas.panel.ITEM_HEIGHT - 1;
-            g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
-            g.fillRect(num, num2, num3, num4);
             ModMenuItemBoolean modMenuItem = ModMenu.modMenuItemBools[i];
+            if (!modMenuItem.isDisabled) g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
+            else g.setColor((i != GameCanvas.panel.selected) ? new Color(0.54f, 0.51f, 0.46f) : new Color(0.61f, 0.63f, 0.18f));
+            g.fillRect(num, num2, num3, num4);
             if (modMenuItem != null)
             {
                 mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + modMenuItem.Title, num + 5, num2, 0);
@@ -185,7 +186,7 @@ public class ModMenuPanel : IChatable
                     int value = int.Parse(text);
                     if (value > 60 || value < 5) throw new Exception();
                     ModMenu.modMenuItemInts[selected].setValue(value);
-                    onModMenuChatFromMe();
+                    Application.targetFrameRate = ModMenu.modMenuItemInts[0].SelectedValue;
                     GameScr.info1.addInfo("Đã thay đổi mức FPS!", 0);
                 }
                 catch
@@ -198,27 +199,19 @@ public class ModMenuPanel : IChatable
         Utilities.ResetTF();
     }
 
-    private void onModMenuChatFromMe()
-    {
-        Application.targetFrameRate = ModMenu.modMenuItemInts[0].SelectedValue;
-    }
-
     public void onCancelChat()
     {
         ChatTextField.gI().isShow = false;
         Utilities.ResetTF();
     }
 
-    static void onModMenuBoolsValueChanged()
+    public static void onModMenuBoolsValueChanged()
     {
-        if (ModMenu.modMenuItemBools[0].Value) QualitySettings.vSyncCount = 1;
-        else QualitySettings.vSyncCount = 0;
+        QualitySettings.vSyncCount = ModMenu.modMenuItemBools[0].Value ? 1 : 0;
         CharEffect.isEnabled = ModMenu.modMenuItemBools[1].Value;
         AutoAttack.gI.toggle(ModMenu.modMenuItemBools[2].Value);
-    }
-
-    static void onModMenuIntsValueChanged()
-    {
-
+        ModMenu.modMenuItemBools[4].isDisabled = !ModMenu.modMenuItemBools[3].Value;
+        ListCharsInMap.isEnabled = ModMenu.modMenuItemBools[3].Value;
+        ListCharsInMap.isShowPet = ModMenu.modMenuItemBools[4].Value;
     }
 }

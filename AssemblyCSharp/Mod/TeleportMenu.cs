@@ -36,14 +36,14 @@ public class TeleportMenu : IChatable, IActionListener
         MyVector myVector = new MyVector();
         if (listTeleportChars.Count > 0) myVector.addElement(new Command("Danh sách\nnhân vật\nđã lưu", getInstance(), 1, null));
         Char c;
-        if (Char.myCharz().charFocus != null && CharExtensions.isNormalChar(Char.myCharz().charFocus)) c = Char.myCharz().charFocus;
+        if (Char.myCharz().charFocus != null && CharExtensions.isNormalChar(Char.myCharz().charFocus, false, false)) c = Char.myCharz().charFocus;
         else c = CharExtensions.ClosestChar(70, true);
         if (c != null)
         {
             TeleportChar teleportChar = new TeleportChar(c);
             if (!listTeleportChars.Contains(teleportChar)) myVector.addElement(new Command($"Thêm\n{teleportChar.cName}\n[{teleportChar.charID}]", getInstance(), 2, teleportChar));
         }
-        if (Char.myCharz().charFocus != null && CharExtensions.isNormalChar(Char.myCharz().charFocus))
+        if (Char.myCharz().charFocus != null && CharExtensions.isNormalChar(Char.myCharz().charFocus, false, false))
         {
             TeleportChar teleportChar = new TeleportChar(Char.myCharz().charFocus);
             if (listTeleportChars.Contains(teleportChar) && ((isAutoTeleportTo && charAutoTeleportTo != teleportChar) || !isAutoTeleportTo))myVector.addElement(new Command($"Xóa\n{teleportChar.cName}\n[{teleportChar.charID}]", getInstance(), 3, teleportChar));
@@ -129,7 +129,7 @@ public class TeleportMenu : IChatable, IActionListener
                 for (int i = 0; i < GameScr.vCharInMap.size(); i++)
                 {
                     Char @char = (Char)GameScr.vCharInMap.elementAt(i);
-                    if (CharExtensions.isNormalChar(@char))
+                    if (CharExtensions.isNormalChar(@char, false, false))
                     {
                         TeleportChar teleportChar1 = new TeleportChar(@char);
                         if (!listTeleportChars.Contains(teleportChar1)) listTeleportChars.Add(teleportChar1);

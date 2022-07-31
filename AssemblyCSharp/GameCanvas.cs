@@ -690,8 +690,9 @@ public class GameCanvas : IActionListener
 				}
 			}
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
+			Debug.LogException(ex);
 		}
 	}
 

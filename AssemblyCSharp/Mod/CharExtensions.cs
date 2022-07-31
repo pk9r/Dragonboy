@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using UnityEngine;
+using System.Reflection;
 
 namespace Mod;
 public static class CharExtensions
 {
-    //Đéo có cách nào lấy thời gian trói cả :))
     public static int getTimeHold(Char @char)
     {
         
@@ -71,7 +72,7 @@ public static class CharExtensions
         }
         return num;
     }
-    //Đéo có cách nào lấy thời gian khiên cả :))
+
     public static int getTimeShield(Char @char)
     {
         int num;
@@ -161,9 +162,31 @@ public static class CharExtensions
         return @char.cName.Remove(0, @char.cName.IndexOf(']') + 1).Replace(" ", "");
     }
 
-    public static bool isNormalChar(Char @char)
+    public static bool isNormalChar(Char @char, bool isIncludeBoss, bool isIncludePet)
     {
-        return !string.IsNullOrEmpty(@char.cName) && !char.IsUpper(getNameWithoutClanTag(@char)[0]) && @char.charID >= 0 && !@char.cName.StartsWith("#") && !@char.cName.StartsWith("$");
+        bool result = !string.IsNullOrEmpty(@char.cName) && @char.cName != "Trọng tài";
+        if (!string.IsNullOrEmpty(@char.cName))
+        {
+            bool isPet = (bool)typeof(Char).GetField("isPet", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(@char);
+            bool isMiniPet = (bool)typeof(Char).GetField("isMiniPet", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(@char);
+            if (!isIncludeBoss) result = result && !char.IsUpper(getNameWithoutClanTag(@char)[0]);
+            if (!isIncludePet) result = result && !isPet && !isMiniPet && !@char.cName.StartsWith("#") && !@char.cName.StartsWith("$");
+        }
+        return result;
+    }
+
+    public static bool isBoss(Char @char)
+    {
+        bool isPet = (bool)typeof(Char).GetField("isPet", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(@char);
+        bool isMiniPet = (bool)typeof(Char).GetField("isMiniPet", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(@char);
+        return !isPet && !isMiniPet && @char.cName != "Trọng tài" && char.IsUpper(getNameWithoutClanTag(@char)[0]);
+    }
+
+    public static bool isPet(Char @char)
+    {
+        bool isPet = (bool)typeof(Char).GetField("isPet", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(@char);
+        bool isMiniPet = (bool)typeof(Char).GetField("isMiniPet", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(@char);
+        return isPet || isMiniPet || @char.cName.StartsWith("#") || @char.cName.StartsWith("$");
     }
 
     public static Char ClosestChar(int maxDistance, bool isNormalCharOnly)
@@ -173,7 +196,7 @@ public static class CharExtensions
         for (int i = 0; i < GameScr.vCharInMap.size(); i++)
         {
             Char c = (Char)GameScr.vCharInMap.elementAt(i);
-            if (isNormalCharOnly && !isNormalChar(c)) continue;
+            if (isNormalCharOnly && !isNormalChar(c, false, false)) continue;
             int distance = Res.distance(Char.myCharz().cx, Char.myCharz().cy, c.cx, c.cy);
             if (!c.me && distance < smallestDistance)
             {
@@ -183,5 +206,34 @@ public static class CharExtensions
         }
         if (Res.distance(Char.myCharz().cx, Char.myCharz().cy, result.cx, result.cy) > maxDistance) result = null;
         return result;
+    }
+
+    public static string getGender(Char @char)
+    {
+        if (@char.cgender == 0) return "TĐ";
+        else if (@char.cgender == 1) return "NM";
+        else if (@char.cgender == 2) return "XD";
+        else return "BĐ";
+    }
+
+    public static Color getFlagColor(Char @char)
+    {
+        return @char.cFlag switch
+        {
+            1 => Color.cyan,
+            2 => Color.red,
+            3 => new Color(0.56f, 0.19f, 0.77f),
+            4 => Color.yellow,
+            5 => Color.green,
+            6 => Color.magenta,
+            7 => new Color(1f, 0.5f, 0),
+            8 => new Color(0.18f, 0.18f, 0.18f),
+            9 => Color.blue,
+            10 => Color.red,
+            11 => Color.blue,
+            12 => Color.white,
+            13 => Color.black,
+            _ => Color.clear,
+        };
     }
 }

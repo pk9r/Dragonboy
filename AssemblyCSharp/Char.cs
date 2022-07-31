@@ -6577,7 +6577,8 @@ public class Char : IMapObject
 				clearFocus(2);
 				return;
 			}
-			charFocus = null;
+			//Không xóa charFocus khi khoảng cách quá xa
+			//charFocus = null;
 			for (int num27 = 0; num27 < GameScr.vCharInMap.size(); num27++)
 			{
 				Char char2 = (Char)GameScr.vCharInMap.elementAt(num27);
@@ -6627,12 +6628,12 @@ public class Char : IMapObject
 		{
 		case 0:
 			deFocusNPC();
-			charFocus = null;
+			//charFocus = null;
 			itemFocus = null;
 			break;
 		case 1:
 			mobFocus = null;
-			charFocus = null;
+			//charFocus = null;
 			itemFocus = null;
 			break;
 		case 2:
@@ -6643,7 +6644,7 @@ public class Char : IMapObject
 		case 3:
 			mobFocus = null;
 			deFocusNPC();
-			charFocus = null;
+			//charFocus = null;
 			break;
 		}
 	}

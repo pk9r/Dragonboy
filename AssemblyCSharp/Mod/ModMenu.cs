@@ -16,7 +16,9 @@ public class ModMenu
     {
         new ModMenuItemBoolean("Vsync", "Tắt Vsync nếu bạn muốn điều chỉnh FPS!", true, "isvsync"),
         new ModMenuItemBoolean("Hiện thông tin nhân vật", "Hiện gần chính xác thời gian NRD, khiên, khỉ, huýt sáo... của nhân vật đang focus", true, "ishowinfochar"),
-        new ModMenuItemBoolean("Tự đánh", "Bật/tắt tự đánh", false, ""),
+        new ModMenuItemBoolean("Tự đánh", "Bật/tắt tự đánh", ""),
+        new ModMenuItemBoolean("Hiện danh sách nhân vật", "Hiện danh sách nhân vật trong map", "ishowlistchar"),
+        new ModMenuItemBoolean("Hiện đệ tử trong danh sách", "Hiện đệ tử trong danh sách nhân vật trong map (đệ tử không có sư phụ trong map không được hiển thị)", "ishowlistpet", true),
     };
 
     /// <summary>
@@ -49,8 +51,10 @@ public class ModMenu
             }
             catch { }
         }
-        QualitySettings.vSyncCount = modMenuItemBools[0].Value ? 1 : 0;
-        CharEffect.isEnabled = modMenuItemBools[1].Value;
+        //QualitySettings.vSyncCount = modMenuItemBools[0].Value ? 1 : 0;
+        //CharEffect.isEnabled = modMenuItemBools[1].Value;
+        //modMenuItemBools[4].isDisabled = !modMenuItemBools[3].Value;
+        ModMenuPanel.onModMenuBoolsValueChanged();
         foreach (ModMenuItemInt modMenuItem in modMenuItemInts)
         {
             try

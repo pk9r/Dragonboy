@@ -4177,6 +4177,7 @@ public class GameScr : mScreen, IChatable
 		{
 			return;
 		}
+		GameEvents.onUpdateKeyTouchControl();
 		mScreen.keyTouch = -1;
 		if (GameCanvas.isTouchControl)
 		{
