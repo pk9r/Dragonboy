@@ -193,6 +193,7 @@ public static class CharExtensions
     {
         int smallestDistance = 9999;
         Char result = null;
+        if (GameScr.vCharInMap.size() <= 0) return null;
         for (int i = 0; i < GameScr.vCharInMap.size(); i++)
         {
             Char c = (Char)GameScr.vCharInMap.elementAt(i);
@@ -204,7 +205,7 @@ public static class CharExtensions
                 result = c;
             }
         }
-        if (Res.distance(Char.myCharz().cx, Char.myCharz().cy, result.cx, result.cy) > maxDistance) result = null;
+        if (result != null && Res.distance(Char.myCharz().cx, Char.myCharz().cy, result.cx, result.cy) > maxDistance) result = null;
         return result;
     }
 

@@ -119,7 +119,7 @@ public class ListCharsInMap
         int startY = 50;
         for (int i = 0; i < listChars.Count; i++)
         {
-            if (GameCanvas.isPointerHoldIn(Mathf.RoundToInt(GameCanvas.w - paddingRight - longestStrLength * 3.3f), startY + 1 + distanceBetweenLines * i, Mathf.RoundToInt(longestStrLength * 3.3f), 7))
+            if (GameCanvas.isPointerHoldIn(Mathf.RoundToInt(GameCanvas.w - paddingRight - longestStrLength * 3.35f), startY + 1 + distanceBetweenLines * i, Mathf.RoundToInt(longestStrLength * 3.35f), 7))
             {
                 GameCanvas.isPointerJustDown = false;
                 GameScr.gI().isPointerDowning = false;
@@ -132,7 +132,7 @@ public class ListCharsInMap
                     {
                         Char.myCharz().charFocus = listChars[i];
                     }
-                    else Utilities.teleportMyChar(listChars[i].cx, listChars[i].cy);
+                    else Utilities.teleportMyChar(listChars[i]);
                 }
                 Char.myCharz().currentMovePoint = null;
                 GameCanvas.clearAllPointerEvent();

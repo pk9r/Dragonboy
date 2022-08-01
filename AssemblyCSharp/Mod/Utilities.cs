@@ -531,5 +531,10 @@ namespace Mod
         {
             str = vietKeyHandler.toVietnamese(str);
         }
+
+        public static void teleportMyChar(IMapObject obj)
+        {
+            teleportMyChar(obj.getX(), obj.getY());
+        }
     }
 }

@@ -77,29 +77,32 @@ namespace Mod.Xmap
 
         public static void Info(string text)
         {
-            if (text.Equals("Bạn chưa thể đến khu vực này"))
+            if (IsXmapRunning)
             {
-                XmapController.FinishXmap();
-                GameScr.info1.addInfo("Đã huỷ Xmap", 0);
-            }
-            else if (text.Equals("Bang hội phải có từ 5 thành viên mới được tham gia"))
-            {
-                XmapController.FinishXmap();
-                GameScr.info1.addInfo("Đã huỷ Xmap", 0);
-            }
-            else if (text.Equals("Chỉ tiếp các bang hội, miễn tiếp khách vãng lai"))
-            {
-                XmapController.FinishXmap();
-                GameScr.info1.addInfo("Đã huỷ Xmap", 0);
-            }
-            else if (text.Equals("Gia nhập bang hội trên 2 ngày mới được tham gia"))
-            {
-                XmapController.FinishXmap();
-                GameScr.info1.addInfo("Đã huỷ Xmap", 0);
-            }
-            else if (text.Equals("Có lỗi xảy ra vui lòng thử lại sau."))
-            {
-                XmapController.MoveMyChar(XmapUtils.getX(2), XmapUtils.getY(2));
+                if (text.Equals("Bạn chưa thể đến khu vực này"))
+                {
+                    XmapController.FinishXmap();
+                    GameScr.info1.addInfo("Đã huỷ Xmap", 0);
+                }
+                else if (text.Equals("Bang hội phải có từ 5 thành viên mới được tham gia"))
+                {
+                    XmapController.FinishXmap();
+                    GameScr.info1.addInfo("Đã huỷ Xmap", 0);
+                }
+                else if (text.Equals("Chỉ tiếp các bang hội, miễn tiếp khách vãng lai"))
+                {
+                    XmapController.FinishXmap();
+                    GameScr.info1.addInfo("Đã huỷ Xmap", 0);
+                }
+                else if (text.Equals("Gia nhập bang hội trên 2 ngày mới được tham gia"))
+                {
+                    XmapController.FinishXmap();
+                    GameScr.info1.addInfo("Đã huỷ Xmap", 0);
+                }
+                else if (text.Equals("Có lỗi xảy ra vui lòng thử lại sau."))
+                {
+                    XmapController.MoveMyChar(XmapUtils.getX(2), XmapUtils.getY(2));
+                }
             }
         }
 
