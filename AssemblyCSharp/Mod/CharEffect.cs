@@ -50,7 +50,9 @@ public class CharEffect
             if (focus.charEffectTime.isHypnotized) strs.Add(focus.charEffectTime.isHypnotizedByMe ? "Bị bạn thôi miên: " : "Bị thôi miên: khoảng " + focus.charEffectTime.timeHypnotized + " giây");
             if (focus.charEffectTime.isTeleported) strs.Add("Bị DCTT: " + focus.charEffectTime.timeTeleported + " giây");
             if (focus.charEffectTime.isTDHS) strs.Add("Bị TDHS: khoảng " + focus.charEffectTime.timeTDHS + " giây");
-            if (focus.charEffectTime.isTied) strs.Add(focus.charEffectTime.isTiedByMe ? "Bị bạn trói: " : "Bị trói: khoảng " + focus.charEffectTime.timeTied + " giây");
+            if (focus.charEffectTime.isTied) strs.Add((focus.charEffectTime.isTiedByMe ? "Bị bạn trói: " : "Bị trói: khoảng ") + focus.charEffectTime.timeTied + " giây");
+            if (focus.charEffectTime.isStone) strs.Add("Bị hóa đá: " + focus.charEffectTime.timeStone + " giây");
+            if (focus.charEffectTime.isChocolate) strs.Add("Bị biến Sôcôla: " + focus.charEffectTime.timeChocolate + " giây");
         }
         foreach (string str in strs)
         {

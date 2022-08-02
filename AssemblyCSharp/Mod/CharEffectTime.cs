@@ -64,6 +64,18 @@ public class CharEffectTime
 
     public long lastTimeTDHS;
 
+    public bool isStone;
+
+    public int timeStone;
+
+    public long lastTimeStoned; 
+
+    public bool isChocolate;
+
+    public int timeChocolate;
+
+    public long lastTimeChocolated;
+
     public void Update()
     {
         if (timeHoldingNRD > 0 && mSystem.currentTimeMillis() - lastTimeHoldNRD >= 1000)
@@ -113,11 +125,21 @@ public class CharEffectTime
             timeTDHS--;
             lastTimeTDHS = mSystem.currentTimeMillis();
         }
+        if (timeStone > 0 && mSystem.currentTimeMillis() - lastTimeStoned >= 1000)
+        {
+            timeStone--;
+            lastTimeStoned = mSystem.currentTimeMillis();
+        }
+        if (timeChocolate > 0 && mSystem.currentTimeMillis() - lastTimeChocolated >= 1000)
+        {
+            timeChocolate--;
+            lastTimeChocolated = mSystem.currentTimeMillis();
+        }
         if (timeHuytSao <= 0) hasHuytSao = false;
     }
 
     public bool HasAnyEffect()
     {
-        return timeTeleported + timeTied + timeHoldingNRD + timeHuytSao + timeMobMe + timeMonkey + timeShield + timeHypnotized + timeTDHS > 0;
+        return timeTeleported + timeTied + timeHoldingNRD + timeHuytSao + timeMobMe + timeMonkey + timeShield + timeHypnotized + timeTDHS + timeStone + timeChocolate > 0;
     }
 }

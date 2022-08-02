@@ -12,19 +12,19 @@ public static class CharExtensions
     public static int getTimeHold(Char @char)
     {
         
-        int num = 36;
+        int num = 35;
         try
         {
             if (!@char.me)
             {
-                num = 36;
-                if (@char.charEffectTime.isTiedByMe && Char.myCharz().cgender == 2) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point * 5 + 1;
+                num = 35;
+                if (@char.charEffectTime.isTiedByMe && Char.myCharz().cgender == 2) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point * 5;
             }
-            else if (Char.myCharz().cgender == 2) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point * 5 + 1;
+            else if (Char.myCharz().cgender == 2) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point * 5;
         }
         catch
         {
-            num = 36;
+            num = 35;
         }
         return num;
     }
@@ -80,23 +80,23 @@ public static class CharExtensions
         {
             if (!@char.me)
             {
-                num = 46;
+                num = 47;
             }
             else
             {
-                num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[7]).point * 5 + 11;
+                num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[7]).point * 5 + 12;
             }
         }
         catch
         {
-            num = 46;
+            num = 47;
         }
         return num;
     }
 
     public static int getTimeMobMe(Char @char)
     {
-        int num = 64;
+        int num = 60;
         try
         {
             if (!@char.me)
@@ -104,57 +104,62 @@ public static class CharExtensions
                 switch (@char.mobMe.templateId)
                 {
                     case 8:
-                        num = 64;
+                        num = 60;
                         break;
                     case 11:
-                        num = 99;
+                        num = 95;
                         break;
                     case 32:
-                        num = 134;
+                        num = 130;
                         break;
                     case 25:
-                        num = 169;
+                        num = 165;
                         break;
                     case 43:
-                        num = 204;
+                        num = 200;
                         break;
                     case 49:
-                        num = 239;
+                        num = 235;
                         break;
                     case 50:
-                        num = 274;
+                        num = 270;
                         break;
                 }
             }
             else if (Char.myCharz().cgender == 1)
             {
-                num = (Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[4]).point - 1) * 35 + 64;
+                num = (Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[4]).point - 1) * 35 + 60;
             }
         }
         catch
         {
-            num = 274;
+            num = 270;
         }
         return num;
     }
 
     public static int getTimeHypnotize(Char @char)
     {
-        int num = 12;
+        int num = 13;
         try
         {
             if (!@char.me)
             {
-                num = 12;
-                if (@char.charEffectTime.isHypnotizedByMe) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point + 5;
+                num = 13;
+                if (@char.charEffectTime.isHypnotizedByMe) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point + 6;
             }
-            else if (Char.myCharz().cgender == 0) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point + 5;
+            else if (Char.myCharz().cgender == 0) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point + 6;
         }
         catch
         {
-            num = 12;
+            num = 13;
         }
         return num;
+    }
+
+    public static int getTimeStone(Char @char)
+    {
+        return 4;
     }
 
     public static string getNameWithoutClanTag(Char @char)
