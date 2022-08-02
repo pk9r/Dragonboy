@@ -295,7 +295,7 @@ namespace Mod
                 GameScr.info1.addInfo(chat, 0);
                 return true;
             }
-
+            Pk9rXmap.Info(chat);
             return false;
         }
 

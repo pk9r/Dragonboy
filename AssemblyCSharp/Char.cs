@@ -1630,6 +1630,19 @@ public class Char : IMapObject
 	{
 		if (charEffectTime.HasAnyEffect() && !CharEffect.isContains(charID)) CharEffect.storedChars.Add(this);
 		charEffectTime.Update();
+		if (head == 412 && body == 413 && leg == 414)
+		{
+			if (!charEffectTime.isChocolate)
+			{
+				charEffectTime.isChocolate = true;
+				charEffectTime.timeChocolate = 32;
+			}
+		}
+		else
+		{
+			charEffectTime.isChocolate = false;
+			charEffectTime.timeChocolate = 0;
+		}
         if (Utilities.isMeInNRDMap() && bag >= 0 && ClanImage.idImages.containsKey(bag.ToString() + string.Empty))
         {
             ClanImage clanImage = (ClanImage)ClanImage.idImages.get(bag.ToString() + string.Empty);
@@ -1644,7 +1657,7 @@ public class Char : IMapObject
                         isResetNRD = false;
                         if (charEffectTime.timeHoldingNRD == 0)
                         {
-                            charEffectTime.timeHoldingNRD = 301;
+                            charEffectTime.timeHoldingNRD = 302;
                         }
                         break;
                     }
@@ -1739,7 +1752,7 @@ public class Char : IMapObject
             if (!charEffectTime.isHypnotized)
             {
                 charEffectTime.isHypnotized = true;
-                charEffectTime.timeHypnotized = CharExtensions.getTimeHypnotize(this);
+                if (charEffectTime.timeHypnotized <= 0) charEffectTime.timeHypnotized = CharExtensions.getTimeHypnotize(this);
             }
             if (GameCanvas.gameTick % 10 == 0)
             {
@@ -1749,24 +1762,26 @@ public class Char : IMapObject
         else
         {
             charEffectTime.isHypnotized = false;
+			charEffectTime.timeHypnotized = 0;
         }
         if (isMonkey == 1)
         {
             if (!charEffectTime.hasMonkey)
             {
                 charEffectTime.hasMonkey = true;
-                charEffectTime.timeMonkey = CharExtensions.getTimeMonkey(this);
+                if (charEffectTime.timeMonkey <= 0) charEffectTime.timeMonkey = CharExtensions.getTimeMonkey(this);
             }
         }
         else
         {
             charEffectTime.hasMonkey = false;
+			charEffectTime.timeMonkey = 0;
         }
         if (huytSao)
 		{
 			huytSao = false;
-			charEffectTime.hasHuytSao = true;
-            charEffectTime.timeHuytSao = 31;
+			if (!charEffectTime.hasHuytSao) charEffectTime.hasHuytSao = true;
+            if (charEffectTime.timeHuytSao <= 0) charEffectTime.timeHuytSao = 32;
             EffecMn.addEff(new Effect(39, cx, cy, 3, 3, 1));
 		}
         if (blindEff)
@@ -1774,7 +1789,7 @@ public class Char : IMapObject
             if (!charEffectTime.isTeleported)
             {
                 charEffectTime.isTeleported = true;
-                charEffectTime.timeTeleported = 5;
+                if (charEffectTime.timeTeleported <= 0) charEffectTime.timeTeleported = 6;
             }
             if (GameCanvas.gameTick % 5 == 0)
             {
@@ -1784,13 +1799,14 @@ public class Char : IMapObject
         else
         {
             charEffectTime.isTeleported = false;
+			charEffectTime.timeTeleported = 0;
         }
         if (protectEff)
         {
             if (!charEffectTime.hasShield)
             {
                 charEffectTime.hasShield = true;
-                charEffectTime.timeShield = CharExtensions.getTimeShield(this);
+                if (charEffectTime.timeShield <= 0) charEffectTime.timeShield = CharExtensions.getTimeShield(this);
             }
             if (GameCanvas.gameTick % 5 == 0)
             {
@@ -1806,6 +1822,7 @@ public class Char : IMapObject
         else
         {
             charEffectTime.hasShield = false;
+			charEffectTime.timeShield = 0;
         }
         if (charFocus != null && charFocus.cy < 0)
 		{
@@ -1864,7 +1881,17 @@ public class Char : IMapObject
 		soundUpdate();
 		if (stone)
 		{
+			if (!charEffectTime.isStone)
+			{
+				charEffectTime.isStone = true;
+				if (charEffectTime.timeStone <= 0) charEffectTime.timeStone = CharExtensions.getTimeStone(this);
+			}
 			return;
+		}
+		else
+		{
+			charEffectTime.isStone = false;
+            charEffectTime.timeStone = 0;
 		}
 		if (isFreez)
 		{
@@ -1872,8 +1899,10 @@ public class Char : IMapObject
 			if (me && meDead)
 			{
 				freezSeconds = 0;
+				charEffectTime.isTDHS = false;
+				charEffectTime.timeTDHS = 0;
 			}
-			charEffectTime.timeTDHS = freezSeconds + 1;
+			else charEffectTime.timeTDHS = freezSeconds + 1;
 			if (GameCanvas.gameTick % 5 == 0)
 			{
 				ServerEffect.addServerEffect(113, cx, cy, 1);
@@ -1909,7 +1938,11 @@ public class Char : IMapObject
 			}
 			return;
 		}
-		else charEffectTime.isTDHS = false;
+		else
+		{
+			charEffectTime.isTDHS = false;
+			charEffectTime.timeTDHS = 0;
+		}
         if (isWaitMonkey)
 		{
 			isLockMove = true;
@@ -2116,18 +2149,22 @@ public class Char : IMapObject
 		if (mobMe != null)
 		{
 			updateMobMe();
-            if (mobMe.isDie || mobMe.hp <= 0)
+			if (mobMe.isDie || mobMe.hp <= 0)
 			{
 				charEffectTime.hasMobMe = false;
 				mobMe = null;
-            }
+			}
 			else if (!charEffectTime.hasMobMe)
 			{
-                charEffectTime.hasMobMe = true;
-                charEffectTime.timeMobMe = CharExtensions.getTimeMobMe(this);
-            }
+				charEffectTime.hasMobMe = true;
+				if (charEffectTime.timeMobMe <= 0) charEffectTime.timeMobMe = CharExtensions.getTimeMobMe(this);
+			}
 		}
-		else charEffectTime.hasMobMe = false;
+		else
+		{
+			charEffectTime.hasMobMe = false;
+			charEffectTime.timeMobMe = 0;
+        }
         if (arr != null)
 		{
 			arr.update();
