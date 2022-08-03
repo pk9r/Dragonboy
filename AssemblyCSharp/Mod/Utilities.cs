@@ -9,6 +9,7 @@ using System.Text;
 using UnityEngine;
 using static System.Net.Mime.MediaTypeNames;
 using Vietpad.InputMethod;
+using System.Drawing;
 
 namespace Mod
 {
@@ -535,6 +536,24 @@ namespace Mod
         public static void teleportMyChar(IMapObject obj)
         {
             teleportMyChar(obj.getX(), obj.getY());
+        }
+
+        public static int getWidth(mFont mfont, string s)
+        {
+            if (mfont == mFont.tahoma_7b_red_tiny || mfont == mFont.tahoma_7b_yellow_tiny || mfont == mFont.tahoma_7_blue_tiny || mfont == mFont.tahoma_7_tiny || mfont == mFont.tahoma_7_white_tiny)
+            {
+                try
+                {
+                    GUIStyle gUIStyle = new GUIStyle(GUI.skin.label);
+                    gUIStyle.fontSize = 13;
+                    return (int)gUIStyle.CalcSize(new GUIContent(s)).x / mGraphics.zoomLevel + 30;
+                }
+                catch (Exception)
+                {
+                    return mfont.getWidthNotExactOf(s);
+                }
+            }
+            else throw new ArgumentException();
         }
     }
 }

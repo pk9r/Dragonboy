@@ -306,8 +306,8 @@ namespace Mod
 
         public static void onPaintGameScr(mGraphics g)
         {
-            CharEffect.Paint(g);
             ListCharsInMap.paint(g);
+            CharEffect.Paint(g);
         }
 
         public static bool onUseSkill(Skill skill)
