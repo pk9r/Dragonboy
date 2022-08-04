@@ -63,7 +63,7 @@ public class ModMenuPanel : IChatable
                 TeleportMenu.ShowMenu();
                 break;
             case 2:
-                AutoPick.ShowMenu();
+                //AutoPick.ShowMenu();
                 break;
         }
     }
@@ -315,5 +315,10 @@ public class ModMenuPanel : IChatable
     {
         if (ModMenu.modMenuItemInts[0].SelectedValue < 5 || ModMenu.modMenuItemInts[0].SelectedValue > 60) ModMenu.modMenuItemInts[0].SelectedValue = 60;
         Application.targetFrameRate = ModMenu.modMenuItemInts[0].SelectedValue;
+        if (ModMenu.modMenuItemInts[2].SelectedValue == 2)
+        {
+            AutoGoback.infoGoback = new AutoGoback.InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz().cx, Char.myCharz().cy);
+            GameScr.info1.addInfo($"Goback đến map: {TileMap.mapName}, khu: {TileMap.zoneID}, tọa độ: ({Char.myCharz().cx}, {Char.myCharz().cy})!", 0);
+        }
     }
 }
