@@ -44,7 +44,7 @@ public class ModMenuItemBoolean
     {
         if (obj is ModMenuItemBoolean modMenuItem)
         {
-            return modMenuItem.Title == Title && modMenuItem.Description == Description && modMenuItem.Value == Value && modMenuItem.RMSName == RMSName;
+            return modMenuItem.Title == Title && modMenuItem.Description == Description && modMenuItem.Value == Value && modMenuItem.RMSName == RMSName && modMenuItem.isDisabled == isDisabled;
         }
         return false;
     }

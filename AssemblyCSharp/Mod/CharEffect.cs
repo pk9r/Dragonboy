@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Mod;
 public class CharEffect
@@ -56,6 +57,8 @@ public class CharEffect
         }
         foreach (string str in strs)
         {
+            g.setColor(new Color(0f, 0f, 0f, 0.4f));
+            g.fillRect(GameCanvas.w / 2 - mFont.tahoma_7b_red.getWidth(str) / 2 - 5, y + 1, mFont.tahoma_7b_red.getWidth(str) + 8, 10);
             mFont.tahoma_7b_red.drawString(g, str, GameCanvas.w / 2, y, mFont.CENTER);
             y += 10;
         }

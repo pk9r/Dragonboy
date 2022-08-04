@@ -2163,7 +2163,6 @@ public class Char : IMapObject
 		else
 		{
 			charEffectTime.hasMobMe = false;
-			charEffectTime.timeMobMe = 0;
         }
         if (arr != null)
 		{

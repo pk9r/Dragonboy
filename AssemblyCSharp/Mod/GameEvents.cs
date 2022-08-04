@@ -198,6 +198,7 @@ namespace Mod
             TeleportMenu.Update();
             if (GameCanvas.gameTick % (10 * Time.timeScale) == 0) Service.gI().petInfo();
             ListCharsInMap.update();
+            AutoGoback.update();
             //NOTE onUpdateChatTextField không thể bấm tab.
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();
@@ -306,8 +307,8 @@ namespace Mod
 
         public static void onPaintGameScr(mGraphics g)
         {
-            CharEffect.Paint(g);
             ListCharsInMap.paint(g);
+            CharEffect.Paint(g);
         }
 
         public static bool onUseSkill(Skill skill)

@@ -368,47 +368,7 @@ public class TeleportMenu : IChatable, IActionListener
 
     static void TeleportToPlayer(int charId)
     {
-        new Thread(delegate ()
-        {
-            int previousDisguiseId = -1;
-            if (Char.myCharz().arrItemBody[5] == null || (Char.myCharz().arrItemBody[5] != null && (Char.myCharz().arrItemBody[5].template.id < 592 || Char.myCharz().arrItemBody[5].template.id > 594)))
-            {
-                if (Char.myCharz().arrItemBody[5] != null) previousDisguiseId = Char.myCharz().arrItemBody[5].template.id;
-                for (int i = 0; i < Char.myCharz().arrItemBag.Length; i++)
-                {
-                    Item item = Char.myCharz().arrItemBag[i];
-                    if (item != null && item.template.id >= 592 && item.template.id <= 594)
-                    {
-                        do
-                        {
-                            Service.gI().getItem(4, (sbyte)i);
-                            Thread.Sleep(250);
-                        }
-                        while (Char.myCharz().arrItemBody[5].template.id < 592 || Char.myCharz().arrItemBody[5].template.id > 594);
-                        break;
-                    }
-                }
-            }
-            Service.gI().gotoPlayer(charId);
-            if (previousDisguiseId != -1)
-            {
-                Thread.Sleep(500);
-                for (int j = 0; j < Char.myCharz().arrItemBag.Length; j++)
-                {
-                    Item item = Char.myCharz().arrItemBag[j];
-                    if (item != null && item.template.id == previousDisguiseId)
-                    {
-                        do
-                        {
-                            Service.gI().getItem(4, (sbyte)j);
-                            Thread.Sleep(250);
-                        }
-                        while (Char.myCharz().arrItemBody[5].template.id != previousDisguiseId);
-                        break;
-                    }
-                }
-            }
-        }).Start();
+        Service.gI().gotoPlayer(charId);
     }
 
     public enum TeleportStatus

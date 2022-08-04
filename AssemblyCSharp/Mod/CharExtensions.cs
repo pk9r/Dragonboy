@@ -159,7 +159,7 @@ public static class CharExtensions
 
     public static int getTimeStone(Char @char)
     {
-        return 4;
+        return 3;
     }
 
     public static string getNameWithoutClanTag(Char @char)

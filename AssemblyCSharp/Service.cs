@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Assets.src.g;
 using Mod;
 
@@ -31,21 +32,61 @@ public class Service
 
 	public void gotoPlayer(int id)
 	{
-		Message message = null;
-		try
-		{
-			message = new Message((sbyte)18);
-			message.writer().writeInt(id);
-			session.sendMessage(message);
-		}
-		catch (Exception ex)
-		{
-			ex.StackTrace.ToString();
-		}
-		finally
-		{
-			message.cleanup();
-		}
+        new Thread(delegate ()
+        {
+            int previousDisguiseId = -1;
+            if (Char.myCharz().arrItemBody[5] == null || (Char.myCharz().arrItemBody[5] != null && (Char.myCharz().arrItemBody[5].template.id < 592 || Char.myCharz().arrItemBody[5].template.id > 594)))
+            {
+                if (Char.myCharz().arrItemBody[5] != null) previousDisguiseId = Char.myCharz().arrItemBody[5].template.id;
+                for (int i = 0; i < Char.myCharz().arrItemBag.Length; i++)
+                {
+                    Item item = Char.myCharz().arrItemBag[i];
+                    if (item != null && item.template.id >= 592 && item.template.id <= 594)
+                    {
+                        do
+                        {
+                            getItem(4, (sbyte)i);
+                            Thread.Sleep(250);
+                        }
+                        while (Char.myCharz().arrItemBody[5].template.id < 592 || Char.myCharz().arrItemBody[5].template.id > 594);
+                        break;
+                    }
+                }
+            }
+            Message message = null;
+            try
+            {
+                message = new Message((sbyte)18);
+                message.writer().writeInt(id);
+                session.sendMessage(message);
+            }
+            catch (Exception ex)
+            {
+                ex.StackTrace.ToString();
+            }
+            finally
+            {
+                message.cleanup();
+            }
+            if (previousDisguiseId != -1)
+            {
+                Thread.Sleep(500);
+                for (int j = 0; j < Char.myCharz().arrItemBag.Length; j++)
+                {
+                    Item item = Char.myCharz().arrItemBag[j];
+                    if (item != null && item.template.id == previousDisguiseId)
+                    {
+                        do
+                        {
+                            getItem(4, (sbyte)j);
+                            Thread.Sleep(250);
+                        }
+                        while (Char.myCharz().arrItemBody[5].template.id != previousDisguiseId);
+                        break;
+                    }
+                }
+            }
+        }).Start();    
 	}
 
 	public void androidPack()
