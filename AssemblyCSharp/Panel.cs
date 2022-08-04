@@ -5459,7 +5459,7 @@ public class Panel : IActionListener, IChatable
 		mFont.tahoma_7b_white.drawString(g, mResources.dragon_ball + " " + GameMidlet.VERSION, 60, 4, mFont.LEFT, mFont.tahoma_7b_dark);
 		mFont.tahoma_7_yellow.drawString(g, mResources.character + ": " + Char.myCharz().cName, 60, 16, mFont.LEFT, mFont.tahoma_7_grey);
 		mFont.tahoma_7_yellow.drawString(g, mResources.account_server + " " + ServerListScreen.nameServer[ServerListScreen.ipSelect] + ":", 60, 27, mFont.LEFT, mFont.tahoma_7_grey);
-		mFont.tahoma_7_yellow.drawString(g, (!GameCanvas.loginScr.tfUser.getText().Equals(string.Empty)) ? GameCanvas.loginScr.tfUser.getText() : mResources.not_register_yet, 60, 39, mFont.LEFT, mFont.tahoma_7_grey);
+		mFont.tahoma_7_yellow.drawString(g, "CharID: " + Char.myCharz().charID, 60, 39, mFont.LEFT, mFont.tahoma_7_grey);
 	}
 
 	private void paintGiaoDichInfo(mGraphics g)

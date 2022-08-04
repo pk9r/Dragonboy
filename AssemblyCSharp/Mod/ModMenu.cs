@@ -18,7 +18,7 @@ public class ModMenu
         new ModMenuItemBoolean("Hiện thông tin nhân vật", "Hiện gần chính xác thời gian NRD, khiên, khỉ, huýt sáo... của nhân vật đang focus", true, "ishowinfochar"),
         new ModMenuItemBoolean("Tự đánh", "Bật/tắt tự đánh", ""),
         new ModMenuItemBoolean("Hiện danh sách nhân vật", "Hiện danh sách nhân vật trong map", "ishowlistchar"),
-        new ModMenuItemBoolean("Hiện đệ tử trong danh sách", "Hiện đệ tử trong danh sách nhân vật trong map (đệ tử không có sư phụ trong map không được hiển thị)", "ishowlistpet", true),
+        new ModMenuItemBoolean("Hiện đệ tử trong danh sách", "Hiện đệ tử trong danh sách nhân vật trong map (đệ tử không có sư phụ trong map không được hiển thị)", "isshowlistpet", true),
     };
 
     /// <summary>
@@ -27,7 +27,16 @@ public class ModMenu
     public static ModMenuItemInt[] modMenuItemInts = new ModMenuItemInt[]
     {
         new ModMenuItemInt("FPS", "FPS mục tiêu (cần tắt Vsync để thay đổi có hiệu lực)", 60, "targetfps"),
-        new ModMenuItemInt("Giảm đồ họa", new string[]{"Đang tắt", "Đang bật mức 1", "Đang bật mức 2", "Đang bật mức 3"}, 0, "levelreducegraphics")
+        new ModMenuItemInt("Giảm đồ họa", new string[]{"Đang tắt", "Đang bật mức 1", "Đang bật mức 2", "Đang bật mức 3"}, 0, "levelreducegraphics"),
+        new ModMenuItemInt("Auto nhặt", new string[]{"Đang tắt", "Đang bật (chỉ nhặt của mình)", "Đang bật (nhặt tất cả)", "Đang bật (nhặt theo danh sách)"}, 2, "statusautopick"),
+        new ModMenuItemInt("Khoảng cách nhặt", "Điều chỉnh khoảng cách nhặt", 50, "distanceautopick"),
+    };
+
+    public static ModMenuItemFunction[] modMenuItemFunctions = new ModMenuItemFunction[]
+    {
+        new ModMenuItemFunction("Xmap", "Mở menu Xmap (chat \"xmp\" hoặc bấm nút x)"),
+        new ModMenuItemFunction("Menu teleport", "Mở menu dịch chuyển (chat \"tele\" hoặc bấm nút z)"),
+        new ModMenuItemFunction("Danh sách nhặt", "Mở danh sách vật phẩm chỉ nhặt"),
     };
 
     public static string[][] inputModMenuItemInts = new string[][]
@@ -51,9 +60,6 @@ public class ModMenu
             }
             catch { }
         }
-        //QualitySettings.vSyncCount = modMenuItemBools[0].Value ? 1 : 0;
-        //CharEffect.isEnabled = modMenuItemBools[1].Value;
-        //modMenuItemBools[4].isDisabled = !modMenuItemBools[3].Value;
         ModMenuPanel.onModMenuBoolsValueChanged();
         foreach (ModMenuItemInt modMenuItem in modMenuItemInts)
         {
@@ -64,8 +70,7 @@ public class ModMenu
             }
             catch { }
         }
-        if (modMenuItemInts[0].SelectedValue < 5 || modMenuItemInts[0].SelectedValue > 60) modMenuItemInts[0].SelectedValue = 60;
-        Application.targetFrameRate = modMenuItemInts[0].SelectedValue;
+        ModMenuPanel.onModMenuIntsValueChanged();
     }
 
     public static bool getStatusBool(string rmsName)
