@@ -4704,7 +4704,7 @@ public class GameScr : mScreen, IChatable
 				effect.paint(g);
 			}
 		}
-		if (!GameCanvas.lowGraphic)
+		if (!GameCanvas.lowGraphic && ModMenu.getStatusInt("levelreducegraphics") == 0)
 		{
 			for (int i = 0; i < Effect2.vAnimateEffect.size(); i++)
 			{
@@ -4729,7 +4729,7 @@ public class GameScr : mScreen, IChatable
 				bgItem.paint(g);
 			}
 		}
-		if (TileMap.mapID == 48 && layer == 3 && !GameCanvas.lowGraphic && GameCanvas.bgW != null && GameCanvas.bgW[0] != 0)
+		if (TileMap.mapID == 48 && layer == 3 && !GameCanvas.lowGraphic && GameCanvas.bgW != null && GameCanvas.bgW[0] != 0 && ModMenu.getStatusInt("levelreducegraphics") == 0)
 		{
 			for (int j = 0; j < TileMap.pxw / GameCanvas.bgW[0] + 1; j++)
 			{
