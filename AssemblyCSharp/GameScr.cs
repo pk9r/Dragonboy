@@ -2601,7 +2601,7 @@ public class GameScr : mScreen, IChatable
 				doUseHP();
 				GameCanvas.clearKeyPressed();
 			}
-			if (GameCanvas.keyPressed[11] && mobCapcha == null)
+			if (GameCanvas.keyPressed[11] && mobCapcha == null && !ChatTextField.gI().isShow)
 			{
 				if (popUpYesNo != null)
 				{

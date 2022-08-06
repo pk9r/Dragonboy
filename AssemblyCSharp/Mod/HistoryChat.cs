@@ -107,58 +107,61 @@ namespace Mod
 
         public void paint(mGraphics g)
         {
-            var chatTextField = ChatTextField.gI();
-
-            // Số lượng gợi ý hiển thị
-            lenghtHintsShow = hints.Count < MAX_HINTS_ITEM ? hints.Count : MAX_HINTS_ITEM;
-
-            // Kích thước bảng gợi ý
-            height = (lenghtHintsShow + 1) * HEIGHT_HINT_ITEM; // Chừa 1 chỗ cho title
-            width = GameCanvas.w - 10 > maxWidth ? maxWidth : GameCanvas.w - 10;
-
-            // Chiều dài của Scrollbar
-            int lenghtScrollbar = lenghtHintsShow * (height - HEIGHT_HINT_ITEM) / hints.Count;
-
-            // Vị trí của bảng gợi ý
-            x = (GameCanvas.w - width) / 2;
-            y = chatTextField.tfChat.y - 40 - height;
-
-            // Background
-            g.setColor(0, 0.75f);
-            g.fillRect(x, y, width, height);
-
-            // Title
-            g.setColor(0, 1f);
-            g.fillRect(x, y, width, HEIGHT_HINT_ITEM);
-            mFont.tahoma_7_white_pSmall.drawString(g, "Gần đây", x + 5, y, 0);
-            if (this.chatBack != hints[selectedIndex])
+            if (hints.Count > 0)
             {
-                int x = this.x + this.width - mFont.tahoma_7_white_pSmall.getWidth("Nhấn Tab để lựa chọn") - 5;
-                mFont.tahoma_7_white_pSmall.drawString(g, "Nhấn Tab để lựa chọn", x, y, 0);
-            }
+                var chatTextField = ChatTextField.gI();
 
-            // Đường ngăn cách title với lệnh gợi ý
-            g.setColor(0xffffff, 0.5f);
-            g.fillRect(x, y + HEIGHT_HINT_ITEM - 1, this.width, 1);
+                // Số lượng gợi ý hiển thị
+                lenghtHintsShow = hints.Count < MAX_HINTS_ITEM ? hints.Count : MAX_HINTS_ITEM;
 
-            // History đang chọn
-            g.setColor(0x838383, 0.75f);
-            g.fillRect(x, y + HEIGHT_HINT_ITEM + HEIGHT_HINT_ITEM * (selectedIndex - scrollValue), width - 5, HEIGHT_HINT_ITEM);
-            g.setColor(0xffffff, 0.75f);
-            g.fillRect(x, y + HEIGHT_HINT_ITEM + HEIGHT_HINT_ITEM * (selectedIndex - scrollValue), 2, HEIGHT_HINT_ITEM);
+                // Kích thước bảng gợi ý
+                height = (lenghtHintsShow + 1) * HEIGHT_HINT_ITEM; // Chừa 1 chỗ cho title
+                width = GameCanvas.w - 10 > maxWidth ? maxWidth : GameCanvas.w - 10;
 
-            // Đường ngăn cách danh sách gợi ý với Scrollbar
-            g.setColor(0xffffff, 0.75f);
-            g.fillRect(x + width - 5, y + HEIGHT_HINT_ITEM, 1, height - HEIGHT_HINT_ITEM);
+                // Chiều dài của Scrollbar
+                int lenghtScrollbar = lenghtHintsShow * (height - HEIGHT_HINT_ITEM) / hints.Count;
 
-            // Scrollbar
-            g.setColor(0xffffff, 0.75f);
-            g.fillRect(x + width - 3, y + HEIGHT_HINT_ITEM + scrollValue * (height - HEIGHT_HINT_ITEM) / hints.Count, 2, lenghtScrollbar);
+                // Vị trí của bảng gợi ý
+                x = (GameCanvas.w - width) / 2;
+                y = chatTextField.tfChat.y - 40 - height;
 
-            // Danh sách gợi ý
-            for (int i = scrollValue; i < scrollValue + lenghtHintsShow; i++)
-            {
-                mFont.tahoma_7_white_pSmall.drawString(g, hints[i], x + 5, y + HEIGHT_HINT_ITEM + HEIGHT_HINT_ITEM * (i - scrollValue), 0);
+                // Background
+                g.setColor(0, 0.75f);
+                g.fillRect(x, y, width, height);
+
+                // Title
+                g.setColor(0, 1f);
+                g.fillRect(x, y, width, HEIGHT_HINT_ITEM);
+                mFont.tahoma_7_white_pSmall.drawString(g, "Gần đây", x + 5, y, 0);
+                if (this.chatBack != hints[selectedIndex])
+                {
+                    int x = this.x + this.width - mFont.tahoma_7_white_pSmall.getWidth("Nhấn Tab để lựa chọn") - 5;
+                    mFont.tahoma_7_white_pSmall.drawString(g, "Nhấn Tab để lựa chọn", x, y, 0);
+                }
+
+                // Đường ngăn cách title với lệnh gợi ý
+                g.setColor(0xffffff, 0.5f);
+                g.fillRect(x, y + HEIGHT_HINT_ITEM - 1, this.width, 1);
+
+                // History đang chọn
+                g.setColor(0x838383, 0.75f);
+                g.fillRect(x, y + HEIGHT_HINT_ITEM + HEIGHT_HINT_ITEM * (selectedIndex - scrollValue), width - 5, HEIGHT_HINT_ITEM);
+                g.setColor(0xffffff, 0.75f);
+                g.fillRect(x, y + HEIGHT_HINT_ITEM + HEIGHT_HINT_ITEM * (selectedIndex - scrollValue), 2, HEIGHT_HINT_ITEM);
+
+                // Đường ngăn cách danh sách gợi ý với Scrollbar
+                g.setColor(0xffffff, 0.75f);
+                g.fillRect(x + width - 5, y + HEIGHT_HINT_ITEM, 1, height - HEIGHT_HINT_ITEM);
+
+                // Scrollbar
+                g.setColor(0xffffff, 0.75f);
+                g.fillRect(x + width - 3, y + HEIGHT_HINT_ITEM + scrollValue * (height - HEIGHT_HINT_ITEM) / hints.Count, 2, lenghtScrollbar);
+
+                // Danh sách gợi ý
+                for (int i = scrollValue; i < scrollValue + lenghtHintsShow; i++)
+                {
+                    mFont.tahoma_7_white_pSmall.drawString(g, hints[i], x + 5, y + HEIGHT_HINT_ITEM + HEIGHT_HINT_ITEM * (i - scrollValue), 0);
+                }
             }
         }
 
