@@ -45,82 +45,79 @@ public class MyKeyMap
 		if (obj == null)
 		{
 			int num = (int)k;
-            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) || GetKeyState(20) > 0 /*cApS LoCK*/)
+			if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) || GetKeyState(20) > 0 /*cApS LoCK*/)
 			{
-				if (num >= 97 && num <= 122)
+				if (num >= 97 && num <= 122) num -= 32;
+			}
+			if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+			{
+				switch (k)
 				{
-					num -= 32;
+					case KeyCode.BackQuote:
+						num = '~';
+						break;
+					case KeyCode.Alpha1:
+						num = (int)KeyCode.Exclaim;
+						break;
+					case KeyCode.Alpha2:
+						num = (int)KeyCode.At;
+						break;
+					case KeyCode.Alpha3:
+						num = (int)KeyCode.Hash;
+						break;
+					case KeyCode.Alpha4:
+						num = (int)KeyCode.Dollar;
+						break;
+					case KeyCode.Alpha5:
+						num = '%';
+						break;
+					case KeyCode.Alpha6:
+						num = (int)KeyCode.Caret;
+						break;
+					case KeyCode.Alpha7:
+						num = (int)KeyCode.Ampersand;
+						break;
+					case KeyCode.Alpha8:
+						num = (int)KeyCode.Asterisk;
+						break;
+					case KeyCode.Alpha9:
+						num = (int)KeyCode.LeftParen;
+						break;
+					case KeyCode.Alpha0:
+						num = (int)KeyCode.RightParen;
+						break;
+					case KeyCode.Minus:
+						num = (int)KeyCode.Underscore;
+						break;
+					case KeyCode.Equals:
+						num = (int)KeyCode.Plus;
+						break;
+					case KeyCode.LeftBracket:
+						num = '{';
+						break;
+					case KeyCode.RightBracket:
+						num = '}';
+						break;
+					case KeyCode.Backslash:
+						num = '|';
+						break;
+					case KeyCode.Semicolon:
+						num = (int)KeyCode.Colon;
+						break;
+					case KeyCode.Quote:
+						num = (int)KeyCode.DoubleQuote;
+						break;
+					case KeyCode.Comma:
+						num = (int)KeyCode.Less;
+						break;
+					case KeyCode.Period:
+						num = (int)KeyCode.Greater;
+						break;
+					case KeyCode.Slash:
+						num = (int)KeyCode.Question;
+						break;
 				}
-				else
-				{
-					switch (k)
-					{
-						case KeyCode.BackQuote:
-							num = '~';
-							break;
-                        case KeyCode.Alpha1:
-                            num = (int)KeyCode.Exclaim;
-							break;
-						case KeyCode.Alpha2:
-							num = (int)KeyCode.At;
-							break;
-						case KeyCode.Alpha3:
-							num = (int)KeyCode.Hash;
-							break;
-                        case KeyCode.Alpha4:
-                            num = (int)KeyCode.Dollar;
-							break;
-						case KeyCode.Alpha5:
-							num = '%';
-							break;
-                        case KeyCode.Alpha6:
-                            num = (int)KeyCode.Caret;
-                            break;
-                        case KeyCode.Alpha7:
-                            num = (int)KeyCode.Ampersand;
-							break;
-                        case KeyCode.Alpha8:
-                            num = (int)KeyCode.Asterisk;
-                            break;
-                        case KeyCode.Alpha9:
-                            num = (int)KeyCode.LeftParen;
-                            break;
-						case KeyCode.Alpha0:
-							num = (int)KeyCode.RightParen;
-							break;
-						case KeyCode.Minus:
-							num = (int)KeyCode.Underscore;
-							break;
-						case KeyCode.Equals:
-							num = (int)KeyCode.Plus;
-							break;
-						case KeyCode.LeftBracket:
-							num = '{';
-                            break;
-						case KeyCode.RightBracket:
-							num = '}';
-							break;
-						case KeyCode.Backslash:
-							num = '|';
-							break;
-						case KeyCode.Semicolon:
-							num = (int)KeyCode.Colon;
-							break;
-                        case KeyCode.Quote:
-                            num = (int)KeyCode.DoubleQuote;
-                            break;
-                        case KeyCode.Comma:
-                            num = (int)KeyCode.Less;
-                            break;
-                        case KeyCode.Period:
-                            num = (int)KeyCode.Greater;
-                            break;
-                        case KeyCode.Slash:
-                            num = (int)KeyCode.Question;
-                            break;
-                    }
-				}	
-            }
+			}	
             return num;
 		}
 		return (int)obj;
