@@ -538,73 +538,24 @@ public class TileMap
 		{
 			return;
 		}
-		else if (ModMenu.getStatusInt("levelreducegraphics") == 1)
+		else if (ModMenu.getStatusInt("levelreducegraphics") >= 1)
 		{
             g.setColor(15615232);
             for (int i = GameScr.gssx; i < GameScr.gssxe; i++)
             {
-                //bool isContinueFill = false;
-				//bool hasAnyEarthSurface = false;
                 for (int j = GameScr.gssy; j < GameScr.gssye; j++)
                 {
                     if (maps[j * tmw + i] != 0)
                     {
-						if (!tileTypeAt(i * 24, (j + 1) * 24, 2) && !tileTypeAt(i * 24, (j + 2) * 24, 2) && !tileTypeAt(i * 24, j * 24, 2)/*|| isContinueFill*/)
+						if ((!tileTypeAt(i * 24, (j + 1) * 24, 2) && !tileTypeAt(i * 24, (j + 2) * 24, 2) && !tileTypeAt(i * 24, j * 24, 2)) || tileTypeAt(i * 24, j * 24, 2))
 						{
-							//isContinueFill = true;
-							g.fillRect(i * size, j * size + 8, 24, 24);
-						}
-                        if (tileTypeAt(i * 24, j * 24, 2))
-                        {
-                            g.fillRect(i * size, j * size + 8, 24, 24);
+							if (ModMenu.getStatusInt("levelreducegraphics") == 2 && i > 0) g.drawRect(i * size, j * size + 8, 24, 24);
+							else g.fillRect(i * size, j * size + 8, 24, 24);
                         }
                     }
-                    //else isContinueFill = false;
                 }
-				//if (!hasAnyEarthSurface)
-				//{
-    //                for (int j = GameScr.gssy; j < GameScr.gssye; j++)
-				//	{
-    //                    if (maps[j * tmw + i] - 1 != -1)
-				//		{
-    //                        g.fillRect(i * size, j * size + 8, 24, 24);
-    //                    }
-    //                }
-    //            }
             }
             return;
-        }
-		else if (ModMenu.getStatusInt("levelreducegraphics") == 2)
-		{
-            g.setColor(15615232);
-            int num = -1;
-            for (int i = GameScr.gssx; i < GameScr.gssxe; i++)
-            {
-                for (int j = GameScr.gssy; j < GameScr.gssye; j++)
-                {
-                    if (maps[j * tmw + i] - 1 != -1)
-                    {
-                        if (tileTypeAt(i * 24, j * 24, 2))
-                        {
-                            g.fillRect(i * size, j * size + 8, 24, 1);
-                            if (num >= 50 && num != j * size + 8 && i * size > 24)
-                            {
-                                if (j * size + 8 - num > 0)
-                                {
-                                    g.fillRect(i * size, num, 1, j * size + 8 - num);
-                                }
-                                else
-                                {
-                                    g.fillRect(i * size, j * size + 8, 1, Math.abs(j * size + 8 - num));
-                                }
-                            }
-                            num = j * size + 8;
-                            break;
-                        }
-                    }
-                }
-            }
-			return;
         }
 		GameScr.gI().paintBgItem(g, 1);
 		for (int i = 0; i < GameScr.vItemMap.size(); i++)

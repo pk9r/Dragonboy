@@ -1,3 +1,5 @@
+using Mod;
+
 public class BackgroudEffect
 {
 	public static MyVector vBgEffect = new MyVector();
@@ -399,7 +401,7 @@ public class BackgroudEffect
 			imgFog = null;
 			return;
 		}
-		if (GameCanvas.lowGraphic)
+		if (GameCanvas.lowGraphic || ModMenu.getStatusInt("levelreducegraphics") > 0)
 		{
 			imgCloud1 = null;
 			imgFog = null;
@@ -431,7 +433,7 @@ public class BackgroudEffect
 
 	public static void updateCloud2()
 	{
-		if (mSystem.clientType == 1 || GameCanvas.lowGraphic || nCloud <= 0)
+		if (mSystem.clientType == 1 || GameCanvas.lowGraphic || nCloud <= 0 || ModMenu.getStatusInt("levelreducegraphics") > 0)
 		{
 			return;
 		}
@@ -449,7 +451,7 @@ public class BackgroudEffect
 
 	public static void updateFog()
 	{
-		if (mSystem.clientType != 1 && !GameCanvas.lowGraphic && isFog)
+		if (mSystem.clientType != 1 && !GameCanvas.lowGraphic && isFog && ModMenu.getStatusInt("levelreducegraphics") == 0)
 		{
 			xfog--;
 			if (xfog < -fogw)
@@ -461,7 +463,7 @@ public class BackgroudEffect
 
 	public static void paintCloud2(mGraphics g)
 	{
-		if (mSystem.clientType == 1 || GameCanvas.lowGraphic || nCloud == 0 || imgCloud1 == null)
+		if (mSystem.clientType == 1 || GameCanvas.lowGraphic || nCloud == 0 || imgCloud1 == null || ModMenu.getStatusInt("levelreducegraphics") > 0)
 		{
 			return;
 		}
@@ -482,7 +484,7 @@ public class BackgroudEffect
 
 	public static void paintFog(mGraphics g)
 	{
-		if (mSystem.clientType == 1 || GameCanvas.lowGraphic || !isFog || imgFog == null)
+		if (mSystem.clientType == 1 || GameCanvas.lowGraphic || !isFog || imgFog == null || ModMenu.getStatusInt("levelreducegraphics") > 0)
 		{
 			return;
 		}
@@ -908,7 +910,7 @@ public class BackgroudEffect
 
 	public static void addEffect(int id)
 	{
-		if (!GameCanvas.lowGraphic)
+		if (!GameCanvas.lowGraphic && ModMenu.getStatusInt("levelreducegraphics") == 0)
 		{
 			BackgroudEffect o = new BackgroudEffect(id);
 			vBgEffect.addElement(o);
