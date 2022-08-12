@@ -1,10 +1,12 @@
-namespace Assets.src.e;
-
-internal class ChatVip
+namespace Assets.src.e
 {
-	public string chat;
 
-	public int width;
+	internal class ChatVip
+	{
+		public string chat;
 
-	public int x;
+		public int width;
+
+		public int x;
+	}
 }

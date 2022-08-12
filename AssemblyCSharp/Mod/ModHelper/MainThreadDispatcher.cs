@@ -7,7 +7,7 @@ namespace Mod.ModHelper
 {
     public class MainThreadDispatcher
     {
-        private static readonly Queue<Action> Queue = new();
+        private static readonly Queue<Action> Queue = new Queue<Action>();
 
         /// <summary>
         /// Thực hiện các hành động trong Thread chính của game tránh xung đột

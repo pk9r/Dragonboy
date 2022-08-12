@@ -30,12 +30,12 @@ public class Member
 
 	public static string getRole(int r)
 	{
-		return r switch
+		switch (r)
 		{
-			0 => mResources.clan_leader, 
-			1 => mResources.clan_coleader, 
-			2 => mResources.member, 
-			_ => string.Empty, 
-		};
-	}
+			case 0: return mResources.clan_leader;
+		  	case 1: return mResources.clan_coleader;
+			case 2: return mResources.member;
+			default: return string.Empty;
+		}
+    }
 }

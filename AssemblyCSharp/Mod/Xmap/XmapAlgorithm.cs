@@ -20,7 +20,7 @@ namespace Mod.Xmap
             if (!XmapData.Instance().CanGetMapNexts(idMapLast))
                 return null;
 
-            List<List<int>> ways = new();
+            List<List<int>> ways = new List<List<int>>();
             List<MapNext> mapNexts = XmapData.Instance().GetMapNexts(idMapLast);
             foreach (MapNext map in mapNexts)
             {
@@ -52,7 +52,7 @@ namespace Mod.Xmap
 
         private static List<int> GetWayPassedStart(int idMapStart)
         {
-            List<int> wayPassed = new()
+            List<int> wayPassed = new List<int>()
             {
                 idMapStart
             };
@@ -61,7 +61,7 @@ namespace Mod.Xmap
 
         private static List<int> GetWayPassedNext(List<int> wayPassed, int idMapNext)
         {
-            List<int> wayNext = new(wayPassed)
+            List<int> wayNext = new List<int>(wayPassed)
             {
                 idMapNext
             };
@@ -94,7 +94,7 @@ namespace Mod.Xmap
 
         private static bool IsWayGoFutureAndBack(List<int> way)
         {
-            List<int> mapsGoFuture = new() { 27, 28, 29 };
+            List<int> mapsGoFuture = new List<int>() { 27, 28, 29 };
             for (int i = 1; i < way.Count - 1; i++)
                 if (way[i] == 102 && way[i + 1] == 24 && mapsGoFuture.Contains(way[i - 1]))
                     return true;

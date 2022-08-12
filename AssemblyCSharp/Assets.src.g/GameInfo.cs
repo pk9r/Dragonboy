@@ -1,12 +1,14 @@
-namespace Assets.src.g;
-
-internal class GameInfo
+namespace Assets.src.g
 {
-	public string main;
 
-	public string content;
+	internal class GameInfo
+	{
+		public string main;
 
-	public short id;
+		public string content;
 
-	public bool hasRead;
+		public short id;
+
+		public bool hasRead;
+	}
 }

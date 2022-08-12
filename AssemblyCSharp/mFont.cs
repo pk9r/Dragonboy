@@ -465,12 +465,19 @@ public class mFont
 		if (mGraphics.zoomLevel == 1)
 		{
 			int length = st.Length;
-			int num = align switch
+			int num;
+			switch (align)
 			{
-				0 => x, 
-				1 => x - getWidth(st), 
-				_ => x - (getWidth(st) >> 1), 
-			};
+				case 0:
+					num = x;
+					break;
+				case 1:
+					num = x - getWidth(st);
+					break;
+				default:
+					num = x - (getWidth(st) >> 1);
+					break;
+			}
 			for (int i = 0; i < length; i++)
 			{
 				int num2 = strFont.IndexOf(st[i] + string.Empty);
@@ -542,13 +549,20 @@ public class mFont
 		if (mGraphics.zoomLevel == 1)
 		{
 			int length = st.Length;
-			int num = align switch
-			{
-				0 => x, 
-				1 => x - getWidth(st), 
-				_ => x - (getWidth(st) >> 1), 
-			};
-			for (int i = 0; i < length; i++)
+            int num;
+            switch (align)
+            {
+                case 0:
+                    num = x;
+                    break;
+                case 1:
+                    num = x - getWidth(st);
+                    break;
+                default:
+                    num = x - (getWidth(st) >> 1);
+                    break;
+            }
+            for (int i = 0; i < length; i++)
 			{
 				int num2 = strFont.IndexOf(st[i]);
 				if (num2 == -1)
