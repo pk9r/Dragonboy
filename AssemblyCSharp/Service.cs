@@ -898,7 +898,7 @@ public class Service
 
 	public void login(string username, string pass, string version, sbyte type)
 	{
-		GameEvents.onLogin(ref username, ref pass);
+		GameEvents.onLogin(ref username, ref pass, ref type);
 		try
 		{
 			Message message = messageNotLogin(0);

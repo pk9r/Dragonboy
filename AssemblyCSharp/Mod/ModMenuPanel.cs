@@ -28,6 +28,8 @@ public class ModMenuPanel : IChatable
         GameCanvas.panel.setType(0);
         SoundMn.gI().getSoundOption();
         setTabModMenu();
+        onModMenuBoolsValueChanged();
+        onModMenuIntsValueChanged();
     }
 
     public static void setTabModMenu()
@@ -309,6 +311,8 @@ public class ModMenuPanel : IChatable
         ModMenu.modMenuItemBools[4].isDisabled = !ModMenu.modMenuItemBools[3].Value;
         ListCharsInMap.isEnabled = ModMenu.modMenuItemBools[3].Value;
         ListCharsInMap.isShowPet = ModMenu.modMenuItemBools[4].Value;
+        AutoSS.isAutoSS = ModMenu.modMenuItemBools[5].Value;
+        if (Char.myCharz().taskMaint != null) ModMenu.modMenuItemBools[5].isDisabled = Char.myCharz().taskMaint.taskId > 11;
     }
 
     public static void onModMenuIntsValueChanged()

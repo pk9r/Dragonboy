@@ -39,25 +39,25 @@ public static class CharExtensions
                 switch (@char.head)
                 {
                     case 192:
-                        num = 61;
+                        num = 61;   //lv 1
                         break;
                     case 195:
-                        num = 71;
+                        num = 71;   //lv 2
                         break;
                     case 196:
-                        num = 81;
+                        num = 81;   //lv 3
                         break;
                     case 199:
-                        num = 91;
+                        num = 91;   //lv 4
                         break;
                     case 197:
-                        num = 101;
+                        num = 101;  //lv 5
                         break;
                     case 200:
-                        num = 111;
+                        num = 111;  //lv 6
                         break;
                     case 198:
-                        num = 121;
+                        num = 121;  //lv 7
                         break;
                 }
             }
