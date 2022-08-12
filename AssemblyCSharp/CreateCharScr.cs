@@ -51,10 +51,10 @@ public class CreateCharScr : mScreen, IActionListener
 	{
 		try
 		{
-			if (!GameCanvas.lowGraphic)
-			{
+			//if (!GameCanvas.lowGraphic)
+			//{
 				loadMapFromResource(new sbyte[3] { 39, 40, 41 });
-			}
+			//}
 			loadMapTableFromResource(new sbyte[3] { 39, 40, 41 });
 		}
 		catch (Exception ex)
@@ -145,10 +145,10 @@ public class CreateCharScr : mScreen, IActionListener
 
 	public void loadMapTableFromResource(sbyte[] mapID)
 	{
-		if (GameCanvas.lowGraphic)
-		{
-			return;
-		}
+		//if (GameCanvas.lowGraphic)
+		//{
+		//	return;
+		//}
 		DataInputStream dataInputStream = null;
 		try
 		{

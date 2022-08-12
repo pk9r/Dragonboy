@@ -30,9 +30,9 @@ public class Service
 		return instance;
 	}
 
-	public void gotoPlayer(int id)
+	public void gotoPlayer(int id, bool isAutoUseYardrat = true)
 	{
-        new Thread(delegate ()
+		if (isAutoUseYardrat) new Thread(delegate ()
         {
             int previousDisguiseId = -1;
             if (Char.myCharz().arrItemBody[5] == null || (Char.myCharz().arrItemBody[5] != null && (Char.myCharz().arrItemBody[5].template.id < 592 || Char.myCharz().arrItemBody[5].template.id > 594)))
@@ -86,7 +86,25 @@ public class Service
                     }
                 }
             }
-        }).Start();    
+        }).Start();  
+		else
+		{
+            Message message = null;
+            try
+            {
+                message = new Message((sbyte)18);
+                message.writer().writeInt(id);
+                session.sendMessage(message);
+            }
+            catch (Exception ex)
+            {
+                ex.StackTrace.ToString();
+            }
+            finally
+            {
+                message.cleanup();
+            }
+        }
 	}
 
 	public void androidPack()
@@ -880,7 +898,7 @@ public class Service
 
 	public void login(string username, string pass, string version, sbyte type)
 	{
-		GameEvents.onLogin(ref username, ref pass);
+		GameEvents.onLogin(ref username, ref pass, ref type);
 		try
 		{
 			Message message = messageNotLogin(0);

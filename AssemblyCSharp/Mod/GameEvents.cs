@@ -199,6 +199,7 @@ namespace Mod
             if (GameCanvas.gameTick % (10 * Time.timeScale) == 0) Service.gI().petInfo();
             ListCharsInMap.update();
             AutoGoback.update();
+            AutoSS.update();
             //NOTE onUpdateChatTextField không thể bấm tab.
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();
@@ -209,10 +210,15 @@ namespace Mod
         /// </summary>
         /// <param name="username"></param>
         /// <param name="pass"></param>
-        public static void onLogin(ref string username, ref string pass)
+        public static void onLogin(ref string username, ref string pass, ref sbyte type)
         {
             username = Utilities.username == "" ? username : Utilities.username;
-            pass = Utilities.password == "" ? pass : Utilities.password;
+            if (username.StartsWith("User"))
+            {
+                pass = string.Empty;
+                type = 1;
+            }
+            else pass = Utilities.password == "" ? pass : Utilities.password;
         }
 
         /// <summary>
@@ -291,12 +297,22 @@ namespace Mod
 
         public static bool onChatPopupMultiLine(string chat)
         {
-            if (chat.ToLower().Contains("chưa thể chuyển khu"))
+            Pk9rXmap.Info(chat);
+            if (chat.ToLower().Contains("chưa thể chuyển khu") || AutoSS.isAutoSS)
             {
                 GameScr.info1.addInfo(chat, 0);
                 return true;
             }
-            Pk9rXmap.Info(chat);
+            return false;
+        }
+
+        public static bool onAddBigMessage(string chat, Npc npc)
+        {
+            if (npc.avatar == 1139 || AutoSS.isAutoSS)
+            {
+                GameScr.info1.addInfo(chat, 0);
+                return true;
+            }
             return false;
         }
 
@@ -325,6 +341,8 @@ namespace Mod
         public static void onAddInfoMe(string str)
         {
             Pk9rXmap.Info(str);
+            if (str.StartsWith("Bạn vừa thu hoạch") && !AutoSS.isNeedMorePean) AutoSS.isHarvestingPean = false;
+            if (str.ToLower().Contains("bạn vừa nhận thưởng bùa")) AutoSS.isNhanBua = true;
         }
 
         public static void onUpdateKeyTouchControl()

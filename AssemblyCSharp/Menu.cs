@@ -1,3 +1,5 @@
+﻿using Mod;
+
 public class Menu
 {
 	public bool showMenu;
@@ -101,7 +103,15 @@ public class Menu
 
 	public void startAt(MyVector menuItems, int pos)
 	{
-		if (showMenu)
+        if (menuItems.size() == 2 && ((Command)menuItems.elementAt(0)).caption == "Nhận quà" && ((Command)menuItems.elementAt(1)).caption == "Từ chối")
+        {
+            GameCanvas.menu.menuSelectedItem = 0;
+            ((Command)menuItems.elementAt(0)).performAction();
+            GameCanvas.menu.doCloseMenu();
+            AutoSS.isNhapCodeTanThu = true;
+			return;
+        }
+        if (showMenu)
 		{
 			return;
 		}

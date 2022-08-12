@@ -24,6 +24,10 @@ public class TeleportMenu : IChatable, IActionListener
 
     private static long lastTimeAutoTeleportTo;
 
+    static bool isChangeDisguise;
+
+    static int previousDisguiseId = -1;
+
     public static TeleportMenu getInstance()
     {
         _Instance ??= new TeleportMenu();
@@ -153,7 +157,7 @@ public class TeleportMenu : IChatable, IActionListener
                 listTeleportChars[listTeleportChars.FindIndex(tC => tC == teleportChar)].lastTimeTeleportTo = mSystem.currentTimeMillis();
                 break;
             case 10:
-                if (isAutoTeleportTo && teleportChar != charAutoTeleportTo)
+                if (teleportChar != charAutoTeleportTo)
                 {
                     listTeleportChars.Remove(teleportChar);
                     GameScr.info1.addInfo($"Đã xóa nhân vật {teleportChar.cName}!", 0);
@@ -221,10 +225,17 @@ public class TeleportMenu : IChatable, IActionListener
     static void ShowListChars(TeleportStatus status)
     {
         MyVector myVector = new MyVector();
-        for (int i = 0; i < (listTeleportChars.Count > 5 ? 5 : listTeleportChars.Count); i++)
+        int i = 0;
+        int count = listTeleportChars.Count;
+        while (myVector.size() < (count < 5 ? count : 5))
         {
             TeleportChar teleportChar = listTeleportChars.ElementAt(i);
-            if (status == TeleportStatus.Delete && teleportChar == charAutoTeleportTo) continue;
+            i++;
+            if (status == TeleportStatus.Delete && teleportChar == charAutoTeleportTo)
+            {
+                count--;
+                continue;
+            }
             myVector.addElement(new Command(teleportChar.cName + "\n[" + teleportChar.charID + "]", getInstance(), 9 + (int)status, teleportChar));
         }
         if (listTeleportChars.Count > 5) myVector.addElement(new Command("Thêm nữa", getInstance(), 12 + (int)status, null));
@@ -243,10 +254,9 @@ public class TeleportMenu : IChatable, IActionListener
                 listTeleportChars[listTeleportChars.FindIndex(tC => tC == teleportChar)].cName = c.cName;
             }
         }
-        if (isAutoTeleportTo && mSystem.currentTimeMillis() - lastTimeAutoTeleportTo >= 1000)
+        if (isAutoTeleportTo)
         {
             bool isCharInMap = false;
-            lastTimeAutoTeleportTo = mSystem.currentTimeMillis();
             for (int i = 0; i < GameScr.vCharInMap.size(); i++)
             {
                 Char c = (Char)GameScr.vCharInMap.elementAt(i);
@@ -256,9 +266,56 @@ public class TeleportMenu : IChatable, IActionListener
                     break;
                 }
             }
-            if (!isCharInMap)
+            if (GameCanvas.gameTick % 30 * Time.timeScale == 0)
             {
-                TeleportToPlayer(charAutoTeleportTo.charID);
+                if (isCharInMap && previousDisguiseId != -1 && !isChangeDisguise)
+                {
+                    new Thread(delegate ()
+                    {
+                        isChangeDisguise = true;
+                        for (int j = 0; j < Char.myCharz().arrItemBag.Length; j++)
+                        {
+                            Item item = Char.myCharz().arrItemBag[j];
+                            if (item != null && item.template.id == previousDisguiseId)
+                            {
+                                do
+                                {
+                                    Service.gI().getItem(4, (sbyte)j);
+                                    Thread.Sleep(500);
+                                }
+                                while (Char.myCharz().arrItemBody[5].template.id != previousDisguiseId);
+                                break;
+                            }
+                        }
+                        previousDisguiseId = -1;
+                    }).Start();
+                }
+            }
+            if (!isCharInMap && isAutoTeleportTo && mSystem.currentTimeMillis() - lastTimeAutoTeleportTo >= 2000)
+            {
+                lastTimeAutoTeleportTo = mSystem.currentTimeMillis();
+                if (previousDisguiseId == -1) new Thread(delegate ()
+                {
+                    if (Char.myCharz().arrItemBody[5] == null || (Char.myCharz().arrItemBody[5] != null && (Char.myCharz().arrItemBody[5].template.id < 592 || Char.myCharz().arrItemBody[5].template.id > 594)))
+                    {
+                        if (Char.myCharz().arrItemBody[5] != null) previousDisguiseId = Char.myCharz().arrItemBody[5].template.id;
+                        for (int i = 0; i < Char.myCharz().arrItemBag.Length; i++)
+                        {
+                            Item item = Char.myCharz().arrItemBag[i];
+                            if (item != null && item.template.id >= 592 && item.template.id <= 594)
+                            {
+                                do
+                                {
+                                    Service.gI().getItem(4, (sbyte)i);
+                                    Thread.Sleep(250);
+                                }
+                                while (Char.myCharz().arrItemBody[5].template.id < 592 || Char.myCharz().arrItemBody[5].template.id > 594);
+                                break;
+                            }
+                        }
+                    }
+                    TeleportToPlayer(charAutoTeleportTo.charID, false);
+                }).Start();
                 listTeleportChars[listTeleportChars.FindIndex(tC => tC == charAutoTeleportTo)].lastTimeTeleportTo = mSystem.currentTimeMillis();
             }
         }
@@ -366,9 +423,9 @@ public class TeleportMenu : IChatable, IActionListener
         GameCanvas.panel.paintScrollArrow(g);
     }
 
-    static void TeleportToPlayer(int charId)
+    static void TeleportToPlayer(int charId, bool isAutoUseYardrat = true)
     {
-        Service.gI().gotoPlayer(charId);
+        Service.gI().gotoPlayer(charId, isAutoUseYardrat);
     }
 
     public enum TeleportStatus

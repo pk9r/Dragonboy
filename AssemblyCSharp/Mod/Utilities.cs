@@ -533,12 +533,24 @@ namespace Mod
             str = vietKeyHandler.toVietnamese(str);
         }
 
+        /// <summary>
+        /// Dịch chuyển đến đối tượng trong map
+        /// </summary>
+        /// <param name="obj">Đối tượng cần dịch chuyển tới</param>
         public static void teleportMyChar(IMapObject obj)
         {
             teleportMyChar(obj.getX(), obj.getY());
         }
 
-        public static int getWidth(mFont mfont, string s)
+        /// <summary>
+        /// Dịch chuyển đến vị trí trên mặt đất có hoành độ x
+        /// </summary>
+        /// <param name="x">Hoành độ</param>
+        public static void teleportMyChar(int x)
+        {
+            teleportMyChar(x, getYGround(x));
+        }
+        internal static int getWidth(mFont mfont, string s)
         {
             if (mfont == mFont.tahoma_7b_red_tiny || mfont == mFont.tahoma_7b_yellow_tiny || mfont == mFont.tahoma_7_blue_tiny || mfont == mFont.tahoma_7_tiny || mfont == mFont.tahoma_7_white_tiny)
             {
@@ -554,6 +566,26 @@ namespace Mod
                 }
             }
             else throw new ArgumentException();
+        }
+
+        /// <summary>
+        /// Lấy tung độ mặt đất từ hoành độ
+        /// </summary>
+        /// <param name="x">Hoành độ x</param>
+        /// <returns>Tung độ y thỏa mãn (x, y) là mặt đất</returns>
+        public static int getYGround(int x)
+        {
+            int y = 50;
+            for (int i = 0; i < 30; i++)
+            {
+                y += 24;
+                if (TileMap.tileTypeAt(x, y, 2))
+                {
+                    if (y % 24 != 0) y -= y % 24;
+                    return y;
+                }
+            }
+            return -1;
         }
     }
 }
