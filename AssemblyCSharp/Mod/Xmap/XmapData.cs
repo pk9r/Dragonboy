@@ -32,7 +32,7 @@ namespace Mod.Xmap
 
         public static XmapData Instance()
         {
-            _Instance ??= new XmapData();
+            if (_Instance == null) _Instance = new XmapData();
             return _Instance;
         }
 
@@ -154,7 +154,7 @@ namespace Mod.Xmap
         {
             try
             {
-                StreamReader sr = new(path);
+                StreamReader sr = new StreamReader(path);
                 string textLine;
                 while ((textLine = sr.ReadLine()) != null)
                 {
@@ -269,7 +269,7 @@ namespace Mod.Xmap
         private void LoadLinkMap(int idMapStart, int idMapNext, TypeMapNext type, int[] info)
         {
             AddKeyLinkMaps(idMapStart);
-            MapNext mapNext = new(idMapNext, type, info);
+            MapNext mapNext = new MapNext(idMapNext, type, info);
             MyLinkMaps[idMapStart].Add(mapNext);
         }
 

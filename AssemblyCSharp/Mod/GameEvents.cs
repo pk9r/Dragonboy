@@ -59,7 +59,7 @@ namespace Mod
 
         public static void onSaveRMSString(ref string filename, ref string data)
         {
-            if (filename is "acc" or "pass")
+            if (filename == "acc" || filename == "pass")
                 data = "pk9r327";
         }
 

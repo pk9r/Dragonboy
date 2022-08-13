@@ -224,8 +224,8 @@ namespace Mod
                 return;
             }
 
-            if (((cMapID is 106 or 107) && textPopup == "Hang băng") ||
-                ((cMapID is 105 or 108) && textPopup == "Rừng băng") ||
+            if (((cMapID == 106 || cMapID == 107) && textPopup == "Hang băng") ||
+                ((cMapID == 105 || cMapID == 108) && textPopup == "Rừng băng") ||
                 (cMapID == 109 && textPopup == "Cánh đồng tuyết"))
             {
                 waypointMiddle = waypoint;

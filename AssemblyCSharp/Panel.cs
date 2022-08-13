@@ -5871,15 +5871,15 @@ public class Panel : IActionListener, IChatable
 
 	private string getStatus(int status)
 	{
-		return status switch
+		switch (status)
 		{
-			0 => mResources.follow, 
-			1 => mResources.defend, 
-			2 => mResources.attack, 
-			3 => mResources.gohome, 
-			_ => "aaa", 
-		};
-	}
+			case 0: return mResources.follow; 
+            case 1: return mResources.defend; 
+            case 2: return mResources.attack; 
+            case 3: return mResources.gohome; 
+            default: return "aaa"; 
+        }
+    }
 
 	private void paintPetStatusInfo(mGraphics g)
 	{
@@ -9716,16 +9716,16 @@ public class Panel : IActionListener, IChatable
 
 	public static int GetColor_ItemBg(int id)
 	{
-		return id switch
+		switch (id)
 		{
-			4 => 1269146, 
-			1 => 2786816, 
-			5 => 13279744, 
-			3 => 12537346, 
-			2 => 7078041, 
-			6 => 11599872, 
-			_ => -1, 
-		};
+			case 4: return 1269146;
+			case 1: return 2786816;
+            case 5: return 13279744;
+            case 3: return 12537346;
+            case 2: return 7078041;
+            case 6: return 11599872;
+            default: return -1;
+		}
 	}
 
 	public static sbyte GetColor_Item_Upgrade(int lv)
@@ -9836,27 +9836,27 @@ public class Panel : IActionListener, IChatable
 	{
 		if (type == 0)
 		{
-			return id switch
+			switch (id)
 			{
-				0 => mFont.bigNumber_While, 
-				1 => mFont.bigNumber_green, 
-				3 => mFont.bigNumber_orange, 
-				4 => mFont.bigNumber_blue, 
-				5 => mFont.bigNumber_yellow, 
-				6 => mFont.bigNumber_red, 
-				_ => mFont.bigNumber_While, 
+				case 0: return mFont.bigNumber_While;
+                case 1: return mFont.bigNumber_green;
+                case 3: return mFont.bigNumber_orange;
+                case 4: return mFont.bigNumber_blue;
+                case 5: return mFont.bigNumber_yellow;
+                case 6: return mFont.bigNumber_red; 
+				default: return mFont.bigNumber_While; 
 			};
 		}
-		return id switch
+		switch (id)
 		{
-			0 => mFont.tahoma_7b_white, 
-			1 => mFont.tahoma_7b_green, 
-			3 => mFont.tahoma_7b_yellowSmall2, 
-			4 => mFont.tahoma_7b_blue, 
-			5 => mFont.tahoma_7b_yellow, 
-			6 => mFont.tahoma_7b_red, 
-			7 => mFont.tahoma_7b_dark, 
-			_ => mFont.tahoma_7b_white, 
+            case 0: return mFont.tahoma_7b_white;
+            case 1: return mFont.tahoma_7b_green;
+            case 3: return mFont.tahoma_7b_yellowSmall2;
+            case 4: return mFont.tahoma_7b_blue;
+            case 5: return mFont.tahoma_7b_yellow;
+            case 6: return mFont.tahoma_7b_red;
+            case 7: return mFont.tahoma_7b_dark; 
+			default: return mFont.tahoma_7b_white; 
 		};
 	}
 }

@@ -12,7 +12,7 @@ namespace Mod.ModHelper
     public abstract class ThreadAction<T> 
         where T : ThreadAction<T>, new()
     {
-        public static T gI { get; } = new();
+        public static T gI { get; } = new T();
 
         /// <summary>
         /// Kiểm tra hành động còn thực hiện.

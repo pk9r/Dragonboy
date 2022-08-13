@@ -201,8 +201,8 @@ public class myWriter
 	{
 		string path = args[0];
 		string path2 = args[1];
-		using StreamReader input = new StreamReader(path, Encoding.Unicode);
-		using StreamWriter output = new StreamWriter(path2, append: false, Encoding.UTF8);
+		StreamReader input = new StreamReader(path, Encoding.Unicode);
+		StreamWriter output = new StreamWriter(path2, append: false, Encoding.UTF8);
 		CopyContents(input, output);
 	}
 

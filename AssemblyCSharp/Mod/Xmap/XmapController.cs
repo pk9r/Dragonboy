@@ -10,7 +10,7 @@ namespace Mod.Xmap
         private const int ID_ITEM_CAPSULE = 193;
         private const int ID_ICON_ITEM_TDLT = 4387;
 
-        private static readonly XmapController _Instance = new();
+        private static readonly XmapController _Instance = new XmapController();
 
         private static int IdMapEnd;
         private static List<int> WayXmap;
@@ -123,7 +123,7 @@ namespace Mod.Xmap
         public static void ShowXmapMenu()
         {
             XmapData.Instance().LoadGroupMapsFromFile("TextData\\GroupMapsXmap.txt");
-            MyVector myVector = new();
+            MyVector myVector = new MyVector();
             foreach (var groupMap in XmapData.Instance().GroupMaps)
                 myVector.addElement(new Command(groupMap.NameGroup, _Instance, 1, groupMap.IdMaps));
             GameCanvas.menu.startAt(myVector, 3);
