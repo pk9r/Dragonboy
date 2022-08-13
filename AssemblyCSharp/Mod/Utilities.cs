@@ -379,7 +379,7 @@ namespace Mod
         [ChatCommand("test")]
         public static void test()
         {
-            
+            //GameScr.info1.addInfo($"cHP: {Char.myCharz().cHP}, dHP: {GameScr.gI().dHP}", 0);
         }
 
         [ChatCommand("skey")]
@@ -586,6 +586,11 @@ namespace Mod
                 }
             }
             return -1;
+        }
+
+        public static int getDistance(IMapObject mapObject1, IMapObject mapObject2)
+        {
+            return Res.distance(mapObject1.getX(), mapObject1.getY(), mapObject2.getX(), mapObject2.getY());
         }
     }
 }

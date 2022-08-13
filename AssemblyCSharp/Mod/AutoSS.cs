@@ -220,6 +220,14 @@ namespace Mod
                     lastTimePickedItem = mSystem.currentTimeMillis();
                     break;
                 }
+                else if (itemMap.template.id == 74)
+                {
+                    isPicking = true;
+                    Char.myCharz().mobFocus = null;
+                    Service.gI().pickItem(itemMap.itemMapID);
+                    lastTimePickedItem = mSystem.currentTimeMillis();
+                    break;
+                }
                 else if ((itemMap.template.id >= 828 && itemMap.template.id <= 842) || itemMap.template.id == 859 || itemMap.template.id == 362 || (itemMap.template.id >= 353 && itemMap.template.id <= 360)) GameScr.vItemMap.removeElementAt(i);
             }
             //if (mSystem.currentTimeMillis() - lastTimePickedItem <= 550) isPicking = false;

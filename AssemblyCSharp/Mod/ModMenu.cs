@@ -21,6 +21,7 @@ namespace Mod
         new ModMenuItemBoolean("Hiện danh sách nhân vật", "Hiện danh sách nhân vật trong map", "isshowlistchar"),
         new ModMenuItemBoolean("Hiện đệ tử trong danh sách", "Hiện đệ tử trong danh sách nhân vật trong map (đệ tử không có sư phụ trong map không được hiển thị)", "isshowlistpet", true),
         new ModMenuItemBoolean("Auto up SS", "Auto up acc sơ sinh đến nhiệm vụ vào bang", "", true),
+        new ModMenuItemBoolean("Auto T77", "Auto up Tàu Pảy Pảy ", "", true),
         };
 
         /// <summary>
