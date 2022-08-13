@@ -6949,6 +6949,7 @@ public class GameScr : mScreen, IChatable
 
 	public void paintChatVip(mGraphics g)
 	{
+		if (ModMenu.getStatusInt("levelreducegraphics") > 2) return;
 		if (vChatVip.size() != 0 && isPaintChatVip)
 		{
 			g.setClip(0, GameCanvas.h - 13, GameCanvas.w, 15);

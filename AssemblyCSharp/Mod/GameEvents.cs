@@ -200,6 +200,7 @@ namespace Mod
             ListCharsInMap.update();
             AutoGoback.update();
             AutoSS.update();
+            AutoT77.update();
             //NOTE onUpdateChatTextField không thể bấm tab.
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();
@@ -298,7 +299,7 @@ namespace Mod
         public static bool onChatPopupMultiLine(string chat)
         {
             Pk9rXmap.Info(chat);
-            if (chat.ToLower().Contains("chưa thể chuyển khu") || AutoSS.isAutoSS)
+            if (chat.ToLower().Contains("chưa thể chuyển khu") || AutoSS.isAutoSS || AutoT77.isAutoT77)
             {
                 GameScr.info1.addInfo(chat, 0);
                 return true;
@@ -308,7 +309,7 @@ namespace Mod
 
         public static bool onAddBigMessage(string chat, Npc npc)
         {
-            if (npc.avatar == 1139 || AutoSS.isAutoSS)
+            if (npc.avatar == 1139 || AutoSS.isAutoSS || AutoT77.isAutoT77)
             {
                 GameScr.info1.addInfo(chat, 0);
                 return true;
