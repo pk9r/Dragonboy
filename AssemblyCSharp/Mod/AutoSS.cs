@@ -55,11 +55,18 @@ namespace Mod
             if ((Char.myCharz().isDie || Char.myCharz().cHP <= 0) && GameCanvas.gameTick % (30f * Time.timeScale) == 0f) Service.gI().returnTownFromDead();
             if (TileMap.mapID == Char.myCharz().cgender + 21)
             {
-                ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(0);
-                if (itemMap != null && mSystem.currentTimeMillis() - lastTimePickedItem >= 550)
+                if (GameScr.vItemMap.size() > 0) 
+                { 
+                    ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(0);
+                    if (mSystem.currentTimeMillis() - lastTimePickedItem >= 550)
+                    {
+                        lastTimePickedItem = mSystem.currentTimeMillis();
+                        Service.gI().pickItem(itemMap.itemMapID);
+                    }
+                }
+                else if (Char.myCharz().taskMaint.taskId < 3)
                 {
-                    lastTimePickedItem = mSystem.currentTimeMillis();
-                    Service.gI().pickItem(itemMap.itemMapID);
+                    GameScr.gI().doUseHP();
                 }
                 if (GameScr.gI().magicTree.currPeas == 0 || (Char.myCharz().cgender == 1 && GameScr.hpPotion >= 20) || (Char.myCharz().cgender != 1 && GameScr.hpPotion >= 10)) isHarvestingPean = false;
                 if (Char.myCharz().taskMaint.taskId >= 2 && GameScr.gI().magicTree.currPeas > 0 && ((Char.myCharz().cgender == 1 && GameScr.hpPotion < 20) || (Char.myCharz().cgender != 1 && GameScr.hpPotion < 10)) && (float)GameCanvas.gameTick % (30f * Time.timeScale) == 0f)
@@ -199,14 +206,18 @@ namespace Mod
                 return;
             }
             bool hasPickableItem = false;
-            bool dontPick = false;
             for (int i = GameScr.vItemMap.size() - 1; i >= 0; i--)
             {
-                ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(i);
-                int distance = Res.distance(Char.myCharz().cx, Char.myCharz().cy, itemMap.x, itemMap.y);
+                ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(i);   
                 if (itemMap == null) continue;
+                int distance = Res.distance(Char.myCharz().cx, Char.myCharz().cy, itemMap.x, itemMap.y);
                 if (itemMap.playerId == Char.myCharz().charID || (itemMap.playerId == -1 && distance <= 60) || itemMap.template.id == 74) hasPickableItem = true;
-                if (mSystem.currentTimeMillis() - lastTimePickedItem > 550 && !dontPick)
+                if ((itemMap.template.id >= 828 && itemMap.template.id <= 842) || itemMap.template.id == 859 || itemMap.template.id == 362 || (itemMap.template.id >= 353 && itemMap.template.id <= 360))
+                {
+                    GameScr.vItemMap.removeElementAt(i);
+                    continue;
+                }
+                if (mSystem.currentTimeMillis() - lastTimePickedItem > 550)
                 {
                     if (itemMap.playerId == Char.myCharz().charID)
                     {
@@ -216,26 +227,17 @@ namespace Mod
                         if (distance >= 100) Utilities.teleportMyChar(itemMap.x, itemMap.y);
                         Service.gI().pickItem(itemMap.itemMapID);
                         lastTimePickedItem = mSystem.currentTimeMillis();
-                        dontPick = true;
+                        continue;
                     }
-                    else if (itemMap.playerId == -1 && distance <= 60)
+                    else if ((itemMap.playerId == -1 && distance <= 60) || itemMap.template.id == 74)
                     {
                         isPicking = true;
                         Char.myCharz().mobFocus = null;
                         Service.gI().pickItem(itemMap.itemMapID);
                         lastTimePickedItem = mSystem.currentTimeMillis();
-                        dontPick = true;
-                    }
-                    else if (itemMap.template.id == 74)
-                    {
-                        isPicking = true;
-                        Char.myCharz().mobFocus = null;
-                        Service.gI().pickItem(itemMap.itemMapID);
-                        lastTimePickedItem = mSystem.currentTimeMillis();
-                        dontPick = true;
+                        continue;
                     }
                 }
-                if ((itemMap.template.id >= 828 && itemMap.template.id <= 842) || itemMap.template.id == 859 || itemMap.template.id == 362 || (itemMap.template.id >= 353 && itemMap.template.id <= 360)) GameScr.vItemMap.removeElementAt(i);
             }
             if (!hasPickableItem) isPicking = false;
             //if (mSystem.currentTimeMillis() - lastTimePickedItem <= 550) isPicking = false;

@@ -374,3 +374,4 @@ Game/Data/targetfps
 Game/Data/levelreducegraphics
 Game/Data/isshowlistchar
 Game/Data/isshowinfochar
+Game/Data/isvsync
