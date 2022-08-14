@@ -214,7 +214,12 @@ namespace Mod {
 
         public static void SaveData()
         {
-            string data = Utilities.loadRMSString($"teleportlist_{GameMidlet.IP}_{GameMidlet.PORT}");
+            string data = "";
+            try
+            {
+                data = Utilities.loadRMSString($"teleportlist_{GameMidlet.IP}_{GameMidlet.PORT}");
+            }
+            catch (Exception) { }
             foreach (TeleportChar teleportChar in listTeleportChars)
             {
                 data += teleportChar.cName + "," + teleportChar.charID + "," + teleportChar.lastTimeTeleportTo + "|";
