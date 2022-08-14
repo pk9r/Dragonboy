@@ -313,7 +313,7 @@ namespace Mod {
             ListCharsInMap.isShowPet = ModMenu.modMenuItemBools[4].Value;
             AutoSS.isAutoSS = ModMenu.modMenuItemBools[5].Value;
             if (Char.myCharz().taskMaint != null) ModMenu.modMenuItemBools[5].isDisabled = Char.myCharz().taskMaint.taskId > 11;
-            if (Char.myCharz().cPower > 2000000 || (Char.myCharz().cPower > 1500000 && TileMap.mapID != 111) || Char.myCharz().taskMaint.taskId < 9) ModMenu.modMenuItemBools[6].isDisabled = true;
+            if (Char.myCharz().cPower > 2000000 || (Char.myCharz().cPower > 1500000 && TileMap.mapID != 111) || (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId < 9)) ModMenu.modMenuItemBools[6].isDisabled = true;
             else ModMenu.modMenuItemBools[6].isDisabled = false;
             AutoT77.isAutoT77 = ModMenu.modMenuItemBools[6].Value;
         }
