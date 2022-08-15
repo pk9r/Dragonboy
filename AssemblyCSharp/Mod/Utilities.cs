@@ -468,6 +468,7 @@ namespace Mod
         {
             ChatTextField.gI().strChat = "Chat";
             ChatTextField.gI().tfChat.name = "chat";
+            ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_ANY);
             ChatTextField.gI().isShow = false;
         }
 
@@ -528,9 +529,9 @@ namespace Mod
             fileStream.Close();
         }
 
-        public static void toVietnamese(ref string str)
+        public static void toVietnamese(ref string str, int inputType)
         {
-            str = vietKeyHandler.toVietnamese(str);
+            if (inputType == TField.INPUT_TYPE_ANY) str = vietKeyHandler.toVietnamese(str);
         }
 
         /// <summary>

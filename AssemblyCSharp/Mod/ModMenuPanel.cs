@@ -6,7 +6,8 @@ using System.Text;
 using UnityEngine;
 using Vietpad.InputMethod;
 
-namespace Mod {
+namespace Mod 
+{
     public class ModMenuPanel : IChatable
     {
         static ModMenuPanel _Instance;
@@ -87,6 +88,7 @@ namespace Mod {
             {
                 ChatTextField.gI().strChat = ModMenu.inputModMenuItemInts[selected][0];
                 ChatTextField.gI().tfChat.name = ModMenu.inputModMenuItemInts[selected][1];
+                ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
                 ChatTextField.gI().startChat2(getInstance(), string.Empty);
                 GameCanvas.panel.hide();
             }
