@@ -32,15 +32,14 @@ namespace Mod
         new ModMenuItemInt("FPS", "FPS mục tiêu (cần tắt Vsync để thay đổi có hiệu lực)", 60, "targetfps"),
         new ModMenuItemInt("Giảm đồ họa", new string[]{"Đang tắt", "Đang bật mức 1", "Đang bật mức 2", "Đang bật mức 3"}, 0, "levelreducegraphics"),
         new ModMenuItemInt("Goback", new string[]{ "Đang tắt", "Đang bật (goback tới chỗ cũ khi chết)", "Đang bật (goback tới map cố định)" }, 0, ""),
-            //new ModMenuItemInt("Auto nhặt", new string[]{"Đang tắt", "Đang bật (chỉ nhặt của mình)", "Đang bật (nhặt tất cả)", "Đang bật (nhặt theo danh sách)"}, 2, "statusautopick"),
-            //new ModMenuItemInt("Khoảng cách nhặt", "Điều chỉnh khoảng cách nhặt", 50, "distanceautopick"),
+        new ModMenuItemInt("Gõ tiếng Việt", new string[]{"Đang tắt", "Đang bật kiểu gõ TELEX", "Đang bật kiểu gõ VIQR", "Đang bật kiểu gõ VNI"}, "vietmode"),
         };
 
         public static ModMenuItemFunction[] modMenuItemFunctions = new ModMenuItemFunction[]
         {
         new ModMenuItemFunction("Xmap", "Mở menu Xmap (chat \"xmp\" hoặc bấm nút x)"),
         new ModMenuItemFunction("Menu teleport", "Mở menu dịch chuyển (chat \"tele\" hoặc bấm nút z)"),
-            //new ModMenuItemFunction("Danh sách nhặt", "Mở danh sách vật phẩm chỉ nhặt"),
+            
         };
 
         public static string[][] inputModMenuItemInts = new string[][]
@@ -70,11 +69,10 @@ namespace Mod
                 try
                 {
                     int data = Utilities.loadRMSInt(modMenuItem.RMSName);
-                    modMenuItem.SelectedValue = data == -1 ? 0 : data;
+                    modMenuItem.setValue(data == -1 ? 0 : data);
                 }
                 catch { }
             }
-            ModMenuPanel.onModMenuIntsValueChanged();
         }
 
         public static bool getStatusBool(string rmsName)

@@ -65,7 +65,7 @@ namespace Mod
 
         public string getSelectedValue()
         {
-            return Values[SelectedValue].ToLower();
+            return Values[SelectedValue];
         }
 
         public void SwitchSelection()
@@ -75,11 +75,13 @@ namespace Mod
                 SelectedValue++;
                 if (SelectedValue > Values.Length - 1) SelectedValue = 0;
             }
+            ModMenuPanel.onModMenuIntsValueChanged();
         }
 
         public void setValue(int value)
         {
             SelectedValue = value;
+            ModMenuPanel.onModMenuIntsValueChanged();
         }
 
         public override int GetHashCode()

@@ -4,6 +4,8 @@ using System.IO;
 using UnityEngine;
 using Mod.Xmap;
 using Vietpad.InputMethod;
+using System;
+using System.Reflection;
 
 namespace Mod
 {
@@ -40,8 +42,6 @@ namespace Mod
             HotkeyCommandHandler.loadDefalut();
             SocketClient.gI.initSender();
             ModMenu.LoadData();
-            VietKeyHandler.InputMethod = InputMethods.Telex;
-            VietKeyHandler.VietModeEnabled = true;
             VietKeyHandler.SmartMark = true;
         }
 
@@ -176,6 +176,7 @@ namespace Mod
         /// </summary>
         public static void onUpdateChatTextField(ChatTextField sender)
         {
+             if (!string.IsNullOrEmpty((string)typeof(TField).GetField("text", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(sender.tfChat))) GameCanvas.keyPressed[14] = false;
         }
 
         public static bool onClearAllRMS()

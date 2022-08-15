@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using Vietpad.InputMethod;
 
 namespace Mod {
     public class ModMenuPanel : IChatable
@@ -89,7 +90,6 @@ namespace Mod {
                 ChatTextField.gI().startChat2(getInstance(), string.Empty);
                 GameCanvas.panel.hide();
             }
-            onModMenuIntsValueChanged();
         }
 
         public static void paintModMenu(mGraphics g)
@@ -327,6 +327,13 @@ namespace Mod {
                 AutoGoback.infoGoback = new AutoGoback.InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz().cx, Char.myCharz().cy);
                 GameScr.info1.addInfo($"Goback đến map: {TileMap.mapName}, khu: {TileMap.zoneID}, tọa độ: ({Char.myCharz().cx}, {Char.myCharz().cy})!", 0);
             }
+            if (ModMenu.modMenuItemInts[3].SelectedValue == 0) VietKeyHandler.VietModeEnabled = false;
+            else
+            {
+                VietKeyHandler.VietModeEnabled = true;
+                VietKeyHandler.InputMethod = (InputMethods)(ModMenu.modMenuItemInts[3].SelectedValue - 1);
+            }
+
         }
     }
 }
