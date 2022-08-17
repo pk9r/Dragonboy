@@ -21,7 +21,7 @@ namespace Mod
         new ModMenuItemBoolean("Hiện danh sách nhân vật", "Hiện danh sách nhân vật trong map", "isshowlistchar"),
         new ModMenuItemBoolean("Hiện đệ tử trong danh sách", "Hiện đệ tử trong danh sách nhân vật trong map (đệ tử không có sư phụ trong map không được hiển thị)", "isshowlistpet", true),
         new ModMenuItemBoolean("Auto up SS", "Auto up acc sơ sinh đến nhiệm vụ vào bang", "", true),
-        new ModMenuItemBoolean("Auto T77", "Auto up Tàu Pảy Pảy ", "", true),
+        new ModMenuItemBoolean("Auto T77", "Auto up Tàu Pảy Pảy", "", true),
         };
 
         /// <summary>
@@ -31,8 +31,10 @@ namespace Mod
         {
         new ModMenuItemInt("FPS", "FPS mục tiêu (cần tắt Vsync để thay đổi có hiệu lực)", 60, "targetfps"),
         new ModMenuItemInt("Giảm đồ họa", new string[]{"Đang tắt", "Đang bật mức 1", "Đang bật mức 2", "Đang bật mức 3"}, 0, "levelreducegraphics"),
-        new ModMenuItemInt("Goback", new string[]{ "Đang tắt", "Đang bật (goback tới chỗ cũ khi chết)", "Đang bật (goback tới map cố định)" }, 0, ""),
+        new ModMenuItemInt("Goback", new string[]{"Đang tắt", "Đang bật (goback tới chỗ cũ khi chết)", "Đang bật (goback tới map cố định)" }, 0, ""),
         new ModMenuItemInt("Gõ tiếng Việt", new string[]{"Đang tắt", "Đang bật kiểu gõ TELEX", "Đang bật kiểu gõ VIQR", "Đang bật kiểu gõ VNI"}, "vietmode"),
+        new ModMenuItemInt("Auto up đệ tử", new string[]{"Đang tắt", "Đang bật up đệ thường", "Đang bật up đệ né siêu quái", "Đang bật up đệ kaioken"}, ""),
+        new ModMenuItemInt("Đánh khi đệ cần", new string[]{"Đánh quái gần nhất", "Đánh đệ (yêu cầu bật cờ xám)", "Đánh bản thân (yêu cầu bật cờ xám)"}, "modeautopet", true),
         };
 
         public static ModMenuItemFunction[] modMenuItemFunctions = new ModMenuItemFunction[]
@@ -59,11 +61,10 @@ namespace Mod
             {
                 try
                 {
-                    if (!string.IsNullOrEmpty(modMenuItem.RMSName)) modMenuItem.Value = Utilities.loadRMSBool(modMenuItem.RMSName);
+                    if (!string.IsNullOrEmpty(modMenuItem.RMSName)) modMenuItem.setValue(Utilities.loadRMSBool(modMenuItem.RMSName));
                 }
                 catch { }
             }
-            ModMenuPanel.onModMenuBoolsValueChanged();
             foreach (ModMenuItemInt modMenuItem in modMenuItemInts)
             {
                 try

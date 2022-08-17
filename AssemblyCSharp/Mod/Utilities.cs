@@ -315,6 +315,7 @@ namespace Mod
         /// <param name="y">Toạ độ y.</param>
         public static void teleportMyChar(int x, int y)
         {
+            Char.myCharz().currentMovePoint = null;
             Char.myCharz().cx = x;
             Char.myCharz().cy = y;
             Service.gI().charMove();
@@ -379,7 +380,7 @@ namespace Mod
         [ChatCommand("test")]
         public static void test()
         {
-            //GameScr.info1.addInfo($"cHP: {Char.myCharz().cHP}, dHP: {GameScr.gI().dHP}", 0);
+            
         }
 
         [ChatCommand("skey")]

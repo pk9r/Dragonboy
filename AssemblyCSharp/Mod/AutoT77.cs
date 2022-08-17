@@ -25,7 +25,7 @@ namespace Mod
                 isAutoT77 = false;
                 ModMenu.modMenuItemBools[6].Value = false;
                 ModMenu.modMenuItemBools[6].isDisabled = true;
-                GameScr.info1.addInfo("Đã up xong!", 0);
+                GameScr.info1.addInfo("Đã up Tàu Pảy Pảy xong!", 0);
                 return;
             }
             if (TileMap.mapID != Char.myCharz().cgender + 21 && GameCanvas.gameTick % (20 * Time.timeScale) == 0 && Char.myCharz().cHP * 100 / Char.myCharz().cHPFull < 6) GameScr.gI().doUseHP();

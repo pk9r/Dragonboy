@@ -30,6 +30,14 @@ namespace Mod
         public static void update()
         {
             if (!isAutoSS) return;
+            if (Char.myCharz().taskMaint.taskId > 11)
+            {
+                GameScr.info1.addInfo("Đã up sơ sinh xong!", 0);
+                ModMenu.modMenuItemBools[5].Value = false;
+                ModMenu.modMenuItemBools[5].isDisabled = true;
+                isAutoSS = false;
+                return;
+            }
             AutoPick();
             if (isNhapCodeTanThu && GameCanvas.gameTick % (60f * Time.timeScale) == 0f)
             {
@@ -69,23 +77,19 @@ namespace Mod
                     GameScr.gI().doUseHP();
                 }
                 if (GameScr.gI().magicTree.currPeas == 0 || (Char.myCharz().cgender == 1 && GameScr.hpPotion >= 20) || (Char.myCharz().cgender != 1 && GameScr.hpPotion >= 10)) isHarvestingPean = false;
-                if (Char.myCharz().taskMaint.taskId >= 2 && GameScr.gI().magicTree.currPeas > 0 && ((Char.myCharz().cgender == 1 && GameScr.hpPotion < 20) || (Char.myCharz().cgender != 1 && GameScr.hpPotion < 10)) && (float)GameCanvas.gameTick % (30f * Time.timeScale) == 0f)
+                if (Char.myCharz().taskMaint.taskId >= 2 && GameScr.gI().magicTree.currPeas > 0 && ((Char.myCharz().cgender == 1 && GameScr.hpPotion < 20) || (Char.myCharz().cgender != 1 && GameScr.hpPotion < 10)) && GameCanvas.gameTick % (30f * Time.timeScale) == 0f)
                 {
                     Service.gI().openMenu(4);
-                    GameCanvas.menu.menuSelectedItem = 0;
-                    GameCanvas.menu.performSelect();
-                    GameCanvas.menu.doCloseMenu();
+                    Service.gI().confirmMenu(4, 0);
                 }
-                if (Char.myCharz().xu >= 5000 && GameScr.gI().magicTree.level == 1 && !GameScr.gI().magicTree.isUpdateTree && (float)GameCanvas.gameTick % (30f * Time.timeScale) == 0f)
+                if (Char.myCharz().xu >= 5000 && GameScr.gI().magicTree.level == 1 && !GameScr.gI().magicTree.isUpdateTree && GameCanvas.gameTick % (30f * Time.timeScale) == 0f)
                 {
                     Service.gI().openMenu(4);
-                    GameCanvas.menu.menuSelectedItem = 1;
-                    GameCanvas.menu.performSelect();
-                    GameCanvas.menu.menuSelectedItem = 0;
-                    GameCanvas.menu.performSelect();
-                    GameCanvas.menu.doCloseMenu();
+                    Service.gI().confirmMenu(4, 1);
+                    Service.gI().confirmMenu(5, 0);
                     isHarvestingPean = false;
                 }
+                if (GameCanvas.menu.showMenu) GameCanvas.menu.doCloseMenu();
             }
             if (!isNhapCodeTanThu && !isNeedMorePean && !isHarvestingPean && !isPicking && GameCanvas.gameTick % (30 * (int)Time.timeScale) == 0 && Char.myCharz().cHP > 1 && !GameScr.gI().isBagFull() && stepXuLyDo > 1 && Char.myCharz().taskMaint.taskId <= 11) AutoNV();
             if (Char.myCharz().taskMaint.taskId > 3 && Char.myCharz().taskMaint.taskId <= 11) AutoPoint();
@@ -323,11 +327,11 @@ namespace Mod
                     else if (Char.myCharz().taskMaint.index == 4)
                     {
                         Service.gI().openMenu(4);
-                        GameCanvas.menu.performSelect();
-                        GameCanvas.menu.doCloseMenu();
+                        Service.gI().confirmMenu(4, 0);
                     }
                     else if (Char.myCharz().taskMaint.index == 5)
                     {
+                        if (GameCanvas.menu.showMenu) GameCanvas.menu.doCloseMenu();
                         if (Char.myCharz().cgender == 0) Service.gI().openMenu(0);
                         if (Char.myCharz().cgender == 1) Service.gI().openMenu(2);
                         if (Char.myCharz().cgender == 2) Service.gI().openMenu(1);
@@ -487,6 +491,7 @@ namespace Mod
                 {
                     if (myMinHP != 15) myMinHP = 15;
                     if (myMinMP != 15) myMinMP = 15;
+                    if (isNhanBua && GameCanvas.menu.showMenu && TileMap.mapID == Char.myCharz().cgender + 42) GameCanvas.menu.doCloseMenu();
                     if (!isNhanBua)
                     {
                         if (TileMap.mapID != Char.myCharz().cgender + 42)
@@ -507,12 +512,7 @@ namespace Mod
                                 else
                                 {
                                     Command command = (Command)GameCanvas.menu.menuItems.elementAt(0);
-                                    if (command.caption == "Thưởng\nBùa 1h\nngẫu nhiên")
-                                    {
-                                        GameCanvas.menu.menuSelectedItem = 0;
-                                        GameCanvas.menu.performSelect();
-                                        GameCanvas.menu.doCloseMenu();
-                                    }
+                                    if (command.caption == "Thưởng\nBùa 1h\nngẫu nhiên") Service.gI().confirmMenu(21, 0);
                                     isNhanBua = true;
                                 }
                             }
@@ -634,21 +634,12 @@ namespace Mod
                 {
                     if (TileMap.mapID == 46)
                     {
+                        if (GameCanvas.menu.showMenu) GameCanvas.menu.doCloseMenu();
                         if (GameScr.findNPCInMap(18) == null || (GameScr.findNPCInMap(18) != null && GameScr.findNPCInMap(18).isHide)) PKThanMeo();
                         if (Char.myCharz().cx != 421 || Char.myCharz().cy != 408) Utilities.teleportMyChar(421, 408);
                         if (!GameCanvas.menu.showMenu) Service.gI().openMenu(18);
-                        if (GameCanvas.menu.menuItems.size() == 4 && ((Command)GameCanvas.menu.menuItems.elementAt(3)).caption == "Thách đấu\nThần Mèo")
-                        {
-                            GameCanvas.menu.menuSelectedItem = 3;
-                            GameCanvas.menu.performSelect();
-                            GameCanvas.menu.doCloseMenu();
-                        }
-                        else if (GameCanvas.menu.menuItems.size() == 2 && ((Command)GameCanvas.menu.menuItems.elementAt(0)).caption == "Đồng ý\ngiao đấu")
-                        {
-                            GameCanvas.menu.menuSelectedItem = 0;
-                            GameCanvas.menu.performSelect();
-                            GameCanvas.menu.doCloseMenu();
-                        }
+                        if (GameCanvas.menu.menuItems.size() == 4 && ((Command)GameCanvas.menu.menuItems.elementAt(3)).caption == "Thách đấu\nThần Mèo") Service.gI().confirmMenu(18, 3);
+                        else if (GameCanvas.menu.menuItems.size() == 2 && ((Command)GameCanvas.menu.menuItems.elementAt(0)).caption == "Đồng ý\ngiao đấu") Service.gI().confirmMenu(18, 0);
                     }
                     else
                     {

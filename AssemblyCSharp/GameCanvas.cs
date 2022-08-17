@@ -2436,6 +2436,7 @@ public class GameCanvas : IActionListener
 
 	public static Image loadImage(string path)
 	{
+		GameEvents.onLoadImageGameCanvas();
 		path = Main.res + "/x" + mGraphics.zoomLevel + path;
 		path = cutPng(path);
 		Image result = null;

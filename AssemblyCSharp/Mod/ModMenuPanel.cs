@@ -75,14 +75,18 @@ namespace Mod
         static void doFireModMenuBools()
         {
             if (GameCanvas.panel.selected < 0) return;
-            if (!ModMenu.modMenuItemBools[GameCanvas.panel.selected].isDisabled) ModMenu.modMenuItemBools[GameCanvas.panel.selected].Value = !ModMenu.modMenuItemBools[GameCanvas.panel.selected].Value;
-            onModMenuBoolsValueChanged();
+            if (!ModMenu.modMenuItemBools[GameCanvas.panel.selected].isDisabled)
+            {
+                ModMenu.modMenuItemBools[GameCanvas.panel.selected].setValue(!ModMenu.modMenuItemBools[GameCanvas.panel.selected].Value);
+                GameScr.info1.addInfo("Đã " + (ModMenu.modMenuItemBools[GameCanvas.panel.selected].Value ? "bật" : "tắt") + " " + ModMenu.modMenuItemBools[GameCanvas.panel.selected].Title + "!", 0);
+            }
         }
 
         static void doFireModMenuInts()
         {
             if (GameCanvas.panel.selected < 0) return;
             int selected = GameCanvas.panel.selected;
+            if (ModMenu.modMenuItemInts[selected].isDisabled) return;
             if (ModMenu.modMenuItemInts[selected].Values != null) ModMenu.modMenuItemInts[selected].SwitchSelection();
             else
             {
@@ -222,9 +226,10 @@ namespace Mod
                 int num2 = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
                 int num3 = GameCanvas.panel.wScroll;
                 int num4 = GameCanvas.panel.ITEM_HEIGHT - 1;
-                g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
-                g.fillRect(num, num2, num3, num4);
                 ModMenuItemInt modMenuItem = ModMenu.modMenuItemInts[i];
+                if (!modMenuItem.isDisabled) g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
+                else g.setColor((i != GameCanvas.panel.selected) ? new Color(0.54f, 0.51f, 0.46f) : new Color(0.61f, 0.63f, 0.18f));
+                g.fillRect(num, num2, num3, num4);
                 if (modMenuItem != null)
                 {
                     string description, str;
@@ -318,6 +323,8 @@ namespace Mod
             if (Char.myCharz().cPower > 2000000 || (Char.myCharz().cPower > 1500000 && TileMap.mapID != 111) || (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId < 9)) ModMenu.modMenuItemBools[6].isDisabled = true;
             else ModMenu.modMenuItemBools[6].isDisabled = false;
             AutoT77.isAutoT77 = ModMenu.modMenuItemBools[6].Value;
+
+            manageDisabledModMenuItems();
         }
 
         public static void onModMenuIntsValueChanged()
@@ -327,7 +334,7 @@ namespace Mod
             if (ModMenu.modMenuItemInts[2].SelectedValue == 2)
             {
                 AutoGoback.infoGoback = new AutoGoback.InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz().cx, Char.myCharz().cy);
-                GameScr.info1.addInfo($"Goback đến map: {TileMap.mapName}, khu: {TileMap.zoneID}, tọa độ: ({Char.myCharz().cx}, {Char.myCharz().cy})!", 0);
+                GameScr.info1.addInfo($"Goback đến map: {TileMap.mapName}, khu: {TileMap.zoneID}, tọa độ: ({AutoGoback.infoGoback.x}, {AutoGoback.infoGoback.y})!", 0);
             }
             if (ModMenu.modMenuItemInts[3].SelectedValue == 0) VietKeyHandler.VietModeEnabled = false;
             else
@@ -336,6 +343,17 @@ namespace Mod
                 VietKeyHandler.InputMethod = (InputMethods)(ModMenu.modMenuItemInts[3].SelectedValue - 1);
             }
 
+            manageDisabledModMenuItems();
+        }
+
+        public static void manageDisabledModMenuItems()
+        {
+            ModMenu.modMenuItemInts[0].isDisabled = ModMenu.modMenuItemBools[0].Value;
+            ModMenu.modMenuItemInts[2].isDisabled = ModMenu.modMenuItemBools[5].Value || ModMenu.modMenuItemBools[6].Value;
+            if (ModMenu.modMenuItemInts[2].isDisabled) ModMenu.modMenuItemInts[2].SelectedValue = 0;
+            ModMenu.modMenuItemInts[4].isDisabled = !Char.myCharz().havePet || ModMenu.modMenuItemBools[5].Value || ModMenu.modMenuItemBools[6].Value;
+            if (ModMenu.modMenuItemInts[4].isDisabled) ModMenu.modMenuItemInts[4].SelectedValue = 0;
+            ModMenu.modMenuItemInts[5].isDisabled = ModMenu.modMenuItemInts[4].SelectedValue == 0;
         }
     }
 }
