@@ -315,13 +315,9 @@ namespace Mod
             QualitySettings.vSyncCount = ModMenu.modMenuItemBools[0].Value ? 1 : 0;
             CharEffect.isEnabled = ModMenu.modMenuItemBools[1].Value;
             AutoAttack.gI.toggle(ModMenu.modMenuItemBools[2].Value);
-            ModMenu.modMenuItemBools[4].isDisabled = !ModMenu.modMenuItemBools[3].Value;
             ListCharsInMap.isEnabled = ModMenu.modMenuItemBools[3].Value;
             ListCharsInMap.isShowPet = ModMenu.modMenuItemBools[4].Value;
             AutoSS.isAutoSS = ModMenu.modMenuItemBools[5].Value;
-            if (Char.myCharz().taskMaint != null) ModMenu.modMenuItemBools[5].isDisabled = Char.myCharz().taskMaint.taskId > 11;
-            if (Char.myCharz().cPower > 2000000 || (Char.myCharz().cPower > 1500000 && TileMap.mapID != 111) || (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId < 9)) ModMenu.modMenuItemBools[6].isDisabled = true;
-            else ModMenu.modMenuItemBools[6].isDisabled = false;
             AutoT77.isAutoT77 = ModMenu.modMenuItemBools[6].Value;
 
             manageDisabledModMenuItems();
@@ -348,6 +344,11 @@ namespace Mod
 
         public static void manageDisabledModMenuItems()
         {
+            ModMenu.modMenuItemBools[4].isDisabled = !ModMenu.modMenuItemBools[3].Value;
+            if (Char.myCharz().taskMaint != null) ModMenu.modMenuItemBools[5].isDisabled = Char.myCharz().taskMaint.taskId > 11;
+            if (Char.myCharz().cPower > 2000000 || (Char.myCharz().cPower > 1500000 && TileMap.mapID != 111) || (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId < 9)) ModMenu.modMenuItemBools[6].isDisabled = true;
+            else ModMenu.modMenuItemBools[6].isDisabled = false;
+
             ModMenu.modMenuItemInts[0].isDisabled = ModMenu.modMenuItemBools[0].Value;
             ModMenu.modMenuItemInts[2].isDisabled = ModMenu.modMenuItemBools[5].Value || ModMenu.modMenuItemBools[6].Value;
             if (ModMenu.modMenuItemInts[2].isDisabled) ModMenu.modMenuItemInts[2].SelectedValue = 0;

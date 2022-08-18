@@ -105,46 +105,7 @@ namespace Mod
                     else if (GameCanvas.gameTick % (120 * Time.timeScale) == 0) Service.gI().requestChangeZone(mapZoneGoBack.Value, 0);
                 }
             }
-            if (!isPicking)
-            {
-                Char myPetInMap = GameScr.findCharInMap(-Char.myCharz().charID);
-                Char myPet = Char.myPetz();
-                if (myPet != null)
-                {
-                    if (myPet.cHP <= 0 || myPet.isDie)
-                    {
-                        if (!isMyPetDied)
-                        {
-                            isMyPetDied = true;
-                            if (!isAssignedLastXPet)
-                            {
-                                isAssignedLastXPet = true;
-                                lastXPet = Char.myCharz().cx;
-                            }
-                            Utilities.teleportMyChar(50);
-                        }
-                    }
-                    else if (isMyPetDied) isMyPetDied = false;
-                }
-                else if (myPetInMap != null)
-                {
-                    if (myPetInMap.cHP <= 0 || myPetInMap.isDie)
-                    {
-                        if (!isMyPetDied)
-                        {
-                            isMyPetDied = true;
-                            if (!isAssignedLastXPet)
-                            {
-                                isAssignedLastXPet = true;
-                                lastXPet = Char.myCharz().cx;
-                            }
-                            Utilities.teleportMyChar(50);
-                        }
-                    }
-                    else if (isMyPetDied) isMyPetDied = false;
-                }
-                else if (isMyPetDied) isMyPetDied = false;
-            }
+            TeleToSafePos();
             AutoSkill();
             if (isMyPetDied) return;
             else if (isAssignedLastXPet)
@@ -152,7 +113,7 @@ namespace Mod
                 isAssignedLastXPet = false;
                 Utilities.teleportMyChar(lastXPet);
             }
-            if (mSystem.currentTimeMillis() - lastTimePetFollow > 600000)
+            if (mSystem.currentTimeMillis() - lastTimePetFollow > 600000 || (GameScr.findCharInMap(-Char.myCharz().charID) != null && Utilities.getDistance(Char.myCharz(), GameScr.findCharInMap(-Char.myCharz().charID)) > 400))
             {
                 lastTimePetFollow = mSystem.currentTimeMillis();
                 Service.gI().petStatus(0);
@@ -192,6 +153,50 @@ namespace Mod
                         Service.gI().charMove();
                     }
                 }
+            }
+        }
+
+        private static void TeleToSafePos()
+        {
+            if (!isPicking && (Char.myCharz().arrItemBody[5] == null || Char.myCharz().arrItemBody[5].template.id != 449))
+            {
+                Char myPetInMap = GameScr.findCharInMap(-Char.myCharz().charID);
+                Char myPet = Char.myPetz();
+                if (myPet != null)
+                {
+                    if (myPet.cHP <= 0 || myPet.isDie)
+                    {
+                        if (!isMyPetDied)
+                        {
+                            isMyPetDied = true;
+                            if (!isAssignedLastXPet)
+                            {
+                                isAssignedLastXPet = true;
+                                lastXPet = Char.myCharz().cx;
+                            }
+                            Utilities.teleportMyChar(50);
+                        }
+                    }
+                    else if (isMyPetDied) isMyPetDied = false;
+                }
+                else if (myPetInMap != null)
+                {
+                    if (myPetInMap.cHP <= 0 || myPetInMap.isDie)
+                    {
+                        if (!isMyPetDied)
+                        {
+                            isMyPetDied = true;
+                            if (!isAssignedLastXPet)
+                            {
+                                isAssignedLastXPet = true;
+                                lastXPet = Char.myCharz().cx;
+                            }
+                            Utilities.teleportMyChar(50);
+                        }
+                    }
+                    else if (isMyPetDied) isMyPetDied = false;
+                }
+                else if (isMyPetDied) isMyPetDied = false;
             }
         }
 
@@ -283,7 +288,6 @@ namespace Mod
             {
                 isSaoMayLuoiThe = false;
                 Service.gI().selectSkill(skill1.template.id);
-                if (Char.myCharz().cFlag != 8) Service.gI().getFlag(1, 8);
                 switch (ModMenu.getStatusInt(5))
                 {
                     case 0:
@@ -292,11 +296,13 @@ namespace Mod
                         Service.gI().sendPlayerAttack(vecMob, new MyVector(), 1);
                         break;
                     case 1:
+                        if (Char.myCharz().cFlag != 8) Service.gI().getFlag(1, 8);
                         MyVector vecPet = new MyVector();
                         vecPet.addElement(GameScr.findCharInMap(-Char.myCharz().charID));
                         Service.gI().sendPlayerAttack(new MyVector(), vecPet, 2);
                         break;
                     case 2:
+                        if (Char.myCharz().cFlag != 8) Service.gI().getFlag(1, 8);
                         Service.gI().sendPlayerAttack(new MyVector(), Utilities.getMyVectorMe(), 2);
                         break;
                 }
