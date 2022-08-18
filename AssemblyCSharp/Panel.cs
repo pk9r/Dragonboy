@@ -5484,11 +5484,11 @@ public class Panel : IActionListener, IChatable
 		}
 		if (Char.myPetz().cDamFull > 0)
 		{
-			mFont.tahoma_7_yellow.drawString(g, mResources.hit_point + " :" + NinjaUtil.getMoneys(Char.myPetz().cDamFull), X + 60, 27, mFont.LEFT, mFont.tahoma_7_grey);
+			mFont.tahoma_7_yellow.drawString(g, mResources.hit_point + ": " + NinjaUtil.getMoneys(Char.myPetz().cDamFull), X + 60, 27, mFont.LEFT, mFont.tahoma_7_grey);
 		}
 		if (Char.myPetz().cMaxStamina > 0)
 		{
-			mFont.tahoma_7_yellow.drawString(g, mResources.vitality + Char.myPetz().cStamina + "/" + Char.myPetz().cMaxStamina + "(" + (Char.myPetz().cStamina / Char.myPetz().cMaxStamina * 100) + ")", X + 60, 38, mFont.LEFT, mFont.tahoma_7_grey);
+			mFont.tahoma_7_yellow.drawString(g, mResources.vitality + ": " + Char.myPetz().cStamina + "/" + Char.myPetz().cMaxStamina + " (" + Char.myPetz().cStamina * 100 / Char.myPetz().cMaxStamina + "%)", X + 60, 38, mFont.LEFT, mFont.tahoma_7_grey);
 			//g.drawImage(GameScr.imgMPLost, X + 100, 41, 0);
 			//int num = Char.myPetz().cStamina * mGraphics.getImageWidth(GameScr.imgMP) / Char.myPetz().cMaxStamina;
 			//g.setClip(100, X + 41, num, 20);

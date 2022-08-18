@@ -4,6 +4,8 @@ using System.IO;
 using UnityEngine;
 using Mod.Xmap;
 using Vietpad.InputMethod;
+using System;
+using System.Reflection;
 
 namespace Mod
 {
@@ -17,6 +19,8 @@ namespace Mod
     /// </remarks>
     public static class GameEvents
     {
+        private static bool isZoomLevelChecked;
+
         /// <summary>
         /// Kích hoạt khi người chơi chat.
         /// </summary>
@@ -40,8 +44,6 @@ namespace Mod
             HotkeyCommandHandler.loadDefalut();
             SocketClient.gI.initSender();
             ModMenu.LoadData();
-            VietKeyHandler.InputMethod = InputMethods.Telex;
-            VietKeyHandler.VietModeEnabled = true;
             VietKeyHandler.SmartMark = true;
         }
 
@@ -176,6 +178,7 @@ namespace Mod
         /// </summary>
         public static void onUpdateChatTextField(ChatTextField sender)
         {
+             if (!string.IsNullOrEmpty((string)typeof(TField).GetField("text", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(sender.tfChat))) GameCanvas.keyPressed[14] = false;
         }
 
         public static bool onClearAllRMS()
@@ -201,6 +204,7 @@ namespace Mod
             AutoGoback.update();
             AutoSS.update();
             AutoT77.update();
+            AutoPet.update();
             //NOTE onUpdateChatTextField không thể bấm tab.
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();
@@ -236,7 +240,7 @@ namespace Mod
             Service.gI().login("", "", GameMidlet.VERSION, 0);
             GameCanvas.startWaitDlg();
             TeleportMenu.LoadData();
-
+            AutoPet.isFirstTimeCkeckPet = true;
         }
 
         /// <summary>
@@ -349,6 +353,41 @@ namespace Mod
         public static void onUpdateKeyTouchControl()
         {
             ListCharsInMap.updateTouch();
+        }
+
+        public static void onSetPointItemMap(int xEnd, int yEnd)
+        {
+            if (xEnd == Char.myCharz().cx && yEnd == Char.myCharz().cy - 10)
+            {
+                if (AutoSS.isAutoSS) AutoSS.isPicking = false;
+                if (ModMenu.modMenuItemInts[4].SelectedValue != 0) AutoPet.isPicking = false;
+            }
+        }
+
+        public static bool onMenuStartAt(MyVector menuItems)
+        {
+            if (AutoSS.isAutoSS && menuItems.size() == 2 && ((Command)menuItems.elementAt(0)).caption == "Nhận quà" && ((Command)menuItems.elementAt(1)).caption == "Từ chối")
+            {
+                GameCanvas.menu.menuSelectedItem = 0;
+                ((Command)menuItems.elementAt(0)).performAction();
+                AutoSS.isNhapCodeTanThu = true;
+                return true;
+            }
+            return false;
+        }
+
+        public static void onAddInfoChar(string info)
+        {
+            if (info.Contains("Sao sư phụ không đánh đi") && ModMenu.modMenuItemInts[4].SelectedValue > 0) AutoPet.isSaoMayLuoiThe = true;
+        }
+
+        public static void onLoadImageGameCanvas()
+        {
+            if (!isZoomLevelChecked)
+            {
+                isZoomLevelChecked = true;
+                onCheckZoomLevel();
+            }
         }
     }
 }

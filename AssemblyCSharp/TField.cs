@@ -406,7 +406,7 @@ public class TField : IActionListener
 				text += this.text.Substring(caretPos, this.text.Length - caretPos);
 			}
 			this.text = text;
-			Mod.Utilities.toVietnamese(ref this.text);
+			Mod.Utilities.toVietnamese(ref this.text, inputType);
             caretPos = this.text.Length;
             //caretPos++;
             setPasswordTest();
@@ -477,7 +477,7 @@ public class TField : IActionListener
 			clear();
 			return true;
 		}
-		if (isQwerty && keyCode >= 32)
+		if (isQwerty && keyCode >= 32 && inputType != INPUT_TYPE_NUMERIC)
 		{
 			keyPressedAscii(keyCode);
 			return false;

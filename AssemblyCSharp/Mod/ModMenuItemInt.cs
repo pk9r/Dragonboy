@@ -18,14 +18,7 @@ namespace Mod
 
         public string Description { get; set; }
 
-        public ModMenuItemInt(string title, string[] values, int selectedValue, string rmsName)
-        {
-            Title = title;
-            Values = values;
-            SelectedValue = selectedValue;
-            RMSName = rmsName;
-            Description = null;
-        }
+        public bool isDisabled { get; set; }
 
         public ModMenuItemInt(string title, string[] values, string rmsName)
         {
@@ -34,15 +27,22 @@ namespace Mod
             RMSName = rmsName;
             SelectedValue = 0;
             Description = null;
+            isDisabled = false;
         }
 
-        public ModMenuItemInt(string title, string description, int selectedValue, string rmsName)
+        public ModMenuItemInt(string title, string[] values, int selectedValue, string rmsName) : this(title, values, rmsName)
         {
-            Title = title;
-            Values = null;
             SelectedValue = selectedValue;
-            RMSName = rmsName;
-            Description = description;
+        }        
+
+        public ModMenuItemInt(string title, string[] values, string rmsName, bool isdisabled) : this(title, values, rmsName)
+        {
+            isDisabled = isdisabled;
+        }
+
+        public ModMenuItemInt(string title, string[] values, int selectedValue, string rmsName, bool isdisabled) : this(title, values, rmsName, isdisabled)
+        {
+            SelectedValue = selectedValue;
         }
 
         public ModMenuItemInt(string title, string description, string rmsName)
@@ -52,6 +52,22 @@ namespace Mod
             SelectedValue = 0;
             RMSName = rmsName;
             Description = description;
+            isDisabled = false;
+        }
+
+        public ModMenuItemInt(string title, string description, int selectedValue, string rmsName) : this(title, description, rmsName)
+        {
+            SelectedValue = selectedValue;
+        }
+
+        public ModMenuItemInt(string title, string description, string rmsName, bool isdisabled) : this(title, description, rmsName)
+        {
+            isDisabled = isdisabled;
+        }
+
+        public ModMenuItemInt(string title, string description, int selectedValue, string rMSName, bool isdisabled) : this(title, description, selectedValue, rMSName)
+        {
+            isDisabled = isdisabled;
         }
 
         public override bool Equals(object obj)
@@ -65,7 +81,7 @@ namespace Mod
 
         public string getSelectedValue()
         {
-            return Values[SelectedValue].ToLower();
+            return Values[SelectedValue];
         }
 
         public void SwitchSelection()
@@ -75,11 +91,13 @@ namespace Mod
                 SelectedValue++;
                 if (SelectedValue > Values.Length - 1) SelectedValue = 0;
             }
+            ModMenuPanel.onModMenuIntsValueChanged();
         }
 
         public void setValue(int value)
         {
             SelectedValue = value;
+            ModMenuPanel.onModMenuIntsValueChanged();
         }
 
         public override int GetHashCode()

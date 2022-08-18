@@ -193,10 +193,10 @@ public class CrackBallScr : mScreen
 
 	private void setDotPosition()
 	{
-		if (GameCanvas.lowGraphic)
-		{
-			return;
-		}
+		//if (GameCanvas.lowGraphic)
+		//{
+		//	return;
+		//}
 		for (int i = 0; i < yArg.Length; i++)
 		{
 			yArg[i] = Res.abs(rO * Res.sin(angle) / 1024);

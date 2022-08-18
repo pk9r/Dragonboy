@@ -93,7 +93,7 @@ public class ItemMap : IMapObject
 
 	public void setPoint(int xEnd, int yEnd)
 	{
-		if (xEnd == Char.myCharz().cx && yEnd == Char.myCharz().cy - 10) AutoSS.isPicking = false;
+		GameEvents.onSetPointItemMap(xEnd, yEnd);
 		this.xEnd = xEnd;
 		this.yEnd = yEnd;
 		vx = xEnd - x >> 2;

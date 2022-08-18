@@ -315,6 +315,7 @@ namespace Mod
         /// <param name="y">Toạ độ y.</param>
         public static void teleportMyChar(int x, int y)
         {
+            Char.myCharz().currentMovePoint = null;
             Char.myCharz().cx = x;
             Char.myCharz().cy = y;
             Service.gI().charMove();
@@ -379,7 +380,7 @@ namespace Mod
         [ChatCommand("test")]
         public static void test()
         {
-            //GameScr.info1.addInfo($"cHP: {Char.myCharz().cHP}, dHP: {GameScr.gI().dHP}", 0);
+            
         }
 
         [ChatCommand("skey")]
@@ -468,6 +469,7 @@ namespace Mod
         {
             ChatTextField.gI().strChat = "Chat";
             ChatTextField.gI().tfChat.name = "chat";
+            ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_ANY);
             ChatTextField.gI().isShow = false;
         }
 
@@ -528,9 +530,9 @@ namespace Mod
             fileStream.Close();
         }
 
-        public static void toVietnamese(ref string str)
+        public static void toVietnamese(ref string str, int inputType)
         {
-            str = vietKeyHandler.toVietnamese(str);
+            if (inputType == TField.INPUT_TYPE_ANY) str = vietKeyHandler.toVietnamese(str);
         }
 
         /// <summary>

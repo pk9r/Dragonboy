@@ -5892,13 +5892,13 @@ public class GameScr : mScreen, IChatable
 						g.fillRect(xHP + 9, yHP + 10, 22, 20);
 						g.setColor(16777215);
 						g.fillRect(xHP + 9, yHP + 10 + ((num3 != 0) ? (20 - num3) : 0), 22, (num3 == 0) ? 20 : num3);
-                        if (ModMenu.getStatusInt("levelreducegraphics") <= 1) g.drawImage((mScreen.keyTouch != 10) ? imgHP1 : imgHP2, xHP, yHP, 0);
+                        g.drawImage((mScreen.keyTouch != 10) ? imgHP1 : imgHP2, xHP, yHP, 0);
 						mFont.tahoma_7_red.drawString(g, string.Empty + hpPotion, xHP + 20, yHP + 15, 2);
 					}
 					else if (isAnalog == 1)
 					{
 						g.drawImage((mScreen.keyTouch != 10) ? imgSkill : imgSkill2, xSkill + xHP - 1, yHP - 1, 0);
-                        if (ModMenu.getStatusInt("levelreducegraphics") <= 1) SmallImage.drawSmallImage(g, 542, xSkill + xHP + 3, yHP + 3, 0, 0);
+						SmallImage.drawSmallImage(g, 542, xSkill + xHP + 3, yHP + 3, 0, 0);
 						mFont.number_gray.drawString(g, string.Empty + hpPotion, xSkill + xHP + 22, yHP + 13, 1);
 						if (num2 < 10000)
 						{
@@ -5967,7 +5967,7 @@ public class GameScr : mScreen, IChatable
 					}
 					if (skill == Char.myCharz().myskill)
 					{
-                        if (ModMenu.getStatusInt("levelreducegraphics") <= 1) g.drawImage(imgSkill2, xSkill + xS[i] - 1, yS[i] - 1, 0);
+                        if (ModMenu.getStatusInt("levelreducegraphics") <= 2) g.drawImage(imgSkill2, xSkill + xS[i] - 1, yS[i] - 1, 0);
 						if (GameCanvas.isTouch && !Main.isPC)
 						{
 							g.drawRegion(Mob.imgHP, 0, 12, 9, 6, 0, xSkill + xS[i] + 8, yS[i] - 7, 0);

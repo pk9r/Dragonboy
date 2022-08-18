@@ -59,5 +59,11 @@ namespace Mod
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(RMSName);
             return hashCode;
         }
+
+        public void setValue(bool value)
+        {
+            Value = value;
+            ModMenuPanel.onModMenuBoolsValueChanged();
+        }
     }
 }

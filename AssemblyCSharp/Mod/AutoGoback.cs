@@ -65,14 +65,14 @@ namespace Mod
                 mapID = mapId;
                 zoneID = zoneId;
                 this.x = x;
-                this.y = y;
+                this.y = TileMap.tileTypeAt(x, y, 2) ? y : Utilities.getYGround(x);
             }
             public InfoGoback(int mapId, int zoneId, IMapObject mapObject)
             {
                 mapID = mapId;
                 zoneID = zoneId;
                 this.x = mapObject.getX();
-                this.y = mapObject.getY();
+                this.y = TileMap.tileTypeAt(x, mapObject.getY(), 2) ? mapObject.getY() : Utilities.getYGround(x);
             }
         }
 
