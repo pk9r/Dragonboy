@@ -5987,7 +5987,7 @@ public class Char : IMapObject
 			else if (cTypePk == 5)
 			{
 				g.setColor(Color.red);
-				if ((isCharge || isFlyAndCharge) && GameCanvas.gameTick % 8 >= 4) g.setColor(Color.white);
+				if ((isCharge || isFlyAndCharge || isStandAndCharge) && GameCanvas.gameTick % 8 >= 4) g.setColor(Color.white);
 			}
 			int height = 35;
 			int width = 12;

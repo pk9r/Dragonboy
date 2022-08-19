@@ -73,7 +73,7 @@ namespace Mod
                         skippedPetCount++;
                     }
                     else if (!CharExtensions.isBoss(ch)) charDesc = i + 1 - skippedPetCount + ". " + charDesc;
-                    if ((Char.myCharz().isStandAndCharge || Char.myCharz().isFlyAndCharge || (!Char.myCharz().isDie && Char.myCharz().cgender == 2 && Char.myCharz().myskill == Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[4]))) && SuicideRange.mapObjsInMyRange.Contains(ch)) charDesc += " - Trong tầm";
+                    if ((Char.myCharz().isStandAndCharge || (!Char.myCharz().isDie && Char.myCharz().cgender == 2 && Char.myCharz().myskill == Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[4]))) && SuicideRange.mapObjsInMyRange.Contains(ch)) charDesc += " - Trong tầm";
                     charDescriptions.Add(charDesc, mfont);
                     if (charDesc.Length > longestStr.Length) longestStr = charDesc;
                 }
@@ -85,7 +85,7 @@ namespace Mod
                     if (SuicideRange.isShowSuicideRange && SuicideRange.mapObjsInMyRange.Contains(listChars[i]))
                     {
                         g.setColor(new Color(0.5f, 0.5f, 0f, 1f));
-                        if ((Char.myCharz().isStandAndCharge || Char.myCharz().isFlyAndCharge) && GameCanvas.gameTick % 10 >= 5) g.setColor(new Color(1f, 0f, 0f, 1f));
+                        if (Char.myCharz().isStandAndCharge && GameCanvas.gameTick % 10 >= 5) g.setColor(new Color(1f, 0f, 0f, 1f));
                     }
                     g.fillRect(GameCanvas.w - paddingRight - longestStrWidth, startY + 1 + distanceBetweenLines * i, longestStrWidth, 7);
                     Char ch = listChars[i];
