@@ -205,6 +205,7 @@ namespace Mod
             AutoSS.update();
             AutoT77.update();
             AutoPet.update();
+            SuicideRange.update();
             //NOTE onUpdateChatTextField không thể bấm tab.
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();
@@ -330,6 +331,9 @@ namespace Mod
         {
             ListCharsInMap.paint(g);
             CharEffect.Paint(g);
+            SuicideRange.paint(g);
+            //CustomGraphics.DrawCircle(g, Char.myCharz().cx, Char.myCharz().cy, 100, 2);
+            //if (Char.myCharz().charFocus != null) mFont.tahoma_7_yellow.drawString(g, Utilities.getDistance(Char.myCharz(), Char.myCharz().charFocus).ToString(), GameCanvas.w / 2, 10, mFont.CENTER);
         }
 
         public static bool onUseSkill(Skill skill)

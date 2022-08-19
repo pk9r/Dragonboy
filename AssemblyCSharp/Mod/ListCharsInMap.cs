@@ -61,33 +61,32 @@ namespace Mod
                     if (ch.charEffectTime.hasNRD || CharExtensions.isBoss(ch)) mfont = mFont.tahoma_7b_red_tiny;
                     if (ch.cHP <= 0) mfont = mFont.tahoma_7_tiny;
                     string charDesc = ch.cName + " [" + NinjaUtil.getMoneys(ch.cHP) + "/" + NinjaUtil.getMoneys(ch.cHPFull) + "]";
-                    string petDesc = string.Empty;
                     if (CharExtensions.isNormalChar(ch, false, false))
                     {
                         charDesc = ch.cName + " [" + NinjaUtil.getMoneys(ch.cHP) + "/" + NinjaUtil.getMoneys(ch.cHPFull) + "] - " + CharExtensions.getGender(ch) + " [" + ch.charID + "]";
                     }
                     if (CharExtensions.isPet(ch))
                     {
-                        mFont mf = mFont.tahoma_7_blue_tiny;
-                        if (ch.cHP <= 0) mf = mFont.tahoma_7_tiny;
-                        petDesc = ch.cName.Replace("$", "").Replace("#", "") + " [" + NinjaUtil.getMoneys(ch.cHP) + "/" + NinjaUtil.getMoneys(ch.cHPFull) + " - " + CharExtensions.getGender(ch) + "]";
-                        charDescriptions.Add(petDesc, mf);
+                        mfont = mFont.tahoma_7_blue_tiny;
+                        if (ch.cHP <= 0) mfont = mFont.tahoma_7_tiny;
+                        charDesc = ch.cName.Replace("$", "").Replace("#", "") + " [" + NinjaUtil.getMoneys(ch.cHP) + "/" + NinjaUtil.getMoneys(ch.cHPFull) + " - " + CharExtensions.getGender(ch) + "]";
                         skippedPetCount++;
                     }
-                    else if (!CharExtensions.isBoss(ch))
-                    {
-                        string str = i + 1 - skippedPetCount + ". " + charDesc;
-                        charDescriptions.Add(str, mfont);
-                    }
-                    else charDescriptions.Add(charDesc, mfont);
+                    else if (!CharExtensions.isBoss(ch)) charDesc = i + 1 - skippedPetCount + ". " + charDesc;
+                    if ((Char.myCharz().isStandAndCharge || Char.myCharz().isFlyAndCharge || (!Char.myCharz().isDie && Char.myCharz().cgender == 2 && Char.myCharz().myskill == Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[4]))) && SuicideRange.mapObjsInMyRange.Contains(ch)) charDesc += " - Trong tầm";
+                    charDescriptions.Add(charDesc, mfont);
                     if (charDesc.Length > longestStr.Length) longestStr = charDesc;
-                    if (petDesc.Length > longestStr.Length) longestStr = petDesc;
                 }
                 for (int i = 0; i < listChars.Count; i++)
                 {
                     longestStrWidth = Utilities.getWidth(charDescriptions.ElementAt(i).Value, longestStr);
                     g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.6f));
-                    if (Char.myCharz().charFocus == listChars[i]) g.setColor(new Color(0.2f, 0f, 0f, 0.8f));
+                    if (Char.myCharz().charFocus == listChars[i]) g.setColor(new Color(1f, 1f, 0f, 0.3f));
+                    if (SuicideRange.isShowSuicideRange && SuicideRange.mapObjsInMyRange.Contains(listChars[i]))
+                    {
+                        g.setColor(new Color(0.5f, 0.5f, 0f, 1f));
+                        if ((Char.myCharz().isStandAndCharge || Char.myCharz().isFlyAndCharge) && GameCanvas.gameTick % 10 >= 5) g.setColor(new Color(1f, 0f, 0f, 1f));
+                    }
                     g.fillRect(GameCanvas.w - paddingRight - longestStrWidth, startY + 1 + distanceBetweenLines * i, longestStrWidth, 7);
                     Char ch = listChars[i];
                     charDescriptions.ElementAt(i).Value.drawString(g, charDescriptions.ElementAt(i).Key, GameCanvas.w - paddingRight, startY + distanceBetweenLines * i, mFont.RIGHT);

@@ -242,5 +242,12 @@ namespace Mod {
                 default: return Color.clear;
             }
     }
+
+        public static int getSuicideRange(Char @char)
+        {
+            int result = 880;
+            if (@char.me && @char.cgender == 2) result = 340 * (Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[4]).point - 1) / 3 + 200;
+            return result;
+        }
     }
 }

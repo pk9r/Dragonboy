@@ -319,6 +319,7 @@ namespace Mod
             ListCharsInMap.isShowPet = ModMenu.modMenuItemBools[4].Value;
             AutoSS.isAutoSS = ModMenu.modMenuItemBools[5].Value;
             AutoT77.isAutoT77 = ModMenu.modMenuItemBools[6].Value;
+            SuicideRange.isShowSuicideRange = ModMenu.modMenuItemBools[7].Value;
 
             manageDisabledModMenuItems();
         }

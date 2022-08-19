@@ -22,6 +22,7 @@ namespace Mod
         new ModMenuItemBoolean("Hiện đệ tử trong danh sách", "Hiện đệ tử trong danh sách nhân vật trong map (đệ tử không có sư phụ trong map không được hiển thị)", "isshowlistpet", true),
         new ModMenuItemBoolean("Auto up SS", "Auto up acc sơ sinh đến nhiệm vụ vào bang", "", true),
         new ModMenuItemBoolean("Auto T77", "Auto up Tàu Pảy Pảy", "", true),
+        new ModMenuItemBoolean("Hiện khoảng cách bom", "Hiển thị người, quái, boss... trong tầm bom", "isshowsuiciderange"),
         };
 
         /// <summary>

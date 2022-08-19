@@ -215,7 +215,7 @@ namespace Mod
 
             if (cMapID == 27 && textPopup == "Tường thành 1")
                 return;
-            
+
             if (cMapID == 70 && textPopup == "Vực cấm" ||
                 cMapID == 73 && textPopup == "Vực chết" ||
                 cMapID == 110 && textPopup == "Rừng tuyết")
@@ -380,7 +380,7 @@ namespace Mod
         [ChatCommand("test")]
         public static void test()
         {
-            
+
         }
 
         [ChatCommand("skey")]
@@ -593,6 +593,31 @@ namespace Mod
         public static int getDistance(IMapObject mapObject1, IMapObject mapObject2)
         {
             return Res.distance(mapObject1.getX(), mapObject1.getY(), mapObject2.getX(), mapObject2.getY());
+        }
+
+        [HotkeyCommand('w')]
+        public static void KhinhCong()
+        {
+            Char.myCharz().cy -= 50;
+            Service.gI().charMove();
+        }
+        [HotkeyCommand('s')]
+        public static void DonTho()
+        {
+            Char.myCharz().cy += 50;
+            Service.gI().charMove();
+        }
+        [HotkeyCommand('a')]
+        public static void DichTrai()
+        {
+            Char.myCharz().cx -= 50;
+            Service.gI().charMove();
+        }
+        [HotkeyCommand('d')]
+        public static void DichPhai()
+        {
+            Char.myCharz().cx += 50;
+            Service.gI().charMove();
         }
     }
 }
