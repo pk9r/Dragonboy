@@ -187,7 +187,7 @@ public class ChatTextField : IActionListener
         {
             return;
         }
-
+        this.parentScreen = parentScreen;
         right.caption = mResources.CLOSE;
         this.to = to;
         if (Main.isWindowsPhone)

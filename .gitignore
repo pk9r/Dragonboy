@@ -370,8 +370,4 @@ Game/ModData/log_socket_client.txt
 Game/asset/
 Game/ModData/hotkeyCommands.json
 Game/ModData/settings.json
-Game/Data/targetfps
-Game/Data/levelreducegraphics
-Game/Data/isshowlistchar
-Game/Data/isshowinfochar
-Game/Data/isvsync
+Game/Data/

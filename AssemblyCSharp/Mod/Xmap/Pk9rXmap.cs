@@ -38,11 +38,6 @@ namespace Mod.Xmap
                     XmapController.StartRunToMapId(idMap);
                 }
             }
-            else if (text == "csb")
-            {
-                IsUseCapsuleNormal = !IsUseCapsuleNormal;
-                GameScr.info1.addInfo("Sử dụng capsule thường Xmap: " + (IsUseCapsuleNormal ? "Bật" : "Tắt"), 0);
-            }
             else if (text == "csdb")
             {
                 IsUseCapsuleVip = !IsUseCapsuleVip;
