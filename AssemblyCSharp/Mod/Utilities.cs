@@ -380,7 +380,7 @@ namespace Mod
         [ChatCommand("test")]
         public static void test()
         {
-
+            Char.vItemTime.addElement(new ItemTime(722, true));
         }
 
         [ChatCommand("skey")]
@@ -619,5 +619,47 @@ namespace Mod
             Char.myCharz().cx += 50;
             Service.gI().charMove();
         }
+
+        public static short getNRSDId()
+        {
+            if (isMeInNRDMap()) return (short)(2400 - TileMap.mapID);
+            return 0;
+        }
+
+        public static bool isMeWearingActivationSet(int idSet)
+        {
+            int activateCount = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                Item item = Char.myCharz().arrItemBody[i];
+                if (item == null) return false;
+                if (item.itemOption == null) return false;
+                for (int j = 0; j < item.itemOption.Length; j++)
+                {
+                    if (item.itemOption[j].optionTemplate.id == idSet)
+                    {
+                        activateCount++;
+                        break;
+                    }
+                }
+            }
+            return activateCount == 5;
+        }
+
+        public static bool isMeWearingTXHSet()
+        {
+            return Char.myCharz().cgender == 0 && isMeWearingActivationSet(141);
+        }
+
+        public static bool isMeWearingCadicSet()
+        {
+            return Char.myCharz().cgender == 2 && isMeWearingActivationSet(0);  //TODO: Tìm id set Cadic
+        }
+
+        public static bool isMeWearingPikkoroDaimaoSet()
+        {
+            return Char.myCharz().cgender == 1 && isMeWearingActivationSet(0);  //TODO: Tìm id set Pikkoro Daimao
+        }
+
     }
 }

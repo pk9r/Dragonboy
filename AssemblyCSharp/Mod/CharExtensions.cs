@@ -31,7 +31,7 @@ namespace Mod {
 
         public static int getTimeMonkey(Char @char)
         {
-            int num = 61;
+            int num = 60;
             try
             {
                 if (!@char.me)
@@ -39,31 +39,31 @@ namespace Mod {
                     switch (@char.head)
                     {
                         case 192:
-                            num = 61;   //lv 1
+                            num = 60;   //lv 1
                             break;
                         case 195:
-                            num = 71;   //lv 2
+                            num = 70;   //lv 2
                             break;
                         case 196:
-                            num = 81;   //lv 3
+                            num = 80;   //lv 3
                             break;
                         case 199:
-                            num = 91;   //lv 4
+                            num = 90;   //lv 4
                             break;
                         case 197:
-                            num = 101;  //lv 5
+                            num = 100;  //lv 5
                             break;
                         case 200:
-                            num = 111;  //lv 6
+                            num = 110;  //lv 6
                             break;
                         case 198:
-                            num = 121;  //lv 7
+                            num = 120;  //lv 7
                             break;
                     }
                 }
                 else if (Char.myCharz().cgender == 2)
                 {
-                    num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[4]).point * 10 + 51;
+                    num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[3]).point * 10 + 50;
                 }
             }
             catch
@@ -80,16 +80,16 @@ namespace Mod {
             {
                 if (!@char.me)
                 {
-                    num = 47;
+                    num = 45;
                 }
                 else
                 {
-                    num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[7]).point * 5 + 12;
+                    num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[7]).point * 5 + 10;
                 }
             }
             catch
             {
-                num = 47;
+                num = 45;
             }
             return num;
         }
@@ -140,26 +140,36 @@ namespace Mod {
 
         public static int getTimeHypnotize(Char @char)
         {
-            int num = 13;
+            int num = 12;
             try
             {
                 if (!@char.me)
                 {
-                    num = 13;
-                    if (@char.charEffectTime.isHypnotizedByMe) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point + 6;
+                    num = 12;
+                    if (@char.charEffectTime.isHypnotizedByMe) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point + 5;
                 }
-                else if (Char.myCharz().cgender == 0) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point + 6;
+                else if (Char.myCharz().cgender == 0) num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point + 5;
             }
             catch
             {
-                num = 13;
+                num = 12;
             }
             return num;
         }
 
         public static int getTimeStone(Char @char)
         {
-            return 3;
+            return 5;
+        }
+
+        public static int getTimeHuytSao(Char @char)
+        {
+            return 31;
+        }
+
+        public static int getTimeChocolate(Char @char)
+        {
+            return 31;
         }
 
         public static string getNameWithoutClanTag(Char @char)
@@ -249,5 +259,6 @@ namespace Mod {
             if (@char.me && @char.cgender == 2) result = 340 * (Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[4]).point - 1) / 3 + 200;
             return result;
         }
+
     }
 }
