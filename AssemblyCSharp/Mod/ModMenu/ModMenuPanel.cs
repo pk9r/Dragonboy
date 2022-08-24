@@ -1,4 +1,5 @@
-﻿using Mod.Xmap;
+﻿using Mod.Images;
+using Mod.Xmap;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,9 @@ namespace Mod.ModMenu
                 case TeleportMenu.TYPE_TELEPORT_LIST:
                     TeleportMenu.setTabTeleportListPanel();
                     break;
+                case CustomBackground.TYPE_CUSTOM_BACKGROUND:
+                    CustomBackground.setTabCustomBackgroundPanel();
+                    break;
             }
         }
 
@@ -71,6 +75,9 @@ namespace Mod.ModMenu
                 case TeleportMenu.TYPE_TELEPORT_LIST:
                     TeleportMenu.doFireTeleportListPanel();
                     break;
+                case CustomBackground.TYPE_CUSTOM_BACKGROUND:
+                    CustomBackground.doFireCustomBackgroundListPanel();
+                    break;
             }
         }
 
@@ -94,7 +101,7 @@ namespace Mod.ModMenu
                     TeleportMenu.ShowMenu();
                     break;
                 case 2:
-                    //AutoPick.ShowMenu();
+                    CustomBackground.ShowMenu();
                     break;
             }
         }
@@ -134,6 +141,9 @@ namespace Mod.ModMenu
                     break;
                 case TeleportMenu.TYPE_TELEPORT_LIST:
                     TeleportMenu.paintTeleportListPanel(g);
+                    break;
+                case CustomBackground.TYPE_CUSTOM_BACKGROUND:
+                    CustomBackground.paintCustomBackgroundPanel(g);
                     break;
             }
         }
@@ -320,23 +330,56 @@ namespace Mod.ModMenu
             GameCanvas.panel.paintScrollArrow(g);
         }
 
+        public static bool paintTab(mGraphics g)
+        {
+            if (GameCanvas.panel.type == TeleportMenu.TYPE_TELEPORT_LIST)
+            {
+                g.setColor(13524492);
+                g.fillRect(GameCanvas.panel.X + 1, 78, GameCanvas.panel.W - 2, 1);
+                mFont.tahoma_7b_dark.drawString(g, "Danh sách nhân vật", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
+                return true;
+            }
+            else if (GameCanvas.panel.type == CustomBackground.TYPE_CUSTOM_BACKGROUND)
+            {
+                g.setColor(13524492);
+                g.fillRect(GameCanvas.panel.X + 1, 78, GameCanvas.panel.W - 2, 1);
+                mFont.tahoma_7b_dark.drawString(g, "Danh sách ảnh nền tùy chỉnh", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
+                return true;
+            }
+            return false;
+        }
+
         public void onChatFromMe(string text, string to)
         {
             if (!string.IsNullOrEmpty(ChatTextField.gI().tfChat.getText()) && !string.IsNullOrEmpty(text))
             {
-                int selected = GameCanvas.panel.selected;
-                if (ChatTextField.gI().strChat == ModMenuMain.inputModMenuItemInts[selected][0])
+                string strChat = ChatTextField.gI().strChat;
+                if (strChat == ModMenuMain.inputModMenuItemInts[0][0])
                 {
                     try
                     {
                         int value = int.Parse(text);
                         if (value > 60 || value < 5) throw new Exception();
-                        ModMenuMain.modMenuItemInts[selected].setValue(value);
+                        ModMenuMain.modMenuItemInts[0].setValue(value);
                         GameScr.info1.addInfo("Đã thay đổi mức FPS!", 0);
                     }
                     catch
                     {
                         GameCanvas.startOKDlg("Mức FPS không hợp lệ!");
+                    }
+                }
+                else if (strChat == ModMenuMain.inputModMenuItemInts[6][0])
+                {
+                    try
+                    {
+                        int value = int.Parse(text);
+                        if (value < 10) throw new Exception();
+                        ModMenuMain.modMenuItemInts[6].setValue(value);
+                        GameScr.info1.addInfo("Đã thay đổi thời gian đổi ảnh nền!", 0);
+                    }
+                    catch
+                    {
+                        GameCanvas.startOKDlg("Thời gian không hợp lệ!");
                     }
                 }
             }
@@ -360,6 +403,7 @@ namespace Mod.ModMenu
             AutoSS.isAutoSS = ModMenuMain.modMenuItemBools[5].Value;
             AutoT77.isAutoT77 = ModMenuMain.modMenuItemBools[6].Value;
             SuicideRange.isShowSuicideRange = ModMenuMain.modMenuItemBools[7].Value;
+            CustomBackground.isEnabled = ModMenuMain.modMenuItemBools[8].Value;
 
             manageDisabledModMenuItems();
         }
@@ -379,6 +423,7 @@ namespace Mod.ModMenu
                 VietKeyHandler.VietModeEnabled = true;
                 VietKeyHandler.InputMethod = (InputMethods)(ModMenuMain.modMenuItemInts[3].SelectedValue - 1);
             }
+            CustomBackground.inveralDrawImages = ModMenuMain.modMenuItemInts[6].SelectedValue * 1000;
 
             manageDisabledModMenuItems();
         }
@@ -389,6 +434,7 @@ namespace Mod.ModMenu
             if (Char.myCharz().taskMaint != null) ModMenuMain.modMenuItemBools[5].isDisabled = Char.myCharz().taskMaint.taskId > 11;
             if (Char.myCharz().cPower > 2000000 || (Char.myCharz().cPower > 1500000 && TileMap.mapID != 111) || (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId < 9)) ModMenuMain.modMenuItemBools[6].isDisabled = true;
             else ModMenuMain.modMenuItemBools[6].isDisabled = false;
+            ModMenuMain.modMenuItemBools[8].isDisabled = ModMenuMain.modMenuItemInts[1].SelectedValue > 0;
 
             ModMenuMain.modMenuItemInts[0].isDisabled = ModMenuMain.modMenuItemBools[0].Value;
             ModMenuMain.modMenuItemInts[2].isDisabled = ModMenuMain.modMenuItemBools[5].Value || ModMenuMain.modMenuItemBools[6].Value;

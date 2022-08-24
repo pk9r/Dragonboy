@@ -109,7 +109,11 @@ namespace Mod.ModHelper
         {
             var json = JsonMapper.ToJson(obj);
             byte[] msg = Encoding.ASCII.GetBytes(json);
-            _ = this.sender.Send(msg);
+            try
+            {
+                _ = this.sender.Send(msg);
+            }
+            catch (ObjectDisposedException) { }
         }
 
         protected override void action()

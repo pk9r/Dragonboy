@@ -200,7 +200,10 @@ public class Panel : IActionListener, IChatable
 
 	private static string[][] boxPet = mResources.petMainTab;
 
-	public string[][][] tabName = new string[28][][]
+	/// <summary>
+	/// Thêm custom panel cần tăng kích thước mảng này
+	/// </summary>
+	public string[][][] tabName = new string[29][][]
 	{
 		null,
 		null,
@@ -229,7 +232,8 @@ public class Panel : IActionListener, IChatable
 		new string[1][] { new string[1] { string.Empty } },
 		new string[1][] { new string[1] { string.Empty } },
 		new string[1][] { new string[1] { string.Empty } },
-		new string[1][] { new string[1] { string.Empty } }
+		new string[1][] { new string[1] { string.Empty } },
+		new string[1][] { new string[1] { string.Empty } },
     };
 
 	private static sbyte BOX_BAG = 0;
@@ -5359,13 +5363,7 @@ public class Panel : IActionListener, IChatable
 			g.fillRect(X + 1, 78, W - 2, 1);
 			return;
 		}
-		if (type == TeleportMenu.TYPE_TELEPORT_LIST)
-		{
-			g.setColor(13524492);
-			g.fillRect(X + 1, 78, W - 2, 1);
-			mFont.tahoma_7b_dark.drawString(g, "Danh sách nhân vật", xScroll + wScroll / 2, 59, mFont.CENTER);
-			return;
-		}
+		if (ModMenuPanel.paintTab(g)) return;
 		if (currentTabIndex == 3 && mainTabName.Length != 4)
 		{
 			g.translate(-cmx, 0);

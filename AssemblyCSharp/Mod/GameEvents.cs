@@ -7,6 +7,7 @@ using Vietpad.InputMethod;
 using System;
 using System.Reflection;
 using Mod.ModMenu;
+using Mod.Images;
 
 namespace Mod
 {
@@ -45,6 +46,7 @@ namespace Mod
             HotkeyCommandHandler.loadDefalut();
             SocketClient.gI.initSender();
             ModMenuMain.LoadData();
+            CustomBackground.LoadData();
             VietKeyHandler.SmartMark = true;
         }
 
@@ -57,6 +59,7 @@ namespace Mod
             SocketClient.gI.close();
             ModMenuMain.SaveData();
             TeleportMenu.SaveData();
+            CustomBackground.SaveData();
             return false;
         }
 
@@ -346,6 +349,7 @@ namespace Mod
         public static void onFixedUpdateMain()
         {
             Pk9rXmap.Update();
+            CustomBackground.update();
         }
 
         public static void onAddInfoMe(string str)
@@ -393,6 +397,16 @@ namespace Mod
                 isZoomLevelChecked = true;
                 onCheckZoomLevel();
             }
+        }
+
+        public static bool onPaintBgGameScr(mGraphics g)
+        {
+            if (CustomBackground.isEnabled && CustomBackground.listBackgroundImages.Count > 0 && !ModMenuMain.modMenuItemBools[8].isDisabled)
+            {
+                CustomBackground.paint(g);
+                return true;
+            }
+            return false;
         }
     }
 }
