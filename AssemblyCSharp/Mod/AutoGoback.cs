@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using Mod.ModMenu;
 
 namespace Mod
 {
@@ -16,7 +17,7 @@ namespace Mod
         static long lastTimeGoback;
         public static void update()
         {
-            if (ModMenu.getStatusInt(2) == 0) return;
+            if (ModMenuMain.getStatusInt(2) == 0) return;
             if (GameCanvas.gameTick % (30 * Time.timeScale) == 0)
             {
                 if (!isGobacking)
@@ -26,7 +27,7 @@ namespace Mod
                         if (mSystem.currentTimeMillis() - lastTimeGoback > 4000) lastTimeGoback = mSystem.currentTimeMillis();
                         if (mSystem.currentTimeMillis() - lastTimeGoback > 3000)
                         {
-                            if (ModMenu.getStatusInt(2) == 1) infoGoback = new InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz());
+                            if (ModMenuMain.getStatusInt(2) == 1) infoGoback = new InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz());
                             Service.gI().returnTownFromDead();
                             isGobacking = true;
                         }

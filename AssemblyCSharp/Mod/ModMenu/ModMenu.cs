@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Mod
+namespace Mod.ModMenu
 {
-    public class ModMenu
+    public class ModMenuMain
     {
         public const int TYPE_MOD_MENU = 26;
 
@@ -19,9 +19,9 @@ namespace Mod
         new ModMenuItemBoolean("Hiện thông tin nhân vật", "Hiện gần chính xác thời gian NRD, khiên, khỉ, huýt sáo... của nhân vật đang focus", true, "isshowinfochar"),
         new ModMenuItemBoolean("Tự đánh", "Bật/tắt tự đánh", ""),
         new ModMenuItemBoolean("Hiện danh sách nhân vật", "Hiện danh sách nhân vật trong map", "isshowlistchar"),
-        new ModMenuItemBoolean("Hiện đệ tử trong danh sách", "Hiện đệ tử trong danh sách nhân vật trong map (đệ tử không có sư phụ trong map không được hiển thị)", "isshowlistpet", true),
-        new ModMenuItemBoolean("Auto up SS", "Auto up acc sơ sinh đến nhiệm vụ vào bang", "", true),
-        new ModMenuItemBoolean("Auto T77", "Auto up Tàu Pảy Pảy", "", true),
+        new ModMenuItemBoolean("Hiện đệ tử trong danh sách", "Hiện đệ tử trong danh sách nhân vật trong map (đệ tử không có sư phụ trong map không được hiển thị)", "isshowlistpet", true, "Bạn chưa bật \"Hiện danh sách nhân vật\"!"),
+        new ModMenuItemBoolean("Auto up SS", "Auto up acc sơ sinh đến nhiệm vụ vào bang", "", true, "Bạn đã qua nhiệm vụ sơ sinh!"),
+        new ModMenuItemBoolean("Auto T77", "Auto up Tàu Pảy Pảy", "", true, "Bạn không thể vào map Đông Karin!"),
         new ModMenuItemBoolean("Hiện khoảng cách bom", "Hiển thị người, quái, boss... trong tầm bom", "isshowsuiciderange"),
         };
 
@@ -30,12 +30,12 @@ namespace Mod
         /// </summary>
         public static ModMenuItemInt[] modMenuItemInts = new ModMenuItemInt[]
         {
-        new ModMenuItemInt("FPS", "FPS mục tiêu (cần tắt Vsync để thay đổi có hiệu lực)", 60, "targetfps"),
+        new ModMenuItemInt("FPS", "FPS mục tiêu (cần tắt Vsync để thay đổi có hiệu lực)", 60, "targetfps", "Bạn chưa tắt Vsync!"),
         new ModMenuItemInt("Giảm đồ họa", new string[]{"Đang tắt", "Đang bật mức 1", "Đang bật mức 2", "Đang bật mức 3"}, 0, "levelreducegraphics"),
         new ModMenuItemInt("Goback", new string[]{"Đang tắt", "Đang bật (goback tới chỗ cũ khi chết)", "Đang bật (goback tới map cố định)" }, 0, ""),
         new ModMenuItemInt("Gõ tiếng Việt", new string[]{"Đang tắt", "Đang bật kiểu gõ TELEX", "Đang bật kiểu gõ VIQR", "Đang bật kiểu gõ VNI"}, "vietmode"),
-        new ModMenuItemInt("Auto up đệ tử", new string[]{"Đang tắt", "Đang bật up đệ thường", "Đang bật up đệ né siêu quái", "Đang bật up đệ kaioken"}, ""),
-        new ModMenuItemInt("Đánh khi đệ cần", new string[]{"Đánh quái gần nhất", "Đánh đệ (yêu cầu bật cờ xám)", "Đánh bản thân (yêu cầu bật cờ xám)"}, "modeautopet", true),
+        new ModMenuItemInt("Auto up đệ tử", new string[]{"Đang tắt", "Đang bật up đệ thường", "Đang bật up đệ né siêu quái", "Đang bật up đệ kaioken"}, "", "Bạn không có đệ tử!"),
+        new ModMenuItemInt("Đánh khi đệ cần", new string[]{"Đánh quái gần nhất", "Đánh đệ (yêu cầu bật cờ xám)", "Đánh bản thân (yêu cầu bật cờ xám)"}, "modeautopet", true, "Bạn chưa bật \"Auto up đệ tử\"!"),
         };
 
         public static ModMenuItemFunction[] modMenuItemFunctions = new ModMenuItemFunction[]

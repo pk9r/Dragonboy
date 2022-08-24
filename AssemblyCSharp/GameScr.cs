@@ -1,6 +1,7 @@
 using System;
 using Assets.src.g;
 using Mod;
+using Mod.ModMenu;
 
 public class GameScr : mScreen, IChatable
 {
@@ -4704,7 +4705,7 @@ public class GameScr : mScreen, IChatable
 				effect.paint(g);
 			}
 		}
-		if (!GameCanvas.lowGraphic && ModMenu.getStatusInt("levelreducegraphics") == 0)
+		if (!GameCanvas.lowGraphic && ModMenuMain.getStatusInt("levelreducegraphics") == 0)
 		{
 			for (int i = 0; i < Effect2.vAnimateEffect.size(); i++)
 			{
@@ -4729,7 +4730,7 @@ public class GameScr : mScreen, IChatable
 				bgItem.paint(g);
 			}
 		}
-		if (TileMap.mapID == 48 && layer == 3 && !GameCanvas.lowGraphic && GameCanvas.bgW != null && GameCanvas.bgW[0] != 0 && ModMenu.getStatusInt("levelreducegraphics") == 0)
+		if (TileMap.mapID == 48 && layer == 3 && !GameCanvas.lowGraphic && GameCanvas.bgW != null && GameCanvas.bgW[0] != 0 && ModMenuMain.getStatusInt("levelreducegraphics") == 0)
 		{
 			for (int j = 0; j < TileMap.pxw / GameCanvas.bgW[0] + 1; j++)
 			{
@@ -4850,7 +4851,7 @@ public class GameScr : mScreen, IChatable
 			Char.myCharz().paintHeadWithXY(g, Char.myCharz().cx, Char.myCharz().cy, 0);
 		}
 		paintBgItem(g, 2);
-		if (Char.myCharz().cmdMenu != null && GameCanvas.isTouch && ModMenu.getStatusInt("levelreducegraphics") <= 1)
+		if (Char.myCharz().cmdMenu != null && GameCanvas.isTouch && ModMenuMain.getStatusInt("levelreducegraphics") <= 1)
 		{
 			if (mScreen.keyTouch == 20)
 			{
@@ -5073,7 +5074,7 @@ public class GameScr : mScreen, IChatable
 					int num3 = 100 + i * (mGraphics.getImageWidth(TileMap.imgLight) + 50) - cmx / 2;
 					int num4 = -20;
 					int imageWidth = mGraphics.getImageWidth(TileMap.imgLight);
-					if (num3 + imageWidth >= cmx && num3 <= cmx + GameCanvas.w && num4 + mGraphics.getImageHeight(TileMap.imgLight) >= cmy && num4 <= cmy + GameCanvas.h && ModMenu.getStatusInt("levelreducegraphics") <= 1)
+					if (num3 + imageWidth >= cmx && num3 <= cmx + GameCanvas.w && num4 + mGraphics.getImageHeight(TileMap.imgLight) >= cmy && num4 <= cmy + GameCanvas.h && ModMenuMain.getStatusInt("levelreducegraphics") <= 1)
 					{
 						g.drawImage(TileMap.imgLight, 100 + i * (mGraphics.getImageWidth(TileMap.imgLight) + 50) - cmx / 2, num4, 0);
 					}
@@ -5594,7 +5595,7 @@ public class GameScr : mScreen, IChatable
 			return;
 		}
 		resetTranslate(g);
-		if (!TileMap.isOfflineMap() && !isVS() && ModMenu.getStatusInt("levelreducegraphics") <= 1)
+		if (!TileMap.isOfflineMap() && !isVS() && ModMenuMain.getStatusInt("levelreducegraphics") <= 1)
 		{
 			if (mScreen.keyTouch == 15 || mScreen.keyMouse == 15)
 			{
@@ -5667,7 +5668,7 @@ public class GameScr : mScreen, IChatable
 			{
 				g.setClip(mGraphics.getImageWidth(imgPanel) - 95, 0, 95, 100);
 			}
-			if (ModMenu.getStatusInt("levelreducegraphics") <= 1) g.drawImage(imgPanel, 0, 0, 0);
+			if (ModMenuMain.getStatusInt("levelreducegraphics") <= 1) g.drawImage(imgPanel, 0, 0, 0);
 			if (isLeft)
 			{
 				g.setClip(83, 5, num, 10);
@@ -5755,7 +5756,7 @@ public class GameScr : mScreen, IChatable
 
 	private void paintInfoBar(mGraphics g)
 	{
-		mFont font = ModMenu.getStatusInt("levelreducegraphics") > 1 ? mFont.tahoma_7b_white : mFont.tahoma_7b_green2;
+		mFont font = ModMenuMain.getStatusInt("levelreducegraphics") > 1 ? mFont.tahoma_7b_white : mFont.tahoma_7b_green2;
         resetTranslate(g);
 		if (isVS() && Char.myCharz().charFocus != null)
 		{
@@ -5869,7 +5870,7 @@ public class GameScr : mScreen, IChatable
 			}
 			if (!GameCanvas.isTouch)
 			{
-				if (ModMenu.getStatusInt("levelreducegraphics") <= 1)
+				if (ModMenuMain.getStatusInt("levelreducegraphics") <= 1)
 				{
 					g.drawImage((mScreen.keyTouch != 10) ? imgSkill : imgSkill2, xSkill + xHP - 1, yHP - 1, 0);
 					SmallImage.drawSmallImage(g, 542, xSkill + xHP + 3, yHP + 3, 0, 0);
@@ -5916,7 +5917,7 @@ public class GameScr : mScreen, IChatable
 						g.fillRect(xHP + 9, yHP + 10, 22, 20);
 						g.setColor(16777215);
 						g.fillRect(xHP + 9, yHP + 10 + ((num3 != 0) ? (20 - num3) : 0), 22, (num3 == 0) ? 20 : num3);
-                        if (ModMenu.getStatusInt("levelreducegraphics") <= 1) g.drawImage((mScreen.keyTouch != 10) ? imgHP1 : imgHP2, xHP, yHP, 0);
+                        if (ModMenuMain.getStatusInt("levelreducegraphics") <= 1) g.drawImage((mScreen.keyTouch != 10) ? imgHP1 : imgHP2, xHP, yHP, 0);
 						mFont.tahoma_7_red.drawString(g, string.Empty + hpPotion, xHP + 20, yHP + 15, 2);
 					}
 					else
@@ -5925,7 +5926,7 @@ public class GameScr : mScreen, IChatable
 						g.fillRect(xHP + 10, yHP + 10, 20, 18);
 						g.setColor(16777215);
 						g.fillRect(xHP + 10, yHP + 10 + ((num3 != 0) ? (20 - num3) : 0), 20, (num3 == 0) ? 18 : num3);
-                        if (ModMenu.getStatusInt("levelreducegraphics") <= 1) g.drawImage((mScreen.keyTouch != 10) ? imgHP3 : imgHP4, xHP + 20, yHP + 20, mGraphics.HCENTER | mGraphics.VCENTER);
+                        if (ModMenuMain.getStatusInt("levelreducegraphics") <= 1) g.drawImage((mScreen.keyTouch != 10) ? imgHP3 : imgHP4, xHP + 20, yHP + 20, mGraphics.HCENTER | mGraphics.VCENTER);
 						mFont.tahoma_7_red.drawString(g, string.Empty + hpPotion, xHP + 20, yHP + 15, 2);
 					}
 				}
@@ -5959,7 +5960,7 @@ public class GameScr : mScreen, IChatable
 					Skill skill = array[i];
 					if (skill != Char.myCharz().myskill)
 					{
-                        if (ModMenu.getStatusInt("levelreducegraphics") <= 1) g.drawImage(imgSkill, xSkill + xS[i] - 1, yS[i] - 1, 0);
+                        if (ModMenuMain.getStatusInt("levelreducegraphics") <= 1) g.drawImage(imgSkill, xSkill + xS[i] - 1, yS[i] - 1, 0);
 					}
 					if (skill == null)
 					{
@@ -5967,7 +5968,7 @@ public class GameScr : mScreen, IChatable
 					}
 					if (skill == Char.myCharz().myskill)
 					{
-                        if (ModMenu.getStatusInt("levelreducegraphics") <= 2) g.drawImage(imgSkill2, xSkill + xS[i] - 1, yS[i] - 1, 0);
+                        if (ModMenuMain.getStatusInt("levelreducegraphics") <= 2) g.drawImage(imgSkill2, xSkill + xS[i] - 1, yS[i] - 1, 0);
 						if (GameCanvas.isTouch && !Main.isPC)
 						{
 							g.drawRegion(Mob.imgHP, 0, 12, 9, 6, 0, xSkill + xS[i] + 8, yS[i] - 7, 0);
@@ -6949,7 +6950,7 @@ public class GameScr : mScreen, IChatable
 
 	public void paintChatVip(mGraphics g)
 	{
-		if (ModMenu.getStatusInt("levelreducegraphics") > 2) return;
+		if (ModMenuMain.getStatusInt("levelreducegraphics") > 2) return;
 		if (vChatVip.size() != 0 && isPaintChatVip)
 		{
 			g.setClip(0, GameCanvas.h - 13, GameCanvas.w, 15);

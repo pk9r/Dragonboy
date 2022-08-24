@@ -6,6 +6,7 @@ using Mod.Xmap;
 using Vietpad.InputMethod;
 using System;
 using System.Reflection;
+using Mod.ModMenu;
 
 namespace Mod
 {
@@ -43,7 +44,7 @@ namespace Mod
             ChatCommandHandler.loadDefalut();
             HotkeyCommandHandler.loadDefalut();
             SocketClient.gI.initSender();
-            ModMenu.LoadData();
+            ModMenuMain.LoadData();
             VietKeyHandler.SmartMark = true;
         }
 
@@ -54,7 +55,7 @@ namespace Mod
         public static bool onGameClosing()
         {
             SocketClient.gI.close();
-            ModMenu.SaveData();
+            ModMenuMain.SaveData();
             TeleportMenu.SaveData();
             return false;
         }
@@ -316,7 +317,7 @@ namespace Mod
         {
             if (npc.avatar == 1139 || AutoSS.isAutoSS || AutoT77.isAutoT77)
             {
-                GameScr.info1.addInfo(chat, 0);
+                if (!chat.Contains("NGOCRONGONLINE.COM") && !chat.Contains("Hack, Mod")) GameScr.info1.addInfo(chat, 0);
                 return true;
             }
             return false;
@@ -364,7 +365,7 @@ namespace Mod
             if (xEnd == Char.myCharz().cx && yEnd == Char.myCharz().cy - 10)
             {
                 if (AutoSS.isAutoSS) AutoSS.isPicking = false;
-                if (ModMenu.modMenuItemInts[4].SelectedValue != 0) AutoPet.isPicking = false;
+                if (ModMenuMain.modMenuItemInts[4].SelectedValue != 0) AutoPet.isPicking = false;
             }
         }
 
@@ -382,7 +383,7 @@ namespace Mod
 
         public static void onAddInfoChar(string info)
         {
-            if (info.Contains("Sao sư phụ không đánh đi") && ModMenu.modMenuItemInts[4].SelectedValue > 0) AutoPet.isSaoMayLuoiThe = true;
+            if (info.Contains("Sao sư phụ không đánh đi") && ModMenuMain.modMenuItemInts[4].SelectedValue > 0) AutoPet.isSaoMayLuoiThe = true;
         }
 
         public static void onLoadImageGameCanvas()

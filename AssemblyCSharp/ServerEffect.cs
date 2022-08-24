@@ -1,4 +1,5 @@
 using Mod;
+using Mod.ModMenu;
 
 public class ServerEffect : Effect2
 {
@@ -94,7 +95,7 @@ public class ServerEffect : Effect2
 
 	public override void paint(mGraphics g)
 	{
-        if (ModMenu.getStatusInt("levelreducegraphics") > 1) return;
+        if (ModMenuMain.getStatusInt("levelreducegraphics") > 1) return;
         if (mGraphics.zoomLevel == 1)
 		{
 			GameScr.countEff++;

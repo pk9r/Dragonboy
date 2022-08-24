@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Mod
+namespace Mod.ModMenu
 {
     public class ModMenuItemInt
     {
@@ -20,6 +20,8 @@ namespace Mod
 
         public bool isDisabled { get; set; }
 
+        public string DisabledReason { get; set; }
+
         public ModMenuItemInt(string title, string[] values, string rmsName)
         {
             Title = title;
@@ -30,20 +32,42 @@ namespace Mod
             isDisabled = false;
         }
 
+        public ModMenuItemInt(string title, string[] values, string rmsName, string disabledreason) : this(title, values, rmsName)
+        {
+            DisabledReason = disabledreason;
+        }
+
         public ModMenuItemInt(string title, string[] values, int selectedValue, string rmsName) : this(title, values, rmsName)
         {
             SelectedValue = selectedValue;
-        }        
+        }
+
+        public ModMenuItemInt(string title, string[] values, int selectedValue, string rmsName, string disabledreason) : this(title, values, selectedValue, rmsName)
+        {
+            DisabledReason = disabledreason;
+        }
 
         public ModMenuItemInt(string title, string[] values, string rmsName, bool isdisabled) : this(title, values, rmsName)
         {
             isDisabled = isdisabled;
         }
 
+        public ModMenuItemInt(string title, string[] values, string rmsName, bool isdisabled, string disabledreason) : this(title, values, rmsName, isdisabled)
+        {
+            DisabledReason = disabledreason;
+        }
+
         public ModMenuItemInt(string title, string[] values, int selectedValue, string rmsName, bool isdisabled) : this(title, values, rmsName, isdisabled)
         {
             SelectedValue = selectedValue;
         }
+
+        public ModMenuItemInt(string title, string[] values, int selectedValue, string rmsName, bool isdisabled, string disabledreason) : this(title, values, selectedValue, rmsName, isdisabled)
+        {
+            DisabledReason = disabledreason;
+        }
+
+
 
         public ModMenuItemInt(string title, string description, string rmsName)
         {
@@ -55,9 +79,19 @@ namespace Mod
             isDisabled = false;
         }
 
+        public ModMenuItemInt(string title, string description, string rmsName, string disabledreason) : this(title, description, rmsName)
+        {
+            DisabledReason = disabledreason;
+        }
+
         public ModMenuItemInt(string title, string description, int selectedValue, string rmsName) : this(title, description, rmsName)
         {
             SelectedValue = selectedValue;
+        }
+
+        public ModMenuItemInt(string title, string description, int selectedValue, string rmsName, string disabledreason) : this(title, description, selectedValue, rmsName)
+        {
+            DisabledReason = disabledreason;
         }
 
         public ModMenuItemInt(string title, string description, string rmsName, bool isdisabled) : this(title, description, rmsName)
@@ -65,9 +99,19 @@ namespace Mod
             isDisabled = isdisabled;
         }
 
-        public ModMenuItemInt(string title, string description, int selectedValue, string rMSName, bool isdisabled) : this(title, description, selectedValue, rMSName)
+        public ModMenuItemInt(string title, string description, string rmsName, bool isdisabled, string disabledreason) : this(title, description, rmsName, isdisabled)
+        {
+            DisabledReason = disabledreason;
+        }
+
+        public ModMenuItemInt(string title, string description, int selectedValue, string rmsName, bool isdisabled) : this(title, description, selectedValue, rmsName)
         {
             isDisabled = isdisabled;
+        }
+
+        public ModMenuItemInt(string title, string description, int selectedValue, string rmsName, bool isdisabled, string disabledreason) : this(title, description, selectedValue, rmsName, isdisabled)
+        {
+            DisabledReason = disabledreason;
         }
 
         public override bool Equals(object obj)

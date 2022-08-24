@@ -1,6 +1,7 @@
 using System;
 using Assets.src.g;
 using Mod;
+using Mod.ModMenu;
 using UnityEngine;
 
 public class Mob : IMapObject
@@ -1375,13 +1376,13 @@ public class Mob : IMapObject
 			return;
 		}
 		g.translate(0, GameCanvas.transY);
-		if (ModMenu.getStatusInt("levelreducegraphics") == 2)
+		if (ModMenuMain.getStatusInt("levelreducegraphics") == 2)
 		{
 			g.setColor(Color.yellow);
 			if (levelBoss != 0) g.setColor(Color.red);
 			g.drawRect(Mathf.RoundToInt((x - w / 2)), y - h - 15, w, h);
 		}
-		else if (ModMenu.getStatusInt("levelreducegraphics") < 3)
+		else if (ModMenuMain.getStatusInt("levelreducegraphics") < 3)
         {
 		    if (!changBody)
 			{

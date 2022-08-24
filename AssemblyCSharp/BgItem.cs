@@ -1,4 +1,5 @@
 using Mod;
+using Mod.ModMenu;
 
 public class BgItem
 {
@@ -139,7 +140,7 @@ public class BgItem
 
 	public void paint(mGraphics g)
 	{
-		if (Char.isLoadingMap || (idImage == 279 && GameScr.gI().tMabuEff >= 110) || ModMenu.getStatusInt("levelreducegraphics") > 0)
+		if (Char.isLoadingMap || (idImage == 279 && GameScr.gI().tMabuEff >= 110) || ModMenuMain.getStatusInt("levelreducegraphics") > 0)
 		{
 			return;
 		}

@@ -2,6 +2,7 @@ using System;
 using Assets.src.e;
 using Assets.src.g;
 using Mod;
+using Mod.ModMenu;
 using UnityEngine;
 
 public class Char : IMapObject
@@ -3577,7 +3578,7 @@ public class Char : IMapObject
 
 	public void updateSuperEff()
 	{
-        if (ModMenu.getStatusInt("levelreducegraphics") > 1) return;
+        if (ModMenuMain.getStatusInt("levelreducegraphics") > 1) return;
         if (GameCanvas.panel.isShow || isCopy || isFusion || isSetPos || isPet || isMiniPet || isMonkey == 1)
 		{
 			return;
@@ -5332,7 +5333,7 @@ public class Char : IMapObject
 
 	public virtual void paint(mGraphics g)
 	{
-		if (isHide || ModMenu.getStatusInt("levelreducegraphics") > 2)
+		if (isHide || ModMenuMain.getStatusInt("levelreducegraphics") > 2)
 		{
 			return;
 		}
@@ -5358,7 +5359,7 @@ public class Char : IMapObject
 			{
 				petFollow.paint(g);
 			}
-			if (ModMenu.getStatusInt("levelreducegraphics") > 1)
+			if (ModMenuMain.getStatusInt("levelreducegraphics") > 1)
 			{
                 g.setColor(65421);
                 g.drawRect(xMount - 20, yMount, 40, 15);
@@ -5380,7 +5381,7 @@ public class Char : IMapObject
 					g.drawLine(cx, cy - ch / 2, mobHold.x, mobHold.y - mobHold.h / 2);
 				}
 			}
-			if (ModMenu.getStatusInt("levelreducegraphics") <= 1)
+			if (ModMenuMain.getStatusInt("levelreducegraphics") <= 1)
 			{
 				paintSuperEffBehind(g);
 				paintAuraBehind(g);
@@ -5426,11 +5427,11 @@ public class Char : IMapObject
 				{
 					dart.paint(g);
 				}
-                if (ModMenu.getStatusInt("levelreducegraphics") <= 1) paintEffect(g);
+                if (ModMenuMain.getStatusInt("levelreducegraphics") <= 1) paintEffect(g);
 				if (mobMe != null)
 				{
 				}
-				if (ModMenu.getStatusInt("levelreducegraphics") <= 1)
+				if (ModMenuMain.getStatusInt("levelreducegraphics") <= 1)
 				{
 					paintMount2(g);
 					paintEff_Lvup_front(g);
@@ -5977,8 +5978,8 @@ public class Char : IMapObject
 
 	public void paintCharBody(mGraphics g, int cx, int cy, int cdir, int cf, bool isPaintBag)
 	{
-		if (ModMenu.getStatusInt("levelreducegraphics") > 2) return;
-		if (ModMenu.getStatusInt("levelreducegraphics") > 1)
+		if (ModMenuMain.getStatusInt("levelreducegraphics") > 2) return;
+		if (ModMenuMain.getStatusInt("levelreducegraphics") > 1)
 		{
 			if (bag >= 0 && statusMe != 14 && isMonkey == 0)
 			{

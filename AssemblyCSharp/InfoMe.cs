@@ -1,4 +1,5 @@
 using Mod;
+using Mod.ModMenu;
 using UnityEngine;
 
 public class InfoMe
@@ -94,7 +95,7 @@ public class InfoMe
 		}
 		if (info.info != null && info.info.charInfo == null && charId != null)
 		{
-			if (ModMenu.getStatusInt("levelreducegraphics") > 1)
+			if (ModMenuMain.getStatusInt("levelreducegraphics") > 1)
 			{
                 g.setColor(14381226);
                 if (Char.myCharz().cgender == 0)
