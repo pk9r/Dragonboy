@@ -1,6 +1,12 @@
+﻿using Mod;
+
 public class ItemTime
 {
-	public short idIcon;
+	public bool isEquivalence;
+
+	public bool isInfinity;
+
+    public short idIcon;
 
 	public int second;
 
@@ -18,6 +24,17 @@ public class ItemTime
 
 	public ItemTime()
 	{
+	}
+
+	public ItemTime(short idIcon, int time, bool isEquivalence) : this(idIcon, time)
+	{
+		this.isEquivalence = isEquivalence;
+	}
+
+	public ItemTime(short idIcon, bool isInfinity)
+	{
+		this.idIcon = idIcon;
+		this.isInfinity = isInfinity;
 	}
 
 	public ItemTime(short idIcon, int s)
@@ -116,44 +133,50 @@ public class ItemTime
 	public void paint(mGraphics g, int x, int y)
 	{
 		SmallImage.drawSmallImage(g, idIcon, x, y, 0, 3);
-		string empty = string.Empty;
-		empty = minute + "'";
-		if (minute == 0)
+		string str;
+		if (!isInfinity)
 		{
-			empty = second + "s";
+			str = minute + "'" + second + "s";
+			if (minute == 0) str = second + "s";
+			if (isEquivalence) str = "~" + str;
 		}
-		mFont.tahoma_7b_white.drawString(g, empty, x, y + 15, 2, mFont.tahoma_7b_dark);
+		else
+		{
+			g.drawImage(ModImages.infinitySymbol, x, y + 21, mGraphics.VCENTER | mGraphics.HCENTER);
+			return;
+		}
+		mFont.tahoma_7b_white.drawString(g, str, x, y + 15, 2, mFont.tahoma_7b_dark);
 	}
 
 	public void paintText(mGraphics g, int x, int y)
 	{
-		string empty = string.Empty;
-		empty = minute + "'";
+		string str = minute + "'" + second + "s";
 		if (minute < 1)
 		{
-			empty = second + "s";
+			str = second + "s";
 		}
 		if (minute < 0)
 		{
-			empty = string.Empty;
+			str = string.Empty;
 		}
 		if (dontClear)
 		{
-			empty = string.Empty;
+			str = string.Empty;
 		}
-		mFont.tahoma_7b_white.drawString(g, text + " " + empty, x, y, mFont.LEFT, mFont.tahoma_7b_dark);
+		mFont.tahoma_7b_white.drawString(g, text + " " + str, x, y, mFont.LEFT, mFont.tahoma_7b_dark);
 	}
 
 	public void update()
 	{
+		if (isInfinity) return;
 		curr = mSystem.currentTimeMillis();
 		if (curr - last >= 1000)
 		{
 			last = mSystem.currentTimeMillis();
 			second--;
-			if (second <= 0)
+			if (second == -1)
 			{
-				second = 60;
+				second = 59;
 				minute--;
 			}
 		}

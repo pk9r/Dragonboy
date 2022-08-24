@@ -333,7 +333,7 @@ namespace Mod
             CharEffect.Paint(g);
             SuicideRange.paint(g);
             //CustomGraphics.DrawCircle(g, Char.myCharz().cx, Char.myCharz().cy, 100, 2);
-            //if (Char.myCharz().charFocus != null) mFont.tahoma_7_yellow.drawString(g, Utilities.getDistance(Char.myCharz(), Char.myCharz().charFocus).ToString(), GameCanvas.w / 2, 10, mFont.CENTER);
+            //if (Char.myCharz().charFocus != null) mFont.tahoma_7_yellow.drawString(g, Extensions.getDistance(Char.myCharz(), Char.myCharz().charFocus).ToString(), GameCanvas.w / 2, 10, mFont.CENTER);
         }
 
         public static bool onUseSkill(Skill skill)

@@ -12,8 +12,98 @@ namespace Mod
 
         public static List<Char> storedChars = new List<Char>();
 
+        public static bool isNRDAdded, isTieAdded, isTDHSAdded, isMobMeAdded, isMonkeyAdded;
+
+        static short NRSDImageId;
+
+        public static void updateMe()
+        {
+            CharEffectTime meEffTime = Char.myCharz().charEffectTime;
+            if (meEffTime.hasMobMe)
+            {
+                if (!isMobMeAdded)
+                {
+                    isMobMeAdded = true;
+                    Char.vItemTime.addElement(new ItemTime(722, CharExtensions.getTimeMobMe(Char.myCharz())));
+                }
+            }
+            else if (isMobMeAdded)
+            {
+                isMobMeAdded = false;
+                removeElement(new ItemTime(722, 0));
+            }
+            if (meEffTime.isTied)
+            {
+                if (!isTieAdded)
+                {
+                    isTieAdded = true;
+                    Char.vItemTime.addElement(new ItemTime(3779, 35, true));
+                }
+            }
+            else if (isTieAdded)
+            {
+                isTieAdded = false;
+                removeElement(new ItemTime(3779, 0, true));
+            }
+            if (meEffTime.isTDHS)
+            {
+                if (!isTDHSAdded)
+                {
+                    isTDHSAdded = true;
+                    Char.vItemTime.addElement(new ItemTime(717, Char.myCharz().freezSeconds));
+                }
+            }
+            else if (isTDHSAdded)
+            {
+                isTDHSAdded = false;
+                removeElement(new ItemTime(717, 0));
+            }
+            if (meEffTime.hasMonkey)
+            {
+                if (!isMonkeyAdded)
+                {
+                    isMonkeyAdded = true;
+                    Char.vItemTime.addElement(new ItemTime(718, CharExtensions.getTimeMonkey(Char.myCharz())));
+                }
+            }
+            else if (isMonkeyAdded)
+            {
+                isMonkeyAdded = false;
+                removeElement(new ItemTime(718, 0));
+            }
+            if (meEffTime.hasNRD)
+            {
+                if (!isNRDAdded)
+                {
+                    isNRDAdded = true;
+                    NRSDImageId = Utilities.getNRSDId();
+                    Char.vItemTime.addElement(new ItemTime(NRSDImageId, 300));
+                }
+            }
+            else if (isNRDAdded)
+            {
+                isNRDAdded = false;
+                removeElement(new ItemTime(NRSDImageId, 0));
+            }
+
+        }    
+
+        public static void removeElement(ItemTime item)
+        {
+            for (int i = 0; i < Char.vItemTime.size(); i++)
+            {
+                ItemTime itemTime = Char.vItemTime.elementAt(i) as ItemTime;
+                if (itemTime.idIcon ==  item.idIcon && itemTime.isEquivalence == item.isEquivalence && itemTime.isInfinity == item.isInfinity)
+                {
+                    Char.vItemTime.removeElementAt(i);
+                    return;
+                }
+            }
+        }
+
         public static void Update()
         {
+            updateMe();
             for (int i = storedChars.Count - 1; i >= 0; i--)
             {
                 Char c = storedChars.ElementAt(i);
@@ -51,7 +141,7 @@ namespace Mod
                 if (focus.charEffectTime.hasMobMe) strs.Add("Đẻ trứng còn: " + focus.charEffectTime.timeMobMe + " giây");
                 if (focus.charEffectTime.isHypnotized) strs.Add(focus.charEffectTime.isHypnotizedByMe ? "Bị bạn thôi miên: " : "Bị thôi miên: khoảng " + focus.charEffectTime.timeHypnotized + " giây");
                 if (focus.charEffectTime.isTeleported) strs.Add("Bị DCTT: " + focus.charEffectTime.timeTeleported + " giây");
-                if (focus.charEffectTime.isTDHS) strs.Add("Bị TDHS: khoảng " + focus.charEffectTime.timeTDHS + " giây");
+                if (focus.charEffectTime.isTDHS) strs.Add("Bị TDHS: " + focus.charEffectTime.timeTDHS + " giây");
                 if (focus.charEffectTime.isTied) strs.Add((focus.charEffectTime.isTiedByMe ? "Bị bạn trói: " : "Bị trói: khoảng ") + focus.charEffectTime.timeTied + " giây");
                 if (focus.charEffectTime.isStone) strs.Add("Bị hóa đá: " + focus.charEffectTime.timeStone + " giây");
                 if (focus.charEffectTime.isChocolate) strs.Add("Bị biến Sôcôla: " + focus.charEffectTime.timeChocolate + " giây");

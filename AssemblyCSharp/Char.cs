@@ -1636,7 +1636,8 @@ public class Char : IMapObject
 			if (!charEffectTime.isChocolate)
 			{
 				charEffectTime.isChocolate = true;
-				charEffectTime.timeChocolate = 32;
+				charEffectTime.lastTimeChocolated = mSystem.currentTimeMillis();
+                charEffectTime.timeChocolate = CharExtensions.getTimeChocolate(this) + 1;
 			}
 		}
 		else
@@ -1656,10 +1657,7 @@ public class Char : IMapObject
                     {
                         charEffectTime.hasNRD = true;
                         isResetNRD = false;
-                        if (charEffectTime.timeHoldingNRD == 0)
-                        {
-                            charEffectTime.timeHoldingNRD = 302;
-                        }
+                        if (charEffectTime.timeHoldingNRD == 0) charEffectTime.timeHoldingNRD = 301 + 1;
                         break;
                     }
                 }
@@ -1753,7 +1751,8 @@ public class Char : IMapObject
             if (!charEffectTime.isHypnotized)
             {
                 charEffectTime.isHypnotized = true;
-                if (charEffectTime.timeHypnotized <= 0) charEffectTime.timeHypnotized = CharExtensions.getTimeHypnotize(this);
+				charEffectTime.lastTimeHypnotized = mSystem.currentTimeMillis();
+                if (charEffectTime.timeHypnotized <= 0) charEffectTime.timeHypnotized = CharExtensions.getTimeHypnotize(this) + 1;
             }
             if (GameCanvas.gameTick % 10 == 0)
             {
@@ -1770,6 +1769,7 @@ public class Char : IMapObject
             if (!charEffectTime.hasMonkey)
             {
                 charEffectTime.hasMonkey = true;
+				charEffectTime.lastTimeMonkey = mSystem.currentTimeMillis();
                 if (charEffectTime.timeMonkey <= 0) charEffectTime.timeMonkey = CharExtensions.getTimeMonkey(this);
             }
         }
@@ -1781,8 +1781,12 @@ public class Char : IMapObject
         if (huytSao)
 		{
 			huytSao = false;
-			if (!charEffectTime.hasHuytSao) charEffectTime.hasHuytSao = true;
-            if (charEffectTime.timeHuytSao <= 0) charEffectTime.timeHuytSao = 32;
+			if (!charEffectTime.hasHuytSao)
+			{
+				charEffectTime.hasHuytSao = true;
+				charEffectTime.lastTimeHuytSao = mSystem.currentTimeMillis();
+                if (charEffectTime.timeHuytSao <= 0) charEffectTime.timeHuytSao = CharExtensions.getTimeHuytSao(this) + 1;
+			}
             EffecMn.addEff(new Effect(39, cx, cy, 3, 3, 1));
 		}
         if (blindEff)
@@ -1790,7 +1794,8 @@ public class Char : IMapObject
             if (!charEffectTime.isTeleported)
             {
                 charEffectTime.isTeleported = true;
-                if (charEffectTime.timeTeleported <= 0) charEffectTime.timeTeleported = 6;
+				charEffectTime.lastTimeTeleported = mSystem.currentTimeMillis();
+                if (charEffectTime.timeTeleported <= 0) charEffectTime.timeTeleported = 6 + 1;
             }
             if (GameCanvas.gameTick % 5 == 0)
             {
@@ -1807,7 +1812,8 @@ public class Char : IMapObject
             if (!charEffectTime.hasShield)
             {
                 charEffectTime.hasShield = true;
-                if (charEffectTime.timeShield <= 0) charEffectTime.timeShield = CharExtensions.getTimeShield(this);
+				charEffectTime.lastTimeShield = mSystem.currentTimeMillis();
+                if (charEffectTime.timeShield <= 0) charEffectTime.timeShield = CharExtensions.getTimeShield(this) + 1;
             }
             if (GameCanvas.gameTick % 5 == 0)
             {
@@ -1885,7 +1891,8 @@ public class Char : IMapObject
 			if (!charEffectTime.isStone)
 			{
 				charEffectTime.isStone = true;
-				if (charEffectTime.timeStone <= 0) charEffectTime.timeStone = CharExtensions.getTimeStone(this);
+				charEffectTime.lastTimeStoned = mSystem.currentTimeMillis();
+                if (charEffectTime.timeStone <= 0) charEffectTime.timeStone = CharExtensions.getTimeStone(this) + 1;
 			}
 			return;
 		}
@@ -1903,7 +1910,11 @@ public class Char : IMapObject
 				charEffectTime.isTDHS = false;
 				charEffectTime.timeTDHS = 0;
 			}
-			else charEffectTime.timeTDHS = freezSeconds + 1;
+			else
+			{
+				charEffectTime.lastTimeTDHS = mSystem.currentTimeMillis();
+                charEffectTime.timeTDHS = freezSeconds + 1;
+			}
 			if (GameCanvas.gameTick % 5 == 0)
 			{
 				ServerEffect.addServerEffect(113, cx, cy, 1);
@@ -2158,7 +2169,8 @@ public class Char : IMapObject
 			else if (!charEffectTime.hasMobMe)
 			{
 				charEffectTime.hasMobMe = true;
-				if (charEffectTime.timeMobMe <= 0) charEffectTime.timeMobMe = CharExtensions.getTimeMobMe(this);
+				charEffectTime.lastTimeMobMe = mSystem.currentTimeMillis();
+				if (charEffectTime.timeMobMe <= 0) charEffectTime.timeMobMe = CharExtensions.getTimeMobMe(this) + 1;
 			}
 		}
 		else
@@ -5987,7 +5999,7 @@ public class Char : IMapObject
 			else if (cTypePk == 5)
 			{
 				g.setColor(Color.red);
-				if ((isCharge || isFlyAndCharge) && GameCanvas.gameTick % 8 >= 4) g.setColor(Color.white);
+				if ((isCharge || isFlyAndCharge || isStandAndCharge) && GameCanvas.gameTick % 8 >= 4) g.setColor(Color.white);
 			}
 			int height = 35;
 			int width = 12;
@@ -6718,7 +6730,8 @@ public class Char : IMapObject
 		charHold = r;
 		holder = true;
 		r.charEffectTime.isTied = true;
-		r.charEffectTime.timeTied = CharExtensions.getTimeHold(r);
+		r.charEffectTime.timeTied = CharExtensions.getTimeHold(r) + 1;
+		if (me) vItemTime.addElement(new ItemTime(3779, CharExtensions.getTimeHold(this)));
     }
 
 	public void setHoldMob(Mob r)
@@ -6733,6 +6746,7 @@ public class Char : IMapObject
 		}
 		mobHold = r;
 		holder = true;
+        if (me) vItemTime.addElement(new ItemTime(3779, CharExtensions.getTimeHold(this)));
     }
 
     public void findNextFocusByKey()
@@ -7274,9 +7288,10 @@ public class Char : IMapObject
 		}
 		charEffectTime.isTied = false;
 		charEffectTime.isTiedByMe = false;
-	}
+        if (me) CharEffect.removeElement(new ItemTime(3779, 0));
+    }
 
-	public void removeProtectEff()
+    public void removeProtectEff()
 	{
 		protectEff = false;
 		eProtect = null;
