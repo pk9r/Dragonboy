@@ -7,7 +7,7 @@ using Mod.Dialogs;
 using System.IO;
 using System.Threading;
 
-namespace Mod.Images
+namespace Mod.Graphics
 {
     public class CustomBackground : IActionListener
     {

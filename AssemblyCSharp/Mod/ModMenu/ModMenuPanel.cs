@@ -1,4 +1,4 @@
-﻿using Mod.Images;
+﻿using Mod.Graphics;
 using Mod.Xmap;
 using System;
 using System.Collections.Generic;

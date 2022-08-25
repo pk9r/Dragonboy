@@ -7,7 +7,7 @@ using Vietpad.InputMethod;
 using System;
 using System.Reflection;
 using Mod.ModMenu;
-using Mod.Images;
+using Mod.Graphics;
 
 namespace Mod
 {
