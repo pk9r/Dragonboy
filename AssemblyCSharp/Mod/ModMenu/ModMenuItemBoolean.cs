@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Mod
+namespace Mod.ModMenu
 {
     public class ModMenuItemBoolean
     {
@@ -18,9 +18,11 @@ namespace Mod
 
         public bool isDisabled { get; set; }
 
-        public ModMenuItemBoolean(string title, string description, bool value, string rMSName, bool isDisabled) : this(title, description, rMSName, value)
+        public string DisabledReason { get; set; }
+
+        public ModMenuItemBoolean(string title, string description, bool value, string rmsName, string disabledreason) : this(title, description, value, rmsName)
         {
-            this.isDisabled = isDisabled;
+            DisabledReason = disabledreason;
         }
 
         public ModMenuItemBoolean(string title, string description, bool value, string rmsName) : this(title, description, rmsName)
@@ -28,10 +30,22 @@ namespace Mod
             Value = value;
             isDisabled = false;
         }
+
+        public ModMenuItemBoolean(string title, string description, string rmsName, bool isDisabled, string disabledreason) : this(title, description, rmsName, isDisabled)
+        {
+            DisabledReason = disabledreason;
+        }
+
         public ModMenuItemBoolean(string title, string description, string rmsName, bool isDisabled) : this(title, description, rmsName)
         {
             this.isDisabled = isDisabled;
         }
+
+        public ModMenuItemBoolean(string title, string description, string rmsName, string disabledreason) : this(title, description, rmsName)
+        {
+            DisabledReason = disabledreason;
+        }
+
         public ModMenuItemBoolean(string title, string description, string rmsName)
         {
             Title = title;

@@ -1,4 +1,5 @@
 using Mod;
+using Mod.ModMenu;
 
 public class Info : IActionListener
 {
@@ -156,7 +157,7 @@ public class Info : IActionListener
 				int num6 = Y - num / 2;
 				int num7 = ((mSystem.clientType != 1) ? (W + 25) : (W + 28));
 				int num8 = H + ((!GameCanvas.isTouch) ? 14 : 0) + num;
-				if (ModMenu.getStatusInt("levelreducegraphics") > 2) return;
+				if (ModMenuMain.getStatusInt("levelreducegraphics") > 2) return;
 				g.setColor(4465169);
 				g.fillRect(num5, num6 + num8, num7, 2);
 				int num9 = info.timeCount * num7 / info.maxTime;

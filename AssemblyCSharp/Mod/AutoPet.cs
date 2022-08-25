@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using Mod.ModMenu;
 
 namespace Mod
 {
@@ -50,7 +51,7 @@ namespace Mod
 
         public static void update()
         {
-            if (ModMenu.modMenuItemInts[4].SelectedValue == 0) return;
+            if (ModMenuMain.modMenuItemInts[4].SelectedValue == 0) return;
             if (isFirstTimeCkeckPet)
             {
                 delayCheckPet = mSystem.currentTimeMillis();
@@ -120,7 +121,7 @@ namespace Mod
                 Utilities.teleportMyChar(Char.myCharz().cx);
                 return;
             }
-            if (ModMenu.modMenuItemInts[4].SelectedValue == 1)
+            if (ModMenuMain.modMenuItemInts[4].SelectedValue == 1)
             {
                 //up đệ thường
                 if (Char.myPetz().petStatus != 2) Service.gI().petStatus(2);    //tấn công
@@ -128,7 +129,7 @@ namespace Mod
             else
             {
                 if (isTTNL) return;
-                if (ModMenu.modMenuItemInts[4].SelectedValue == 2)
+                if (ModMenuMain.modMenuItemInts[4].SelectedValue == 2)
                 {
                     //up đệ né siêu quái
                     if (Char.myPetz().petStatus != 1) Service.gI().petStatus(1);    //bảo vệ
@@ -138,7 +139,7 @@ namespace Mod
                         Char.myCharz().currentMovePoint = new MovePoint(closestMob.x + Res.random(-5, 5), closestMob.y);
                     }
                 }
-                else if (ModMenu.modMenuItemInts[4].SelectedValue == 3)
+                else if (ModMenuMain.modMenuItemInts[4].SelectedValue == 3)
                 {
                     //up đệ kaioken
                     if (Char.myPetz().petStatus != 2) Service.gI().petStatus(2);    //tấn công
@@ -288,7 +289,7 @@ namespace Mod
             {
                 isSaoMayLuoiThe = false;
                 Service.gI().selectSkill(skill1.template.id);
-                switch (ModMenu.getStatusInt(5))
+                switch (ModMenuMain.getStatusInt(5))
                 {
                     case 0:
                         MyVector vecMob = new MyVector();

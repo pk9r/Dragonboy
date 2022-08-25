@@ -2,6 +2,7 @@
 using Assets.src.g;
 using UnityEngine;
 using Mod;
+using Mod.ModMenu;
 
 public class Panel : IActionListener, IChatable
 {
@@ -199,7 +200,10 @@ public class Panel : IActionListener, IChatable
 
 	private static string[][] boxPet = mResources.petMainTab;
 
-	public string[][][] tabName = new string[28][][]
+	/// <summary>
+	/// Thêm custom panel cần tăng kích thước mảng này
+	/// </summary>
+	public string[][][] tabName = new string[29][][]
 	{
 		null,
 		null,
@@ -228,7 +232,8 @@ public class Panel : IActionListener, IChatable
 		new string[1][] { new string[1] { string.Empty } },
 		new string[1][] { new string[1] { string.Empty } },
 		new string[1][] { new string[1] { string.Empty } },
-		new string[1][] { new string[1] { string.Empty } }
+		new string[1][] { new string[1] { string.Empty } },
+		new string[1][] { new string[1] { string.Empty } },
     };
 
 	private static sbyte BOX_BAG = 0;
@@ -1887,12 +1892,9 @@ public class Panel : IActionListener, IChatable
 			case 22:
 				updateKeyAuto();
 				break;
-			case ModMenu.TYPE_MOD_MENU:
+			default:
                 updateKeyScrollView();
 				break;
-            case TeleportMenu.TYPE_TELEPORT_LIST:
-                updateKeyScrollView();
-                break;
             }
 			GameCanvas.clearKeyHold();
 			for (int i = 0; i < GameCanvas.keyPressed.Length; i++)
@@ -2894,11 +2896,8 @@ public class Panel : IActionListener, IChatable
 				setTabGiaoDich(isMe: false);
 			}
 			break;
-		case ModMenu.TYPE_MOD_MENU:
-			ModMenuPanel.setTabModMenu();
-			break;
-		case TeleportMenu.TYPE_TELEPORT_LIST:
-			TeleportMenu.setTabTeleportListPanel();
+		default:
+			ModMenuPanel.setTabModMenuMain();
 			break;
         }
 		selected = lastSelect[currentTabIndex];
@@ -3689,11 +3688,8 @@ public class Panel : IActionListener, IChatable
 		case 22:
 			paintAuto(g);
 			break;
-		case ModMenu.TYPE_MOD_MENU:
-			ModMenuPanel.paintModMenu(g);
-			break;
-		case TeleportMenu.TYPE_TELEPORT_LIST:
-			TeleportMenu.paintTeleportListPanel(g);
+		default:
+			ModMenuPanel.paintModMenuMain(g);
 			break;
 		}
 		GameScr.resetTranslate(g);
@@ -5367,13 +5363,7 @@ public class Panel : IActionListener, IChatable
 			g.fillRect(X + 1, 78, W - 2, 1);
 			return;
 		}
-		if (type == TeleportMenu.TYPE_TELEPORT_LIST)
-		{
-			g.setColor(13524492);
-			g.fillRect(X + 1, 78, W - 2, 1);
-			mFont.tahoma_7b_dark.drawString(g, "Danh sách nhân vật", xScroll + wScroll / 2, 59, mFont.CENTER);
-			return;
-		}
+		if (ModMenuPanel.paintTab(g)) return;
 		if (currentTabIndex == 3 && mainTabName.Length != 4)
 		{
 			g.translate(-cmx, 0);
@@ -5858,11 +5848,7 @@ public class Panel : IActionListener, IChatable
 		case 5:
 		case 6:
 			break;
-		case ModMenu.TYPE_MOD_MENU:
-            SmallImage.drawSmallImage(g, Char.myCharz().avatarz(), X + 25, 50, 0, 33);
-            paintToolInfo(g);
-            break;
-		case TeleportMenu.TYPE_TELEPORT_LIST:
+		default:
             SmallImage.drawSmallImage(g, Char.myCharz().avatarz(), X + 25, 50, 0, 33);
             paintToolInfo(g);
             break;
@@ -6569,11 +6555,8 @@ public class Panel : IActionListener, IChatable
 				case 22:
 					doFireAuto();
 					break;
-				case ModMenu.TYPE_MOD_MENU:
-                    ModMenuPanel.doFireModMenu();
-					break;
-				case TeleportMenu.TYPE_TELEPORT_LIST:
-					TeleportMenu.doFireTeleportListPanel();
+				default:
+                    ModMenuPanel.doFireModMenuMain();
 					break;
 				}
 			}

@@ -2,6 +2,7 @@
 using Mod.Xmap;
 using System.Reflection;
 using UnityEngine;
+using Mod.ModMenu;
 
 namespace Mod
 {
@@ -33,8 +34,8 @@ namespace Mod
             if (Char.myCharz().taskMaint.taskId > 11)
             {
                 GameScr.info1.addInfo("Đã up sơ sinh xong!", 0);
-                ModMenu.modMenuItemBools[5].Value = false;
-                ModMenu.modMenuItemBools[5].isDisabled = true;
+                ModMenuMain.modMenuItemBools[5].Value = false;
+                ModMenuMain.modMenuItemBools[5].isDisabled = true;
                 isAutoSS = false;
                 return;
             }

@@ -1,4 +1,5 @@
-﻿using Mod.Xmap;
+﻿using Mod.Images;
+using Mod.Xmap;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 using UnityEngine;
 using Vietpad.InputMethod;
 
-namespace Mod 
+namespace Mod.ModMenu
 {
     public class ModMenuPanel : IChatable
     {
@@ -20,8 +21,8 @@ namespace Mod
 
         public static void setTypeModMenu()
         {
-            GameCanvas.panel.type = ModMenu.TYPE_MOD_MENU;
-            GameCanvas.panel.tabName[ModMenu.TYPE_MOD_MENU] = new string[][]
+            GameCanvas.panel.type = ModMenuMain.TYPE_MOD_MENU;
+            GameCanvas.panel.tabName[ModMenuMain.TYPE_MOD_MENU] = new string[][]
             {
             new string[]{ "Bật/tắt", "" },
             new string[]{ "Điều", "chỉnh" },
@@ -29,17 +30,33 @@ namespace Mod
             };
             GameCanvas.panel.setType(0);
             SoundMn.gI().getSoundOption();
-            setTabModMenu();
+            setTabModMenuMain();
             onModMenuBoolsValueChanged();
             onModMenuIntsValueChanged();
         }
 
-        public static void setTabModMenu()
+        public static void setTabModMenuMain()
+        {
+            switch (GameCanvas.panel.type)
+            {
+                case ModMenuMain.TYPE_MOD_MENU:
+                    setTabModMenu();
+                    break;
+                case TeleportMenu.TYPE_TELEPORT_LIST:
+                    TeleportMenu.setTabTeleportListPanel();
+                    break;
+                case CustomBackground.TYPE_CUSTOM_BACKGROUND:
+                    CustomBackground.setTabCustomBackgroundPanel();
+                    break;
+            }
+        }
+
+        static void setTabModMenu()
         {
             GameCanvas.panel.ITEM_HEIGHT = 24;
-            if (GameCanvas.panel.currentTabIndex == 0) GameCanvas.panel.currentListLength = ModMenu.modMenuItemBools.Length;
-            else if (GameCanvas.panel.currentTabIndex == 1) GameCanvas.panel.currentListLength = ModMenu.modMenuItemInts.Length;
-            else GameCanvas.panel.currentListLength = ModMenu.modMenuItemFunctions.Length;
+            if (GameCanvas.panel.currentTabIndex == 0) GameCanvas.panel.currentListLength = ModMenuMain.modMenuItemBools.Length;
+            else if (GameCanvas.panel.currentTabIndex == 1) GameCanvas.panel.currentListLength = ModMenuMain.modMenuItemInts.Length;
+            else GameCanvas.panel.currentListLength = ModMenuMain.modMenuItemFunctions.Length;
             GameCanvas.panel.selected = (GameCanvas.isTouch ? (-1) : 0);
             GameCanvas.panel.cmyLim = GameCanvas.panel.currentListLength * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.hScroll;
             if (GameCanvas.panel.cmyLim < 0) GameCanvas.panel.cmyLim = 0;
@@ -48,11 +65,28 @@ namespace Mod
             if (GameCanvas.panel.cmy > GameCanvas.panel.cmyLim) GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = GameCanvas.panel.cmyLim;
         }
 
-        public static void doFireModMenu()
+        public static void doFireModMenuMain()
+        {
+            switch (GameCanvas.panel.type)
+            {
+                case ModMenuMain.TYPE_MOD_MENU:
+                    doFireModMenu();
+                    break;
+                case TeleportMenu.TYPE_TELEPORT_LIST:
+                    TeleportMenu.doFireTeleportListPanel();
+                    break;
+                case CustomBackground.TYPE_CUSTOM_BACKGROUND:
+                    CustomBackground.doFireCustomBackgroundListPanel();
+                    break;
+            }
+        }
+
+        static void doFireModMenu()
         {
             if (GameCanvas.panel.currentTabIndex == 0) doFireModMenuBools();
             else if (GameCanvas.panel.currentTabIndex == 1) doFireModMenuInts();
             else doFireModMenuFunctions();
+            notifySelectDisabledItem();
         }
 
         private static void doFireModMenuFunctions()
@@ -67,7 +101,7 @@ namespace Mod
                     TeleportMenu.ShowMenu();
                     break;
                 case 2:
-                    //AutoPick.ShowMenu();
+                    CustomBackground.ShowMenu();
                     break;
             }
         }
@@ -75,10 +109,10 @@ namespace Mod
         static void doFireModMenuBools()
         {
             if (GameCanvas.panel.selected < 0) return;
-            if (!ModMenu.modMenuItemBools[GameCanvas.panel.selected].isDisabled)
+            if (!ModMenuMain.modMenuItemBools[GameCanvas.panel.selected].isDisabled)
             {
-                ModMenu.modMenuItemBools[GameCanvas.panel.selected].setValue(!ModMenu.modMenuItemBools[GameCanvas.panel.selected].Value);
-                GameScr.info1.addInfo("Đã " + (ModMenu.modMenuItemBools[GameCanvas.panel.selected].Value ? "bật" : "tắt") + " " + ModMenu.modMenuItemBools[GameCanvas.panel.selected].Title + "!", 0);
+                ModMenuMain.modMenuItemBools[GameCanvas.panel.selected].setValue(!ModMenuMain.modMenuItemBools[GameCanvas.panel.selected].Value);
+                GameScr.info1.addInfo("Đã " + (ModMenuMain.modMenuItemBools[GameCanvas.panel.selected].Value ? "bật" : "tắt") + " " + ModMenuMain.modMenuItemBools[GameCanvas.panel.selected].Title + "!", 0);
             }
         }
 
@@ -86,19 +120,35 @@ namespace Mod
         {
             if (GameCanvas.panel.selected < 0) return;
             int selected = GameCanvas.panel.selected;
-            if (ModMenu.modMenuItemInts[selected].isDisabled) return;
-            if (ModMenu.modMenuItemInts[selected].Values != null) ModMenu.modMenuItemInts[selected].SwitchSelection();
+            if (ModMenuMain.modMenuItemInts[selected].isDisabled) return;
+            if (ModMenuMain.modMenuItemInts[selected].Values != null) ModMenuMain.modMenuItemInts[selected].SwitchSelection();
             else
             {
-                ChatTextField.gI().strChat = ModMenu.inputModMenuItemInts[selected][0];
-                ChatTextField.gI().tfChat.name = ModMenu.inputModMenuItemInts[selected][1];
+                ChatTextField.gI().strChat = ModMenuMain.inputModMenuItemInts[selected][0];
+                ChatTextField.gI().tfChat.name = ModMenuMain.inputModMenuItemInts[selected][1];
                 ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
                 ChatTextField.gI().startChat2(getInstance(), string.Empty);
                 GameCanvas.panel.hide();
             }
         }
 
-        public static void paintModMenu(mGraphics g)
+        public static void paintModMenuMain(mGraphics g)
+        {
+            switch (GameCanvas.panel.type)
+            {
+                case ModMenuMain.TYPE_MOD_MENU:
+                    paintModMenu(g);
+                    break;
+                case TeleportMenu.TYPE_TELEPORT_LIST:
+                    TeleportMenu.paintTeleportListPanel(g);
+                    break;
+                case CustomBackground.TYPE_CUSTOM_BACKGROUND:
+                    CustomBackground.paintCustomBackgroundPanel(g);
+                    break;
+            }
+        }
+
+        static void paintModMenu(mGraphics g)
         {
             if (GameCanvas.panel.currentTabIndex == 0) paintModMenuBools(g);
             else if (GameCanvas.panel.currentTabIndex == 1) paintModMenuInts(g);
@@ -110,7 +160,7 @@ namespace Mod
             g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
             g.translate(0, -GameCanvas.panel.cmy);
             g.setColor(0);
-            if (ModMenu.modMenuItemFunctions == null || ModMenu.modMenuItemFunctions.Length != GameCanvas.panel.currentListLength) return;
+            if (ModMenuMain.modMenuItemFunctions == null || ModMenuMain.modMenuItemFunctions.Length != GameCanvas.panel.currentListLength) return;
             bool isReset = true;
             string descriptionTextInfo = string.Empty;
             int x = 0, y = 0;
@@ -120,7 +170,7 @@ namespace Mod
                 int num2 = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
                 int num3 = GameCanvas.panel.wScroll;
                 int num4 = GameCanvas.panel.ITEM_HEIGHT - 1;
-                ModMenuItemFunction modMenuItem = ModMenu.modMenuItemFunctions[i];
+                ModMenuItemFunction modMenuItem = ModMenuMain.modMenuItemFunctions[i];
                 if (!modMenuItem.isDisabled) g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
                 else g.setColor((i != GameCanvas.panel.selected) ? new Color(0.54f, 0.51f, 0.46f) : new Color(0.61f, 0.63f, 0.18f));
                 g.fillRect(num, num2, num3, num4);
@@ -161,7 +211,7 @@ namespace Mod
             g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
             g.translate(0, -GameCanvas.panel.cmy);
             g.setColor(0);
-            if (ModMenu.modMenuItemBools == null || ModMenu.modMenuItemBools.Length != GameCanvas.panel.currentListLength) return;
+            if (ModMenuMain.modMenuItemBools == null || ModMenuMain.modMenuItemBools.Length != GameCanvas.panel.currentListLength) return;
             bool isReset = true;
             string descriptionTextInfo = string.Empty;
             int x = 0, y = 0;
@@ -172,7 +222,7 @@ namespace Mod
                 int num2 = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
                 int num3 = GameCanvas.panel.wScroll;
                 int num4 = GameCanvas.panel.ITEM_HEIGHT - 1;
-                ModMenuItemBoolean modMenuItem = ModMenu.modMenuItemBools[i];
+                ModMenuItemBoolean modMenuItem = ModMenuMain.modMenuItemBools[i];
                 if (!modMenuItem.isDisabled) g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
                 else g.setColor((i != GameCanvas.panel.selected) ? new Color(0.54f, 0.51f, 0.46f) : new Color(0.61f, 0.63f, 0.18f));
                 g.fillRect(num, num2, num3, num4);
@@ -216,7 +266,7 @@ namespace Mod
             g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
             g.translate(0, -GameCanvas.panel.cmy);
             g.setColor(0);
-            if (ModMenu.modMenuItemInts == null || ModMenu.modMenuItemInts.Length != GameCanvas.panel.currentListLength) return;
+            if (ModMenuMain.modMenuItemInts == null || ModMenuMain.modMenuItemInts.Length != GameCanvas.panel.currentListLength) return;
             bool isReset = true;
             string descriptionTextInfo = string.Empty;
             int x = 0, y = 0, currSelectedValue = 0;
@@ -226,7 +276,7 @@ namespace Mod
                 int num2 = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
                 int num3 = GameCanvas.panel.wScroll;
                 int num4 = GameCanvas.panel.ITEM_HEIGHT - 1;
-                ModMenuItemInt modMenuItem = ModMenu.modMenuItemInts[i];
+                ModMenuItemInt modMenuItem = ModMenuMain.modMenuItemInts[i];
                 if (!modMenuItem.isDisabled) g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
                 else g.setColor((i != GameCanvas.panel.selected) ? new Color(0.54f, 0.51f, 0.46f) : new Color(0.61f, 0.63f, 0.18f));
                 g.fillRect(num, num2, num3, num4);
@@ -280,23 +330,56 @@ namespace Mod
             GameCanvas.panel.paintScrollArrow(g);
         }
 
+        public static bool paintTab(mGraphics g)
+        {
+            if (GameCanvas.panel.type == TeleportMenu.TYPE_TELEPORT_LIST)
+            {
+                g.setColor(13524492);
+                g.fillRect(GameCanvas.panel.X + 1, 78, GameCanvas.panel.W - 2, 1);
+                mFont.tahoma_7b_dark.drawString(g, "Danh sách nhân vật", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
+                return true;
+            }
+            else if (GameCanvas.panel.type == CustomBackground.TYPE_CUSTOM_BACKGROUND)
+            {
+                g.setColor(13524492);
+                g.fillRect(GameCanvas.panel.X + 1, 78, GameCanvas.panel.W - 2, 1);
+                mFont.tahoma_7b_dark.drawString(g, "Danh sách ảnh nền tùy chỉnh", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
+                return true;
+            }
+            return false;
+        }
+
         public void onChatFromMe(string text, string to)
         {
             if (!string.IsNullOrEmpty(ChatTextField.gI().tfChat.getText()) && !string.IsNullOrEmpty(text))
             {
-                int selected = GameCanvas.panel.selected;
-                if (ChatTextField.gI().strChat == ModMenu.inputModMenuItemInts[selected][0])
+                string strChat = ChatTextField.gI().strChat;
+                if (strChat == ModMenuMain.inputModMenuItemInts[0][0])
                 {
                     try
                     {
                         int value = int.Parse(text);
                         if (value > 60 || value < 5) throw new Exception();
-                        ModMenu.modMenuItemInts[selected].setValue(value);
+                        ModMenuMain.modMenuItemInts[0].setValue(value);
                         GameScr.info1.addInfo("Đã thay đổi mức FPS!", 0);
                     }
                     catch
                     {
                         GameCanvas.startOKDlg("Mức FPS không hợp lệ!");
+                    }
+                }
+                else if (strChat == ModMenuMain.inputModMenuItemInts[6][0])
+                {
+                    try
+                    {
+                        int value = int.Parse(text);
+                        if (value < 10) throw new Exception();
+                        ModMenuMain.modMenuItemInts[6].setValue(value);
+                        GameScr.info1.addInfo("Đã thay đổi thời gian đổi ảnh nền!", 0);
+                    }
+                    catch
+                    {
+                        GameCanvas.startOKDlg("Thời gian không hợp lệ!");
                     }
                 }
             }
@@ -312,50 +395,72 @@ namespace Mod
 
         public static void onModMenuBoolsValueChanged()
         {
-            QualitySettings.vSyncCount = ModMenu.modMenuItemBools[0].Value ? 1 : 0;
-            CharEffect.isEnabled = ModMenu.modMenuItemBools[1].Value;
-            AutoAttack.gI.toggle(ModMenu.modMenuItemBools[2].Value);
-            ListCharsInMap.isEnabled = ModMenu.modMenuItemBools[3].Value;
-            ListCharsInMap.isShowPet = ModMenu.modMenuItemBools[4].Value;
-            AutoSS.isAutoSS = ModMenu.modMenuItemBools[5].Value;
-            AutoT77.isAutoT77 = ModMenu.modMenuItemBools[6].Value;
-            SuicideRange.isShowSuicideRange = ModMenu.modMenuItemBools[7].Value;
+            QualitySettings.vSyncCount = ModMenuMain.modMenuItemBools[0].Value ? 1 : 0;
+            CharEffect.isEnabled = ModMenuMain.modMenuItemBools[1].Value;
+            AutoAttack.gI.toggle(ModMenuMain.modMenuItemBools[2].Value);
+            ListCharsInMap.isEnabled = ModMenuMain.modMenuItemBools[3].Value;
+            ListCharsInMap.isShowPet = ModMenuMain.modMenuItemBools[4].Value;
+            AutoSS.isAutoSS = ModMenuMain.modMenuItemBools[5].Value;
+            AutoT77.isAutoT77 = ModMenuMain.modMenuItemBools[6].Value;
+            SuicideRange.isShowSuicideRange = ModMenuMain.modMenuItemBools[7].Value;
+            CustomBackground.isEnabled = ModMenuMain.modMenuItemBools[8].Value;
 
             manageDisabledModMenuItems();
         }
 
         public static void onModMenuIntsValueChanged()
         {
-            if (ModMenu.modMenuItemInts[0].SelectedValue < 5 || ModMenu.modMenuItemInts[0].SelectedValue > 60) ModMenu.modMenuItemInts[0].SelectedValue = 60;
-            Application.targetFrameRate = ModMenu.modMenuItemInts[0].SelectedValue;
-            if (ModMenu.modMenuItemInts[2].SelectedValue == 2)
+            if (ModMenuMain.modMenuItemInts[0].SelectedValue < 5 || ModMenuMain.modMenuItemInts[0].SelectedValue > 60) ModMenuMain.modMenuItemInts[0].SelectedValue = 60;
+            Application.targetFrameRate = ModMenuMain.modMenuItemInts[0].SelectedValue;
+            if (ModMenuMain.modMenuItemInts[2].SelectedValue == 2)
             {
                 AutoGoback.infoGoback = new AutoGoback.InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz().cx, Char.myCharz().cy);
                 GameScr.info1.addInfo($"Goback đến map: {TileMap.mapName}, khu: {TileMap.zoneID}, tọa độ: ({AutoGoback.infoGoback.x}, {AutoGoback.infoGoback.y})!", 0);
             }
-            if (ModMenu.modMenuItemInts[3].SelectedValue == 0) VietKeyHandler.VietModeEnabled = false;
+            if (ModMenuMain.modMenuItemInts[3].SelectedValue == 0) VietKeyHandler.VietModeEnabled = false;
             else
             {
                 VietKeyHandler.VietModeEnabled = true;
-                VietKeyHandler.InputMethod = (InputMethods)(ModMenu.modMenuItemInts[3].SelectedValue - 1);
+                VietKeyHandler.InputMethod = (InputMethods)(ModMenuMain.modMenuItemInts[3].SelectedValue - 1);
             }
+            CustomBackground.inveralDrawImages = ModMenuMain.modMenuItemInts[6].SelectedValue * 1000;
 
             manageDisabledModMenuItems();
         }
 
         public static void manageDisabledModMenuItems()
         {
-            ModMenu.modMenuItemBools[4].isDisabled = !ModMenu.modMenuItemBools[3].Value;
-            if (Char.myCharz().taskMaint != null) ModMenu.modMenuItemBools[5].isDisabled = Char.myCharz().taskMaint.taskId > 11;
-            if (Char.myCharz().cPower > 2000000 || (Char.myCharz().cPower > 1500000 && TileMap.mapID != 111) || (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId < 9)) ModMenu.modMenuItemBools[6].isDisabled = true;
-            else ModMenu.modMenuItemBools[6].isDisabled = false;
+            ModMenuMain.modMenuItemBools[4].isDisabled = !ModMenuMain.modMenuItemBools[3].Value;
+            if (Char.myCharz().taskMaint != null) ModMenuMain.modMenuItemBools[5].isDisabled = Char.myCharz().taskMaint.taskId > 11;
+            if (Char.myCharz().cPower > 2000000 || (Char.myCharz().cPower > 1500000 && TileMap.mapID != 111) || (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId < 9)) ModMenuMain.modMenuItemBools[6].isDisabled = true;
+            else ModMenuMain.modMenuItemBools[6].isDisabled = false;
+            ModMenuMain.modMenuItemBools[8].isDisabled = ModMenuMain.modMenuItemInts[1].SelectedValue > 0;
 
-            ModMenu.modMenuItemInts[0].isDisabled = ModMenu.modMenuItemBools[0].Value;
-            ModMenu.modMenuItemInts[2].isDisabled = ModMenu.modMenuItemBools[5].Value || ModMenu.modMenuItemBools[6].Value;
-            if (ModMenu.modMenuItemInts[2].isDisabled) ModMenu.modMenuItemInts[2].SelectedValue = 0;
-            ModMenu.modMenuItemInts[4].isDisabled = !Char.myCharz().havePet || ModMenu.modMenuItemBools[5].Value || ModMenu.modMenuItemBools[6].Value;
-            if (ModMenu.modMenuItemInts[4].isDisabled) ModMenu.modMenuItemInts[4].SelectedValue = 0;
-            ModMenu.modMenuItemInts[5].isDisabled = ModMenu.modMenuItemInts[4].SelectedValue == 0;
+            ModMenuMain.modMenuItemInts[0].isDisabled = ModMenuMain.modMenuItemBools[0].Value;
+            ModMenuMain.modMenuItemInts[2].isDisabled = ModMenuMain.modMenuItemBools[5].Value || ModMenuMain.modMenuItemBools[6].Value;
+            if (ModMenuMain.modMenuItemInts[2].isDisabled) ModMenuMain.modMenuItemInts[2].SelectedValue = 0;
+            ModMenuMain.modMenuItemInts[4].isDisabled = !Char.myCharz().havePet || ModMenuMain.modMenuItemBools[5].Value || ModMenuMain.modMenuItemBools[6].Value;
+            if (ModMenuMain.modMenuItemInts[4].isDisabled) ModMenuMain.modMenuItemInts[4].SelectedValue = 0;
+            ModMenuMain.modMenuItemInts[5].isDisabled = ModMenuMain.modMenuItemInts[4].SelectedValue == 0;
+        }
+
+        static void notifySelectDisabledItem()
+        {
+            int selected = GameCanvas.panel.selected;
+            if (GameCanvas.panel.currentTabIndex == 0)
+            {
+                if (!ModMenuMain.modMenuItemBools[selected].isDisabled) return;
+                GameScr.info1.addInfo(ModMenuMain.modMenuItemBools[selected].DisabledReason, 0);
+            }
+            else if (GameCanvas.panel.currentTabIndex == 1)
+            {
+                if (!ModMenuMain.modMenuItemInts[selected].isDisabled) return;
+                GameScr.info1.addInfo(ModMenuMain.modMenuItemInts[selected].DisabledReason, 0);
+            }
+            else
+            {
+                //ModMenuItemFunction không có isDisabled
+            }
         }
     }
 }

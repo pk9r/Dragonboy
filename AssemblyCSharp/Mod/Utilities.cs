@@ -9,7 +9,8 @@ using System.Text;
 using UnityEngine;
 using static System.Net.Mime.MediaTypeNames;
 using Vietpad.InputMethod;
-using System.Drawing;
+using Mod.Dialogs;
+using System.Threading;
 
 namespace Mod
 {
@@ -24,7 +25,7 @@ namespace Mod
         public const int ID_ICON_ITEM_TDLT = 4387;
 
         private const BindingFlags PUBLIC_STATIC_VOID =
-            BindingFlags.Public |
+            BindingFlags.Public | BindingFlags.NonPublic |
             BindingFlags.Static |
             BindingFlags.InvokeMethod;
 
@@ -380,7 +381,13 @@ namespace Mod
         [ChatCommand("test")]
         public static void test()
         {
-            Char.vItemTime.addElement(new ItemTime(722, true));
+            new Thread(delegate ()
+            {
+                GameScr.info1.addInfo(string.Join("\n", FileDialog.OpenFileDialog("Chọn tệp ảnh nền", "Tệp ảnh (*.png)|*.png", "png")), 0);
+            })
+            {
+                IsBackground = true
+            }.Start();
         }
 
         [ChatCommand("skey")]
@@ -661,5 +668,30 @@ namespace Mod
             return Char.myCharz().cgender == 1 && isMeWearingActivationSet(0);  //TODO: Tìm id set Pikkoro Daimao
         }
 
+        public static Image createImage(byte[] imageData, int w, int h)
+        {
+            if (imageData == null || imageData.Length == 0)
+            {
+                return null;
+            }
+            Image image = new Image();
+            try
+            {
+                image.texture.LoadImage(imageData);
+                if (image.texture.width != w || image.texture.height != h) image.texture = TextureScaler.ScaleTexture(image.texture, w, h);
+                image.texture.anisoLevel = 0;
+                image.texture.filterMode = FilterMode.Point;
+                image.texture.mipMapBias = 0f;
+                image.texture.wrapMode = TextureWrapMode.Clamp;
+                image.w = image.texture.width;
+                image.h = image.texture.height;
+                image.texture.Apply();
+                return image;
+            }
+            catch (Exception)
+            {
+                return image;
+            }
+        }
     }
 }

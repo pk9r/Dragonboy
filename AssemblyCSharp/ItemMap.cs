@@ -1,4 +1,5 @@
 using Mod;
+using Mod.ModMenu;
 using UnityEngine;
 
 public class ItemMap : IMapObject
@@ -158,9 +159,9 @@ public class ItemMap : IMapObject
 	{
 		if (isAuraItem())
 		{
-			if (ModMenu.getStatusInt("levelreducegraphics") > 2) return;
+			if (ModMenuMain.getStatusInt("levelreducegraphics") > 2) return;
 			g.drawImage(TileMap.bong, x + 3, y, mGraphics.VCENTER | mGraphics.HCENTER);
-			if (ModMenu.getStatusInt("levelreducegraphics") > 1)
+			if (ModMenuMain.getStatusInt("levelreducegraphics") > 1)
 			{
                 g.setColor(Color.gray);
                 g.drawRect(x - 12, y - Image.getImageHeight(imageAuraItem1), 24, Image.getImageHeight(imageAuraItem1));

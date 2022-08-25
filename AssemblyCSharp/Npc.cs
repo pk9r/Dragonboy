@@ -1,4 +1,5 @@
 using Mod;
+using Mod.ModMenu;
 using UnityEngine;
 
 public class Npc : Char
@@ -218,13 +219,13 @@ public class Npc : Char
 			{
 				g.drawImage(TileMap.bong, cx, cy, 3);
 			}
-			if (ModMenu.getStatusInt("levelreducegraphics") == 2)
+			if (ModMenuMain.getStatusInt("levelreducegraphics") == 2)
 			{
                 g.setColor(Color.green);
                 g.drawRect(cx - 12, cy - ch, 24, ch);
                 if (myCharz().npcFocus != null && myCharz().npcFocus.Equals(this) && ChatPopup.currChatPopup == null) g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx, cy - ch - 7, mGraphics.BOTTOM | mGraphics.HCENTER);
             }
-			else if (ModMenu.getStatusInt("levelreducegraphics") > 2)
+			else if (ModMenuMain.getStatusInt("levelreducegraphics") > 2)
 			{
                 if (myCharz().npcFocus != null && myCharz().npcFocus.Equals(this) && ChatPopup.currChatPopup == null) g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx, cy - ch - 7, mGraphics.BOTTOM | mGraphics.HCENTER);
                 return;

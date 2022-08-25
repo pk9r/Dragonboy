@@ -1,4 +1,5 @@
 using Mod;
+using Mod.ModMenu;
 using System;
 
 public class Effect
@@ -318,7 +319,7 @@ public class Effect
 
 	public void paint(mGraphics g)
 	{
-		if (ModMenu.getStatusInt("levelreducegraphics") > 0) return;
+		if (ModMenuMain.getStatusInt("levelreducegraphics") > 0) return;
 		if (isPaintz() && getEffDataById(effId) != null && getEffDataById(effId).img != null)
 		{
 			getEffDataById(effId).paintFrame(g, currFrame, x, y, trans, layer);
