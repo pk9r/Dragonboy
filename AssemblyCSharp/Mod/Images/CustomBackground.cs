@@ -206,7 +206,9 @@ namespace Mod.Images
                         imageIndex = 0;
                         lastTimeDrawAnImage = mSystem.currentTimeMillis();
                     }
+                    GameScr.info1.addInfo("Đã xóa ảnh " + index + "!", 0);
                     setTabCustomBackgroundPanel();
+                    SaveData();
                     break;
             }
         }
@@ -224,18 +226,7 @@ namespace Mod.Images
 
         public static void SaveData()
         {
-            try
-            {
-                foreach (string str in Utilities.loadRMSString("custombackgroundpath").Split('|'))
-                {
-                    if (listImagePaths.Contains(str)) continue;
-                    listImagePaths.Add(str);
-                }
-            }
-            catch (Exception)
-            { }
             string data = string.Join("|", listImagePaths.ToArray());
-            //data = data.Remove(data.LastIndexOf('|'), 1);
             Utilities.saveRMSString("custombackgroundpath", data);
         }
     }
