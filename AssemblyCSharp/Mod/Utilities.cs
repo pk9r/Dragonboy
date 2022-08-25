@@ -25,7 +25,7 @@ namespace Mod
         public const int ID_ICON_ITEM_TDLT = 4387;
 
         private const BindingFlags PUBLIC_STATIC_VOID =
-            BindingFlags.Public |
+            BindingFlags.Public | BindingFlags.NonPublic |
             BindingFlags.Static |
             BindingFlags.InvokeMethod;
 
