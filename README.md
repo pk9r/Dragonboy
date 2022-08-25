@@ -18,6 +18,8 @@ Discord hỏi đáp: https://discord.gg/zdvBdVxRh6
 - tele: mở menu dịch chuyển tức thời
 - xmp: mở menu Xmap
 - xmp***X***: Xmap đến map có id ***X***
+#### Invoke method bằng lệnh chat
+- Gọi method trong assembly của game bằng tên đầy đủ (Namespace + tên class + tên method). Method được invoke phải là method static và không phải là constructor (.ctor).
 ### Phím tắt
 - **Z**: mở menu dịch chuyển tức thời
 - **B**: sử dụng chiêu hồi sinh Namec vào bản thân
@@ -35,15 +37,15 @@ Discord hỏi đáp: https://discord.gg/zdvBdVxRh6
 ### Các chức năng khác
 ***Các chức năng khác của phiên bản mod ở trong phần "Menu Mod". Lưu ý các chức năng có màu xám không thể điều chỉnh.***
 #### Bật/tắt
-Chứa các chức năng có thể bật/tắt
+Chứa các chức năng có 2 trạng thái
 
-![image](https://user-images.githubusercontent.com/98677996/185588846-4464fcc4-bb0f-476b-9aaf-23b30c1ddb61.png)
+![image](https://user-images.githubusercontent.com/98677996/186596345-4eb768d0-57ff-4dd1-86fd-41ffe483735b.png)
 #### Điều chỉnh
 Chứa các chức năng cần điều chỉnh giá trị và các chức năng nhiều trạng thái
 
-![image](https://user-images.githubusercontent.com/98677996/185589236-551e8cdf-64d6-4e8b-85db-521d0ad02b91.png)
+![image](https://user-images.githubusercontent.com/98677996/186596434-23f79704-8134-4b5e-b3a1-95748d8f728a.png)
 #### Chức năng
-Chứa các chức năng không cần thay đổi giá trị
+Chứa các chức năng khác
 
-![image](https://user-images.githubusercontent.com/98677996/185589419-27d8d0f5-2d23-499e-8b83-85086cfab909.png)
+![image](https://user-images.githubusercontent.com/98677996/186596496-0a3ce578-c4bd-40e0-a461-5eda3dd0760f.png)
 
