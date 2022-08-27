@@ -12,106 +12,26 @@ namespace Mod.ModMenu
 
         public string[] Values { get; set; }
 
+        public string Description { get; set; }
+
         public int SelectedValue { get; set; }
 
         public string RMSName { get; set; }
-
-        public string Description { get; set; }
 
         public bool isDisabled { get; set; }
 
         public string DisabledReason { get; set; }
 
-        public ModMenuItemInt(string title, string[] values, string rmsName)
+        public ModMenuItemInt(string title, string[] values = null, string description = "", int selectedValue = 0, string rmsName = "", bool isDisabled = false, string disabledReason = "")
         {
+            if (values == null && string.IsNullOrEmpty(description)) throw new ArgumentException("Values and description cannot be null at the same time");
             Title = title;
             Values = values;
-            RMSName = rmsName;
-            SelectedValue = 0;
-            Description = null;
-            isDisabled = false;
-        }
-
-        public ModMenuItemInt(string title, string[] values, string rmsName, string disabledreason) : this(title, values, rmsName)
-        {
-            DisabledReason = disabledreason;
-        }
-
-        public ModMenuItemInt(string title, string[] values, int selectedValue, string rmsName) : this(title, values, rmsName)
-        {
-            SelectedValue = selectedValue;
-        }
-
-        public ModMenuItemInt(string title, string[] values, int selectedValue, string rmsName, string disabledreason) : this(title, values, selectedValue, rmsName)
-        {
-            DisabledReason = disabledreason;
-        }
-
-        public ModMenuItemInt(string title, string[] values, string rmsName, bool isdisabled) : this(title, values, rmsName)
-        {
-            isDisabled = isdisabled;
-        }
-
-        public ModMenuItemInt(string title, string[] values, string rmsName, bool isdisabled, string disabledreason) : this(title, values, rmsName, isdisabled)
-        {
-            DisabledReason = disabledreason;
-        }
-
-        public ModMenuItemInt(string title, string[] values, int selectedValue, string rmsName, bool isdisabled) : this(title, values, rmsName, isdisabled)
-        {
-            SelectedValue = selectedValue;
-        }
-
-        public ModMenuItemInt(string title, string[] values, int selectedValue, string rmsName, bool isdisabled, string disabledreason) : this(title, values, selectedValue, rmsName, isdisabled)
-        {
-            DisabledReason = disabledreason;
-        }
-
-
-
-        public ModMenuItemInt(string title, string description, string rmsName)
-        {
-            Title = title;
-            Values = null;
-            SelectedValue = 0;
-            RMSName = rmsName;
             Description = description;
-            isDisabled = false;
-        }
-
-        public ModMenuItemInt(string title, string description, string rmsName, string disabledreason) : this(title, description, rmsName)
-        {
-            DisabledReason = disabledreason;
-        }
-
-        public ModMenuItemInt(string title, string description, int selectedValue, string rmsName) : this(title, description, rmsName)
-        {
             SelectedValue = selectedValue;
-        }
-
-        public ModMenuItemInt(string title, string description, int selectedValue, string rmsName, string disabledreason) : this(title, description, selectedValue, rmsName)
-        {
-            DisabledReason = disabledreason;
-        }
-
-        public ModMenuItemInt(string title, string description, string rmsName, bool isdisabled) : this(title, description, rmsName)
-        {
-            isDisabled = isdisabled;
-        }
-
-        public ModMenuItemInt(string title, string description, string rmsName, bool isdisabled, string disabledreason) : this(title, description, rmsName, isdisabled)
-        {
-            DisabledReason = disabledreason;
-        }
-
-        public ModMenuItemInt(string title, string description, int selectedValue, string rmsName, bool isdisabled) : this(title, description, selectedValue, rmsName)
-        {
-            isDisabled = isdisabled;
-        }
-
-        public ModMenuItemInt(string title, string description, int selectedValue, string rmsName, bool isdisabled, string disabledreason) : this(title, description, selectedValue, rmsName, isdisabled)
-        {
-            DisabledReason = disabledreason;
+            RMSName = rmsName;
+            this.isDisabled = isDisabled;
+            DisabledReason = disabledReason;
         }
 
         public override bool Equals(object obj)

@@ -2,6 +2,7 @@ using System;
 using Assets.src.g;
 using Mod;
 using Mod.ModMenu;
+using UnityEngine;
 
 public class GameScr : mScreen, IChatable
 {
@@ -3727,124 +3728,124 @@ public class GameScr : mScreen, IChatable
 
 	private void autoPlay()
 	{
-		if (timeSkill > 0)
-		{
-			timeSkill--;
-		}
-		if (!canAutoPlay || isChangeZone || Char.myCharz().statusMe == 14 || Char.myCharz().statusMe == 5 || Char.myCharz().isCharge || Char.myCharz().isFlyAndCharge || Char.myCharz().isUseChargeSkill())
-		{
-			return;
-		}
-		bool flag = false;
-		for (int i = 0; i < vMob.size(); i++)
-		{
-			Mob mob = (Mob)vMob.elementAt(i);
-			if (mob.status != 0 && mob.status != 1)
-			{
-				flag = true;
-			}
-		}
-		if (!flag)
-		{
-			return;
-		}
-		bool flag2 = false;
-		for (int j = 0; j < Char.myCharz().arrItemBag.Length; j++)
-		{
-			Item item = Char.myCharz().arrItemBag[j];
-			if (item != null && item.template.type == 6)
-			{
-				flag2 = true;
-				break;
-			}
-		}
-		if (!flag2 && GameCanvas.gameTick % 150 == 0)
-		{
-			Service.gI().requestPean();
-		}
-		if (Char.myCharz().cHP <= Char.myCharz().cHPFull * 20 / 100 || Char.myCharz().cMP <= Char.myCharz().cMPFull * 20 / 100)
-		{
-			doUseHP();
-		}
-		if (Char.myCharz().mobFocus == null || (Char.myCharz().mobFocus != null && Char.myCharz().mobFocus.isMobMe))
-		{
-			for (int k = 0; k < vMob.size(); k++)
-			{
-				Mob mob2 = (Mob)vMob.elementAt(k);
-				if (mob2.status != 0 && mob2.status != 1 && mob2.hp > 0 && !mob2.isMobMe)
-				{
-					Char.myCharz().cx = mob2.x;
-					Char.myCharz().cy = mob2.y;
-					Char.myCharz().mobFocus = mob2;
-					Service.gI().charMove();
-					Res.outz("focus 1 con bossssssssssssssssssssssssssssssssssssssssssssssssss");
-					break;
-				}
-			}
-		}
-		else if (Char.myCharz().mobFocus.hp <= 0 || Char.myCharz().mobFocus.status == 1 || Char.myCharz().mobFocus.status == 0)
-		{
-			Char.myCharz().mobFocus = null;
-		}
-		if (Char.myCharz().mobFocus == null || timeSkill != 0 || (Char.myCharz().skillInfoPaint() != null && Char.myCharz().indexSkill < Char.myCharz().skillInfoPaint().Length && Char.myCharz().dart != null && Char.myCharz().arr != null))
-		{
-			return;
-		}
-		Skill skill = null;
-		if (GameCanvas.isTouch)
-		{
-			for (int l = 0; l < onScreenSkill.Length; l++)
-			{
-				if (onScreenSkill[l] == null || onScreenSkill[l].paintCanNotUseSkill || onScreenSkill[l].template.id == 10 || onScreenSkill[l].template.id == 11 || onScreenSkill[l].template.id == 14 || onScreenSkill[l].template.id == 23 || onScreenSkill[l].template.id == 7 || Char.myCharz().skillInfoPaint() != null)
-				{
-					continue;
-				}
-				int num = 0;
-				num = ((onScreenSkill[l].template.manaUseType == 2) ? 1 : ((onScreenSkill[l].template.manaUseType == 1) ? (onScreenSkill[l].manaUse * Char.myCharz().cMPFull / 100) : onScreenSkill[l].manaUse));
-				if (Char.myCharz().cMP >= num)
-				{
-					if (skill == null)
-					{
-						skill = onScreenSkill[l];
-					}
-					else if (skill.coolDown < onScreenSkill[l].coolDown)
-					{
-						skill = onScreenSkill[l];
-					}
-				}
-			}
-			if (skill != null)
-			{
-				doSelectSkill(skill, isShortcut: true);
-				doDoubleClickToObj(Char.myCharz().mobFocus);
-			}
-			return;
-		}
-		for (int m = 0; m < keySkill.Length; m++)
-		{
-			if (keySkill[m] == null || keySkill[m].paintCanNotUseSkill || keySkill[m].template.id == 10 || keySkill[m].template.id == 11 || keySkill[m].template.id == 14 || keySkill[m].template.id == 23 || keySkill[m].template.id == 7 || Char.myCharz().skillInfoPaint() != null)
-			{
-				continue;
-			}
-			int num2 = 0;
-			num2 = ((keySkill[m].template.manaUseType == 2) ? 1 : ((keySkill[m].template.manaUseType == 1) ? (keySkill[m].manaUse * Char.myCharz().cMPFull / 100) : keySkill[m].manaUse));
-			if (Char.myCharz().cMP >= num2)
-			{
-				if (skill == null)
-				{
-					skill = keySkill[m];
-				}
-				else if (skill.coolDown < keySkill[m].coolDown)
-				{
-					skill = keySkill[m];
-				}
-			}
-		}
-		if (skill != null)
-		{
-			doSelectSkill(skill, isShortcut: true);
-			doDoubleClickToObj(Char.myCharz().mobFocus);
-		}
+		//if (timeSkill > 0)
+		//{
+		//	timeSkill--;
+		//}
+		//if (!canAutoPlay || isChangeZone || Char.myCharz().statusMe == 14 || Char.myCharz().statusMe == 5 || Char.myCharz().isCharge || Char.myCharz().isFlyAndCharge || Char.myCharz().isUseChargeSkill())
+		//{
+		//	return;
+		//}
+		//bool flag = false;
+		//for (int i = 0; i < vMob.size(); i++)
+		//{
+		//	Mob mob = (Mob)vMob.elementAt(i);
+		//	if (mob.status != 0 && mob.status != 1)
+		//	{
+		//		flag = true;
+		//	}
+		//}
+		//if (!flag)
+		//{
+		//	return;
+		//}
+		//bool flag2 = false;
+		//for (int j = 0; j < Char.myCharz().arrItemBag.Length; j++)
+		//{
+		//	Item item = Char.myCharz().arrItemBag[j];
+		//	if (item != null && item.template.type == 6)
+		//	{
+		//		flag2 = true;
+		//		break;
+		//	}
+		//}
+		//if (!flag2 && GameCanvas.gameTick % 150 == 0)
+		//{
+		//	Service.gI().requestPean();
+		//}
+		//if (Char.myCharz().cHP <= Char.myCharz().cHPFull * 20 / 100 || Char.myCharz().cMP <= Char.myCharz().cMPFull * 20 / 100)
+		//{
+		//	doUseHP();
+		//}
+		//if (Char.myCharz().mobFocus == null || (Char.myCharz().mobFocus != null && Char.myCharz().mobFocus.isMobMe))
+		//{
+		//	for (int k = 0; k < vMob.size(); k++)
+		//	{
+		//		Mob mob2 = (Mob)vMob.elementAt(k);
+		//		if (mob2.status != 0 && mob2.status != 1 && mob2.hp > 0 && !mob2.isMobMe)
+		//		{
+		//			Char.myCharz().cx = mob2.x;
+		//			Char.myCharz().cy = mob2.y;
+		//			Char.myCharz().mobFocus = mob2;
+		//			Service.gI().charMove();
+		//			Res.outz("focus 1 con bossssssssssssssssssssssssssssssssssssssssssssssssss");
+		//			break;
+		//		}
+		//	}
+		//}
+		//else if (Char.myCharz().mobFocus.hp <= 0 || Char.myCharz().mobFocus.status == 1 || Char.myCharz().mobFocus.status == 0)
+		//{
+		//	Char.myCharz().mobFocus = null;
+		//}
+		//if (Char.myCharz().mobFocus == null || timeSkill != 0 || (Char.myCharz().skillInfoPaint() != null && Char.myCharz().indexSkill < Char.myCharz().skillInfoPaint().Length && Char.myCharz().dart != null && Char.myCharz().arr != null))
+		//{
+		//	return;
+		//}
+		//Skill skill = null;
+		//if (GameCanvas.isTouch)
+		//{
+		//	for (int l = 0; l < onScreenSkill.Length; l++)
+		//	{
+		//		if (onScreenSkill[l] == null || onScreenSkill[l].paintCanNotUseSkill || onScreenSkill[l].template.id == 10 || onScreenSkill[l].template.id == 11 || onScreenSkill[l].template.id == 14 || onScreenSkill[l].template.id == 23 || onScreenSkill[l].template.id == 7 || Char.myCharz().skillInfoPaint() != null)
+		//		{
+		//			continue;
+		//		}
+		//		int num = 0;
+		//		num = ((onScreenSkill[l].template.manaUseType == 2) ? 1 : ((onScreenSkill[l].template.manaUseType == 1) ? (onScreenSkill[l].manaUse * Char.myCharz().cMPFull / 100) : onScreenSkill[l].manaUse));
+		//		if (Char.myCharz().cMP >= num)
+		//		{
+		//			if (skill == null)
+		//			{
+		//				skill = onScreenSkill[l];
+		//			}
+		//			else if (skill.coolDown < onScreenSkill[l].coolDown)
+		//			{
+		//				skill = onScreenSkill[l];
+		//			}
+		//		}
+		//	}
+		//	if (skill != null)
+		//	{
+		//		doSelectSkill(skill, isShortcut: true);
+		//		doDoubleClickToObj(Char.myCharz().mobFocus);
+		//	}
+		//	return;
+		//}
+		//for (int m = 0; m < keySkill.Length; m++)
+		//{
+		//	if (keySkill[m] == null || keySkill[m].paintCanNotUseSkill || keySkill[m].template.id == 10 || keySkill[m].template.id == 11 || keySkill[m].template.id == 14 || keySkill[m].template.id == 23 || keySkill[m].template.id == 7 || Char.myCharz().skillInfoPaint() != null)
+		//	{
+		//		continue;
+		//	}
+		//	int num2 = 0;
+		//	num2 = ((keySkill[m].template.manaUseType == 2) ? 1 : ((keySkill[m].template.manaUseType == 1) ? (keySkill[m].manaUse * Char.myCharz().cMPFull / 100) : keySkill[m].manaUse));
+		//	if (Char.myCharz().cMP >= num2)
+		//	{
+		//		if (skill == null)
+		//		{
+		//			skill = keySkill[m];
+		//		}
+		//		else if (skill.coolDown < keySkill[m].coolDown)
+		//		{
+		//			skill = keySkill[m];
+		//		}
+		//	}
+		//}
+		//if (skill != null)
+		//{
+		//	doSelectSkill(skill, isShortcut: true);
+		//	doDoubleClickToObj(Char.myCharz().mobFocus);
+		//}
 	}
 
 	private void doFire(bool isFireByShortCut, bool skipWaypoint)
@@ -4671,8 +4672,9 @@ public class GameScr : mScreen, IChatable
 			}
 			updateChatVip();
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
+			Debug.LogException(ex);
 		}
 		int num4 = GameCanvas.gameTick % 4000;
 		if (num4 == 1000)

@@ -106,7 +106,7 @@ namespace Mod.Graphics
         {
             new Thread(delegate ()
             {
-                string[] paths = FileDialog.OpenFileDialog("Chọn tệp ảnh để làm ảnh nền", "Tệp ảnh (*.png)|*.png", "png");
+                string[] paths = FileDialog.OpenSelectFileDialog("Chọn tệp ảnh để làm ảnh nền", "Tệp ảnh (*.png)|*.png", "png");
                 if (paths != null) 
                 {
                     listImagePaths.AddRange(paths);

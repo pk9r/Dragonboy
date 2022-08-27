@@ -23,6 +23,7 @@ namespace Mod
 
         public const sbyte ID_SKILL_BUFF = 7;
         public const int ID_ICON_ITEM_TDLT = 4387;
+        public const short ID_NPC_MOD_FACE = 7333;// Doraemon, TODO: custom npc avatar
 
         private const BindingFlags PUBLIC_STATIC_VOID =
             BindingFlags.Public | BindingFlags.NonPublic |
@@ -383,7 +384,7 @@ namespace Mod
         {
             new Thread(delegate ()
             {
-                GameScr.info1.addInfo(string.Join("\n", FileDialog.OpenFileDialog("Chọn tệp ảnh nền", "Tệp ảnh (*.png)|*.png", "png")), 0);
+                GameScr.info1.addInfo(FileDialog.OpenSaveFileDialog("Lưu tệp ảnh nền", "Tệp ảnh (*.png)|*.png", "png"), 0);
             })
             {
                 IsBackground = true
@@ -692,6 +693,11 @@ namespace Mod
             {
                 return image;
             }
+        }
+
+        public static void DoDoubleClickToObj(IMapObject mapObject)
+        {
+            typeof(GameScr).GetMethod("doDoubleClickToObj", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod).Invoke(GameScr.gI(), new object[] { mapObject });
         }
     }
 }

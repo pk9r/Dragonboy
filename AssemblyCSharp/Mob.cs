@@ -6,7 +6,11 @@ using UnityEngine;
 
 public class Mob : IMapObject
 {
-	public const sbyte TYPE_DUNG = 0;
+	public int countDie;
+
+    public long lastTimeDie;
+
+    public const sbyte TYPE_DUNG = 0;
 
 	public const sbyte TYPE_DI = 1;
 
@@ -503,6 +507,7 @@ public class Mob : IMapObject
 
 	public virtual void update()
 	{
+		GameEvents.onUpdateMob(this);
 		GetFrame();
 		if (blindEff && GameCanvas.gameTick % 5 == 0)
 		{
@@ -1416,6 +1421,7 @@ public class Mob : IMapObject
 
 	public void startDie()
 	{
+		GameEvents.onMobStartDie(this);
 		hp = 0;
 		injureThenDie = true;
 		hp = 0;

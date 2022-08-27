@@ -88,8 +88,7 @@ namespace Mod
         /// <returns>true nếu lệnh thực hiện thành công.</returns>
         public static bool executeFull(string command)
         {
-            string pattern = @"^(([A-Za-z.]+)\.([A-Za-z]+))(.*)$";
-            var match = Regex.Match(command, pattern);
+            var match = Regex.Match(command, @"^(([A-Za-z0-9.]+)\.([A-Za-z0-9]+))(.*)$");
 
             if (!match.Success)
             {

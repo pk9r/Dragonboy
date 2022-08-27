@@ -103,6 +103,7 @@ namespace Mod.Xmap
                     ShowPanelXmap(idMaps);
                     break;
             }
+            Char.chatPopup = null;
         }
 
         private static void Wait(int time)
@@ -127,6 +128,7 @@ namespace Mod.Xmap
             foreach (var groupMap in XmapData.Instance().GroupMaps)
                 myVector.addElement(new Command(groupMap.NameGroup, _Instance, 1, groupMap.IdMaps));
             GameCanvas.menu.startAt(myVector, 3);
+            ChatPopup.addChatPopup($"XmapNRO by Phucprotein\nMap hiện tại: {TileMap.mapName}, ID: {TileMap.mapID}\nVui lòng chọn nơi muốn đến", 100000, new Npc(5, 0, -100, 100, 5, Utilities.ID_NPC_MOD_FACE));
         }
 
         public static void ShowPanelXmap(List<int> idMaps)

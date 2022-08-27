@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using UnityEngine;
 
-namespace Mod {
+namespace Mod
+{
     public class TeleportMenu : IChatable, IActionListener
     {
         public static List<TeleportChar> listTeleportChars = new List<TeleportChar>();
