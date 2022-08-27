@@ -256,18 +256,13 @@ namespace Mod
             MyVector myVector = new MyVector();
             Mob mob = ClosestMob();
             Char.myCharz().mobFocus = mob;
-            if (mob.getTemplate().type == 4) doDoubleClickToObj(mob);
+            if (mob.getTemplate().type == 4) Utilities.DoDoubleClickToObj(mob);
             else
             {
                 myVector.addElement(mob);
                 Char.myCharz().currentMovePoint = new MovePoint(mob.x, mob.y);
                 if (Res.distance(Char.myCharz().cx, Char.myCharz().cy, mob.x, mob.y) <= 50) Service.gI().sendPlayerAttack(myVector, new MyVector(), -1);
             }
-        }
-
-        static void doDoubleClickToObj(IMapObject mapObject)
-        {
-            typeof(GameScr).GetMethod("doDoubleClickToObj", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod).Invoke(GameScr.gI(), new object[] { mapObject });
         }
 
         private static Mob ClosestMob()
@@ -709,7 +704,7 @@ namespace Mod
             {
                 Char @char = (Char)GameScr.vCharInMap.elementAt(i);
                 if (@char.cName == "Karin" && @char.cTypePk == 3)
-                    doDoubleClickToObj(@char);
+                    Utilities.DoDoubleClickToObj(@char);
             }
         }
 
@@ -722,7 +717,7 @@ namespace Mod
             {
                 Char @char = (Char)GameScr.vCharInMap.elementAt(i);
                 if (@char.cName == "Tàu Pảy Pảy" && @char.cTypePk == 3)
-                    doDoubleClickToObj(@char);
+                    Utilities.DoDoubleClickToObj(@char);
             }
         }
 

@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class ItemMap : IMapObject
 {
-	public int x;
+	public int countAutoPick;
+
+    public int x;
 
 	public int y;
 

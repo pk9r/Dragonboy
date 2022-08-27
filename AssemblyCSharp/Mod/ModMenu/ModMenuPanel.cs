@@ -1,4 +1,5 @@
-﻿using Mod.Images;
+﻿using Mod.Graphics;
+using Mod.PickMob;
 using Mod.Xmap;
 using System;
 using System.Collections.Generic;
@@ -98,9 +99,12 @@ namespace Mod.ModMenu
                     XmapController.ShowXmapMenu();
                     break;
                 case 1:
-                    TeleportMenu.ShowMenu();
+                    Pk9rPickMob.ShowMenu();
                     break;
                 case 2:
+                    TeleportMenu.ShowMenu();
+                    break;
+                case 3:
                     CustomBackground.ShowMenu();
                     break;
             }
@@ -404,6 +408,12 @@ namespace Mod.ModMenu
             AutoT77.isAutoT77 = ModMenuMain.modMenuItemBools[6].Value;
             SuicideRange.isShowSuicideRange = ModMenuMain.modMenuItemBools[7].Value;
             CustomBackground.isEnabled = ModMenuMain.modMenuItemBools[8].Value;
+            Pk9rPickMob.IsTanSat = ModMenuMain.modMenuItemBools[9].Value;
+            Pk9rPickMob.IsNeSieuQuai = ModMenuMain.modMenuItemBools[10].Value;
+            Pk9rPickMob.IsVuotDiaHinh = ModMenuMain.modMenuItemBools[11].Value;
+            Pk9rPickMob.IsAutoPickItems = ModMenuMain.modMenuItemBools[12].Value;
+            Pk9rPickMob.IsItemMe = ModMenuMain.modMenuItemBools[13].Value;
+            Pk9rPickMob.IsLimitTimesPickItem = ModMenuMain.modMenuItemBools[14].Value;
 
             manageDisabledModMenuItems();
         }
@@ -435,6 +445,7 @@ namespace Mod.ModMenu
             if (Char.myCharz().cPower > 2000000 || (Char.myCharz().cPower > 1500000 && TileMap.mapID != 111) || (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId < 9)) ModMenuMain.modMenuItemBools[6].isDisabled = true;
             else ModMenuMain.modMenuItemBools[6].isDisabled = false;
             ModMenuMain.modMenuItemBools[8].isDisabled = ModMenuMain.modMenuItemInts[1].SelectedValue > 0;
+            ModMenuMain.modMenuItemBools[9].isDisabled = AutoSS.isAutoSS || AutoT77.isAutoT77;
 
             ModMenuMain.modMenuItemInts[0].isDisabled = ModMenuMain.modMenuItemBools[0].Value;
             ModMenuMain.modMenuItemInts[2].isDisabled = ModMenuMain.modMenuItemBools[5].Value || ModMenuMain.modMenuItemBools[6].Value;
@@ -459,7 +470,8 @@ namespace Mod.ModMenu
             }
             else
             {
-                //ModMenuItemFunction không có isDisabled
+                if (!ModMenuMain.modMenuItemFunctions[selected].isDisabled) return;
+                GameScr.info1.addInfo(ModMenuMain.modMenuItemFunctions[selected].DisabledReason, 0);
             }
         }
     }

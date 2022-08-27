@@ -7,7 +7,7 @@ using Mod.Dialogs;
 using System.IO;
 using System.Threading;
 
-namespace Mod.Images
+namespace Mod.Graphics
 {
     public class CustomBackground : IActionListener
     {
@@ -106,7 +106,7 @@ namespace Mod.Images
         {
             new Thread(delegate ()
             {
-                string[] paths = FileDialog.OpenFileDialog("Chọn tệp ảnh để làm ảnh nền", "Tệp ảnh (*.png)|*.png", "png");
+                string[] paths = FileDialog.OpenSelectFileDialog("Chọn tệp ảnh để làm ảnh nền", "Tệp ảnh (*.png)|*.png", "png");
                 if (paths != null) 
                 {
                     listImagePaths.AddRange(paths);
@@ -206,7 +206,9 @@ namespace Mod.Images
                         imageIndex = 0;
                         lastTimeDrawAnImage = mSystem.currentTimeMillis();
                     }
+                    GameScr.info1.addInfo("Đã xóa ảnh " + index + "!", 0);
                     setTabCustomBackgroundPanel();
+                    SaveData();
                     break;
             }
         }
@@ -224,18 +226,7 @@ namespace Mod.Images
 
         public static void SaveData()
         {
-            try
-            {
-                foreach (string str in Utilities.loadRMSString("custombackgroundpath").Split('|'))
-                {
-                    if (listImagePaths.Contains(str)) continue;
-                    listImagePaths.Add(str);
-                }
-            }
-            catch (Exception)
-            { }
             string data = string.Join("|", listImagePaths.ToArray());
-            //data = data.Remove(data.LastIndexOf('|'), 1);
             Utilities.saveRMSString("custombackgroundpath", data);
         }
     }

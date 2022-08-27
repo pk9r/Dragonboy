@@ -18,6 +18,7 @@ Discord hỏi đáp: https://discord.gg/zdvBdVxRh6
 - tele: mở menu dịch chuyển tức thời
 - xmp: mở menu Xmap
 - xmp***X***: Xmap đến map có id ***X***
+- ***Các lệnh chat của PickMob có thể xem tại [đây](AssemblyCSharp/Mod/PickMob/README.md).***
 #### Invoke method bằng lệnh chat
 - Gọi method trong assembly của game bằng tên đầy đủ (Namespace + tên class + tên method). Method được invoke phải là method static và không phải là constructor (.ctor).
 ### Phím tắt

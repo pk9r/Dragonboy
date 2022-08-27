@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using UnityEngine;
 
-namespace Mod {
+namespace Mod
+{
     public class TeleportMenu : IChatable, IActionListener
     {
         public static List<TeleportChar> listTeleportChars = new List<TeleportChar>();
@@ -76,8 +76,13 @@ namespace Mod {
                 try
                 {
                     int charId = int.Parse(text);
-                    if (charId < 0) throw new Exception();
+                    if (charId < 0)
+                    {
+                        GameCanvas.startOKDlg("CharID phải lớn hơn hoặc bằng 0!");
+                        return;
+                    } 
                     listTeleportChars.Add(new TeleportChar(charId));
+                    SaveData();
                     GameScr.info1.addInfo($"Đã thêm nhân vật với CharID {text}!", 0);
 
                 }
@@ -105,12 +110,14 @@ namespace Mod {
                     break;
                 case 2:
                     listTeleportChars.Insert(0, teleportChar);
-                    GameScr.info1.addInfo($"Đã thêm {teleportChar}!", 0);
+                    SaveData();
+                    GameScr.info1.addInfo($"Đã thêm nhân vật {teleportChar}!", 0);
                     break;
                 case 3:
                     if (isAutoTeleportTo && teleportChar != charAutoTeleportTo)
                     {
                         listTeleportChars.Remove(teleportChar);
+                        SaveData();
                         GameScr.info1.addInfo($"Đã xóa nhân vật {teleportChar}!", 0);
                     }
                     else GameScr.info1.addInfo($"Không thể xóa nhân vật đang auto dịch chuyển!", 0);
@@ -127,6 +134,7 @@ namespace Mod {
                 case 5:
                     ChatTextField.gI().strChat = inputCharID[0];
                     ChatTextField.gI().tfChat.name = inputCharID[1];
+                    ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
                     ChatTextField.gI().startChat2(getInstance(), string.Empty);
                     break;
                 case 6:
@@ -139,6 +147,7 @@ namespace Mod {
                             if (!listTeleportChars.Contains(teleportChar1)) listTeleportChars.Add(teleportChar1);
                         }
                     }
+                    SaveData();
                     GameScr.info1.addInfo("Đã thêm toàn bộ nhân vật trong map!", 0);
                     break;
                 case 7:
@@ -149,6 +158,7 @@ namespace Mod {
                     {
                         if (listTeleportChars[i] != charAutoTeleportTo) listTeleportChars.RemoveAt(i);
                     }
+                    SaveData();
                     GameScr.info1.addInfo("Đã xóa toàn bộ nhân vật đã lưu!", 0);
                     break;
                 case 9:
@@ -160,6 +170,7 @@ namespace Mod {
                     if (teleportChar != charAutoTeleportTo)
                     {
                         listTeleportChars.Remove(teleportChar);
+                        SaveData();
                         GameScr.info1.addInfo($"Đã xóa nhân vật {teleportChar.cName}!", 0);
                         setTypeTeleportListPanel();
                     }
@@ -215,11 +226,6 @@ namespace Mod {
         public static void SaveData()
         {
             string data = "";
-            try
-            {
-                data = Utilities.loadRMSString($"teleportlist_{GameMidlet.IP}_{GameMidlet.PORT}");
-            }
-            catch (Exception) { }
             foreach (TeleportChar teleportChar in listTeleportChars)
             {
                 data += teleportChar.cName + "," + teleportChar.charID + "," + teleportChar.lastTimeTeleportTo + "|";

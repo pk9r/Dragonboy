@@ -2,7 +2,7 @@
 using System.Reflection;
 using UnityEngine;
 
-namespace Mod
+namespace Mod.Graphics
 {
     public static class CustomGraphics
     {
@@ -192,7 +192,6 @@ namespace Mod
             y1 *= mGraphics.zoomLevel;
             x2 *= mGraphics.zoomLevel;
             y2 *= mGraphics.zoomLevel;
-            thickness *= mGraphics.zoomLevel;
             if (x1 == x2 && y1 == y2) return;
             if (isTranslate)
             {
@@ -247,7 +246,7 @@ namespace Mod
             {
                 GUI.BeginGroup(new Rect(num5, num6, num7, num8));
             }
-            Graphics.DrawTexture(new Rect(vector.x - num5, vector.y - num4 - num6, vector3.magnitude, thickness), texture2D);
+            UnityEngine.Graphics.DrawTexture(new Rect(vector.x - num5, vector.y - num4 - num6, vector3.magnitude, thickness), texture2D);
             if (isClip)
             {
                 GUI.EndGroup();

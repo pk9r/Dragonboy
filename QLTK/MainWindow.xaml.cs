@@ -71,6 +71,8 @@ namespace QLTK
 
         public static object settings;
 
+        static int width, height;
+
         public MainWindow()
         {
             this.InitializeComponent();
@@ -183,11 +185,12 @@ namespace QLTK
             var match = Regex.Match(this.TextBoxSize.Text, @"^\s*(\d+)x(\d+)\s*$");
             if (!match.Success)
                 return false;
-
+            width = int.Parse(match.Groups[1].Value);
+            height = int.Parse(match.Groups[2].Value);
             sizeData = new
             {
-                width = int.Parse(match.Groups[1].Value),
-                height = int.Parse(match.Groups[2].Value),
+                width,
+                height,
                 typeSize = this.ComboBoxTypeSize.SelectedIndex + 1,
                 lowGraphic = this.ComboBoxLowGraphic.SelectedIndex
             };
@@ -314,7 +317,7 @@ namespace QLTK
                 AsynchronousSocketListener.waitingAccounts.Add(account);
 
                 account.process = Process.Start(Settings.Default.PathGame,
-                    $"-port {Settings.Default.PortListener}");
+                    $"-port {Settings.Default.PortListener} -screen-width {width} -screen-height {height}");
 
                 while (account.process.MainWindowHandle == IntPtr.Zero)
                 {

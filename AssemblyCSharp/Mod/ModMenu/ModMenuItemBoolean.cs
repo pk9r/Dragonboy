@@ -20,39 +20,14 @@ namespace Mod.ModMenu
 
         public string DisabledReason { get; set; }
 
-        public ModMenuItemBoolean(string title, string description, bool value, string rmsName, string disabledreason) : this(title, description, value, rmsName)
-        {
-            DisabledReason = disabledreason;
-        }
-
-        public ModMenuItemBoolean(string title, string description, bool value, string rmsName) : this(title, description, rmsName)
-        {
-            Value = value;
-            isDisabled = false;
-        }
-
-        public ModMenuItemBoolean(string title, string description, string rmsName, bool isDisabled, string disabledreason) : this(title, description, rmsName, isDisabled)
-        {
-            DisabledReason = disabledreason;
-        }
-
-        public ModMenuItemBoolean(string title, string description, string rmsName, bool isDisabled) : this(title, description, rmsName)
-        {
-            this.isDisabled = isDisabled;
-        }
-
-        public ModMenuItemBoolean(string title, string description, string rmsName, string disabledreason) : this(title, description, rmsName)
-        {
-            DisabledReason = disabledreason;
-        }
-
-        public ModMenuItemBoolean(string title, string description, string rmsName)
+        public ModMenuItemBoolean(string title, string description, bool value = false, string rmsName = "", bool isDisabled = false, string disabledReason = "")
         {
             Title = title;
             Description = description;
-            Value = false;
+            Value = value;
             RMSName = rmsName;
-            isDisabled = false;
+            this.isDisabled = isDisabled;
+            DisabledReason = disabledReason;
         }
 
         public override bool Equals(object obj)

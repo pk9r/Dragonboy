@@ -7,6 +7,9 @@ namespace Mod.Dialogs
 {
     public class FileDialog
     {
+        /// <summary>
+        /// Link: https://docs.microsoft.com/en-us/windows/win32/api/commdlg/ns-commdlg-openfilenamea
+        /// </summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class OpenFileName
         {
@@ -40,7 +43,7 @@ namespace Mod.Dialogs
 
         public OpenFileName openFileNameInstance = new OpenFileName();
 
-        FileDialog(string title, string filter, string extension)
+        FileDialog(string title, string filter, string extension, string initialPath = "", int flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000200 | 0x00000008)
         {
             openFileNameInstance.hwndOwner = GetForegroundWindow();
             openFileNameInstance.lStructSize = Marshal.SizeOf(openFileNameInstance);
@@ -49,7 +52,7 @@ namespace Mod.Dialogs
             openFileNameInstance.nMaxFile = 256;
             openFileNameInstance.lpstrFileTitle = new string(new char[64]);
             openFileNameInstance.nMaxFileTitle = openFileNameInstance.lpstrFileTitle.Length;
-            openFileNameInstance.lpstrInitialDir = Application.dataPath;
+            openFileNameInstance.lpstrInitialDir = string.IsNullOrEmpty(initialPath) ? Application.dataPath : initialPath;
             openFileNameInstance.lpstrTitle = title;
             openFileNameInstance.lpstrFilter = Marshal.AllocHGlobal((filter.Length + 2) * sizeof(short));
             StringBuilder stringBuilder = new StringBuilder(filter);
@@ -57,29 +60,43 @@ namespace Mod.Dialogs
             stringBuilder.Replace('|', '\0').CopyTo(0, chars, 0, filter.Length);
             Marshal.Copy(chars, 0, openFileNameInstance.lpstrFilter, chars.Length);
             openFileNameInstance.lpstrDefExt = extension;
-            openFileNameInstance.Flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000200 | 0x00000008;//OFN_EXPLORER|OFN_FILEMUSTEXIST|OFN_PATHMUSTEXIST| OFN_ALLOWMULTISELECT|OFN_NOCHANGEDIR
-        }
-
-        FileDialog(string title, string filter, string extension, string initialPath) : this(title, filter, extension)
-        {
-            openFileNameInstance.lpstrInitialDir = initialPath;
-        }
-
-        FileDialog(string title, string filter, string extension, int flags) : this(title, filter, extension)
-        {
-            openFileNameInstance.Flags = flags;
-        }
-
-        FileDialog(string title, string filter, string extension, string initialPath, int flags) : this(title, filter, extension, initialPath)
-        {
-            openFileNameInstance.Flags = flags;
+            openFileNameInstance.Flags = flags;//OFN_EXPLORER|OFN_FILEMUSTEXIST|OFN_PATHMUSTEXIST| OFN_ALLOWMULTISELECT|OFN_NOCHANGEDIR
         }
 
         [DllImport("Comdlg32.dll", SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Auto)]
         static extern bool GetOpenFileName([In, Out] OpenFileName ofn);
 
+        [DllImport("Comdlg32.dll", SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Auto)]
+        static extern bool GetSaveFileName([In, Out] OpenFileName ofn);
+
         [DllImport("user32.dll")]
-        public static extern IntPtr GetForegroundWindow();
+        static extern IntPtr GetForegroundWindow();
+
+        /// <summary>
+        /// Mở hộp thoại lưu tệp.
+        /// </summary>
+        /// <param name="title">Tiêu đề cửa sổ của hộp thoại lưu tệp.</param>
+        /// <param name="filter">Bộ lọc tệp, phân cách nhau bởi dấu chấm phẩy (;). Nội dung và phần mở rộng phân cách nhau bởi dấu gạch đứng (|).</param>
+        /// <param name="missingExtension">Phần mở rộng tệp (không bao gồm dấu chấm) được tự động thêm nếu người dùng nhập thiếu. Có thể là một xâu rỗng nếu không cần sử dụng.</param>
+        /// <returns>Mảng xâu chứa đường dẫn tới các tệp đã được chọn.</returns>
+        public static string OpenSaveFileDialog(string title, string filter, string missingExtension)
+        {
+            FileDialog openFileDialog = new FileDialog(title, filter, missingExtension, "", 0x00080000 | 0x00001000 | 0x00000800 | 0x00000008);
+            string result;
+            if (GetSaveFileName(openFileDialog.openFileNameInstance))
+            {
+                char[] chars = new char[1024];
+                Marshal.Copy(openFileDialog.openFileNameInstance.lpstrFile, chars, 0, 1024);
+                result = new StringBuilder().Append(chars).Replace('\0', '|').ToString();
+                result = result.Substring(0, result.IndexOf("||"));
+            }
+            else return null;
+            Marshal.FreeHGlobal(openFileDialog.openFileNameInstance.lpstrFile);
+            Marshal.FreeHGlobal(openFileDialog.openFileNameInstance.lpstrFilter);
+            openFileDialog.openFileNameInstance.lpstrFile = IntPtr.Zero;
+            openFileDialog.openFileNameInstance.lpstrFilter = IntPtr.Zero;
+            return result;
+        }
 
         /// <summary>
         /// Mở hộp thoại chọn tệp. Được phép chọn nhiều tệp cùng một lúc.
@@ -88,13 +105,10 @@ namespace Mod.Dialogs
         /// <param name="filter">Bộ lọc tệp, phân cách nhau bởi dấu chấm phẩy (;). Nội dung và phần mở rộng phân cách nhau bởi dấu gạch đứng (|).</param>
         /// <param name="missingExtension">Phần mở rộng tệp (không bao gồm dấu chấm) được tự động thêm nếu người dùng nhập thiếu. Có thể là một xâu rỗng nếu không cần sử dụng.</param>
         /// <returns>Mảng xâu chứa đường dẫn tới các tệp đã được chọn.</returns>
-        public static string[] OpenFileDialog(string title, string filter, string missingExtension)
+        public static string[] OpenSelectFileDialog(string title, string filter, string missingExtension)
         {
             FileDialog openFileDialog = new FileDialog(title, filter, missingExtension);
-            //filter = "Picture files (*.png)|*.png";
-            //title = "Upload Image";
-            //defExt = "PNG";
-            string str = string.Empty;
+            string str;
             if (GetOpenFileName(openFileDialog.openFileNameInstance))
             {
                 char[] chars = new char[1024];

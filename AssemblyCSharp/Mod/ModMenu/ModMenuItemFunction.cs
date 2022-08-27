@@ -13,16 +13,14 @@ namespace Mod.ModMenu
 
         public bool isDisabled { get; set; }
 
-        public ModMenuItemFunction(string title, string description, bool isDisabled)
+        public string DisabledReason { get; set; }
+
+        public ModMenuItemFunction(string title, string description, bool isDisabled = false, string disabledReason = "")
         {
             Title = title;
             Description = description;
             this.isDisabled = isDisabled;
-        }
-
-        public ModMenuItemFunction(string title, string description) : this(title, description, false)
-        {
-
+            DisabledReason = disabledReason;
         }
 
         public override bool Equals(object obj)

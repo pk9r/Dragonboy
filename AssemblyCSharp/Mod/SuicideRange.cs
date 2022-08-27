@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mod.Graphics;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -68,7 +69,7 @@ namespace Mod
                 {
                     g.setColor(Color.yellow);
                     if (GameCanvas.gameTick % 10 >= 5) g.setColor(Color.red);
-                    CustomGraphics.drawLine(g, Char.myCharz().cx, Char.myCharz().cy, c.cx, c.cy, 2);
+                    CustomGraphics.drawLine(g, Char.myCharz().cx, Char.myCharz().cy, c.cx, c.cy, 3);
                     string str = $"Đang trong tầm bom của {CharExtensions.getNameWithoutClanTag(c)} [{NinjaUtil.getMoneys(c.cHPFull)}]!";
                     g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.6f));
                     g.fillRect(12, y + 2, mFont.tahoma_7_red.getWidth(str) + 5, 9);

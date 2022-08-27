@@ -7,7 +7,8 @@ using Vietpad.InputMethod;
 using System;
 using System.Reflection;
 using Mod.ModMenu;
-using Mod.Images;
+using Mod.Graphics;
+using Mod.PickMob;
 
 namespace Mod
 {
@@ -31,7 +32,8 @@ namespace Mod
         public static bool onSendChat(string text)
         {
             HistoryChat.gI.append(text);
-            if (Pk9rXmap.Chat(text)) return true;
+            if (text.StartsWith("/") && (Pk9rXmap.Chat(text.Remove(0, 1)) || Pk9rPickMob.Chat(text.Remove(0, 1))))
+                return true;
             bool result = ChatCommandHandler.handleChatText(text);
 
             return result;
@@ -83,14 +85,15 @@ namespace Mod
         /// <returns></returns>
         public static bool onSetResolution()
         {
-            if (Utilities.sizeData != null)
-            {
-                int width = (int)Utilities.sizeData["width"];
-                int height = (int)Utilities.sizeData["height"];
-                Screen.SetResolution(width, height, fullscreen: false);
-                return true;
-            }
-            return false;
+            //if (Utilities.sizeData != null)
+            //{
+            //    int width = (int)Utilities.sizeData["width"];
+            //    int height = (int)Utilities.sizeData["height"];
+            //    Screen.SetResolution(width, height, fullscreen: false);
+            //    return true;
+            //}
+            //return false;
+            return true;
         }
 
         /// <summary>
@@ -210,6 +213,7 @@ namespace Mod
             AutoT77.update();
             AutoPet.update();
             SuicideRange.update();
+            if (!AutoSS.isAutoSS && !AutoT77.isAutoT77) Pk9rPickMob.Update();
             //NOTE onUpdateChatTextField không thể bấm tab.
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();
@@ -407,6 +411,16 @@ namespace Mod
                 return true;
             }
             return false;
+        }
+
+        public static void onMobStartDie(Mob instance)
+        {
+            Pk9rPickMob.MobStartDie(instance);
+        }
+
+        public static void onUpdateMob(Mob instance)
+        {
+            Pk9rPickMob.UpdateCountDieMob(instance);
         }
     }
 }

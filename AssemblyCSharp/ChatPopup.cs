@@ -302,7 +302,7 @@ public class ChatPopup : Effect2, IActionListener
 		PopUp.paintPopUp(g, num, num2, num3, num4, 16777215, isButton: false);
 		if (c != null)
 		{
-			SmallImage.drawSmallImage(g, c.avatar, cx + 14, cy, 0, StaticObj.BOTTOM_LEFT);
+			SmallImage.drawSmallImage(g, c.avatar, cx + 14, cy, 0, StaticObj.BOTTOM_LEFT);	//TODO: custom npc avatar
 		}
 		if (iconID != 0)
 		{
