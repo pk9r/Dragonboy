@@ -295,7 +295,8 @@ public class TField : IActionListener
 	{
 		if (caretPos > 0 && text.Length > 0)
 		{
-			text = text.Substring(0, caretPos - 1);
+			string textAfterCaret = text.Remove(0, caretPos);
+            text = text.Substring(0, caretPos - 1) + textAfterCaret;
 			caretPos--;
 			setOffset(0);
 			setPasswordTest();
@@ -400,15 +401,17 @@ public class TField : IActionListener
 		}
 		if (this.text.Length < maxTextLenght)
 		{
-			string text = this.text.Substring(0, caretPos) + (char)keyCode;
+            string oldText = this.text;
+            string text = this.text.Substring(0, caretPos) + (char)keyCode;
 			if (caretPos < this.text.Length)
 			{
 				text += this.text.Substring(caretPos, this.text.Length - caretPos);
 			}
 			this.text = text;
-			Mod.Utilities.toVietnamese(ref this.text, inputType);
-            caretPos = this.text.Length;
-            //caretPos++;
+			Mod.Utilities.toVietnamese(ref this.text, inputType, caretPos, (char)keyCode);
+            //caretPos = this.text.Length;
+			if (oldText.Length < this.text.Length) caretPos++;
+			//else if (oldText.Length > text.Length) caretPos--;
             setPasswordTest();
 			setOffset(0);
 		}
@@ -467,6 +470,16 @@ public class TField : IActionListener
 
 	public bool keyPressed(int keyCode)
 	{
+		if (keyCode == -3)
+		{
+			if (caretPos > 0) caretPos--;
+			return true;
+		}
+		if (keyCode == -4)
+		{
+			if (caretPos < text.Length) caretPos++;
+			return true;
+		}
 		if (Main.isPC && keyCode == -8)
 		{
 			clearKeyWhenPutText(-8);
