@@ -11,6 +11,7 @@ using static System.Net.Mime.MediaTypeNames;
 using Vietpad.InputMethod;
 using Mod.Dialogs;
 using System.Threading;
+using Mod.Graphics;
 
 namespace Mod
 {
@@ -538,9 +539,9 @@ namespace Mod
             fileStream.Close();
         }
 
-        public static void toVietnamese(ref string str, int inputType)
+        public static void toVietnamese(ref string str, int inputType, int caresPos, char keyChar)
         {
-            if (inputType == TField.INPUT_TYPE_ANY) str = vietKeyHandler.toVietnamese(str);
+            if (inputType == TField.INPUT_TYPE_ANY && !str.StartsWith("/")) str = vietKeyHandler.toVietnamese(str, caresPos);
         }
 
         /// <summary>

@@ -1,3 +1,4 @@
+using Mod;
 using System;
 using System.Threading;
 using UnityEngine;
@@ -323,17 +324,7 @@ public class Image
 
 	private static Image __createImage(string filename)
 	{
-		Image image = new Image();
-		Texture2D texture2D = Resources.Load(filename) as Texture2D;
-		if (texture2D == null)
-		{
-			throw new Exception("NULL POINTER EXCEPTION AT Image __createImage " + filename);
-		}
-		image.texture = texture2D;
-		image.w = image.texture.width;
-		image.h = image.texture.height;
-		setTextureQuality(image);
-		return image;
+		return GameEvents.onCreateImage(filename);
 	}
 
 	private static Image __createImage(byte[] imageData)

@@ -2801,264 +2801,206 @@ public class GameScr : mScreen, IChatable
 				}
 				GameCanvas.keyAsciiPress = 0;
 			}
-			if (Char.myCharz().statusMe == 1)
+			if (!ChatTextField.gI().isShow)
 			{
-				GameCanvas.debug("F10", 0);
-				if (!doSeleckSkillFlag)
+				if (Char.myCharz().statusMe == 1)
 				{
+					GameCanvas.debug("F10", 0);
+					if (!doSeleckSkillFlag)
+					{
+						if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
+						{
+							GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
+							doFire(isFireByShortCut: false, skipWaypoint: false);
+						}
+						else if (GameCanvas.keyHold[(!Main.isPC) ? 2 : 21])
+						{
+							if (!Char.myCharz().isLockMove)
+							{
+								setCharJump(0);
+							}
+						}
+						else if (GameCanvas.keyHold[1] && mobCapcha == null)
+						{
+							if (!Main.isPC)
+							{
+								Char.myCharz().cdir = -1;
+								if (!Char.myCharz().isLockMove)
+								{
+									setCharJump(-4);
+								}
+							}
+						}
+						else if (GameCanvas.keyHold[(!Main.isPC) ? 5 : 25] && mobCapcha == null)
+						{
+							if (!Main.isPC)
+							{
+								Char.myCharz().cdir = 1;
+								if (!Char.myCharz().isLockMove)
+								{
+									setCharJump(4);
+								}
+							}
+						}
+						else if (GameCanvas.keyHold[(!Main.isPC) ? 4 : 23])
+						{
+							isAutoPlay = false;
+							Char.myCharz().isAttack = false;
+							if (Char.myCharz().cdir == 1)
+							{
+								Char.myCharz().cdir = -1;
+							}
+							else if (!Char.myCharz().isLockMove)
+							{
+								if (Char.myCharz().cx - Char.myCharz().cxSend != 0)
+								{
+									Service.gI().charMove();
+								}
+								Char.myCharz().statusMe = 2;
+								Char.myCharz().cvx = -Char.myCharz().cspeed;
+							}
+							Char.myCharz().holder = false;
+						}
+						else if (GameCanvas.keyHold[(!Main.isPC) ? 6 : 24])
+						{
+							isAutoPlay = false;
+							Char.myCharz().isAttack = false;
+							if (Char.myCharz().cdir == -1)
+							{
+								Char.myCharz().cdir = 1;
+							}
+							else if (!Char.myCharz().isLockMove)
+							{
+								if (Char.myCharz().cx - Char.myCharz().cxSend != 0)
+								{
+									Service.gI().charMove();
+								}
+								Char.myCharz().statusMe = 2;
+								Char.myCharz().cvx = Char.myCharz().cspeed;
+							}
+							Char.myCharz().holder = false;
+						}
+					}
+				}
+				else if (Char.myCharz().statusMe == 2)
+				{
+					GameCanvas.debug("F11", 0);
 					if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
 					{
 						GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
-						doFire(isFireByShortCut: false, skipWaypoint: false);
+						doFire(isFireByShortCut: false, skipWaypoint: true);
 					}
 					else if (GameCanvas.keyHold[(!Main.isPC) ? 2 : 21])
 					{
-						if (!Char.myCharz().isLockMove)
+						if (Char.myCharz().cx - Char.myCharz().cxSend != 0 || Char.myCharz().cy - Char.myCharz().cySend != 0)
 						{
-							setCharJump(0);
+							Service.gI().charMove();
 						}
+						Char.myCharz().cvy = -10;
+						Char.myCharz().statusMe = 3;
+						Char.myCharz().cp1 = 0;
 					}
 					else if (GameCanvas.keyHold[1] && mobCapcha == null)
 					{
-						if (!Main.isPC)
+						if (Main.isPC)
 						{
-							Char.myCharz().cdir = -1;
-							if (!Char.myCharz().isLockMove)
+							if (Char.myCharz().cx - Char.myCharz().cxSend != 0 || Char.myCharz().cy - Char.myCharz().cySend != 0)
 							{
-								setCharJump(-4);
+								Service.gI().charMove();
 							}
+							Char.myCharz().cdir = -1;
+							Char.myCharz().cvy = -10;
+							Char.myCharz().cvx = -4;
+							Char.myCharz().statusMe = 3;
+							Char.myCharz().cp1 = 0;
 						}
 					}
-					else if (GameCanvas.keyHold[(!Main.isPC) ? 5 : 25] && mobCapcha == null)
+					else if (GameCanvas.keyHold[3] && mobCapcha == null)
 					{
 						if (!Main.isPC)
 						{
-							Char.myCharz().cdir = 1;
-							if (!Char.myCharz().isLockMove)
+							if (Char.myCharz().cx - Char.myCharz().cxSend != 0 || Char.myCharz().cy - Char.myCharz().cySend != 0)
 							{
-								setCharJump(4);
+								Service.gI().charMove();
 							}
+							Char.myCharz().cdir = 1;
+							Char.myCharz().cvy = -10;
+							Char.myCharz().cvx = 4;
+							Char.myCharz().statusMe = 3;
+							Char.myCharz().cp1 = 0;
 						}
 					}
 					else if (GameCanvas.keyHold[(!Main.isPC) ? 4 : 23])
 					{
 						isAutoPlay = false;
-						Char.myCharz().isAttack = false;
 						if (Char.myCharz().cdir == 1)
 						{
 							Char.myCharz().cdir = -1;
 						}
-						else if (!Char.myCharz().isLockMove)
+						else
 						{
-							if (Char.myCharz().cx - Char.myCharz().cxSend != 0)
-							{
-								Service.gI().charMove();
-							}
-							Char.myCharz().statusMe = 2;
-							Char.myCharz().cvx = -Char.myCharz().cspeed;
+							Char.myCharz().cvx = -Char.myCharz().cspeed + Char.myCharz().cBonusSpeed;
 						}
-						Char.myCharz().holder = false;
 					}
 					else if (GameCanvas.keyHold[(!Main.isPC) ? 6 : 24])
 					{
 						isAutoPlay = false;
-						Char.myCharz().isAttack = false;
 						if (Char.myCharz().cdir == -1)
 						{
 							Char.myCharz().cdir = 1;
 						}
-						else if (!Char.myCharz().isLockMove)
+						else
 						{
-							if (Char.myCharz().cx - Char.myCharz().cxSend != 0)
-							{
-								Service.gI().charMove();
-							}
-							Char.myCharz().statusMe = 2;
+							Char.myCharz().cvx = Char.myCharz().cspeed + Char.myCharz().cBonusSpeed;
+						}
+					}
+				}
+				else if (Char.myCharz().statusMe == 3)
+				{
+					isAutoPlay = false;
+					GameCanvas.debug("F12", 0);
+					if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
+					{
+						GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
+						doFire(isFireByShortCut: false, skipWaypoint: true);
+					}
+					if (GameCanvas.keyHold[(!Main.isPC) ? 4 : 23] || (GameCanvas.keyHold[1] && mobCapcha == null))
+					{
+						if (Char.myCharz().cdir == 1)
+						{
+							Char.myCharz().cdir = -1;
+						}
+						else
+						{
+							Char.myCharz().cvx = -Char.myCharz().cspeed;
+						}
+					}
+					else if (GameCanvas.keyHold[(!Main.isPC) ? 6 : 24] || (GameCanvas.keyHold[3] && mobCapcha == null))
+					{
+						if (Char.myCharz().cdir == -1)
+						{
+							Char.myCharz().cdir = 1;
+						}
+						else
+						{
 							Char.myCharz().cvx = Char.myCharz().cspeed;
 						}
-						Char.myCharz().holder = false;
 					}
-				}
-			}
-			else if (Char.myCharz().statusMe == 2)
-			{
-				GameCanvas.debug("F11", 0);
-				if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
-				{
-					GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
-					doFire(isFireByShortCut: false, skipWaypoint: true);
-				}
-				else if (GameCanvas.keyHold[(!Main.isPC) ? 2 : 21])
-				{
-					if (Char.myCharz().cx - Char.myCharz().cxSend != 0 || Char.myCharz().cy - Char.myCharz().cySend != 0)
-					{
-						Service.gI().charMove();
-					}
-					Char.myCharz().cvy = -10;
-					Char.myCharz().statusMe = 3;
-					Char.myCharz().cp1 = 0;
-				}
-				else if (GameCanvas.keyHold[1] && mobCapcha == null)
-				{
-					if (Main.isPC)
-					{
-						if (Char.myCharz().cx - Char.myCharz().cxSend != 0 || Char.myCharz().cy - Char.myCharz().cySend != 0)
-						{
-							Service.gI().charMove();
-						}
-						Char.myCharz().cdir = -1;
-						Char.myCharz().cvy = -10;
-						Char.myCharz().cvx = -4;
-						Char.myCharz().statusMe = 3;
-						Char.myCharz().cp1 = 0;
-					}
-				}
-				else if (GameCanvas.keyHold[3] && mobCapcha == null)
-				{
-					if (!Main.isPC)
-					{
-						if (Char.myCharz().cx - Char.myCharz().cxSend != 0 || Char.myCharz().cy - Char.myCharz().cySend != 0)
-						{
-							Service.gI().charMove();
-						}
-						Char.myCharz().cdir = 1;
-						Char.myCharz().cvy = -10;
-						Char.myCharz().cvx = 4;
-						Char.myCharz().statusMe = 3;
-						Char.myCharz().cp1 = 0;
-					}
-				}
-				else if (GameCanvas.keyHold[(!Main.isPC) ? 4 : 23])
-				{
-					isAutoPlay = false;
-					if (Char.myCharz().cdir == 1)
-					{
-						Char.myCharz().cdir = -1;
-					}
-					else
-					{
-						Char.myCharz().cvx = -Char.myCharz().cspeed + Char.myCharz().cBonusSpeed;
-					}
-				}
-				else if (GameCanvas.keyHold[(!Main.isPC) ? 6 : 24])
-				{
-					isAutoPlay = false;
-					if (Char.myCharz().cdir == -1)
-					{
-						Char.myCharz().cdir = 1;
-					}
-					else
-					{
-						Char.myCharz().cvx = Char.myCharz().cspeed + Char.myCharz().cBonusSpeed;
-					}
-				}
-			}
-			else if (Char.myCharz().statusMe == 3)
-			{
-				isAutoPlay = false;
-				GameCanvas.debug("F12", 0);
-				if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
-				{
-					GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
-					doFire(isFireByShortCut: false, skipWaypoint: true);
-				}
-				if (GameCanvas.keyHold[(!Main.isPC) ? 4 : 23] || (GameCanvas.keyHold[1] && mobCapcha == null))
-				{
-					if (Char.myCharz().cdir == 1)
-					{
-						Char.myCharz().cdir = -1;
-					}
-					else
-					{
-						Char.myCharz().cvx = -Char.myCharz().cspeed;
-					}
-				}
-				else if (GameCanvas.keyHold[(!Main.isPC) ? 6 : 24] || (GameCanvas.keyHold[3] && mobCapcha == null))
-				{
-					if (Char.myCharz().cdir == -1)
-					{
-						Char.myCharz().cdir = 1;
-					}
-					else
-					{
-						Char.myCharz().cvx = Char.myCharz().cspeed;
-					}
-				}
-				if ((GameCanvas.keyHold[(!Main.isPC) ? 2 : 21] || ((GameCanvas.keyHold[1] || GameCanvas.keyHold[3]) && mobCapcha == null)) && Char.myCharz().canFly && Char.myCharz().cMP > 0 && Char.myCharz().cp1 < 8 && Char.myCharz().cvy > -4)
-				{
-					Char.myCharz().cp1++;
-					Char.myCharz().cvy = -7;
-				}
-			}
-			else if (Char.myCharz().statusMe == 4)
-			{
-				GameCanvas.debug("F13", 0);
-				if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
-				{
-					GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
-					doFire(isFireByShortCut: false, skipWaypoint: true);
-				}
-				if (GameCanvas.keyHold[(!Main.isPC) ? 2 : 21] && Char.myCharz().cMP > 0 && Char.myCharz().canFly)
-				{
-					isAutoPlay = false;
-					if ((Char.myCharz().cx - Char.myCharz().cxSend != 0 || Char.myCharz().cy - Char.myCharz().cySend != 0) && (Res.abs(Char.myCharz().cx - Char.myCharz().cxSend) > 96 || Res.abs(Char.myCharz().cy - Char.myCharz().cySend) > 24))
-					{
-						Service.gI().charMove();
-					}
-					Char.myCharz().cvy = -10;
-					Char.myCharz().statusMe = 3;
-					Char.myCharz().cp1 = 0;
-				}
-				if (GameCanvas.keyHold[(!Main.isPC) ? 4 : 23])
-				{
-					isAutoPlay = false;
-					if (Char.myCharz().cdir == 1)
-					{
-						Char.myCharz().cdir = -1;
-					}
-					else
+					if ((GameCanvas.keyHold[(!Main.isPC) ? 2 : 21] || ((GameCanvas.keyHold[1] || GameCanvas.keyHold[3]) && mobCapcha == null)) && Char.myCharz().canFly && Char.myCharz().cMP > 0 && Char.myCharz().cp1 < 8 && Char.myCharz().cvy > -4)
 					{
 						Char.myCharz().cp1++;
-						Char.myCharz().cvx = -Char.myCharz().cspeed;
-						if (Char.myCharz().cp1 > 5 && Char.myCharz().cvy > 6)
-						{
-							Char.myCharz().statusMe = 10;
-							Char.myCharz().cp1 = 0;
-							Char.myCharz().cvy = 0;
-						}
+						Char.myCharz().cvy = -7;
 					}
 				}
-				else if (GameCanvas.keyHold[(!Main.isPC) ? 6 : 24])
+				else if (Char.myCharz().statusMe == 4)
 				{
-					isAutoPlay = false;
-					if (Char.myCharz().cdir == -1)
+					GameCanvas.debug("F13", 0);
+					if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
 					{
-						Char.myCharz().cdir = 1;
+						GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
+						doFire(isFireByShortCut: false, skipWaypoint: true);
 					}
-					else
-					{
-						Char.myCharz().cp1++;
-						Char.myCharz().cvx = Char.myCharz().cspeed;
-						if (Char.myCharz().cp1 > 5 && Char.myCharz().cvy > 6)
-						{
-							Char.myCharz().statusMe = 10;
-							Char.myCharz().cp1 = 0;
-							Char.myCharz().cvy = 0;
-						}
-					}
-				}
-			}
-			else if (Char.myCharz().statusMe == 10)
-			{
-				GameCanvas.debug("F14", 0);
-				if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
-				{
-					GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
-					doFire(isFireByShortCut: false, skipWaypoint: true);
-				}
-				if (Char.myCharz().canFly && Char.myCharz().cMP > 0)
-				{
-					if (GameCanvas.keyHold[(!Main.isPC) ? 2 : 21])
+					if (GameCanvas.keyHold[(!Main.isPC) ? 2 : 21] && Char.myCharz().cMP > 0 && Char.myCharz().canFly)
 					{
 						isAutoPlay = false;
 						if ((Char.myCharz().cx - Char.myCharz().cxSend != 0 || Char.myCharz().cy - Char.myCharz().cySend != 0) && (Res.abs(Char.myCharz().cx - Char.myCharz().cxSend) > 96 || Res.abs(Char.myCharz().cy - Char.myCharz().cySend) > 24))
@@ -3069,7 +3011,7 @@ public class GameScr : mScreen, IChatable
 						Char.myCharz().statusMe = 3;
 						Char.myCharz().cp1 = 0;
 					}
-					else if (GameCanvas.keyHold[(!Main.isPC) ? 4 : 23])
+					if (GameCanvas.keyHold[(!Main.isPC) ? 4 : 23])
 					{
 						isAutoPlay = false;
 						if (Char.myCharz().cdir == 1)
@@ -3078,51 +3020,112 @@ public class GameScr : mScreen, IChatable
 						}
 						else
 						{
-							Char.myCharz().cvx = -(Char.myCharz().cspeed + 1);
+							Char.myCharz().cp1++;
+							Char.myCharz().cvx = -Char.myCharz().cspeed;
+							if (Char.myCharz().cp1 > 5 && Char.myCharz().cvy > 6)
+							{
+								Char.myCharz().statusMe = 10;
+								Char.myCharz().cp1 = 0;
+								Char.myCharz().cvy = 0;
+							}
 						}
 					}
 					else if (GameCanvas.keyHold[(!Main.isPC) ? 6 : 24])
 					{
+						isAutoPlay = false;
 						if (Char.myCharz().cdir == -1)
 						{
 							Char.myCharz().cdir = 1;
 						}
 						else
 						{
-							Char.myCharz().cvx = Char.myCharz().cspeed + 1;
+							Char.myCharz().cp1++;
+							Char.myCharz().cvx = Char.myCharz().cspeed;
+							if (Char.myCharz().cp1 > 5 && Char.myCharz().cvy > 6)
+							{
+								Char.myCharz().statusMe = 10;
+								Char.myCharz().cp1 = 0;
+								Char.myCharz().cvy = 0;
+							}
 						}
 					}
 				}
-			}
-			else if (Char.myCharz().statusMe == 7)
-			{
-				GameCanvas.debug("F15", 0);
-				if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
+				else if (Char.myCharz().statusMe == 10)
 				{
-					GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
+					GameCanvas.debug("F14", 0);
+					if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
+					{
+						GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
+						doFire(isFireByShortCut: false, skipWaypoint: true);
+					}
+					if (Char.myCharz().canFly && Char.myCharz().cMP > 0)
+					{
+						if (GameCanvas.keyHold[(!Main.isPC) ? 2 : 21])
+						{
+							isAutoPlay = false;
+							if ((Char.myCharz().cx - Char.myCharz().cxSend != 0 || Char.myCharz().cy - Char.myCharz().cySend != 0) && (Res.abs(Char.myCharz().cx - Char.myCharz().cxSend) > 96 || Res.abs(Char.myCharz().cy - Char.myCharz().cySend) > 24))
+							{
+								Service.gI().charMove();
+							}
+							Char.myCharz().cvy = -10;
+							Char.myCharz().statusMe = 3;
+							Char.myCharz().cp1 = 0;
+						}
+						else if (GameCanvas.keyHold[(!Main.isPC) ? 4 : 23])
+						{
+							isAutoPlay = false;
+							if (Char.myCharz().cdir == 1)
+							{
+								Char.myCharz().cdir = -1;
+							}
+							else
+							{
+								Char.myCharz().cvx = -(Char.myCharz().cspeed + 1);
+							}
+						}
+						else if (GameCanvas.keyHold[(!Main.isPC) ? 6 : 24])
+						{
+							if (Char.myCharz().cdir == -1)
+							{
+								Char.myCharz().cdir = 1;
+							}
+							else
+							{
+								Char.myCharz().cvx = Char.myCharz().cspeed + 1;
+							}
+						}
+					}
 				}
-				if (GameCanvas.keyHold[(!Main.isPC) ? 4 : 23])
+				else if (Char.myCharz().statusMe == 7)
 				{
-					isAutoPlay = false;
-					if (Char.myCharz().cdir == 1)
+					GameCanvas.debug("F15", 0);
+					if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
 					{
-						Char.myCharz().cdir = -1;
+						GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
 					}
-					else
+					if (GameCanvas.keyHold[(!Main.isPC) ? 4 : 23])
 					{
-						Char.myCharz().cvx = -Char.myCharz().cspeed + 2;
+						isAutoPlay = false;
+						if (Char.myCharz().cdir == 1)
+						{
+							Char.myCharz().cdir = -1;
+						}
+						else
+						{
+							Char.myCharz().cvx = -Char.myCharz().cspeed + 2;
+						}
 					}
-				}
-				else if (GameCanvas.keyHold[(!Main.isPC) ? 6 : 24])
-				{
-					isAutoPlay = false;
-					if (Char.myCharz().cdir == -1)
+					else if (GameCanvas.keyHold[(!Main.isPC) ? 6 : 24])
 					{
-						Char.myCharz().cdir = 1;
-					}
-					else
-					{
-						Char.myCharz().cvx = Char.myCharz().cspeed - 2;
+						isAutoPlay = false;
+						if (Char.myCharz().cdir == -1)
+						{
+							Char.myCharz().cdir = 1;
+						}
+						else
+						{
+							Char.myCharz().cvx = Char.myCharz().cspeed - 2;
+						}
 					}
 				}
 			}

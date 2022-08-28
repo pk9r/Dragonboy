@@ -422,5 +422,25 @@ namespace Mod
         {
             Pk9rPickMob.UpdateCountDieMob(instance);
         }
+
+        public static Image onCreateImage(string filename)
+        {     
+            Image image = new Image();
+            Texture2D texture2D = new Texture2D(1, 1);
+            if (!Directory.Exists("Game_Data\\CustomAssets")) Directory.CreateDirectory("Game_Data\\CustomAssets");
+            if (File.Exists("Game_Data\\CustomAssets\\" + filename.Replace('/', '\\') + ".png"))
+            {
+                texture2D.LoadImage(File.ReadAllBytes("Game_Data\\CustomAssets\\" + filename.Replace('/', '\\') + ".png"));
+            }
+            else texture2D = Resources.Load(filename) as Texture2D;
+            image.texture = texture2D ?? throw new Exception("NULL POINTER EXCEPTION AT Image onCreateImage " + filename);
+            image.w = image.texture.width;
+            image.h = image.texture.height;
+            image.texture.anisoLevel = 0;
+            image.texture.filterMode = FilterMode.Point;
+            image.texture.mipMapBias = 0f;
+            image.texture.wrapMode = TextureWrapMode.Clamp;
+            return image;
+        }
     }
 }
