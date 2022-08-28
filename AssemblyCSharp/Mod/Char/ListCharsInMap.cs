@@ -96,10 +96,7 @@ namespace Mod
                     if (ch.cFlag == 10) mFont.tahoma_7_white_tiny.drawString(g, "M", GameCanvas.w - paddingRight + 5, startY + distanceBetweenLines * i, mFont.CENTER);
                 }
             }
-            catch (Exception ex)
-            {
-                //Debug.LogException(ex);
-            }
+            catch (Exception) { }
         }
 
         public static void updateTouch()
@@ -131,10 +128,7 @@ namespace Mod
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                //Debug.LogException(ex);
-            }
+            catch (Exception) { }
         }
     }
 }

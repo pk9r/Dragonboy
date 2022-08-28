@@ -52,7 +52,8 @@ namespace Mod.Dialogs
             openFileNameInstance.nMaxFile = 256;
             openFileNameInstance.lpstrFileTitle = new string(new char[64]);
             openFileNameInstance.nMaxFileTitle = openFileNameInstance.lpstrFileTitle.Length;
-            openFileNameInstance.lpstrInitialDir = string.IsNullOrEmpty(initialPath) ? Application.dataPath : initialPath;
+            string dataPath = Application.dataPath;
+            openFileNameInstance.lpstrInitialDir = string.IsNullOrEmpty(initialPath) ? dataPath : initialPath;
             openFileNameInstance.lpstrTitle = title;
             openFileNameInstance.lpstrFilter = Marshal.AllocHGlobal((filter.Length + 2) * sizeof(short));
             StringBuilder stringBuilder = new StringBuilder(filter);

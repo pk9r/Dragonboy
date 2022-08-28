@@ -1,4 +1,5 @@
 using Mod;
+using Mod.Graphics;
 using Mod.ModHelper;
 using System.Net.NetworkInformation;
 using System.Threading;
@@ -161,6 +162,7 @@ public class Main : MonoBehaviour
 				g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.6f));
                 g.fillRect(0, 0, mFont.tahoma_7b_red.getWidth(fps) + 2, 12);
                 mFont.tahoma_7b_red.drawString(g, fps, 2, 0, 0);
+                if (GameCanvas.currentScreen == GameScr.gI() || GameCanvas.currentScreen == CreateCharScr.gI() || GameCanvas.currentScreen == CrackBallScr.gI() || GameCanvas.currentScreen == RadarScr.gI() || GameCanvas.currentScreen == TransportScr.gI()) CustomLogo.paint(g);
                 paintCount++;
 				g.reset();
 			}

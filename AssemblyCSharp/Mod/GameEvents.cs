@@ -49,6 +49,7 @@ namespace Mod
             SocketClient.gI.initSender();
             ModMenuMain.LoadData();
             CustomBackground.LoadData();
+            CustomLogo.LoadData();
             VietKeyHandler.SmartMark = true;
         }
 
@@ -62,6 +63,7 @@ namespace Mod
             ModMenuMain.SaveData();
             TeleportMenu.SaveData();
             CustomBackground.SaveData();
+            CustomLogo.SaveData();
             return false;
         }
 
@@ -354,6 +356,7 @@ namespace Mod
         {
             Pk9rXmap.Update();
             CustomBackground.update();
+            CustomLogo.update();
         }
 
         public static void onAddInfoMe(string str)
@@ -405,7 +408,7 @@ namespace Mod
 
         public static bool onPaintBgGameScr(mGraphics g)
         {
-            if (CustomBackground.isEnabled && CustomBackground.listBackgroundImages.Count > 0 && !ModMenuMain.modMenuItemBools[8].isDisabled)
+            if (CustomBackground.isEnabled && CustomBackground.backgroundWallpapers.Count > 0 && !ModMenuMain.modMenuItemBools[8].isDisabled)
             {
                 CustomBackground.paint(g);
                 return true;

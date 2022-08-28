@@ -24,6 +24,7 @@ namespace Mod.ModMenu
             new ModMenuItemBoolean("Auto T77", "Auto up Tàu Pảy Pảy", false, "", true, "Bạn không thể vào map Đông Karin!"),
             new ModMenuItemBoolean("Hiện khoảng cách bom", "Hiển thị người, quái, boss... trong tầm bom", false, "isshowsuiciderange"),
             new ModMenuItemBoolean("Ảnh nền tùy chỉnh", "Thay thế nền của game bằng ảnh tùy chỉnh (ảnh sẽ được tự động điều chỉnh cho vừa kích thước màn hình)", false, "iscustombackground", false, "Bạn cần tắt chức năng \"Giảm đồ họa\"!"),
+            new ModMenuItemBoolean("Logo tùy chỉnh", "Bật/tắt hiển thị logo tùy chỉnh trên màn hình game", false, "isshowlogo"),
 
             new ModMenuItemBoolean("Tàn sát", "Bật/tắt tự động đánh quái", false, "", false, "Bạn đang bật auto T77 hoặc auto up SS!"),
             new ModMenuItemBoolean("Né siêu quái khi tàn sát", "Tự động né siêu quái khi tàn sát", true, "isnesieuquaits"),
@@ -44,7 +45,9 @@ namespace Mod.ModMenu
             new ModMenuItemInt("Gõ tiếng Việt", new string[]{"Đang tắt", "Đang bật kiểu gõ TELEX", "Đang bật kiểu gõ VIQR", "Đang bật kiểu gõ VNI"}, "",0, "vietmode", false, "Bạn không biết gõ tiếng Việt!"),
             new ModMenuItemInt("Auto up đệ tử", new string[]{"Đang tắt", "Đang bật up đệ thường", "Đang bật up đệ né siêu quái", "Đang bật up đệ kaioken"}, "", 0, "", false, "Bạn không có đệ tử!"),
             new ModMenuItemInt("Đánh khi đệ cần", new string[]{"Đánh quái gần nhất", "Đánh đệ (tự động bật cờ xám)", "Đánh bản thân (tự động bật cờ xám)"}, "", 0, "modeautopet", true, "Bạn chưa bật chức năng \"Auto up đệ tử\"!"),
-            new ModMenuItemInt("Thời gian đổi ảnh nền", null, "Điều chỉnh thời gian thay đổi ảnh nền (giây)", 30, "backgroundinveral", false, "Bạn chưa bật chức năng \"Ảnh nền tùy chỉnh\"!"),
+            new ModMenuItemInt("Thời gian đổi ảnh nền", null, "Điều chỉnh thời gian thay đổi ảnh nền (giây)", 30, "backgroundinveral", false),
+            new ModMenuItemInt("Thời gian đổi logo", null, "Điều chỉnh thời gian thay đổi logo (giây)", 30, "logoinveral", false),
+            new ModMenuItemInt("Chiều cao của logo", null, "Điều chỉnh chiều cao của logo", 80, "logoheight"),
         };
 
         public static ModMenuItemFunction[] modMenuItemFunctions = new ModMenuItemFunction[]
@@ -53,12 +56,15 @@ namespace Mod.ModMenu
             new ModMenuItemFunction("Menu PickMob", "Mở menu PickMob (chat \"pickmob\")"),
             new ModMenuItemFunction("Menu Teleport", "Mở menu dịch chuyển (chat \"tele\" hoặc bấm nút z)"),
             new ModMenuItemFunction("Menu Custom Background", "Mở menu ảnh nền tùy chỉnh"),
+            new ModMenuItemFunction("Menu Custom Logo", "Mở menu logo tùy chỉnh"),
         };
 
         public static Dictionary<int, string[]> inputModMenuItemInts = new Dictionary<int, string[]>()
         {
             { 0, new string[]{"Nhập mức FPS", "FPS"} },
-            { 6, new string[]{"Nhập thời gian thay đổi ảnh nền", "giây"} },
+            { 6, new string[]{"Nhập thời gian thay đổi ảnh nền", "thời gian (giây)"} },
+            { 7, new string[]{"Nhập thời gian thay đổi logo", "thời gian (giây)"} },
+            { 8, new string[]{"Nhập chiều cao logo", "Chiều cao logo" } },
         };
 
         public static void SaveData()

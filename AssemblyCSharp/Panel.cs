@@ -203,7 +203,7 @@ public class Panel : IActionListener, IChatable
 	/// <summary>
 	/// Thêm custom panel cần tăng kích thước mảng này
 	/// </summary>
-	public string[][][] tabName = new string[29][][]
+	public string[][][] tabName = new string[30][][]
 	{
 		null,
 		null,
@@ -227,6 +227,7 @@ public class Panel : IActionListener, IChatable
 		new string[1][] { new string[1] { string.Empty } },
 		new string[1][] { new string[1] { string.Empty } },
 		boxPet,
+		new string[1][] { new string[1] { string.Empty } },
 		new string[1][] { new string[1] { string.Empty } },
 		new string[1][] { new string[1] { string.Empty } },
 		new string[1][] { new string[1] { string.Empty } },

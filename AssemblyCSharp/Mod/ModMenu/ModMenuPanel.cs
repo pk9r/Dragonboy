@@ -49,6 +49,9 @@ namespace Mod.ModMenu
                 case CustomBackground.TYPE_CUSTOM_BACKGROUND:
                     CustomBackground.setTabCustomBackgroundPanel();
                     break;
+                case CustomLogo.TYPE_CUSTOM_LOGO:
+                    CustomLogo.setTabCustomLogoPanel();
+                    break;
             }
         }
 
@@ -79,6 +82,9 @@ namespace Mod.ModMenu
                 case CustomBackground.TYPE_CUSTOM_BACKGROUND:
                     CustomBackground.doFireCustomBackgroundListPanel();
                     break;
+                case CustomLogo.TYPE_CUSTOM_LOGO:
+                    CustomLogo.doFireCustomBackgroundListPanel();
+                    break;
             }
         }
 
@@ -106,6 +112,9 @@ namespace Mod.ModMenu
                     break;
                 case 3:
                     CustomBackground.ShowMenu();
+                    break;
+                case 4:
+                    CustomLogo.ShowMenu();
                     break;
             }
         }
@@ -148,6 +157,9 @@ namespace Mod.ModMenu
                     break;
                 case CustomBackground.TYPE_CUSTOM_BACKGROUND:
                     CustomBackground.paintCustomBackgroundPanel(g);
+                    break;
+                case CustomLogo.TYPE_CUSTOM_LOGO:
+                    CustomLogo.paintCustomLogoPanel(g);
                     break;
             }
         }
@@ -350,6 +362,13 @@ namespace Mod.ModMenu
                 mFont.tahoma_7b_dark.drawString(g, "Danh sách ảnh nền tùy chỉnh", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
                 return true;
             }
+            else if (GameCanvas.panel.type == CustomLogo.TYPE_CUSTOM_LOGO)
+            {
+                g.setColor(13524492);
+                g.fillRect(GameCanvas.panel.X + 1, 78, GameCanvas.panel.W - 2, 1);
+                mFont.tahoma_7b_dark.drawString(g, "Danh sách logo tùy chỉnh", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
+                return true;
+            }
             return false;
         }
 
@@ -386,6 +405,35 @@ namespace Mod.ModMenu
                         GameCanvas.startOKDlg("Thời gian không hợp lệ!");
                     }
                 }
+                else if (strChat == ModMenuMain.inputModMenuItemInts[7][0])
+                {
+                    try
+                    {
+                        int value = int.Parse(text);
+                        if (value < 10) throw new Exception();
+                        ModMenuMain.modMenuItemInts[7].setValue(value);
+                        GameScr.info1.addInfo("Đã thay đổi thời gian đổi logo!", 0);
+                    }
+                    catch
+                    {
+                        GameCanvas.startOKDlg("Thời gian không hợp lệ!");
+                    }
+                }
+                else if (strChat == ModMenuMain.inputModMenuItemInts[8][0])
+                {
+                    try
+                    {
+                        int value = int.Parse(text);
+                        if (value < 25 || value > Screen.height * 30 / 100) throw new Exception();
+                        ModMenuMain.modMenuItemInts[8].setValue(value);
+                        GameScr.info1.addInfo("Đã thay đổi chiều cao logo!", 0);
+                        CustomLogo.LoadData();
+                    }
+                    catch
+                    {
+                        GameCanvas.startOKDlg("Chiều cao không hợp lệ!");
+                    }
+                }
             }
             else ChatTextField.gI().isShow = false;
             Utilities.ResetTF();
@@ -408,12 +456,13 @@ namespace Mod.ModMenu
             AutoT77.isAutoT77 = ModMenuMain.modMenuItemBools[6].Value;
             SuicideRange.isShowSuicideRange = ModMenuMain.modMenuItemBools[7].Value;
             CustomBackground.isEnabled = ModMenuMain.modMenuItemBools[8].Value;
-            Pk9rPickMob.IsTanSat = ModMenuMain.modMenuItemBools[9].Value;
-            Pk9rPickMob.IsNeSieuQuai = ModMenuMain.modMenuItemBools[10].Value;
-            Pk9rPickMob.IsVuotDiaHinh = ModMenuMain.modMenuItemBools[11].Value;
-            Pk9rPickMob.IsAutoPickItems = ModMenuMain.modMenuItemBools[12].Value;
-            Pk9rPickMob.IsItemMe = ModMenuMain.modMenuItemBools[13].Value;
-            Pk9rPickMob.IsLimitTimesPickItem = ModMenuMain.modMenuItemBools[14].Value;
+            CustomLogo.isEnabled = ModMenuMain.modMenuItemBools[9].Value;
+            Pk9rPickMob.IsTanSat = ModMenuMain.modMenuItemBools[10].Value;
+            Pk9rPickMob.IsNeSieuQuai = ModMenuMain.modMenuItemBools[11].Value;
+            Pk9rPickMob.IsVuotDiaHinh = ModMenuMain.modMenuItemBools[12].Value;
+            Pk9rPickMob.IsAutoPickItems = ModMenuMain.modMenuItemBools[13].Value;
+            Pk9rPickMob.IsItemMe = ModMenuMain.modMenuItemBools[14].Value;
+            Pk9rPickMob.IsLimitTimesPickItem = ModMenuMain.modMenuItemBools[15].Value;
 
             manageDisabledModMenuItems();
         }
@@ -433,7 +482,9 @@ namespace Mod.ModMenu
                 VietKeyHandler.VietModeEnabled = true;
                 VietKeyHandler.InputMethod = (InputMethods)(ModMenuMain.modMenuItemInts[3].SelectedValue - 1);
             }
-            CustomBackground.inveralDrawImages = ModMenuMain.modMenuItemInts[6].SelectedValue * 1000;
+            CustomBackground.inveralChangeBackgroundWallpaper = ModMenuMain.modMenuItemInts[6].SelectedValue * 1000;
+            CustomLogo.inveralChangeLogo = ModMenuMain.modMenuItemInts[7].SelectedValue * 1000;
+            CustomLogo.height = ModMenuMain.modMenuItemInts[8].SelectedValue;
 
             manageDisabledModMenuItems();
         }
@@ -445,7 +496,7 @@ namespace Mod.ModMenu
             if (Char.myCharz().cPower > 2000000 || (Char.myCharz().cPower > 1500000 && TileMap.mapID != 111) || (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId < 9)) ModMenuMain.modMenuItemBools[6].isDisabled = true;
             else ModMenuMain.modMenuItemBools[6].isDisabled = false;
             ModMenuMain.modMenuItemBools[8].isDisabled = ModMenuMain.modMenuItemInts[1].SelectedValue > 0;
-            ModMenuMain.modMenuItemBools[9].isDisabled = AutoSS.isAutoSS || AutoT77.isAutoT77;
+            ModMenuMain.modMenuItemBools[10].isDisabled = AutoSS.isAutoSS || AutoT77.isAutoT77;
 
             ModMenuMain.modMenuItemInts[0].isDisabled = ModMenuMain.modMenuItemBools[0].Value;
             ModMenuMain.modMenuItemInts[2].isDisabled = ModMenuMain.modMenuItemBools[5].Value || ModMenuMain.modMenuItemBools[6].Value;
