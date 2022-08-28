@@ -6,6 +6,7 @@ using UnityEngine;
 using Mod.Dialogs;
 using System.IO;
 using System.Threading;
+using System.IO.IsolatedStorage;
 
 namespace Mod.Graphics
 {
@@ -138,6 +139,10 @@ namespace Mod.Graphics
                         backgroundWallpapers[path] = image;
                     }
                     catch (FileNotFoundException)
+                    {
+                        backgroundWallpapers.Remove(path);
+                    }
+                    catch (IsolatedStorageException)
                     {
                         backgroundWallpapers.Remove(path);
                     }

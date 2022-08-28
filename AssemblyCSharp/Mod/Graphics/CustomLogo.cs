@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -64,6 +65,10 @@ namespace Mod.Graphics
                         logos[path] = image;
                     }
                     catch (FileNotFoundException)
+                    {
+                        logos.Remove(path);
+                    }
+                    catch (IsolatedStorageException)
                     {
                         logos.Remove(path);
                     }
