@@ -130,5 +130,9 @@ namespace Mod
             }
             catch (Exception) { }
         }
+
+        public static void setState(bool value) => isEnabled = value;
+
+        public static void setStatePet(bool value) => isShowPet = value;
     }
 }

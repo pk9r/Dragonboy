@@ -730,5 +730,7 @@ namespace Mod
             }
             return false;
         }
+
+        public static void setState(bool value) => isAutoSS = value;
     }
 }

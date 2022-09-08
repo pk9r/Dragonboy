@@ -14,10 +14,13 @@ namespace Mod
 
         static bool isGobacking = false;
 
+        static GobackMode gobackMode;
+
         static long lastTimeGoback;
+
         public static void update()
         {
-            if (ModMenuMain.getStatusInt(2) == 0) return;
+            if (gobackMode == GobackMode.Disabled) return;
             if (GameCanvas.gameTick % (30 * Time.timeScale) == 0)
             {
                 if (!isGobacking)
@@ -27,7 +30,7 @@ namespace Mod
                         if (mSystem.currentTimeMillis() - lastTimeGoback > 4000) lastTimeGoback = mSystem.currentTimeMillis();
                         if (mSystem.currentTimeMillis() - lastTimeGoback > 3000)
                         {
-                            if (ModMenuMain.getStatusInt(2) == 1) infoGoback = new InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz());
+                            if (gobackMode == GobackMode.GoBackToFixedLocation) infoGoback = new InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz());
                             Service.gI().returnTownFromDead();
                             isGobacking = true;
                         }
@@ -54,6 +57,16 @@ namespace Mod
             }
         }
 
+        public static void setState(int value)
+        {
+            gobackMode = (GobackMode)value;
+            if (gobackMode == GobackMode.GoBackToFixedLocation)
+            {
+                infoGoback = new InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz().cx, Char.myCharz().cy);
+                GameScr.info1.addInfo($"Goback đến map: {TileMap.mapName}, khu: {TileMap.zoneID}, tọa độ: ({infoGoback.x}, {infoGoback.y})!", 0);
+            }
+        }
+
         public struct InfoGoback
         {
             public int mapID;
@@ -75,6 +88,13 @@ namespace Mod
                 this.x = mapObject.getX();
                 this.y = TileMap.tileTypeAt(x, mapObject.getY(), 2) ? mapObject.getY() : Utilities.getYGround(x);
             }
+        }
+
+        public enum GobackMode
+        {
+            Disabled,
+            GoBackToWhereMeDied,
+            GoBackToFixedLocation
         }
 
     }

@@ -224,7 +224,7 @@ namespace Mod.Graphics
                 {
                     try
                     {
-                        logos.Add(path, null);
+                        if (!string.IsNullOrEmpty(path)) logos.Add(path, null);
                     }
                     catch (ArgumentException)
                     {
@@ -242,5 +242,11 @@ namespace Mod.Graphics
             string data = string.Join("|", logos.Keys.ToArray());
             Utilities.saveRMSString("customlogopath", data);
         }
+
+        public static void setState(bool value) => isEnabled = value;
+
+        public static void setState(int value) => inveralChangeLogo = value * 1000;
+
+        public static void setLogoHeight(int value) => height = value;
     }
 }

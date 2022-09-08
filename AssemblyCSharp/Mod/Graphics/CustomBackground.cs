@@ -230,7 +230,7 @@ namespace Mod.Graphics
             {
                 foreach (string path in Utilities.loadRMSString("custombackgroundpath").Split('|'))
                 {
-                    backgroundWallpapers.Add(path, null);
+                    if (!string.IsNullOrEmpty(path)) backgroundWallpapers.Add(path, null);
                 }
                 isAllWallpaperLoaded = true;
             }
@@ -243,5 +243,9 @@ namespace Mod.Graphics
             string data = string.Join("|", backgroundWallpapers.Keys.ToArray());
             Utilities.saveRMSString("custombackgroundpath", data);
         }
+
+        public static void setState(bool value) => isEnabled = value;
+
+        public static void setState(int value) => inveralChangeBackgroundWallpaper = value * 1000;
     }
 }

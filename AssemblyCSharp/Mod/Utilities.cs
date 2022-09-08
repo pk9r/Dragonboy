@@ -383,13 +383,8 @@ namespace Mod
         [ChatCommand("test")]
         public static void test()
         {
-            new Thread(delegate ()
-            {
-                GameScr.info1.addInfo(FileDialog.OpenSaveFileDialog("Lưu tệp ảnh nền", "Tệp ảnh (*.png)|*.png", "png"), 0);
-            })
-            {
-                IsBackground = true
-            }.Start();
+            BackgroundVideo.videoPlayer.Play();
+            BackgroundVideo.audioSource.Play();
         }
 
         [ChatCommand("skey")]

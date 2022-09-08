@@ -163,5 +163,7 @@ namespace Mod
                 if (skill.template.id == 23) Char.myCharz().charFocus.charEffectTime.isTiedByMe = true;
             }
         }
+
+        public static void setState(bool value) => isEnabled = value;
     }
 }

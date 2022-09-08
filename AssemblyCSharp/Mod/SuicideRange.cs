@@ -14,6 +14,7 @@ namespace Mod
 
         public static List<IMapObject> mapObjsInMyRange { get; private set; } = new List<IMapObject>();
 
+
         public static bool isShowSuicideRange;
 
         public static void update()
@@ -134,5 +135,7 @@ namespace Mod
                 }
             }
         }
+
+        public static void setState(bool value) => isShowSuicideRange = value;
     }
 }

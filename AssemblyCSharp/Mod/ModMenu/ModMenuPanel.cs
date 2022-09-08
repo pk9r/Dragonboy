@@ -99,24 +99,7 @@ namespace Mod.ModMenu
         private static void doFireModMenuFunctions()
         {
             GameCanvas.panel.hideNow();
-            switch (GameCanvas.panel.selected)
-            {
-                case 0:
-                    XmapController.ShowXmapMenu();
-                    break;
-                case 1:
-                    Pk9rPickMob.ShowMenu();
-                    break;
-                case 2:
-                    TeleportMenu.ShowMenu();
-                    break;
-                case 3:
-                    CustomBackground.ShowMenu();
-                    break;
-                case 4:
-                    CustomLogo.ShowMenu();
-                    break;
-            }
+            if (ModMenuMain.modMenuItemFunctions[GameCanvas.panel.selected].Action != null) ModMenuMain.modMenuItemFunctions[GameCanvas.panel.selected].Action();
         }
 
         static void doFireModMenuBools()
@@ -447,44 +430,44 @@ namespace Mod.ModMenu
 
         public static void onModMenuBoolsValueChanged()
         {
-            QualitySettings.vSyncCount = ModMenuMain.modMenuItemBools[0].Value ? 1 : 0;
-            CharEffect.isEnabled = ModMenuMain.modMenuItemBools[1].Value;
-            AutoAttack.gI.toggle(ModMenuMain.modMenuItemBools[2].Value);
-            ListCharsInMap.isEnabled = ModMenuMain.modMenuItemBools[3].Value;
-            ListCharsInMap.isShowPet = ModMenuMain.modMenuItemBools[4].Value;
-            AutoSS.isAutoSS = ModMenuMain.modMenuItemBools[5].Value;
-            AutoT77.isAutoT77 = ModMenuMain.modMenuItemBools[6].Value;
-            SuicideRange.isShowSuicideRange = ModMenuMain.modMenuItemBools[7].Value;
-            CustomBackground.isEnabled = ModMenuMain.modMenuItemBools[8].Value;
-            CustomLogo.isEnabled = ModMenuMain.modMenuItemBools[9].Value;
-            Pk9rPickMob.IsTanSat = ModMenuMain.modMenuItemBools[10].Value;
-            Pk9rPickMob.IsNeSieuQuai = ModMenuMain.modMenuItemBools[11].Value;
-            Pk9rPickMob.IsVuotDiaHinh = ModMenuMain.modMenuItemBools[12].Value;
-            Pk9rPickMob.IsAutoPickItems = ModMenuMain.modMenuItemBools[13].Value;
-            Pk9rPickMob.IsItemMe = ModMenuMain.modMenuItemBools[14].Value;
-            Pk9rPickMob.IsLimitTimesPickItem = ModMenuMain.modMenuItemBools[15].Value;
+            //QualitySettings.vSyncCount = ModMenuMain.modMenuItemBools[0].Value ? 1 : 0;
+            //CharEffect.isEnabled = ModMenuMain.modMenuItemBools[1].Value;
+            //AutoAttack.gI.toggle(ModMenuMain.modMenuItemBools[2].Value);
+            //ListCharsInMap.isEnabled = ModMenuMain.modMenuItemBools[3].Value;
+            //ListCharsInMap.isShowPet = ModMenuMain.modMenuItemBools[4].Value;
+            //AutoSS.isAutoSS = ModMenuMain.modMenuItemBools[5].Value;
+            //AutoT77.isAutoT77 = ModMenuMain.modMenuItemBools[6].Value;
+            //SuicideRange.isShowSuicideRange = ModMenuMain.modMenuItemBools[7].Value;
+            //CustomBackground.isEnabled = ModMenuMain.modMenuItemBools[8].Value;
+            //CustomLogo.isEnabled = ModMenuMain.modMenuItemBools[9].Value;
+            //Pk9rPickMob.IsTanSat = ModMenuMain.modMenuItemBools[10].Value;
+            //Pk9rPickMob.IsNeSieuQuai = ModMenuMain.modMenuItemBools[11].Value;
+            //Pk9rPickMob.IsVuotDiaHinh = ModMenuMain.modMenuItemBools[12].Value;
+            //Pk9rPickMob.IsAutoPickItems = ModMenuMain.modMenuItemBools[13].Value;
+            //Pk9rPickMob.IsItemMe = ModMenuMain.modMenuItemBools[14].Value;
+            //Pk9rPickMob.IsLimitTimesPickItem = ModMenuMain.modMenuItemBools[15].Value;
 
             manageDisabledModMenuItems();
         }
 
         public static void onModMenuIntsValueChanged()
         {
-            if (ModMenuMain.modMenuItemInts[0].SelectedValue < 5 || ModMenuMain.modMenuItemInts[0].SelectedValue > 60) ModMenuMain.modMenuItemInts[0].SelectedValue = 60;
-            Application.targetFrameRate = ModMenuMain.modMenuItemInts[0].SelectedValue;
-            if (ModMenuMain.modMenuItemInts[2].SelectedValue == 2)
-            {
-                AutoGoback.infoGoback = new AutoGoback.InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz().cx, Char.myCharz().cy);
-                GameScr.info1.addInfo($"Goback đến map: {TileMap.mapName}, khu: {TileMap.zoneID}, tọa độ: ({AutoGoback.infoGoback.x}, {AutoGoback.infoGoback.y})!", 0);
-            }
-            if (ModMenuMain.modMenuItemInts[3].SelectedValue == 0) VietKeyHandler.VietModeEnabled = false;
-            else
-            {
-                VietKeyHandler.VietModeEnabled = true;
-                VietKeyHandler.InputMethod = (InputMethods)(ModMenuMain.modMenuItemInts[3].SelectedValue - 1);
-            }
-            CustomBackground.inveralChangeBackgroundWallpaper = ModMenuMain.modMenuItemInts[6].SelectedValue * 1000;
-            CustomLogo.inveralChangeLogo = ModMenuMain.modMenuItemInts[7].SelectedValue * 1000;
-            CustomLogo.height = ModMenuMain.modMenuItemInts[8].SelectedValue;
+            //if (ModMenuMain.modMenuItemInts[0].SelectedValue < 5 || ModMenuMain.modMenuItemInts[0].SelectedValue > 60) ModMenuMain.modMenuItemInts[0].SelectedValue = 60;
+            //Application.targetFrameRate = ModMenuMain.modMenuItemInts[0].SelectedValue;
+            //if (ModMenuMain.modMenuItemInts[2].SelectedValue == 2)
+            //{
+            //    AutoGoback.infoGoback = new AutoGoback.InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz().cx, Char.myCharz().cy);
+            //    GameScr.info1.addInfo($"Goback đến map: {TileMap.mapName}, khu: {TileMap.zoneID}, tọa độ: ({AutoGoback.infoGoback.x}, {AutoGoback.infoGoback.y})!", 0);
+            //}
+            //if (ModMenuMain.modMenuItemInts[3].SelectedValue == 0) VietKeyHandler.VietModeEnabled = false;
+            //else
+            //{
+            //    VietKeyHandler.VietModeEnabled = true;
+            //    VietKeyHandler.InputMethod = (InputMethods)(ModMenuMain.modMenuItemInts[3].SelectedValue - 1);
+            //}
+            //CustomBackground.inveralChangeBackgroundWallpaper = ModMenuMain.modMenuItemInts[6].SelectedValue * 1000;
+            //CustomLogo.inveralChangeLogo = ModMenuMain.modMenuItemInts[7].SelectedValue * 1000;
+            //CustomLogo.height = ModMenuMain.modMenuItemInts[8].SelectedValue;
 
             manageDisabledModMenuItems();
         }
