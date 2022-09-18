@@ -114,5 +114,7 @@ namespace Mod
             myVector.addElement(@char);
             Service.gI().sendPlayerAttack(new MyVector(), myVector, 2);
         }
+
+        public static void setState(bool value) => isAutoT77 = value;
     }
 }

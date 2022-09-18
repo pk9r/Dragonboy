@@ -12,7 +12,11 @@ namespace Mod.ModMenu
 {
     public class ModMenuPanel : IChatable
     {
+        public const int TYPE_MOD_MENU = 26;
+
         static ModMenuPanel _Instance;
+
+        public static int PanelType { get; set; }
 
         public static ModMenuPanel getInstance()
         {
@@ -20,34 +24,59 @@ namespace Mod.ModMenu
             return _Instance;
         }
 
+
+        public static void setTypeModMenuMain(int panelType)
+        {
+            GameCanvas.panel.type = TYPE_MOD_MENU;
+            PanelType = panelType;
+            setTypeModMenu();
+        }
         public static void setTypeModMenu()
         {
-            GameCanvas.panel.type = ModMenuMain.TYPE_MOD_MENU;
-            GameCanvas.panel.tabName[ModMenuMain.TYPE_MOD_MENU] = new string[][]
-            {
-            new string[]{ "Bật/tắt", "" },
-            new string[]{ "Điều", "chỉnh" },
-            new string[]{ "Chức", "năng" },
-            };
-            GameCanvas.panel.setType(0);
             SoundMn.gI().getSoundOption();
-            setTabModMenuMain();
-            onModMenuBoolsValueChanged();
-            onModMenuIntsValueChanged();
+            GameCanvas.panel.setType(0);
+            if (PanelType == 0) //Mod menu main
+            {
+                GameCanvas.panel.tabName[TYPE_MOD_MENU] = new string[][]
+                {
+                    new string[]{ "Bật/tắt", "" },
+                    new string[]{ "Điều", "chỉnh" },
+                    new string[]{ "Chức", "năng" },
+                };
+                GameCanvas.panel.setType(0);
+                setTabModMenuMain();
+                onModMenuBoolsValueChanged();
+                onModMenuIntsValueChanged();
+            }
+            if (PanelType == 1) //Teleport menu
+            {
+                TeleportMenu.setTabTeleportListPanel();
+            }
+            if (PanelType == 2) //Custom background
+            {
+                 CustomBackground.setTabCustomBackgroundPanel();
+            }
+            if (PanelType == 3) //Custom logo
+            {
+                CustomLogo.setTabCustomLogoPanel();
+            }
         }
 
         public static void setTabModMenuMain()
         {
-            switch (GameCanvas.panel.type)
+            switch (PanelType)
             {
-                case ModMenuMain.TYPE_MOD_MENU:
+                case 0:
                     setTabModMenu();
                     break;
-                case TeleportMenu.TYPE_TELEPORT_LIST:
+                case 1:
                     TeleportMenu.setTabTeleportListPanel();
                     break;
-                case CustomBackground.TYPE_CUSTOM_BACKGROUND:
+                case 2:
                     CustomBackground.setTabCustomBackgroundPanel();
+                    break;
+                case 3:
+                    CustomLogo.setTabCustomLogoPanel();
                     break;
             }
         }
@@ -68,16 +97,19 @@ namespace Mod.ModMenu
 
         public static void doFireModMenuMain()
         {
-            switch (GameCanvas.panel.type)
+            switch (PanelType)
             {
-                case ModMenuMain.TYPE_MOD_MENU:
+                case 0:
                     doFireModMenu();
                     break;
-                case TeleportMenu.TYPE_TELEPORT_LIST:
+                case 1:
                     TeleportMenu.doFireTeleportListPanel();
                     break;
-                case CustomBackground.TYPE_CUSTOM_BACKGROUND:
+                case 2:
                     CustomBackground.doFireCustomBackgroundListPanel();
+                    break;
+                case 3:
+                    CustomLogo.doFireCustomBackgroundListPanel();
                     break;
             }
         }
@@ -93,21 +125,7 @@ namespace Mod.ModMenu
         private static void doFireModMenuFunctions()
         {
             GameCanvas.panel.hideNow();
-            switch (GameCanvas.panel.selected)
-            {
-                case 0:
-                    XmapController.ShowXmapMenu();
-                    break;
-                case 1:
-                    Pk9rPickMob.ShowMenu();
-                    break;
-                case 2:
-                    TeleportMenu.ShowMenu();
-                    break;
-                case 3:
-                    CustomBackground.ShowMenu();
-                    break;
-            }
+            if (ModMenuMain.modMenuItemFunctions[GameCanvas.panel.selected].Action != null) ModMenuMain.modMenuItemFunctions[GameCanvas.panel.selected].Action();
         }
 
         static void doFireModMenuBools()
@@ -138,16 +156,19 @@ namespace Mod.ModMenu
 
         public static void paintModMenuMain(mGraphics g)
         {
-            switch (GameCanvas.panel.type)
+            switch (PanelType)
             {
-                case ModMenuMain.TYPE_MOD_MENU:
+                case 0:
                     paintModMenu(g);
                     break;
-                case TeleportMenu.TYPE_TELEPORT_LIST:
+                case 1:
                     TeleportMenu.paintTeleportListPanel(g);
                     break;
-                case CustomBackground.TYPE_CUSTOM_BACKGROUND:
+                case 2:
                     CustomBackground.paintCustomBackgroundPanel(g);
+                    break;
+                case 3:
+                    CustomLogo.paintCustomLogoPanel(g);
                     break;
             }
         }
@@ -336,21 +357,22 @@ namespace Mod.ModMenu
 
         public static bool paintTab(mGraphics g)
         {
-            if (GameCanvas.panel.type == TeleportMenu.TYPE_TELEPORT_LIST)
+            g.setColor(13524492);
+            g.fillRect(GameCanvas.panel.X + 1, 78, GameCanvas.panel.W - 2, 1);
+            if (PanelType == 1)
             {
-                g.setColor(13524492);
-                g.fillRect(GameCanvas.panel.X + 1, 78, GameCanvas.panel.W - 2, 1);
                 mFont.tahoma_7b_dark.drawString(g, "Danh sách nhân vật", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
-                return true;
             }
-            else if (GameCanvas.panel.type == CustomBackground.TYPE_CUSTOM_BACKGROUND)
+            else if (PanelType == 2)
             {
-                g.setColor(13524492);
-                g.fillRect(GameCanvas.panel.X + 1, 78, GameCanvas.panel.W - 2, 1);
                 mFont.tahoma_7b_dark.drawString(g, "Danh sách ảnh nền tùy chỉnh", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
-                return true;
             }
-            return false;
+            else if (PanelType == 3)
+            {
+                mFont.tahoma_7b_dark.drawString(g, "Danh sách logo tùy chỉnh", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
+            }
+            else return false;
+            return true;
         }
 
         public void onChatFromMe(string text, string to)
@@ -386,6 +408,35 @@ namespace Mod.ModMenu
                         GameCanvas.startOKDlg("Thời gian không hợp lệ!");
                     }
                 }
+                else if (strChat == ModMenuMain.inputModMenuItemInts[7][0])
+                {
+                    try
+                    {
+                        int value = int.Parse(text);
+                        if (value < 10) throw new Exception();
+                        ModMenuMain.modMenuItemInts[7].setValue(value);
+                        GameScr.info1.addInfo("Đã thay đổi thời gian đổi logo!", 0);
+                    }
+                    catch
+                    {
+                        GameCanvas.startOKDlg("Thời gian không hợp lệ!");
+                    }
+                }
+                else if (strChat == ModMenuMain.inputModMenuItemInts[8][0])
+                {
+                    try
+                    {
+                        int value = int.Parse(text);
+                        if (value < 25 || value > Screen.height * 30 / 100) throw new Exception();
+                        ModMenuMain.modMenuItemInts[8].setValue(value);
+                        GameScr.info1.addInfo("Đã thay đổi chiều cao logo!", 0);
+                        CustomLogo.LoadData();
+                    }
+                    catch
+                    {
+                        GameCanvas.startOKDlg("Chiều cao không hợp lệ!");
+                    }
+                }
             }
             else ChatTextField.gI().isShow = false;
             Utilities.ResetTF();
@@ -397,55 +448,14 @@ namespace Mod.ModMenu
             Utilities.ResetTF();
         }
 
-        public static void onModMenuBoolsValueChanged()
-        {
-            QualitySettings.vSyncCount = ModMenuMain.modMenuItemBools[0].Value ? 1 : 0;
-            CharEffect.isEnabled = ModMenuMain.modMenuItemBools[1].Value;
-            AutoAttack.gI.toggle(ModMenuMain.modMenuItemBools[2].Value);
-            ListCharsInMap.isEnabled = ModMenuMain.modMenuItemBools[3].Value;
-            ListCharsInMap.isShowPet = ModMenuMain.modMenuItemBools[4].Value;
-            AutoSS.isAutoSS = ModMenuMain.modMenuItemBools[5].Value;
-            AutoT77.isAutoT77 = ModMenuMain.modMenuItemBools[6].Value;
-            SuicideRange.isShowSuicideRange = ModMenuMain.modMenuItemBools[7].Value;
-            CustomBackground.isEnabled = ModMenuMain.modMenuItemBools[8].Value;
-            Pk9rPickMob.IsTanSat = ModMenuMain.modMenuItemBools[9].Value;
-            Pk9rPickMob.IsNeSieuQuai = ModMenuMain.modMenuItemBools[10].Value;
-            Pk9rPickMob.IsVuotDiaHinh = ModMenuMain.modMenuItemBools[11].Value;
-            Pk9rPickMob.IsAutoPickItems = ModMenuMain.modMenuItemBools[12].Value;
-            Pk9rPickMob.IsItemMe = ModMenuMain.modMenuItemBools[13].Value;
-            Pk9rPickMob.IsLimitTimesPickItem = ModMenuMain.modMenuItemBools[14].Value;
-
-            manageDisabledModMenuItems();
-        }
-
-        public static void onModMenuIntsValueChanged()
-        {
-            if (ModMenuMain.modMenuItemInts[0].SelectedValue < 5 || ModMenuMain.modMenuItemInts[0].SelectedValue > 60) ModMenuMain.modMenuItemInts[0].SelectedValue = 60;
-            Application.targetFrameRate = ModMenuMain.modMenuItemInts[0].SelectedValue;
-            if (ModMenuMain.modMenuItemInts[2].SelectedValue == 2)
-            {
-                AutoGoback.infoGoback = new AutoGoback.InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz().cx, Char.myCharz().cy);
-                GameScr.info1.addInfo($"Goback đến map: {TileMap.mapName}, khu: {TileMap.zoneID}, tọa độ: ({AutoGoback.infoGoback.x}, {AutoGoback.infoGoback.y})!", 0);
-            }
-            if (ModMenuMain.modMenuItemInts[3].SelectedValue == 0) VietKeyHandler.VietModeEnabled = false;
-            else
-            {
-                VietKeyHandler.VietModeEnabled = true;
-                VietKeyHandler.InputMethod = (InputMethods)(ModMenuMain.modMenuItemInts[3].SelectedValue - 1);
-            }
-            CustomBackground.inveralDrawImages = ModMenuMain.modMenuItemInts[6].SelectedValue * 1000;
-
-            manageDisabledModMenuItems();
-        }
-
-        public static void manageDisabledModMenuItems()
+        static void onModMenuValueChanged()
         {
             ModMenuMain.modMenuItemBools[4].isDisabled = !ModMenuMain.modMenuItemBools[3].Value;
             if (Char.myCharz().taskMaint != null) ModMenuMain.modMenuItemBools[5].isDisabled = Char.myCharz().taskMaint.taskId > 11;
             if (Char.myCharz().cPower > 2000000 || (Char.myCharz().cPower > 1500000 && TileMap.mapID != 111) || (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId < 9)) ModMenuMain.modMenuItemBools[6].isDisabled = true;
             else ModMenuMain.modMenuItemBools[6].isDisabled = false;
             ModMenuMain.modMenuItemBools[8].isDisabled = ModMenuMain.modMenuItemInts[1].SelectedValue > 0;
-            ModMenuMain.modMenuItemBools[9].isDisabled = AutoSS.isAutoSS || AutoT77.isAutoT77;
+            ModMenuMain.modMenuItemBools[10].isDisabled = AutoSS.isAutoSS || AutoT77.isAutoT77;
 
             ModMenuMain.modMenuItemInts[0].isDisabled = ModMenuMain.modMenuItemBools[0].Value;
             ModMenuMain.modMenuItemInts[2].isDisabled = ModMenuMain.modMenuItemBools[5].Value || ModMenuMain.modMenuItemBools[6].Value;
@@ -453,6 +463,48 @@ namespace Mod.ModMenu
             ModMenuMain.modMenuItemInts[4].isDisabled = !Char.myCharz().havePet || ModMenuMain.modMenuItemBools[5].Value || ModMenuMain.modMenuItemBools[6].Value;
             if (ModMenuMain.modMenuItemInts[4].isDisabled) ModMenuMain.modMenuItemInts[4].SelectedValue = 0;
             ModMenuMain.modMenuItemInts[5].isDisabled = ModMenuMain.modMenuItemInts[4].SelectedValue == 0;
+        }
+
+        public static void onModMenuBoolsValueChanged()
+        {
+            onModMenuValueChanged();
+            //QualitySettings.vSyncCount = ModMenuMain.modMenuItemBools[0].Value ? 1 : 0;
+            //CharEffect.isEnabled = ModMenuMain.modMenuItemBools[1].Value;
+            //AutoAttack.gI.toggle(ModMenuMain.modMenuItemBools[2].Value);
+            //ListCharsInMap.isEnabled = ModMenuMain.modMenuItemBools[3].Value;
+            //ListCharsInMap.isShowPet = ModMenuMain.modMenuItemBools[4].Value;
+            //AutoSS.isAutoSS = ModMenuMain.modMenuItemBools[5].Value;
+            //AutoT77.isAutoT77 = ModMenuMain.modMenuItemBools[6].Value;
+            //SuicideRange.isShowSuicideRange = ModMenuMain.modMenuItemBools[7].Value;
+            //CustomBackground.isEnabled = ModMenuMain.modMenuItemBools[8].Value;
+            //CustomLogo.isEnabled = ModMenuMain.modMenuItemBools[9].Value;
+            //Pk9rPickMob.IsTanSat = ModMenuMain.modMenuItemBools[10].Value;
+            //Pk9rPickMob.IsNeSieuQuai = ModMenuMain.modMenuItemBools[11].Value;
+            //Pk9rPickMob.IsVuotDiaHinh = ModMenuMain.modMenuItemBools[12].Value;
+            //Pk9rPickMob.IsAutoPickItems = ModMenuMain.modMenuItemBools[13].Value;
+            //Pk9rPickMob.IsItemMe = ModMenuMain.modMenuItemBools[14].Value;
+            //Pk9rPickMob.IsLimitTimesPickItem = ModMenuMain.modMenuItemBools[15].Value;
+        }
+
+        public static void onModMenuIntsValueChanged()
+        {
+            onModMenuValueChanged();
+            //if (ModMenuMain.modMenuItemInts[0].SelectedValue < 5 || ModMenuMain.modMenuItemInts[0].SelectedValue > 60) ModMenuMain.modMenuItemInts[0].SelectedValue = 60;
+            //Application.targetFrameRate = ModMenuMain.modMenuItemInts[0].SelectedValue;
+            //if (ModMenuMain.modMenuItemInts[2].SelectedValue == 2)
+            //{
+            //    AutoGoback.infoGoback = new AutoGoback.InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz().cx, Char.myCharz().cy);
+            //    GameScr.info1.addInfo($"Goback đến map: {TileMap.mapName}, khu: {TileMap.zoneID}, tọa độ: ({AutoGoback.infoGoback.x}, {AutoGoback.infoGoback.y})!", 0);
+            //}
+            //if (ModMenuMain.modMenuItemInts[3].SelectedValue == 0) VietKeyHandler.VietModeEnabled = false;
+            //else
+            //{
+            //    VietKeyHandler.VietModeEnabled = true;
+            //    VietKeyHandler.InputMethod = (InputMethods)(ModMenuMain.modMenuItemInts[3].SelectedValue - 1);
+            //}
+            //CustomBackground.inveralChangeBackgroundWallpaper = ModMenuMain.modMenuItemInts[6].SelectedValue * 1000;
+            //CustomLogo.inveralChangeLogo = ModMenuMain.modMenuItemInts[7].SelectedValue * 1000;
+            //CustomLogo.height = ModMenuMain.modMenuItemInts[8].SelectedValue;
         }
 
         static void notifySelectDisabledItem()
@@ -474,5 +526,6 @@ namespace Mod.ModMenu
                 GameScr.info1.addInfo(ModMenuMain.modMenuItemFunctions[selected].DisabledReason, 0);
             }
         }
+
     }
 }

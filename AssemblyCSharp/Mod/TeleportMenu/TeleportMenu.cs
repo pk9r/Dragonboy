@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mod.ModMenu;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -13,8 +14,6 @@ namespace Mod
         static TeleportMenu _Instance;
 
         static string[] inputCharID = new string[2] { "Nhập CharID", "CharID" };
-
-        public const int TYPE_TELEPORT_LIST = 27;
 
         static TeleportStatus currentTeleportStatus;
 
@@ -172,7 +171,7 @@ namespace Mod
                         listTeleportChars.Remove(teleportChar);
                         SaveData();
                         GameScr.info1.addInfo($"Đã xóa nhân vật {teleportChar.cName}!", 0);
-                        setTypeTeleportListPanel();
+                        ModMenuPanel.setTypeModMenuMain(1);
                     }
                     else GameCanvas.startOKDlg("Không thể xóa nhân vật đang auto dịch chuyển!");
                     break;
@@ -183,17 +182,17 @@ namespace Mod
                     break;
                 case 12:
                     currentTeleportStatus = TeleportStatus.TeleportTo;
-                    setTypeTeleportListPanel();
+                    ModMenuPanel.setTypeModMenuMain(1);
                     GameCanvas.panel.show();
                     break;
                 case 13:
                     currentTeleportStatus = TeleportStatus.Delete;
-                    setTypeTeleportListPanel();
+                    ModMenuPanel.setTypeModMenuMain(1);
                     GameCanvas.panel.show();
                     break;
                 case 14:
                     currentTeleportStatus = TeleportStatus.AutoTeleportTo;
-                    setTypeTeleportListPanel();
+                    ModMenuPanel.setTypeModMenuMain(1);
                     GameCanvas.panel.show();
                     break;
             }
@@ -335,14 +334,6 @@ namespace Mod
         static void SortList()
         {
             listTeleportChars = listTeleportChars.OrderBy(tC => -tC.lastTimeTeleportTo).ToList();
-        }
-
-        static void setTypeTeleportListPanel()
-        {
-            GameCanvas.panel.type = TYPE_TELEPORT_LIST;
-            GameCanvas.panel.setType(0);
-            SoundMn.gI().getSoundOption();
-            setTabTeleportListPanel();
         }
 
         public static void setTabTeleportListPanel()

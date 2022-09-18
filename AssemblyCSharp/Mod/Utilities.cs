@@ -383,13 +383,8 @@ namespace Mod
         [ChatCommand("test")]
         public static void test()
         {
-            new Thread(delegate ()
-            {
-                GameScr.info1.addInfo(FileDialog.OpenSaveFileDialog("Lưu tệp ảnh nền", "Tệp ảnh (*.png)|*.png", "png"), 0);
-            })
-            {
-                IsBackground = true
-            }.Start();
+            //BackgroundVideo.videoPlayer.Play();
+            //BackgroundVideo.audioSource.Play();
         }
 
         [ChatCommand("skey")]
@@ -670,8 +665,9 @@ namespace Mod
             return Char.myCharz().cgender == 1 && isMeWearingActivationSet(0);  //TODO: Tìm id set Pikkoro Daimao
         }
 
-        public static Image createImage(byte[] imageData, int w, int h)
+        public static Image createImage(byte[] imageData, int w = -1, int h = -1)
         {
+            if (w == -1 && h == -1) throw new ArgumentException("w or h must be assigned!");
             if (imageData == null || imageData.Length == 0)
             {
                 return null;
@@ -680,6 +676,8 @@ namespace Mod
             try
             {
                 image.texture.LoadImage(imageData);
+                if (w == -1) w = image.texture.width * h / image.texture.height;
+                else if (h == -1) h = image.texture.height * w / image.texture.width;
                 if (image.texture.width != w || image.texture.height != h) image.texture = TextureScaler.ScaleTexture(image.texture, w, h);
                 image.texture.anisoLevel = 0;
                 image.texture.filterMode = FilterMode.Point;

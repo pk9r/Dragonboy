@@ -58,5 +58,7 @@ namespace Mod.ModHelper
                 }
             }
         }
+
+        public static void toggle(bool value) => gI.toggle(value);
     }
 }

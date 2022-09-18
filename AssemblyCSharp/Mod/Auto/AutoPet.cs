@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using Mod.ModMenu;
 
 namespace Mod
 {
@@ -49,9 +48,13 @@ namespace Mod
 
         public static bool isSaoMayLuoiThe;
 
+        static AutoPetMode mode;
+
+        static AttackMode modeAttackWhenNeeded;
+
         public static void update()
         {
-            if (ModMenuMain.modMenuItemInts[4].SelectedValue == 0) return;
+            if (mode == AutoPetMode.Disabled) return;
             if (isFirstTimeCkeckPet)
             {
                 delayCheckPet = mSystem.currentTimeMillis();
@@ -121,7 +124,7 @@ namespace Mod
                 Utilities.teleportMyChar(Char.myCharz().cx);
                 return;
             }
-            if (ModMenuMain.modMenuItemInts[4].SelectedValue == 1)
+            if (mode == AutoPetMode.Normal)
             {
                 //up đệ thường
                 if (Char.myPetz().petStatus != 2) Service.gI().petStatus(2);    //tấn công
@@ -129,7 +132,7 @@ namespace Mod
             else
             {
                 if (isTTNL) return;
-                if (ModMenuMain.modMenuItemInts[4].SelectedValue == 2)
+                if (mode == AutoPetMode.AvoidSuperMob)
                 {
                     //up đệ né siêu quái
                     if (Char.myPetz().petStatus != 1) Service.gI().petStatus(1);    //bảo vệ
@@ -139,7 +142,7 @@ namespace Mod
                         Char.myCharz().currentMovePoint = new MovePoint(closestMob.x + Res.random(-5, 5), closestMob.y);
                     }
                 }
-                else if (ModMenuMain.modMenuItemInts[4].SelectedValue == 3)
+                else if (mode == AutoPetMode.Kaioken)
                 {
                     //up đệ kaioken
                     if (Char.myPetz().petStatus != 2) Service.gI().petStatus(2);    //tấn công
@@ -289,20 +292,20 @@ namespace Mod
             {
                 isSaoMayLuoiThe = false;
                 Service.gI().selectSkill(skill1.template.id);
-                switch (ModMenuMain.getStatusInt(5))
+                switch (modeAttackWhenNeeded)
                 {
-                    case 0:
+                    case AttackMode.AttackClosestMob:
                         MyVector vecMob = new MyVector();
                         vecMob.addElement(ClosestMob());
                         Service.gI().sendPlayerAttack(vecMob, new MyVector(), 1);
                         break;
-                    case 1:
+                    case AttackMode.AttackMyPet:
                         if (Char.myCharz().cFlag != 8) Service.gI().getFlag(1, 8);
                         MyVector vecPet = new MyVector();
                         vecPet.addElement(GameScr.findCharInMap(-Char.myCharz().charID));
                         Service.gI().sendPlayerAttack(new MyVector(), vecPet, 2);
                         break;
-                    case 2:
+                    case AttackMode.AttackMyself:
                         if (Char.myCharz().cFlag != 8) Service.gI().getFlag(1, 8);
                         Service.gI().sendPlayerAttack(new MyVector(), Utilities.getMyVectorMe(), 2);
                         break;
@@ -389,6 +392,25 @@ namespace Mod
                 }
             }
             
+        }
+
+        public static void setState(int value) => mode = (AutoPetMode)value;
+
+        public static void setAttackState(int value) => modeAttackWhenNeeded = (AttackMode)value;
+
+        public enum AutoPetMode
+        {
+            Disabled,
+            Normal,
+            AvoidSuperMob,
+            Kaioken
+        }
+
+        public enum AttackMode
+        {
+            AttackClosestMob,
+            AttackMyPet,
+            AttackMyself
         }
     }
 }

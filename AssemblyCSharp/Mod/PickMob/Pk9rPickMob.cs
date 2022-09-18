@@ -460,17 +460,18 @@ namespace Mod.PickMob
             if (IdMobsTanSat.Count + TypeMobsTanSat.Count > 0) menuItems.addElement(new Command("Xem danh sách quái", getInstance(), 9, null));
             if (IdItemPicks.Count + TypeItemPicks.Count + IdItemBlocks.Count + TypeItemBlocks.Count > 0) menuItems.addElement(new Command("Xem danh sách vật phẩm", getInstance(), 10, null));
             menuItems.addElement(new Command("Xem danh sách skill", getInstance(), 11, null));
-            GameCanvas.menu.startAt(menuItems, 0);
+            GameCanvas.menu.startAt(menuItems, 0); 
+            string cpDesc = "PickMobNRO by Phucprotein\n";
             if (mobFocus != null || itemFocus != null)
             {
-                string cpDesc = "PickMobNRO by Phucprotein\n";
                 if (mobFocus != null)
                 {
                     cpDesc += $"Quái đang trỏ vào: {mobFocus.getTemplate().name}, số thứ tự: {mobFocus.mobId}, loại: {mobFocus.getTemplate().mobTemplateId}";
                 }
                 else cpDesc += $"Item đang trỏ vào: {itemFocus.template.name}, id: {itemFocus.template.id}, loại: {itemFocus.template.type}";
-                ChatPopup.addChatPopup(cpDesc, 100000, new Npc(5, 0, -100, 100, 5, Utilities.ID_NPC_MOD_FACE));
-            }
+            } 
+            ChatPopup.addChatPopup(cpDesc, 100000, new Npc(5, 0, -100, 100, 5, Utilities.ID_NPC_MOD_FACE));
+
 
         }
 

@@ -49,6 +49,7 @@ namespace Mod
             SocketClient.gI.initSender();
             ModMenuMain.LoadData();
             CustomBackground.LoadData();
+            CustomLogo.LoadData();
             VietKeyHandler.SmartMark = true;
         }
 
@@ -62,6 +63,7 @@ namespace Mod
             ModMenuMain.SaveData();
             TeleportMenu.SaveData();
             CustomBackground.SaveData();
+            CustomLogo.SaveData();
             return false;
         }
 
@@ -85,15 +87,14 @@ namespace Mod
         /// <returns></returns>
         public static bool onSetResolution()
         {
-            //if (Utilities.sizeData != null)
-            //{
-            //    int width = (int)Utilities.sizeData["width"];
-            //    int height = (int)Utilities.sizeData["height"];
-            //    Screen.SetResolution(width, height, fullscreen: false);
-            //    return true;
-            //}
-            //return false;
-            return true;
+            if (Utilities.sizeData != null)
+            {
+                int width = (int)Utilities.sizeData["width"];
+                int height = (int)Utilities.sizeData["height"];
+                if (Screen.width != width || Screen.height != height) Screen.SetResolution(width, height, fullscreen: false);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -354,6 +355,7 @@ namespace Mod
         {
             Pk9rXmap.Update();
             CustomBackground.update();
+            CustomLogo.update();
         }
 
         public static void onAddInfoMe(string str)
@@ -405,7 +407,8 @@ namespace Mod
 
         public static bool onPaintBgGameScr(mGraphics g)
         {
-            if (CustomBackground.isEnabled && CustomBackground.listBackgroundImages.Count > 0 && !ModMenuMain.modMenuItemBools[8].isDisabled)
+            //UnityEngine.Graphics.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), BackgroundVideo.videoPlayer.texture);
+            if (CustomBackground.isEnabled && CustomBackground.backgroundWallpapers.Count > 0 && !ModMenuMain.modMenuItemBools[8].isDisabled)
             {
                 CustomBackground.paint(g);
                 return true;
