@@ -200,10 +200,7 @@ public class Panel : IActionListener, IChatable
 
 	private static string[][] boxPet = mResources.petMainTab;
 
-	/// <summary>
-	/// Thêm custom panel cần tăng kích thước mảng này
-	/// </summary>
-	public string[][][] tabName = new string[30][][]
+	public string[][][] tabName = new string[27][][]
 	{
 		null,
 		null,
@@ -231,9 +228,7 @@ public class Panel : IActionListener, IChatable
 		new string[1][] { new string[1] { string.Empty } },
 		new string[1][] { new string[1] { string.Empty } },
 		new string[1][] { new string[1] { string.Empty } },
-		new string[1][] { new string[1] { string.Empty } },
-		new string[1][] { new string[1] { string.Empty } },
-		new string[1][] { new string[1] { string.Empty } },
+
 		new string[1][] { new string[1] { string.Empty } },
     };
 
@@ -1893,7 +1888,7 @@ public class Panel : IActionListener, IChatable
 			case 22:
 				updateKeyAuto();
 				break;
-			default:
+			case ModMenuPanel.TYPE_MOD_MENU:
                 updateKeyScrollView();
 				break;
             }
@@ -2897,7 +2892,7 @@ public class Panel : IActionListener, IChatable
 				setTabGiaoDich(isMe: false);
 			}
 			break;
-		default:
+        case ModMenuPanel.TYPE_MOD_MENU:
 			ModMenuPanel.setTabModMenuMain();
 			break;
         }
@@ -3689,8 +3684,8 @@ public class Panel : IActionListener, IChatable
 		case 22:
 			paintAuto(g);
 			break;
-		default:
-			ModMenuPanel.paintModMenuMain(g);
+        case ModMenuPanel.TYPE_MOD_MENU:
+            ModMenuPanel.paintModMenuMain(g);
 			break;
 		}
 		GameScr.resetTranslate(g);
@@ -5364,7 +5359,7 @@ public class Panel : IActionListener, IChatable
 			g.fillRect(X + 1, 78, W - 2, 1);
 			return;
 		}
-		if (ModMenuPanel.paintTab(g)) return;
+		if (type == ModMenuPanel.TYPE_MOD_MENU && ModMenuPanel.paintTab(g)) return;
 		if (currentTabIndex == 3 && mainTabName.Length != 4)
 		{
 			g.translate(-cmx, 0);
@@ -5849,7 +5844,7 @@ public class Panel : IActionListener, IChatable
 		case 5:
 		case 6:
 			break;
-		default:
+		case ModMenuPanel.TYPE_MOD_MENU:
             SmallImage.drawSmallImage(g, Char.myCharz().avatarz(), X + 25, 50, 0, 33);
             paintToolInfo(g);
             break;
@@ -6556,7 +6551,7 @@ public class Panel : IActionListener, IChatable
 				case 22:
 					doFireAuto();
 					break;
-				default:
+				case ModMenuPanel.TYPE_MOD_MENU:
                     ModMenuPanel.doFireModMenuMain();
 					break;
 				}
@@ -7059,7 +7054,7 @@ public class Panel : IActionListener, IChatable
 			switch (selected)
 			{
 			case 0:
-                ModMenuPanel.setTypeModMenu();
+                ModMenuPanel.setTypeModMenuMain(0);
 				break;
 			case 1:
 				doRada();
@@ -7139,7 +7134,7 @@ public class Panel : IActionListener, IChatable
 		switch (selected)
 		{
         case 0:
-            ModMenuPanel.setTypeModMenu();
+            ModMenuPanel.setTypeModMenuMain(0);
             break;
         case 1:
 			doRada();

@@ -7,6 +7,7 @@ using Mod.Dialogs;
 using System.IO;
 using System.Threading;
 using System.IO.IsolatedStorage;
+using Mod.ModMenu;
 
 namespace Mod.Graphics
 {
@@ -26,8 +27,6 @@ namespace Mod.Graphics
 
         static long lastTimeChangedWallpaper;
 
-        public const int TYPE_CUSTOM_BACKGROUND = 28;
-
         public static CustomBackground getInstance()
         {
             if (_Instance == null) _Instance = new CustomBackground();
@@ -41,14 +40,6 @@ namespace Mod.Graphics
             myVector.addElement(new Command("Thêm ảnh\nvào danh sách", getInstance(), 2, null));
             if (backgroundWallpapers.Count > 0) myVector.addElement(new Command("Xóa hết\nảnh trong\ndanh sách", getInstance(), 3, null));
             GameCanvas.menu.startAt(myVector, 0);
-        }
-
-        static void setTypeCustomBackgroundPanel()
-        {
-            GameCanvas.panel.type = TYPE_CUSTOM_BACKGROUND;
-            GameCanvas.panel.setType(0);
-            SoundMn.gI().getSoundOption();
-            setTabCustomBackgroundPanel();
         }
 
         public static void setTabCustomBackgroundPanel()
@@ -194,7 +185,7 @@ namespace Mod.Graphics
             switch (idAction)
             {
                 case 1:
-                    setTypeCustomBackgroundPanel();
+                    ModMenuPanel.setTypeModMenuMain(2);
                     GameCanvas.panel.show();
                     break;
                 case 2:

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Mod.Dialogs;
+using Mod.ModMenu;
 using UnityEngine;
 
 namespace Mod.Graphics
@@ -23,8 +24,6 @@ namespace Mod.Graphics
         public static int inveralChangeLogo = 30000;
 
         static long lastTimeChangedLogo;
-
-        public const int TYPE_CUSTOM_LOGO = 29;
 
         static CustomLogo _Instance;
 
@@ -86,14 +85,6 @@ namespace Mod.Graphics
             myVector.addElement(new Command("Thêm logo vào danh sách", getInstance(), 2, null));
             if (logos.Count > 0) myVector.addElement(new Command("Xóa hết logo trong danh sách", getInstance(), 3, null));
             GameCanvas.menu.startAt(myVector, 0);
-        }
-
-        static void setTypeCustomLogoPanel()
-        {
-            GameCanvas.panel.type = TYPE_CUSTOM_LOGO;
-            GameCanvas.panel.setType(0);
-            SoundMn.gI().getSoundOption();
-            setTabCustomLogoPanel();
         }
 
         public static void setTabCustomLogoPanel()
@@ -186,7 +177,7 @@ namespace Mod.Graphics
             switch (idAction)
             {
                 case 1:
-                    setTypeCustomLogoPanel();
+                    ModMenuPanel.setTypeModMenuMain(3);
                     GameCanvas.panel.show();
                     break;
                 case 2:

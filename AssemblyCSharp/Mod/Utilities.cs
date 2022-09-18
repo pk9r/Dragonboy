@@ -383,8 +383,8 @@ namespace Mod
         [ChatCommand("test")]
         public static void test()
         {
-            BackgroundVideo.videoPlayer.Play();
-            BackgroundVideo.audioSource.Play();
+            //BackgroundVideo.videoPlayer.Play();
+            //BackgroundVideo.audioSource.Play();
         }
 
         [ChatCommand("skey")]

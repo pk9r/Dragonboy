@@ -12,8 +12,6 @@ namespace Mod.ModMenu
 {
     public class ModMenuMain
     {
-        public const int TYPE_MOD_MENU = 26;
-
         /// <summary>
         /// Thêm bật/tắt chức năng mod ở đây
         /// </summary>
