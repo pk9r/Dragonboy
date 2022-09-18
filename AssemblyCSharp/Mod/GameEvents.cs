@@ -87,15 +87,14 @@ namespace Mod
         /// <returns></returns>
         public static bool onSetResolution()
         {
-            //if (Utilities.sizeData != null)
-            //{
-            //    int width = (int)Utilities.sizeData["width"];
-            //    int height = (int)Utilities.sizeData["height"];
-            //    Screen.SetResolution(width, height, fullscreen: false);
-            //    return true;
-            //}
-            //return false;
-            return true;
+            if (Utilities.sizeData != null)
+            {
+                int width = (int)Utilities.sizeData["width"];
+                int height = (int)Utilities.sizeData["height"];
+                if (Screen.width != width || Screen.height != height) Screen.SetResolution(width, height, fullscreen: false);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
