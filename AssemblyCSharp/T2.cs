@@ -18,7 +18,7 @@ public class T2 : mResources
 		mResources.gameInfo = "Notification";
 		mResources.useGem = "Auto reborn";
 		mResources.autoFunction = "Auto function";
-		mResources.sure_fusion = "Are you sure you fusion forever with your disciple? You will lost your disciple and all disciple's equip, all disciple's power will convert to your potential.";
+		mResources.sure_fusion = "Are you sure you fusion forever with your disciple? You will lost your disciple, all disciple's power will convert to your potential.";
 		mResources.fusionForever = "Fusion dance forever";
 		mResources.fusion = "Fusion dance";
 		mResources.nhanngoc = "Receive gem";
@@ -307,8 +307,6 @@ public class T2 : mResources
 		mResources.serverchat_on = "Turn on server notice";
 		mResources.aura_on = "Turn on special aura";
 		mResources.aura_off = "Turn off special aura";
-		mResources.hat_on = "Show accessories";
-		mResources.hat_off = "Hide accessories";
 		mResources.x1Screen = "Small screen";
 		mResources.x2Screen = "Big screen";
 		mResources.changeSizeScreen = "Do you want to exit game to change screen size?";

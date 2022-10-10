@@ -18,7 +18,7 @@ public class T1 : mResources
 		mResources.gameInfo = "Thông báo";
 		mResources.useGem = "Tự động hồi sinh";
 		mResources.autoFunction = "Chức năng auto";
-		mResources.sure_fusion = "Bạn có chắc muốn kết hợp vĩnh viễn với đệ tử của mình không? Bạn sẽ mất đệ tử và toàn bộ trang bị đệ tử đang mặc, toàn bộ sức mạnh của đệ tử sẽ chuyển thành tiềm năng của bạn";
+		mResources.sure_fusion = "Bạn có chắc muốn kết hợp vĩnh viễn với đệ tử của mình không? Bạn sẽ mất đệ tử, toàn bộ sức mạnh của đệ tử sẽ chuyển thành tiềm năng của bạn";
 		mResources.fusionForever = "Hợp thể vĩnh viễn";
 		mResources.fusion = "Hợp thể";
 		mResources.nhanngoc = "Nhận ngọc";
@@ -275,8 +275,6 @@ public class T1 : mResources
 		mResources.serverchat_on = "Bật thông báo từ máy chủ";
 		mResources.aura_on = "Bật hào quang đặc biệt";
 		mResources.aura_off = "Tắt hào quang đặc biệt";
-		mResources.hat_on = "Hiện phụ kiện";
-		mResources.hat_off = "Ẩn phụ kiện";
 		mResources.x2Screen = "Màn hình lớn";
 		mResources.x1Screen = "Màn hình nhỏ";
 		mResources.changeSizeScreen = "Bạn có muốn thoát game để thay đổi cỡ màn hình không ?";
