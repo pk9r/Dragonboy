@@ -380,6 +380,9 @@ public class ChatPopup : Effect2, IActionListener
 			case 7:
 				mFont2 = mFont.tahoma_7b_red;
 				break;
+			case 8:
+				mFont2 = mFont.tahoma_7b_yellow;
+				break;
 			}
 			if (says[i].StartsWith("<"))
 			{

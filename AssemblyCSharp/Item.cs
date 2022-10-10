@@ -6,6 +6,8 @@ public class Item
 
 	public const int OPT_SUN = 36;
 
+	public const int OPT_COLORNAME = 41;
+
 	public const int OPT_LVITEM = 72;
 
 	public const int OPT_STARSLOT = 102;
@@ -42,7 +44,15 @@ public class Item
 
 	public const int TYPE_BALO = 11;
 
+	public const int TYPE_MOUNT = 23;
+
+	public const int TYPE_MOUNT_VIP = 24;
+
 	public const int TYPE_DIAMOND_LOCK = 34;
+
+	public const int TYPE_TRAINSUIT = 32;
+
+	public const int TYPE_HAT = 35;
 
 	public const sbyte UI_WEAPON = 2;
 
@@ -369,7 +379,7 @@ public class Item
 
 	public bool isTypeBody()
 	{
-		if ((0 <= template.type && template.type < 6) || template.type == 32)
+		if ((0 <= template.type && template.type < 6) || template.type == 32 || template.type == 35 || template.type == 11 || template.type == 23)
 		{
 			return true;
 		}
