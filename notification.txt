@@ -1,2 +1,2 @@
-v1
-Các server lậu chưa thể chạy ổn định trên phiên bản 217
+v2
+Các phiên bản dưới 222 có thể giao dịch với nhau được nhưng không giao dịch với phiên bản 222 được và ngược lại. Nếu cần chuyển qua phiên bản 222 bạn có thể chuyển qua branch update222 để sử dụng
