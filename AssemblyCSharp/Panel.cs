@@ -4657,7 +4657,7 @@ public class Panel : IActionListener, IChatable
 				{
 					mFont.tahoma_7_yellow.drawString(g, string.Empty + item.quantity, num5 + num7, num6 + num8 - mFont.tahoma_7_yellow.getHeight(), 1);
 				}
-				mFont.tahoma_7_yellow.drawStringBorder(g, i.ToString(), num2 - 35, num3, 0, mFont.tahoma_7b_dark);
+				mFont.tahoma_7_yellow.drawStringBorder(g, inventorySelect_body.ToString(), num2 - 35, num3, 0, mFont.tahoma_7b_dark);
 			}
 		}
 		catch (Exception)
@@ -5438,7 +5438,8 @@ public class Panel : IActionListener, IChatable
 				{
 					mFont.tahoma_7_yellow.drawString(g, string.Empty + item.quantity, num5 + num7, num6 + num8 - mFont.tahoma_7_yellow.getHeight(), 1);
 				}
-				mFont.tahoma_7_yellow.drawStringBorder(g, i.ToString(), num3 - 35, num4, 0, mFont.tahoma_7b_dark);
+				int index = inventorySelect_isbody ? inventorySelect_body : inventorySelect_bag;
+				mFont.tahoma_7_yellow.drawStringBorder(g, index.ToString(), num2 - 35, num3, 0, mFont.tahoma_7b_dark);
 			}
 		}
 		catch (Exception)
