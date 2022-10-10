@@ -404,6 +404,10 @@ public class Effect
 						}
 						break;
 					}
+					if (t == getEffDataById(effId).arrFrame.Length / 2 && (effId == 62 || effId == 63 || effId == 64 || effId == 65))
+					{
+						SoundMn.playSound(x, y, SoundMn.FIREWORK, SoundMn.volume);
+					}
 					if (t <= getEffDataById(effId).arrFrame.Length - 1)
 					{
 						currFrame = getEffDataById(effId).arrFrame[t];
@@ -423,6 +427,10 @@ public class Effect
 					{
 						t = 0;
 						return;
+					}
+					if (typeEff == 1 && loop == 1)
+					{
+						isPaint = false;
 					}
 					if (typeEff == 4)
 					{

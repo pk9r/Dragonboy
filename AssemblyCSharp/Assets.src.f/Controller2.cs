@@ -970,7 +970,7 @@ internal class Controller2
 					Char.myCharz().arrItemShop[b][i].buyCoin = msg.reader().readInt();
 					Char.myCharz().arrItemShop[b][i].buyGold = msg.reader().readInt();
 					Char.myCharz().arrItemShop[b][i].buyType = msg.reader().readByte();
-					Char.myCharz().arrItemShop[b][i].quantity = msg.reader().readByte();
+					Char.myCharz().arrItemShop[b][i].quantity = msg.reader().readInt();
 					Char.myCharz().arrItemShop[b][i].isMe = msg.reader().readByte();
 					Panel.strWantToBuy = mResources.say_wat_do_u_want_to_buy;
 					sbyte b2 = msg.reader().readByte();

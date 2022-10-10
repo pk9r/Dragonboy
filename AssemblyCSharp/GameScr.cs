@@ -6835,7 +6835,7 @@ public class GameScr : mScreen, IChatable
 			xTG = (xF = GameCanvas.w - 45);
 			if (gamePad.isLargeGamePad)
 			{
-				xSkill = gamePad.wZone - 20;
+				xSkill = gamePad.wZone + 20;
 				wSkill = 35;
 				xHP = xF - 45;
 			}

@@ -167,7 +167,7 @@ public class Info : IActionListener
 				{
 					return;
 				}
-				info.charInfo.paintHead(g, X + 10, Y + H / 2, 0);
+				info.charInfo.paintHead(g, X + 5, Y + H / 2, 0);
 				if (mGraphics.zoomLevel == 1)
 				{
 					((!info.isChatServer) ? mFont.tahoma_7b_greenSmall : mFont.tahoma_7b_yellowSmall2).drawString(g, info.charInfo.cName, X + 12, Y + 3, 0);

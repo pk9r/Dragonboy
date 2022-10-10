@@ -539,6 +539,10 @@ public class mResources
 
 	public static string aura_on = string.Empty;
 
+	public static string hat_off = string.Empty;
+
+	public static string hat_on = string.Empty;
+
 	public static string chest = string.Empty;
 
 	public static string[] chestt = new string[2]
