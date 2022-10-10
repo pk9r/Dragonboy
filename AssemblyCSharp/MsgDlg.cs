@@ -76,7 +76,6 @@ public class MsgDlg : Dialog
 			}
 		}
 		isWait = false;
-		time = -1L;
 	}
 
 	public override void paint(mGraphics g)

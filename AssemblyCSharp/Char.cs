@@ -960,8 +960,6 @@ public class Char : IMapObject
 
 	private bool isOutMap;
 
-	private int fBag;
-
 	private int statusBeforeNothing;
 
 	private int timeFocusToMob;
@@ -1113,58 +1111,6 @@ public class Char : IMapObject
 	private string strEff_Set_Item = "set_eff_";
 
 	public short idEff_Set_Item = -1;
-
-	private FrameImage fraHat_behind;
-
-	private FrameImage fraHat_font;
-
-	private FrameImage fraHat_behind_2;
-
-	private FrameImage fraHat_font_2;
-
-	private string strHat_behind = "hat_sau_";
-
-	private string strHat_font = "hat_truoc_";
-
-	private string strNgang = "ngang_";
-
-	public short idHat = -1;
-
-	public static int[][] hatInfo = new int[32][]
-	{
-		new int[2] { 5, -7 },
-		new int[2] { 5, -7 },
-		new int[2] { 5, -8 },
-		new int[2] { 5, -7 },
-		new int[2] { 5, -6 },
-		new int[2] { 5, -8 },
-		new int[2] { 5, -7 },
-		new int[2] { 9, 0 },
-		new int[2] { 11, 1 },
-		new int[2] { 4, 0 },
-		new int[2] { 4, -1 },
-		new int[2] { 4, 8 },
-		new int[2] { 6, 5 },
-		new int[2] { 6, -6 },
-		new int[2] { 2, -5 },
-		new int[2] { 7, -8 },
-		new int[2] { 7, -6 },
-		new int[2] { 8, 0 },
-		new int[2] { 7, 5 },
-		new int[2] { 9, -7 },
-		new int[2] { 7, -3 },
-		new int[2] { 2, 8 },
-		new int[2] { 4, 5 },
-		new int[2] { 10, -5 },
-		new int[2] { 9, -5 },
-		new int[2] { 9, -5 },
-		new int[2] { 6, -6 },
-		new int[2] { 2, -5 },
-		new int[2] { 7, -8 },
-		new int[2] { 7, -6 },
-		new int[2] { 9, -7 },
-		new int[2] { 7, -3 }
-	};
 
 	public Char()
 	{
@@ -4776,12 +4722,11 @@ public class Char : IMapObject
 	{
 		bool result = false;
 		short num = -1;
-		Item[] array = arrItemBody;
-		for (int i = 0; i < array.Length; i++)
+		for (int i = 0; i < arrItemBag.Length; i++)
 		{
-			if (array[i] != null && (array[i].template.type == 24 || array[i].template.type == 23))
+			if (arrItemBag[i] != null && (arrItemBag[i].template.type == 24 || arrItemBag[i].template.type == 23))
 			{
-				num = ((array[i].template.part < 0) ? array[i].template.id : ((short)(ID_NEW_MOUNT + array[i].template.part)));
+				num = ((arrItemBag[i].template.part < 0) ? arrItemBag[i].template.id : ((short)(ID_NEW_MOUNT + arrItemBag[i].template.part)));
 				result = true;
 				break;
 			}
@@ -5748,8 +5693,7 @@ public class Char : IMapObject
 
 	private void paintCharName_HP_MP_Overhead(mGraphics g)
 	{
-		Part part = GameScr.parts[getFHead(head)];
-		int num = CharInfo[cf][0][2] - part.pi[CharInfo[cf][0][0]].dy + 5;
+		int num = ch + 5;
 		if ((isInvisiblez && !me) || (!me && TileMap.mapID == 113 && cy >= 360) || me)
 		{
 			return;
@@ -5772,8 +5716,12 @@ public class Char : IMapObject
 			num += 5;
 			paintHp(g, cx, cy - num + 3);
 		}
-		num += mFont.tahoma_7_white.getHeight();
+		num += mFont.tahoma_7b_white.getHeight();
 		mFont mFont2 = mFont.tahoma_7_whiteSmall;
+		if (isNhapThe)
+		{
+			num += 10;
+		}
 		if (isPet || isMiniPet)
 		{
 			mFont2 = mFont.tahoma_7_blue1Small;
@@ -5908,6 +5856,10 @@ public class Char : IMapObject
 	{
 		int num = 0;
 		int num2 = 0;
+		int num3 = 0;
+		int num4 = 0;
+		num4 = StaticObj.VCENTER_HCENTER;
+		num3 = ((dir != 1) ? 2 : 0);
 		if (statusMe == 6)
 		{
 			num = 8;
@@ -5981,44 +5933,12 @@ public class Char : IMapObject
 			num = -1;
 			num2 = 17;
 		}
-		fBag++;
-		if (fBag > 10000)
+		sbyte b = (sbyte)(GameCanvas.gameTick / 4 % id.Length);
+		if (!isPaintChar && b == 0)
 		{
-			fBag = 0;
+			b = 1;
 		}
-		sbyte b = (sbyte)(fBag / 4 % id.Length);
-		if (!isPaintChar)
-		{
-			if (id.Length == 2)
-			{
-				b = 1;
-			}
-			if (id.Length == 3)
-			{
-				if (id[2] >= 0)
-				{
-					b = 2;
-					if (GameCanvas.gameTick % 10 > 5)
-					{
-						b = 1;
-					}
-				}
-				else
-				{
-					b = 1;
-				}
-			}
-		}
-		else if (id.Length > 1 && (b == 0 || b == 1) && statusMe != 1 && statusMe != 6)
-		{
-			fBag = 0;
-			b = 0;
-			if (GameCanvas.gameTick % 10 > 5)
-			{
-				b = 1;
-			}
-		}
-		SmallImage.drawSmallImage(g, id[b], x + ((dir != 1) ? num : (-num)), y - num2, (dir != 1) ? 2 : 0, StaticObj.VCENTER_HCENTER);
+		SmallImage.drawSmallImage(g, id[b], x + ((dir != 1) ? num : (-num)), y - num2, num3, num4);
 	}
 
 	public bool isCharBodyImageID(int id)
@@ -6153,7 +6073,6 @@ public class Char : IMapObject
 			}
 			SmallImage.drawSmallImage(g, 834, cx, cy - CharInfo[cf][2][2] + part3.pi[CharInfo[cf][2][0]].dy - 2 + num3, num, StaticObj.TOP_CENTER);
 			SmallImage.drawSmallImage(g, 79, cx, cy - ch - 8, 0, mGraphics.HCENTER | mGraphics.BOTTOM);
-			paintHat_behind(g, cf, cy - CharInfo[cf][2][2] + part3.pi[CharInfo[cf][2][0]].dy);
 			if (isHead_2Fr(head))
 			{
 				Part part4 = GameScr.parts[getFHead(head)];
@@ -6163,12 +6082,10 @@ public class Char : IMapObject
 			{
 				SmallImage.drawSmallImage(g, part.pi[CharInfo[cf][0][0]].id, cx + (CharInfo[cf][0][1] + part.pi[CharInfo[cf][0][0]].dx) * num2, cy - CharInfo[cf][0][2] + part.pi[CharInfo[cf][0][0]].dy, num, anchor);
 			}
-			paintHat_front(g, cf, cy - CharInfo[cf][2][2] + part3.pi[CharInfo[cf][2][0]].dy);
 			paintRedEye(g, cx + (CharInfo[cf][0][1] + part.pi[CharInfo[cf][0][0]].dx) * num2, cy - CharInfo[cf][0][2] + part.pi[CharInfo[cf][0][0]].dy, num, anchor);
 		}
 		else
 		{
-			paintHat_behind(g, cf, cy - CharInfo[cf][2][2] + part3.pi[CharInfo[cf][2][0]].dy);
 			if (isHead_2Fr(head))
 			{
 				Part part5 = GameScr.parts[getFHead(head)];
@@ -6178,7 +6095,6 @@ public class Char : IMapObject
 			{
 				SmallImage.drawSmallImage(g, part.pi[CharInfo[cf][0][0]].id, cx + (CharInfo[cf][0][1] + part.pi[CharInfo[cf][0][0]].dx) * num2, cy - CharInfo[cf][0][2] + part.pi[CharInfo[cf][0][0]].dy, num, anchor);
 			}
-			paintHat_front(g, cf, cy - CharInfo[cf][2][2] + part3.pi[CharInfo[cf][2][0]].dy);
 			SmallImage.drawSmallImage(g, part2.pi[CharInfo[cf][1][0]].id, cx + (CharInfo[cf][1][1] + part2.pi[CharInfo[cf][1][0]].dx) * num2, cy - CharInfo[cf][1][2] + part2.pi[CharInfo[cf][1][0]].dy, num, anchor);
 			SmallImage.drawSmallImage(g, part3.pi[CharInfo[cf][2][0]].id, cx + (CharInfo[cf][2][1] + part3.pi[CharInfo[cf][2][0]].dx) * num2, cy - CharInfo[cf][2][2] + part3.pi[CharInfo[cf][2][0]].dy, num, anchor);
 			paintRedEye(g, cx + (CharInfo[cf][0][1] + part.pi[CharInfo[cf][0][0]].dx) * num2, cy - CharInfo[cf][0][2] + part.pi[CharInfo[cf][0][0]].dy, num, anchor);
@@ -7785,80 +7701,5 @@ public class Char : IMapObject
 				fraEffSub = mSystem.getFraImage(strEff_Set_Item + idEff_Set_Item + "_1");
 			}
 		}
-	}
-
-	public void paintHat_behind(mGraphics g, int cf, int yh)
-	{
-		try
-		{
-			if (idHat == -1)
-			{
-				return;
-			}
-			if (isFrNgang(cf))
-			{
-				if (fraHat_behind_2 != null)
-				{
-					fraHat_behind_2.drawFrame(GameCanvas.gameTick / 4 % fraHat_behind_2.nFrame, cx + hatInfo[cf][0] * ((cdir == 1) ? 1 : (-1)), yh + hatInfo[cf][1], (cdir != 1) ? 2 : 0, mGraphics.BOTTOM | mGraphics.HCENTER, g);
-				}
-				else
-				{
-					fraHat_behind_2 = mSystem.getFraImage(strHat_behind + strNgang + idHat);
-				}
-			}
-			else if (fraHat_behind != null)
-			{
-				fraHat_behind.drawFrame(GameCanvas.gameTick / 4 % fraHat_behind.nFrame, cx + hatInfo[cf][0] * ((cdir == 1) ? 1 : (-1)), yh + hatInfo[cf][1], (cdir != 1) ? 2 : 0, mGraphics.BOTTOM | mGraphics.HCENTER, g);
-			}
-			else
-			{
-				fraHat_behind = mSystem.getFraImage(strHat_behind + idHat);
-			}
-		}
-		catch (Exception)
-		{
-		}
-	}
-
-	public void paintHat_front(mGraphics g, int cf, int yh)
-	{
-		try
-		{
-			if (idHat == -1)
-			{
-				return;
-			}
-			if (isFrNgang(cf))
-			{
-				if (fraHat_font_2 != null)
-				{
-					fraHat_font_2.drawFrame(GameCanvas.gameTick / 4 % fraHat_font_2.nFrame, cx + hatInfo[cf][0] * ((cdir == 1) ? 1 : (-1)), yh + hatInfo[cf][1], (cdir != 1) ? 2 : 0, mGraphics.BOTTOM | mGraphics.HCENTER, g);
-				}
-				else
-				{
-					fraHat_font_2 = mSystem.getFraImage(strHat_font + strNgang + idHat);
-				}
-			}
-			else if (fraHat_font != null)
-			{
-				fraHat_font.drawFrame(GameCanvas.gameTick / 4 % fraHat_font.nFrame, cx + hatInfo[cf][0] * ((cdir == 1) ? 1 : (-1)), yh + hatInfo[cf][1], (cdir != 1) ? 2 : 0, mGraphics.BOTTOM | mGraphics.HCENTER, g);
-			}
-			else
-			{
-				fraHat_font = mSystem.getFraImage(strHat_font + idHat);
-			}
-		}
-		catch (Exception)
-		{
-		}
-	}
-
-	public bool isFrNgang(int fr)
-	{
-		if (fr == 2 || fr == 3 || fr == 4 || fr == 5 || fr == 6 || fr == 9 || fr == 10 || fr == 13 || fr == 14 || fr == 15 || fr == 16 || fr == 26 || fr == 27 || fr == 28 || fr == 29)
-		{
-			return true;
-		}
-		return false;
 	}
 }

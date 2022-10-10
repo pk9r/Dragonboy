@@ -2842,7 +2842,7 @@ public class Service
 				message.writer().writeShort(itemId);
 				message.writer().writeByte(moneyType);
 				message.writer().writeInt(money);
-				message.writer().writeInt(quaintly);
+				message.writer().writeByte((sbyte)quaintly);
 			}
 			if (action == 1 || action == 2)
 			{
@@ -3208,23 +3208,6 @@ public class Service
 			{
 				message.writer().writeShort(id);
 			}
-			session.sendMessage(message);
-		}
-		catch (Exception)
-		{
-		}
-		finally
-		{
-			message.cleanup();
-		}
-	}
-
-	public void sendOptHat()
-	{
-		Message message = new Message((sbyte)24);
-		try
-		{
-			message.writer().writeByte(0);
 			session.sendMessage(message);
 		}
 		catch (Exception)

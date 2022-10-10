@@ -203,9 +203,8 @@ public class SoundMn
 	{
 		if (Main.isPC)
 		{
-			Panel.strCauhinh = new string[4]
+			Panel.strCauhinh = new string[3]
 			{
-				(Char.myCharz().idHat == -1) ? mResources.hat_on : mResources.hat_off,
 				(!Char.isPaintAura) ? mResources.aura_on : mResources.aura_off,
 				(!GameCanvas.isPlaySound) ? mResources.turnOnSound : mResources.turnOffSound,
 				(mGraphics.zoomLevel <= 1) ? mResources.x2Screen : mResources.x1Screen
@@ -213,9 +212,8 @@ public class SoundMn
 		}
 		else
 		{
-			Panel.strCauhinh = new string[4]
+			Panel.strCauhinh = new string[3]
 			{
-				(Char.myCharz().idHat == -1) ? mResources.hat_on : mResources.hat_off,
 				(!Char.isPaintAura) ? mResources.aura_on : mResources.aura_off,
 				(!GameCanvas.isPlaySound) ? mResources.turnOnSound : mResources.turnOffSound,
 				(GameScr.isAnalog != 0) ? mResources.turnOffAnalog : mResources.turnOnAnalog
@@ -308,11 +306,6 @@ public class SoundMn
 			Char.isPaintAura = true;
 		}
 		getStrOption();
-	}
-
-	public void HatToolOption()
-	{
-		Service.gI().sendOptHat();
 	}
 
 	public void update()

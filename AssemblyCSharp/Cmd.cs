@@ -360,7 +360,7 @@ public class Cmd
 
 	public const sbyte OPEN_UI = 23;
 
-	public const sbyte OPTION_HAT = 24;
+	public const sbyte OPEN_UI_BOX = 24;
 
 	public const sbyte OPEN_UI_PT = 25;
 

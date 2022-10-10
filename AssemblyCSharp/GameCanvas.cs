@@ -562,18 +562,6 @@ public class GameCanvas : IActionListener
 				else if (panel.isShow)
 				{
 					panel.update();
-					if (isPointer(panel.X, panel.Y, panel.W, panel.H))
-					{
-						isFocusPanel2 = false;
-					}
-					if (panel2 != null && panel2.isShow)
-					{
-						panel2.update();
-						if (isPointer(panel2.X, panel2.Y, panel2.W, panel2.H))
-						{
-							isFocusPanel2 = true;
-						}
-					}
 					if (panel2 != null)
 					{
 						if (isFocusPanel2)
@@ -583,6 +571,14 @@ public class GameCanvas : IActionListener
 						else
 						{
 							panel.updateKey();
+						}
+						if (panel2.isShow)
+						{
+							panel2.update();
+							if (isPointer(panel2.X, panel2.Y, panel2.W, panel2.H))
+							{
+								panel2.updateKey();
+							}
 						}
 					}
 					else
@@ -596,14 +592,6 @@ public class GameCanvas : IActionListener
 					else if (panel2 != null && panel2.chatTField != null && panel2.chatTField.isShow)
 					{
 						panel2.chatTFUpdateKey();
-					}
-					else if ((isPointer(panel.X, panel.Y, panel.W, panel.H) && panel2 != null) || panel2 == null)
-					{
-						panel.updateKey();
-					}
-					else if (panel2 != null && panel2.isShow && isPointer(panel2.X, panel2.Y, panel2.W, panel2.H))
-					{
-						panel2.updateKey();
 					}
 					if (isPointer(panel.X + panel.W, panel.Y, w - panel.W * 2, panel.H) && isPointerJustRelease && panel.isDoneCombine)
 					{
