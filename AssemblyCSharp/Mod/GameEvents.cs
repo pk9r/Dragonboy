@@ -392,9 +392,9 @@ namespace Mod
             return false;
         }
 
-        public static void onAddInfoChar(string info)
+        public static void onAddInfoChar(string info, Char c)
         {
-            if (info.Contains("Sao sư phụ không đánh đi") && ModMenuMain.modMenuItemInts[4].SelectedValue > 0) AutoPet.isSaoMayLuoiThe = true;
+            if (info.Contains("Sao sư phụ không đánh đi") && ModMenuMain.modMenuItemInts[4].SelectedValue > 0 && c.charID == -Char.myCharz().charID) AutoPet.isSaoMayLuoiThe = true;
         }
 
         public static void onLoadImageGameCanvas()
