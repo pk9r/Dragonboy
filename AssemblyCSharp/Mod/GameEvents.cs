@@ -51,6 +51,7 @@ namespace Mod
             CustomBackground.LoadData();
             CustomLogo.LoadData();
             VietKeyHandler.SmartMark = true;
+            Extension.LoadExtensions();
         }
 
         /// <summary>
