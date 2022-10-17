@@ -40,13 +40,17 @@ Discord hỏi đáp: https://discord.gg/zdvBdVxRh6
 #### Bật/tắt
 Chứa các chức năng có 2 trạng thái
 
-![image](https://user-images.githubusercontent.com/98677996/186596345-4eb768d0-57ff-4dd1-86fd-41ffe483735b.png)
+![image](https://user-images.githubusercontent.com/98677996/196203308-60396427-5137-4597-bf2f-9013e4f2a237.png)
 #### Điều chỉnh
 Chứa các chức năng cần điều chỉnh giá trị và các chức năng nhiều trạng thái
 
-![image](https://user-images.githubusercontent.com/98677996/186596434-23f79704-8134-4b5e-b3a1-95748d8f728a.png)
+![image](https://user-images.githubusercontent.com/98677996/196203694-5bf456aa-5661-428f-a260-4e0eeb251163.png)
 #### Chức năng
 Chứa các chức năng khác
 
-![image](https://user-images.githubusercontent.com/98677996/186596496-0a3ce578-c4bd-40e0-a461-5eda3dd0760f.png)
+![image](https://user-images.githubusercontent.com/98677996/196203774-9ffe6e15-c290-4d82-b4da-27013191a1b6.png)
+#### Phần mở rộng
+Chứa chức năng của các phần mở rộng, chỉ hiện khi có ít nhất 1 phần mở rộng có hàm OpenMenu
+![image](https://user-images.githubusercontent.com/98677996/196202880-37927897-5137-4a94-9079-6a46460f98f7.png)
+
 

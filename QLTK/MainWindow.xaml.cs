@@ -67,6 +67,8 @@ namespace QLTK
 
             new Server("SUPER 1", "103.90.224.245", 14446),
             new Server("SUPER 2", "103.90.224.245", 14447),
+
+            new Server("Rose", "103.90.224.45", 14445),
         };
 
         public static object settings;
@@ -88,7 +90,7 @@ namespace QLTK
 
             this.LoadAccounts();
             this.LoadSaveSettings();
-
+            if (WinVersion.GetVersion().Major < 8) return;
             using (WebClient client = new WebClient())
             {
                 var data = client.DownloadData(Settings.Default.LinkNotification);

@@ -24,13 +24,13 @@ namespace Mod.ModMenu
             return _Instance;
         }
 
-
         public static void setTypeModMenuMain(int panelType)
         {
             GameCanvas.panel.type = TYPE_MOD_MENU;
             PanelType = panelType;
             setTypeModMenu();
         }
+
         public static void setTypeModMenu()
         {
             SoundMn.gI().getSoundOption();
@@ -43,6 +43,14 @@ namespace Mod.ModMenu
                     new string[]{ "Điều", "chỉnh" },
                     new string[]{ "Chức", "năng" },
                 };
+                if (Extension.Extensions.Count > 0) 
+                    GameCanvas.panel.tabName[TYPE_MOD_MENU] = new string[][]
+                    {
+                        new string[]{ "Bật/tắt", "" },
+                        new string[]{ "Điều", "chỉnh" },
+                        new string[]{ "Chức", "năng" },
+                        new string[]{ "Phần", "mở rộng" }
+                    };
                 GameCanvas.panel.setType(0);
                 setTabModMenuMain();
                 onModMenuBoolsValueChanged();
@@ -86,7 +94,8 @@ namespace Mod.ModMenu
             GameCanvas.panel.ITEM_HEIGHT = 24;
             if (GameCanvas.panel.currentTabIndex == 0) GameCanvas.panel.currentListLength = ModMenuMain.modMenuItemBools.Length;
             else if (GameCanvas.panel.currentTabIndex == 1) GameCanvas.panel.currentListLength = ModMenuMain.modMenuItemInts.Length;
-            else GameCanvas.panel.currentListLength = ModMenuMain.modMenuItemFunctions.Length;
+            else if (GameCanvas.panel.currentTabIndex == 2) GameCanvas.panel.currentListLength = ModMenuMain.modMenuItemFunctions.Length;
+            else GameCanvas.panel.currentListLength = Extension.Extensions.Count;
             GameCanvas.panel.selected = (GameCanvas.isTouch ? (-1) : 0);
             GameCanvas.panel.cmyLim = GameCanvas.panel.currentListLength * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.hScroll;
             if (GameCanvas.panel.cmyLim < 0) GameCanvas.panel.cmyLim = 0;
@@ -118,8 +127,15 @@ namespace Mod.ModMenu
         {
             if (GameCanvas.panel.currentTabIndex == 0) doFireModMenuBools();
             else if (GameCanvas.panel.currentTabIndex == 1) doFireModMenuInts();
-            else doFireModMenuFunctions();
+            else if (GameCanvas.panel.currentTabIndex == 2) doFireModMenuFunctions();
+            else doFireModMenuExtensions();
             notifySelectDisabledItem();
+        }
+
+        private static void doFireModMenuExtensions()
+        {
+            GameCanvas.panel.hideNow();
+            Extension.Extensions[GameCanvas.panel.selected].OpenMenu();
         }
 
         private static void doFireModMenuFunctions()
@@ -177,7 +193,58 @@ namespace Mod.ModMenu
         {
             if (GameCanvas.panel.currentTabIndex == 0) paintModMenuBools(g);
             else if (GameCanvas.panel.currentTabIndex == 1) paintModMenuInts(g);
-            else paintModMenuFunctions(g);
+            else if (GameCanvas.panel.currentTabIndex == 2) paintModMenuFunctions(g);
+            else paintModMenuExtensions(g);
+        }
+
+        private static void paintModMenuExtensions(mGraphics g)
+        {
+            g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
+            g.translate(0, -GameCanvas.panel.cmy);
+            g.setColor(0);
+            if (Extension.Extensions == null || Extension.Extensions.Count != GameCanvas.panel.currentListLength) return;
+            bool isReset = true;
+            string descriptionTextInfo = string.Empty;
+            int x = 0, y = 0;
+            for (int i = 0; i < GameCanvas.panel.currentListLength; i++)
+            {
+                int num = GameCanvas.panel.xScroll;
+                int num2 = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
+                int num3 = GameCanvas.panel.wScroll;
+                int num4 = GameCanvas.panel.ITEM_HEIGHT - 1;
+                Extension ext = Extension.Extensions[i];
+                if (ext.HasMenuItems()) g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
+                else g.setColor((i != GameCanvas.panel.selected) ? new Color(0.54f, 0.51f, 0.46f) : new Color(0.61f, 0.63f, 0.18f));
+                g.fillRect(num, num2, num3, num4);
+                if (ext != null)
+                {
+                    mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + ext.ExtensionName + ' ' + ext.ExtensionVersion, num + 5, num2, 0);
+                    string description = string.Empty;
+                    if (mFont.tahoma_7_blue.getWidth(ext.ExtensionDescription) > 160)
+                    {
+                        string str = ext.ExtensionDescription;
+                        while (mFont.tahoma_7_blue.getWidth(str + "...") > 160) str = str.Remove(str.Length - 1, 1);
+                        description = str + "...";
+                    }
+                    else description = ext.ExtensionDescription;
+                    if (i == GameCanvas.panel.selected && mFont.tahoma_7_blue.getWidth(ext.ExtensionDescription) > 160 && !GameCanvas.panel.isClose)
+                    {
+                        isReset = false;
+                        descriptionTextInfo = ext.ExtensionDescription;
+                        x = num + 5;
+                        y = num2 + 11;
+                    }
+                    else mFont.tahoma_7_blue.drawString(g, description, num + 5, num2 + 11, 0);
+                }
+            }
+            if (isReset) TextInfo.reset();
+            else
+            {
+                TextInfo.paint(g, descriptionTextInfo, x, y, 160, 15, mFont.tahoma_7_blue);
+                g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
+                g.translate(0, -GameCanvas.panel.cmy);
+            }
+            GameCanvas.panel.paintScrollArrow(g);
         }
 
         private static void paintModMenuFunctions(mGraphics g)

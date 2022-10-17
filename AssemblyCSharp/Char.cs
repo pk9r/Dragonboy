@@ -1285,7 +1285,7 @@ public class Char : IMapObject
 
 	public void addInfo(string info)
 	{
-		GameEvents.onAddInfoChar(info);
+		GameEvents.onAddInfoChar(info, this);
 		if (chatInfo == null)
 		{
 			chatInfo = new Info();
