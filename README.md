@@ -50,7 +50,7 @@ Chứa các chức năng khác
 
 ![image](https://user-images.githubusercontent.com/98677996/196203774-9ffe6e15-c290-4d82-b4da-27013191a1b6.png)
 #### Phần mở rộng
-Chứa chức năng của các phần mở rộng, chỉ hiện khi có ít nhất 1 phần mở rộng có hàm OpenMenu
+Chứa chức năng của các phần mở rộng, chỉ hiện khi có ít nhất 1 phần mở rộng
 ![image](https://user-images.githubusercontent.com/98677996/196202880-37927897-5137-4a94-9079-6a46460f98f7.png)
 
 
