@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class mFont
 {
+	[Obsolete("Không dùng nữa")]
 	public static mFont tahoma_7b_red_tiny, tahoma_7b_yellow_tiny, tahoma_7_tiny, tahoma_7_blue_tiny, tahoma_7_white_tiny;
 
     public static int LEFT = 0;
@@ -316,18 +317,18 @@ public class mFont
 			tahoma_7_blue1Small = tahoma_7_blue1;
 			tahoma_7_white_pSmall = tahoma_7_white;
 
-			tahoma_7b_red_tiny = tahoma_7b_red;
-			tahoma_7b_yellow_tiny = tahoma_7b_yellow;
-			tahoma_7_tiny = tahoma_7;
-            tahoma_7_blue_tiny = tahoma_7_blue1;
-			tahoma_7_white_tiny = tahoma_7_white;
+			//tahoma_7b_red_tiny = tahoma_7b_red;
+			//tahoma_7b_yellow_tiny = tahoma_7b_yellow;
+			//tahoma_7_tiny = tahoma_7;
+   //         tahoma_7_blue_tiny = tahoma_7_blue1;
+			//tahoma_7_white_tiny = tahoma_7_white;
             return;
 		}
-		tahoma_7b_red_tiny = new mFont(1);
-		tahoma_7b_yellow_tiny = new mFont(4);
-		tahoma_7_tiny = new mFont(10);
-        tahoma_7_blue_tiny = new mFont(11);
-        tahoma_7_white_tiny = new mFont(18);
+		//tahoma_7b_red_tiny = new mFont(1);
+		//tahoma_7b_yellow_tiny = new mFont(4);
+		//tahoma_7_tiny = new mFont(10);
+  //      tahoma_7_blue_tiny = new mFont(11);
+  //      tahoma_7_white_tiny = new mFont(18);
 
         gI = new mFont(0);
 		tahoma_7b_red = new mFont(1);
@@ -832,11 +833,11 @@ public class mFont
 		y0 += yAddFont;
 		GUIStyle gUIStyle = new GUIStyle(GUI.skin.label);
 		gUIStyle.font = myFont;
-		if ((this == tahoma_7b_red_tiny || this == tahoma_7b_yellow_tiny || this == tahoma_7_tiny || this == tahoma_7_blue_tiny || this == tahoma_7_white_tiny) && mGraphics.zoomLevel == 2)
-		{
-            gUIStyle = new GUIStyle(GUI.skin.label);
-            gUIStyle.fontSize = 13;
-        }
+		//if ((this == tahoma_7b_red_tiny || this == tahoma_7b_yellow_tiny || this == tahoma_7_tiny || this == tahoma_7_blue_tiny || this == tahoma_7_white_tiny) && mGraphics.zoomLevel == 2)
+		//{
+  //          gUIStyle = new GUIStyle(GUI.skin.label);
+  //          gUIStyle.fontSize = 13;
+  //      }
 		float num = 0f;
 		float num2 = 0f;
 		switch (align)
