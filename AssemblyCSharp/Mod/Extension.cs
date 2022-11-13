@@ -1,79 +1,86 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using UnityEngine;
+﻿using System.Collections;
 
 namespace Mod
 {
-    public class Extension
+    /// <summary>
+    /// Class để các extension override, chứa các method được gọi khi một sự kiện nào đó trong game diễn ra.
+    /// </summary>
+    public abstract class Extension
     {
-        public static List<Extension> Extensions { get; private set; } = new List<Extension>();
+        public abstract bool onSendChat(string text);
 
-        public string ExtensionName { get; private set; }
+        public abstract void onGameStarted();
 
-        public string ExtensionDescription { get; private set; }
+        public abstract bool onGameClosing();
 
-        public string ExtensionVersion { get; private set; }
+        public abstract void onSaveRMSString(ref string filename, ref string data);
 
-        bool hasMenuItems;
+        public abstract void onKeyMapLoaded(Hashtable h);
 
-        const BindingFlags flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod;
+        public abstract bool onSetResolution();
 
-        Assembly extensionAssembly;
+        public abstract void onGameScrPressHotkeysUnassigned();
 
-        public Extension(string path) 
-        {
-            extensionAssembly = Assembly.LoadFrom(path);
-            extensionAssembly.GetType("Loader").GetMethod("Init", flags).Invoke(null, null);
-            FieldInfo name = extensionAssembly.GetType("MainExt").GetField("name", BindingFlags.Public | BindingFlags.Static);
-            if (name != null)
-                ExtensionName = (string)name.GetRawConstantValue();
-            FieldInfo desc = extensionAssembly.GetType("MainExt").GetField("description", BindingFlags.Public | BindingFlags.Static);
-            if (desc != null)
-                ExtensionDescription = (string)desc.GetRawConstantValue();
-            FieldInfo ver = extensionAssembly.GetType("MainExt").GetField("version", BindingFlags.Public | BindingFlags.Static);
-            if (ver != null)
-                ExtensionVersion = (string)ver.GetRawConstantValue();
-            if (string.IsNullOrEmpty(ExtensionName))
-                ExtensionName = extensionAssembly.FullName;
-            if (string.IsNullOrEmpty(ExtensionDescription))
-                ExtensionDescription = extensionAssembly.ManifestModule.Name;
-            if (string.IsNullOrEmpty(ExtensionVersion))
-                ExtensionVersion = extensionAssembly.GetName().Version.ToString();
-            hasMenuItems = extensionAssembly.GetType("MainExt") != null && extensionAssembly.GetType("MainExt").GetMethod("OpenMenu", flags) != null;
-        }
+        public abstract void onPaintChatTextField(mGraphics g);
 
-        public bool HasMenuItems()
-        {
-            return hasMenuItems;
-        }
+        public abstract bool onStartChatTextField(ChatTextField sender);
 
-        public void OpenMenu()
-        {
-            if (hasMenuItems) 
-                extensionAssembly.GetType("MainExt").GetMethod("OpenMenu", flags).Invoke(null, null);
-        }
+        public abstract bool onLoadRMSInt(string file, out int result);
 
-        public static void LoadExtensions()
-        {
-            string extensionDir = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))) + "\\Extensions";
-            if (!Directory.Exists(extensionDir))
-                Directory.CreateDirectory(extensionDir);
-            foreach (string path in Directory.GetFiles(extensionDir))
-            {
-                try
-                {
-                    Extensions.Add(new Extension(path));
-                }
-                catch(Exception ex)
-                {
-                    Debug.LogError("Exception when loading extension module: " + path);
-                    Debug.LogException(ex);
-                }
-            }
-        }
+        public abstract bool onGetRMSPath(out string result);
+
+        public abstract bool onTeleportUpdate(Teleport teleport);
+
+        public abstract void onUpdateChatTextField(ChatTextField sender);
+
+        public abstract bool onClearAllRMS();
+
+        public abstract void onUpdateGameScr();
+
+        //public abstract void onLogin(ref string username, ref string pass, ref sbyte type);
+
+        public abstract void onServerListScreenLoaded();
+
+        public abstract void onSessionConnecting(ref string host, ref int port);
+
+        public abstract void onSceenDownloadDataShow();
+
+        public abstract bool onCheckZoomLevel();
+
+        public abstract bool onKeyPressedz(int keyCode, bool isFromSync);
+
+        public abstract bool onKeyReleasedz(int keyCode, bool isFromAsync);
+
+        public abstract bool onChatPopupMultiLine(string chat);
+
+        public abstract bool onAddBigMessage(string chat, Npc npc);
+
+        public abstract void onInfoMapLoaded();
+
+        public abstract void onPaintGameScr(mGraphics g);
+
+        public abstract bool onUseSkill(Skill skill);
+
+        public abstract void onFixedUpdateMain();
+
+        public abstract void onAddInfoMe(string str);
+
+        public abstract void onUpdateKeyTouchControl();
+
+        public abstract void onSetPointItemMap(int xEnd, int yEnd);
+
+        public abstract bool onMenuStartAt(MyVector menuItems);
+
+        public abstract void onAddInfoChar(string info, Char c);
+
+        public abstract void onLoadImageGameCanvas();
+
+        public abstract bool onPaintBgGameScr(mGraphics g);
+
+        public abstract void onMobStartDie(Mob instance);
+
+        public abstract void onUpdateMob(Mob instance);
+
+        public abstract Image onCreateImage(string filename);
     }
 }
