@@ -233,7 +233,7 @@ public class mGraphics
 		Vector2 vector = new Vector2(x1, y1);
 		Vector2 vector2 = new Vector2(x2, y2);
 		Vector2 vector3 = vector2 - vector;
-		float num3 = 57.29578f * Mathf.Atan(vector3.y / vector3.x);
+		float num3 = Mathf.Rad2Deg * Mathf.Atan(vector3.y / vector3.x);
 		if (vector3.x < 0f)
 		{
 			num3 += 180f;

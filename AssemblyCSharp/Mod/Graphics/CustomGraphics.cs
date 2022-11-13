@@ -172,6 +172,7 @@ namespace Mod.Graphics
             g.fillRect(x + w, y, thickness, h + thickness);
             g.fillRect(x, y + h, w + thickness, thickness);
         }
+
         public static void drawLine(mGraphics gr, int x1, int y1, int x2, int y2, int thickness)
         {
             #region Reflection

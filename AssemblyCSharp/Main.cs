@@ -159,7 +159,7 @@ public class Main : MonoBehaviour
 			if (Event.current.type.Equals(EventType.Repaint) && paintCount <= updateCount)
 			{
 				GameMidlet.gameCanvas.paint(g);
-                string fps = $"{System.Math.Round(1f / Time.smoothDeltaTime * Time.timeScale, 1):0.#}";
+                string fps = $"{System.Math.Round(1f / Time.smoothDeltaTime * Time.timeScale, 1):0.0}";
 				g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.6f));
                 g.fillRect(0, 0, mFont.tahoma_7b_red.getWidth(fps) + 2, 12);
                 mFont.tahoma_7b_red.drawString(g, fps, 2, 0, 0);
