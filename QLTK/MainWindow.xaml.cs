@@ -69,6 +69,7 @@ namespace QLTK
             new Server("SUPER 2", "103.90.224.245", 14447),
 
             new Server("Rose", "103.90.224.45", 14445),
+            new Server("Local", "127.0.0.1", 14445),
         };
 
         public static object settings;

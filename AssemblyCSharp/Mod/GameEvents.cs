@@ -31,11 +31,11 @@ namespace Mod
         /// <returns></returns>
         public static bool onSendChat(string text)
         {
-            HistoryChat.gI.append(text);
+            HistoryChat.gI.append(text);  
+            ExtensionManager.Invoke(text);
             if (text.StartsWith("/") && (Pk9rXmap.Chat(text.Remove(0, 1)) || Pk9rPickMob.Chat(text.Remove(0, 1))))
                 return true;
             bool result = ChatCommandHandler.handleChatText(text);
-
             return result;
         }
 
@@ -51,7 +51,8 @@ namespace Mod
             CustomBackground.LoadData();
             CustomLogo.LoadData();
             VietKeyHandler.SmartMark = true;
-            Extension.LoadExtensions();
+            ExtensionManager.LoadExtensions();
+            ExtensionManager.Invoke();
         }
 
         /// <summary>
@@ -65,6 +66,7 @@ namespace Mod
             TeleportMenu.SaveData();
             CustomBackground.SaveData();
             CustomLogo.SaveData();
+            ExtensionManager.Invoke();
             return false;
         }
 
@@ -72,6 +74,7 @@ namespace Mod
         {
             if (filename == "acc" || filename == "pass")
                 data = "pk9r327";
+            ExtensionManager.Invoke(filename, data);
         }
 
         /// <summary>
@@ -80,6 +83,7 @@ namespace Mod
         /// <param name="h"></param>
         public static void onKeyMapLoaded(Hashtable h)
         {
+            ExtensionManager.Invoke(h);
         }
 
         /// <summary>
@@ -88,6 +92,7 @@ namespace Mod
         /// <returns></returns>
         public static bool onSetResolution()
         {
+            ExtensionManager.Invoke();
             if (Utilities.sizeData != null)
             {
                 int width = (int)Utilities.sizeData["width"];
@@ -104,6 +109,7 @@ namespace Mod
         public static void onGameScrPressHotkeysUnassigned()
         {
             HotkeyCommandHandler.handleHotkey(GameCanvas.keyAsciiPress);
+            ExtensionManager.Invoke();
         }
 
         /// <summary>
@@ -112,6 +118,7 @@ namespace Mod
         /// <param name="g"></param>
         public static void onPaintChatTextField(mGraphics g)
         {
+            ExtensionManager.Invoke(g);
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.paint(g);
         }
@@ -127,6 +134,7 @@ namespace Mod
                 HistoryChat.gI.show();
             }
 
+            ExtensionManager.Invoke(sender);
             return false;
         }
 
@@ -134,11 +142,13 @@ namespace Mod
         {
             if (file == "lowGraphic" && Utilities.sizeData != null)
             {
-                result = (int)Utilities.sizeData["lowGraphic"];
+                result = (int)Utilities.sizeData["lowGraphic"]; 
+                ExtensionManager.Invoke(file, result);
                 return true;
             }
 
             result = -1;
+            ExtensionManager.Invoke(file, result);
             return false;
         }
 
@@ -154,6 +164,7 @@ namespace Mod
             {
                 Directory.CreateDirectory(result);
             }
+            ExtensionManager.Invoke(result);
             return true;
         }
 
@@ -179,6 +190,7 @@ namespace Mod
             }
 
             Teleport.vTeleport.removeElement(teleport);
+            ExtensionManager.Invoke(teleport);
             return true;
         }
 
@@ -188,6 +200,7 @@ namespace Mod
         public static void onUpdateChatTextField(ChatTextField sender)
         {
              if (!string.IsNullOrEmpty((string)typeof(TField).GetField("text", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(sender.tfChat))) GameCanvas.keyPressed[14] = false;
+            ExtensionManager.Invoke(sender);
         }
 
         public static bool onClearAllRMS()
@@ -197,6 +210,7 @@ namespace Mod
                 if (fileInfo.Name != "isPlaySound")
                     fileInfo.Delete();
 
+            ExtensionManager.Invoke();
             return true;
         }
 
@@ -219,6 +233,7 @@ namespace Mod
             //NOTE onUpdateChatTextField không thể bấm tab.
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();
+            ExtensionManager.Invoke();
         }
 
         /// <summary>
@@ -235,6 +250,7 @@ namespace Mod
                 type = 1;
             }
             else pass = Utilities.password == "" ? pass : Utilities.password;
+            //Không thêm hàm này
         }
 
         /// <summary>
@@ -252,6 +268,7 @@ namespace Mod
             GameCanvas.startWaitDlg();
             TeleportMenu.LoadData();
             AutoPet.isFirstTimeCkeckPet = true;
+            ExtensionManager.Invoke();
         }
 
         /// <summary>
@@ -266,11 +283,13 @@ namespace Mod
                 host = (string)Utilities.server["ip"];
                 port = (int)Utilities.server["port"];
             }
+            ExtensionManager.Invoke(host, port);
         }
 
         public static void onSceenDownloadDataShow()
         {
             GameCanvas.serverScreen.perform(2, null);
+            ExtensionManager.Invoke();
         }
 
         public static bool onCheckZoomLevel()
@@ -278,8 +297,10 @@ namespace Mod
             if (Utilities.sizeData != null)
             {
                 mGraphics.zoomLevel = (int)Utilities.sizeData["typeSize"];
+                ExtensionManager.Invoke();
                 return true;
             }
+            ExtensionManager.Invoke();
             return false;
         }
 
@@ -294,6 +315,7 @@ namespace Mod
                     Utilities.channelSyncKey
                 });
             }
+            ExtensionManager.Invoke(keyCode, isFromSync);
             return false;
         }
 
@@ -308,6 +330,7 @@ namespace Mod
                     Utilities.channelSyncKey
                 });
             }
+            ExtensionManager.Invoke(keyCode, isFromAsync);
             return false;
         }
 
@@ -317,8 +340,10 @@ namespace Mod
             if (chat.ToLower().Contains("chưa thể chuyển khu") || AutoSS.isAutoSS || AutoT77.isAutoT77)
             {
                 GameScr.info1.addInfo(chat, 0);
+                ExtensionManager.Invoke(chat);
                 return true;
             }
+            ExtensionManager.Invoke(chat);
             return false;
         }
 
@@ -327,14 +352,17 @@ namespace Mod
             if (npc.avatar == 1139 || AutoSS.isAutoSS || AutoT77.isAutoT77)
             {
                 if (!chat.Contains("NGOCRONGONLINE.COM") && !chat.Contains("Hack, Mod")) GameScr.info1.addInfo(chat, 0);
+                ExtensionManager.Invoke(chat, npc);
                 return true;
             }
+            ExtensionManager.Invoke();
             return false;
         }
 
         public static void onInfoMapLoaded()
         {
             Utilities.updateWaypointChangeMap();
+            ExtensionManager.Invoke();
         }
 
         public static void onPaintGameScr(mGraphics g)
@@ -342,6 +370,7 @@ namespace Mod
             ListCharsInMap.paint(g);
             CharEffect.Paint(g);
             SuicideRange.paint(g);
+            ExtensionManager.Invoke(g);
             //CustomGraphics.DrawCircle(g, Char.myCharz().cx, Char.myCharz().cy, 100, 2);
             //if (Char.myCharz().charFocus != null) mFont.tahoma_7_yellow.drawString(g, Extensions.getDistance(Char.myCharz(), Char.myCharz().charFocus).ToString(), GameCanvas.w / 2, 10, mFont.CENTER);
         }
@@ -349,6 +378,7 @@ namespace Mod
         public static bool onUseSkill(Skill skill)
         {
             CharEffect.AddEffectCreatedByMe(skill);
+            ExtensionManager.Invoke(skill);
             return false;
         }
 
@@ -357,6 +387,7 @@ namespace Mod
             Pk9rXmap.Update();
             CustomBackground.update();
             CustomLogo.update();
+            ExtensionManager.Invoke();
         }
 
         public static void onAddInfoMe(string str)
@@ -364,11 +395,13 @@ namespace Mod
             Pk9rXmap.Info(str);
             if (str.StartsWith("Bạn vừa thu hoạch") && !AutoSS.isNeedMorePean) AutoSS.isHarvestingPean = false;
             if (str.ToLower().Contains("bạn vừa nhận thưởng bùa")) AutoSS.isNhanBua = true;
+            ExtensionManager.Invoke(str);
         }
 
         public static void onUpdateKeyTouchControl()
         {
             ListCharsInMap.updateTouch();
+            ExtensionManager.Invoke();
         }
 
         public static void onSetPointItemMap(int xEnd, int yEnd)
@@ -378,6 +411,7 @@ namespace Mod
                 if (AutoSS.isAutoSS) AutoSS.isPicking = false;
                 if (ModMenuMain.modMenuItemInts[4].SelectedValue != 0) AutoPet.isPicking = false;
             }
+            ExtensionManager.Invoke(xEnd, yEnd);
         }
 
         public static bool onMenuStartAt(MyVector menuItems)
@@ -387,14 +421,17 @@ namespace Mod
                 GameCanvas.menu.menuSelectedItem = 0;
                 ((Command)menuItems.elementAt(0)).performAction();
                 AutoSS.isNhapCodeTanThu = true;
+                ExtensionManager.Invoke(menuItems);
                 return true;
             }
+            ExtensionManager.Invoke(menuItems);
             return false;
         }
 
         public static void onAddInfoChar(string info, Char c)
         {
             if (info.Contains("Sao sư phụ không đánh đi") && ModMenuMain.modMenuItemInts[4].SelectedValue > 0 && c.charID == -Char.myCharz().charID) AutoPet.isSaoMayLuoiThe = true;
+            ExtensionManager.Invoke(info, c);
         }
 
         public static void onLoadImageGameCanvas()
@@ -404,6 +441,7 @@ namespace Mod
                 isZoomLevelChecked = true;
                 onCheckZoomLevel();
             }
+            ExtensionManager.Invoke();
         }
 
         public static bool onPaintBgGameScr(mGraphics g)
@@ -412,19 +450,23 @@ namespace Mod
             if (CustomBackground.isEnabled && CustomBackground.backgroundWallpapers.Count > 0 && !ModMenuMain.modMenuItemBools[8].isDisabled)
             {
                 CustomBackground.paint(g);
+                ExtensionManager.Invoke(g);
                 return true;
             }
+            ExtensionManager.Invoke(g);
             return false;
         }
 
         public static void onMobStartDie(Mob instance)
         {
             Pk9rPickMob.MobStartDie(instance);
+            ExtensionManager.Invoke(instance);
         }
 
         public static void onUpdateMob(Mob instance)
         {
             Pk9rPickMob.UpdateCountDieMob(instance);
+            ExtensionManager.Invoke(instance);
         }
 
         public static Image onCreateImage(string filename)
@@ -444,6 +486,7 @@ namespace Mod
             image.texture.filterMode = FilterMode.Point;
             image.texture.mipMapBias = 0f;
             image.texture.wrapMode = TextureWrapMode.Clamp;
+            ExtensionManager.Invoke(filename);
             return image;
         }
     }

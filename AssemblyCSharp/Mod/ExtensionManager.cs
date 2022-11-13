@@ -1,0 +1,106 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using UnityEngine;
+
+namespace Mod
+{
+    internal class ExtensionManager
+    {
+        internal static List<ExtensionManager> Extensions { get; private set; } = new List<ExtensionManager>();
+
+        internal string ExtensionName { get; private set; }
+
+        internal string ExtensionDescription { get; private set; }
+
+        internal string ExtensionVersion { get; private set; }
+
+        bool hasMenuItems;
+
+        bool isOverrideExtensionClass;
+
+        const BindingFlags flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod;
+
+        Assembly extensionAssembly;
+
+        internal ExtensionManager(string path) 
+        {
+            extensionAssembly = Assembly.LoadFrom(path);
+            extensionAssembly.GetType("Loader").GetMethod("Init", flags).Invoke(null, null);
+            FieldInfo name = extensionAssembly.GetType("MainExt").GetField("name", BindingFlags.Public | BindingFlags.Static);
+            if (name != null)
+                ExtensionName = (string)name.GetRawConstantValue();
+            FieldInfo desc = extensionAssembly.GetType("MainExt").GetField("description", BindingFlags.Public | BindingFlags.Static);
+            if (desc != null)
+                ExtensionDescription = (string)desc.GetRawConstantValue();
+            FieldInfo ver = extensionAssembly.GetType("MainExt").GetField("version", BindingFlags.Public | BindingFlags.Static);
+            if (ver != null)
+                ExtensionVersion = (string)ver.GetRawConstantValue();
+            if (string.IsNullOrEmpty(ExtensionName))
+                ExtensionName = extensionAssembly.FullName;
+            if (string.IsNullOrEmpty(ExtensionDescription))
+                ExtensionDescription = extensionAssembly.ManifestModule.Name;
+            if (string.IsNullOrEmpty(ExtensionVersion))
+                ExtensionVersion = extensionAssembly.GetName().Version.ToString();
+            hasMenuItems = extensionAssembly.GetType("MainExt") != null && extensionAssembly.GetType("MainExt").GetMethod("OpenMenu", flags) != null;
+            isOverrideExtensionClass = extensionAssembly.GetType("GameEvents") != null && extensionAssembly.GetType("GameEvents").IsSubclassOf(typeof(Extension));
+        }
+
+        internal bool HasMenuItems()
+        {
+            return hasMenuItems;
+        }
+
+        internal void OpenMenu()
+        {
+            if (hasMenuItems) 
+                extensionAssembly.GetType("MainExt").GetMethod("OpenMenu", flags).Invoke(null, null);
+        }
+
+        internal static void Invoke(params object[] parameters)
+        {
+            foreach (ExtensionManager extensionManager in Extensions)
+                if (extensionManager.isOverrideExtensionClass)
+                    extensionManager.TryInvoke<object>(parameters, out _);
+        }
+
+        internal bool TryInvoke<T>(object[] parameters, out T result)
+        {
+            if (new StackFrame(1).GetMethod().DeclaringType != typeof(GameEvents))
+                throw new MethodAccessException();
+            try
+            {
+                result = (T)extensionAssembly.GetType("GameEvents").GetMethod(new StackFrame(1).GetMethod().Name, flags).Invoke(null, parameters);
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+
+        internal static void LoadExtensions()
+        {
+            string extensionDir = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))) + "\\Extensions";
+            if (!Directory.Exists(extensionDir))
+                Directory.CreateDirectory(extensionDir);
+            foreach (string path in Directory.GetFiles(extensionDir))
+            {
+                try
+                {
+                    Extensions.Add(new ExtensionManager(path));
+                }
+                catch(Exception ex)
+                {
+                    UnityEngine.Debug.LogError("Exception when loading extension module: " + path);
+                    UnityEngine.Debug.LogException(ex);
+                }
+            }
+        }
+    }
+}

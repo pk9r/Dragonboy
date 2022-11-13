@@ -43,7 +43,7 @@ namespace Mod.ModMenu
                     new string[]{ "Điều", "chỉnh" },
                     new string[]{ "Chức", "năng" },
                 };
-                if (Extension.Extensions.Count > 0) 
+                if (ExtensionManager.Extensions.Count > 0) 
                     GameCanvas.panel.tabName[TYPE_MOD_MENU] = new string[][]
                     {
                         new string[]{ "Bật/tắt", "" },
@@ -95,7 +95,7 @@ namespace Mod.ModMenu
             if (GameCanvas.panel.currentTabIndex == 0) GameCanvas.panel.currentListLength = ModMenuMain.modMenuItemBools.Length;
             else if (GameCanvas.panel.currentTabIndex == 1) GameCanvas.panel.currentListLength = ModMenuMain.modMenuItemInts.Length;
             else if (GameCanvas.panel.currentTabIndex == 2) GameCanvas.panel.currentListLength = ModMenuMain.modMenuItemFunctions.Length;
-            else GameCanvas.panel.currentListLength = Extension.Extensions.Count;
+            else GameCanvas.panel.currentListLength = ExtensionManager.Extensions.Count;
             GameCanvas.panel.selected = (GameCanvas.isTouch ? (-1) : 0);
             GameCanvas.panel.cmyLim = GameCanvas.panel.currentListLength * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.hScroll;
             if (GameCanvas.panel.cmyLim < 0) GameCanvas.panel.cmyLim = 0;
@@ -135,7 +135,7 @@ namespace Mod.ModMenu
         private static void doFireModMenuExtensions()
         {
             GameCanvas.panel.hideNow();
-            Extension.Extensions[GameCanvas.panel.selected].OpenMenu();
+            ExtensionManager.Extensions[GameCanvas.panel.selected].OpenMenu();
         }
 
         private static void doFireModMenuFunctions()
@@ -202,7 +202,7 @@ namespace Mod.ModMenu
             g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
             g.translate(0, -GameCanvas.panel.cmy);
             g.setColor(0);
-            if (Extension.Extensions == null || Extension.Extensions.Count != GameCanvas.panel.currentListLength) return;
+            if (ExtensionManager.Extensions == null || ExtensionManager.Extensions.Count != GameCanvas.panel.currentListLength) return;
             bool isReset = true;
             string descriptionTextInfo = string.Empty;
             int x = 0, y = 0;
@@ -212,7 +212,7 @@ namespace Mod.ModMenu
                 int num2 = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
                 int num3 = GameCanvas.panel.wScroll;
                 int num4 = GameCanvas.panel.ITEM_HEIGHT - 1;
-                Extension ext = Extension.Extensions[i];
+                ExtensionManager ext = ExtensionManager.Extensions[i];
                 if (ext.HasMenuItems()) g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
                 else g.setColor((i != GameCanvas.panel.selected) ? new Color(0.54f, 0.51f, 0.46f) : new Color(0.61f, 0.63f, 0.18f));
                 g.fillRect(num, num2, num3, num4);
