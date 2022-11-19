@@ -1,12 +1,6 @@
 ﻿using Mod.Graphics;
-using Mod.PickMob;
-using Mod.Xmap;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
-using Vietpad.InputMethod;
 
 namespace Mod.ModMenu
 {
@@ -219,7 +213,7 @@ namespace Mod.ModMenu
                 if (ext != null)
                 {
                     mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + ext.ExtensionName + ' ' + ext.ExtensionVersion, num + 5, num2, 0);
-                    string description = string.Empty;
+                    string description;
                     if (mFont.tahoma_7_blue.getWidth(ext.ExtensionDescription) > 160)
                     {
                         string str = ext.ExtensionDescription;

@@ -19,6 +19,8 @@ namespace Mod
 
         internal string ExtensionVersion { get; private set; }
 
+        MemberInfo singletonFieldOrMethod;
+
         bool hasMenuItems;
 
         bool isOverrideExtensionClass;
@@ -48,6 +50,30 @@ namespace Mod
                 ExtensionVersion = extensionAssembly.GetName().Version.ToString();
             hasMenuItems = extensionAssembly.GetType("MainExt") != null && extensionAssembly.GetType("MainExt").GetMethod("OpenMenu", flags) != null;
             isOverrideExtensionClass = extensionAssembly.GetType("GameEvents") != null && extensionAssembly.GetType("GameEvents").IsSubclassOf(typeof(Extension));
+            if (isOverrideExtensionClass)
+            {
+                try
+                {
+                    singletonFieldOrMethod = extensionAssembly.GetType("GameEvents").GetMethods(flags).First((method) => method.Name == "gI" || method.Name.ToLower() == "getinstance" || method.ReturnType == extensionAssembly.GetType("GameEvents"));
+                }
+                catch (Exception)
+                {
+                    try
+                    {
+                        singletonFieldOrMethod = extensionAssembly.GetType("GameEvents").GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static).First((field) => field.Name.ToLower() == "_instance" || field.Name.ToLower() == "instance" || field.FieldType == extensionAssembly.GetType("GameEvents"));
+                    }
+                    catch (Exception)
+                    {
+                        UnityEngine.Debug.LogError("Could not find Singleton method or field!");
+                        throw;
+                    }
+                }
+                if (singletonFieldOrMethod == null)
+                {
+                    UnityEngine.Debug.LogError("Could not find Singleton method or field!");
+                    throw new NullReferenceException(nameof(singletonFieldOrMethod));
+                }
+            }
         }
 
         internal bool HasMenuItems()
@@ -70,14 +96,21 @@ namespace Mod
 
         internal bool TryInvoke<T>(object[] parameters, out T result)
         {
-            if (new StackFrame(1).GetMethod().DeclaringType != typeof(GameEvents))
+            if (new StackFrame(2).GetMethod().DeclaringType != typeof(GameEvents))
                 throw new MethodAccessException();
             try
             {
-                result = (T)extensionAssembly.GetType("GameEvents").GetMethod(new StackFrame(1).GetMethod().Name, flags).Invoke(null, parameters);
+                object instance = null;
+                if (singletonFieldOrMethod is FieldInfo fieldInfo)
+                    instance = fieldInfo.GetValue(null);
+                else if (singletonFieldOrMethod is MethodInfo methodInfo)
+                    instance = methodInfo.Invoke(null, null);
+                result = (T)extensionAssembly.GetType("GameEvents").GetMethod(new StackFrame(2).GetMethod().Name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod).Invoke(instance, parameters);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                UnityEngine.Debug.Log(ExtensionName + ": Cannot invoke method: " + new StackFrame(2).GetMethod().Name + "!");
+                UnityEngine.Debug.LogException(ex);
                 result = default;
                 return false;
             }
