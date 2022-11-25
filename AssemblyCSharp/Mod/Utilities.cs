@@ -340,15 +340,14 @@ namespace Mod
                 return;
             }
 
-            var pairs = new List<KeyValuePair<string, Action>>();
+            var pairs = new List<KeyValuePair<string, Action<int, string, string[]>>>();
             for (int i = 0; i < vNpcSize; i++)
             {
                 var npc = (Npc)GameScr.vNpc.elementAt(i);
                 var caption = string.IsNullOrEmpty(npc.template.name.Trim()) ? "(no name)" : npc.template.name;
-                pairs.Add(new KeyValuePair<
-                    string, Action>(caption, () => teleToNpc(npc)));
+                pairs.Add(new(caption, (_, _, _) => teleToNpc(npc)));
             }
-            openMenu(pairs.ToArray());
+            openMenu(pairs);
         }
 
         [ChatCommand("csb")]
@@ -380,15 +379,7 @@ namespace Mod
         [ChatCommand("test")]
         public static void test()
         {
-            openMenu(
-                new KeyValuePair<string, Action>("Test 1", () =>
-                {
-                    GameScr.info1.addInfo("meow meow", 0);
-                }),
-                new KeyValuePair<string, Action>("Test 2", () =>
-                {
-                    GameScr.info1.addInfo("gau gau", 0);
-                }));
+
         }
 
         [ChatCommand("skey")]
@@ -710,99 +701,82 @@ namespace Mod
             typeof(GameScr).GetMethod("doDoubleClickToObj", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod).Invoke(GameScr.gI(), new object[] { mapObject });
         }
 
-        public static void openMenu(string[] captions, Action<int> action)
+        [ChatCommand("example1OpenMenu")]
+        public static void example1OpenMenu()
         {
-            openMenu(captions, (selected, caption, _) => action.Invoke(selected));
+            openMenu(new() { "test a", "test b", "test c" },
+                // selected: vị trí menu được chọn
+                // caption: chuỗi được chọn, vd: selected là 1 thì giá trị biến này là "test b"
+                // captions: mảng tạo menu, ["test a", "test b", "test c"]
+                // thay đổi tên biến tùy ý (đảm bảo đủ 3 biến) hoặc thay bằng _ nếu không sử dụng
+                (selected, caption, captions) =>
+                {
+                    GameScr.info1.addInfo($"selected {selected}, {caption}", 0);
+                });
         }
 
-        public static void openMenu(string[] captions, Action<int, string> action)
+        [ChatCommand("example1OpenMenu")]
+        public static void example2OpenMenu()
         {
-            openMenu(captions, (selected, caption, _) => action.Invoke(selected, caption));
+            openMenu(new()
+                {
+                    // missing name params
+                    new("test", (selected, caption, _) =>
+                    {
+                        GameScr.info1.addInfo($"selected {selected}, {caption}", 0);
+                    }),
+                    // without name params
+                    new("Test 1", (_, _, _) =>
+                    {
+                        GameScr.info1.addInfo("meow meow", 0);
+                    }),
+                    // inline
+                    new("Test 2", (_, _, _) => GameScr.info1.addInfo("gau gau", 0))
+                });
         }
 
-        public static void openMenu(string[] captions, Action<int, string, string[]> action)
+        public static void openMenu(List<string> captions, Action<int, string, string[]> action)
+        {
+            var ps = new List<KeyValuePair<string, Action<int, string, string[]>>>();
+
+            for (int i = 0; i < captions.Count; i++)
+                ps.Add(new(captions[i], action));
+
+            openMenu(ps);
+        }
+
+        public static void openMenu(int x, int y, string[] captions, Action<int, string, string[]> action)
         {
             var ps = new List<KeyValuePair<string, Action<int, string, string[]>>>();
 
             for (int i = 0; i < captions.Length; i++)
-                ps.Add(new KeyValuePair<string, Action<int, string, string[]>>(captions[i], action));
+                ps.Add(new(captions[i], action));
 
-            openMenu(ps.ToArray());
+            openMenu(x, y, ps);
         }
 
-        public static void openMenu(params KeyValuePair<string, Action>[] pairs)
-        {
-            var ps = new List<KeyValuePair<string, Action<int, string, string[]>>>();
-            foreach (var p in pairs)
-            {
-                ps.Add(new KeyValuePair<
-                    string, Action<int, string, string[]>>(
-                        p.Key, (selected, caption, captions) => p.Value.Invoke()));
-            }
-            openMenu(ps.ToArray());
-        }
-
-        public static void openMenu(int x, int y, params KeyValuePair<string, Action>[] pairs)
-        {
-            var ps = new List<KeyValuePair<string, Action<int, string, string[]>>>();
-            foreach (var p in pairs)
-            {
-                ps.Add(new KeyValuePair<
-                    string, Action<int, string, string[]>>(
-                        p.Key, (_, __, ___) => p.Value.Invoke()));
-            }
-            openMenu(ps.ToArray());
-        }
-
-        public static void openMenu(params KeyValuePair<string, Action<int>>[] pairs)
-        {
-            var ps = new List<KeyValuePair<string, Action<int, string, string[]>>>();
-            foreach (var p in pairs)
-            {
-                ps.Add(new KeyValuePair<
-                    string, Action<int, string, string[]>>(
-                        p.Key, (selected, _, __) => p.Value.Invoke(selected)));
-            }
-            openMenu(ps.ToArray());
-        }
-
-        public static void openMenu(params KeyValuePair<string, Action<int, string>>[] pairs)
-        {
-            var ps = new List<KeyValuePair<string, Action<int, string, string[]>>>();
-            foreach (var p in pairs)
-            {
-                ps.Add(new KeyValuePair<
-                    string, Action<int, string, string[]>>(
-                        p.Key, (selected, caption, _) => p.Value.Invoke(selected, caption)));
-            }
-            openMenu(ps.ToArray());
-        }
-
-        public static void openMenu(params KeyValuePair<string, Action<int, string, string[]>>[] pairs)
+        public static void openMenu(List<KeyValuePair<string, Action<int, string, string[]>>> pairs)
         {
             var captions = from pair in pairs select pair.Key;
-
             var myVector = new MyVector();
-            for (int i = 0; i < pairs.Length; i++)
+            for (int i = 0; i < pairs.Count; i++)
             {
                 var pair = pairs[i];
-                myVector.addElement(
-                    new Command(pair.Key, gI, (int)IdAction.MenuSelect,
+                myVector.addElement(new Command(pair.Key, gI, (int)IdAction.MenuSelect,
                         new { selected = i, action = pair.Value, captions = captions.ToArray() }));
             }
             GameCanvas.menu.startAt(myVector, 3);
         }
 
-        public static void openMenu(int x, int y, params KeyValuePair<string, Action<int, string, string[]>>[] pairs)
+        public static void openMenu(int x, int y, List<KeyValuePair<string, Action<int, string, string[]>>> pairs)
         {
             var captions = from pair in pairs select pair.Key;
 
             var myVector = new MyVector();
-            for (int i = 0; i < pairs.Length; i++)
+            for (int i = 0; i < pairs.Count; i++)
             {
                 var pair = pairs[i];
-                myVector.addElement(
-                    new Command(pair.Key, gI, (int)IdAction.MenuSelect,
+                myVector.addElement(new Command(pair.Key, gI, (int)IdAction.MenuSelect,
                         new { selected = i, action = pair.Value, captions = captions.ToArray() }));
             }
             GameCanvas.menu.startAt(myVector, x, y);

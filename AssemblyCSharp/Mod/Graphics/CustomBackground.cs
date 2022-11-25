@@ -45,27 +45,22 @@ namespace Mod.Graphics
             //    myVector.addElement(new Command("Xóa hết\nảnh trong\ndanh sách", getInstance(), 3, null));
             //GameCanvas.menu.startAt(myVector, 0);
 
-            var pairs = new List<KeyValuePair<string, Action>>();
+            var pairs = new List<KeyValuePair<string, Action<int, string, string[]>>>();
             if (backgroundWallpapers.Count > 0)
-                pairs.Add(new KeyValuePair<string, Action>(
-                    "Mở danh\nsách ảnh\nđã lưu",
-                    () =>
+                pairs.Add(new("Mở danh\nsách ảnh\nđã lưu", (_, _, _) =>
                     {
                         ModMenuPanel.setTypeModMenuMain(2);
                         GameCanvas.panel.show();
                     }));
-            pairs.Add(new KeyValuePair<string, Action>(
-                    "Thêm ảnh\nvào danh sách", SelectBackgroundImages));
+            pairs.Add(new("Thêm ảnh\nvào danh sách", (_, _, _) => SelectBackgroundImages()));
             if (backgroundWallpapers.Count > 0)
-                pairs.Add(new KeyValuePair<string, Action>(
-                    "Xóa hết\nảnh trong\ndanh sách",
-                    () =>
+                pairs.Add(new("Xóa hết\nảnh trong\ndanh sách", (_, _, _) =>
                     {
                         backgroundWallpapers.Clear();
                         GameScr.info1.addInfo("Đã xóa hết ảnh nền trong danh sách!", 0);
                     }));
 
-            Utilities.openMenu(pairs.ToArray());
+            Utilities.openMenu(pairs);
         }
 
         public static void setTabCustomBackgroundPanel()
@@ -86,11 +81,12 @@ namespace Mod.Graphics
             if (selected < 0) return;
             //MyVector myVector = new MyVector();
             //myVector.addElement(new Command("Xóa", getInstance(), 4, selected));
+            //GameCanvas.menu.startAt(myVector, GameCanvas.panel.X, (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
             string fileName = Path.GetFileName(backgroundWallpapers.ElementAt(selected).Key);
             Utilities.openMenu(
-                pairs: new KeyValuePair<string, Action>[] 
+                pairs: new()
                 {
-                    new KeyValuePair<string, Action>("Xóa", () =>
+                    new("Xóa", (_, _, _) =>
                     {
                         backgroundWallpapers.Remove(backgroundWallpapers.ElementAt(selected).Key);
                         if (selected < backgroundIndex)
@@ -106,12 +102,11 @@ namespace Mod.Graphics
                         GameScr.info1.addInfo("Đã xóa ảnh " + selected + "!", 0);
                         setTabCustomBackgroundPanel();
                         SaveData();
-                    }) 
+                    })
                 },
                 x: GameCanvas.panel.X,
                 y: (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
 
-            //GameCanvas.menu.startAt(myVector, GameCanvas.panel.X, (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
             GameCanvas.panel.cp = new ChatPopup();
             GameCanvas.panel.cp.isClip = false;
             GameCanvas.panel.cp.sayWidth = 180;
