@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mod;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -67,38 +68,39 @@ public class Skill
 			//g.setColor(2721889, 0.7f);
 			//if (paintCanNotUseSkill && GameCanvas.gameTick % 6 > 2)
 			//	g.setColor(876862);
-            //int num3 = (int)(coolingDown * 20 / coolDown);
-            //g.fillRect(x - 10, y - 10 + num3, 20, 20 - num3);
+			//int num3 = (int)(coolingDown * 20 / coolDown);
+			//g.fillRect(x - 10, y - 10 + num3, 20, 20 - num3);
+			float opacity = .6f;
             float alpha = coolingDown * 360 / coolDown;
 			Texture2D coolDownOverlay = new Texture2D(22 * mGraphics.zoomLevel, 22 * mGraphics.zoomLevel, TextureFormat.RGBA32, false);
 			//fill with transparent
             for (int i = 0; i < coolDownOverlay.width; i++)
                 for (int j = 0; j < coolDownOverlay.height; j++)
-                    coolDownOverlay.SetPixel(i, j, new Color(0, 0, 0, 0f));
-			#region Code đang chạy ok cấm sửa
+                    coolDownOverlay.SetPixel(i, j, new Color(0, 0, 0, opacity / 2));
+			#region Code ok
 			//paint first line
 			for (int i = 0; i < coolDownOverlay.width / 2; i++)
-				coolDownOverlay.SetPixel(coolDownOverlay.width / 2, i + coolDownOverlay.height / 2, new Color(0, 0, 0, 0.4f));
+				coolDownOverlay.SetPixel(coolDownOverlay.width / 2, i + coolDownOverlay.height / 2, new Color(0, 0, 0, opacity));
 			if (alpha < 270)
 			{
                 //góc phần tư thứ 1
                 for (int i = 0; i < coolDownOverlay.width / 2; i++)
 					for (int j = 0; j < coolDownOverlay.height / 2; j++)
-						coolDownOverlay.SetPixel(i, j + coolDownOverlay.height / 2, new Color(0, 0, 0, 0.4f));
+						coolDownOverlay.SetPixel(i, j + coolDownOverlay.height / 2, new Color(0, 0, 0, opacity));
 			}
 			if (alpha < 180)
 			{
                 //góc phần tư thứ 3
                 for (int i = 0; i < coolDownOverlay.width / 2; i++)
 					for (int j = 0; j < coolDownOverlay.height / 2; j++)
-						coolDownOverlay.SetPixel(i, j, new Color(0, 0, 0, 0.4f));
+						coolDownOverlay.SetPixel(i, j, new Color(0, 0, 0, opacity));
 			}
 			if (alpha < 90)
 			{
 				//góc phần tư thứ 4
                 for (int i = 0; i < coolDownOverlay.width / 2; i++)
                     for (int j = 0; j <= coolDownOverlay.height / 2; j++)
-                        coolDownOverlay.SetPixel(i + coolDownOverlay.width / 2, j, new Color(0, 0, 0, 0.4f));
+                        coolDownOverlay.SetPixel(i + coolDownOverlay.width / 2, j, new Color(0, 0, 0, opacity));
             }
 			//find main line
 			for (int i = 0; i < coolDownOverlay.width / 2; i++)	//height
@@ -143,7 +145,7 @@ public class Skill
                         if (coolDownOverlay.GetPixel(j + coolDownOverlay.width / 2, i + coolDownOverlay.width / 2).r == 1f)  //red
                         {
                             for (int k = j; k <= coolDownOverlay.width / 2; k++)
-                                coolDownOverlay.SetPixel(k + coolDownOverlay.width / 2, i + coolDownOverlay.width / 2, new Color(0, 0, 0, 0.4f));
+                                coolDownOverlay.SetPixel(k + coolDownOverlay.width / 2, i + coolDownOverlay.width / 2, new Color(0, 0, 0, opacity));
                             break;
                         }
                     }
@@ -152,7 +154,7 @@ public class Skill
 						if (coolDownOverlay.GetPixel(j + coolDownOverlay.width / 2, i).r == 1f)  //red
 						{
 							for (int k = 0; k <= j; k++)
-								coolDownOverlay.SetPixel(k + coolDownOverlay.width / 2, i, new Color(0, 0, 0, 0.4f));
+								coolDownOverlay.SetPixel(k + coolDownOverlay.width / 2, i, new Color(0, 0, 0, opacity));
 							break;
 						}
 					}
@@ -161,7 +163,7 @@ public class Skill
                         if (coolDownOverlay.GetPixel(j, i).r == 1f)  //red
                         {
                             for (int k = 0; k <= j ; k++)
-                                coolDownOverlay.SetPixel(k, i, new Color(0, 0, 0, 0.4f));
+                                coolDownOverlay.SetPixel(k, i, new Color(0, 0, 0, opacity));
                             break;
                         }
                     }
@@ -170,7 +172,7 @@ public class Skill
                         if (coolDownOverlay.GetPixel(j, i + coolDownOverlay.width / 2).r == 1f)  //red
                         {
                             for (int k = j; k <= coolDownOverlay.width / 2; k++)
-                                coolDownOverlay.SetPixel(k, i + coolDownOverlay.width / 2, new Color(0, 0, 0, 0.4f));
+                                coolDownOverlay.SetPixel(k, i + coolDownOverlay.width / 2, new Color(0, 0, 0, opacity));
                             break;
                         }
                     }
@@ -180,19 +182,19 @@ public class Skill
 					{
 						if (alpha < 45)
 						{
-                            coolDownOverlay.SetPixel(j + coolDownOverlay.width / 2, i + coolDownOverlay.width / 2, new Color(0, 0, 0, 0.4f));
+                            coolDownOverlay.SetPixel(j + coolDownOverlay.width / 2, i + coolDownOverlay.width / 2, new Color(0, 0, 0, opacity));
                         }
 						else if (alpha <= 135)
 						{
-							coolDownOverlay.SetPixel(j + coolDownOverlay.width / 2, i, new Color(0, 0, 0, 0.4f));
+							coolDownOverlay.SetPixel(j + coolDownOverlay.width / 2, i, new Color(0, 0, 0, opacity));
 						}
 						else if (alpha < 225)
 						{
-                            coolDownOverlay.SetPixel(j, i, new Color(0, 0, 0, 0.4f));
+                            coolDownOverlay.SetPixel(j, i, new Color(0, 0, 0, opacity));
                         }
 						else if (alpha < 315)
 						{
-                            if (i != 0) coolDownOverlay.SetPixel(j, i + coolDownOverlay.width / 2, new Color(0, 0, 0, 0.4f));
+                            if (i != 0) coolDownOverlay.SetPixel(j, i + coolDownOverlay.width / 2, new Color(0, 0, 0, opacity));
                         }
 					}
             }
@@ -203,19 +205,19 @@ public class Skill
 			{
                 //top
                 for (int j = 0; j < coolDownOverlay.width; j++)
-                    if (coolDownOverlay.GetPixel(j, coolDownOverlay.height - 1 - i).a == 0.4f)
+                    if (coolDownOverlay.GetPixel(j, coolDownOverlay.height - 1 - i).a == opacity)
                         coolDownOverlay.SetPixel(j, coolDownOverlay.height - 1 - i, color);
                 //bottom
                 for (int j = 0; j < coolDownOverlay.width; j++)
-                    if (coolDownOverlay.GetPixel(j, 0 + i).a == 0.4f)
+                    if (coolDownOverlay.GetPixel(j, 0 + i).a == opacity)
                         coolDownOverlay.SetPixel(j, 0 + i, color);
                 //left
                 for (int j = 0; j < coolDownOverlay.height; j++)
-                    if (coolDownOverlay.GetPixel(0 + i, j).a == 0.4f)
+                    if (coolDownOverlay.GetPixel(0 + i, j).a == opacity)
                         coolDownOverlay.SetPixel(0 + i, j, color);
                 //right
                 for (int j = 0; j < coolDownOverlay.height; j++)
-                    if (coolDownOverlay.GetPixel(coolDownOverlay.width - 1 - i, j).a == 0.4f)
+                    if (coolDownOverlay.GetPixel(coolDownOverlay.width - 1 - i, j).a == opacity)
                         coolDownOverlay.SetPixel(coolDownOverlay.width - 1 - i, j, color);
             }
             #endregion
@@ -257,12 +259,13 @@ public class Skill
             string cooldownpaint = $"{(coolDown - coolingDown) / 1000f:#.0}";
 			if (cooldownpaint.Length > 4)
 				cooldownpaint = cooldownpaint.Substring(0, cooldownpaint.IndexOf('.'));
-			GUIStyle style = new GUIStyle(GUI.skin.label);
-            style.font = (Font)Resources.Load("FontSys/x" + mGraphics.zoomLevel + "/chelthm");
-			//gUIStyle.normal.textColor = color;
-			style.normal.textColor = Color.black;
-            style.alignment = TextAnchor.UpperCenter;
-			g.drawString(cooldownpaint, x - 1 - GameCanvas.w / 2, y - 12 + mFont.tahoma_7.getHeight() / 2, style);
+			//GUIStyle style = new GUIStyle(GUI.skin.label);
+			//         style.font = (Font)Resources.Load("FontSys/x" + mGraphics.zoomLevel + "/chelthm");
+			//         style.normal.textColor = color;
+			//         style.normal.textColor = Color.white;
+			//         style.alignment = TextAnchor.UpperCenter;
+			//g.drawString(cooldownpaint, x - GameCanvas.w / 2, y - 12 + mFont.tahoma_7.getHeight() / 2, style);
+			mFont.tahoma_7_yellow.drawString(g, cooldownpaint, x + 1, y - 12 + mFont.tahoma_7.getHeight() / 2, mFont.CENTER);
 		}
 		else
 		{
