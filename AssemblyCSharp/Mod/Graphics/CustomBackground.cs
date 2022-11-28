@@ -11,7 +11,7 @@ using Mod.ModMenu;
 
 namespace Mod.Graphics
 {
-    public class CustomBackground : IActionListener
+    public class CustomBackground
     {
         static CustomBackground _Instance;
 
@@ -35,11 +35,32 @@ namespace Mod.Graphics
 
         public static void ShowMenu()
         {
-            MyVector myVector = new MyVector();
-            if (backgroundWallpapers.Count > 0) myVector.addElement(new Command("Mở danh\nsách ảnh\nđã lưu", getInstance(), 1, null));
-            myVector.addElement(new Command("Thêm ảnh\nvào danh sách", getInstance(), 2, null));
-            if (backgroundWallpapers.Count > 0) myVector.addElement(new Command("Xóa hết\nảnh trong\ndanh sách", getInstance(), 3, null));
-            GameCanvas.menu.startAt(myVector, 0);
+            //MyVector myVector = new MyVector();
+            //if (backgroundWallpapers.Count > 0) 
+            //    myVector.addElement(new Command("Mở danh\nsách ảnh\nđã lưu", getInstance(), 1, null));
+
+            //myVector.addElement(new Command("Thêm ảnh\nvào danh sách", getInstance(), 2, null));
+
+            //if (backgroundWallpapers.Count > 0) 
+            //    myVector.addElement(new Command("Xóa hết\nảnh trong\ndanh sách", getInstance(), 3, null));
+            //GameCanvas.menu.startAt(myVector, 0);
+
+            var pairs = new List<KeyValuePair<string, Action<int, string, string[]>>>();
+            if (backgroundWallpapers.Count > 0)
+                pairs.Add(new("Mở danh\nsách ảnh\nđã lưu", (_, _, _) =>
+                    {
+                        ModMenuPanel.setTypeModMenuMain(2);
+                        GameCanvas.panel.show();
+                    }));
+            pairs.Add(new("Thêm ảnh\nvào danh sách", (_, _, _) => SelectBackgroundImages()));
+            if (backgroundWallpapers.Count > 0)
+                pairs.Add(new("Xóa hết\nảnh trong\ndanh sách", (_, _, _) =>
+                    {
+                        backgroundWallpapers.Clear();
+                        GameScr.info1.addInfo("Đã xóa hết ảnh nền trong danh sách!", 0);
+                    }));
+
+            Utilities.openMenu(pairs);
         }
 
         public static void setTabCustomBackgroundPanel()
@@ -58,10 +79,34 @@ namespace Mod.Graphics
         {
             int selected = GameCanvas.panel.selected;
             if (selected < 0) return;
-            MyVector myVector = new MyVector();
-            myVector.addElement(new Command("Xóa", getInstance(), 4, selected));
+            //MyVector myVector = new MyVector();
+            //myVector.addElement(new Command("Xóa", getInstance(), 4, selected));
+            //GameCanvas.menu.startAt(myVector, GameCanvas.panel.X, (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
             string fileName = Path.GetFileName(backgroundWallpapers.ElementAt(selected).Key);
-            GameCanvas.menu.startAt(myVector, GameCanvas.panel.X, (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
+            Utilities.openMenu(
+                pairs: new()
+                {
+                    new("Xóa", (_, _, _) =>
+                    {
+                        backgroundWallpapers.Remove(backgroundWallpapers.ElementAt(selected).Key);
+                        if (selected < backgroundIndex)
+                        {
+                            backgroundIndex--;
+                            lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+                        }
+                        else if (selected == backgroundIndex && backgroundWallpapers.Count == backgroundIndex)
+                        {
+                            backgroundIndex = 0;
+                            lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+                        }
+                        GameScr.info1.addInfo("Đã xóa ảnh " + selected + "!", 0);
+                        setTabCustomBackgroundPanel();
+                        SaveData();
+                    })
+                },
+                x: GameCanvas.panel.X,
+                y: (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
+
             GameCanvas.panel.cp = new ChatPopup();
             GameCanvas.panel.cp.isClip = false;
             GameCanvas.panel.cp.sayWidth = 180;
@@ -97,7 +142,7 @@ namespace Mod.Graphics
             new Thread(delegate ()
             {
                 string[] paths = FileDialog.OpenSelectFileDialog("Chọn tệp ảnh để làm ảnh nền", "Tệp ảnh (*.png)|*.png", "png");
-                if (paths != null) 
+                if (paths != null)
                 {
                     foreach (string path in paths)
                     {
@@ -180,40 +225,40 @@ namespace Mod.Graphics
             GameCanvas.panel.paintScrollArrow(g);
         }
 
-        public void perform(int idAction, object p)
-        {
-            switch (idAction)
-            {
-                case 1:
-                    ModMenuPanel.setTypeModMenuMain(2);
-                    GameCanvas.panel.show();
-                    break;
-                case 2:
-                    SelectBackgroundImages();
-                    break;
-                case 3:
-                    backgroundWallpapers.Clear();
-                    GameScr.info1.addInfo("Đã xóa hết ảnh nền trong danh sách!", 0);
-                    break;
-                case 4:
-                    int index = (int)p;
-                    backgroundWallpapers.Remove(backgroundWallpapers.ElementAt(index).Key);
-                    if (index < backgroundIndex)
-                    {
-                        backgroundIndex--;
-                        lastTimeChangedWallpaper = mSystem.currentTimeMillis();
-                    }
-                    else if (index == backgroundIndex && backgroundWallpapers.Count == backgroundIndex)
-                    {
-                        backgroundIndex = 0;
-                        lastTimeChangedWallpaper = mSystem.currentTimeMillis();
-                    }
-                    GameScr.info1.addInfo("Đã xóa ảnh " + index + "!", 0);
-                    setTabCustomBackgroundPanel();
-                    SaveData();
-                    break;
-            }
-        }
+        //public void perform(int idAction, object p)
+        //{
+        //    switch (idAction)
+        //    {
+        //        case 1:
+        //            ModMenuPanel.setTypeModMenuMain(2);
+        //            GameCanvas.panel.show();
+        //            break;
+        //        case 2:
+        //            SelectBackgroundImages();
+        //            break;
+        //        case 3:
+        //            backgroundWallpapers.Clear();
+        //            GameScr.info1.addInfo("Đã xóa hết ảnh nền trong danh sách!", 0);
+        //            break;
+        //        case 4:
+        //            int index = (int)p;
+        //            backgroundWallpapers.Remove(backgroundWallpapers.ElementAt(index).Key);
+        //            if (index < backgroundIndex)
+        //            {
+        //                backgroundIndex--;
+        //                lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+        //            }
+        //            else if (index == backgroundIndex && backgroundWallpapers.Count == backgroundIndex)
+        //            {
+        //                backgroundIndex = 0;
+        //                lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+        //            }
+        //            GameScr.info1.addInfo("Đã xóa ảnh " + index + "!", 0);
+        //            setTabCustomBackgroundPanel();
+        //            SaveData();
+        //            break;
+        //    }
+        //}
 
         public static void LoadData()
         {

@@ -1,5 +1,5 @@
 ﻿enum IdAction
 {
     None,
-    TeleToNpc
+    MenuSelect,
 }
