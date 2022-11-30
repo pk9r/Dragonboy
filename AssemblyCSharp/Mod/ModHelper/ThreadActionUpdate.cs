@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 
 namespace Mod.ModHelper
 {
@@ -20,7 +16,7 @@ namespace Mod.ModHelper
         /// Thời gian nghỉ giữa các lần thực thi.
         /// </summary>
         public abstract int Interval { get; }
-        
+
         protected override void action()
         {
             while (isActing)
@@ -48,13 +44,13 @@ namespace Mod.ModHelper
 
             if (this.isActing = (bool)isActing)
             {
-                this.performAction();
+                performAction();
             }
             else
             {
                 if (base.IsActing)
                 {
-                    this.threadAction.Abort();
+                    threadAction.Abort();
                 }
             }
         }

@@ -1,7 +1,7 @@
 ﻿using Mod.ModHelper;
-using System;
+using Mod.ModHelper.CommandMod.Chat;
 
-namespace Mod
+namespace Mod.Auto
 {
     public class AutoAttack : ThreadActionUpdate<AutoAttack>
     {
@@ -29,6 +29,17 @@ namespace Mod
                     myskill.lastTimeUseThisSkill = currentTimeMillis;
                 }
             }
+        }
+
+        [ChatCommand("ak")]
+        public static void toggleAutoAttack()
+        {
+            gI.toggle();
+
+            if (gI.IsActing)
+                GameScr.info1.addInfo("Đang tự tấn công", 0);
+            else
+                GameScr.info1.addInfo("Đã tắt tự tấn công", 0);
         }
     }
 }

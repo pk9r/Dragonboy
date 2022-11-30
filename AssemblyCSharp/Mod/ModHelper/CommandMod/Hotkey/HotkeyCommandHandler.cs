@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
-namespace Mod
+namespace Mod.ModHelper.CommandMod.Hotkey
 {
     public class HotkeyCommandHandler
     {
@@ -67,7 +65,7 @@ namespace Mod
                     return true;
                 }
             }
-            
+
             return false;
         }
     }

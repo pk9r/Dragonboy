@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
-namespace Mod
+namespace Mod.ModHelper.CommandMod
 {
     public abstract class BaseCommand
     {
@@ -27,7 +24,7 @@ namespace Mod
             parameters = null;
             preprocessingArgs(ref args);
 
-            if (args == "" && this.parameterInfos.Length == 0)
+            if (args == "" && parameterInfos.Length == 0)
                 return true; // Lệnh không cần tham số
 
             if (!checkCountArgs(args, out string[] arguments))
@@ -71,8 +68,8 @@ namespace Mod
         /// <returns>true nếu độ dài phù hợp với command.</returns>
         private bool checkCountArgs(string args, out string[] arguments)
         {
-            arguments = args.Split(this.delimiter);
-            return this.parameterInfos.Length == arguments.Length;
+            arguments = args.Split(delimiter);
+            return parameterInfos.Length == arguments.Length;
         }
 
         /// <summary>
@@ -89,7 +86,7 @@ namespace Mod
             {
                 for (int i = 0; i < arguments.Length; i++)
                     parameters[i] = Convert.ChangeType(arguments[i],
-                        this.parameterInfos[i].ParameterType);
+                        parameterInfos[i].ParameterType);
 
                 return true; // Tất cả đối số đều đúng type
             }

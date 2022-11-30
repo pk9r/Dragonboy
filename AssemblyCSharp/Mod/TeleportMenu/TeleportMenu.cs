@@ -1,4 +1,6 @@
-﻿using Mod.ModHelper.Menu;
+﻿using Mod.ModHelper.CommandMod.Chat;
+using Mod.ModHelper.CommandMod.Hotkey;
+using Mod.ModHelper.Menu;
 using Mod.ModMenu;
 using System;
 using System.Collections.Generic;

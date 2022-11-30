@@ -1,5 +1,8 @@
-﻿using Mod.Graphics;
+﻿using Mod.Auto;
+using Mod.Graphics;
 using Mod.ModHelper;
+using Mod.ModHelper.CommandMod.Chat;
+using Mod.ModHelper.CommandMod.Hotkey;
 using Mod.ModMenu;
 using Mod.PickMob;
 using Mod.Xmap;

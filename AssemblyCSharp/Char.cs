@@ -2,6 +2,7 @@ using System;
 using Assets.src.e;
 using Assets.src.g;
 using Mod;
+using Mod.Auto;
 using Mod.ModMenu;
 using UnityEngine;
 

@@ -1,56 +1,36 @@
-﻿using Assets.src.e;
-using Mod.Xmap;
-using System;
+﻿using Mod.Xmap;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
-namespace Mod
+namespace Mod.Auto
 {
     public class AutoPet
     {
         public static List<int> mobTemplateIdList = new List<int>();
 
         public static List<int> mobIdList = new List<int>();
-
-        static long lastTimePick;
-
-        static int lastX;
-
-        static bool isAssignedLastX;
-
-        static int lastXPet;
-
-        static bool isAssignedLastXPet;
-
-        static bool isMyPetDied;
+        private static long lastTimePick;
+        private static int lastX;
+        private static bool isAssignedLastX;
+        private static int lastXPet;
+        private static bool isAssignedLastXPet;
+        private static bool isMyPetDied;
 
         public static bool isPicking;
-
-        static long lastTimePetFollow = mSystem.currentTimeMillis();
-
-        static bool isGoHomeGetMorePean;
-
-        static bool isMagicTreeUpgrading;
-
-        static bool isMagicTreeOutOfPean;
-
-        static long lastTimeCheckMagicTree;
-
-        static KeyValuePair<int, int> mapZoneGoBack = new KeyValuePair<int, int>();
-
-        static long delayCheckPet;
+        private static long lastTimePetFollow = mSystem.currentTimeMillis();
+        private static bool isGoHomeGetMorePean;
+        private static bool isMagicTreeUpgrading;
+        private static bool isMagicTreeOutOfPean;
+        private static long lastTimeCheckMagicTree;
+        private static KeyValuePair<int, int> mapZoneGoBack = new KeyValuePair<int, int>();
+        private static long delayCheckPet;
 
         public static bool isFirstTimeCkeckPet = true;
-
-        static bool isTTNL;
+        private static bool isTTNL;
 
         public static bool isSaoMayLuoiThe;
-
-        static AutoPetMode mode;
-
-        static AttackMode modeAttackWhenNeeded;
+        private static AutoPetMode mode;
+        private static AttackMode modeAttackWhenNeeded;
 
         public static void update()
         {
@@ -61,7 +41,7 @@ namespace Mod
                 isFirstTimeCkeckPet = false;
             }
             if (mSystem.currentTimeMillis() - delayCheckPet < 3000) return;
-            if (GameCanvas.gameTick % (30 * Time.timeScale) != 0 || Pk9rXmap.IsXmapRunning) return;
+            if (GameCanvas.gameTick % (30 * Time.timeScale) != 0 || XmapController.gI.IsActing) return;
             AutoPick();
             if (Char.myPetz().cStamina < 5 && GameScr.hpPotion > 0 && !(Char.myPetz().cHP <= 0 || Char.myPetz().isDie)) GameScr.gI().doUseHP();
             if (isMagicTreeOutOfPean && mSystem.currentTimeMillis() - lastTimeCheckMagicTree >= 600000)
@@ -81,7 +61,7 @@ namespace Mod
             {
                 if (TileMap.mapID != Char.myCharz().cgender + 21)
                 {
-                    if (!Pk9rXmap.IsXmapRunning && GameScr.hpPotion == 0) XmapController.StartRunToMapId(Char.myCharz().cgender + 21);
+                    if (!XmapController.gI.IsActing && GameScr.hpPotion == 0) XmapController.startRunToMapId(Char.myCharz().cgender + 21);
                 }
                 else
                 {
@@ -98,9 +78,9 @@ namespace Mod
                         lastTimeCheckMagicTree = mSystem.currentTimeMillis();
                         isMagicTreeUpgrading = true;
                     }
-                    if ((GameScr.gI().magicTree.isPeasEffect || GameScr.gI().magicTree.isUpdateTree || GameScr.gI().magicTree.currPeas == 0) && !Pk9rXmap.IsXmapRunning) XmapController.StartRunToMapId(mapZoneGoBack.Key);
+                    if ((GameScr.gI().magicTree.isPeasEffect || GameScr.gI().magicTree.isUpdateTree || GameScr.gI().magicTree.currPeas == 0) && !XmapController.gI.IsActing) XmapController.startRunToMapId(mapZoneGoBack.Key);
                 }
-                if (TileMap.mapID == mapZoneGoBack.Key && !Pk9rXmap.IsXmapRunning)
+                if (TileMap.mapID == mapZoneGoBack.Key && !XmapController.gI.IsActing)
                 {
                     if (TileMap.zoneID == mapZoneGoBack.Value)
                     {
@@ -117,7 +97,7 @@ namespace Mod
                 isAssignedLastXPet = false;
                 Utilities.teleportMyChar(lastXPet);
             }
-            if (mSystem.currentTimeMillis() - lastTimePetFollow > 600000 || (GameScr.findCharInMap(-Char.myCharz().charID) != null && Utilities.getDistance(Char.myCharz(), GameScr.findCharInMap(-Char.myCharz().charID)) > 400))
+            if (mSystem.currentTimeMillis() - lastTimePetFollow > 600000 || GameScr.findCharInMap(-Char.myCharz().charID) != null && Utilities.getDistance(Char.myCharz(), GameScr.findCharInMap(-Char.myCharz().charID)) > 400)
             {
                 lastTimePetFollow = mSystem.currentTimeMillis();
                 Service.gI().petStatus(0);
@@ -204,7 +184,7 @@ namespace Mod
             }
         }
 
-        static void AutoSkill()
+        private static void AutoSkill()
         {
             //auto skill 3
             Skill skill3 = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[2]);
@@ -313,14 +293,14 @@ namespace Mod
             }
         }
 
-        static Mob ClosestMob()
+        private static Mob ClosestMob()
         {
             Mob result = null;
             int minDistance = 9999;
             for (int i = 0; i < GameScr.vMob.size(); i++)
             {
                 Mob mob = (Mob)GameScr.vMob.elementAt(i);
-                if (mob.status != 0 && mob.status != 1 && mob.hp > 0 && !mob.isMobMe && mob.levelBoss == 0 && mob.getTemplate().type != 4 && ((mobTemplateIdList.Count > 0 && mobTemplateIdList.Contains(mob.templateId)) || (mobIdList.Count > 0 && mobIdList.Contains(mob.mobId)) || mobTemplateIdList.Count == 0 || mobIdList.Count == 0))
+                if (mob.status != 0 && mob.status != 1 && mob.hp > 0 && !mob.isMobMe && mob.levelBoss == 0 && mob.getTemplate().type != 4 && (mobTemplateIdList.Count > 0 && mobTemplateIdList.Contains(mob.templateId) || mobIdList.Count > 0 && mobIdList.Contains(mob.mobId) || mobTemplateIdList.Count == 0 || mobIdList.Count == 0))
                 {
                     int distance = Res.distance(mob.x, mob.y, Char.myCharz().cx, Char.myCharz().cy);
                     if (minDistance > distance)
@@ -333,7 +313,7 @@ namespace Mod
             return result;
         }
 
-        static void AutoPick()
+        private static void AutoPick()
         {
             if (mSystem.currentTimeMillis() - lastTimePick > 550)
             {
@@ -342,7 +322,7 @@ namespace Mod
                 for (int i = GameScr.vItemMap.size() - 1; i >= 0; i--)
                 {
                     ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(i);
-                    if ((itemMap.template.id >= 828 && itemMap.template.id <= 842) || itemMap.template.id == 859 || itemMap.template.id == 362 || (itemMap.template.id >= 353 && itemMap.template.id <= 360))
+                    if (itemMap.template.id >= 828 && itemMap.template.id <= 842 || itemMap.template.id == 859 || itemMap.template.id == 362 || itemMap.template.id >= 353 && itemMap.template.id <= 360)
                     {
                         GameScr.vItemMap.removeElementAt(i);
                         continue;
@@ -357,7 +337,7 @@ namespace Mod
                     if (itemMap.playerId == Char.myCharz().charID || itemMap.playerId == -1)
                     {
                         hasPickableItem = true;
-                        if (!isAssignedLastX) 
+                        if (!isAssignedLastX)
                         {
                             isAssignedLastX = true;
                             lastX = Char.myCharz().cx;
@@ -391,7 +371,7 @@ namespace Mod
                     isAssignedLastX = false;
                 }
             }
-            
+
         }
 
         public static void setState(int value) => mode = (AutoPetMode)value;

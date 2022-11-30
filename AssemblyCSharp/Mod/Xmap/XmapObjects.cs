@@ -4,31 +4,38 @@ namespace Mod.Xmap
 {
     public struct MapNext
     {
-        public int MapID;
+        public int mapId;
 
-        public TypeMapNext Type;
+        public TypeMapNext type;
 
-        public int[] Info;
+        public int[] info;
 
-        public MapNext(int mapID, TypeMapNext type, int[] info)
+        public MapNext(int mapId, TypeMapNext type, int[] info)
         {
-            MapID = mapID;
-            Type = type;
-            Info = info;
+            this.mapId = mapId;
+            this.type = type;
+            this.info = info;
         }
     }
 
     public struct GroupMap
     {
-        public string NameGroup;
+        public string nameGroup;
 
-        public List<int> IdMaps;
+        public List<int> maps;
 
-        public GroupMap(string nameGroup, List<int> idMaps)
+        public GroupMap(string nameGroup, List<int> maps)
         {
-            NameGroup = nameGroup;
-            IdMaps = idMaps;
+            this.nameGroup = nameGroup;
+            this.maps = maps;
         }
+    }
+
+    public class Way : List<MapNext>
+    {
+        public Way() : base() { }
+
+        public Way(IEnumerable<MapNext> collection) : base(collection) { }
     }
 
     public enum TypeMapNext

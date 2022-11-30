@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Mod
+﻿namespace Mod.ModHelper.CommandMod.Hotkey
 {
     public class HotkeyCommandAttribute : BaseCommandAttribute
     {

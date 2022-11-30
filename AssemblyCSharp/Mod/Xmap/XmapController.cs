@@ -1,108 +1,88 @@
-﻿using Mod.ModHelper.Menu;
+﻿using Mod.ModHelper;
+using Mod.ModHelper.Menu;
 using System.Collections.Generic;
 using System.Threading;
 
 namespace Mod.Xmap
 {
-    public class XmapController
+    public class XmapController : ThreadActionUpdate<XmapController>
     {
-        private const int TIME_DELAY_NEXTMAP = 200;
-        private const int TIME_DELAY_RENEXTMAP = 500;
-        private const int ID_ITEM_CAPSULE_VIP = 194;
-        private const int ID_ITEM_CAPSULE = 193;
-        private const int ID_ICON_ITEM_TDLT = 4387;
+        public override int Interval => 100;
 
-        private static readonly XmapController _Instance = new XmapController();
+        private static int idMapEnd;
+        private static Way way;
+        private static int indexWay;
+        private static bool isNextMapFailed;
 
-        private static int IdMapEnd;
-        private static List<int> WayXmap;
-        private static int IndexWay;
-        private static bool IsNextMapFailed;
-        private static bool IsWait;
-        private static long TimeStartWait;
-        private static long TimeWait;
-        private static bool IsWaitNextMap;
-
-        public static void Update()
+        protected override void update()
         {
-            if (XmapData.Instance().IsLoading)
-                return;
-
-            if (IsWaitNextMap)
+            if (way == null)
             {
-                Thread.Sleep(TIME_DELAY_NEXTMAP);
-                IsWaitNextMap = false;
-                return;
-            }
-
-            if (IsNextMapFailed)
-            {
-                XmapData.Instance().MyLinkMaps = null;
-                WayXmap = null;
-                IsNextMapFailed = false;
-                return;
-            }
-
-            if (WayXmap == null)
-            {
-                GameScr.info1.addInfo("Đi đến: " + TileMap.mapNames[IdMapEnd], 0);
-                if (XmapData.Instance().MyLinkMaps == null)
+                if (!isNextMapFailed)
                 {
-                    XmapData.Instance().LoadLinkMaps();
-                    return;
+                    string mapName = TileMap.mapNames[idMapEnd];
+                    MainThreadDispatcher.dispatcher(() =>
+                        GameScr.info1.addInfo($"Đi đến: {mapName}", 0));
                 }
-                WayXmap = XmapAlgorithm.FindWay(TileMap.mapID, IdMapEnd);
-                IndexWay = 0;
-                if (WayXmap == null)
+
+                XmapAlgorithm.xmapData = new XmapData();
+                XmapAlgorithm.xmapData.loadLinkMapCapsule();
+                way = XmapAlgorithm.findWay(TileMap.mapID, idMapEnd);
+                indexWay = 0;
+
+                if (way == null)
                 {
-                    GameScr.info1.addInfo("Không thể tìm thấy đường đi", 0);
-                    FinishXmap();
+                    MainThreadDispatcher.dispatcher(() =>
+                        GameScr.info1.addInfo("Không thể tìm thấy đường đi", 0));
+                    finishXmap();
                     return;
                 }
             }
 
-            if (TileMap.mapID == WayXmap[WayXmap.Count - 1] && !XmapData.IsMyCharDie())
+            if (TileMap.mapID == way[way.Count - 1].mapId && !Utilities.isMyCharDied())
             {
-                GameScr.info1.addInfo("Xmap by Phucprotein", 0);
-                FinishXmap();
+                MainThreadDispatcher.dispatcher(() =>
+                    GameScr.info1.addInfo("Xmap by Phucprotein", 0));
+                finishXmap();
                 return;
             }
 
-            if (TileMap.mapID == WayXmap[IndexWay])
+            if (TileMap.mapID == way[indexWay].mapId)
             {
-                if (XmapData.IsMyCharDie())
+                if (Utilities.isMyCharDied())
                 {
                     Service.gI().returnTownFromDead();
-                    IsWaitNextMap = IsNextMapFailed = true;
+                    isNextMapFailed = true;
+                    way = null;
                 }
-                else if (XmapData.CanNextMap())
+                else if (Utilities.canNextMap())
                 {
-                    NextMap(WayXmap[IndexWay + 1]);
-                    IsWaitNextMap = true;
+                    MainThreadDispatcher.dispatcher(() =>
+                        Pk9rXmap.nextMap(way[indexWay + 1]));
                 }
-                Thread.Sleep(TIME_DELAY_RENEXTMAP);
+                Thread.Sleep(500);
                 return;
             }
-
-            if (TileMap.mapID == WayXmap[IndexWay + 1])
+            else if (TileMap.mapID == way[indexWay + 1].mapId)
             {
-                IndexWay++;
+                indexWay++;
                 return;
             }
-
-            IsNextMapFailed = true;
+            else
+            {
+                isNextMapFailed = true;
+            }
         }
 
-        #region Thao tác của xmap
         public static void ShowXmapMenu()
         {
-            XmapData.Instance().LoadGroupMapsFromFile("TextData\\GroupMapsXmap.txt");
+            XmapData.loadGroupMapsFromFile("TextData\\GroupMapsXmap.txt");
             OpenMenu.start(new(menuItems =>
             {
-                foreach (var groupMap in XmapData.Instance().GroupMaps)
-                    menuItems.Add(new(groupMap.NameGroup, new(() =>
+                foreach (var groupMap in XmapData.groups)
+                    menuItems.Add(new(groupMap.nameGroup, new(() =>
                     {
-                        ShowXmapPanel(groupMap.IdMaps);
+                        ShowXmapPanel(groupMap.maps);
                         Char.chatPopup = null;
                     })));
             }));
@@ -126,158 +106,17 @@ namespace Mod.Xmap
             GameCanvas.panel.show();
         }
 
-        public static void StartRunToMapId(int idMap)
+        public static void startRunToMapId(int idMap)
         {
-            IdMapEnd = idMap;
-            Pk9rXmap.IsXmapRunning = true;
+            idMapEnd = idMap;
+            gI.toggle(true);
         }
 
-        public static void FinishXmap()
+        public static void finishXmap()
         {
-            Pk9rXmap.IsXmapRunning = false;
-            IsNextMapFailed = false;
-            XmapData.Instance().MyLinkMaps = null;
-            WayXmap = null;
+            way = null;
+            isNextMapFailed = false;
+            gI.toggle(false);
         }
-
-        public static void SaveIdMapCapsuleReturn()
-        {
-            Pk9rXmap.IdMapCapsuleReturn = TileMap.mapID;
-        }
-
-        private static void NextMap(int idMapNext)
-        {
-            List<MapNext> mapNexts = XmapData.Instance().GetMapNexts(TileMap.mapID);
-            if (mapNexts != null)
-            {
-                foreach (MapNext mapNext in mapNexts)
-                {
-                    if (mapNext.MapID == idMapNext)
-                    {
-                        NextMap(mapNext);
-                        return;
-                    }
-                }
-            }
-            GameScr.info1.addInfo("Lỗi tại dữ liệu", 0);
-        }
-
-        private static void NextMap(MapNext mapNext)
-        {
-            switch (mapNext.Type)
-            {
-                case TypeMapNext.AutoWaypoint:
-                    NextMapAutoWaypoint(mapNext);
-                    break;
-                case TypeMapNext.NpcMenu:
-                    NextMapNpcMenu(mapNext);
-                    break;
-                case TypeMapNext.NpcPanel:
-                    NextMapNpcPanel(mapNext);
-                    break;
-                case TypeMapNext.Position:
-                    NextMapPosition(mapNext);
-                    break;
-                case TypeMapNext.Capsule:
-                    NextMapCapsule(mapNext);
-                    break;
-            }
-        }
-
-        private static void NextMapAutoWaypoint(MapNext mapNext)
-        {
-            Waypoint waypoint = XmapData.FindWaypoint(mapNext.MapID);
-            if (waypoint != null)
-            {
-                int x = XmapData.GetPosWaypointX(waypoint);
-                int y = XmapData.GetPosWaypointY(waypoint);
-                MoveMyChar(x, y);
-                RequestChangeMap(waypoint);
-            }
-        }
-
-        private static void NextMapNpcMenu(MapNext mapNext)
-        {
-            int idNpc = mapNext.Info[0];
-            Service.gI().openMenu(idNpc);
-            for (int i = 1; i < mapNext.Info.Length; i++)
-            {
-                int select = mapNext.Info[i];
-                Service.gI().confirmMenu((short)idNpc, (sbyte)select);
-            }
-        }
-
-        private static void NextMapNpcPanel(MapNext mapNext)
-        {
-            int idNpc = mapNext.Info[0];
-            int selectMenu = mapNext.Info[1];
-            int selectPanel = mapNext.Info[2];
-            Service.gI().openMenu(idNpc);
-            Service.gI().confirmMenu((short)idNpc, (sbyte)selectMenu);
-            Service.gI().requestMapSelect(selectPanel);
-        }
-
-        private static void NextMapPosition(MapNext mapNext)
-        {
-            int xPos = mapNext.Info[0];
-            int yPos = mapNext.Info[1];
-            MoveMyChar(xPos, yPos);
-            Service.gI().requestChangeMap();
-            Service.gI().getMapOffline();
-        }
-
-        private static void NextMapCapsule(MapNext mapNext)
-        {
-            SaveIdMapCapsuleReturn();
-            int index = mapNext.Info[0];
-            Service.gI().requestMapSelect(index);
-        }
-        #endregion
-
-        #region Thao tác với game
-        public static void UseCapsuleNormal()
-        {
-            Pk9rXmap.IsShowPanelMapTrans = false;
-            Service.gI().useItem(0, 1, -1, ID_ITEM_CAPSULE);
-        }
-
-        public static void UseCapsuleVip()
-        {
-            Pk9rXmap.IsShowPanelMapTrans = false;
-            Service.gI().useItem(0, 1, -1, ID_ITEM_CAPSULE_VIP);
-        }
-
-        public static void HideInfoDlg()
-        {
-            InfoDlg.hide();
-        }
-
-        public static void MoveMyChar(int x, int y)
-        {
-            Char.myCharz().cx = x;
-            Char.myCharz().cy = y;
-            Service.gI().charMove();
-
-            if (ItemTime.isExistItem(ID_ICON_ITEM_TDLT))
-                return;
-
-            Char.myCharz().cx = x;
-            Char.myCharz().cy = y + 1;
-            Service.gI().charMove();
-            Char.myCharz().cx = x;
-            Char.myCharz().cy = y;
-            Service.gI().charMove();
-        }
-
-        private static void RequestChangeMap(Waypoint waypoint)
-        {
-            if (waypoint.isOffline)
-            {
-                Service.gI().getMapOffline();
-                return;
-            }
-            Service.gI().requestChangeMap();
-        }
-        #endregion
     }
 }

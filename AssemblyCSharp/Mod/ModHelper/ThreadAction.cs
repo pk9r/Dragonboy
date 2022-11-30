@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 
 namespace Mod.ModHelper
 {
     /// <summary>
     /// Kế thừa class này để tạo chức năng sử dụng Thread.
     /// </summary>
-    public abstract class ThreadAction<T> 
+    public abstract class ThreadAction<T>
         where T : ThreadAction<T>, new()
     {
         public static T gI { get; } = new T();
@@ -17,7 +13,7 @@ namespace Mod.ModHelper
         /// <summary>
         /// Kiểm tra hành động còn thực hiện.
         /// </summary>
-        public bool IsActing => this.threadAction?.IsAlive == true;
+        public bool IsActing => threadAction?.IsAlive == true;
 
         /// <summary>
         /// Thread sử dụng để thực thi hành động.
@@ -34,10 +30,10 @@ namespace Mod.ModHelper
         /// </summary>
         public void performAction()
         {
-            if (this.IsActing)
-                this.threadAction.Abort();
+            if (IsActing)
+                threadAction.Abort();
 
-            this.executeAction();
+            executeAction();
         }
 
         /// <summary>
@@ -47,17 +43,17 @@ namespace Mod.ModHelper
         protected void executeAction()
         {
             // Không thực hiện hành động trong luồng khác
-            if (Thread.CurrentThread != this.threadAction)
+            if (Thread.CurrentThread != threadAction)
             {
-                this.threadAction = new Thread(this.executeAction)
+                threadAction = new Thread(executeAction)
                 {
                     IsBackground = true
                 };
-                this.threadAction.Start();
+                threadAction.Start();
                 return;
             }
 
-            this.action();
+            action();
         }
     }
 }

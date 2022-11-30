@@ -1,18 +1,16 @@
-﻿using Mod.ModHelper;
+﻿using Mod.ModHelper.CommandMod.Chat;
+using Mod.ModHelper.CommandMod.Hotkey;
 using System.Collections.Generic;
 
 namespace Mod.Xmap
 {
-    public class Pk9rXmap : ThreadActionUpdate<Pk9rXmap>
+    public class Pk9rXmap
     {
-        public static bool IsXmapRunning = false;
         public static bool IsMapTransAsXmap = false;
-        public static bool IsShowPanelMapTrans = true;
+        public static bool isShowPanelMapTrans = true;
         public static bool IsUseCapsuleNormal = false;
         public static bool IsUseCapsuleVip = true;
-        public static int IdMapCapsuleReturn = -1;
-
-        public override int Interval => 500;
+        public static int idMapCapsuleReturn = -1;
 
         [ChatCommand("csdb")]
         public static void toggleUseCapsuleVip()
@@ -24,23 +22,23 @@ namespace Mod.Xmap
         [ChatCommand("xmp")]
         public static void toggleXmap(int mapId)
         {
-            if (IsXmapRunning)
+            if (XmapController.gI.IsActing)
             {
-                XmapController.FinishXmap();
+                XmapController.finishXmap();
                 GameScr.info1.addInfo("Đã huỷ Xmap", 0);
             }
             else
             {
-                XmapController.StartRunToMapId(mapId);
+                XmapController.startRunToMapId(mapId);
             }
         }
 
         [ChatCommand("xmp"), HotkeyCommand('x')]
         public static void toggleXmap()
         {
-            if (IsXmapRunning)
+            if (XmapController.gI.IsActing)
             {
-                XmapController.FinishXmap();
+                XmapController.finishXmap();
                 GameScr.info1.addInfo("Đã huỷ Xmap", 0);
             }
             else
@@ -49,15 +47,9 @@ namespace Mod.Xmap
             }
         }
 
-        protected override void update()
-        {
-            if (XmapData.Instance().IsLoading) XmapData.Instance().Update();
-            if (IsXmapRunning) XmapController.Update();
-        }
-
         public static void Info(string text)
         {
-            if (IsXmapRunning)
+            if (XmapController.gI.IsActing)
             {
                 var keywords = new List<string>
                 {
@@ -69,12 +61,12 @@ namespace Mod.Xmap
 
                 if (keywords.Contains(text))
                 {
-                    XmapController.FinishXmap();
+                    XmapController.finishXmap();
                     GameScr.info1.addInfo("Đã huỷ Xmap", 0);
                 }
                 else if (text.Equals("Có lỗi xảy ra vui lòng thử lại sau."))
                 {
-                    XmapController.MoveMyChar(XmapUtils.getX(2), XmapUtils.getY(2));
+                    Utilities.teleportMyChar(XmapUtils.getX(2), XmapUtils.getY(2));
                 }
             }
         }
@@ -83,26 +75,26 @@ namespace Mod.Xmap
         {
             if (IsMapTransAsXmap)
             {
-                XmapController.HideInfoDlg();
+                InfoDlg.hide();
                 string mapName = GameCanvas.panel.mapNames[selected];
-                int idMap = XmapData.GetIdMapFromPanelXmap(mapName);
-                XmapController.StartRunToMapId(idMap);
+                int idMap = getMapIdFromPanelXmap(mapName);
+                XmapController.startRunToMapId(idMap);
                 return;
             }
-            XmapController.SaveIdMapCapsuleReturn();
+            saveIdMapCapsuleReturn();
             Service.gI().requestMapSelect(selected);
         }
 
         public static void ShowPanelMapTrans()
         {
             IsMapTransAsXmap = false;
-            if (IsShowPanelMapTrans)
+            if (isShowPanelMapTrans)
             {
                 GameCanvas.panel.setTypeMapTrans();
                 GameCanvas.panel.show();
                 return;
             }
-            IsShowPanelMapTrans = true;
+            isShowPanelMapTrans = true;
         }
 
         public static void FixBlackScreen()
@@ -110,6 +102,96 @@ namespace Mod.Xmap
             Controller.gI().loadCurrMap(0);
             Service.gI().finishLoadMap();
             Char.isLoadingMap = false;
+        }
+
+        public static bool canUseCapsuleNormal()
+        {
+            return IsUseCapsuleNormal && !Utilities.isMyCharDied() && Utilities.hasItemCapsuleNormal();
+        }
+
+        public static bool canUseCapsuleVip()
+        {
+            return IsUseCapsuleVip && !Utilities.isMyCharDied() && Utilities.hasItemCapsuleVip();
+        }
+
+        public static int getMapIdFromPanelXmap(string mapName)
+        {
+            return int.Parse(mapName.Split(':')[0]);
+        }
+
+        public static bool isWaitInfoMapTrans()
+        {
+            return !isShowPanelMapTrans;
+        }
+
+        public static void saveIdMapCapsuleReturn()
+        {
+            idMapCapsuleReturn = TileMap.mapID;
+        }
+
+        public static void nextMap(MapNext mapNext)
+        {
+            switch (mapNext.type)
+            {
+                case TypeMapNext.AutoWaypoint:
+                    nextMapAutoWaypoint(mapNext);
+                    break;
+                case TypeMapNext.NpcMenu:
+                    nextMapNpcMenu(mapNext);
+                    break;
+                case TypeMapNext.NpcPanel:
+                    nextMapNpcPanel(mapNext);
+                    break;
+                case TypeMapNext.Position:
+                    nextMapPosition(mapNext);
+                    break;
+                case TypeMapNext.Capsule:
+                    nextMapCapsule(mapNext);
+                    break;
+            }
+        }
+
+        public static void nextMapAutoWaypoint(MapNext mapNext)
+        {
+            var waypoint = Utilities.findWaypoint(mapNext.mapId);
+            Utilities.changeMap(waypoint);
+        }
+
+        public static void nextMapNpcMenu(MapNext mapNext)
+        {
+            var idNpc = mapNext.info[0];
+            Service.gI().openMenu(idNpc);
+            for (int i = 1; i < mapNext.info.Length; i++)
+            {
+                int select = mapNext.info[i];
+                Service.gI().confirmMenu((short)idNpc, (sbyte)select);
+            }
+        }
+
+        public static void nextMapNpcPanel(MapNext mapNext)
+        {
+            var idNpc = mapNext.info[0];
+            var selectMenu = mapNext.info[1];
+            var selectPanel = mapNext.info[2];
+            Service.gI().openMenu(idNpc);
+            Service.gI().confirmMenu((short)idNpc, (sbyte)selectMenu);
+            Service.gI().requestMapSelect(selectPanel);
+        }
+
+        public static void nextMapPosition(MapNext mapNext)
+        {
+            var xPos = mapNext.info[0];
+            var yPos = mapNext.info[1];
+            Utilities.teleportMyChar(xPos, yPos);
+            Service.gI().requestChangeMap();
+            Service.gI().getMapOffline();
+        }
+
+        public static void nextMapCapsule(MapNext mapNext)
+        {
+            saveIdMapCapsuleReturn();
+            var select = mapNext.info[0];
+            Service.gI().requestMapSelect(select);
         }
     }
 }

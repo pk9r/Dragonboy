@@ -1,6 +1,9 @@
 ﻿using LitJson;
 using Mod.Graphics;
+using Mod.ModHelper.CommandMod.Chat;
+using Mod.ModHelper.CommandMod.Hotkey;
 using Mod.ModHelper.Menu;
+using Mod.Xmap;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,6 +25,12 @@ namespace Mod
         public const sbyte ID_SKILL_BUFF = 7;
         public const int ID_ICON_ITEM_TDLT = 4387;
         public const short ID_NPC_MOD_FACE = 7333;// Doraemon, TODO: custom npc avatar
+
+        public const int ID_ITEM_CAPSULE_VIP = 194;
+        public const int ID_ITEM_CAPSULE_NORMAL = 193;
+
+        public const int ID_MAP_HOME_BASE = 21;
+        public const int ID_MAP_TTVT_BASE = 24;
 
         private const BindingFlags PUBLIC_STATIC_VOID =
             BindingFlags.Public | BindingFlags.NonPublic |
@@ -185,6 +194,22 @@ namespace Mod
             }
 
             Service.gI().requestChangeMap();
+        }
+
+        public static Waypoint findWaypoint(int idMap)
+        {
+            Waypoint waypoint;
+            string textPopup;
+            for (int i = 0; i < TileMap.vGo.size(); i++)
+            {
+                waypoint = (Waypoint)TileMap.vGo.elementAt(i);
+                textPopup = Utilities.getTextPopup(waypoint.popup);
+                if (textPopup.Equals(TileMap.mapNames[idMap]))
+                {
+                    return waypoint;
+                }
+            }
+            return null;
         }
 
         public static void setWaypointChangeMap(Waypoint waypoint)
@@ -374,37 +399,13 @@ namespace Mod
         }
 
         [HotkeyCommand('j')]
-        public static void changeMapLeft()
-        {
-            Waypoint waypoint = waypointLeft;
-            if (waypoint != null)
-            {
-                teleportMyChar(getXWayPoint(waypoint), getYWayPoint(waypoint));
-                requestChangeMap(waypoint);
-            }
-        }
+        public static void changeMapLeft() => changeMap(waypointLeft);
 
         [HotkeyCommand('k')]
-        public static void changeMapMiddle()
-        {
-            Waypoint waypoint = waypointMiddle;
-            if (waypoint != null)
-            {
-                teleportMyChar(getXWayPoint(waypoint), getYWayPoint(waypoint));
-                requestChangeMap(waypoint);
-            }
-        }
+        public static void changeMapMiddle() => changeMap(waypointMiddle);
 
         [HotkeyCommand('l')]
-        public static void changeMapRight()
-        {
-            Waypoint waypoint = waypointRight;
-            if (waypoint != null)
-            {
-                teleportMyChar(getXWayPoint(waypoint), getYWayPoint(waypoint));
-                requestChangeMap(waypoint);
-            }
-        }
+        public static void changeMapRight() => changeMap(waypointRight);
 
         [HotkeyCommand('g')]
         public static void sendGiaoDichToCharFocusing()
@@ -426,15 +427,13 @@ namespace Mod
             Service.gI().requestChangeZone(zone, -1);
         }
 
-        [ChatCommand("ak")]
-        public static void toggleAutoAttack()
+        public static void changeMap(Waypoint waypoint)
         {
-            AutoAttack.gI.toggle();
-
-            if (AutoAttack.gI.IsActing)
-                GameScr.info1.addInfo("Đang tự tấn công", 0);
-            else
-                GameScr.info1.addInfo("Đã tắt tự tấn công", 0);
+            if (waypoint != null)
+            {
+                teleportMyChar(getXWayPoint(waypoint), getYWayPoint(waypoint));
+                requestChangeMap(waypoint);
+            }
         }
 
         public static bool isMeInNRDMap()
@@ -585,18 +584,21 @@ namespace Mod
             Char.myCharz().cy -= 50;
             Service.gI().charMove();
         }
+
         [HotkeyCommand('s')]
         public static void DonTho()
         {
             Char.myCharz().cy += 50;
             Service.gI().charMove();
         }
+
         [HotkeyCommand('a')]
         public static void DichTrai()
         {
             Char.myCharz().cx -= 50;
             Service.gI().charMove();
         }
+
         [HotkeyCommand('d')]
         public static void DichPhai()
         {
@@ -682,6 +684,50 @@ namespace Mod
         public static T getValueProperty<T>(this object obj, string name)
         {
             return (T)obj.GetType().GetProperty(name).GetValue(obj, null);
+        }
+
+        public static bool isMyCharDied()
+        {
+            Char myChar = Char.myCharz();
+            return myChar.statusMe == 14 || myChar.cHP <= 0;
+        }
+
+        public static bool hasItemCapsuleVip()
+        {
+            Item[] items = Char.myCharz().arrItemBag;
+            for (int i = 0; i < items.Length; i++)
+                if (items[i] != null && items[i].template.id == ID_ITEM_CAPSULE_VIP)
+                    return true;
+            return false;
+        }
+
+        public static bool hasItemCapsuleNormal()
+        {
+            Item[] items = Char.myCharz().arrItemBag;
+            for (int i = 0; i < items.Length; i++)
+                if (items[i] != null && items[i].template.id == ID_ITEM_CAPSULE_NORMAL)
+                    return true;
+            return false;
+        }
+
+        public static bool canNextMap()
+        {
+            return !Char.isLoadingMap && !Char.ischangingMap && !Controller.isStopReadMessage;
+        }
+
+        public static int getMapIdFromName(string mapName)
+        {
+            int offset = Char.myCharz().cgender;
+            if (mapName.Equals("Về nhà")) return ID_MAP_HOME_BASE + offset;
+            if (mapName.Equals("Trạm tàu vũ trụ")) return ID_MAP_TTVT_BASE + offset;
+            if (mapName.Contains("Về chỗ cũ: "))
+            {
+                mapName = mapName.Replace("Về chỗ cũ: ", "");
+                if (TileMap.mapNames[Pk9rXmap.idMapCapsuleReturn].Equals(mapName)) return Pk9rXmap.idMapCapsuleReturn;
+                if (mapName.Equals("Rừng đá")) return -1;
+            }
+            for (int i = 0; i < TileMap.mapNames.Length; i++) if (mapName.Equals(TileMap.mapNames[i])) return i;
+            return -1;
         }
     }
 }

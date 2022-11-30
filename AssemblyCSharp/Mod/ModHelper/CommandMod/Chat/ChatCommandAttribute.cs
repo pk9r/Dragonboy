@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Mod
+﻿namespace Mod.ModHelper.CommandMod.Chat
 {
     public class ChatCommandAttribute : BaseCommandAttribute
     {

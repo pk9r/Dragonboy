@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Mod.ModHelper.CommandMod.Chat;
+using System.Linq;
 
 namespace Mod.ModHelper.Menu
 {
@@ -18,7 +19,7 @@ namespace Mod.ModHelper.Menu
                 // selected: vị trí menu được chọn
                 // caption: chuỗi được chọn, vd: selected là 1 thì giá trị biến này là "test b"
                 // captions: mảng tạo menu, ["test a", "test b", "test c"]
-                // thay đổi tên biến tùy ý (đảm bảo đủ 3 biến) hoặc thay bằng _ nếu không sử dụng
+                // thay đổi tên biến tùy ý hoặc thay bằng _ nếu không sử dụng
                 menuItems.Add(new("test", new((selected, caption, captions) =>
                 {
                     GameScr.info1.addInfo($"selected {selected}, {caption}", 0);

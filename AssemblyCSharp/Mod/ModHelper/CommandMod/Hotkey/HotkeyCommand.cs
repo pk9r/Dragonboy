@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Mod
+﻿namespace Mod.ModHelper.CommandMod.Hotkey
 {
     public class HotkeyCommand : BaseCommand
     {
@@ -12,7 +10,7 @@ namespace Mod
 
         public void execute()
         {
-            this.method.Invoke(null, this.parameters);
+            method.Invoke(null, parameters);
         }
     }
 }

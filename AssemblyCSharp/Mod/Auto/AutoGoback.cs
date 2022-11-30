@@ -1,22 +1,14 @@
 ﻿using Mod.Xmap;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
-using Mod.ModMenu;
 
-namespace Mod
+namespace Mod.Auto
 {
     public class AutoGoback
     {
         public static InfoGoback infoGoback = new InfoGoback();
-
-        static bool isGobacking = false;
-
-        static GobackMode gobackMode;
-
-        static long lastTimeGoback;
+        private static bool isGobacking = false;
+        private static GobackMode gobackMode;
+        private static long lastTimeGoback;
 
         public static void update()
         {
@@ -42,7 +34,7 @@ namespace Mod
                     {
                         if (GameScr.vItemMap.size() > 0) Service.gI().pickItem(-1);
                         else if (Char.myCharz().cHP <= 1) GameScr.gI().doUseHP();
-                        else if (!Pk9rXmap.IsXmapRunning) XmapController.StartRunToMapId(infoGoback.mapID);
+                        else if (!XmapController.gI.IsActing) XmapController.startRunToMapId(infoGoback.mapID);
                     }
                     else if (TileMap.mapID == infoGoback.mapID)
                     {
@@ -85,8 +77,8 @@ namespace Mod
             {
                 mapID = mapId;
                 zoneID = zoneId;
-                this.x = mapObject.getX();
-                this.y = TileMap.tileTypeAt(x, mapObject.getY(), 2) ? mapObject.getY() : Utilities.getYGround(x);
+                x = mapObject.getX();
+                y = TileMap.tileTypeAt(x, mapObject.getY(), 2) ? mapObject.getY() : Utilities.getYGround(x);
             }
         }
 
