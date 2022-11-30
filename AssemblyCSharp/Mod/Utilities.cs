@@ -3,7 +3,6 @@ using Mod.Graphics;
 using Mod.ModHelper.CommandMod.Chat;
 using Mod.ModHelper.CommandMod.Hotkey;
 using Mod.ModHelper.Menu;
-using Mod.Xmap;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,6 +21,7 @@ namespace Mod
         public const string PathChatCommand = @"ModData\chatCommands.json";
         public const string PathChatHistory = @"ModData\chat.txt";
         public const string PathHotkeyCommand = @"ModData\hotkeyCommands.json";
+
 
         public const sbyte ID_SKILL_BUFF = 7;
         public const int ID_ICON_ITEM_TDLT = 4387;
@@ -54,6 +54,8 @@ namespace Mod
         public static int channelSyncKey = -1;
 
         public static VietKeyHandler vietKeyHandler = new VietKeyHandler();
+
+        public static int mapCapsuleReturn = -1;
 
         #region Get Methods
         /// <summary>
@@ -754,7 +756,7 @@ namespace Mod
             if (mapName.Contains("Về chỗ cũ: "))
             {
                 mapName = mapName.Replace("Về chỗ cũ: ", "");
-                if (TileMap.mapNames[Pk9rXmap.idMapCapsuleReturn].Equals(mapName)) return Pk9rXmap.idMapCapsuleReturn;
+                if (TileMap.mapNames[mapCapsuleReturn].Equals(mapName)) return mapCapsuleReturn;
                 if (mapName.Equals("Rừng đá")) return -1;
             }
             for (int i = 0; i < TileMap.mapNames.Length; i++) if (mapName.Equals(TileMap.mapNames[i])) return i;

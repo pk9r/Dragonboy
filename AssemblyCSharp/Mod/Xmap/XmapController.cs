@@ -1,6 +1,4 @@
 ﻿using Mod.ModHelper;
-using Mod.ModHelper.Menu;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace Mod.Xmap
@@ -72,38 +70,6 @@ namespace Mod.Xmap
             {
                 isNextMapFailed = true;
             }
-        }
-
-        public static void ShowXmapMenu()
-        {
-            XmapData.loadGroupMapsFromFile("TextData\\GroupMapsXmap.txt");
-            OpenMenu.start(new(menuItems =>
-            {
-                foreach (var groupMap in XmapData.groups)
-                    menuItems.Add(new(groupMap.nameGroup, new(() =>
-                    {
-                        ShowXmapPanel(groupMap.maps);
-                        Char.chatPopup = null;
-                    })));
-            }));
-            ChatPopup.addChatPopup($"XmapNRO by Phucprotein\nMap hiện tại: {TileMap.mapName}, ID: {TileMap.mapID}\nVui lòng chọn nơi muốn đến", 100000, new Npc(5, 0, -100, 100, 5, Utilities.ID_NPC_MOD_FACE));
-        }
-
-        public static void ShowXmapPanel(List<int> maps)
-        {
-            Pk9rXmap.IsMapTransAsXmap = true;
-            int len = maps.Count;
-            GameCanvas.panel.mapNames = new string[len];
-            GameCanvas.panel.planetNames = new string[len];
-            for (int i = 0; i < len; i++)
-            {
-                var mapId = maps[i];
-                var nameMap = TileMap.mapNames[maps[i]];
-                GameCanvas.panel.mapNames[i] = $"{mapId}: {nameMap}";
-                GameCanvas.panel.planetNames[i] = "Xmap by Phucprotein";
-            }
-            GameCanvas.panel.setTypeMapTrans();
-            GameCanvas.panel.show();
         }
 
         public static void startRunToMapId(int idMap)

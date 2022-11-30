@@ -65,7 +65,7 @@ namespace Mod.ModMenu
 
         public static ModMenuItemFunction[] modMenuItemFunctions = new ModMenuItemFunction[]
         {
-            new ModMenuItemFunction("Menu Xmap", "Mở menu Xmap (chat \"xmp\" hoặc bấm nút x)", XmapController.ShowXmapMenu),
+            new ModMenuItemFunction("Menu Xmap", "Mở menu Xmap (chat \"xmp\" hoặc bấm nút x)", Pk9rXmap.ShowXmapMenu),
             new ModMenuItemFunction("Menu PickMob", "Mở menu PickMob (chat \"pickmob\")", Pk9rPickMob.ShowMenu),
             new ModMenuItemFunction("Menu Teleport", "Mở menu dịch chuyển (chat \"tele\" hoặc bấm nút z)", TeleportMenu.TeleportMenu.ShowMenu),
             new ModMenuItemFunction("Menu Custom Background", "Mở menu ảnh nền tùy chỉnh", CustomBackground.ShowMenu),

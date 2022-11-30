@@ -1,22 +1,22 @@
 ﻿using Mod.ModHelper.CommandMod.Chat;
 using Mod.ModHelper.CommandMod.Hotkey;
+using Mod.ModHelper.Menu;
 using System.Collections.Generic;
 
 namespace Mod.Xmap
 {
     public class Pk9rXmap
     {
-        public static bool IsMapTransAsXmap = false;
+        public static bool isMapTransAsXmap = false;
         public static bool isShowPanelMapTrans = true;
-        public static bool IsUseCapsuleNormal = false;
-        public static bool IsUseCapsuleVip = true;
-        public static int idMapCapsuleReturn = -1;
+        public static bool isUseCapsuleNormal = false;
+        public static bool isUseCapsuleVip = true;
 
         [ChatCommand("csdb")]
         public static void toggleUseCapsuleVip()
         {
-            IsUseCapsuleVip = !IsUseCapsuleVip;
-            GameScr.info1.addInfo("Sử dụng capsule đặc biệt Xmap: " + (IsUseCapsuleVip ? "Bật" : "Tắt"), 0);
+            isUseCapsuleVip = !isUseCapsuleVip;
+            GameScr.info1.addInfo("Sử dụng capsule đặc biệt Xmap: " + (isUseCapsuleVip ? "Bật" : "Tắt"), 0);
         }
 
         [ChatCommand("xmp")]
@@ -43,8 +43,40 @@ namespace Mod.Xmap
             }
             else
             {
-                XmapController.ShowXmapMenu();
+                ShowXmapMenu();
             }
+        }
+
+        public static void ShowXmapMenu()
+        {
+            XmapData.loadGroupMapsFromFile("TextData\\GroupMapsXmap.txt");
+            OpenMenu.start(new(menuItems =>
+            {
+                foreach (var groupMap in XmapData.groups)
+                    menuItems.Add(new(groupMap.nameGroup, new(() =>
+                    {
+                        ShowXmapPanel(groupMap.maps);
+                        Char.chatPopup = null;
+                    })));
+            }));
+            ChatPopup.addChatPopup($"XmapNRO by Phucprotein\nMap hiện tại: {TileMap.mapName}, ID: {TileMap.mapID}\nVui lòng chọn nơi muốn đến", 100000, new Npc(5, 0, -100, 100, 5, Utilities.ID_NPC_MOD_FACE));
+        }
+
+        public static void ShowXmapPanel(List<int> maps)
+        {
+            isMapTransAsXmap = true;
+            int len = maps.Count;
+            GameCanvas.panel.mapNames = new string[len];
+            GameCanvas.panel.planetNames = new string[len];
+            for (int i = 0; i < len; i++)
+            {
+                var mapId = maps[i];
+                var nameMap = TileMap.mapNames[maps[i]];
+                GameCanvas.panel.mapNames[i] = $"{mapId}: {nameMap}";
+                GameCanvas.panel.planetNames[i] = "Xmap by Phucprotein";
+            }
+            GameCanvas.panel.setTypeMapTrans();
+            GameCanvas.panel.show();
         }
 
         public static void Info(string text)
@@ -73,7 +105,7 @@ namespace Mod.Xmap
 
         public static void SelectMapTrans(int selected)
         {
-            if (IsMapTransAsXmap)
+            if (isMapTransAsXmap)
             {
                 InfoDlg.hide();
                 string mapName = GameCanvas.panel.mapNames[selected];
@@ -81,13 +113,13 @@ namespace Mod.Xmap
                 XmapController.startRunToMapId(idMap);
                 return;
             }
-            saveIdMapCapsuleReturn();
+            Utilities.mapCapsuleReturn = TileMap.mapID;
             Service.gI().requestMapSelect(selected);
         }
 
         public static void ShowPanelMapTrans()
         {
-            IsMapTransAsXmap = false;
+            isMapTransAsXmap = false;
             if (isShowPanelMapTrans)
             {
                 GameCanvas.panel.setTypeMapTrans();
@@ -106,12 +138,12 @@ namespace Mod.Xmap
 
         public static bool canUseCapsuleNormal()
         {
-            return IsUseCapsuleNormal && !Utilities.isMyCharDied() && Utilities.hasItemCapsuleNormal();
+            return isUseCapsuleNormal && !Utilities.isMyCharDied() && Utilities.hasItemCapsuleNormal();
         }
 
         public static bool canUseCapsuleVip()
         {
-            return IsUseCapsuleVip && !Utilities.isMyCharDied() && Utilities.hasItemCapsuleVip();
+            return isUseCapsuleVip && !Utilities.isMyCharDied() && Utilities.hasItemCapsuleVip();
         }
 
         public static int getMapIdFromPanelXmap(string mapName)
@@ -122,11 +154,6 @@ namespace Mod.Xmap
         public static bool isWaitInfoMapTrans()
         {
             return !isShowPanelMapTrans;
-        }
-
-        public static void saveIdMapCapsuleReturn()
-        {
-            idMapCapsuleReturn = TileMap.mapID;
         }
 
         public static void nextMap(MapNext mapNext)
@@ -189,7 +216,7 @@ namespace Mod.Xmap
 
         public static void nextMapCapsule(MapNext mapNext)
         {
-            saveIdMapCapsuleReturn();
+            Utilities.mapCapsuleReturn = TileMap.mapID;
             var select = mapNext.info[0];
             Service.gI().requestMapSelect(select);
         }
