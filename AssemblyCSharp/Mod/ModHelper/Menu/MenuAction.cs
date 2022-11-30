@@ -25,5 +25,10 @@ namespace Mod.ModHelper.Menu
         {
             this.action = (_, _, _) => action.Invoke();
         }
+
+        public void Invoke(int selected, string caption, string[] captions)
+        {
+            action.Invoke(selected, caption, captions);
+        }
     }
 }
