@@ -13,7 +13,7 @@ namespace Mod
 
         public abstract bool onGameClosing();
 
-        public abstract void onSaveRMSString(ref string filename, ref string data);
+        public abstract void onSaveRMSString(string filename, string data);
 
         public abstract void onKeyMapLoaded(Hashtable h);
 
@@ -25,9 +25,9 @@ namespace Mod
 
         public abstract bool onStartChatTextField(ChatTextField sender);
 
-        public abstract bool onLoadRMSInt(string file, out int result);
+        public abstract bool onLoadRMSInt(string file, int result);
 
-        public abstract bool onGetRMSPath(out string result);
+        public abstract bool onGetRMSPath(string result);
 
         public abstract bool onTeleportUpdate(Teleport teleport);
 
@@ -37,11 +37,11 @@ namespace Mod
 
         public abstract void onUpdateGameScr();
 
-        //public abstract void onLogin(ref string username, ref string pass, ref sbyte type);
+        //public abstract void onLogin(string username, string pass, sbyte type);
 
         public abstract void onServerListScreenLoaded();
 
-        public abstract void onSessionConnecting(ref string host, ref int port);
+        public abstract void onSessionConnecting(string host, int port);
 
         public abstract void onSceenDownloadDataShow();
 

@@ -6,6 +6,7 @@ using Mod.ModHelper.Menu;
 using Mod.Xmap;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -452,8 +453,13 @@ namespace Mod
 
         public static void saveRMSInt(string name, int value)
         {
-            if (!Directory.Exists("Data")) Directory.CreateDirectory("Data");
-            FileStream fileStream = new FileStream("Data\\" + name, FileMode.Create);
+            string folder = "Data";
+            if (new StackFrame(1).GetMethod().Module != typeof(Utilities).Module)
+            {
+                folder += "\\" + new StackFrame(1).GetMethod().Module.Name.Replace(".dll", "");
+            }
+            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+            FileStream fileStream = new FileStream(folder + "\\" + name, FileMode.Create);
             fileStream.Write(BitConverter.GetBytes(value), 0, 4);
             fileStream.Flush();
             fileStream.Close();
@@ -461,7 +467,12 @@ namespace Mod
 
         public static int loadRMSInt(string name)
         {
-            FileStream fileStream = new FileStream("Data\\" + name, FileMode.Open);
+            string folder = "Data";
+            if (new StackFrame(1).GetMethod().Module != typeof(Utilities).Module)
+            {
+                folder += "\\" + new StackFrame(1).GetMethod().Module.Name.Replace(".dll", "");
+            }
+            FileStream fileStream = new FileStream(folder + "\\" + name, FileMode.Open);
             byte[] array = new byte[4];
             fileStream.Read(array, 0, 4);
             fileStream.Close();
@@ -470,8 +481,13 @@ namespace Mod
 
         public static void saveRMSBool(string name, bool status)
         {
-            if (!Directory.Exists("Data")) Directory.CreateDirectory("Data");
-            FileStream fileStream = new FileStream("Data\\" + name, FileMode.Create);
+            string folder = "Data";
+            if (new StackFrame(1).GetMethod().Module != typeof(Utilities).Module)
+            {
+                folder += "\\" + new StackFrame(1).GetMethod().Module.Name.Replace(".dll", "");
+            }
+            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+            FileStream fileStream = new FileStream(folder + "\\" + name, FileMode.Create);
             fileStream.Write(new byte[] { (byte)(status ? 1 : 0) }, 0, 1);
             fileStream.Flush();
             fileStream.Close();
@@ -479,7 +495,12 @@ namespace Mod
 
         public static bool loadRMSBool(string name)
         {
-            FileStream fileStream = new FileStream("Data\\" + name, FileMode.Open);
+            string folder = "Data";
+            if (new StackFrame(1).GetMethod().Module != typeof(Utilities).Module)
+            {
+                folder += "\\" + new StackFrame(1).GetMethod().Module.Name.Replace(".dll", "");
+            }
+            FileStream fileStream = new FileStream(folder + "\\" + name, FileMode.Open);
             byte[] array = new byte[1];
             fileStream.Read(array, 0, 1);
             fileStream.Close();
@@ -488,7 +509,12 @@ namespace Mod
 
         public static string loadRMSString(string name)
         {
-            FileStream fileStream = new FileStream("Data\\" + name, FileMode.Open);
+            string folder = "Data";
+            if (new StackFrame(1).GetMethod().Module != typeof(Utilities).Module)
+            {
+                folder += "\\" + new StackFrame(1).GetMethod().Module.Name.Replace(".dll", "");
+            }
+            FileStream fileStream = new FileStream(folder + "\\" + name, FileMode.Open);
             StreamReader streamReader = new StreamReader(fileStream);
             string result = streamReader.ReadToEnd();
             streamReader.Close();
@@ -498,8 +524,13 @@ namespace Mod
 
         public static void saveRMSString(string name, string data)
         {
-            if (!Directory.Exists("Data")) Directory.CreateDirectory("Data");
-            FileStream fileStream = new FileStream("Data\\" + name, FileMode.Create);
+            string folder = "Data";
+            if (new StackFrame(1).GetMethod().Module != typeof(Utilities).Module)
+            {
+                folder += "\\" + new StackFrame(1).GetMethod().Module.Name.Replace(".dll", "");
+            }
+            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+            FileStream fileStream = new FileStream(folder + "\\" + name, FileMode.Create);
             byte[] buffer = Encoding.UTF8.GetBytes(data);
             fileStream.Write(buffer, 0, buffer.Length);
             fileStream.Flush();

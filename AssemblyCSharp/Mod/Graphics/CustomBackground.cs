@@ -16,37 +16,47 @@ namespace Mod.Graphics
 
         public static bool isEnabled;
 
-        public static Dictionary<string, Image> backgroundWallpapers = new Dictionary<string, Image>();
+        public static Dictionary<string, Image> staticBackgroundWallpapers = new Dictionary<string, Image>();
+
+        public static Dictionary<string, Gif> gifBackgroundWallpapers = new Dictionary<string, Gif>();
 
         public static int inveralChangeBackgroundWallpaper = 30000;
         private static int backgroundIndex;
         private static bool isAllWallpaperLoaded;
         private static long lastTimeChangedWallpaper;
+        private static bool isChangeWallpaper = true;
 
         public static void ShowMenu()
         {
             OpenMenu.start(new(menuItems =>
             {
-                if (backgroundWallpapers.Count > 0)
+                if (staticBackgroundWallpapers.Count + gifBackgroundWallpapers.Count > 0)
                     menuItems.Add(new("Mở danh\nsách ảnh\nđã lưu", new(() =>
                     {
                         ModMenuPanel.setTypeModMenuMain(2);
                         GameCanvas.panel.show();
                     })));
                 menuItems.Add(new("Thêm ảnh\nvào danh sách", new(SelectBackgroundImages)));
-                if (backgroundWallpapers.Count > 0)
+                if (staticBackgroundWallpapers.Count + gifBackgroundWallpapers.Count > 0)
                     menuItems.Add(new("Xóa hết\nảnh trong\ndanh sách", new(() =>
                     {
-                        backgroundWallpapers.Clear();
+                        staticBackgroundWallpapers.Clear();
+                        gifBackgroundWallpapers.Clear();
                         GameScr.info1.addInfo("Đã xóa hết ảnh nền trong danh sách!", 0);
                     })));
+                menuItems.Add(new("Tự động chuyển ảnh nền: " + (isChangeWallpaper ? "Bật" : "Tắt"), new(() =>
+                {
+                    isChangeWallpaper = !isChangeWallpaper;
+                    lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+                    GameScr.info1.addInfo("Đã " + (isChangeWallpaper ? "bật" : "tắt") + " tự động chuyển ảnh nền!", 0);
+                })));
             }));
         }
 
         public static void setTabCustomBackgroundPanel()
         {
             GameCanvas.panel.ITEM_HEIGHT = 24;
-            GameCanvas.panel.currentListLength = backgroundWallpapers.Count;
+            GameCanvas.panel.currentListLength = staticBackgroundWallpapers.Count + gifBackgroundWallpapers.Count;
             GameCanvas.panel.selected = (GameCanvas.isTouch ? (-1) : 0);
             GameCanvas.panel.cmyLim = GameCanvas.panel.currentListLength * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.hScroll;
             if (GameCanvas.panel.cmyLim < 0) GameCanvas.panel.cmyLim = 0;
@@ -59,19 +69,26 @@ namespace Mod.Graphics
         {
             int selected = GameCanvas.panel.selected;
             if (selected < 0) return;
-            string fileName = Path.GetFileName(backgroundWallpapers.ElementAt(selected).Key);
+            string fileName;
+            if (selected < staticBackgroundWallpapers.Count)
+                fileName = Path.GetFileName(staticBackgroundWallpapers.ElementAt(selected).Key);
+            else
+                fileName = Path.GetFileName(gifBackgroundWallpapers.ElementAt(selected - staticBackgroundWallpapers.Count).Key);
             OpenMenu.start(
                 menuItemCollection: new(menuItems =>
                 {
                     menuItems.Add(new("Xóa", new(() =>
                     {
-                        backgroundWallpapers.Remove(backgroundWallpapers.ElementAt(selected).Key);
+                        if (selected < staticBackgroundWallpapers.Count)
+                            staticBackgroundWallpapers.Remove(staticBackgroundWallpapers.ElementAt(selected).Key);
+                        else
+                            gifBackgroundWallpapers.Remove(gifBackgroundWallpapers.ElementAt(selected - staticBackgroundWallpapers.Count).Key);
                         if (selected < backgroundIndex)
                         {
                             backgroundIndex--;
                             lastTimeChangedWallpaper = mSystem.currentTimeMillis();
                         }
-                        else if (selected == backgroundIndex && backgroundWallpapers.Count == backgroundIndex)
+                        else if (selected == backgroundIndex && staticBackgroundWallpapers.Count + gifBackgroundWallpapers.Count == backgroundIndex)
                         {
                             backgroundIndex = 0;
                             lastTimeChangedWallpaper = mSystem.currentTimeMillis();
@@ -80,6 +97,12 @@ namespace Mod.Graphics
                         setTabCustomBackgroundPanel();
                         SaveData();
                     })));
+                    if (backgroundIndex != selected)
+                        menuItems.Insert(0, new("Chuyển tới ảnh này", new(() =>
+                        {
+                            backgroundIndex = selected;
+                            lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+                        })));
                 }),
                 x: GameCanvas.panel.X,
                 y: (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
@@ -88,7 +111,7 @@ namespace Mod.Graphics
             GameCanvas.panel.cp.isClip = false;
             GameCanvas.panel.cp.sayWidth = 180;
             GameCanvas.panel.cp.cx = 3 + GameCanvas.panel.X - ((GameCanvas.panel.X != 0) ? (Res.abs(GameCanvas.panel.cp.sayWidth - GameCanvas.panel.W) + 8) : 0);
-            GameCanvas.panel.cp.says = mFont.tahoma_7_red.splitFontArray("|0|2|" + fileName + "\n--\n|6|Đường dẫn đầy đủ: " + backgroundWallpapers.ElementAt(selected).Key, GameCanvas.panel.cp.sayWidth - 10);
+            GameCanvas.panel.cp.says = mFont.tahoma_7_red.splitFontArray("|0|2|" + fileName + "\n--\n|6|Đường dẫn đầy đủ: " + (selected < staticBackgroundWallpapers.Count ? staticBackgroundWallpapers.ElementAt(selected).Key : gifBackgroundWallpapers.ElementAt(selected - staticBackgroundWallpapers.Count).Key), GameCanvas.panel.cp.sayWidth - 10);
             GameCanvas.panel.cp.delay = 10000000;
             GameCanvas.panel.cp.c = null;
             GameCanvas.panel.cp.sayRun = 7;
@@ -118,12 +141,15 @@ namespace Mod.Graphics
         {
             new Thread(delegate ()
             {
-                string[] paths = FileDialog.OpenSelectFileDialog("Chọn tệp ảnh để làm ảnh nền", "Tệp ảnh (*.png)|*.png", "png");
+                string[] paths = FileDialog.OpenSelectFileDialog("Chọn tệp ảnh để làm ảnh nền", "Tệp ảnh (*.png)|*.png|Tệp ảnh động (*.gif)|*.gif", "png");
                 if (paths != null)
                 {
                     foreach (string path in paths)
                     {
-                        backgroundWallpapers.Add(path, null);
+                        if (path.EndsWith("gif"))
+                            gifBackgroundWallpapers.Add(path, null);
+                        else
+                            staticBackgroundWallpapers.Add(path, null);
                     }
                     isAllWallpaperLoaded = true;
                 }
@@ -138,29 +164,52 @@ namespace Mod.Graphics
             if (isAllWallpaperLoaded)
             {
                 isAllWallpaperLoaded = false;
-                List<string> paths = new List<string>(backgroundWallpapers.Keys);
+                List<string> paths = new List<string>(staticBackgroundWallpapers.Keys);
+                paths.AddRange(new List<string>(gifBackgroundWallpapers.Keys));
                 for (int i = paths.Count - 1; i >= 0; i--)
                 {
                     string path = paths[i];
-                    try
+                    if (path.EndsWith(".gif"))
                     {
-                        Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-                        byte[] imageData = new byte[stream.Length];
-                        stream.Read(imageData, 0, imageData.Length);
-                        stream.Close();
-                        Image image = Utilities.createImage(imageData, Screen.width, Screen.height);
-                        backgroundWallpapers[path] = image;
+                        try
+                        {
+                            gifBackgroundWallpapers[path] = new Gif(path, Screen.width, Screen.height);
+                        }
+                        catch (FileNotFoundException)
+                        {
+                            gifBackgroundWallpapers.Remove(path);
+                        }
+                        catch (IsolatedStorageException)
+                        {
+                            gifBackgroundWallpapers.Remove(path);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
                     }
-                    catch (FileNotFoundException)
+                    else
                     {
-                        backgroundWallpapers.Remove(path);
+                        try
+                        {
+                            Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                            byte[] imageData = new byte[stream.Length];
+                            stream.Read(imageData, 0, imageData.Length);
+                            stream.Close();
+                            Image image = Utilities.createImage(imageData, Screen.width, Screen.height);
+                            staticBackgroundWallpapers[path] = image;
+                        }
+                        catch (FileNotFoundException)
+                        {
+                            staticBackgroundWallpapers.Remove(path);
+                        }
+                        catch (IsolatedStorageException)
+                        {
+                            staticBackgroundWallpapers.Remove(path);
+                        }
+                        catch (Exception)
+                        { }
                     }
-                    catch (IsolatedStorageException)
-                    {
-                        backgroundWallpapers.Remove(path);
-                    }
-                    catch (Exception)
-                    { }
                 }
                 lastTimeChangedWallpaper = mSystem.currentTimeMillis();
                 SaveData();
@@ -169,16 +218,17 @@ namespace Mod.Graphics
 
         public static void paint(mGraphics g)
         {
-            if (!isEnabled || backgroundWallpapers.Count <= 0) return;
-            g.drawImage(backgroundWallpapers.ElementAt(backgroundIndex).Value, 0, 0);
-            if (mSystem.currentTimeMillis() - lastTimeChangedWallpaper > inveralChangeBackgroundWallpaper)
+            if (!isEnabled || staticBackgroundWallpapers.Count + gifBackgroundWallpapers.Count <= 0) return;
+            if (backgroundIndex < staticBackgroundWallpapers.Count)
+                g.drawImage(staticBackgroundWallpapers.ElementAt(backgroundIndex).Value, 0, 0);
+            else
+                gifBackgroundWallpapers.ElementAt(backgroundIndex - staticBackgroundWallpapers.Count).Value.Paint(g, 0, 0);
+            if (isChangeWallpaper && mSystem.currentTimeMillis() - lastTimeChangedWallpaper > inveralChangeBackgroundWallpaper)
             {
                 lastTimeChangedWallpaper = mSystem.currentTimeMillis();
                 backgroundIndex++;
-                if (backgroundIndex >= backgroundWallpapers.Count)
-                {
+                if (backgroundIndex >= staticBackgroundWallpapers.Count + gifBackgroundWallpapers.Count)
                     backgroundIndex = 0;
-                }
             }
         }
 
@@ -187,7 +237,7 @@ namespace Mod.Graphics
             g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
             g.translate(0, -GameCanvas.panel.cmy);
             g.setColor(0);
-            if (backgroundWallpapers == null || backgroundWallpapers.Count != GameCanvas.panel.currentListLength) return;
+            if (staticBackgroundWallpapers.Count + gifBackgroundWallpapers.Count != GameCanvas.panel.currentListLength) return;
             for (int i = 0; i < GameCanvas.panel.currentListLength; i++)
             {
                 int num = GameCanvas.panel.xScroll;
@@ -195,9 +245,19 @@ namespace Mod.Graphics
                 int num3 = GameCanvas.panel.wScroll;
                 int num4 = GameCanvas.panel.ITEM_HEIGHT - 1;
                 g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
+                if (backgroundIndex == i)
+                    g.setColor((i != GameCanvas.panel.selected) ? new Color(.5f, 1, 0) : new Color(.375f, .75f, 0));
                 g.fillRect(num, num2, num3, num4);
-                mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + Path.GetFileName(backgroundWallpapers.ElementAt(i).Key), num + 5, num2, 0);
-                mFont.tahoma_7_blue.drawString(g, $"Đường dẫn đầy đủ: {backgroundWallpapers.ElementAt(i).Key}", num + 5, num2 + 11, 0);
+                if (i < staticBackgroundWallpapers.Count)
+                {
+                    mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + Path.GetFileName(staticBackgroundWallpapers.ElementAt(i).Key), num + 5, num2, 0);
+                    mFont.tahoma_7_blue.drawString(g, $"Đường dẫn đầy đủ: {staticBackgroundWallpapers.ElementAt(i).Key}", num + 5, num2 + 11, 0);
+                }
+                else
+                {
+                    mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + Path.GetFileName(gifBackgroundWallpapers.ElementAt(i - staticBackgroundWallpapers.Count).Key), num + 5, num2, 0);
+                    mFont.tahoma_7_blue.drawString(g, $"Đường dẫn đầy đủ: {gifBackgroundWallpapers.ElementAt(i - staticBackgroundWallpapers.Count).Key}", num + 5, num2 + 11, 0);
+                }
             }
             GameCanvas.panel.paintScrollArrow(g);
         }
@@ -208,9 +268,19 @@ namespace Mod.Graphics
             {
                 foreach (string path in Utilities.loadRMSString("custombackgroundpath").Split('|'))
                 {
-                    if (!string.IsNullOrEmpty(path)) backgroundWallpapers.Add(path, null);
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        if (path.EndsWith("gif"))
+                            gifBackgroundWallpapers.Add(path, null);
+                        else
+                            staticBackgroundWallpapers.Add(path, null);
+                    }
                 }
                 isAllWallpaperLoaded = true;
+                isChangeWallpaper = Utilities.loadRMSBool("ischangewallpaper");
+                backgroundIndex = Utilities.loadRMSInt("backgroundindex");
+                if (backgroundIndex >= staticBackgroundWallpapers.Count + gifBackgroundWallpapers.Count)
+                    backgroundIndex = 0;
             }
             catch (Exception)
             { }
@@ -218,8 +288,11 @@ namespace Mod.Graphics
 
         public static void SaveData()
         {
-            string data = string.Join("|", backgroundWallpapers.Keys.ToArray());
+            string data = string.Join("|", staticBackgroundWallpapers.Keys.ToArray());
+            data += "|" + string.Join("|", gifBackgroundWallpapers.Keys.ToArray());
             Utilities.saveRMSString("custombackgroundpath", data);
+            Utilities.saveRMSBool("ischangewallpaper", isChangeWallpaper);
+            Utilities.saveRMSInt("backgroundindex", backgroundIndex);
         }
 
         public static void setState(bool value) => isEnabled = value;

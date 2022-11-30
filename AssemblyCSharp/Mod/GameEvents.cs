@@ -26,6 +26,7 @@ namespace Mod
     public static class GameEvents
     {
         private static bool isZoomLevelChecked;
+        private static string currentDirectory = Environment.CurrentDirectory;
 
         /// <summary>
         /// Kích hoạt khi người chơi chat.
@@ -157,6 +158,8 @@ namespace Mod
 
         internal static bool onGetRMSPath(out string result)
         {
+            if (Environment.CurrentDirectory != currentDirectory)
+                Environment.CurrentDirectory = currentDirectory;
             if (Utilities.server != null)
             {
                 GameMidlet.IP = (string)Utilities.server["ip"];
@@ -450,7 +453,7 @@ namespace Mod
         public static bool onPaintBgGameScr(mGraphics g)
         {
             //UnityEngine.Graphics.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), BackgroundVideo.videoPlayer.texture);
-            if (CustomBackground.isEnabled && CustomBackground.backgroundWallpapers.Count > 0 && !ModMenuMain.modMenuItemBools[8].isDisabled)
+            if (CustomBackground.isEnabled && CustomBackground.staticBackgroundWallpapers.Count + CustomBackground.gifBackgroundWallpapers.Count > 0 && !ModMenuMain.modMenuItemBools[8].isDisabled)
             {
                 CustomBackground.paint(g);
                 ExtensionManager.Invoke(g);
@@ -474,6 +477,8 @@ namespace Mod
 
         public static Image onCreateImage(string filename)
         {
+            if (Environment.CurrentDirectory != currentDirectory)
+                Environment.CurrentDirectory = currentDirectory;
             Image image = new Image();
             Texture2D texture2D = new Texture2D(1, 1);
             if (!Directory.Exists("Game_Data\\CustomAssets")) Directory.CreateDirectory("Game_Data\\CustomAssets");
