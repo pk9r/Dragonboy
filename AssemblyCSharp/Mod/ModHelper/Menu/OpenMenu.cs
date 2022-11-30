@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace Mod.ModHelper.Menu
 {
@@ -102,7 +101,7 @@ namespace Mod.ModHelper.Menu
         private static void onMenuSelected(object p)
         {
             var selected = p.getValueProperty<int>("selected");
-            var action = p.getValueProperty<Action<int, string, string[]>>("action");
+            var action = p.getValueProperty<MenuAction>("action");
             var captions = p.getValueProperty<string[]>("captions");
 
             var caption = captions[selected];
