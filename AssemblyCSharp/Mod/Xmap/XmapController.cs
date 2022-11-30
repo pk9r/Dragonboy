@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Mod.ModHelper.Menu;
+using System.Collections.Generic;
 
 namespace Mod.Xmap
 {
-    public class XmapController : IActionListener
+    public class XmapController
     {
         private const int TIME_DELAY_NEXTMAP = 200;
         private const int TIME_DELAY_RENEXTMAP = 500;
@@ -94,18 +95,6 @@ namespace Mod.Xmap
             IsNextMapFailed = true;
         }
 
-        public void perform(int idAction, object p)
-        {
-            switch (idAction)
-            {
-                case 1:
-                    List<int> idMaps = (List<int>)p;
-                    ShowPanelXmap(idMaps);
-                    break;
-            }
-            Char.chatPopup = null;
-        }
-
         private static void Wait(int time)
         {
             IsWait = true;
@@ -124,10 +113,15 @@ namespace Mod.Xmap
         public static void ShowXmapMenu()
         {
             XmapData.Instance().LoadGroupMapsFromFile("TextData\\GroupMapsXmap.txt");
-            MyVector myVector = new MyVector();
-            foreach (var groupMap in XmapData.Instance().GroupMaps)
-                myVector.addElement(new Command(groupMap.NameGroup, _Instance, 1, groupMap.IdMaps));
-            GameCanvas.menu.startAt(myVector, 3);
+            OpenMenu.start(new(menuItems =>
+            {
+                foreach (var groupMap in XmapData.Instance().GroupMaps)
+                    menuItems.Add(new(groupMap.NameGroup, new(() =>
+                    {
+                        ShowPanelXmap(groupMap.IdMaps);
+                        Char.chatPopup = null;
+                    })));
+            }));
             ChatPopup.addChatPopup($"XmapNRO by Phucprotein\nMap hiện tại: {TileMap.mapName}, ID: {TileMap.mapID}\nVui lòng chọn nơi muốn đến", 100000, new Npc(5, 0, -100, 100, 5, Utilities.ID_NPC_MOD_FACE));
         }
 
@@ -267,7 +261,7 @@ namespace Mod.Xmap
             Pk9rXmap.IsShowPanelMapTrans = false;
             Service.gI().useItem(0, 1, -1, ID_ITEM_CAPSULE_VIP);
         }
-        
+
         public static void HideInfoDlg()
         {
             InfoDlg.hide();

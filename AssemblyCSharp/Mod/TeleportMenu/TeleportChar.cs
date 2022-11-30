@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace Mod
+namespace Mod.TeleportMenu
 {
     public class TeleportChar
     {
@@ -16,13 +13,13 @@ namespace Mod
         public TeleportChar(int charId)
         {
             cName = "Không tên";
-            this.charID = charId;
+            charID = charId;
             lastTimeTeleportTo = mSystem.currentTimeMillis();
         }
 
         public TeleportChar(string cName, int charId)
         {
-            this.charID = charId;
+            charID = charId;
             this.cName = cName;
             lastTimeTeleportTo = mSystem.currentTimeMillis();
         }

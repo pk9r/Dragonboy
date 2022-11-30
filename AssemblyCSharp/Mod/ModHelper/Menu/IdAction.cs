@@ -1,4 +1,4 @@
-﻿enum IdAction
+﻿public enum IdAction
 {
     None,
     MenuSelect,

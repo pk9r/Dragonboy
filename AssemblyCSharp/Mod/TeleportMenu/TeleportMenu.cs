@@ -1,31 +1,25 @@
-﻿using Mod.ModMenu;
+﻿using Mod.ModHelper.Menu;
+using Mod.ModMenu;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using UnityEngine;
 
-namespace Mod
+namespace Mod.TeleportMenu
 {
-    public class TeleportMenu : IChatable, IActionListener
+    public class TeleportMenu : IChatable
     {
         public static List<TeleportChar> listTeleportChars = new List<TeleportChar>();
-
-        static TeleportMenu _Instance;
-
-        static string[] inputCharID = new string[2] { "Nhập CharID", "CharID" };
-
-        static TeleportStatus currentTeleportStatus;
-
-        static bool isDataLoaded, isAutoTeleportTo;
-
-        static TeleportChar charAutoTeleportTo;
+        private static TeleportMenu _Instance;
+        private static string[] inputCharID = new string[2] { "Nhập CharID", "CharID" };
+        private static TeleportStatus currentTeleportStatus;
+        private static bool isDataLoaded, isAutoTeleportTo;
+        private static TeleportChar charAutoTeleportTo;
 
         private static long lastTimeAutoTeleportTo;
-
-        static bool isChangeDisguise;
-
-        static int previousDisguiseId = -1;
+        private static bool isChangeDisguise;
+        private static int previousDisguiseId = -1;
 
         public static TeleportMenu getInstance()
         {
@@ -36,30 +30,91 @@ namespace Mod
         [ChatCommand("tele"), HotkeyCommand('z')]
         public static void ShowMenu()
         {
-            MyVector myVector = new MyVector();
-            if (listTeleportChars.Count > 0) myVector.addElement(new Command("Danh sách\nnhân vật\nđã lưu", getInstance(), 1, null));
-            Char c;
-            if (Char.myCharz().charFocus != null && CharExtensions.isNormalChar(Char.myCharz().charFocus, false, false)) c = Char.myCharz().charFocus;
-            else c = CharExtensions.ClosestChar(70, true);
-            if (c != null)
+            OpenMenu.start(new(menuItems =>
             {
-                TeleportChar teleportChar = new TeleportChar(c);
-                if (!listTeleportChars.Contains(teleportChar)) myVector.addElement(new Command($"Thêm\n{teleportChar.cName}\n[{teleportChar.charID}]", getInstance(), 2, teleportChar));
-            }
-            if (Char.myCharz().charFocus != null && CharExtensions.isNormalChar(Char.myCharz().charFocus, false, false))
-            {
-                TeleportChar teleportChar = new TeleportChar(Char.myCharz().charFocus);
-                if (listTeleportChars.Contains(teleportChar) && ((isAutoTeleportTo && charAutoTeleportTo != teleportChar) || !isAutoTeleportTo)) myVector.addElement(new Command($"Xóa\n{teleportChar.cName}\n[{teleportChar.charID}]", getInstance(), 3, teleportChar));
-            }
-            if (listTeleportChars.Count > 0) myVector.addElement(new Command(isAutoTeleportTo ? "Dừng auto\ndịch chuyển" : "Auto dịch\nchuyển đến\nnhân vật", getInstance(), 4, null));
-            myVector.addElement(new Command("Thêm nhân\nvật bằng\ncharID", getInstance(), 5, null));
-            if (GameScr.vCharInMap.size() > 1) myVector.addElement(new Command("Thêm tất\ncả người\ntrong map", getInstance(), 6, null));
-            if (listTeleportChars.Count > 0)
-            {
-                myVector.addElement(new Command("Xóa\nnhân vật\nđã lưu", getInstance(), 7, null));
-                myVector.addElement(new Command("Xóa tất\ncả", getInstance(), 8, null));
-            }
-            GameCanvas.menu.startAt(myVector, 3);
+                if (listTeleportChars.Count > 0)
+                    menuItems.Add(new("Danh sách\nnhân vật\nđã lưu", new(() => ShowListChars(TeleportStatus.TeleportTo))));
+                Char c;
+                Char charFocus = Char.myCharz().charFocus;
+                if (charFocus != null && charFocus.isNormalChar())
+                    c = charFocus;
+                else
+                    c = CharExtensions.ClosestChar(maxDistance: 70, isNormalCharOnly: true);
+
+                if (c != null)
+                {
+                    var teleportChar = new TeleportChar(c);
+                    if (!listTeleportChars.Contains(teleportChar))
+                        menuItems.Add(new($"Thêm\n{teleportChar.cName}\n[{teleportChar.charID}]", new(() =>
+                        {
+                            listTeleportChars.Insert(0, teleportChar);
+                            SaveData();
+                            GameScr.info1.addInfo($"Đã thêm nhân vật {teleportChar}!", 0);
+                        })));
+                }
+
+                if (charFocus != null && charFocus.isNormalChar())
+                {
+                    var teleportChar = new TeleportChar(charFocus);
+                    if (listTeleportChars.Contains(teleportChar) && ((isAutoTeleportTo && charAutoTeleportTo != teleportChar) || !isAutoTeleportTo))
+                        menuItems.Add(new($"Xóa\n{teleportChar.cName}\n[{teleportChar.charID}]", new(() =>
+                        {
+                            if (isAutoTeleportTo && teleportChar != charAutoTeleportTo)
+                            {
+                                listTeleportChars.Remove(teleportChar);
+                                SaveData();
+                                GameScr.info1.addInfo($"Đã xóa nhân vật {teleportChar}!", 0);
+                            }
+                            else GameScr.info1.addInfo($"Không thể xóa nhân vật đang auto dịch chuyển!", 0);
+                        })));
+                }
+                if (listTeleportChars.Count > 0)
+                    menuItems.Add(new(isAutoTeleportTo ? "Dừng auto\ndịch chuyển" : "Auto dịch\nchuyển đến\nnhân vật", new(() =>
+                    {
+                        if (!isAutoTeleportTo) ShowListChars(TeleportStatus.AutoTeleportTo);
+                        else
+                        {
+                            isAutoTeleportTo = false;
+                            charAutoTeleportTo = null;
+                            GameScr.info1.addInfo($"Đã dừng auto dịch chuyển đến nhân vật {charAutoTeleportTo.cName}!", 0);
+                        }
+                    })));
+                menuItems.Add(new("Thêm nhân\nvật bằng\ncharID", new(() =>
+                {
+                    ChatTextField.gI().strChat = inputCharID[0];
+                    ChatTextField.gI().tfChat.name = inputCharID[1];
+                    ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
+                    ChatTextField.gI().startChat2(getInstance(), string.Empty);
+                })));
+                if (GameScr.vCharInMap.size() > 1)
+                    menuItems.Add(new("Thêm tất\ncả người\ntrong map", new(() =>
+                    {
+                        for (int i = 0; i < GameScr.vCharInMap.size(); i++)
+                        {
+                            Char @char = (Char)GameScr.vCharInMap.elementAt(i);
+                            if (CharExtensions.isNormalChar(@char, false, false))
+                            {
+                                TeleportChar teleportChar1 = new TeleportChar(@char);
+                                if (!listTeleportChars.Contains(teleportChar1)) listTeleportChars.Add(teleportChar1);
+                            }
+                        }
+                        SaveData();
+                        GameScr.info1.addInfo("Đã thêm toàn bộ nhân vật trong map!", 0);
+                    })));
+                if (listTeleportChars.Count > 0)
+                {
+                    menuItems.Add(new("Xóa\nnhân vật\nđã lưu", new(() => ShowListChars(TeleportStatus.Delete))));
+                    menuItems.Add(new("Xóa tất\ncả", new(() =>
+                    {
+                        for (int i = listTeleportChars.Count - 1; i >= 0; i--)
+                        {
+                            if (listTeleportChars[i] != charAutoTeleportTo) listTeleportChars.RemoveAt(i);
+                        }
+                        SaveData();
+                        GameScr.info1.addInfo("Đã xóa toàn bộ nhân vật đã lưu!", 0);
+                    })));
+                }
+            }));
         }
 
         public void onCancelChat()
@@ -79,7 +134,7 @@ namespace Mod
                     {
                         GameCanvas.startOKDlg("CharID phải lớn hơn hoặc bằng 0!");
                         return;
-                    } 
+                    }
                     listTeleportChars.Add(new TeleportChar(charId));
                     SaveData();
                     GameScr.info1.addInfo($"Đã thêm nhân vật với CharID {text}!", 0);
@@ -232,25 +287,39 @@ namespace Mod
             Utilities.saveRMSString($"teleportlist_{GameMidlet.IP}_{GameMidlet.PORT}", data);
         }
 
-        static void ShowListChars(TeleportStatus status)
+        private static void ShowListChars(TeleportStatus status)
         {
-            MyVector myVector = new MyVector();
-            int i = 0;
-            int count = listTeleportChars.Count;
-            while (myVector.size() < (count < 5 ? count : 5))
+            OpenMenu.start(new(menuItems =>
             {
-                TeleportChar teleportChar = listTeleportChars.ElementAt(i);
-                i++;
-                if (status == TeleportStatus.Delete && teleportChar == charAutoTeleportTo)
+                int i = 0;
+                int count = listTeleportChars.Count;
+                while (menuItems.Count < (count < 5 ? count : 5))
                 {
-                    count--;
-                    continue;
+                    TeleportChar teleportChar = listTeleportChars.ElementAt(i);
+                    i++;
+                    if (status == TeleportStatus.Delete && teleportChar == charAutoTeleportTo)
+                    {
+                        count--;
+                        continue;
+                    }
+                    menuItems.Add(new(teleportChar.cName + "\n[" + teleportChar.charID + "]", new(() =>
+                    {
+                        GameScr.info1.addInfo($"Dịch chuyển đến nhân vật {teleportChar.cName}!", 0);
+                        TeleportToPlayer(teleportChar.charID);
+                        listTeleportChars[listTeleportChars.FindIndex(tC => tC == teleportChar)].lastTimeTeleportTo = mSystem.currentTimeMillis();
+                    })));
                 }
-                myVector.addElement(new Command(teleportChar.cName + "\n[" + teleportChar.charID + "]", getInstance(), 9 + (int)status, teleportChar));
-            }
-            if (listTeleportChars.Count > 5) myVector.addElement(new Command("Thêm nữa", getInstance(), 12 + (int)status, null));
-            if (myVector.size() <= 0) GameScr.info1.addInfo("Danh sách nhân vật xóa được trống!", 0);
-            else GameCanvas.menu.startAt(myVector, 3);
+                if (listTeleportChars.Count > 5)
+                    menuItems.Add(new("Thêm nữa", new(() =>
+                    {
+                        currentTeleportStatus = status;
+                        ModMenuPanel.setTypeModMenuMain(1);
+                        GameCanvas.panel.show();
+                    })));
+                if (menuItems.Count <= 0)
+                    GameScr.info1.addInfo("Danh sách nhân vật xóa được trống!", 0);
+            }));
+
         }
 
         public static void Update()
@@ -306,7 +375,7 @@ namespace Mod
                     lastTimeAutoTeleportTo = mSystem.currentTimeMillis();
                     if (previousDisguiseId == -1) new Thread(delegate ()
                     {
-                        if (Char.myCharz().arrItemBody[5] == null || (Char.myCharz().arrItemBody[5] != null && (Char.myCharz().arrItemBody[5].template.id < 592 || Char.myCharz().arrItemBody[5].template.id > 594)))
+                        if (Char.myCharz().arrItemBody[5] == null || Char.myCharz().arrItemBody[5] != null && (Char.myCharz().arrItemBody[5].template.id < 592 || Char.myCharz().arrItemBody[5].template.id > 594))
                         {
                             if (Char.myCharz().arrItemBody[5] != null) previousDisguiseId = Char.myCharz().arrItemBody[5].template.id;
                             for (int i = 0; i < Char.myCharz().arrItemBag.Length; i++)
@@ -331,7 +400,7 @@ namespace Mod
             }
         }
 
-        static void SortList()
+        private static void SortList()
         {
             listTeleportChars = listTeleportChars.OrderBy(tC => -tC.lastTimeTeleportTo).ToList();
         }
@@ -340,7 +409,7 @@ namespace Mod
         {
             GameCanvas.panel.ITEM_HEIGHT = 24;
             GameCanvas.panel.currentListLength = listTeleportChars.Count;
-            GameCanvas.panel.selected = (GameCanvas.isTouch ? (-1) : 0);
+            GameCanvas.panel.selected = GameCanvas.isTouch ? -1 : 0;
             GameCanvas.panel.cmyLim = GameCanvas.panel.currentListLength * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.hScroll;
             if (GameCanvas.panel.cmyLim < 0) GameCanvas.panel.cmyLim = 0;
             GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = GameCanvas.panel.cmyLast[GameCanvas.panel.currentTabIndex];
@@ -351,30 +420,57 @@ namespace Mod
         public static void doFireTeleportListPanel()
         {
             if (GameCanvas.panel.selected < 0) return;
-            MyVector myVector = new MyVector();
             string str = "";
-            int cmd = 0;
-            if (currentTeleportStatus == TeleportStatus.TeleportTo)
+            Action action = null;
+            var teleportChar = listTeleportChars.OrderBy(tC => tC.cName).ToList()[GameCanvas.panel.selected];
+
+            switch (currentTeleportStatus)
             {
-                str = mResources.den;
-                cmd = 9;
+                case TeleportStatus.TeleportTo:
+                    str = mResources.den;
+                    action = () =>
+                    {
+                        GameScr.info1.addInfo($"Dịch chuyển đến nhân vật {teleportChar.cName}!", 0);
+                        TeleportToPlayer(teleportChar.charID);
+                        listTeleportChars[listTeleportChars.FindIndex(tC => tC == teleportChar)].lastTimeTeleportTo = mSystem.currentTimeMillis();
+                    };
+                    break;
+                case TeleportStatus.Delete:
+                    str = mResources.DELETE;
+                    action = () =>
+                    {
+                        if (teleportChar != charAutoTeleportTo)
+                        {
+                            listTeleportChars.Remove(teleportChar);
+                            SaveData();
+                            GameScr.info1.addInfo($"Đã xóa nhân vật {teleportChar.cName}!", 0);
+                            ModMenuPanel.setTypeModMenuMain(1);
+                        }
+                        else GameCanvas.startOKDlg("Không thể xóa nhân vật đang auto dịch chuyển!");
+                    };
+                    break;
+                case TeleportStatus.AutoTeleportTo:
+                    str = "Auto " + mResources.den.ToLower();
+                    action = () =>
+                    {
+                        currentTeleportStatus = TeleportStatus.TeleportTo;
+                        ModMenuPanel.setTypeModMenuMain(1);
+                        GameCanvas.panel.show();
+                    };
+                    break;
+                default:
+                    break;
             }
-            if (currentTeleportStatus == TeleportStatus.Delete)
-            {
-                str = mResources.DELETE;
-                cmd = 10;
-            }
-            if (currentTeleportStatus == TeleportStatus.AutoTeleportTo)
-            {
-                str = "Auto " + mResources.den.ToLower();
-                cmd = 11;
-            }
-            myVector.addElement(new Command(str, getInstance(), cmd, listTeleportChars.OrderBy(tC => tC.cName).ToList()[GameCanvas.panel.selected]));
-            GameCanvas.menu.startAt(myVector, GameCanvas.panel.X, (GameCanvas.panel.selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
+
+            OpenMenu.start(
+                new(menuItems => { menuItems.Add(new(str, new(action))); }),
+                x: GameCanvas.panel.X,
+                y: (GameCanvas.panel.selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
+
             GameCanvas.panel.cp = new ChatPopup();
             GameCanvas.panel.cp.isClip = false;
             GameCanvas.panel.cp.sayWidth = 180;
-            GameCanvas.panel.cp.cx = 3 + GameCanvas.panel.X - ((GameCanvas.panel.X != 0) ? (Res.abs(GameCanvas.panel.cp.sayWidth - GameCanvas.panel.W) + 8) : 0);
+            GameCanvas.panel.cp.cx = 3 + GameCanvas.panel.X - (GameCanvas.panel.X != 0 ? Res.abs(GameCanvas.panel.cp.sayWidth - GameCanvas.panel.W) + 8 : 0);
             GameCanvas.panel.cp.says = mFont.tahoma_7_red.splitFontArray("|0|2|" + listTeleportChars.OrderBy(tC => tC.cName).ToList()[GameCanvas.panel.selected].cName + "\n|6|CharID: " + listTeleportChars.OrderBy(tC => tC.cName).ToList()[GameCanvas.panel.selected].charID, GameCanvas.panel.cp.sayWidth - 10);
             GameCanvas.panel.cp.delay = 10000000;
             GameCanvas.panel.cp.c = null;
@@ -413,7 +509,7 @@ namespace Mod
                 int num2 = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
                 int num3 = GameCanvas.panel.wScroll;
                 int num4 = GameCanvas.panel.ITEM_HEIGHT - 1;
-                g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
+                g.setColor(i != GameCanvas.panel.selected ? 15196114 : 16383818);
                 g.fillRect(num, num2, num3, num4);
                 TeleportChar teleportChar = listTeleportChars.OrderBy(tC => tC.cName).ToList()[i];
                 if (teleportChar != null)
@@ -425,7 +521,7 @@ namespace Mod
             GameCanvas.panel.paintScrollArrow(g);
         }
 
-        static void TeleportToPlayer(int charId, bool isAutoUseYardrat = true)
+        private static void TeleportToPlayer(int charId, bool isAutoUseYardrat = true)
         {
             Service.gI().gotoPlayer(charId, isAutoUseYardrat);
         }

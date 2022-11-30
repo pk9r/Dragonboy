@@ -1,41 +1,30 @@
-﻿using System;
+﻿using Mod.Dialogs;
+using Mod.ModHelper.Menu;
+using Mod.ModMenu;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using Mod.Dialogs;
-using Mod.ModMenu;
-using UnityEngine;
 
 namespace Mod.Graphics
 {
-    public class CustomLogo : IActionListener
+    public class CustomLogo
     {
         public static Dictionary<string, Image> logos = new Dictionary<string, Image>();
-
-        static bool isLogoLoaded;
+        private static bool isLogoLoaded;
 
         public static bool isEnabled;
 
         public static int height = 80, logoIndex;
 
         public static int inveralChangeLogo = 30000;
-
-        static long lastTimeChangedLogo;
-
-        static CustomLogo _Instance;
-
-        public static CustomLogo getInstance()
-        {
-            if (_Instance == null) _Instance = new CustomLogo();
-            return _Instance;
-        }
+        private static long lastTimeChangedLogo;
 
         public static void SelectLogos()
         {
-            new Thread(delegate()
+            new Thread(delegate ()
             {
                 foreach (string logopath in FileDialog.OpenSelectFileDialog("Chọn logo", "Tệp ảnh (*.png)|*.png", "png"))
                 {
@@ -80,11 +69,22 @@ namespace Mod.Graphics
 
         public static void ShowMenu()
         {
-            MyVector myVector = new MyVector();
-            if (logos.Count > 0) myVector.addElement(new Command("Mở danh sách logo đã lưu", getInstance(), 1, null));
-            myVector.addElement(new Command("Thêm logo vào danh sách", getInstance(), 2, null));
-            if (logos.Count > 0) myVector.addElement(new Command("Xóa hết logo trong danh sách", getInstance(), 3, null));
-            GameCanvas.menu.startAt(myVector, 0);
+            OpenMenu.start(new(menuItems =>
+            {
+                if (logos.Count > 0)
+                    menuItems.Add(new("Mở danh sách logo đã lưu", new(() =>
+                    {
+                        ModMenuPanel.setTypeModMenuMain(3);
+                        GameCanvas.panel.show();
+                    })));
+                menuItems.Add(new("Thêm logo vào danh sách", new(SelectLogos)));
+                if (logos.Count > 0)
+                    menuItems.Add(new("Xóa hết logo trong danh sách", new(() =>
+                    {
+                        logos.Clear();
+                        GameScr.info1.addInfo("Đã xóa hết logo trong danh sách!", 0);
+                    })));
+            }));
         }
 
         public static void setTabCustomLogoPanel()
@@ -103,10 +103,31 @@ namespace Mod.Graphics
         {
             int selected = GameCanvas.panel.selected;
             if (selected < 0) return;
-            MyVector myVector = new MyVector();
-            myVector.addElement(new Command("Xóa", getInstance(), 4, selected));
             string fileName = Path.GetFileName(logos.ElementAt(selected).Key);
-            GameCanvas.menu.startAt(myVector, GameCanvas.panel.X, (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
+            OpenMenu.start(
+                menuItemCollection: new(menuItems =>
+                {
+                    menuItems.Add(new("Xóa", new(() =>
+                    {
+                        logos.Remove(logos.ElementAt(selected).Key);
+                        if (selected < logoIndex)
+                        {
+                            logoIndex--;
+                            lastTimeChangedLogo = mSystem.currentTimeMillis();
+                        }
+                        else if (selected == logoIndex && logos.Count == logoIndex)
+                        {
+                            logoIndex = 0;
+                            lastTimeChangedLogo = mSystem.currentTimeMillis();
+                        }
+                        GameScr.info1.addInfo("Đã xóa ảnh " + selected + "!", 0);
+                        setTabCustomLogoPanel();
+                        SaveData();
+                    })));
+                }),
+                x: GameCanvas.panel.X,
+                y: (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
+
             GameCanvas.panel.cp = new ChatPopup();
             GameCanvas.panel.cp.isClip = false;
             GameCanvas.panel.cp.sayWidth = 180;
@@ -139,7 +160,7 @@ namespace Mod.Graphics
 
         public static void paint(mGraphics g)
         {
-            if(!isEnabled || logos.Count <= 0) return;
+            if (!isEnabled || logos.Count <= 0) return;
             g.drawImage(logos.ElementAt(logoIndex).Value, GameCanvas.w / 2, 0, mGraphics.HCENTER);
             if (mSystem.currentTimeMillis() - lastTimeChangedLogo > inveralChangeLogo)
             {
@@ -172,40 +193,6 @@ namespace Mod.Graphics
             GameCanvas.panel.paintScrollArrow(g);
         }
 
-        public void perform(int idAction, object p)
-        {
-            switch (idAction)
-            {
-                case 1:
-                    ModMenuPanel.setTypeModMenuMain(3);
-                    GameCanvas.panel.show();
-                    break;
-                case 2:
-                    SelectLogos();
-                    break;
-                case 3:
-                    logos.Clear();
-                    GameScr.info1.addInfo("Đã xóa hết logo trong danh sách!", 0);
-                    break;
-                case 4:
-                    int index = (int)p;
-                    logos.Remove(logos.ElementAt(index).Key);
-                    if (index < logoIndex)
-                    {
-                        logoIndex--;
-                        lastTimeChangedLogo = mSystem.currentTimeMillis();
-                    }
-                    else if (index == logoIndex && logos.Count == logoIndex)
-                    {
-                        logoIndex = 0;
-                        lastTimeChangedLogo = mSystem.currentTimeMillis();
-                    }
-                    GameScr.info1.addInfo("Đã xóa ảnh " + index + "!", 0);
-                    setTabCustomLogoPanel();
-                    SaveData();
-                    break;
-            }
-        }
 
         public static void LoadData()
         {

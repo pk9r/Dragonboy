@@ -1,14 +1,14 @@
-﻿using Mod.ModHelper;
+﻿using Mod.Graphics;
+using Mod.ModHelper;
+using Mod.ModMenu;
+using Mod.PickMob;
+using Mod.Xmap;
+using System;
 using System.Collections;
 using System.IO;
-using UnityEngine;
-using Mod.Xmap;
-using Vietpad.InputMethod;
-using System;
 using System.Reflection;
-using Mod.ModMenu;
-using Mod.Graphics;
-using Mod.PickMob;
+using UnityEngine;
+using Vietpad.InputMethod;
 
 namespace Mod
 {
@@ -31,7 +31,7 @@ namespace Mod
         /// <returns></returns>
         public static bool onSendChat(string text)
         {
-            HistoryChat.gI.append(text);  
+            HistoryChat.gI.append(text);
             ExtensionManager.Invoke(text);
             if (text.StartsWith("/") && (Pk9rXmap.Chat(text.Remove(0, 1)) || Pk9rPickMob.Chat(text.Remove(0, 1))))
                 return true;
@@ -63,7 +63,7 @@ namespace Mod
         {
             SocketClient.gI.close();
             ModMenuMain.SaveData();
-            TeleportMenu.SaveData();
+            TeleportMenu.TeleportMenu.SaveData();
             CustomBackground.SaveData();
             CustomLogo.SaveData();
             ExtensionManager.Invoke();
@@ -142,7 +142,7 @@ namespace Mod
         {
             if (file == "lowGraphic" && Utilities.sizeData != null)
             {
-                result = (int)Utilities.sizeData["lowGraphic"]; 
+                result = (int)Utilities.sizeData["lowGraphic"];
                 ExtensionManager.Invoke(file, result);
                 return true;
             }
@@ -199,7 +199,7 @@ namespace Mod
         /// </summary>
         public static void onUpdateChatTextField(ChatTextField sender)
         {
-             if (!string.IsNullOrEmpty((string)typeof(TField).GetField("text", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(sender.tfChat))) GameCanvas.keyPressed[14] = false;
+            if (!string.IsNullOrEmpty((string)typeof(TField).GetField("text", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(sender.tfChat))) GameCanvas.keyPressed[14] = false;
             ExtensionManager.Invoke(sender);
         }
 
@@ -221,7 +221,7 @@ namespace Mod
         {
             Char.myCharz().cspeed = Utilities.speedRun;
             CharEffect.Update();
-            TeleportMenu.Update();
+            TeleportMenu.TeleportMenu.Update();
             if (GameCanvas.gameTick % (10 * Time.timeScale) == 0) Service.gI().petInfo();
             ListCharsInMap.update();
             AutoGoback.update();
@@ -266,7 +266,7 @@ namespace Mod
             GameCanvas.loginScr.switchToMe();
             Service.gI().login("", "", GameMidlet.VERSION, 0);
             GameCanvas.startWaitDlg();
-            TeleportMenu.LoadData();
+            TeleportMenu.TeleportMenu.LoadData();
             AutoPet.isFirstTimeCkeckPet = true;
             ExtensionManager.Invoke();
         }
@@ -470,7 +470,7 @@ namespace Mod
         }
 
         public static Image onCreateImage(string filename)
-        {     
+        {
             Image image = new Image();
             Texture2D texture2D = new Texture2D(1, 1);
             if (!Directory.Exists("Game_Data\\CustomAssets")) Directory.CreateDirectory("Game_Data\\CustomAssets");

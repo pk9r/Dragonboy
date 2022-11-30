@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
+﻿using System.Reflection;
 using UnityEngine;
-using System.Reflection;
 
-namespace Mod {
+namespace Mod
+{
     public static class CharExtensions
     {
         public static int getTimeHold(Char @char)
@@ -177,7 +173,7 @@ namespace Mod {
             return @char.cName.Remove(0, @char.cName.IndexOf(']') + 1).Replace(" ", "");
         }
 
-        public static bool isNormalChar(Char @char, bool isIncludeBoss, bool isIncludePet)
+        public static bool isNormalChar(this Char @char, bool isIncludeBoss = false, bool isIncludePet = false)
         {
             bool result = !string.IsNullOrEmpty(@char.cName) && @char.cName != "Trọng tài";
             if (!string.IsNullOrEmpty(@char.cName))
@@ -251,7 +247,7 @@ namespace Mod {
                 case 13: return Color.black;
                 default: return Color.clear;
             }
-    }
+        }
 
         public static int getSuicideRange(Char @char)
         {
