@@ -33,8 +33,8 @@ namespace Mod
         {
             HistoryChat.gI.append(text);
             ExtensionManager.Invoke(text);
-            if (text.StartsWith("/") && (Pk9rXmap.Chat(text.Remove(0, 1)) || Pk9rPickMob.Chat(text.Remove(0, 1))))
-                return true;
+            //if (text.StartsWith("/") && (Pk9rXmap.Chat(text.Remove(0, 1)) || Pk9rPickMob.Chat(text.Remove(0, 1))))
+            //    return true;
             bool result = ChatCommandHandler.handleChatText(text);
             return result;
         }
@@ -384,7 +384,7 @@ namespace Mod
 
         public static void onFixedUpdateMain()
         {
-            Pk9rXmap.Update();
+            //Pk9rXmap.Update();
             CustomBackground.update();
             CustomLogo.update();
             ExtensionManager.Invoke();

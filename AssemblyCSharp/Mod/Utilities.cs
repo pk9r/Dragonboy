@@ -244,8 +244,7 @@ namespace Mod
             }
         }
 
-        [ChatCommand("tdc")]
-        [ChatCommand("cspeed")]
+        [ChatCommand("tdc"), ChatCommand("cspeed")]
         public static void setSpeedRun(int speed)
         {
             speedRun = speed;
@@ -263,9 +262,7 @@ namespace Mod
         /// <summary>
 		/// Sử dụng skill Trị thương của namec vào bản thân.
 		/// </summary>
-		[ChatCommand("hsme")]
-        [ChatCommand("buffme")]
-        [HotkeyCommand('b')]
+		[ChatCommand("hsme"), ChatCommand("buffme"), HotkeyCommand('b')]
         public static void buffMe()
         {
             if (!canBuffMe(out Skill skillBuff))
@@ -331,7 +328,7 @@ namespace Mod
             }));
         }
 
-        [ChatCommand("csb")]
+        [ChatCommand("csb"), HotkeyCommand('c')]
         public static void useCapsule()
         {
             var index = getIndexItemBag(193, 194);

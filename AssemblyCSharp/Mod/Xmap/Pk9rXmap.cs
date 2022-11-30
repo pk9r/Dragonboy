@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Mod.ModHelper;
+using System.Collections.Generic;
 
 namespace Mod.Xmap
 {
-    public class Pk9rXmap
+    public class Pk9rXmap : ThreadActionUpdate<Pk9rXmap>
     {
         public static bool IsXmapRunning = false;
         public static bool IsMapTransAsXmap = false;
@@ -11,60 +12,44 @@ namespace Mod.Xmap
         public static bool IsUseCapsuleVip = true;
         public static int IdMapCapsuleReturn = -1;
 
-        public static bool Chat(string text)
+        public override int Interval => 500;
+
+        [ChatCommand("csdb")]
+        public static void toggleUseCapsuleVip()
         {
-            if (text == "xmp")
-            {
-                if (IsXmapRunning)
-                {
-                    XmapController.FinishXmap();
-                    GameScr.info1.addInfo("Đã huỷ Xmap", 0);
-                }
-                else
-                {
-                    XmapController.ShowXmapMenu();
-                }
-            }
-            else if (IsGetInfoChat<int>(text, "xmp"))
-            {
-                if (IsXmapRunning)
-                {
-                    XmapController.FinishXmap();
-                    GameScr.info1.addInfo("Đã huỷ Xmap", 0);
-                }
-                else
-                {
-                    int idMap = GetInfoChat<int>(text, "xmp");
-                    XmapController.StartRunToMapId(idMap);
-                }
-            }
-            else if (text == "csdb")
-            {
-                IsUseCapsuleVip = !IsUseCapsuleVip;
-                GameScr.info1.addInfo("Sử dụng capsule đặc biệt Xmap: " + (IsUseCapsuleVip ? "Bật" : "Tắt"), 0);
-            }
-            else return false;
-            return true;
+            IsUseCapsuleVip = !IsUseCapsuleVip;
+            GameScr.info1.addInfo("Sử dụng capsule đặc biệt Xmap: " + (IsUseCapsuleVip ? "Bật" : "Tắt"), 0);
         }
 
-        [HotkeyCommand('x'), HotkeyCommand('c')]
-        public static bool HotKeys()
+        [ChatCommand("xmp")]
+        public static void toggleXmap(int mapId)
         {
-            switch (GameCanvas.keyAsciiPress)
+            if (IsXmapRunning)
             {
-                case 'x':
-                    Chat("xmp");
-                    break;
-                case 'c':
-                    Chat("csb");
-                    break;
-                default:
-                    return false;
+                XmapController.FinishXmap();
+                GameScr.info1.addInfo("Đã huỷ Xmap", 0);
             }
-            return true;
+            else
+            {
+                XmapController.StartRunToMapId(mapId);
+            }
         }
 
-        public static void Update()
+        [ChatCommand("xmp"), HotkeyCommand('x')]
+        public static void toggleXmap()
+        {
+            if (IsXmapRunning)
+            {
+                XmapController.FinishXmap();
+                GameScr.info1.addInfo("Đã huỷ Xmap", 0);
+            }
+            else
+            {
+                XmapController.ShowXmapMenu();
+            }
+        }
+
+        protected override void update()
         {
             if (XmapData.Instance().IsLoading) XmapData.Instance().Update();
             if (IsXmapRunning) XmapController.Update();
@@ -74,22 +59,15 @@ namespace Mod.Xmap
         {
             if (IsXmapRunning)
             {
-                if (text.Equals("Bạn chưa thể đến khu vực này"))
+                var keywords = new List<string>
                 {
-                    XmapController.FinishXmap();
-                    GameScr.info1.addInfo("Đã huỷ Xmap", 0);
-                }
-                else if (text.Equals("Bang hội phải có từ 5 thành viên mới được tham gia"))
-                {
-                    XmapController.FinishXmap();
-                    GameScr.info1.addInfo("Đã huỷ Xmap", 0);
-                }
-                else if (text.Equals("Chỉ tiếp các bang hội, miễn tiếp khách vãng lai"))
-                {
-                    XmapController.FinishXmap();
-                    GameScr.info1.addInfo("Đã huỷ Xmap", 0);
-                }
-                else if (text.Equals("Gia nhập bang hội trên 2 ngày mới được tham gia"))
+                    "Bạn chưa thể đến khu vực này",
+                    "Bang hội phải có từ 5 thành viên mới được tham gia",
+                    "Chỉ tiếp các bang hội, miễn tiếp khách vãng lai",
+                    "Gia nhập bang hội trên 2 ngày mới được tham gia",
+                };
+
+                if (keywords.Contains(text))
                 {
                     XmapController.FinishXmap();
                     GameScr.info1.addInfo("Đã huỷ Xmap", 0);
@@ -99,24 +77,6 @@ namespace Mod.Xmap
                     XmapController.MoveMyChar(XmapUtils.getX(2), XmapUtils.getY(2));
                 }
             }
-        }
-
-        [Obsolete("Đã thêm")]
-        public static bool XoaTauBay(object obj)
-        {
-            Teleport teleport = (Teleport)obj;
-            if (teleport.isMe)
-            {
-                Char.myCharz().isTeleport = false;
-                if (teleport.type == 0)
-                {
-                    Controller.isStopReadMessage = false;
-                    Char.ischangingMap = true;
-                }
-                Teleport.vTeleport.removeElement(teleport);
-                return true;
-            }
-            return false;
         }
 
         public static void SelectMapTrans(int selected)
@@ -151,29 +111,5 @@ namespace Mod.Xmap
             Service.gI().finishLoadMap();
             Char.isLoadingMap = false;
         }
-
-        #region Không cần liên kết với game
-        private static bool IsGetInfoChat<T>(string text, string s)
-        {
-            if (!text.StartsWith(s))
-            {
-                return false;
-            }
-            try
-            {
-                Convert.ChangeType(text.Substring(s.Length), typeof(T));
-            }
-            catch
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private static T GetInfoChat<T>(string text, string s)
-        {
-            return (T)Convert.ChangeType(text.Substring(s.Length), typeof(T));
-        }
-        #endregion
     }
 }

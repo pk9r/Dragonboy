@@ -1,5 +1,6 @@
 ﻿using Mod.ModHelper.Menu;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Mod.Xmap
 {
@@ -24,15 +25,12 @@ namespace Mod.Xmap
 
         public static void Update()
         {
-            if (IsWaiting())
-                return;
-
             if (XmapData.Instance().IsLoading)
                 return;
 
             if (IsWaitNextMap)
             {
-                Wait(TIME_DELAY_NEXTMAP);
+                Thread.Sleep(TIME_DELAY_NEXTMAP);
                 IsWaitNextMap = false;
                 return;
             }
@@ -82,7 +80,7 @@ namespace Mod.Xmap
                     NextMap(WayXmap[IndexWay + 1]);
                     IsWaitNextMap = true;
                 }
-                Wait(TIME_DELAY_RENEXTMAP);
+                Thread.Sleep(TIME_DELAY_RENEXTMAP);
                 return;
             }
 
@@ -95,20 +93,6 @@ namespace Mod.Xmap
             IsNextMapFailed = true;
         }
 
-        private static void Wait(int time)
-        {
-            IsWait = true;
-            TimeStartWait = mSystem.currentTimeMillis();
-            TimeWait = time;
-        }
-
-        private static bool IsWaiting()
-        {
-            if (IsWait && mSystem.currentTimeMillis() - TimeStartWait >= TimeWait)
-                IsWait = false;
-            return IsWait;
-        }
-
         #region Thao tác của xmap
         public static void ShowXmapMenu()
         {
@@ -118,23 +102,24 @@ namespace Mod.Xmap
                 foreach (var groupMap in XmapData.Instance().GroupMaps)
                     menuItems.Add(new(groupMap.NameGroup, new(() =>
                     {
-                        ShowPanelXmap(groupMap.IdMaps);
+                        ShowXmapPanel(groupMap.IdMaps);
                         Char.chatPopup = null;
                     })));
             }));
             ChatPopup.addChatPopup($"XmapNRO by Phucprotein\nMap hiện tại: {TileMap.mapName}, ID: {TileMap.mapID}\nVui lòng chọn nơi muốn đến", 100000, new Npc(5, 0, -100, 100, 5, Utilities.ID_NPC_MOD_FACE));
         }
 
-        public static void ShowPanelXmap(List<int> idMaps)
+        public static void ShowXmapPanel(List<int> maps)
         {
             Pk9rXmap.IsMapTransAsXmap = true;
-            int len = idMaps.Count;
+            int len = maps.Count;
             GameCanvas.panel.mapNames = new string[len];
             GameCanvas.panel.planetNames = new string[len];
             for (int i = 0; i < len; i++)
             {
-                string nameMap = TileMap.mapNames[idMaps[i]];
-                GameCanvas.panel.mapNames[i] = idMaps[i] + ": " + nameMap;
+                var mapId = maps[i];
+                var nameMap = TileMap.mapNames[maps[i]];
+                GameCanvas.panel.mapNames[i] = $"{mapId}: {nameMap}";
                 GameCanvas.panel.planetNames[i] = "Xmap by Phucprotein";
             }
             GameCanvas.panel.setTypeMapTrans();
