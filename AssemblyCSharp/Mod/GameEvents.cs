@@ -24,6 +24,8 @@ namespace Mod
     {
         private static bool isZoomLevelChecked;
 
+        static string currentDirectory = Environment.CurrentDirectory;
+
         /// <summary>
         /// Kích hoạt khi người chơi chat.
         /// </summary>
@@ -154,6 +156,8 @@ namespace Mod
 
         internal static bool onGetRMSPath(out string result)
         {
+            if (Environment.CurrentDirectory != currentDirectory)
+                Environment.CurrentDirectory = currentDirectory;
             if (Utilities.server != null)
             {
                 GameMidlet.IP = (string)Utilities.server["ip"];
@@ -471,6 +475,8 @@ namespace Mod
 
         public static Image onCreateImage(string filename)
         {     
+            if (Environment.CurrentDirectory != currentDirectory)
+                Environment.CurrentDirectory = currentDirectory;
             Image image = new Image();
             Texture2D texture2D = new Texture2D(1, 1);
             if (!Directory.Exists("Game_Data\\CustomAssets")) Directory.CreateDirectory("Game_Data\\CustomAssets");

@@ -183,7 +183,7 @@ namespace Mod.Graphics
                     {
                         try
                         {
-                            gifBackgroundWallpapers[path] = new Gif(path);
+                            gifBackgroundWallpapers[path] = new Gif(path, Screen.width, Screen.height);
                         }
                         catch (FileNotFoundException)
                         {
