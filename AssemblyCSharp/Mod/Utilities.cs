@@ -4,7 +4,6 @@ using Mod.ModHelper.CommandMod.Chat;
 using Mod.ModHelper.CommandMod.Hotkey;
 using Mod.ModHelper.Menu;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -17,7 +16,6 @@ namespace Mod
 {
     public static class Utilities
     {
-        public const string ManifestModuleName = "Assembly-CSharp.dll";
         public const string PathChatCommand = @"ModData\chatCommands.json";
         public const string PathChatHistory = @"ModData\chat.txt";
         public const string PathHotkeyCommand = @"ModData\hotkeyCommands.json";
@@ -31,12 +29,8 @@ namespace Mod
         public const int ID_ITEM_CAPSULE_NORMAL = 193;
 
         public const int ID_MAP_HOME_BASE = 21;
+        public const int ID_MAP_LANG_BASE = 7;
         public const int ID_MAP_TTVT_BASE = 24;
-
-        private const BindingFlags PUBLIC_STATIC_VOID =
-            BindingFlags.Public | BindingFlags.NonPublic |
-            BindingFlags.Static |
-            BindingFlags.InvokeMethod;
 
         public static string status = "Đã kết nối";
 
@@ -57,44 +51,7 @@ namespace Mod
 
         public static int mapCapsuleReturn = -1;
 
-        #region Get Methods
-        /// <summary>
-        /// Lấy danh sách các hàm trong theo tên của class.
-        /// </summary>
-        /// <remarks> Lưu ý:
-        /// <list type="bullet">
-        /// <item><description>Chỉ lấy các hàm public static void.</description></item>
-        /// <item><description>Tên class phải bao gồm cả namespace.</description></item>
-        /// </list>
-        /// </remarks>
-        /// <param name="typeFullName"></param>
-        /// <returns>Danh sách các hàm trong class.</returns>
-        public static MethodInfo[] getMethods(string typeFullName)
-        {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .First(x => x.ManifestModule.Name == Utilities.ManifestModuleName)
-                .GetTypes().FirstOrDefault(x => x.FullName.ToLower() == typeFullName.ToLower())
-                .GetMethods(PUBLIC_STATIC_VOID);
-        }
-
-        /// <summary>
-        /// Lấy danh sách tất cả các hàm của tệp Assembly-CSharp.dll.
-        /// </summary>
-        /// <remarks> Lưu ý:
-        /// <list type="bullet">
-        /// <item><description>Chỉ lấy các hàm public static void.</description></item>
-        /// <item><description>Tên class phải bao gồm cả namespace.</description></item>
-        /// </list>
-        /// </remarks>
-        /// <returns>Danh sách các hàm của tệp Assembly-CSharp.dll.</returns>
-        public static IEnumerable<MethodInfo> GetMethods()
-        {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .First(x => x.ManifestModule.Name == ManifestModuleName)
-                .GetTypes().Where(x => x.IsClass)
-                .SelectMany(x => x.GetMethods(PUBLIC_STATIC_VOID));
-        }
-        #endregion
+        public static System.Random random = new System.Random();
 
         #region Get info
         /// <summary>
@@ -761,6 +718,16 @@ namespace Mod
             }
             for (int i = 0; i < TileMap.mapNames.Length; i++) if (mapName.Equals(TileMap.mapNames[i])) return i;
             return -1;
+        }
+
+        public static int getIdMapHome(int cgender)
+        {
+            return ID_MAP_HOME_BASE + cgender;
+        }
+
+        public static int getIdMapLang(int cgender)
+        {
+            return ID_MAP_LANG_BASE * cgender;
         }
     }
 }

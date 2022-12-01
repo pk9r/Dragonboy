@@ -4,15 +4,15 @@ namespace Mod.Xmap
 {
     public struct MapNext
     {
-        public int mapId;
-
+        public int mapStart;
+        public int to;
         public TypeMapNext type;
-
         public int[] info;
 
-        public MapNext(int mapId, TypeMapNext type, int[] info)
+        public MapNext(int mapStart, int to, TypeMapNext type, int[] info)
         {
-            this.mapId = mapId;
+            this.mapStart = mapStart;
+            this.to = to;
             this.type = type;
             this.info = info;
         }
@@ -31,15 +31,9 @@ namespace Mod.Xmap
         }
     }
 
-    public class Way : List<MapNext>
-    {
-        public Way() : base() { }
-
-        public Way(IEnumerable<MapNext> collection) : base(collection) { }
-    }
-
     public enum TypeMapNext
     {
+        None = -1,
         AutoWaypoint,
         NpcMenu,
         NpcPanel,

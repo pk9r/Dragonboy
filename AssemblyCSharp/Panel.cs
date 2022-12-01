@@ -3356,7 +3356,7 @@ public class Panel : IActionListener, IChatable
 					else if (type == 14)
 					{
 						//Service.gI().requestMapSelect(selected);
-						Mod.Xmap.Pk9rXmap.SelectMapTrans(selected);
+						Mod.Xmap.Pk9rXmap.selectMapTrans(selected);
 					}
 				}
 			}

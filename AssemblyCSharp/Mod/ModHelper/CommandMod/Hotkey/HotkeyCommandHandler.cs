@@ -13,22 +13,23 @@ namespace Mod.ModHelper.CommandMod.Hotkey
         /// </summary>
         public static void loadDefalut()
         {
-            var methods = Utilities.GetMethods();
+            var methods = Utils.GetMethods();
 
-            foreach (var m in methods)
+            for (int i = 0; i < methods.Length; i++)
             {
-                var attributes = Attribute.GetCustomAttributes(m, typeof(HotkeyCommandAttribute));
-                foreach (var a in attributes)
+                var method = methods[i];
+                var attributes = Attribute.GetCustomAttributes(method, typeof(HotkeyCommandAttribute));
+                foreach (var attribute in attributes)
                 {
-                    if (a is HotkeyCommandAttribute kca)
+                    if (attribute is HotkeyCommandAttribute kca)
                     {
                         var hotkeyCommand = new HotkeyCommand()
                         {
                             key = kca.key,
                             delimiter = kca.delimiter,
-                            fullCommand = m.DeclaringType.FullName + "." + m.Name,
-                            method = m,
-                            parameterInfos = m.GetParameters(),
+                            fullCommand = method.DeclaringType.FullName + "." + method.Name,
+                            method = method,
+                            parameterInfos = method.GetParameters(),
                         };
                         if (hotkeyCommand.canExecute(kca.agrs, out hotkeyCommand.parameters))
                         {

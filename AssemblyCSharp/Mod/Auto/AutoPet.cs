@@ -61,7 +61,7 @@ namespace Mod.Auto
             {
                 if (TileMap.mapID != Char.myCharz().cgender + 21)
                 {
-                    if (!XmapController.gI.IsActing && GameScr.hpPotion == 0) XmapController.startRunToMapId(Char.myCharz().cgender + 21);
+                    if (!XmapController.gI.IsActing && GameScr.hpPotion == 0) XmapController.start(Char.myCharz().cgender + 21);
                 }
                 else
                 {
@@ -78,7 +78,7 @@ namespace Mod.Auto
                         lastTimeCheckMagicTree = mSystem.currentTimeMillis();
                         isMagicTreeUpgrading = true;
                     }
-                    if ((GameScr.gI().magicTree.isPeasEffect || GameScr.gI().magicTree.isUpdateTree || GameScr.gI().magicTree.currPeas == 0) && !XmapController.gI.IsActing) XmapController.startRunToMapId(mapZoneGoBack.Key);
+                    if ((GameScr.gI().magicTree.isPeasEffect || GameScr.gI().magicTree.isUpdateTree || GameScr.gI().magicTree.currPeas == 0) && !XmapController.gI.IsActing) XmapController.start(mapZoneGoBack.Key);
                 }
                 if (TileMap.mapID == mapZoneGoBack.Key && !XmapController.gI.IsActing)
                 {

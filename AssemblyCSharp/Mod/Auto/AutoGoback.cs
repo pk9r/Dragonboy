@@ -34,7 +34,7 @@ namespace Mod.Auto
                     {
                         if (GameScr.vItemMap.size() > 0) Service.gI().pickItem(-1);
                         else if (Char.myCharz().cHP <= 1) GameScr.gI().doUseHP();
-                        else if (!XmapController.gI.IsActing) XmapController.startRunToMapId(infoGoback.mapID);
+                        else if (!XmapController.gI.IsActing) XmapController.start(infoGoback.mapID);
                     }
                     else if (TileMap.mapID == infoGoback.mapID)
                     {

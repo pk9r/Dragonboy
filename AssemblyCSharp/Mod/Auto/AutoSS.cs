@@ -53,7 +53,7 @@ namespace Mod.Auto
             {
                 if (!isHarvestingPean) isHarvestingPean = true;
                 if (isTanSat) isTanSat = false;
-                if (!XmapController.gI.IsActing) XmapController.startRunToMapId(Char.myCharz().cgender + 21);
+                if (!XmapController.gI.IsActing) XmapController.start(Char.myCharz().cgender + 21);
             }
             if ((Char.myCharz().cMP < myMinMP || Char.myCharz().cHP < myMinHP) && !isHarvestingPean && TileMap.mapID != Char.myCharz().cgender + 21 && mSystem.currentTimeMillis() - lastTimeEatPean > 2000)
             {
@@ -125,7 +125,7 @@ namespace Mod.Auto
             {
                 if (TileMap.mapID != Char.myCharz().cgender + 21)
                 {
-                    if (!XmapController.gI.IsActing) XmapController.startRunToMapId(Char.myCharz().cgender + 21);
+                    if (!XmapController.gI.IsActing) XmapController.start(Char.myCharz().cgender + 21);
                 }
                 else
                 {
@@ -153,7 +153,7 @@ namespace Mod.Auto
             if (stepXuLyDo != 1) return;
             if (TileMap.mapID != Char.myCharz().cgender + 24)
             {
-                if (!XmapController.gI.IsActing) XmapController.startRunToMapId(Char.myCharz().cgender + 24);
+                if (!XmapController.gI.IsActing) XmapController.start(Char.myCharz().cgender + 24);
                 return;
             }
             if (TileMap.mapID == 24)
@@ -340,7 +340,7 @@ namespace Mod.Auto
                     Char.myCharz().npcFocus = null;
                     if (TileMap.mapID >= 21 && TileMap.mapID <= 23)
                     {
-                        if (!XmapController.gI.IsActing) XmapController.startRunToMapId(Char.myCharz().cgender * 7);
+                        if (!XmapController.gI.IsActing) XmapController.start(Char.myCharz().cgender * 7);
                     }
                     else if (TileMap.mapID == Char.myCharz().cgender * 7)
                     {
@@ -355,7 +355,7 @@ namespace Mod.Auto
                     Char.myCharz().mobFocus = null;
                     Char.myCharz().itemFocus = null;
                     Char.myCharz().charFocus = null;
-                    if (!XmapController.gI.IsActing) XmapController.startRunToMapId(Char.myCharz().cgender + 21);
+                    if (!XmapController.gI.IsActing) XmapController.start(Char.myCharz().cgender + 21);
                     else if (TileMap.mapID >= 21 && TileMap.mapID <= 23)
                     {
                         if (Char.myCharz().cgender == 0) Service.gI().openMenu(0);
@@ -373,7 +373,7 @@ namespace Mod.Auto
                         if (!XmapController.gI.IsActing)
                         {
                             isTanSat = false;
-                            XmapController.startRunToMapId(Char.myCharz().cgender * 7 + 1);
+                            XmapController.start(Char.myCharz().cgender * 7 + 1);
                         }
                     }
                     else if (!isTanSat)
@@ -385,7 +385,7 @@ namespace Mod.Auto
                     isTanSat = false;
                     if (TileMap.mapID != Char.myCharz().cgender + 21)
                     {
-                        if (!XmapController.gI.IsActing) XmapController.startRunToMapId(Char.myCharz().cgender + 21);
+                        if (!XmapController.gI.IsActing) XmapController.start(Char.myCharz().cgender + 21);
                     }
                     else
                     {
@@ -407,13 +407,13 @@ namespace Mod.Auto
                         if (Char.myCharz().cgender == 2) Utilities.teleportMyChar(156, 288);
                         AutoPick();
                     }
-                    else if (!XmapController.gI.IsActing) XmapController.startRunToMapId(Char.myCharz().cgender + 42);
+                    else if (!XmapController.gI.IsActing) XmapController.start(Char.myCharz().cgender + 42);
                 }
                 else if (Char.myCharz().taskMaint.index == 2)
                 {
                     if (TileMap.mapID != Char.myCharz().cgender + 21)
                     {
-                        if (!XmapController.gI.IsActing) XmapController.startRunToMapId(Char.myCharz().cgender + 21);
+                        if (!XmapController.gI.IsActing) XmapController.start(Char.myCharz().cgender + 21);
                     }
                     else
                     {
@@ -435,7 +435,7 @@ namespace Mod.Auto
                     else
                     {
                         isTanSat = false;
-                        if (!XmapController.gI.IsActing) XmapController.startRunToMapId(2 + Char.myCharz().cgender * 7);
+                        if (!XmapController.gI.IsActing) XmapController.start(2 + Char.myCharz().cgender * 7);
                     }
                 }
                 else if (Char.myCharz().taskMaint.index == 1)
@@ -447,7 +447,7 @@ namespace Mod.Auto
                     else
                     {
                         isTanSat = false;
-                        if (!XmapController.gI.IsActing) XmapController.startRunToMapId(2 + num * 7);
+                        if (!XmapController.gI.IsActing) XmapController.start(2 + num * 7);
                     }
                 }
                 else if (Char.myCharz().taskMaint.index == 2)
@@ -460,7 +460,7 @@ namespace Mod.Auto
                     else
                     {
                         isTanSat = false;
-                        if (!XmapController.gI.IsActing) XmapController.startRunToMapId(2 + num2 * 7);
+                        if (!XmapController.gI.IsActing) XmapController.start(2 + num2 * 7);
                     }
                 }
                 else if (Char.myCharz().taskMaint.index == 3)
@@ -470,7 +470,7 @@ namespace Mod.Auto
                     minHPMob = 0;
                     if (TileMap.mapID != Char.myCharz().cgender + 21)
                     {
-                        if (!XmapController.gI.IsActing) XmapController.startRunToMapId(Char.myCharz().cgender + 21);
+                        if (!XmapController.gI.IsActing) XmapController.start(Char.myCharz().cgender + 21);
                     }
                     else
                     {
@@ -494,7 +494,7 @@ namespace Mod.Auto
                             if (!XmapController.gI.IsActing)
                             {
                                 isTanSat = false;
-                                XmapController.startRunToMapId(Char.myCharz().cgender + 42);
+                                XmapController.start(Char.myCharz().cgender + 42);
                             }
                         }
                         else
@@ -522,9 +522,9 @@ namespace Mod.Auto
                     else if (!XmapController.gI.IsActing)
                     {
                         isTanSat = false;
-                        if (Char.myCharz().cgender == 0) XmapController.startRunToMapId(3);
-                        if (Char.myCharz().cgender == 1) XmapController.startRunToMapId(9);
-                        if (Char.myCharz().cgender == 2) XmapController.startRunToMapId(17);
+                        if (Char.myCharz().cgender == 0) XmapController.start(3);
+                        if (Char.myCharz().cgender == 1) XmapController.start(9);
+                        if (Char.myCharz().cgender == 2) XmapController.start(17);
                     }
                 }
                 else if (Char.myCharz().taskMaint.index == 1)
@@ -538,9 +538,9 @@ namespace Mod.Auto
                     else if (!XmapController.gI.IsActing)
                     {
                         isTanSat = false;
-                        if (Char.myCharz().cgender == 0) XmapController.startRunToMapId(3);
-                        if (Char.myCharz().cgender == 1) XmapController.startRunToMapId(11);
-                        if (Char.myCharz().cgender == 2) XmapController.startRunToMapId(17);
+                        if (Char.myCharz().cgender == 0) XmapController.start(3);
+                        if (Char.myCharz().cgender == 1) XmapController.start(11);
+                        if (Char.myCharz().cgender == 2) XmapController.start(17);
                     }
                 }
                 else if (Char.myCharz().taskMaint.index == 2)
@@ -549,13 +549,13 @@ namespace Mod.Auto
                     maxHPMob = int.MaxValue;
                     minHPMob = 0;
                     if (TileMap.mapID == Char.myCharz().cgender * 7) Service.gI().openMenu(Char.myCharz().cgender + 7);
-                    else if (!XmapController.gI.IsActing) XmapController.startRunToMapId(Char.myCharz().cgender * 7);
+                    else if (!XmapController.gI.IsActing) XmapController.start(Char.myCharz().cgender * 7);
                 }
                 else if (Char.myCharz().taskMaint.index == 3)
                 {
                     if (TileMap.mapID != Char.myCharz().cgender + 21)
                     {
-                        if (!XmapController.gI.IsActing) XmapController.startRunToMapId(Char.myCharz().cgender + 21);
+                        if (!XmapController.gI.IsActing) XmapController.start(Char.myCharz().cgender + 21);
                     }
                     else
                     {
@@ -571,9 +571,9 @@ namespace Mod.Auto
                 {
                     if (!XmapController.gI.IsActing)
                     {
-                        if (Char.myCharz().cgender == 0 && TileMap.mapID != 12) XmapController.startRunToMapId(12);
-                        else if (Char.myCharz().cgender == 1 && TileMap.mapID != 18) XmapController.startRunToMapId(18);
-                        else if (Char.myCharz().cgender == 2 && TileMap.mapID != 4) XmapController.startRunToMapId(4);
+                        if (Char.myCharz().cgender == 0 && TileMap.mapID != 12) XmapController.start(12);
+                        else if (Char.myCharz().cgender == 1 && TileMap.mapID != 18) XmapController.start(18);
+                        else if (Char.myCharz().cgender == 2 && TileMap.mapID != 4) XmapController.start(4);
                     }
                     if (TileMap.mapID == 12 || TileMap.mapID == 18 || TileMap.mapID == 4)
                     {
@@ -587,7 +587,7 @@ namespace Mod.Auto
                     if (isTanSat) isTanSat = false;
                     if (TileMap.mapID != Char.myCharz().cgender + 21)
                     {
-                        if (!XmapController.gI.IsActing) XmapController.startRunToMapId(Char.myCharz().cgender + 21);
+                        if (!XmapController.gI.IsActing) XmapController.start(Char.myCharz().cgender + 21);
                     }
                     else
                     {
@@ -596,19 +596,19 @@ namespace Mod.Auto
                         if (Char.myCharz().cgender == 2) Service.gI().openMenu(1);
                     }
                 }
-                else if (Char.myCharz().taskMaint.index == 3 && TileMap.mapID != 47 && !XmapController.gI.IsActing) XmapController.startRunToMapId(47);
+                else if (Char.myCharz().taskMaint.index == 3 && TileMap.mapID != 47 && !XmapController.gI.IsActing) XmapController.start(47);
             }
             else if (Char.myCharz().taskMaint.taskId == 9)
             {
                 if (Char.myCharz().taskMaint.index <= 1)
                 {
                     if (TileMap.mapID == 47) Service.gI().openMenu(17);
-                    if (TileMap.mapID != 1 && !XmapController.gI.IsActing) XmapController.startRunToMapId(1);
-                    if (TileMap.mapID == 1 && !XmapController.gI.IsActing) XmapController.startRunToMapId(47);
+                    if (TileMap.mapID != 1 && !XmapController.gI.IsActing) XmapController.start(1);
+                    if (TileMap.mapID == 1 && !XmapController.gI.IsActing) XmapController.start(47);
                 }
                 else if (Char.myCharz().taskMaint.index == 2)
                 {
-                    if (TileMap.mapID != 47 && !XmapController.gI.IsActing) XmapController.startRunToMapId(47);
+                    if (TileMap.mapID != 47 && !XmapController.gI.IsActing) XmapController.start(47);
                     else if (Math.abs(Char.myCharz().cx - 600) >= 20) Utilities.teleportMyChar(600, 336);
                     else if (Char.myCharz().currentMovePoint != null && Char.myCharz().currentMovePoint.xEnd != 600 && Char.myCharz().currentMovePoint.yEnd != 10) Char.myCharz().currentMovePoint = new MovePoint(600, 10);
                 }
@@ -620,7 +620,7 @@ namespace Mod.Auto
                         if (Math.abs(Char.myCharz().cx - 600) >= 20) Utilities.teleportMyChar(600, 336);
                         else if (Char.myCharz().currentMovePoint != null && Char.myCharz().currentMovePoint.xEnd != 600 && Char.myCharz().currentMovePoint.yEnd != 10) Char.myCharz().currentMovePoint = new MovePoint(600, 10);
                     }
-                    else if (!XmapController.gI.IsActing) XmapController.startRunToMapId(47);
+                    else if (!XmapController.gI.IsActing) XmapController.start(47);
                 }
             }
             else if (Char.myCharz().taskMaint.taskId == 10)
@@ -643,7 +643,7 @@ namespace Mod.Auto
                             if (Math.abs(Char.myCharz().cx - 600) >= 20) Utilities.teleportMyChar(600, 336);
                             else if (Char.myCharz().currentMovePoint != null && Char.myCharz().currentMovePoint.xEnd != 600 && Char.myCharz().currentMovePoint.yEnd != 10) Char.myCharz().currentMovePoint = new MovePoint(600, 10);
                         }
-                        else if (!XmapController.gI.IsActing) XmapController.startRunToMapId(47);
+                        else if (!XmapController.gI.IsActing) XmapController.start(47);
                     }
                 }
                 else if (Char.myCharz().taskMaint.index == 1)
@@ -658,18 +658,18 @@ namespace Mod.Auto
                     {
                         if (Char.myCharz().currentMovePoint != null && Char.myCharz().currentMovePoint.xEnd != 579 && Char.myCharz().currentMovePoint.yEnd != 420) Char.myCharz().currentMovePoint = new MovePoint(579, 420);
                     }
-                    else if (!XmapController.gI.IsActing) XmapController.startRunToMapId(47);
+                    else if (!XmapController.gI.IsActing) XmapController.start(47);
                 }
                 else if (Char.myCharz().taskMaint.index == 2)
                 {
                     if (TileMap.mapID == 47) Service.gI().openMenu(17);
-                    if (!XmapController.gI.IsActing) XmapController.startRunToMapId(47);
+                    if (!XmapController.gI.IsActing) XmapController.start(47);
                 }
                 else if (Char.myCharz().taskMaint.index == 3)
                 {
                     if (TileMap.mapID < 21 || TileMap.mapID > 23)
                     {
-                        if (!XmapController.gI.IsActing) XmapController.startRunToMapId(Char.myCharz().cgender + 21);
+                        if (!XmapController.gI.IsActing) XmapController.start(Char.myCharz().cgender + 21);
                     }
                     else
                     {
@@ -683,13 +683,13 @@ namespace Mod.Auto
             {
                 if (Char.myCharz().cgender == 0)
                 {
-                    if (TileMap.mapID != 5 && !XmapController.gI.IsActing) XmapController.startRunToMapId(5);
+                    if (TileMap.mapID != 5 && !XmapController.gI.IsActing) XmapController.start(5);
                 }
                 else if (Char.myCharz().cgender == 1)
                 {
-                    if (TileMap.mapID != 13 && !XmapController.gI.IsActing) XmapController.startRunToMapId(13);
+                    if (TileMap.mapID != 13 && !XmapController.gI.IsActing) XmapController.start(13);
                 }
-                else if (Char.myCharz().cgender == 2 && TileMap.mapID != 20 && !XmapController.gI.IsActing) XmapController.startRunToMapId(20);
+                else if (Char.myCharz().cgender == 2 && TileMap.mapID != 20 && !XmapController.gI.IsActing) XmapController.start(20);
                 if (TileMap.mapID == 5 || TileMap.mapID == 13 || TileMap.mapID == 20) Service.gI().openMenu(13 + Char.myCharz().cgender);
             }
         }
