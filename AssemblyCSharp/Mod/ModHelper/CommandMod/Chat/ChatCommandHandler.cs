@@ -14,22 +14,24 @@ namespace Mod.ModHelper.CommandMod.Chat
         /// </summary>
         public static void loadDefalut()
         {
-            var methods = Utilities.GetMethods();
+            var methods = Utils.GetMethods();
 
-            foreach (var m in methods)
+            var length = methods.Length;
+            for (int i = 0; i < length; i++)
             {
-                var attributes = Attribute.GetCustomAttributes(m, typeof(ChatCommandAttribute));
-                foreach (var a in attributes)
+                var method = methods[i];
+                var attributes = Attribute.GetCustomAttributes(method, typeof(ChatCommandAttribute));
+                foreach (var attribute in attributes)
                 {
-                    if (a is ChatCommandAttribute cca)
+                    if (attribute is ChatCommandAttribute cca)
                     {
                         chatCommands.Add(new ChatCommand()
                         {
                             command = cca.command,
                             delimiter = cca.delimiter,
-                            fullCommand = m.DeclaringType.FullName + "." + m.Name,
-                            method = m,
-                            parameterInfos = m.GetParameters()
+                            fullCommand = method.DeclaringType.FullName + "." + method.Name,
+                            method = method,
+                            parameterInfos = method.GetParameters()
                         });
                     }
                 }
@@ -98,7 +100,7 @@ namespace Mod.ModHelper.CommandMod.Chat
             string methodName = match.Groups[3].Value;
             string args = match.Groups[4].Value;
 
-            var methods = Utilities.getMethods(typeFullName);
+            var methods = Utils.getMethods(typeFullName);
 
             if (methods == null)
             {

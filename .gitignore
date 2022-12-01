@@ -371,3 +371,4 @@ Game/asset/
 Game/ModData/hotkeyCommands.json
 Game/ModData/settings.json
 Game/Data/
+/Game/ModData/log.txt

@@ -43,10 +43,10 @@ namespace Mod.Auto
                         if (!AutoSS.isPicking && Char.myCharz().cHP > 1)
                         {
                             if (XmapController.gI.IsActing) XmapController.finishXmap();
-                            if (!XmapController.gI.IsActing) XmapController.startRunToMapId(111);
+                            if (!XmapController.gI.IsActing) XmapController.start(111);
                         }
                     }
-                    else if (!XmapController.gI.IsActing) XmapController.startRunToMapId(111);
+                    else if (!XmapController.gI.IsActing) XmapController.start(111);
                 }
             }
             else
@@ -67,7 +67,7 @@ namespace Mod.Auto
                     else if (!isTeleToT77) isTeleToT77 = true;
                     if (isMeLostHP())
                     {
-                        if (!XmapController.gI.IsActing) XmapController.startRunToMapId(47);
+                        if (!XmapController.gI.IsActing) XmapController.start(47);
                     }
                 }
                 if (t77.cy == Utilities.getYGround(t77.cx) && isT77TeleToGround)

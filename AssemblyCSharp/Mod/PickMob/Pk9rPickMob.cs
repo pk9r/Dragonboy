@@ -6,15 +6,14 @@ namespace Mod.PickMob
 {
     public class Pk9rPickMob : IActionListener
     {
-        [Obsolete("Không có ngọc xanh ở dưới đất đâu mà nhặt")]
         private const int ID_ITEM_GEM = 77;
         private const int ID_ITEM_GEM_LOCK = 861;
         private const int DEFAULT_HP_BUFF = 20;
         private const int DEFAULT_MP_BUFF = 20;
-        private static readonly sbyte[] IdSkillsBase = {0, 2, 17, 4};
-        private static readonly short[] IdItemBlockBase = 
+        private static readonly sbyte[] IdSkillsBase = { 0, 2, 17, 4 };
+        private static readonly short[] IdItemBlockBase =
             { 225, 353, 354, 355, 356, 357, 358, 359, 360, 362 };
-            
+
         public static bool IsTanSat = false;
         public static bool IsNeSieuQuai = true;
         public static bool IsVuotDiaHinh = true;
@@ -35,8 +34,7 @@ namespace Mod.PickMob
         public static int HpBuff = 0;
         [Obsolete("Chức năng này sẽ làm ở 1 class riêng")]
         public static int MpBuff = 0;
-
-        static Pk9rPickMob _Instance;
+        private static Pk9rPickMob _Instance;
         public static Pk9rPickMob getInstance()
         {
             if (_Instance == null) _Instance = new Pk9rPickMob();
@@ -173,7 +171,7 @@ namespace Mod.PickMob
                 {
                     GameScr.info1.addInfo("Cần trỏ vào vật phẩm cần chặn khi auto nhặt", 0);
                 }
-            }    
+            }
             else if (IsGetInfoChat<short>(text, "blocki"))
             {
                 short id = GetInfoChat<short>(text, "blocki");
@@ -200,7 +198,7 @@ namespace Mod.PickMob
                 {
                     TypeItemPicks.Add(type);
                     GameScr.info1.addInfo("Đã thêm vào danh sách chỉ tự động nhặt loại item: " + type, 0);
-                }    
+                }
             }
             else if (IsGetInfoChat<sbyte>(text, "blockti"))
             {
@@ -236,7 +234,7 @@ namespace Mod.PickMob
                 IdItemPicks.Add(ID_ITEM_GEM_LOCK);
                 GameScr.info1.addInfo("Đã cài đặt chỉ nhặt ngọc", 0);
             }
-            else if (text =="ts")
+            else if (text == "ts")
             {
                 IsTanSat = !IsTanSat;
                 GameScr.info1.addInfo("Tự động đánh quái: " + (IsTanSat ? "Bật" : "Tắt"), 0);
@@ -445,7 +443,7 @@ namespace Mod.PickMob
                     if (IdItemBlocks.Contains(itemFocus.template.id)) menuDesc = $"Xóa {itemFocus.template.name} khỏi danh sách không nhặt";
                     else menuDesc = $"Thêm {itemFocus.template.name} vào danh sách không nhặt";
                     menuItems.addElement(new Command(menuDesc, getInstance(), 3, itemFocus));
-                     if (TypeItemBlocks.Contains(itemFocus.template.type)) menuDesc = $"Xóa loại item ({itemFocus.template.type}) khỏi danh sách không nhặt";
+                    if (TypeItemBlocks.Contains(itemFocus.template.type)) menuDesc = $"Xóa loại item ({itemFocus.template.type}) khỏi danh sách không nhặt";
                     else menuDesc = $"Thêm loại item ({itemFocus.template.type}) vào danh sách không nhặt";
                     menuItems.addElement(new Command(menuDesc, getInstance(), 4, itemFocus));
                 }
@@ -460,7 +458,7 @@ namespace Mod.PickMob
             if (IdMobsTanSat.Count + TypeMobsTanSat.Count > 0) menuItems.addElement(new Command("Xem danh sách quái", getInstance(), 9, null));
             if (IdItemPicks.Count + TypeItemPicks.Count + IdItemBlocks.Count + TypeItemBlocks.Count > 0) menuItems.addElement(new Command("Xem danh sách vật phẩm", getInstance(), 10, null));
             menuItems.addElement(new Command("Xem danh sách skill", getInstance(), 11, null));
-            GameCanvas.menu.startAt(menuItems, 0); 
+            GameCanvas.menu.startAt(menuItems, 0);
             string cpDesc = "PickMobNRO by Phucprotein\n";
             if (mobFocus != null || itemFocus != null)
             {
@@ -469,7 +467,7 @@ namespace Mod.PickMob
                     cpDesc += $"Quái đang trỏ vào: {mobFocus.getTemplate().name}, số thứ tự: {mobFocus.mobId}, loại: {mobFocus.getTemplate().mobTemplateId}";
                 }
                 else cpDesc += $"Item đang trỏ vào: {itemFocus.template.name}, id: {itemFocus.template.id}, loại: {itemFocus.template.type}";
-            } 
+            }
             ChatPopup.addChatPopup(cpDesc, 100000, new Npc(5, 0, -100, 100, 5, Utilities.ID_NPC_MOD_FACE));
 
 
@@ -573,7 +571,7 @@ namespace Mod.PickMob
                     string infoskill = "Danh sách skill tự động đánh quái: ";
                     foreach (sbyte skillid in IdSkillsTanSat)
                     {
-                        for (int i = 0; i < 8; i++) 
+                        for (int i = 0; i < 8; i++)
                         {
                             SkillTemplate template = Char.myCharz().nClass.skillTemplates[i];
                             if (template.id == skillid)

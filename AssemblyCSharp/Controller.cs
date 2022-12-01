@@ -526,7 +526,7 @@ public class Controller : IMessageHandler
 					GameCanvas.panel.mapNames[num72] = msg.reader().readUTF();
 					GameCanvas.panel.planetNames[num72] = msg.reader().readUTF();
 				}
-				Pk9rXmap.ShowPanelMapTrans();
+				Pk9rXmap.showPanelMapTrans();
 				//GameCanvas.panel.setTypeMapTrans();
 				//GameCanvas.panel.show();
 				break;
@@ -4874,7 +4874,7 @@ public class Controller : IMessageHandler
 		catch (Exception ex)
 		{
 			Cout.LogError("LOI TAI LOADMAP INFO " + ex.ToString());
-            Pk9rXmap.FixBlackScreen();
+            Pk9rXmap.fixBlackScreen();
         }
 		GameEvents.onInfoMapLoaded();
 	}

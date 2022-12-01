@@ -1,5 +1,7 @@
-﻿using System;
+﻿using LitJson;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Mod.Xmap
 {
@@ -7,41 +9,69 @@ namespace Mod.Xmap
     {
         public static XmapData xmapData;
 
-        public static Way findWay(int idMapStart, int idMapEnd)
+        private static bool[] blackMaps;
+        private static List<int> blackMapsL;
+
+        private static Way bestWay;
+
+        public static Way findWay(int mapStart, int mapEnd)
         {
+            blackMaps = new bool[TileMap.mapNames.Length];
+            blackMapsL = new();
+            bestWay = null;
+
+            LogMod.writeLine($"[xmap][dbg] Bắt đầu tìm đường từ {mapStart} tới {mapEnd}");
             if (xmapData == null)
             {
                 throw new Exception("xmapData is null");
             }
 
-            var wayPassed = new Way() { new(idMapStart, TypeMapNext.AutoWaypoint, null) };
-            return findWay(idMapEnd, wayPassed);
+            var wayPassed = new Way() { new(mapStart, TypeMapNext.AutoWaypoint, null) };
+            return findWay(mapEnd, wayPassed);
         }
 
-        private static Way findWay(int mapIdEnd, Way wayPassed)
+        private static Way findWay(int mapEnd, Way wayPassed)
         {
-            var cMap = wayPassed[wayPassed.Count - 1];
+            LogMod.writeLine($"[xmap][dbg] wayPassed: {JsonMapper.ToJson(wayPassed.Select(x => x.mapId).ToList())}");
+            LogMod.writeLine($"[xmap][dbg] blackMapsL: {JsonMapper.ToJson(blackMapsL.ToList())}");
 
-            if (cMap.mapId == mapIdEnd)
-                return wayPassed;
-
-            var mapNexts = xmapData.getMapNexts(cMap.mapId);
-            if (mapNexts == null)
+            if (!isWayBetter(wayPassed, bestWay))
                 return null;
 
-            var ways = new List<Way>();
+            var cMap = wayPassed[wayPassed.Count - 1];
+
+            if (cMap.mapId == mapEnd)
+                return wayPassed;
+
+            var mapNexts = xmapData.links[cMap.mapId];
+            if (mapNexts == null)
+            {
+                return null;
+            }
+
+            //var ways = new List<Way>();
             foreach (var map in mapNexts)
             {
                 if (!wayPassed.Exists(x => x.mapId == map.mapId))
                 {
-                    var wayPassedNext = new Way(wayPassed) { map };
-                    var wayContinue = findWay(mapIdEnd, wayPassedNext);
-                    if (wayContinue != null)
-                        ways.Add(wayContinue);
+                    if (!blackMaps[map.mapId])
+                    {
+                        var wayPassedNext = new Way(wayPassed) { map };
+                        var wayContinue = findWay(mapEnd, wayPassedNext);
+                        if (wayContinue != null)
+                        {
+                            if (isWayBetter(wayContinue, bestWay)) bestWay = wayContinue;
+                        }
+                        else
+                        {
+                            blackMaps[map.mapId] = true;
+                            blackMapsL.Add(map.mapId);
+                        }
+                    }
                 }
             }
 
-            var bestWay = getBestWay(ways);
+            //var bestWay = getBestWay(ways);
             return bestWay;
         }
 
@@ -65,6 +95,9 @@ namespace Mod.Xmap
         /// <returns></returns>
         private static bool isWayBetter(Way way1, Way way2)
         {
+            if (way1 == null) return false;
+            if (way2 == null) return true;
+
             bool isBadWay1 = isBadWay(way1);
             bool isBadWay2 = isBadWay(way2);
 

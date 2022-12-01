@@ -75,31 +75,40 @@ namespace Mod.Xmap
         public XmapData()
         {
             links = new List<MapNext>[TileMap.mapNames.Length];
+            for (int i = 0; i < links.Length; i++)
+                links[i] = new();
+
             loadLinksFromFile("TextData\\LinkMapsXmap.txt");
             LoadLinksAutoWaypointFromFile("TextData\\AutoLinkMapsWaypoint.txt");
-            loadLinksHome();
+            addLinksHome();
             loadLinkSieuThi();
             loadLinkToCold();
         }
 
         public void loadLinkMapCapsule()
         {
+
             if (Pk9rXmap.canUseCapsuleVip())
             {
+                LogMod.writeLine($"[xmap][dbg] Sử dụng capsule đặc biệt");
                 Service.gI().useItem(0, 1, -1, Utilities.ID_ITEM_CAPSULE_VIP);
                 Pk9rXmap.isShowPanelMapTrans = false;
             }
             else if (Pk9rXmap.canUseCapsuleNormal())
             {
+                LogMod.writeLine($"[xmap][dbg] Sử dụng capsule thường");
                 Service.gI().useItem(0, 1, -1, Utilities.ID_ITEM_CAPSULE_NORMAL);
                 Pk9rXmap.isShowPanelMapTrans = false;
+            }
+            else
+            {
+                return;
             }
             while (Pk9rXmap.isWaitInfoMapTrans())
             {
                 Thread.Sleep(100);
             }
 
-            addKeyLinkMaps(TileMap.mapID);
             string[] mapNames = GameCanvas.panel.mapNames;
             for (int select = 0; select < mapNames.Length; select++)
             {
@@ -116,10 +125,10 @@ namespace Mod.Xmap
         {
             try
             {
-                using (var sr = new StreamReader(path))
+                using (var reader = new StreamReader(path))
                 {
                     string textLine;
-                    while ((textLine = sr.ReadLine()) != null)
+                    while ((textLine = reader.ReadLine()) != null)
                     {
                         textLine = textLine.Trim();
 
@@ -127,7 +136,7 @@ namespace Mod.Xmap
                             continue;
 
                         string[] textData = textLine.Split(' ');
-                        int[] data = Array.ConvertAll(textData, s => int.Parse(s));
+                        int[] data = Array.ConvertAll(textData, int.Parse);
 
                         int lenInfo = data.Length - 3;
                         int[] info = new int[lenInfo];
@@ -175,13 +184,11 @@ namespace Mod.Xmap
             }
         }
 
-        private void loadLinksHome()
+        private void addLinksHome()
         {
-            const int ID_MAP_LANG_BASE = 7;
             int cgender = Char.myCharz().cgender;
-
-            int idMapHome = Utilities.ID_MAP_HOME_BASE + cgender;
-            int idMapLang = ID_MAP_LANG_BASE * cgender;
+            int idMapHome = Utilities.getIdMapHome(cgender);
+            int idMapLang = Utilities.getIdMapLang(cgender);
 
             addLinkMap(idMapLang, idMapHome, TypeMapNext.AutoWaypoint, null);
             addLinkMap(idMapHome, idMapLang, TypeMapNext.AutoWaypoint, null);
@@ -210,21 +217,9 @@ namespace Mod.Xmap
             addLinkMap(ID_MAP_TPVGT, ID_MAP_TO_COLD, TypeMapNext.NpcMenu, info);
         }
 
-        public List<MapNext> getMapNexts(int idMap)
-        {
-            return links[idMap];
-        }
-
         private void addLinkMap(int idMapStart, int idMapNext, TypeMapNext type, int[] info)
         {
-            addKeyLinkMaps(idMapStart);
             links[idMapStart].Add(new(idMapNext, type, info));
-        }
-
-        private void addKeyLinkMaps(int idMap)
-        {
-            if (links[idMap] == null)
-                links[idMap] = new List<MapNext>();
         }
     }
 }

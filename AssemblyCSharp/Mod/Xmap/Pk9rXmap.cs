@@ -12,57 +12,46 @@ namespace Mod.Xmap
         public static bool isUseCapsuleNormal = false;
         public static bool isUseCapsuleVip = true;
 
-        [ChatCommand("csdb")]
+        [ChatCommand("xmapcsdb")]
         public static void toggleUseCapsuleVip()
         {
             isUseCapsuleVip = !isUseCapsuleVip;
             GameScr.info1.addInfo("Sử dụng capsule đặc biệt Xmap: " + (isUseCapsuleVip ? "Bật" : "Tắt"), 0);
         }
 
-        [ChatCommand("xmp")]
-        public static void toggleXmap(int mapId)
+        [ChatCommand("xmapcsb")]
+        public static void toggleUseCapsuleNormal()
         {
-            if (XmapController.gI.IsActing)
-            {
-                XmapController.finishXmap();
-                GameScr.info1.addInfo("Đã huỷ Xmap", 0);
-            }
-            else
-            {
-                XmapController.startRunToMapId(mapId);
-            }
+            isUseCapsuleNormal = !isUseCapsuleNormal;
+            GameScr.info1.addInfo("Sử dụng capsule thường Xmap: " + (isUseCapsuleNormal ? "Bật" : "Tắt"), 0);
         }
 
         [ChatCommand("xmp"), HotkeyCommand('x')]
-        public static void toggleXmap()
+        public static void showXmapMenu()
         {
             if (XmapController.gI.IsActing)
             {
+                LogMod.writeLine("[xmap][info] Người chơi yêu cầu hủy xmap");
+
                 XmapController.finishXmap();
                 GameScr.info1.addInfo("Đã huỷ Xmap", 0);
+                return;
             }
-            else
-            {
-                ShowXmapMenu();
-            }
-        }
 
-        public static void ShowXmapMenu()
-        {
             XmapData.loadGroupMapsFromFile("TextData\\GroupMapsXmap.txt");
             OpenMenu.start(new(menuItems =>
             {
                 foreach (var groupMap in XmapData.groups)
                     menuItems.Add(new(groupMap.nameGroup, new(() =>
                     {
-                        ShowXmapPanel(groupMap.maps);
+                        showXmapPanel(groupMap.maps);
                         Char.chatPopup = null;
                     })));
             }));
             ChatPopup.addChatPopup($"XmapNRO by Phucprotein\nMap hiện tại: {TileMap.mapName}, ID: {TileMap.mapID}\nVui lòng chọn nơi muốn đến", 100000, new Npc(5, 0, -100, 100, 5, Utilities.ID_NPC_MOD_FACE));
         }
 
-        public static void ShowXmapPanel(List<int> maps)
+        public static void showXmapPanel(List<int> maps)
         {
             isMapTransAsXmap = true;
             int len = maps.Count;
@@ -103,21 +92,21 @@ namespace Mod.Xmap
             }
         }
 
-        public static void SelectMapTrans(int selected)
+        public static void selectMapTrans(int selected)
         {
             if (isMapTransAsXmap)
             {
                 InfoDlg.hide();
                 string mapName = GameCanvas.panel.mapNames[selected];
-                int idMap = getMapIdFromPanelXmap(mapName);
-                XmapController.startRunToMapId(idMap);
+                int mapId = getMapIdFromPanelXmap(mapName);
+                XmapController.start(mapId);
                 return;
             }
             Utilities.mapCapsuleReturn = TileMap.mapID;
             Service.gI().requestMapSelect(selected);
         }
 
-        public static void ShowPanelMapTrans()
+        public static void showPanelMapTrans()
         {
             isMapTransAsXmap = false;
             if (isShowPanelMapTrans)
@@ -129,7 +118,7 @@ namespace Mod.Xmap
             isShowPanelMapTrans = true;
         }
 
-        public static void FixBlackScreen()
+        public static void fixBlackScreen()
         {
             Controller.gI().loadCurrMap(0);
             Service.gI().finishLoadMap();
