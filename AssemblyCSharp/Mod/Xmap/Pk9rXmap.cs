@@ -12,14 +12,14 @@ namespace Mod.Xmap
         public static bool isUseCapsuleNormal = false;
         public static bool isUseCapsuleVip = true;
 
-        [ChatCommand("xmapcsdb")]
+        [ChatCommand("xcsdb")]
         public static void toggleUseCapsuleVip()
         {
             isUseCapsuleVip = !isUseCapsuleVip;
             GameScr.info1.addInfo("Sử dụng capsule đặc biệt Xmap: " + (isUseCapsuleVip ? "Bật" : "Tắt"), 0);
         }
 
-        [ChatCommand("xmapcsb")]
+        [ChatCommand("xcsb")]
         public static void toggleUseCapsuleNormal()
         {
             isUseCapsuleNormal = !isUseCapsuleNormal;

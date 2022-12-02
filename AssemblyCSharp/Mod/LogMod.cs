@@ -45,17 +45,17 @@ namespace Mod
 
         public static void writeLine(string message)
         {
-            if (!filter(message))
-                return;
+            //if (!filter(message))
+            //    return;
 
-            lock (locker)
-            {
-                using (var writer = new StreamWriter(pathLog, append: true))
-                {
-                    beforeWriteMessage(writer);
-                    writer.WriteLine(message);
-                }
-            }
+            //lock (locker)
+            //{
+            //    using (var writer = new StreamWriter(pathLog, append: true))
+            //    {
+            //        beforeWriteMessage(writer);
+            //        writer.WriteLine(message);
+            //    }
+            //}
         }
 
         private static void beforeWriteMessage(StreamWriter writer)
