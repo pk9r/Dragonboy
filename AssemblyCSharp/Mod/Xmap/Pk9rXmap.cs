@@ -169,18 +169,48 @@ namespace Mod.Xmap
 
         public static void nextMapAutoWaypoint(MapNext mapNext)
         {
-            var waypoint = Utilities.findWaypoint(mapNext.mapId);
+            var waypoint = Utilities.findWaypoint(mapNext.to);
             Utilities.changeMap(waypoint);
         }
 
         public static void nextMapNpcMenu(MapNext mapNext)
         {
-            var idNpc = mapNext.info[0];
-            Service.gI().openMenu(idNpc);
+            var npcId = mapNext.info[0];
+            if (npcId == 38)
+            {
+                var flag = false;
+                int vNpcSize = GameScr.vNpc.size();
+                for (int i = 0; i < vNpcSize; i++)
+                {
+                    var npc = (Npc)GameScr.vNpc.elementAt(i);
+                    if (npc.template.npcTemplateId == npcId)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag)
+                {
+                    Waypoint waypoint;
+                    if (TileMap.mapID == 27 || TileMap.mapID == 29)
+                        waypoint = Utilities.findWaypoint(28);
+                    else
+                    {
+                        if (Utilities.random.Next(27, 29) == 27)
+                            waypoint = Utilities.findWaypoint(27);
+                        else
+                            waypoint = Utilities.findWaypoint(29);
+                    }
+
+                    Utilities.changeMap(waypoint);
+                    return;
+                }
+            }
+            Service.gI().openMenu(npcId);
             for (int i = 1; i < mapNext.info.Length; i++)
             {
                 int select = mapNext.info[i];
-                Service.gI().confirmMenu((short)idNpc, (sbyte)select);
+                Service.gI().confirmMenu((short)npcId, (sbyte)select);
             }
         }
 

@@ -1,16 +1,9 @@
-﻿using LitJson;
-using Mod.Graphics;
-using Mod.ModHelper.CommandMod.Chat;
-using Mod.ModHelper.CommandMod.Hotkey;
-using Mod.ModHelper.Menu;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using UnityEngine;
-using Vietpad.InputMethod;
 
 namespace Mod
 {
@@ -50,6 +43,8 @@ namespace Mod
         public static VietKeyHandler vietKeyHandler = new VietKeyHandler();
 
         public static int mapCapsuleReturn = -1;
+
+        public static System.Random random = new System.Random();
 
         #region Get info
         /// <summary>

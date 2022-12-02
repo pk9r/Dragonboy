@@ -2,6 +2,7 @@
 using Mod.ModHelper;
 using Mod.ModHelper.CommandMod.Chat;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
@@ -12,7 +13,7 @@ namespace Mod.Xmap
         public override int Interval => 100;
 
         private static int mapEnd;
-        private static Way way;
+        private static List<MapNext> way;
         private static int indexWay;
         private static bool isNextMapFailed;
 
@@ -35,7 +36,8 @@ namespace Mod.Xmap
                 try
                 {
                     way = XmapAlgorithm.findWay(TileMap.mapID, mapEnd);
-                    LogMod.writeLine($"[xmap][dbg] bestWay: {JsonMapper.ToJson(way.Select(x => x.mapId).ToArray())}");
+                    if (way != null)
+                        LogMod.writeLine($"[xmap][dbg] bestWay: {JsonMapper.ToJson(way.Select(x => x.to).ToArray())}");
                 }
                 catch (Exception ex)
                 {
@@ -52,7 +54,7 @@ namespace Mod.Xmap
                 }
             }
 
-            if (TileMap.mapID == way[way.Count - 1].mapId && !Utilities.isMyCharDied())
+            if (TileMap.mapID == way[way.Count - 1].to && !Utilities.isMyCharDied())
             {
                 MainThreadDispatcher.dispatcher(() =>
                     GameScr.info1.addInfo("Xmap by Phucprotein", 0));
@@ -60,7 +62,7 @@ namespace Mod.Xmap
                 return;
             }
 
-            if (TileMap.mapID == way[indexWay].mapId)
+            if (TileMap.mapID == way[indexWay].mapStart)
             {
                 if (Utilities.isMyCharDied())
                 {
@@ -71,13 +73,13 @@ namespace Mod.Xmap
                 else if (Utilities.canNextMap())
                 {
                     MainThreadDispatcher.dispatcher(() =>
-                        Pk9rXmap.nextMap(way[indexWay + 1]));
-                    LogMod.writeLine($"[xmap][dbg] nextMap: {way[indexWay + 1].mapId}");
+                        Pk9rXmap.nextMap(way[indexWay]));
+                    LogMod.writeLine($"[xmap][dbg] nextMap: {way[indexWay].to}");
                 }
                 Thread.Sleep(500);
                 return;
             }
-            else if (TileMap.mapID == way[indexWay + 1].mapId)
+            else if (TileMap.mapID == way[indexWay].to)
             {
                 indexWay++;
                 return;
@@ -85,6 +87,7 @@ namespace Mod.Xmap
             else
             {
                 isNextMapFailed = true;
+                way = null;
             }
         }
 

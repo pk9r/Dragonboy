@@ -79,7 +79,7 @@ namespace Mod.Xmap
                 links[i] = new();
 
             loadLinksFromFile("TextData\\LinkMapsXmap.txt");
-            LoadLinksAutoWaypointFromFile("TextData\\AutoLinkMapsWaypoint.txt");
+            loadLinksAutoWaypointFromFile("TextData\\AutoLinkMapsWaypoint.txt");
             addLinksHome();
             loadLinkSieuThi();
             loadLinkToCold();
@@ -109,15 +109,14 @@ namespace Mod.Xmap
                 Thread.Sleep(100);
             }
 
-            string[] mapNames = GameCanvas.panel.mapNames;
-            for (int select = 0; select < mapNames.Length; select++)
+            var mapStart = TileMap.mapID;
+            var mapNames = GameCanvas.panel.mapNames;
+            var length = mapNames.Length;
+            for (int select = 0; select < length; select++)
             {
-                int mapId = Utilities.getMapIdFromName(mapNames[select]);
-                if (mapId != -1)
-                {
-                    int[] info = new int[] { select };
-                    links[TileMap.mapID].Add(new MapNext(mapId, TypeMapNext.Capsule, info));
-                }
+                var to = Utilities.getMapIdFromName(mapNames[select]);
+                if (to != -1) links[mapStart].Add(new(mapStart, to,
+                    TypeMapNext.Capsule, info: new int[] { select }));
             }
         }
 
@@ -132,66 +131,73 @@ namespace Mod.Xmap
                     {
                         textLine = textLine.Trim();
 
+                        // textLine is comment or empty
                         if (textLine.StartsWith("#") || textLine.Equals(""))
                             continue;
 
-                        string[] textData = textLine.Split(' ');
-                        int[] data = Array.ConvertAll(textData, int.Parse);
+                        var data = Array.ConvertAll(textLine.Split(' '), int.Parse);
 
-                        int lenInfo = data.Length - 3;
-                        int[] info = new int[lenInfo];
+                        var mapStart = data[0];
+                        var to = data[1];
+                        var typeMapNext = (TypeMapNext)data[2];
+
+                        var lenInfo = data.Length - 3;
+                        var info = new int[lenInfo];
                         Array.Copy(data, 3, info, 0, lenInfo);
 
-                        addLinkMap(data[0], data[1], (TypeMapNext)data[2], info);
+                        links[mapStart].Add(new(mapStart, to, typeMapNext, info));
                     }
                 }
             }
             catch (Exception e)
             {
-                GameScr.info1.addInfo(e.Message, 0);
+                LogMod.writeLine($"[xmap][error] Lỗi đọc links từ tệp {path}\n{e}");
             }
         }
 
-        private void LoadLinksAutoWaypointFromFile(string path)
+        private void loadLinksAutoWaypointFromFile(string path)
         {
             try
             {
-                StreamReader sr = new StreamReader(path);
-                string textLine;
-                while ((textLine = sr.ReadLine()) != null)
+                using (var reader = new StreamReader(path))
                 {
-                    textLine = textLine.Trim();
-
-                    if (textLine.StartsWith("#") || textLine.Equals(""))
-                        continue;
-
-                    string[] textData = textLine.Split(' ');
-                    int[] data = Array.ConvertAll(textData, int.Parse);
-
-                    for (int i = 0; i < data.Length; i++)
+                    string textLine;
+                    while ((textLine = reader.ReadLine()) != null)
                     {
-                        if (i != 0)
-                            addLinkMap(data[i], data[i - 1], TypeMapNext.AutoWaypoint, null);
+                        textLine = textLine.Trim();
 
-                        if (i != data.Length - 1)
-                            addLinkMap(data[i], data[i + 1], TypeMapNext.AutoWaypoint, null);
+                        // textLine is comment or empty
+                        if (textLine.StartsWith("#") || textLine.Equals(""))
+                            continue;
+
+                        var data = Array.ConvertAll(textLine.Split(' '), int.Parse);
+
+                        int length = data.Length;
+                        for (int i = 0; i < length; i++)
+                        {
+                            var mapStart = data[i];
+                            if (i != 0) links[mapStart].Add(new(mapStart, to: data[i - 1],
+                                TypeMapNext.AutoWaypoint, new int[0]));
+                            if (i != length - 1) links[mapStart].Add(new(mapStart, to: data[i + 1],
+                                TypeMapNext.AutoWaypoint, new int[0]));
+                        }
                     }
                 }
             }
             catch (Exception e)
             {
-                GameScr.info1.addInfo(e.Message, 0);
+                LogMod.writeLine($"[xmap][error] Lỗi đọc links autowaypoint từ tệp {path}\n{e}");
             }
         }
 
         private void addLinksHome()
         {
             int cgender = Char.myCharz().cgender;
-            int idMapHome = Utilities.getIdMapHome(cgender);
-            int idMapLang = Utilities.getIdMapLang(cgender);
+            int mapHome = Utilities.getIdMapHome(cgender);
+            int mapLang = Utilities.getIdMapLang(cgender);
 
-            addLinkMap(idMapLang, idMapHome, TypeMapNext.AutoWaypoint, null);
-            addLinkMap(idMapHome, idMapLang, TypeMapNext.AutoWaypoint, null);
+            links[mapHome].Add(new(mapHome, mapLang, TypeMapNext.AutoWaypoint, null));
+            links[mapLang].Add(new(mapLang, mapHome, TypeMapNext.AutoWaypoint, null));
         }
 
         private void loadLinkSieuThi()
@@ -200,9 +206,9 @@ namespace Mod.Xmap
             const int select = 0;
 
             int offset = Char.myCharz().cgender;
-            int idMapNext = Utilities.ID_MAP_TTVT_BASE + offset;
+            int mapTTVT = Utilities.ID_MAP_TTVT_BASE + offset;
             int[] info = new int[] { npcId, select };
-            addLinkMap(ID_MAP_SIEU_THI, idMapNext, TypeMapNext.NpcMenu, info);
+            links[ID_MAP_SIEU_THI].Add(new(ID_MAP_SIEU_THI, mapTTVT, TypeMapNext.NpcMenu, info));
         }
 
         private void loadLinkToCold()
@@ -214,12 +220,12 @@ namespace Mod.Xmap
             const int select = 0;
 
             int[] info = new int[] { npcId, select };
-            addLinkMap(ID_MAP_TPVGT, ID_MAP_TO_COLD, TypeMapNext.NpcMenu, info);
+            links[ID_MAP_TPVGT].Add(new(ID_MAP_TPVGT, ID_MAP_TO_COLD, TypeMapNext.NpcMenu, info));
         }
 
-        private void addLinkMap(int idMapStart, int idMapNext, TypeMapNext type, int[] info)
-        {
-            links[idMapStart].Add(new(idMapNext, type, info));
-        }
+        //private void addLinkMap(int idMapStart, int idMapNext, TypeMapNext type, int[] info)
+        //{
+        //    links[idMapStart].Add(new(idMapNext, type, info));
+        //}
     }
 }
