@@ -38,43 +38,17 @@ namespace QLTK
             new Server() { name = "Võ đài Liên Vũ Trụ", ip = "dragonwar.teamobi.com", port = 20000, language = 0 },
             new Server() { name = "Indonaga", ip = "dragon.indonaga.com", port = 14446, language = 2 },
             new Server() { name = "Universe 1", ip = "dragon.indonaga.com", port = 14445, language = 2 },
-
-            //Server Blue không chạy được phiên bản 217
-            //Các server lậu khác chưa test
-            new Server("Blue 01", "103.48.194.146", 14445),
-            new Server("Blue 02", "103.48.194.152", 14445),
-            new Server("Blue 03", "45.119.81.28", 14445),
-            new Server("Blue 04", "45.119.81.51", 14445),
-            new Server("Blue 05", "103.48.194.173", 14445),
-            new Server("Blue 06", "103.48.194.137", 14445),
-            new Server("Blue 07", "103.48.194.159", 14445),
-            new Server("Blue 08", "103.48.194.139", 14445),
-
-            new Server("Green 01", "103.48.194.46", 14445),
-
-            new Server("Dream 1", "14.225.198.30", 14446),
-            new Server("Dream 2", "14.225.198.30", 14447),
-
-            new Server("NroZ 1", "222.255.214.169", 14445),
-            new Server("NroZ 2", "222.255.214.169", 14445),
-
-            new Server("Vũ Trụ Kakarot", "103.90.224.247", 14445),
-
-            new Server("NROLOVE 1", "103.200.22.220", 14446),
-            new Server("NROLOVE 2", "103.27.236.54", 14446),
-
-            new Server("Private 1", "222.255.214.140", 14445),
-
-            new Server("SUPER 1", "103.90.224.245", 14446),
-            new Server("SUPER 2", "103.90.224.245", 14447),
-
-            new Server("Rose", "103.90.224.45", 14445),
-            new Server("Local", "127.0.0.1", 14445),
         };
 
         public static object settings;
 
         static int width, height;
+
+        static MainWindow()
+        {
+            Servers.AddRange(Utilities.LoadServersFromFile());
+            Servers.Add(new Server("Local", "127.0.0.1", 14445));
+        }
 
         public MainWindow()
         {
