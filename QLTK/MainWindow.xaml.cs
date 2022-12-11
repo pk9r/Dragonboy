@@ -25,19 +25,20 @@ namespace QLTK
 
         public static List<Server> Servers = new List<Server>()
         {
-            new Server() { name = "Vũ trụ 1", ip = "dragon1.teamobi.com", port = 14445, language = 0},
-            new Server() { name = "Vũ trụ 2", ip = "dragon2.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Vũ trụ 3", ip = "dragon3.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Vũ trụ 4", ip = "dragon4.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Vũ trụ 5", ip = "dragon5.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Vũ trụ 6", ip = "dragon6.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Vũ trụ 7", ip = "dragon7.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Vũ trụ 8", ip = "dragon8.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Vũ trụ 9", ip = "dragon9.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Vũ trụ 10", ip = "dragon10.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Võ đài Liên Vũ Trụ", ip = "dragonwar.teamobi.com", port = 20000, language = 0 },
-            new Server() { name = "Indonaga", ip = "dragon.indonaga.com", port = 14446, language = 2 },
-            new Server() { name = "Universe 1", ip = "dragon.indonaga.com", port = 14445, language = 2 },
+            new Server("Vũ trụ 1", "dragon1.teamobi.com", 14445),
+            new Server("Vũ trụ 2", "dragon2.teamobi.com", 14445),
+            new Server("Vũ trụ 3", "dragon3.teamobi.com", 14445),
+            new Server("Vũ trụ 4", "dragon4.teamobi.com", 14445),
+            new Server("Vũ trụ 5", "dragon5.teamobi.com", 14445),
+            new Server("Vũ trụ 6", "dragon6.teamobi.com", 14445),
+            new Server("Vũ trụ 7", "dragon7.teamobi.com", 14445),
+            new Server("Vũ trụ 8", "dragon8.teamobi.com", 14445),
+            new Server("Vũ trụ 9", "dragon9.teamobi.com", 14445),
+            new Server("Vũ trụ 10", "dragon10.teamobi.com", 14445),
+            new Server("Vũ trụ 11", "dragon11.teamobi.com", 14445),
+            new Server("Võ đài Liên Vũ Trụ", "dragonwar.teamobi.com", 20000),
+            new Server("Universe 1", "dragon.indonaga.com", 14445, 2),
+            new Server("Indonaga", "dragon.indonaga.com", 14446, 2),
         };
 
         public static object settings;
