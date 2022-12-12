@@ -25,56 +25,31 @@ namespace QLTK
 
         public static List<Server> Servers = new List<Server>()
         {
-            new Server() { name = "Vũ trụ 1", ip = "dragon1.teamobi.com", port = 14445, language = 0},
-            new Server() { name = "Vũ trụ 2", ip = "dragon2.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Vũ trụ 3", ip = "dragon3.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Vũ trụ 4", ip = "dragon4.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Vũ trụ 5", ip = "dragon5.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Vũ trụ 6", ip = "dragon6.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Vũ trụ 7", ip = "dragon7.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Vũ trụ 8", ip = "dragon8.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Vũ trụ 9", ip = "dragon9.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Vũ trụ 10", ip = "dragon10.teamobi.com", port = 14445, language = 0 },
-            new Server() { name = "Võ đài Liên Vũ Trụ", ip = "dragonwar.teamobi.com", port = 20000, language = 0 },
-            new Server() { name = "Indonaga", ip = "dragon.indonaga.com", port = 14446, language = 2 },
-            new Server() { name = "Universe 1", ip = "dragon.indonaga.com", port = 14445, language = 2 },
-
-            //Server Blue không chạy được phiên bản 217
-            //Các server lậu khác chưa test
-            new Server("Blue 01", "103.48.194.146", 14445),
-            new Server("Blue 02", "103.48.194.152", 14445),
-            new Server("Blue 03", "45.119.81.28", 14445),
-            new Server("Blue 04", "45.119.81.51", 14445),
-            new Server("Blue 05", "103.48.194.173", 14445),
-            new Server("Blue 06", "103.48.194.137", 14445),
-            new Server("Blue 07", "103.48.194.159", 14445),
-            new Server("Blue 08", "103.48.194.139", 14445),
-
-            new Server("Green 01", "103.48.194.46", 14445),
-
-            new Server("Dream 1", "14.225.198.30", 14446),
-            new Server("Dream 2", "14.225.198.30", 14447),
-
-            new Server("NroZ 1", "222.255.214.169", 14445),
-            new Server("NroZ 2", "222.255.214.169", 14445),
-
-            new Server("Vũ Trụ Kakarot", "103.90.224.247", 14445),
-
-            new Server("NROLOVE 1", "103.200.22.220", 14446),
-            new Server("NROLOVE 2", "103.27.236.54", 14446),
-
-            new Server("Private 1", "222.255.214.140", 14445),
-
-            new Server("SUPER 1", "103.90.224.245", 14446),
-            new Server("SUPER 2", "103.90.224.245", 14447),
-
-            new Server("Rose", "103.90.224.45", 14445),
-            new Server("Local", "127.0.0.1", 14445),
+            new Server("Vũ trụ 1", "dragon1.teamobi.com", 14445),
+            new Server("Vũ trụ 2", "dragon2.teamobi.com", 14445),
+            new Server("Vũ trụ 3", "dragon3.teamobi.com", 14445),
+            new Server("Vũ trụ 4", "dragon4.teamobi.com", 14445),
+            new Server("Vũ trụ 5", "dragon5.teamobi.com", 14445),
+            new Server("Vũ trụ 6", "dragon6.teamobi.com", 14445),
+            new Server("Vũ trụ 7", "dragon7.teamobi.com", 14445),
+            new Server("Vũ trụ 8", "dragon8.teamobi.com", 14445),
+            new Server("Vũ trụ 9", "dragon9.teamobi.com", 14445),
+            new Server("Vũ trụ 10", "dragon10.teamobi.com", 14445),
+            new Server("Vũ trụ 11", "dragon11.teamobi.com", 14445),
+            new Server("Võ đài Liên Vũ Trụ", "dragonwar.teamobi.com", 20000),
+            new Server("Universe 1", "dragon.indonaga.com", 14445, 2),
+            new Server("Indonaga", "dragon.indonaga.com", 14446, 2),
         };
 
         public static object settings;
 
         static int width, height;
+
+        static MainWindow()
+        {
+            Servers.AddRange(Utilities.LoadServersFromFile());
+            Servers.Add(new Server("Local", "127.0.0.1", 14445));
+        }
 
         public MainWindow()
         {

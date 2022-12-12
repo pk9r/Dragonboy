@@ -1,5 +1,8 @@
 ﻿using HardwareId;
+using QLTK.Models;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -9,6 +12,22 @@ namespace QLTK
 {
     public class Utilities
     {
+
+        internal static List<Server> LoadServersFromFile()
+        {
+            List<Server> servers = new List<Server>();
+            if (File.Exists("ModData\\Servers.txt"))
+                foreach(string server in File.ReadAllLines("ModData\\Servers.txt"))
+                {
+                    try
+                    {
+                        string[] strings = server.Split(new char[] { '|' });
+                        servers.Add(new Server(strings[0], strings[1], int.Parse(strings[2]), int.Parse(strings[3])));
+                    }
+                    catch (Exception) { }
+                }
+            return servers;
+        }
 
         public static string EncryptString(string data)
         {
