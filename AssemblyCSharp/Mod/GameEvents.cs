@@ -247,6 +247,7 @@ namespace Mod
         /// </summary>
         /// <param name="username"></param>
         /// <param name="pass"></param>
+        /// <param name="type"></param>
         public static void onLogin(ref string username, ref string pass, ref sbyte type)
         {
             username = Utilities.username == "" ? username : Utilities.username;

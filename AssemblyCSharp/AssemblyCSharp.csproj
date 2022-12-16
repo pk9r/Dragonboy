@@ -10,6 +10,14 @@
   </PropertyGroup>
   <PropertyGroup>
     <RootNamespace />
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>none</DebugType>
+    <NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
@@ -38,6 +46,6 @@
 	</Reference>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(TargetDir)Assembly-CSharp.dll&quot; &quot;$(SolutionDir)Game\Game_Data\Managed\&quot;" />
+    <Exec Command="copy &quot;$(TargetDir)Assembly-CSharp.dll&quot; &quot;$(SolutionDir)Game\Game_Data\Managed\&quot;&#xD;&#xA;copy &quot;$(TargetDir)Assembly-CSharp.xml&quot; &quot;$(SolutionDir)Game\Game_Data\Managed\&quot;" />
   </Target>
 </Project>

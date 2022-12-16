@@ -255,13 +255,10 @@ namespace Mod.Auto
             MyVector myVector = new MyVector();
             Mob mob = ClosestMob();
             Char.myCharz().mobFocus = mob;
-            if (mob.getTemplate().type == 4) Utilities.DoDoubleClickToObj(mob);
-            else
-            {
-                myVector.addElement(mob);
-                Char.myCharz().currentMovePoint = new MovePoint(mob.x, mob.y);
-                if (Res.distance(Char.myCharz().cx, Char.myCharz().cy, mob.x, mob.y) <= 50) Service.gI().sendPlayerAttack(myVector, new MyVector(), -1);
-            }
+            myVector.addElement(mob);
+            Char.myCharz().currentMovePoint = new MovePoint(mob.x, mob.y);
+            if (Utilities.getDistance(Char.myCharz(), mob) <= 50) 
+                Service.gI().sendPlayerAttack(myVector, new MyVector(), -1);
         }
 
         private static Mob ClosestMob()

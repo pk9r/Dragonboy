@@ -1,0 +1,545 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Assembly-CSharp</name>
+    </assembly>
+    <members>
+        <member name="T:Mod.Dialogs.FileDialog.OpenFileName">
+            <summary>
+            Link: https://docs.microsoft.com/en-us/windows/win32/api/commdlg/ns-commdlg-openfilenamea
+            </summary>
+        </member>
+        <member name="M:Mod.Dialogs.FileDialog.OpenSaveFileDialog(System.String,System.String,System.String)">
+            <summary>
+            Mở hộp thoại lưu tệp.
+            </summary>
+            <param name="title">Tiêu đề cửa sổ của hộp thoại lưu tệp.</param>
+            <param name="filter">Bộ lọc tệp, phân cách nhau bởi dấu chấm phẩy (;). Nội dung và phần mở rộng phân cách nhau bởi dấu gạch đứng (|).</param>
+            <param name="missingExtension">Phần mở rộng tệp (không bao gồm dấu chấm) được tự động thêm nếu người dùng nhập thiếu. Có thể là một xâu rỗng nếu không cần sử dụng.</param>
+            <returns>Mảng xâu chứa đường dẫn tới các tệp đã được chọn.</returns>
+        </member>
+        <member name="M:Mod.Dialogs.FileDialog.OpenSelectFileDialog(System.String,System.String,System.String)">
+            <summary>
+            Mở hộp thoại chọn tệp. Được phép chọn nhiều tệp cùng một lúc.
+            </summary>
+            <param name="title">Tiêu đề cửa sổ của hộp thoại chọn tệp.</param>
+            <param name="filter">Bộ lọc tệp, phân cách nhau bởi dấu chấm phẩy (;). Nội dung và phần mở rộng phân cách nhau bởi dấu gạch đứng (|).</param>
+            <param name="missingExtension">Phần mở rộng tệp (không bao gồm dấu chấm) được tự động thêm nếu người dùng nhập thiếu. Có thể là một xâu rỗng nếu không cần sử dụng.</param>
+            <returns>Mảng xâu chứa đường dẫn tới các tệp đã được chọn.</returns>
+        </member>
+        <member name="T:Mod.Extension">
+            <summary>
+            Class để các extension override, chứa các method được gọi khi một sự kiện nào đó trong game diễn ra.
+            </summary>
+        </member>
+        <member name="T:Mod.GameEvents">
+            <summary>
+            Định nghĩa các sự kiện của game.
+            </summary>
+            <remarks>
+            - Các hàm bool trả về true thì sự kiện game sẽ không được thực hiện, 
+            trả về false thì sự kiện sẽ được kích hoạt như bình thường.<br/>
+            - Các hàm void hỗ trợ thực hiện các lệnh cùng với sự kiện.
+            </remarks>
+        </member>
+        <member name="M:Mod.GameEvents.onSendChat(System.String)">
+            <summary>
+            Kích hoạt khi người chơi chat.
+            </summary>
+            <param name="text">Nội dung chat.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mod.GameEvents.onGameStarted">
+            <summary>
+            Kích hoạt sau khi game khởi động.
+            </summary>
+        </member>
+        <member name="M:Mod.GameEvents.onGameClosing">
+            <summary>
+            Kích hoạt khi game đóng
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Mod.GameEvents.onKeyMapLoaded(System.Collections.Hashtable)">
+            <summary>
+            Kích hoạt sau khi load KeyMap.
+            </summary>
+            <param name="h"></param>
+        </member>
+        <member name="M:Mod.GameEvents.onSetResolution">
+            <summary>
+            Kích hoạt khi cài đăt kích thước màn hình.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Mod.GameEvents.onGameScrPressHotkeysUnassigned">
+            <summary>
+            Kích hoạt khi nhấn phím tắt (GameScr) chưa được xử lý.
+            </summary>
+        </member>
+        <member name="M:Mod.GameEvents.onPaintChatTextField(mGraphics)">
+            <summary>
+            Kích hoạt sau khi vẽ khung chat.
+            </summary>
+            <param name="g"></param>
+        </member>
+        <member name="M:Mod.GameEvents.onStartChatTextField(ChatTextField)">
+            <summary>
+            Kích hoạt khi mở khung chat.
+            </summary>
+        </member>
+        <member name="M:Mod.GameEvents.onUpdateChatTextField(ChatTextField)">
+            <summary>
+            Kích hoạt khi có ChatTextField update.
+            </summary>
+        </member>
+        <member name="M:Mod.GameEvents.onUpdateGameScr">
+            <summary>
+            Kích hoạt khi GameScr.gI() update.
+            </summary>
+        </member>
+        <member name="M:Mod.GameEvents.onLogin(System.String@,System.String@,System.SByte@)">
+            <summary>
+            Kích hoạt khi gửi yêu cầu đăng nhập.
+            </summary>
+            <param name="username"></param>
+            <param name="pass"></param>
+            <param name="type"></param>
+        </member>
+        <member name="M:Mod.GameEvents.onServerListScreenLoaded">
+            <summary>
+            Kích hoạt sau khi màn hình chọn server được load.
+            </summary>
+        </member>
+        <member name="M:Mod.GameEvents.onSessionConnecting(System.String@,System.Int32@)">
+            <summary>
+            Kích hoạt khi Session kết nối đến server.
+            </summary>
+            <param name="host"></param>
+            <param name="port"></param>
+        </member>
+        <member name="T:Mod.Graphics.TextureScaler">
+             <summary>
+             A unility class with functions to scale Texture2D Data.
+            
+             Scale is performed on the GPU using RTT, so it's blazing fast.
+             Setting up and Getting back the texture data is the bottleneck. 
+             But Scaling itself costs only 1 draw call and 1 RTT State setup!
+             WARNING: This script override the RTT Setup! (It sets a RTT!)	 
+            
+             Note: This scaler does NOT support aspect ratio based scaling. You will have to do it yourself!
+             It supports Alpha, but you will have to divide by alpha in your shaders, 
+             because of premultiplied alpha effect. Or you should use blend modes.
+             </summary>
+        </member>
+        <member name="M:Mod.Graphics.TextureScaler.ScaleTexture(UnityEngine.Texture2D,System.Int32,System.Int32,UnityEngine.FilterMode)">
+            <summary>
+            Returns a scaled copy of given texture. 
+            </summary>
+            <param name="src">Source texure to scale</param>
+            <param name="width">Destination texture width</param>
+            <param name="height">Destination texture height</param>
+            <param name="mode">Filtering mode</param>
+        </member>
+        <member name="M:Mod.Graphics.TextureScaler.ApplyScaleTexture(UnityEngine.Texture2D,System.Int32,System.Int32,UnityEngine.FilterMode)">
+            <summary>
+            Scales the texture data of the given texture.
+            </summary>
+            <param name="tex">Texure to scale</param>
+            <param name="width">New width</param>
+            <param name="height">New height</param>
+            <param name="mode">Filtering mode</param>
+        </member>
+        <member name="F:Mod.HistoryChat.HEIGHT_HINT_ITEM">
+            <summary>
+            Chiều cao hiển thị một gợi ý.
+            </summary>
+        </member>
+        <member name="F:Mod.HistoryChat.MAX_HINTS_ITEM">
+            <summary>
+            Số lượng tối da các gợi ý hiển thị.
+            </summary>
+        </member>
+        <member name="F:Mod.HistoryChat.hints">
+            <summary>
+            Danh sách gợi ý.
+            </summary>
+        </member>
+        <member name="F:Mod.HistoryChat.selectedIndex">
+            <summary>
+            Thứ tự lệnh gợi ý lựa chọn.
+            </summary>
+        </member>
+        <member name="F:Mod.HistoryChat.isShow">
+            <summary>
+            Trạng thái hiển thị.
+            </summary>
+        </member>
+        <member name="F:Mod.HistoryChat.lenghtHintsShow">
+            <summary>
+            Số lượng gợi ý hiển thị
+            </summary>
+        </member>
+        <member name="F:Mod.HistoryChat.scrollValue">
+            <summary>
+            Giá trị thanh cuộn.
+            </summary>
+        </member>
+        <member name="F:Mod.HistoryChat.width">
+            <summary>
+            Chiều rộng khung gợi ý.
+            </summary>
+        </member>
+        <member name="F:Mod.HistoryChat.height">
+            <summary>
+            Chiều cao khung gợi ý.
+            </summary>
+        </member>
+        <member name="F:Mod.HistoryChat.x">
+            <summary>
+            Toạ độ x khung gợi ý.
+            </summary>
+        </member>
+        <member name="F:Mod.HistoryChat.y">
+            <summary>
+            Toạ độ y khung gợi ý.
+            </summary>
+        </member>
+        <member name="F:Mod.HistoryChat.chatBack">
+            <summary>
+            Lưu chuỗi chat cũ.
+            </summary>
+        </member>
+        <member name="P:Mod.HistoryChat.maxWidth">
+            <summary>
+            Chiều rộng tối da của khung gợi ý.
+            </summary>
+        </member>
+        <member name="M:Mod.ModHelper.CommandMod.BaseCommand.canExecute(System.String,System.Object[]@)">
+            <summary>
+            Kiểm tra có thể thực hiện command với args không.
+            </summary>
+            <param name="args">Chuỗi chứa các đối số cần của command.</param>
+            <param name="parameters">Danh sách các đối số đã tách và ép kiểu được.</param>
+            <returns>true nếu có thể thực hiện.</returns>
+        </member>
+        <member name="M:Mod.ModHelper.CommandMod.BaseCommand.execute(System.String)">
+            <summary>
+            Thực thi command.
+            </summary>
+            <param name="args">Các đối số của command.</param>
+            <returns>true nếu thực thi thành công.</returns>
+        </member>
+        <member name="M:Mod.ModHelper.CommandMod.BaseCommand.preprocessingArgs(System.String@)">
+            <summary>
+            Tiền xử lý các đối số.
+            </summary>
+            <param name="args">Các đối số của command</param>
+        </member>
+        <member name="M:Mod.ModHelper.CommandMod.BaseCommand.checkCountArgs(System.String,System.String[]@)">
+            <summary>
+            Kiểm tra số lượng đối số.
+            </summary>
+            <param name="args">Các đối số của command</param>
+            <param name="arguments">Danh sách các đối số đã tách được.</param>
+            <returns>true nếu độ dài phù hợp với command.</returns>
+        </member>
+        <member name="M:Mod.ModHelper.CommandMod.BaseCommand.checkTypeArgs(System.String[],System.Object[]@)">
+            <summary>
+            Kiểm tra kiểu dữ liệu các đối số.
+            </summary>
+            <param name="arguments">Danh sách các đối số chưa ép kiểu.</param>
+            <param name="parameters">Danh sách các đối số đã ép kiểu được.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mod.ModHelper.CommandMod.Chat.ChatCommandHandler.loadDefalut">
+            <summary>
+            Tải lệnh chat mặc định. (các lệnh được định nghĩa trên code)
+            </summary>
+        </member>
+        <member name="M:Mod.ModHelper.CommandMod.Chat.ChatCommandHandler.save">
+            <summary>
+            Lưu lệnh chat.
+            </summary>
+        </member>
+        <member name="M:Mod.ModHelper.CommandMod.Chat.ChatCommandHandler.execute(System.String)">
+            <summary>
+            Tìm và thực hiện lệnh chat.
+            </summary>
+            <param name="command">Nội dung lệnh.</param>
+            <returns>true nếu lệnh thực hiện thành công.</returns>
+        </member>
+        <member name="M:Mod.ModHelper.CommandMod.Chat.ChatCommandHandler.executeFull(System.String)">
+            <summary>
+            Tìm và thực hiện các lệnh chat dạng đầy đủ (namespace.class.method)
+            </summary>
+            <param name="command">Nội dung lệnh.</param>
+            <returns>true nếu lệnh thực hiện thành công.</returns>
+        </member>
+        <member name="M:Mod.ModHelper.CommandMod.Chat.ChatCommandHandler.handleChatText(System.String)">
+            <summary>
+            Xử lý câu chat.
+            </summary>
+            <param name="text">Nội dung chat.</param>
+            <returns>true nếu có lệnh được thực hiện thành công.</returns>
+        </member>
+        <member name="M:Mod.ModHelper.CommandMod.Hotkey.HotkeyCommandHandler.loadDefalut">
+            <summary>
+            Tải lệnh chat mặc định.
+            </summary>
+        </member>
+        <member name="M:Mod.ModHelper.CommandMod.Hotkey.HotkeyCommandHandler.save">
+            <summary>
+            Lưu lệnh chat.
+            </summary>
+        </member>
+        <member name="M:Mod.ModHelper.CommandMod.Hotkey.HotkeyCommandHandler.handleHotkey(System.Int32)">
+            <summary>
+            Xử lý phím nhấn.
+            </summary>
+            <param name="key">Mã ASCII phím được nhấn.</param>
+            <returns>true nếu có lệnh được thực hiện thành công.</returns>
+        </member>
+        <member name="M:Mod.ModHelper.CommandMod.Utils.getMethods(System.String)">
+            <summary>
+            Lấy danh sách các hàm trong theo tên của class.
+            </summary>
+            <remarks> Lưu ý:
+            <list type="bullet">
+            <item><description>Chỉ lấy các hàm public static void.</description></item>
+            <item><description>Tên class phải bao gồm cả namespace.</description></item>
+            </list>
+            </remarks>
+            <param name="typeFullName"></param>
+            <returns>Danh sách các hàm trong class.</returns>
+        </member>
+        <member name="M:Mod.ModHelper.CommandMod.Utils.GetMethods">
+            <summary>
+            Lấy danh sách tất cả các hàm của tệp Assembly-CSharp.dll.
+            </summary>
+            <remarks> Lưu ý:
+            <list type="bullet">
+            <item><description>Chỉ lấy các hàm public static void.</description></item>
+            <item><description>Tên class phải bao gồm cả namespace.</description></item>
+            </list>
+            </remarks>
+            <returns>Danh sách các hàm của tệp Assembly-CSharp.dll.</returns>
+        </member>
+        <member name="M:Mod.ModHelper.MainThreadDispatcher.dispatcher(System.Action)">
+            <summary>
+            Thực hiện các hành động trong Thread chính của game tránh xung đột
+            </summary>
+            <param name="action"></param>
+        </member>
+        <member name="M:Mod.ModHelper.SocketClient.close">
+            <summary>
+            Đóng kết nối socket.
+            </summary>
+        </member>
+        <member name="M:Mod.ModHelper.SocketClient.writeLog(System.String)">
+            <summary>
+            Ghi log cho SocketClient.
+            </summary>
+            <param name="log"></param>
+        </member>
+        <member name="T:Mod.ModHelper.ThreadAction`1">
+            <summary>
+            Kế thừa class này để tạo chức năng sử dụng Thread.
+            </summary>
+        </member>
+        <member name="P:Mod.ModHelper.ThreadAction`1.IsActing">
+            <summary>
+            Kiểm tra hành động còn thực hiện.
+            </summary>
+        </member>
+        <member name="F:Mod.ModHelper.ThreadAction`1.threadAction">
+            <summary>
+            Thread sử dụng để thực thi hành động.
+            </summary>
+        </member>
+        <member name="M:Mod.ModHelper.ThreadAction`1.action">
+            <summary>
+            Hành động cần thực hiện.
+            </summary>
+        </member>
+        <member name="M:Mod.ModHelper.ThreadAction`1.performAction">
+            <summary>
+            Thực thi hành động bằng thread của instance.
+            </summary>
+        </member>
+        <member name="M:Mod.ModHelper.ThreadAction`1.executeAction">
+            <summary>
+            Sử dụng thread của instance để thực thi hành động.
+            </summary>
+        </member>
+        <member name="T:Mod.ModHelper.ThreadActionUpdate`1">
+            <summary>
+            Hỗ trợ tạo thread thực hiện cách hành động lặp đi lặp lại.
+            </summary>
+        </member>
+        <member name="P:Mod.ModHelper.ThreadActionUpdate`1.Interval">
+            <summary>
+            Thời gian nghỉ giữa các lần thực thi.
+            </summary>
+        </member>
+        <member name="M:Mod.ModHelper.ThreadActionUpdate`1.update">
+            <summary>
+            Hành động thực hiện.
+            </summary>
+        </member>
+        <member name="M:Mod.ModHelper.ThreadActionUpdate`1.toggle(System.Nullable{System.Boolean})">
+            <summary>
+            Chuyển đổi trạng thái hành động
+            </summary>
+            <param name="isActing">Trạng thái hành động muốn chuyển đổi, nếu null thì sẽ đổi qua lại giữa bật và tắt</param>
+        </member>
+        <member name="M:Mod.ModMenu.ModMenuItem.#ctor(System.String,System.String,System.Boolean,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="title">Tiêu đề</param>
+            <param name="description">Mô tả</param>
+            <param name="isDisabled">Trạng thái vô hiệu hóa</param>
+            <param name="disabledReason">Lý do bị vô hiệu hóa, được thông báo khi ModMenuItem được chọn đang bị vô hiệu hóa.</param>
+        </member>
+        <member name="M:Mod.ModMenu.ModMenuItemBoolean.#ctor(System.String,System.String,System.Action{System.Boolean},System.Boolean,System.String,System.Boolean,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="title">Tiêu đề</param>
+            <param name="description">Mô tả</param>
+            <param name="action">Hàm được gọi khi giá trị hiện tại thay đổi, có 1 đối số kiểu boolean và không trả về giá trị.</param>
+            <param name="value">Giá trị hiện tại</param>
+            <param name="rmsName">Tên tệp lưu dữ liệu</param>
+            <param name="isDisabled">Trạng thái vô hiệu hóa</param>
+            <param name="disabledReason">Lý do bị vô hiệu hóa, được thông báo khi ModMenuItem được chọn đang bị vô hiệu hóa.</param>
+        </member>
+        <member name="M:Mod.ModMenu.ModMenuItemFunction.#ctor(System.String,System.String,System.Action,System.Boolean,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="title">Tiêu đề</param>
+            <param name="description">Mô tả</param>
+            <param name="action">Hàm được gọi khi được chọn, không có đối số và không trả về giá trị.</param>
+            <param name="isDisabled">Trạng thái vô hiệu hóa</param>
+            <param name="disabledReason">Lý do bị vô hiệu hóa, được thông báo khi ModMenuItem được chọn đang bị vô hiệu hóa.</param>
+        </member>
+        <member name="M:Mod.ModMenu.ModMenuItemInt.#ctor(System.String,System.String[],System.String,System.Int32,System.Action{System.Int32},System.String,System.Boolean,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="title">Tiêu đề</param>
+            <param name="values">Danh sách giá trị để lựa chọn</param>
+            <param name="description">Mô tả</param>
+            <param name="selectedValue">Giá trị được chọn</param>
+            <param name="action">Hàm được gọi khi giá trị được chọn thay đổi, có 1 đối số kiểu int32 và không trả về giá trị.</param>
+            <param name="rmsName">Tên tệp lưu dữ liệu</param>
+            <param name="isDisabled">Trạng thái vô hiệu hóa</param>
+            <param name="disabledReason">Lý do bị vô hiệu hóa, được thông báo khi ModMenuItem được chọn đang bị vô hiệu hóa.</param>
+            <exception cref="T:System.ArgumentException">Danh sách giá trị và mô tả đều bằng <see langword="null"/> hoặc rỗng.</exception>
+        </member>
+        <member name="F:Mod.ModMenu.ModMenuMain.modMenuItemBools">
+            <summary>
+            Thêm bật/tắt chức năng mod ở đây
+            </summary>
+        </member>
+        <member name="F:Mod.ModMenu.ModMenuMain.modMenuItemInts">
+            <summary>
+            Thêm điều chỉnh chỉ số chức năng mod ở đây
+            </summary>
+        </member>
+        <member name="M:Mod.Utilities.getMyVectorMe">
+            <summary>
+            Lấy MyVector chứa nhân vật của người chơi.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Mod.Utilities.canBuffMe(Skill@)">
+            <summary>
+            Kiểm tra khả năng sử dụng skill Trị thương vào bản thân.
+            </summary>
+            <param name="skillBuff">Skill trị thương.</param>
+            <returns>true nếu có thể sử dụng skill trị thương vào bản thân.</returns>
+        </member>
+        <member name="M:Mod.Utilities.isUsingTDLT">
+            <summary>
+            Kiểm tra trạng thái sử dụng TĐLT.
+            </summary>
+            <returns>true nếu đang sử dụng tự động luyên tập</returns>
+        </member>
+        <member name="M:Mod.Utilities.getIndexItemBag(System.Int16[])">
+            <summary>
+            Sử dụng một item có id là một trong số các id truyền vào.
+            </summary>
+            <param name="templatesId">Mảng chứa các id của các item muốn sử dụng.</param>
+            <returns>true nếu có vật phẩm được sử dụng.</returns>
+        </member>
+        <member name="M:Mod.Utilities.teleToNpc(Npc)">
+            <summary>
+            Dịch chuyển tới npc trong map.
+            </summary>
+            <param name="npc">Npc cần dịch chuyển tới</param>
+        </member>
+        <member name="M:Mod.Utilities.buffMe">
+            <summary>
+            Sử dụng skill Trị thương của namec vào bản thân.
+            </summary>
+        </member>
+        <member name="M:Mod.Utilities.teleportMyChar(System.Int32,System.Int32)">
+            <summary>
+            Dịch chuyển tới một toạ độ cụ thể trong map.
+            </summary>
+            <param name="x">Toạ độ x.</param>
+            <param name="y">Toạ độ y.</param>
+        </member>
+        <member name="M:Mod.Utilities.teleportMyChar(IMapObject)">
+            <summary>
+            Dịch chuyển đến đối tượng trong map
+            </summary>
+            <param name="obj">Đối tượng cần dịch chuyển tới</param>
+        </member>
+        <member name="M:Mod.Utilities.teleportMyChar(System.Int32)">
+            <summary>
+            Dịch chuyển đến vị trí trên mặt đất có hoành độ x
+            </summary>
+            <param name="x">Hoành độ</param>
+        </member>
+        <member name="M:Mod.Utilities.getYGround(System.Int32)">
+            <summary>
+            Lấy tung độ mặt đất từ hoành độ
+            </summary>
+            <param name="x">Hoành độ x</param>
+            <returns>Tung độ y thỏa mãn (x, y) là mặt đất</returns>
+        </member>
+        <member name="M:Service.sendPlayerAttack(MyVector,MyVector,System.Int32)">
+            <summary>
+            Gửi sự tấn công của người chơi.
+            </summary>
+            <example>Tấn công quái hoặc người chơi đang focus:
+            <code>
+            var vMob = new MyVector();
+            var vChar = new MyVector();
+            
+            if (Char.myCharz().mobFocus != null)
+            	vMob.addElement(Char.myCharz().mobFocus);
+            else if (Char.myCharz().charFocus != null)
+            	vChar.addElement(Char.myCharz().charFocus);
+            	
+            if (vMob.size() > 0 || vChar.size() > 0)
+            	Service.gI().sendPlayerAttack(vMob, vChar, -1); // type = -1 -> auto
+            </code>
+            </example>
+            <param name="vMob">MyVector chứa Mob bị tấn công.</param>
+            <param name="vChar">MyVector chứa Char bị tấn công.</param>
+            <param name="type">
+            Kiểu tấn công.
+            <list type="bullet">
+            <item><description>0: Không tấn công.</description></item>
+            <item><description>1: Tấn công Mob.</description></item>
+            <item><description>2: Tấn công Char.</description></item>
+            <item><description>Khác: Tự động, ưu tiên tấn công Mob.</description></item>
+            </list>
+            </param>
+        </member>
+    </members>
+</doc>
