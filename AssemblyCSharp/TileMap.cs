@@ -552,6 +552,7 @@ public class TileMap
 						{
 							if (ModMenuMain.getStatusInt("levelreducegraphics") == 2 && i > 0) g.drawRect(i * size, j * size + 8, 24, 24);
 							else g.fillRect(i * size, j * size + 8, 24, 24);
+							//perfomance issuse
                         }
                     }
                 }

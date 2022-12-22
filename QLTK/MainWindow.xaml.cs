@@ -45,6 +45,7 @@ namespace QLTK
 
         static int width, height;
 
+        static bool isCheckedStateChangedByCode;
         static MainWindow()
         {
             Servers.AddRange(Utilities.LoadServersFromFile());
@@ -66,6 +67,17 @@ namespace QLTK
 
             this.LoadAccounts();
             this.LoadSaveSettings();
+            if (SaveSettings.Instance.indexConnectToDiscordRPC >= 0 && SaveSettings.Instance.indexConnectToDiscordRPC < AccountsDataGrid.Items.Count)
+                SaveSettings.accountConnectToDiscordRPC = AccountsDataGrid.Items[SaveSettings.Instance.indexConnectToDiscordRPC] as Account;
+            Program.discordClient.SetPresence(new DiscordRPC.RichPresence()
+            {
+                State = "Chưa đăng nhập",
+                Assets = new DiscordRPC.Assets()
+                {
+                    LargeImageKey = "icon_large",
+                    LargeImageText = "Mod Cộng Đồng",
+                }
+            });
             if (WinVersion.GetVersion().Major < 8) return;
             using (WebClient client = new WebClient())
             {
@@ -566,6 +578,11 @@ namespace QLTK
                 this.UsernameTextBox.Text = account.username;
                 this.PasswordPasswordBox.Password = account.password;
                 this.ServerComboBox.SelectedIndex = account.indexServer;
+                isCheckedStateChangedByCode = true;
+                if (account.Equals(SaveSettings.accountConnectToDiscordRPC))
+                    IsDisplayInDiscordRichPresence.IsChecked = true;
+                else
+                    IsDisplayInDiscordRichPresence.IsChecked = false;
             }
         }
 
@@ -573,6 +590,7 @@ namespace QLTK
         {
             if (this.AccountsDataGrid.SelectedItem is Account account)
             {
+                isCheckedStateChangedByCode = false;
                 this.MainGrid.IsEnabled = false;
                 
                 if (ExistedWindow(account, out IntPtr hWnd))
@@ -589,6 +607,8 @@ namespace QLTK
                     return;
                 }
 
+                if (account.Equals(SaveSettings.accountConnectToDiscordRPC))
+                    IsDisplayInDiscordRichPresence_Checked(sender, null);
                 await this.OpenGameAsync(account);
                 
                 this.MainGrid.IsEnabled = true;
@@ -631,7 +651,14 @@ namespace QLTK
         {
             var accounts = this.GetSelectedAccounts();
             foreach (var account in accounts)
+            {
+                if (account.Equals(SaveSettings.accountConnectToDiscordRPC))
+                {
+                    SaveSettings.accountConnectToDiscordRPC = null;
+                    SaveSettings.Instance.indexConnectToDiscordRPC = -1;
+                }
                 this.GetAllAccounts().Remove(account);
+            }
 
             this.DoSaveAccounts();
             this.AccountsDataGrid.Items.Refresh();
@@ -678,6 +705,46 @@ namespace QLTK
                 this.ChatButton_Click(sender, null);
                 e.Handled = true;
             }
+        }
+
+        private void IsDisplayInDiscordRichPresence_Checked(object sender, RoutedEventArgs e)
+        {
+            if (isCheckedStateChangedByCode)
+            {
+                isCheckedStateChangedByCode = false;
+                return;
+            }
+            SaveSettings.Instance.indexConnectToDiscordRPC = AccountsDataGrid.SelectedIndex;
+            SaveSettings.accountConnectToDiscordRPC = AccountsDataGrid.SelectedItem as Account;
+            Program.discordClient.SetPresence(new DiscordRPC.RichPresence()
+            {
+                State = "Chưa đăng nhập",
+                Assets = new DiscordRPC.Assets()
+                {
+                    LargeImageKey = "icon_large",
+                    LargeImageText = "Mod Cộng Đồng",
+                }
+            });
+        }
+
+        private void IsDisplayInDiscordRichPresence_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (isCheckedStateChangedByCode)
+            {
+                isCheckedStateChangedByCode = false;
+                return;
+            }
+            SaveSettings.Instance.indexConnectToDiscordRPC = -1;
+            SaveSettings.accountConnectToDiscordRPC = null;
+            Program.discordClient.SetPresence(new DiscordRPC.RichPresence()
+            {
+                State = "Chưa đăng nhập",
+                Assets = new DiscordRPC.Assets()
+                {
+                    LargeImageKey = "icon_large",
+                    LargeImageText = "Mod Cộng Đồng",
+                }
+            });
         }
 
         private void AccountsDataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)

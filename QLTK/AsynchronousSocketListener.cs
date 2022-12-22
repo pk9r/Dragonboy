@@ -1,4 +1,5 @@
-﻿using LitJson;
+﻿using DiscordRPC;
+using LitJson;
 using QLTK.Models;
 using QLTK.Properties;
 using System;
@@ -73,6 +74,18 @@ namespace QLTK
                     state.account.xu = (long)msg["xu"];
                     state.account.luong = (int)msg["luong"];
                     state.account.luongKhoa = (int)msg["luongKhoa"];
+                    if (state.account == SaveSettings.accountConnectToDiscordRPC)
+                        Program.discordClient.SetPresence(new RichPresence()
+                        {
+                            Details = $"{state.account.cName} ({state.account.server.name})",
+                            State = $"Map: {state.account.mapName}, Khu: {state.account.zoneID}",
+                            Timestamps = Program.timestampsStartQLTK,
+                            Assets = new Assets()
+                            {
+                                LargeImageKey = "icon_large",
+                                LargeImageText = "Mod Cộng Đồng",
+                            }
+                        });
                     break;
                 case "setStatus":
                     state.account.status = (string)msg["status"];
@@ -108,6 +121,17 @@ namespace QLTK
                         state.account.server,
                         MainWindow.sizeData
                     });
+                    if (state.account == SaveSettings.accountConnectToDiscordRPC)
+                        Program.discordClient.SetPresence(new RichPresence()
+                        {
+                            State = "Đang đăng nhập...",
+                            Timestamps = Program.timestampsStartQLTK = Timestamps.Now,
+                            Assets = new Assets()
+                            {
+                                LargeImageKey = "icon_large",
+                                LargeImageText = "Mod Cộng Đồng",
+                            }
+                        });
                     break;
                 default:
                     break;
@@ -199,6 +223,16 @@ namespace QLTK
             catch (SocketException)
             {
                 state.account.status = "-";
+                if (state.account == SaveSettings.accountConnectToDiscordRPC)
+                    Program.discordClient.SetPresence(new RichPresence()
+                    {
+                        State = "Chưa đăng nhập",
+                        Assets = new Assets()
+                        {
+                            LargeImageKey = "icon_large",
+                            LargeImageText = "Mod Cộng Đồng",
+                        }
+                    });
             }
 
             if (bytesRead > 0)
@@ -214,6 +248,16 @@ namespace QLTK
                     handler.Shutdown(SocketShutdown.Both);
                     handler.Close();
                     state.account.status = "-";
+                    if (state.account == SaveSettings.accountConnectToDiscordRPC)
+                        Program.discordClient.SetPresence(new RichPresence()
+                        {
+                            State = "Chưa đăng nhập",
+                            Assets = new Assets()
+                            {
+                                LargeImageKey = "icon_large",
+                                LargeImageText = "Mod Cộng Đồng",
+                            }
+                        });
                     return;
                 }
 
