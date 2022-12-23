@@ -9,7 +9,25 @@ namespace Mod.Graphics
         private static Texture2D aaLineTex = null;
         private static Texture2D lineTex = null;
         private static Rect lineRect = new Rect(0, 0, 1, 1);
-
+        static int[] array = new int[] { 0, 0, 1, 1, 2, 3, 4 };
+        static int[] array2 = new int[] { 0, 0, 0, 0, 600841, 3346944, 3932211, 6684682 };
+        static int[] array3 = new int[4]
+        {
+            0,
+            68,
+            68,
+            0
+        };
+        static int[] array4 = new int[] { 0, 48, 0, 48 };
+        static int[] size = new int[6] { 2, 1, 1, 1, 1, 1 };
+        static int[][] colorBorder = new int[5][]
+        {
+            new int[6] { 18687, 16869, 15052, 13235, 11161, 9344 },
+            new int[6] { 45824, 39168, 32768, 26112, 19712, 13056 },
+            new int[6] { 16744192, 15037184, 13395456, 11753728, 10046464, 8404992 },
+            new int[6] { 13500671, 12058853, 10682572, 9371827, 7995545, 6684800 },
+            new int[6] { 16711705, 15007767, 13369364, 11730962, 10027023, 8388621 }
+        };
         public static void DrawLine(Vector2 pointA, Vector2 pointB, Color color, float width, bool antiAlias)
         {
             float dx = pointB.x - pointA.x;
@@ -253,6 +271,157 @@ namespace Mod.Graphics
                 GUI.EndGroup();
             }
             GUIUtility.RotateAroundPivot(0f - num3, vector);
+        }
+
+        public static void PaintStar(mGraphics g, Panel instance, Item item, int num)
+        {
+            if (Utilities.getStar(item, out uint star, out uint starE))
+            {
+                if (instance == GameCanvas.panel)
+                {
+                    if (star > 0)
+                    {
+                        mFont.tahoma_7b_red.drawString(g, star.ToString(), Panel.WIDTH_PANEL - instance.xScroll - Image.getImageWidth(Panel.imgStar) - mFont.tahoma_7b_red.getWidth(star.ToString()) - 1, num, mFont.LEFT);
+                        g.drawImage(Panel.imgStar, Panel.WIDTH_PANEL - instance.xScroll - Image.getImageWidth(Panel.imgStar) - 1, num + 1);
+                    }
+                    if (starE > 0)
+                    {
+                        if (star == 0)
+                        {
+                            mFont.tahoma_7b_red.drawString(g, starE.ToString(), Panel.WIDTH_PANEL - instance.xScroll - Image.getImageWidth(Panel.imgMaxStar) - mFont.tahoma_7b_red.getWidth(starE.ToString()) - 1, num, mFont.LEFT);
+                            g.drawImage(Panel.imgMaxStar, Panel.WIDTH_PANEL - instance.xScroll - Image.getImageWidth(Panel.imgMaxStar) - 1, num + 1);
+                        }
+                        else
+                        {
+                            mFont.tahoma_7b_red.drawString(g, starE.ToString(), Panel.WIDTH_PANEL - instance.xScroll - mFont.tahoma_7b_red.getWidth(starE.ToString() + star.ToString()) - Image.getImageWidth(Panel.imgMaxStar) * 2 - 2, num, mFont.LEFT);
+                            g.drawImage(Panel.imgMaxStar, Panel.WIDTH_PANEL - instance.xScroll - mFont.tahoma_7b_red.getWidth(starE.ToString()) - Image.getImageWidth(Panel.imgMaxStar) * 2 - 3, num + 1);
+                        }
+                    }
+                }
+                else if (instance == GameCanvas.panel2)
+                {
+                    if (star > 0)
+                    {
+                        mFont.tahoma_7b_red.drawString(g, star.ToString(), GameCanvas.w - Image.getImageWidth(Panel.imgStar) - mFont.tahoma_7b_red.getWidth(star.ToString()) - 4, num, mFont.LEFT);
+                        g.drawImage(Panel.imgStar, GameCanvas.w - Image.getImageWidth(Panel.imgStar) - 4, num + 1);
+                    }
+                    if (starE > 0)
+                    {
+                        if (star == 0)
+                        {
+                            mFont.tahoma_7b_red.drawString(g, starE.ToString(), GameCanvas.w - Image.getImageWidth(Panel.imgMaxStar) - mFont.tahoma_7b_red.getWidth(starE.ToString()) - 4, num, mFont.LEFT);
+                            g.drawImage(Panel.imgMaxStar, GameCanvas.w - Image.getImageWidth(Panel.imgMaxStar) - 4, num + 1);
+                        }
+                        else
+                        {
+                            mFont.tahoma_7b_red.drawString(g, starE.ToString(), GameCanvas.w - mFont.tahoma_7b_red.getWidth(starE.ToString() + star.ToString()) - Image.getImageWidth(Panel.imgMaxStar) * 2 - 5, num, mFont.LEFT);
+                            g.drawImage(Panel.imgMaxStar, GameCanvas.w - mFont.tahoma_7b_red.getWidth(starE.ToString()) - Image.getImageWidth(Panel.imgMaxStar) * 2 - 6, num + 1);
+                        }
+                    }
+                }
+            }
+        }
+
+        static int unknown_method_0(int int_0)
+        {
+            int num = 32;
+            int num2 = int_0 % 128;
+            if (0 <= num2 && num2 < num)
+            {
+                return num2 % num;
+            }
+            if (num <= num2 && num2 < num * 2)
+            {
+                return num;
+            }
+            if (num * 2 <= num2 && num2 < num * 3)
+            {
+                return num - num2 % num;
+            }
+            return 0;
+        }
+
+        static int unknown_method_1(int int_1)
+        {
+            int num = 22;
+            int num2 = int_1 % 88;
+            if (0 <= num2 && num2 < num)
+            {
+                return 0;
+            }
+            if (num <= num2 && num2 < num * 2)
+            {
+                return num2 % num;
+            }
+            if (num * 2 <= num2 && num2 < num * 3)
+            {
+                return num;
+            }
+            return num - num2 % num;
+        }
+
+        public static void PaintItemEffectInPanel(mGraphics g, int x, int y, int param)
+        {
+            if (param > 7)
+                param = 7;
+            if (param < 0)
+                param = 0;
+            if (param >= 4)
+            {
+                g.setColor(array2[param]);
+                g.fillRect(x - 18, y - 12, 34, 23);
+            }
+            if (param < 4)
+            {
+                if (param == 1)
+                {
+                    for (int i = 0; i < 2; i++)
+                    {
+                        for (int j = 0; j < size.Length; j++)
+                        {
+                            int num = x - 17 + unknown_method_0(GameCanvas.gameTick + array3[i] - j * 4);
+                            int num2 = y - 12 + unknown_method_1(GameCanvas.gameTick + array4[i] - j * 4);
+                            g.setColor(colorBorder[array[param - 1]][j]);
+                            g.fillRect(num - size[j] / 2, num2 - size[j] / 2, size[j], size[j]);
+                        }
+                    }
+                    return;
+                }
+                if (param != 2)
+                {
+                    for (int k = 0; k < 2; k++)
+                    {
+                        for (int l = 0; l < size.Length; l++)
+                        {
+                            int num3 = x - 17 + unknown_method_0(GameCanvas.gameTick + array3[k] - l * 4);
+                            int num4 = y - 12 + unknown_method_1(GameCanvas.gameTick + array4[k] - l * 4);
+                            g.setColor(colorBorder[0][l]);
+                            g.fillRect(num3 - size[l] / 2, num4 - size[l] / 2, size[l], size[l]);
+                        }
+                    }
+                    for (int m = 2; m < 4; m++)
+                    {
+                        for (int n = 0; n < size.Length; n++)
+                        {
+                            int num5 = x - 17 + unknown_method_0(GameCanvas.gameTick + array3[m] - n * 4);
+                            int num6 = y - 12 + unknown_method_1(GameCanvas.gameTick + array4[m] - n * 4);
+                            g.setColor(colorBorder[1][n]);
+                            g.fillRect(num5 - size[n] / 2, num6 - size[n] / 2, size[n], size[n]);
+                        }
+                    }
+                    return;
+                }
+            }
+            for (int num7 = 0; num7 < 4; num7++)
+            {
+                for (int num8 = 0; num8 < size.Length; num8++)
+                {
+                    int num9 = x - 17 + unknown_method_0(GameCanvas.gameTick + array3[num7] - num8 * 4);
+                    int num10 = y - 12 + unknown_method_1(GameCanvas.gameTick + array4[num7] - num8 * 4);
+                    g.setColor(colorBorder[array[param - 1]][num8]);
+                    g.fillRect(num9 - size[num8] / 2, num10 - size[num8] / 2, size[num8], size[num8]);
+                }
+            }
         }
     }
 }
