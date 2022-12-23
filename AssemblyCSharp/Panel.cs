@@ -4504,7 +4504,28 @@ public class Panel : IActionListener, IChatable
 				mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num5 + num7 - 15, num6 + 6, 0);
 			}
 			mFont.tahoma_7_yellow.drawStringBorder(g, i.ToString(), num2 - 35, num3, 0, mFont.tahoma_7b_dark);
-		}
+			if (Utilities.getStar(item, out uint star, out uint starE))
+            {
+                if (star > 0)
+                {
+                    mFont.tahoma_7b_red.drawString(g, star.ToString(), WIDTH_PANEL - xScroll - Image.getImageWidth(imgStar) - mFont.tahoma_7b_red.getWidth(star.ToString()), num4, mFont.LEFT);
+                    g.drawImage(imgStar, WIDTH_PANEL - xScroll - Image.getImageWidth(imgStar), num4 + 1);
+                }
+                if (starE > 0)
+                {
+                    if (star == 0)
+                    {
+                        mFont.tahoma_7b_red.drawString(g, starE.ToString(), WIDTH_PANEL - xScroll - Image.getImageWidth(imgMaxStar) - mFont.tahoma_7b_red.getWidth(starE.ToString()), num4, mFont.LEFT);
+                        g.drawImage(imgMaxStar, WIDTH_PANEL - xScroll - Image.getImageWidth(imgMaxStar), num4 + 1);
+                    }
+                    else
+                    {
+                        mFont.tahoma_7b_red.drawString(g, starE.ToString(), WIDTH_PANEL - xScroll - mFont.tahoma_7b_red.getWidth(starE.ToString() + star.ToString()) - Image.getImageWidth(imgMaxStar) * 2 - 1, num4, mFont.LEFT);
+                        g.drawImage(imgMaxStar, WIDTH_PANEL - xScroll - mFont.tahoma_7b_red.getWidth(starE.ToString()) - Image.getImageWidth(imgMaxStar) * 2 - 2, num4 + 1);
+                    }
+                }
+            }
+        }
 		paintScrollArrow(g);
 	}
 
@@ -5220,7 +5241,28 @@ public class Panel : IActionListener, IChatable
 				mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num6 + num8, num7 + num9 - mFont.tahoma_7_yellow.getHeight(), 1);
 			}
 			mFont.tahoma_7_yellow.drawStringBorder(g, i.ToString(), num3 - 35, num4, 0, mFont.tahoma_7b_dark);
-		}
+            if (Utilities.getStar(item, out uint star, out uint starE))
+            {
+				if (star > 0)
+				{
+					mFont.tahoma_7b_red.drawString(g, star.ToString(), WIDTH_PANEL - xScroll - Image.getImageWidth(imgStar) - mFont.tahoma_7b_red.getWidth(star.ToString()), num4, mFont.LEFT);
+					g.drawImage(imgStar, WIDTH_PANEL - xScroll - Image.getImageWidth(imgStar), num4 + 1);
+				}
+				if (starE > 0)
+				{
+					if (star == 0)
+					{
+                        mFont.tahoma_7b_red.drawString(g, starE.ToString(), WIDTH_PANEL - xScroll - Image.getImageWidth(imgMaxStar) - mFont.tahoma_7b_red.getWidth(starE.ToString()), num4, mFont.LEFT);
+                        g.drawImage(imgMaxStar, WIDTH_PANEL - xScroll - Image.getImageWidth(imgMaxStar), num4 + 1);
+                    }
+					else
+					{
+						mFont.tahoma_7b_red.drawString(g, starE.ToString(), WIDTH_PANEL - xScroll - mFont.tahoma_7b_red.getWidth(starE.ToString() + star.ToString()) - Image.getImageWidth(imgMaxStar) * 2 - 1, num4, mFont.LEFT);
+						g.drawImage(imgMaxStar, WIDTH_PANEL - xScroll - mFont.tahoma_7b_red.getWidth(starE.ToString()) - Image.getImageWidth(imgMaxStar) * 2 - 2, num4 + 1);
+					}
+				}
+            }
+        }
 		paintScrollArrow(g);
 	}
 
