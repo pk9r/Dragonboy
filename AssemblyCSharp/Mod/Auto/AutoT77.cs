@@ -52,6 +52,8 @@ namespace Mod.Auto
             else
             {
                 Char t77 = (Char)GameScr.vCharInMap.elementAt(0);
+                if (t77 == null)
+                    return;
                 if (GameCanvas.gameTick % (15 * Time.timeScale) == 0)
                 {
                     if (Char.myCharz().cFlag != 8) Service.gI().getFlag(1, 8);

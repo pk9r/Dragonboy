@@ -17,6 +17,10 @@ namespace QLTK.Models
         public int typeSize = 2;
         public int rowDetailsMode = 0;
 
+        public int indexConnectToDiscordRPC = -1;
+
+        [LitJSON.JsonSkip]
+        public static Account accountConnectToDiscordRPC;
         private static SaveSettings LoadSaveSettings()
         {
             try

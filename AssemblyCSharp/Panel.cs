@@ -3,6 +3,7 @@ using Assets.src.g;
 using UnityEngine;
 using Mod;
 using Mod.ModMenu;
+using Mod.Graphics;
 
 public class Panel : IActionListener, IChatable
 {
@@ -2186,7 +2187,8 @@ public class Panel : IActionListener, IChatable
 					if (item.itemOption[k].optionTemplate.id == 72)
 					{
 						text = " [+" + item.itemOption[k].param + "]";
-					}
+                        CustomGraphics.PaintItemEffectInPanel(g, num5 + 18, num6 + 12, item.itemOption[k].param);
+                    }
 				}
 			}
 			mFont.tahoma_7_green2.drawString(g, item.template.name + text, num + 5, num2 + 1, 0);
@@ -2230,7 +2232,8 @@ public class Panel : IActionListener, IChatable
 			{
 				mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num5 + num7 - 15, num6 + 6, 0);
 			}
-		}
+			CustomGraphics.PaintStar(g, this, item, num2);
+        }
 		paintScrollArrow(g);
 	}
 
@@ -3780,7 +3783,8 @@ public class Panel : IActionListener, IChatable
 						if (item.itemOption[j].optionTemplate.id == 72)
 						{
 							text = " [+" + item.itemOption[j].param + "]";
-						}
+                            CustomGraphics.PaintItemEffectInPanel(g, num5 + 18, num6 + 12, item.itemOption[j].param);
+                        }
 					}
 				}
 				if (item.isMe != 0 && typeShop == 2 && currentTabIndex <= 3 && !Equals(GameCanvas.panel2))
@@ -3887,7 +3891,8 @@ public class Panel : IActionListener, IChatable
 				{
 					g.drawImage(imgNew, num5 + num7 / 2, num3 + 19, 3);
 				}
-			}
+                CustomGraphics.PaintStar(g, this, item, num3);
+            }
 			if (typeShop != 2 || (!Equals(GameCanvas.panel2) && currentTabIndex != 4) || item.buyType == 0)
 			{
 				continue;
@@ -4011,7 +4016,8 @@ public class Panel : IActionListener, IChatable
 						if (item.itemOption[k].optionTemplate.id == 72)
 						{
 							text = " [+" + item.itemOption[k].param + "]";
-						}
+                            CustomGraphics.PaintItemEffectInPanel(g, num6 + 18, num7 + 12, item.itemOption[k].param);
+                        }
 					}
 				}
 				mFont.tahoma_7_green2.drawString(g, item.template.name + text, num3 + 5, num4 + 1, 0);
@@ -4055,7 +4061,8 @@ public class Panel : IActionListener, IChatable
 				{
 					mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num6 + num8 - 15, num7 + 6, 0);
 				}
-			}
+                CustomGraphics.PaintStar(g, this, item, num4);
+            }
 			else if (!flag)
 			{
 				Skill skill = arrPetSkill[num2];
@@ -4459,6 +4466,7 @@ public class Panel : IActionListener, IChatable
 					if (item.itemOption[k].optionTemplate.id == 72)
 					{
 						text = " [+" + item.itemOption[k].getOptionString() + "]";
+                        CustomGraphics.PaintItemEffectInPanel(g, num5 + 18, num6 + 12, item.itemOption[k].param);
 					}
 				}
 			}
@@ -4504,7 +4512,8 @@ public class Panel : IActionListener, IChatable
 				mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num5 + num7 - 15, num6 + 6, 0);
 			}
 			mFont.tahoma_7_yellow.drawStringBorder(g, i.ToString(), num2 - 35, num3, 0, mFont.tahoma_7b_dark);
-		}
+            CustomGraphics.PaintStar(g, this, item, num3);
+        }
 		paintScrollArrow(g);
 	}
 
@@ -5064,7 +5073,8 @@ public class Panel : IActionListener, IChatable
 					if (item.itemOption[l].optionTemplate.id == 72)
 					{
 						text = " [+" + item.itemOption[l].param + "]";
-					}
+                        CustomGraphics.PaintItemEffectInPanel(g, num5 + 18, num6 + 12, item.itemOption[j].param);
+                    }
 				}
 			}
 			mFont.tahoma_7_green2.drawString(g, item.template.name + text, num + 5, num2 + 1, 0);
@@ -5110,7 +5120,8 @@ public class Panel : IActionListener, IChatable
 			{
 				mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num5 + num7 - 15, num6 + 6, 0);
 			}
-		}
+			CustomGraphics.PaintStar(g, this, item, num2);
+        }
 		paintScrollArrow(g);
 	}
 
@@ -5175,7 +5186,8 @@ public class Panel : IActionListener, IChatable
 					if (item.itemOption[k].optionTemplate.id == 72)
 					{
 						text = " [+" + item.itemOption[k].param + "]";
-					}
+                        CustomGraphics.PaintItemEffectInPanel(g, num6 + 18, num7 + 12, item.itemOption[k].param);
+                    }
 				}
 			}
 			mFont.tahoma_7_green2.drawString(g, item.template.name + text, num3 + 5, num4 + 1, 0);
@@ -5220,7 +5232,8 @@ public class Panel : IActionListener, IChatable
 				mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num6 + num8, num7 + num9 - mFont.tahoma_7_yellow.getHeight(), 1);
 			}
 			mFont.tahoma_7_yellow.drawStringBorder(g, i.ToString(), num3 - 35, num4, 0, mFont.tahoma_7b_dark);
-		}
+            CustomGraphics.PaintStar(g, this, item, num4);
+        }
 		paintScrollArrow(g);
 	}
 

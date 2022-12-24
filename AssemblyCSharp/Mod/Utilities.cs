@@ -729,5 +729,29 @@ namespace Mod
         {
             return ID_MAP_LANG_BASE * cgender;
         }
+
+        public static bool getStar(Item item, out uint star, out uint starE)
+        {
+            star = 0;
+            starE = 0;
+            bool result = false;
+            if (item.itemOption == null)
+                return result;
+            for (int i = 0; i < item.itemOption.Length; i++)
+            {
+                if (item.itemOption[i].optionTemplate.id == 102)
+                {
+                    star = starE = (uint)item.itemOption[i].param;
+                }
+                if (item.itemOption[i].optionTemplate.id == 107)
+                {
+                    starE = (uint)item.itemOption[i].param;
+                }
+            }
+            if (starE != 0)
+                result = true;
+            starE -= star;
+            return result;
+        }
     }
 }

@@ -18,7 +18,7 @@
   TextElement.FontWeight="Medium"
   TextElement.Foreground="{DynamicResource MaterialDesignBody}"
   Top="0"
-  Topmost="True"
+  Topmost="False"
   WindowStartupLocation="Manual"
   mc:Ignorable="d">
 
@@ -629,7 +629,7 @@
         </materialDesign:Card>
 
         <materialDesign:Card Margin="5">
-          <StackPanel>
+          <StackPanel Height="174">
             <CheckBox
               x:Name="InfoCharacterCheckBox"
               Margin="5"
@@ -655,7 +655,11 @@
               Margin="5"
               Content="Tiền"
               IsChecked="True" />
-          </StackPanel>
+            <CheckBox
+                x:Name="IsDisplayInDiscordRichPresence"
+                Content="Hiển thị trong Discord Rich Presence"
+                IsChecked="False" Margin="5,5,5,5" Checked="IsDisplayInDiscordRichPresence_Checked" Unchecked="IsDisplayInDiscordRichPresence_Unchecked" />
+           </StackPanel>
         </materialDesign:Card>
       </StackPanel>
     </Expander>

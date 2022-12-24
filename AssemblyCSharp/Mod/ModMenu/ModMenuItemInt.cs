@@ -27,7 +27,7 @@ namespace Mod.ModMenu
         /// <param name="rmsName">Tên tệp lưu dữ liệu</param>
         /// <param name="isDisabled">Trạng thái vô hiệu hóa</param>
         /// <param name="disabledReason">Lý do bị vô hiệu hóa, được thông báo khi ModMenuItem được chọn đang bị vô hiệu hóa.</param>
-        /// <exception cref="ArgumentException">Danh sách giá trị và mô tả đều bằng <see cref="null"/> hoặc rỗng.</exception>
+        /// <exception cref="ArgumentException">Danh sách giá trị và mô tả đều bằng <see langword="null"/> hoặc rỗng.</exception>
         public ModMenuItemInt(string title, string[] values = null, string description = "", int selectedValue = 0, Action<int> action = null, string rmsName = "", bool isDisabled = false, string disabledReason = "") : base(title, description, isDisabled, disabledReason)
         {
             if ((values == null || values.Length <= 0) && string.IsNullOrEmpty(description)) throw new ArgumentException("Values and description cannot be null at the same time");

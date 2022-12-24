@@ -39,7 +39,6 @@ namespace Mod.ModHelper
         /// <summary>
         /// Sử dụng thread của instance để thực thi hành động.
         /// </summary>
-        /// <param name="isReturn">Dùng check return của action khi khác thread.</param>
         protected void executeAction()
         {
             // Không thực hiện hành động trong luồng khác
@@ -52,7 +51,6 @@ namespace Mod.ModHelper
                 threadAction.Start();
                 return;
             }
-
             action();
         }
     }

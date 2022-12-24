@@ -252,7 +252,13 @@ namespace Mod
         public static int getSuicideRange(Char @char)
         {
             int result = 880;
-            if (@char.me && @char.cgender == 2) result = 340 * (Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[4]).point - 1) / 3 + 200;
+            if (@char.me && @char.cgender == 2)
+            {
+                Skill skill5 = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[4]);
+                if (skill5 == null)
+                    return 0;
+                result = 340 * (skill5.point - 1) / 3 + 200;
+            }
             return result;
         }
 
