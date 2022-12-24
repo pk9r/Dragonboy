@@ -78,7 +78,8 @@ namespace QLTK
                     LargeImageText = "Mod Cộng Đồng",
                 }
             });
-            if (WinVersion.GetVersion().Major < 8) return;
+            if (!int.TryParse(FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\cmd.exe").FileVersion.Split('.')[0], out int winVer) || winVer <= 7) 
+                return;
             using (WebClient client = new WebClient())
             {
                 var data = client.DownloadData(Settings.Default.LinkNotification);

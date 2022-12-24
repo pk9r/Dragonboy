@@ -95,7 +95,6 @@
     <Compile Include="Settings.cs" />
     <Compile Include="AsynchronousSocketListener.cs" />
     <Compile Include="Utilities.cs" />
-    <Compile Include="WinVersion.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
