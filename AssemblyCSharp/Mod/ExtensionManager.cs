@@ -107,6 +107,12 @@ namespace Mod
                     instance = methodInfo.Invoke(null, null);
                 result = (T)extensionAssembly.GetType("GameEvents").GetMethod(new StackFrame(2).GetMethod().Name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod).Invoke(instance, parameters);
             }
+            catch (TargetInvocationException tEx)
+            {
+                result = default;
+                if (tEx.InnerException != null && tEx.InnerException is NotImplementedException)
+                    return false;
+            }
             catch (Exception ex)
             {
                 UnityEngine.Debug.Log(ExtensionName + ": Cannot invoke method: " + new StackFrame(2).GetMethod().Name + "!");
