@@ -405,6 +405,7 @@ namespace Mod
         {
             ChatTextField.gI().strChat = "Chat";
             ChatTextField.gI().tfChat.name = "chat";
+            ChatTextField.gI().to = "";
             ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_ANY);
             ChatTextField.gI().isShow = false;
         }
@@ -492,6 +493,30 @@ namespace Mod
             FileStream fileStream = new FileStream(folder + "\\" + name, FileMode.Create);
             byte[] buffer = Encoding.UTF8.GetBytes(data);
             fileStream.Write(buffer, 0, buffer.Length);
+            fileStream.Flush();
+            fileStream.Close();
+        }
+
+        public static float loadRMSFloat(string name)
+        {
+            string folder = "Data";
+            if (new StackFrame(1).GetMethod().Module != typeof(Utilities).Module)
+                folder += "\\" + new StackFrame(1).GetMethod().Module.Name.Replace(".dll", "");
+            FileStream fileStream = new FileStream(folder + "\\" + name, FileMode.Open);
+            byte[] array = new byte[4];
+            fileStream.Read(array, 0, 4);
+            fileStream.Close();
+            return BitConverter.ToSingle(array, 0);
+        }
+
+        public static void saveRMSFloat(string name, float value)
+        {
+            string folder = "Data";
+            if (new StackFrame(1).GetMethod().Module != typeof(Utilities).Module)
+                folder += "\\" + new StackFrame(1).GetMethod().Module.Name.Replace(".dll", "");
+            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+            FileStream fileStream = new FileStream(folder + "\\" + name, FileMode.Create);
+            fileStream.Write(BitConverter.GetBytes(value), 0, 4);
             fileStream.Flush();
             fileStream.Close();
         }

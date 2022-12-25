@@ -392,7 +392,7 @@ namespace Mod
         public static void onFixedUpdateMain()
         {
             //Pk9rXmap.Update();
-            CustomBackground.update();
+            CustomBackground.FixedUpdate();
             CustomLogo.update();
             ExtensionManager.Invoke();
         }

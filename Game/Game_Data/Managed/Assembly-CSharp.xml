@@ -134,21 +134,41 @@
         </member>
         <member name="M:Mod.Graphics.TextureScaler.ScaleTexture(UnityEngine.Texture2D,System.Int32,System.Int32,UnityEngine.FilterMode)">
             <summary>
-            Returns a scaled copy of given texture. 
+            Scales the texture data of the given texture.
             </summary>
             <param name="src">Source texure to scale</param>
             <param name="width">Destination texture width</param>
             <param name="height">Destination texture height</param>
             <param name="mode">Filtering mode</param>
+            <returns>Scaled texture</returns>
         </member>
         <member name="M:Mod.Graphics.TextureScaler.ApplyScaleTexture(UnityEngine.Texture2D,System.Int32,System.Int32,UnityEngine.FilterMode)">
             <summary>
-            Scales the texture data of the given texture.
+            Scales the texture data of the given texture, then apply it.
             </summary>
             <param name="tex">Texure to scale</param>
             <param name="width">New width</param>
             <param name="height">New height</param>
             <param name="mode">Filtering mode</param>
+            <returns>Scaled texture</returns>
+        </member>
+        <member name="M:Mod.Graphics.TextureScaler._gpu_scale(UnityEngine.Texture2D,System.Int32,System.Int32,UnityEngine.FilterMode)">
+            <summary>
+            Internal unility that renders the source texture into the RTT - the scaling method itself.
+            </summary>
+            <param name="src">Source texture</param>
+            <param name="width">New width</param>
+            <param name="height">New height</param>
+            <param name="fmode">Texture filtering mode</param>
+        </member>
+        <member name="M:Mod.Graphics.TextureScaler.ResizeImage(System.Drawing.Image,System.Int32,System.Int32)">
+            <summary>
+            Resize the image to the specified width and height.
+            </summary>
+            <param name="image">The image to resize.</param>
+            <param name="width">The width to resize to.</param>
+            <param name="height">The height to resize to.</param>
+            <returns>The resized image.</returns>
         </member>
         <member name="F:Mod.HistoryChat.HEIGHT_HINT_ITEM">
             <summary>

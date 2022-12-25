@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Mod.Graphics
 {
-    public class CustomBackground
+    public class CustomBackground : IChatable
     {
 
         public static bool isEnabled;
@@ -25,6 +25,11 @@ namespace Mod.Graphics
         private static bool isAllWallpaperLoaded;
         private static long lastTimeChangedWallpaper;
         private static bool isChangeWallpaper = true;
+        static int updateGifBackgroundIndex;
+        static int ticks;
+        public static int threadCount;
+
+        static CustomBackground instance = new CustomBackground();
 
         public static void ShowMenu()
         {
@@ -49,6 +54,14 @@ namespace Mod.Graphics
                     isChangeWallpaper = !isChangeWallpaper;
                     lastTimeChangedWallpaper = mSystem.currentTimeMillis();
                     GameScr.info1.addInfo("Đã " + (isChangeWallpaper ? "bật" : "tắt") + " tự động chuyển ảnh nền!", 0);
+                })));
+                menuItems.Add(new("Thay đổi tốc độ ảnh động" , new(() =>
+                {
+                    ChatTextField.gI().strChat = "Nhập tốc độ ảnh động";
+                    ChatTextField.gI().tfChat.name = "Tốc độ";
+                    ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_ANY);
+                    ChatTextField.gI().startChat2(instance, string.Empty);
+                    ChatTextField.gI().tfChat.setText(Gif.speed.ToString());
                 })));
             }));
         }
@@ -159,7 +172,7 @@ namespace Mod.Graphics
             }.Start();
         }
 
-        public static void update()
+        public static void FixedUpdate()
         {
             if (isAllWallpaperLoaded)
             {
@@ -184,9 +197,7 @@ namespace Mod.Graphics
                             gifBackgroundWallpapers.Remove(path);
                         }
                         catch (Exception)
-                        {
-
-                        }
+                        { }
                     }
                     else
                     {
@@ -214,6 +225,25 @@ namespace Mod.Graphics
                 lastTimeChangedWallpaper = mSystem.currentTimeMillis();
                 SaveData();
             }
+            ticks++;
+            if (ticks > 50)
+                ticks = 0;
+            if (ticks % 5 != 0)
+                return;
+            if (updateGifBackgroundIndex >= gifBackgroundWallpapers.Count)
+                return;
+            Gif gif = gifBackgroundWallpapers.ElementAt(updateGifBackgroundIndex).Value;
+            gif.FixedUpdate();
+            if (!gif.isFullyLoaded)
+            {
+                if (threadCount <= 50)
+                {
+                    new Thread(gif.FixedUpdateDifferentThread).Start();
+                    threadCount++;
+                }
+            }
+            else
+                updateGifBackgroundIndex++;
         }
 
         public static void paint(mGraphics g)
@@ -279,6 +309,7 @@ namespace Mod.Graphics
                 isAllWallpaperLoaded = true;
                 isChangeWallpaper = Utilities.loadRMSBool("ischangewallpaper");
                 backgroundIndex = Utilities.loadRMSInt("backgroundindex");
+                Gif.speed = Utilities.loadRMSFloat("gifspeed");
                 if (backgroundIndex >= staticBackgroundWallpapers.Count + gifBackgroundWallpapers.Count)
                     backgroundIndex = 0;
             }
@@ -293,10 +324,51 @@ namespace Mod.Graphics
             Utilities.saveRMSString("custombackgroundpath", data);
             Utilities.saveRMSBool("ischangewallpaper", isChangeWallpaper);
             Utilities.saveRMSInt("backgroundindex", backgroundIndex);
+            Utilities.saveRMSFloat("gifspeed", Gif.speed);
         }
 
         public static void setState(bool value) => isEnabled = value;
 
         public static void setState(int value) => inveralChangeBackgroundWallpaper = value * 1000;
+
+        public void onChatFromMe(string text, string to)
+        {
+            if (ChatTextField.gI().tfChat.name == "Tốc độ")
+            {
+                if (string.IsNullOrEmpty(text))
+                {
+                    GameCanvas.startOKDlg("Bạn chưa nhập số!");
+                    return;
+                }
+                try
+                {
+                    float value = float.Parse(text);
+                    if (value > 10f || value < 0.1f)
+                    {
+                        GameCanvas.startOKDlg("Số đã nhập phải trong khoảng 0.1 và 10!");
+                        return;
+                    }
+                    if (value == Gif.speed)
+                        return;
+                    Gif.speed = value;
+                    GameScr.info1.addInfo($"Thay đổi tốc độ ảnh động thành: {text}!", 0);
+                    SaveData();
+                    Utilities.ResetTF();
+                }
+                catch (FormatException)
+                {
+                    GameCanvas.startOKDlg("Số đã nhập không hợp lệ!");
+                }
+                catch (OverflowException)
+                {
+                    GameCanvas.startOKDlg("Số đã nhập quá lớn, quá nhỏ hoặc quá nhiều số thập phân!");
+                }
+            }
+        }
+
+        public void onCancelChat()
+        {
+            Utilities.ResetTF();
+        }
     }
 }
