@@ -4,28 +4,41 @@ using UnityEngine.Video;
 
 namespace Mod.Graphics
 {
-    [Obsolete("Tốn nhiểu CPU + RAM, máy mạnh mới chạy được!")]
-    public class BackgroundVideo
+    //[Obsolete("Tốn nhiểu CPU + RAM, máy mạnh mới chạy được!")]
+    public class BackgroundVideo : IBackground
     {
-        public static VideoPlayer videoPlayer = GameObject.Find("Main Camera").AddComponent<VideoPlayer>();
+        VideoPlayer videoPlayer = GameObject.Find("Main Camera").AddComponent<VideoPlayer>();
+        //AudioSource audioSource;
 
-        public static AudioSource audioSource;
-
-        public static void Start()
+        public BackgroundVideo(string path)
         {
-            GameObject gameObject = GameObject.Find("Main Camera");
-            audioSource = gameObject.AddComponent<AudioSource>();
+            //GameObject gameObject = GameObject.Find("Main Camera");
+            //audioSource = gameObject.AddComponent<AudioSource>();
             videoPlayer.playOnAwake = false;
-            audioSource.playOnAwake = false;
+            //audioSource.playOnAwake = false;
             videoPlayer.renderMode = VideoRenderMode.APIOnly;
-            videoPlayer.url = "Videos/Rick Astley - Never Gonna Give You Up Official Music Video.mp4";
+            videoPlayer.url = path;
             videoPlayer.isLooping = true;
-            videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
+            //videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
             videoPlayer.skipOnDrop = true;
-            videoPlayer.SetTargetAudioSource(0, audioSource);
-            audioSource.volume = 0.5f;
-            videoPlayer.Play();
-            audioSource.Play();
+            //videoPlayer.SetTargetAudioSource(0, audioSource);
+            //audioSource.volume = 0.5f;
+            //videoPlayer.Play();
+            //audioSource.Play();
         }
+
+        public void Paint(mGraphics g, int x, int y)
+        {
+            UnityEngine.Graphics.DrawTexture(new Rect(x, y, Screen.width, Screen.height), videoPlayer.texture);
+        }
+
+        public void Stop() =>
+            videoPlayer.Stop();
+
+        public void Play() => 
+            videoPlayer.Play();
+
+        public bool isPlaying =>
+            videoPlayer.isPlaying;
     }
 }

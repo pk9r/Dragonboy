@@ -426,7 +426,7 @@ namespace Mod.ModMenu
             }
             else if (PanelType == 2)
             {
-                mFont.tahoma_7b_dark.drawString(g, "Danh sách ảnh nền tùy chỉnh", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
+                mFont.tahoma_7b_dark.drawString(g, "Danh sách nền tùy chỉnh", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
             }
             else if (PanelType == 3)
             {
@@ -462,7 +462,7 @@ namespace Mod.ModMenu
                         int value = int.Parse(text);
                         if (value < 10) throw new Exception();
                         ModMenuMain.modMenuItemInts[6].setValue(value);
-                        GameScr.info1.addInfo("Đã thay đổi thời gian đổi ảnh nền!", 0);
+                        GameScr.info1.addInfo("Đã thay đổi thời gian đổi nền!", 0);
                     }
                     catch
                     {

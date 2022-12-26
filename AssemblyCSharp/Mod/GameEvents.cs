@@ -454,7 +454,7 @@ namespace Mod
         public static bool onPaintBgGameScr(mGraphics g)
         {
             //UnityEngine.Graphics.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), BackgroundVideo.videoPlayer.texture);
-            if (CustomBackground.isEnabled && CustomBackground.staticBackgroundWallpapers.Count + CustomBackground.gifBackgroundWallpapers.Count > 0 && !ModMenuMain.modMenuItemBools[8].isDisabled)
+            if (CustomBackground.isEnabled && CustomBackground.backgroundWallpapers.Count > 0 && !ModMenuMain.modMenuItemBools[8].isDisabled)
             {
                 CustomBackground.paint(g);
                 ExtensionManager.Invoke(g);

@@ -10,7 +10,7 @@ using System.Drawing.Drawing2D;
 
 namespace Mod.Graphics
 {
-    public class Gif
+    public class BackgroundGif : IBackground
     {
         System.Drawing.Image gifImage;
         FrameDimension dimension;  
@@ -25,7 +25,7 @@ namespace Mod.Graphics
         public bool isFullyLoaded;
         public static float speed = 1f;
 
-        public Gif(string filepath)
+        public BackgroundGif(string filepath)
         {
             gifImage = System.Drawing.Image.FromFile(filepath);
             dimension = new FrameDimension(gifImage.FrameDimensionsList[0]);
@@ -43,7 +43,7 @@ namespace Mod.Graphics
             }
         }
 
-        public Gif(string filepath, int width, int height)
+        public BackgroundGif(string filepath, int width, int height)
         {
             gifImage = System.Drawing.Image.FromFile(filepath);
             dimension = new FrameDimension(gifImage.FrameDimensionsList[0]);
@@ -84,11 +84,11 @@ namespace Mod.Graphics
                 applyIndex.Push(frameIndex);
                 frameIndex++;
                 isLocking = false;
-                if (CustomBackground.threadCount > 0)
-                    CustomBackground.threadCount--;
             }
             catch (Exception)
             { }
+            if (CustomBackground.threadCount > 0)
+                CustomBackground.threadCount--;
         }
 
         public void FixedUpdate()
@@ -171,5 +171,6 @@ namespace Mod.Graphics
                     paintFrameIndex = 0;
             }
         }
+
     }
 }
