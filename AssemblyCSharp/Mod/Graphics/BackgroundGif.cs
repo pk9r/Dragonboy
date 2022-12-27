@@ -16,7 +16,6 @@ namespace Mod.Graphics
         FrameDimension dimension;  
         List<Texture2D> frames;
         Stack<int> applyIndex = new Stack<int>();
-        public List<Image> images;
         public float delay = 0.1f;
         int paintFrameIndex;
         long lastTimePaintAFrame;
@@ -32,15 +31,6 @@ namespace Mod.Graphics
             lastTimePaintAFrame = mSystem.currentTimeMillis();
             GetDelay();
             frames = GetEmptyFrames();
-            images = new List<Image>();
-            foreach (Texture2D texture2D in frames)
-            {
-                Image image = new Image();
-                image.texture = texture2D;
-                image.w = texture2D.width;
-                image.h = texture2D.height;
-                images.Add(image);
-            }
         }
 
         public BackgroundGif(string filepath, int width, int height)
@@ -50,15 +40,6 @@ namespace Mod.Graphics
             lastTimePaintAFrame = mSystem.currentTimeMillis();
             GetDelay();
             frames = GetEmptyFrames(width, height);
-            images = new List<Image>(frames.Count);
-            foreach (Texture2D texture2D in frames)
-            {
-                Image image = new Image();
-                image.texture = texture2D;
-                image.w = texture2D.width;
-                image.h = texture2D.height;
-                images.Add(image);
-            }
         }
 
         public void FixedUpdateDifferentThread()
@@ -162,15 +143,14 @@ namespace Mod.Graphics
                 mFont.tahoma_7b_red.drawString(g, $"Đang tải... ({frameIndex}/{frames.Count})", GameCanvas.w / 2, y, mFont.CENTER);
                 return;
             }
-            g.drawImage(images[paintFrameIndex], x, y);
+            if (paintFrameIndex >= frames.Count)
+                paintFrameIndex = 0;
+            UnityEngine.Graphics.DrawTexture(new Rect(x, y, frames[paintFrameIndex].width, frames[paintFrameIndex].height), frames[paintFrameIndex]);
             if (mSystem.currentTimeMillis() - lastTimePaintAFrame > delay * 1000f / speed)
             {
                 lastTimePaintAFrame = mSystem.currentTimeMillis();
                 paintFrameIndex++;
-                if (paintFrameIndex >= images.Count)
-                    paintFrameIndex = 0;
             }
         }
-
     }
 }

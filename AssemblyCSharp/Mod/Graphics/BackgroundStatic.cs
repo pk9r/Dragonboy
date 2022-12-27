@@ -13,9 +13,9 @@ namespace Mod.Graphics
         public BackgroundStatic(string path, int width, int height)
         {
             Texture2D texture = new Texture2D(1, 1);
+            image = new Image();
             image.w = width;
             image.h = height;
-            image.texture = texture;
             Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
             byte[] imageData = new byte[stream.Length];
             stream.Read(imageData, 0, imageData.Length);
@@ -32,6 +32,7 @@ namespace Mod.Graphics
             texture.mipMapBias = 0f;
             texture.wrapMode = TextureWrapMode.Clamp;
             texture.Apply();
+            image.texture = texture;
         }
 
         public void Paint(mGraphics g, int x, int y)

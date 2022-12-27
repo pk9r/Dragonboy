@@ -180,7 +180,7 @@ namespace Mod.Graphics
                     {
                         if (path.EndsWith(".gif"))
                             backgroundWallpapers[path] = new BackgroundGif(path, Screen.width, Screen.height);
-                        if (path.EndsWith(".mp4"))
+                        else if (path.EndsWith(".mp4"))
                             backgroundWallpapers[path] = new BackgroundVideo(path);
                         else
                             backgroundWallpapers[path] = new BackgroundStatic(path, Screen.width, Screen.height);
@@ -224,8 +224,13 @@ namespace Mod.Graphics
 
         public static void paint(mGraphics g)
         {
-            if (!isEnabled || backgroundWallpapers.Count <= 0) return;
+            if (!isEnabled || backgroundWallpapers.Count <= 0) 
+                return;
+            if (backgroundIndex >= backgroundWallpapers.Count)
+                backgroundIndex = 0;
             IBackground background = backgroundWallpapers.ElementAt(backgroundIndex).Value;
+            if (background == null)
+                return;
             if (background is BackgroundVideo videoBackground && !videoBackground.isPlaying)
                 videoBackground.Play();
             background.Paint(g, 0, 0);
@@ -235,8 +240,6 @@ namespace Mod.Graphics
                 if (background is BackgroundVideo videoBackground1 && videoBackground1.isPlaying)
                     videoBackground1.Stop();    
                 backgroundIndex++;
-                if (backgroundIndex >= backgroundWallpapers.Count)
-                    backgroundIndex = 0;
             }
         }
 
