@@ -8,6 +8,8 @@ namespace Mod.Graphics
     public class BackgroundVideo : IBackground
     {
         VideoPlayer videoPlayer = GameObject.Find("Main Camera").AddComponent<VideoPlayer>();
+        public bool isPreparing;
+
         //AudioSource audioSource;
 
         public BackgroundVideo(string path)
@@ -19,8 +21,9 @@ namespace Mod.Graphics
             videoPlayer.renderMode = VideoRenderMode.APIOnly;
             videoPlayer.url = path;
             videoPlayer.isLooping = true;
-            //videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
+            videoPlayer.audioOutputMode = VideoAudioOutputMode.None;
             videoPlayer.skipOnDrop = true;
+            videoPlayer.prepareCompleted += (source) => isPreparing = false;
             //videoPlayer.SetTargetAudioSource(0, audioSource);
             //audioSource.volume = 0.5f;
             //videoPlayer.Play();
@@ -38,7 +41,16 @@ namespace Mod.Graphics
         public void Play() => 
             videoPlayer.Play();
 
+        public void Prepare()
+        {
+            isPreparing = true;
+            videoPlayer.Prepare();
+        }
+
         public bool isPlaying =>
             videoPlayer.isPlaying;
+
+        public bool isPrepared =>
+            videoPlayer.isPrepared;
     }
 }

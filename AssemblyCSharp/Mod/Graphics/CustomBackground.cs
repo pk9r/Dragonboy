@@ -231,15 +231,30 @@ namespace Mod.Graphics
             IBackground background = backgroundWallpapers.ElementAt(backgroundIndex).Value;
             if (background == null)
                 return;
-            if (background is BackgroundVideo videoBackground && !videoBackground.isPlaying)
-                videoBackground.Play();
-            background.Paint(g, 0, 0);
-            if (isChangeWallpaper && mSystem.currentTimeMillis() - lastTimeChangedWallpaper > inveralChangeBackgroundWallpaper)
+            if (background is BackgroundVideo backgroundVideo && !backgroundVideo.isPlaying)
             {
-                lastTimeChangedWallpaper = mSystem.currentTimeMillis();
-                if (background is BackgroundVideo videoBackground1 && videoBackground1.isPlaying)
-                    videoBackground1.Stop();    
-                backgroundIndex++;
+                if (!backgroundVideo.isPrepared)
+                    backgroundVideo.Prepare();
+                backgroundVideo.Play();
+            }
+            background.Paint(g, 0, 0);
+            if (isChangeWallpaper)
+            { 
+                if (mSystem.currentTimeMillis() - lastTimeChangedWallpaper > inveralChangeBackgroundWallpaper - 2000)
+                {
+                    int index = backgroundIndex + 1;
+                    if (index >= backgroundWallpapers.Count)
+                        index = 0;
+                    if (backgroundWallpapers.ElementAt(index).Value is BackgroundVideo backgroundVideo1 && !backgroundVideo1.isPreparing && !backgroundVideo1.isPrepared)
+                        backgroundVideo1.Prepare();
+                }
+                if (mSystem.currentTimeMillis() - lastTimeChangedWallpaper > inveralChangeBackgroundWallpaper)
+                {
+                    lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+                    if (background is BackgroundVideo backgroundVideo1 && backgroundVideo1.isPlaying)
+                        backgroundVideo1.Stop();
+                    backgroundIndex++;
+                } 
             }
         }
 
@@ -294,7 +309,13 @@ namespace Mod.Graphics
             Utilities.saveRMSFloat("gifspeed", BackgroundGif.speed);
         }
 
-        public static void setState(bool value) => isEnabled = value;
+        public static void setState(bool value)
+        {
+            isEnabled = value;
+            if (!value)
+                foreach (BackgroundVideo backgroundVideo in backgroundWallpapers.Values.Where((background) => background is BackgroundVideo))
+                    backgroundVideo.Stop();
+        }
 
         public static void setState(int value) => inveralChangeBackgroundWallpaper = value * 1000;
 

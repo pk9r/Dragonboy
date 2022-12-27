@@ -377,9 +377,9 @@ namespace Mod
             ListCharsInMap.paint(g);
             CharEffect.Paint(g);
             SuicideRange.paint(g);
-            ExtensionManager.Invoke(g);
             //CustomGraphics.DrawCircle(g, Char.myCharz().cx, Char.myCharz().cy, 100, 2);
             //if (Char.myCharz().charFocus != null) mFont.tahoma_7_yellow.drawString(g, Extensions.getDistance(Char.myCharz(), Char.myCharz().charFocus).ToString(), GameCanvas.w / 2, 10, mFont.CENTER);
+            ExtensionManager.Invoke(g);
         }
 
         public static bool onUseSkill(Skill skill)

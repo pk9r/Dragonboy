@@ -568,6 +568,11 @@ namespace Mod
             return (int)gUIStyle.CalcSize(new GUIContent(s)).x / mGraphics.zoomLevel + 30;
         }
 
+        internal static int getHeight(GUIStyle gUIStyle, string content)
+        {
+            return (int)gUIStyle.CalcSize(new GUIContent(content)).y / mGraphics.zoomLevel;
+        }
+
         /// <summary>
         /// Lấy tung độ mặt đất từ hoành độ
         /// </summary>
