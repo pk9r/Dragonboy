@@ -5673,7 +5673,8 @@ public class GameScr : mScreen, IChatable
 			{
 				g.setClip(mGraphics.getImageWidth(imgPanel) - 95, 0, 95, 100);
 			}
-			if (ModMenuMain.getStatusInt("levelreducegraphics") <= 1) g.drawImage(imgPanel, 0, 0, 0);
+			if (ModMenuMain.getStatusInt("levelreducegraphics") <= 1)
+				g.drawImage(imgPanel, 0, 0, 0);
 			if (isLeft)
 			{
 				g.setClip(83, 5, num, 10);
@@ -5720,6 +5721,34 @@ public class GameScr : mScreen, IChatable
 				g.drawImage(imgMPLost, 83, 20, 0);
 				g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
 			}
+			if (c == Char.myCharz() && ModMenuMain.getStatusInt("levelreducegraphics") <= 1)
+			{
+                int x = 87;
+                int yHP = 4;
+                int yMP = 19;
+                string cHP = NinjaUtil.getMoneys(Char.myCharz().cHP);
+                string cMP = NinjaUtil.getMoneys(Char.myCharz().cMP);
+                g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.6f));
+                if (mGraphics.zoomLevel > 1)
+				{
+					GUIStyle guistyle = new GUIStyle(GUI.skin.label);
+					guistyle.normal.textColor = Color.yellow;
+					guistyle.fontStyle = FontStyle.Bold;
+					guistyle.fontSize = (int)(8.5 * mGraphics.zoomLevel);
+					g.fillRect(x - 2, yHP + 1, Utilities.getWidth(guistyle, cHP) - 25, Utilities.getHeight(guistyle, cHP) - 2);
+					g.drawString(cHP, x, yHP, guistyle);
+					guistyle.fontSize = 5 * mGraphics.zoomLevel;
+					g.fillRect(x - 2, yMP + 1, Utilities.getWidth(guistyle, cMP) - 25, Utilities.getHeight(guistyle, cMP) - 2);
+					g.drawString(cMP, x, yMP, guistyle);
+				}
+				else
+				{
+					g.fillRect(x - 1, yHP + 1, mFont.tahoma_7b_yellow.getWidth(cHP), mFont.tahoma_7b_yellow.getHeight() - 2);
+					mFont.tahoma_7b_yellow.drawString(g, cHP, x, yHP, mFont.LEFT);
+					g.fillRect(x - 1, yMP + 1, mFont.tahoma_7_yellow.getWidth(cMP), mFont.tahoma_7_yellow.getHeight() - 2);
+                    mFont.tahoma_7_yellow.drawString(g, cMP, x, yMP, mFont.LEFT);
+                }
+            }
 		}
 	}
 
