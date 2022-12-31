@@ -377,9 +377,9 @@ namespace Mod
             ListCharsInMap.paint(g);
             CharEffect.Paint(g);
             SuicideRange.paint(g);
-            ExtensionManager.Invoke(g);
             //CustomGraphics.DrawCircle(g, Char.myCharz().cx, Char.myCharz().cy, 100, 2);
             //if (Char.myCharz().charFocus != null) mFont.tahoma_7_yellow.drawString(g, Extensions.getDistance(Char.myCharz(), Char.myCharz().charFocus).ToString(), GameCanvas.w / 2, 10, mFont.CENTER);
+            ExtensionManager.Invoke(g);
         }
 
         public static bool onUseSkill(Skill skill)
@@ -392,7 +392,7 @@ namespace Mod
         public static void onFixedUpdateMain()
         {
             //Pk9rXmap.Update();
-            CustomBackground.update();
+            CustomBackground.FixedUpdate();
             CustomLogo.update();
             ExtensionManager.Invoke();
         }
@@ -454,7 +454,7 @@ namespace Mod
         public static bool onPaintBgGameScr(mGraphics g)
         {
             //UnityEngine.Graphics.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), BackgroundVideo.videoPlayer.texture);
-            if (CustomBackground.isEnabled && CustomBackground.staticBackgroundWallpapers.Count + CustomBackground.gifBackgroundWallpapers.Count > 0 && !ModMenuMain.modMenuItemBools[8].isDisabled)
+            if (CustomBackground.isEnabled && CustomBackground.backgroundWallpapers.Count > 0 && !ModMenuMain.modMenuItemBools[8].isDisabled)
             {
                 CustomBackground.paint(g);
                 ExtensionManager.Invoke(g);

@@ -49,6 +49,7 @@ namespace Mod
             try
             {
                 if (!isEnabled) return;
+                g.reset();
                 longestStr = string.Empty;
                 distanceBetweenLines = 8;
                 int startY = 50;
@@ -104,7 +105,6 @@ namespace Mod
                         if (Char.myCharz().isStandAndCharge && GameCanvas.gameTick % 10 >= 5) g.setColor(new Color(1f, 0f, 0f, 1f));
                     }
                     g.fillRect(GameCanvas.w - paddingRight - longestStrWidth, startY + 1 + distanceBetweenLines * i, longestStrWidth, 7);
-                    g.reset();
                     g.drawString(charDescriptions[i].Key, GameCanvas.w - paddingRight - longestStrWidth, startY + 1 + distanceBetweenLines * i, charDescriptions[i].Value, longestStrWidth * 2);
                     Char ch = listChars[i];
                     g.setColor(CharExtensions.getFlagColor(ch));
@@ -127,6 +127,8 @@ namespace Mod
 
         public static void updateTouch()
         {
+            if (!isEnabled)
+                return;
             try
             {
                 if (!GameCanvas.isTouch || ChatTextField.gI().isShow || GameCanvas.menu.showMenu) return;

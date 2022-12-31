@@ -24,7 +24,7 @@ namespace Mod.ModMenu
             new ModMenuItemBoolean("Auto up SS", "Auto up acc sơ sinh đến nhiệm vụ vào bang", AutoSS.setState, false, "", true, "Bạn đã qua nhiệm vụ sơ sinh!"),
             new ModMenuItemBoolean("Auto T77", "Auto up Tàu Pảy Pảy", AutoT77.setState, false, "", true, "Bạn không thể vào map Đông Karin!"),
             new ModMenuItemBoolean("Hiện khoảng cách bom", "Hiển thị người, quái, boss... trong tầm bom", SuicideRange.setState, false, "isshowsuiciderange"),
-            new ModMenuItemBoolean("Nền tùy chỉnh", "Thay thế nền của game bằng ảnh trong danh sách (ảnh sẽ được tự động điều chỉnh cho vừa kích thước màn hình)", CustomBackground.setState, false, "iscustombackground", false, "Bạn cần tắt chức năng \"Giảm đồ họa\"!"),
+            new ModMenuItemBoolean("Nền tùy chỉnh", "Thay thế nền của game bằng nền tùy chỉnh (tự động điều chỉnh nền cho vừa kích thước màn hình)", CustomBackground.setState, false, "iscustombackground", false, "Bạn cần tắt chức năng \"Giảm đồ họa\"!"),
             new ModMenuItemBoolean("Logo tùy chỉnh", "Bật/tắt hiển thị logo tùy chỉnh trên màn hình game", CustomLogo.setState, false, "isshowlogo"),
 
             new ModMenuItemBoolean("Tàn sát", "Bật/tắt tự động đánh quái", (bool value) => Pk9rPickMob.IsTanSat = value, false, "", false, "Bạn đang bật auto T77 hoặc auto up SS!"),
@@ -58,7 +58,7 @@ namespace Mod.ModMenu
             }, "vietmode", false, "Bạn không biết gõ tiếng Việt!"),
             new ModMenuItemInt("Auto up đệ tử", new string[]{"Đang tắt", "Đang bật up đệ thường", "Đang bật up đệ né siêu quái", "Đang bật up đệ kaioken"}, "", 0, AutoPet.setState, "", false, "Bạn không có đệ tử!"),
             new ModMenuItemInt("Đánh khi đệ cần", new string[]{"Đánh quái gần nhất", "Đánh đệ (tự động bật cờ xám)", "Đánh bản thân (tự động bật cờ xám)"}, "", 0, AutoPet.setAttackState, "modeautopet", true, "Bạn chưa bật chức năng \"Auto up đệ tử\"!"),
-            new ModMenuItemInt("Thời gian đổi ảnh nền", null, "Điều chỉnh thời gian thay đổi ảnh nền (giây)", 30, CustomBackground.setState, "backgroundinveral", false),
+            new ModMenuItemInt("Thời gian đổi nền", null, "Điều chỉnh thời gian thay đổi nền (giây)", 30, CustomBackground.setState, "backgroundinveral", false),
             new ModMenuItemInt("Thời gian đổi logo", null, "Điều chỉnh thời gian thay đổi logo (giây)", 30, CustomLogo.setState, "logoinveral", false),
             new ModMenuItemInt("Chiều cao của logo", null, "Điều chỉnh chiều cao của logo", 80, CustomLogo.setLogoHeight, "logoheight"),
         };
@@ -68,15 +68,15 @@ namespace Mod.ModMenu
             new ModMenuItemFunction("Menu Xmap", "Mở menu Xmap (chat \"xmp\" hoặc bấm nút x)", Pk9rXmap.showXmapMenu),
             new ModMenuItemFunction("Menu PickMob", "Mở menu PickMob (chat \"pickmob\")", Pk9rPickMob.ShowMenu),
             new ModMenuItemFunction("Menu Teleport", "Mở menu dịch chuyển (chat \"tele\" hoặc bấm nút z)", TeleportMenu.TeleportMenu.ShowMenu),
-            new ModMenuItemFunction("Menu Custom Background", "Mở menu ảnh nền tùy chỉnh", CustomBackground.ShowMenu),
+            new ModMenuItemFunction("Menu Custom Background", "Mở menu nền tùy chỉnh", CustomBackground.ShowMenu),
             new ModMenuItemFunction("Menu Custom Logo", "Mở menu logo tùy chỉnh", CustomLogo.ShowMenu),
         };
 
         public static Dictionary<int, string[]> inputModMenuItemInts = new Dictionary<int, string[]>()
         {
             { 0, new string[]{"Nhập mức FPS", "FPS"} },
-            { 6, new string[]{"Nhập thời gian thay đổi ảnh nền", "thời gian (giây)"} },
-            { 7, new string[]{"Nhập thời gian thay đổi logo", "thời gian (giây)"} },
+            { 6, new string[]{"Nhập thời gian thay đổi nền", "Thời gian (giây)"} },
+            { 7, new string[]{"Nhập thời gian thay đổi logo", "Thời gian (giây)"} },
             { 8, new string[]{"Nhập chiều cao logo", "Chiều cao logo" } },
         };
 
@@ -127,7 +127,7 @@ namespace Mod.ModMenu
             {
                 if (modMenuItem.RMSName == rmsName) return modMenuItem.SelectedValue;
             }
-            throw new Exception("Not found any ModMenuItemOther with RMSName \"" + rmsName + "\"!");
+            throw new Exception("Not found any ModMenuItemInt with RMSName \"" + rmsName + "\"!");
         }
 
         public static int getStatusInt(int index)

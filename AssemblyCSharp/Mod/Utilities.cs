@@ -405,6 +405,7 @@ namespace Mod
         {
             ChatTextField.gI().strChat = "Chat";
             ChatTextField.gI().tfChat.name = "chat";
+            ChatTextField.gI().to = "";
             ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_ANY);
             ChatTextField.gI().isShow = false;
         }
@@ -496,6 +497,30 @@ namespace Mod
             fileStream.Close();
         }
 
+        public static float loadRMSFloat(string name)
+        {
+            string folder = "Data";
+            if (new StackFrame(1).GetMethod().Module != typeof(Utilities).Module)
+                folder += "\\" + new StackFrame(1).GetMethod().Module.Name.Replace(".dll", "");
+            FileStream fileStream = new FileStream(folder + "\\" + name, FileMode.Open);
+            byte[] array = new byte[4];
+            fileStream.Read(array, 0, 4);
+            fileStream.Close();
+            return BitConverter.ToSingle(array, 0);
+        }
+
+        public static void saveRMSFloat(string name, float value)
+        {
+            string folder = "Data";
+            if (new StackFrame(1).GetMethod().Module != typeof(Utilities).Module)
+                folder += "\\" + new StackFrame(1).GetMethod().Module.Name.Replace(".dll", "");
+            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+            FileStream fileStream = new FileStream(folder + "\\" + name, FileMode.Create);
+            fileStream.Write(BitConverter.GetBytes(value), 0, 4);
+            fileStream.Flush();
+            fileStream.Close();
+        }
+
         public static void toVietnamese(ref string str, int inputType, int caresPos, char keyChar)
         {
             if (inputType == TField.INPUT_TYPE_ANY && !str.StartsWith("/")) str = vietKeyHandler.toVietnamese(str, caresPos);
@@ -541,6 +566,11 @@ namespace Mod
         internal static int getWidth(GUIStyle gUIStyle, string s)
         {
             return (int)gUIStyle.CalcSize(new GUIContent(s)).x / mGraphics.zoomLevel + 30;
+        }
+
+        internal static int getHeight(GUIStyle gUIStyle, string content)
+        {
+            return (int)gUIStyle.CalcSize(new GUIContent(content)).y / mGraphics.zoomLevel;
         }
 
         /// <summary>
