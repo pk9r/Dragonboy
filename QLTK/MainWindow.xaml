@@ -621,45 +621,52 @@
                 Margin="5"
                 materialDesign:HintAssist.Hint="Màn hình"
                 SelectedIndex="1">
-                <ComboBoxItem Content="Nhỏ" />
-                <ComboBoxItem Content="Lớn" />
+                <ComboBoxItem Content="1" />
+                <ComboBoxItem Content="2" />
+                <ComboBoxItem Content="3" />
+                <ComboBoxItem Content="4" />
               </ComboBox>
             </Grid>
           </StackPanel>
         </materialDesign:Card>
 
         <materialDesign:Card Margin="5">
-          <StackPanel Height="174">
-            <CheckBox
+          <StackPanel Height="204">
+                        <CheckBox
+            x:Name="FullScreenCheckBox"
+            Margin="5"
+            Content="Toàn màn hình"
+            IsChecked="False" />
+                        <CheckBox
               x:Name="InfoCharacterCheckBox"
               Margin="5"
               Content="Thông tin nhân vật"
               IsChecked="True" />
-            <CheckBox
+                        <CheckBox
               x:Name="InfoLocationCheckBox"
               Margin="5"
               Content="Vị trí"
               IsChecked="True" />
-            <CheckBox
+                        <CheckBox
               x:Name="InfoMHPCheckBox"
               Margin="5"
               Content="HP, MP, Thể lực"
               IsChecked="True" />
-            <CheckBox
+                        <CheckBox
               x:Name="InfoPowerCheckBox"
               Margin="5"
               Content="Thông tin sức mạnh"
               IsChecked="True" />
-            <CheckBox
+                        <CheckBox
               x:Name="InfoMoneyCheckBox"
               Margin="5"
               Content="Tiền"
               IsChecked="True" />
-            <CheckBox
+                        <CheckBox
                 x:Name="IsDisplayInDiscordRichPresence"
                 Content="Hiển thị trong Discord Rich Presence"
                 IsChecked="False" Margin="5,5,5,5" Checked="IsDisplayInDiscordRichPresence_Checked" Unchecked="IsDisplayInDiscordRichPresence_Unchecked" />
-           </StackPanel>
+                    </StackPanel>
         </materialDesign:Card>
       </StackPanel>
     </Expander>

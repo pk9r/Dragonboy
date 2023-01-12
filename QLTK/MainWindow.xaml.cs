@@ -183,7 +183,8 @@ namespace QLTK
                 width,
                 height,
                 typeSize = this.ComboBoxTypeSize.SelectedIndex + 1,
-                lowGraphic = this.ComboBoxLowGraphic.SelectedIndex
+                lowGraphic = this.ComboBoxLowGraphic.SelectedIndex,
+                fullScreen = FullScreenCheckBox.IsChecked.Value
             };
             return true;
         }
@@ -317,13 +318,15 @@ namespace QLTK
 
                 var hWnd = account.process.MainWindowHandle;
                 Utilities.SetWindowText(hWnd, account.username);
-
-                Utilities.GetWindowRect(hWnd, out RECT rect);
-                Utilities.MoveWindow(
-                    hWnd, x: rect.left - rect.right, y: 0,
-                    width: rect.right - rect.left,
-                    height: rect.bottom - rect.top,
-                    bRepaint: true);
+                if (!FullScreenCheckBox.IsChecked.Value)
+                {
+                    Utilities.GetWindowRect(hWnd, out RECT rect);
+                    Utilities.MoveWindow(
+                        hWnd, x: rect.left - rect.right, y: 0,
+                        width: rect.right - rect.left,
+                        height: rect.bottom - rect.top,
+                        bRepaint: true);
+                }
             }
         }
         #endregion
@@ -367,6 +370,8 @@ namespace QLTK
 
         private async Task ShowAndArrangeWindows(int type)
         {
+            if (FullScreenCheckBox.IsChecked.Value)
+                return;
             var accounts = this.GetSelectedAccounts();
             if (accounts.Count <= 1)
                 accounts = this.GetAllAccounts();
@@ -596,7 +601,8 @@ namespace QLTK
                 
                 if (ExistedWindow(account, out IntPtr hWnd))
                 {
-                    await this.ShowWindowAsync(hWnd);
+                    if (!FullScreenCheckBox.IsChecked.Value)
+                        await this.ShowWindowAsync(hWnd);
                     this.MainGrid.IsEnabled = true;
                     return;
                 }

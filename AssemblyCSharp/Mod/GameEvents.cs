@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using UnityEngine;
 using Vietpad.InputMethod;
 
@@ -101,7 +102,18 @@ namespace Mod
             {
                 int width = (int)Utilities.sizeData["width"];
                 int height = (int)Utilities.sizeData["height"];
-                if (Screen.width != width || Screen.height != height) Screen.SetResolution(width, height, fullscreen: false);
+                bool fullScreen = (bool)Utilities.sizeData["fullScreen"];
+                if (Screen.width != width || Screen.height != height)
+                    Screen.SetResolution(width, height, fullScreen);
+                new Thread(delegate ()
+                {
+                    Thread.Sleep(500);
+                    while (Screen.fullScreen != fullScreen)
+                    {
+                        Screen.fullScreen = fullScreen;
+                        Thread.Sleep(100);
+                    }
+                }).Start();
                 return true;
             }
             return false;
