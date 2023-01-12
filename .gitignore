@@ -362,6 +362,7 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+*.mdb
 Game/Game_Data/output_log.txt
 Game/ModData/chat.txt
 Game/ModData/Accounts.json

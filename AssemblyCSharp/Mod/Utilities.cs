@@ -342,7 +342,14 @@ namespace Mod
         [ChatCommand("test")]
         public static void test()
         {
-            Boss.AddBoss("BOSS abc vừa xuất hiện tại Vách núi đen");
+            //try
+            //{
+            //    throw new Exception("test StackTrace with file name and line number");
+            //}
+            //catch (Exception ex)
+            //{
+            //    UnityEngine.Debug.LogException(ex);
+            //}
         }
 
         [ChatCommand("skey")]
