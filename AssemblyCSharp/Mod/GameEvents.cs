@@ -377,6 +377,7 @@ namespace Mod
             ListCharsInMap.paint(g);
             CharEffect.Paint(g);
             SuicideRange.paint(g);
+            Boss.Paint(g);
             //CustomGraphics.DrawCircle(g, Char.myCharz().cx, Char.myCharz().cy, 100, 2);
             //if (Char.myCharz().charFocus != null) mFont.tahoma_7_yellow.drawString(g, Extensions.getDistance(Char.myCharz(), Char.myCharz().charFocus).ToString(), GameCanvas.w / 2, 10, mFont.CENTER);
             ExtensionManager.Invoke(g);
@@ -408,6 +409,7 @@ namespace Mod
         public static void onUpdateKeyTouchControl()
         {
             ListCharsInMap.updateTouch();
+            Boss.UpdateTouch();
             ExtensionManager.Invoke();
         }
 
@@ -497,6 +499,12 @@ namespace Mod
             image.texture.wrapMode = TextureWrapMode.Clamp;
             ExtensionManager.Invoke(filename);
             return image;
+        }
+
+        public static void onChatVip(string chatVip)
+        {
+            Boss.AddBoss(chatVip);
+            ExtensionManager.Invoke(chatVip);
         }
     }
 }

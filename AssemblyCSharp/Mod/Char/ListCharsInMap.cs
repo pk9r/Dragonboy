@@ -22,9 +22,19 @@ namespace Mod
 
         static int distanceBetweenLines = 8;
 
+        static int startY = 50;
+
         public static void update()
         {
-            if (!isEnabled) return;
+            if (Boss.isEnabled)
+            {
+                if (startY != 100)
+                    startY = 100;
+            }
+            else if (startY != 50)
+                startY = 50;
+            if (!isEnabled)
+                return;
             listChars.Clear();
             for (int i = 0; i < GameScr.vCharInMap.size(); i++)
             {
@@ -52,8 +62,7 @@ namespace Mod
                 g.reset();
                 longestStr = string.Empty;
                 distanceBetweenLines = 8;
-                int startY = 50;
-                int skippedPetCount = 0;
+                int skippedCharCount = 0;
                 List<KeyValuePair<string, GUIStyle>> charDescriptions = new List<KeyValuePair<string, GUIStyle>>();
                 for (int i = 0; i < listChars.Count; i++)
                 {
@@ -87,9 +96,12 @@ namespace Mod
                             //mfont = mFont.tahoma_7_tiny;
                         }
                         charDesc = ch.cName.Replace("$", "").Replace("#", "") + " [" + NinjaUtil.getMoneys(ch.cHP) + "/" + NinjaUtil.getMoneys(ch.cHPFull) + " - " + CharExtensions.getGender(ch) + "]";
-                        skippedPetCount++;
+                        skippedCharCount++;
                     }
-                    else if (!CharExtensions.isBoss(ch)) charDesc = i + 1 - skippedPetCount + ". " + charDesc;
+                    else if (!CharExtensions.isBoss(ch))
+                        charDesc = i + 1 - skippedCharCount + ". " + charDesc;
+                    else
+                        skippedCharCount++;
                     if ((Char.myCharz().isStandAndCharge || (!Char.myCharz().isDie && Char.myCharz().cgender == 2 && Char.myCharz().myskill == Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[4]))) && SuicideRange.mapObjsInMyRange.Contains(ch)) charDesc += " - Trong tầm";
                     charDescriptions.Add(new KeyValuePair<string, GUIStyle>(charDesc, /*mfont*/gUIStyle));
                     if (charDesc.Length > longestStr.Length) longestStr = charDesc;
@@ -97,7 +109,7 @@ namespace Mod
                 for (int i = 0; i < listChars.Count; i++)
                 {
                     longestStrWidth = Utilities.getWidth(charDescriptions[i].Value, longestStr);
-                    g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.6f));
+                    g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.4f));
                     if (Char.myCharz().charFocus == listChars[i]) g.setColor(new Color(1f, 1f, 0f, 0.3f));
                     if (SuicideRange.isShowSuicideRange && SuicideRange.mapObjsInMyRange.Contains(listChars[i]))
                     {
@@ -132,7 +144,6 @@ namespace Mod
             try
             {
                 if (!GameCanvas.isTouch || ChatTextField.gI().isShow || GameCanvas.menu.showMenu) return;
-                int startY = 50;
                 for (int i = 0; i < listChars.Count; i++)
                 {
                     if (GameCanvas.isPointerHoldIn(GameCanvas.w - paddingRight - longestStrWidth, startY + 1 + distanceBetweenLines * i, longestStrWidth, 7))

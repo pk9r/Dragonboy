@@ -29,7 +29,7 @@
         </member>
         <member name="T:Mod.Extension">
             <summary>
-            Class để các extension override, chứa các method được gọi khi một sự kiện nào đó trong game diễn ra.
+            Class để các extension kế thừa, chứa các method được gọi khi một sự kiện nào đó trong game diễn ra.
             </summary>
         </member>
         <member name="T:Mod.GameEvents">

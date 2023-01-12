@@ -6961,6 +6961,7 @@ public class GameScr : mScreen, IChatable
 
 	public void chatVip(string chatVip)
 	{
+		GameEvents.onChatVip(chatVip);
 		if (!startChat)
 		{
 			currChatWidth = mFont.tahoma_7b_yellowSmall.getWidth(chatVip);

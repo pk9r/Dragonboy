@@ -342,7 +342,7 @@ namespace Mod
         [ChatCommand("test")]
         public static void test()
         {
-
+            Boss.AddBoss("BOSS abc vừa xuất hiện tại Vách núi đen");
         }
 
         [ChatCommand("skey")]
@@ -782,6 +782,11 @@ namespace Mod
                 result = true;
             starE -= star;
             return result;
+        }
+
+        public static long GetLastTimePress()
+        {
+            return (long)typeof(GameCanvas).GetField("lastTimePress", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
         }
     }
 }
