@@ -45,10 +45,8 @@ namespace Mod.Xmap
                     menuItems.Add(new(groupMap.nameGroup, new(() =>
                     {
                         showXmapPanel(groupMap.maps);
-                        Char.chatPopup = null;
                     })));
-            }));
-            ChatPopup.addChatPopup($"XmapNRO by Phucprotein\nMap hiện tại: {TileMap.mapName}, ID: {TileMap.mapID}\nVui lòng chọn nơi muốn đến", 100000, new Npc(5, 0, -100, 100, 5, Utilities.ID_NPC_MOD_FACE));
+            }), $"XmapNRO by Phucprotein\nMap hiện tại: {TileMap.mapName}, ID: {TileMap.mapID}\nVui lòng chọn nơi muốn đến");
         }
 
         public static void showXmapPanel(List<int> maps)
