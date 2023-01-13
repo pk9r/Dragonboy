@@ -112,7 +112,7 @@ namespace QLTK
                     string hashGameAssemblyLocal = BitConverter.ToString(md5CryptoServiceProvider.ComputeHash(File.ReadAllBytes(@"Game_Data\Managed\Assembly-CSharp.dll"))).Replace("-", "");
                     string hashQLTKLocal = BitConverter.ToString(md5CryptoServiceProvider.ComputeHash(File.ReadAllBytes("QLTK.exe"))).Replace("-", "");
 
-                    string hashGameAssemblyRemote = remoteInfo[0];
+                    string hashGameAssemblyRemote = remoteInfo[0].TrimStart('\ufeff');
                     string hashQLTKRemote = remoteInfo[2];
 
                     if (hashQLTKLocal != hashQLTKRemote || hashGameAssemblyLocal != hashGameAssemblyRemote)
