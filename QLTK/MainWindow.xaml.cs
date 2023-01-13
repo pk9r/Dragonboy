@@ -109,12 +109,8 @@ namespace QLTK
                     MD5CryptoServiceProvider md5CryptoServiceProvider = new MD5CryptoServiceProvider();
                     string[] remoteInfo = Encoding.UTF8.GetString(client.DownloadData(Settings.Default.LinkHash)).Split('\n');
 
-                    string hashQLTKLocal = "";
-                    string hashGameAssemblyLocal = "";
-                    foreach (byte b in md5CryptoServiceProvider.ComputeHash(File.ReadAllBytes(@"Game_Data\Managed\Assembly-CSharp.dll")))
-                        hashGameAssemblyLocal += Convert.ToString(b, 16).ToUpper();
-                    foreach (byte b in md5CryptoServiceProvider.ComputeHash(File.ReadAllBytes("QLTK.exe")))
-                        hashQLTKLocal += Convert.ToString(b, 16).ToUpper();
+                    string hashGameAssemblyLocal = BitConverter.ToString(md5CryptoServiceProvider.ComputeHash(File.ReadAllBytes(@"Game_Data\Managed\Assembly-CSharp.dll"))).Replace("-", "");
+                    string hashQLTKLocal = BitConverter.ToString(md5CryptoServiceProvider.ComputeHash(File.ReadAllBytes("QLTK.exe"))).Replace("-", "");
 
                     string hashGameAssemblyRemote = remoteInfo[0];
                     string hashQLTKRemote = remoteInfo[2];
