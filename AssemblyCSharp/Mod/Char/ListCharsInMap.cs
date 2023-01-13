@@ -22,9 +22,19 @@ namespace Mod
 
         static int distanceBetweenLines = 8;
 
+        static int startY = 50;
+
         public static void update()
         {
-            if (!isEnabled) return;
+            if (Boss.isEnabled)
+            {
+                if (startY != 100)
+                    startY = 100;
+            }
+            else if (startY != 50)
+                startY = 50;
+            if (!isEnabled)
+                return;
             listChars.Clear();
             for (int i = 0; i < GameScr.vCharInMap.size(); i++)
             {
@@ -52,13 +62,12 @@ namespace Mod
                 g.reset();
                 longestStr = string.Empty;
                 distanceBetweenLines = 8;
-                int startY = 50;
-                int skippedPetCount = 0;
+                int skippedCharCount = 0;
                 List<KeyValuePair<string, GUIStyle>> charDescriptions = new List<KeyValuePair<string, GUIStyle>>();
                 for (int i = 0; i < listChars.Count; i++)
                 {
                     GUIStyle gUIStyle = new GUIStyle(GUI.skin.label);
-                    gUIStyle.fontSize = 13;
+                    gUIStyle.fontSize = 6 * mGraphics.zoomLevel;
                     gUIStyle.alignment = TextAnchor.UpperRight;
                     Char ch = listChars[i];
                     //mFont mfont = mFont.tahoma_7_white_tiny;
@@ -87,9 +96,12 @@ namespace Mod
                             //mfont = mFont.tahoma_7_tiny;
                         }
                         charDesc = ch.cName.Replace("$", "").Replace("#", "") + " [" + NinjaUtil.getMoneys(ch.cHP) + "/" + NinjaUtil.getMoneys(ch.cHPFull) + " - " + CharExtensions.getGender(ch) + "]";
-                        skippedPetCount++;
+                        skippedCharCount++;
                     }
-                    else if (!CharExtensions.isBoss(ch)) charDesc = i + 1 - skippedPetCount + ". " + charDesc;
+                    else if (!CharExtensions.isBoss(ch))
+                        charDesc = i + 1 - skippedCharCount + ". " + charDesc;
+                    else
+                        skippedCharCount++;
                     if ((Char.myCharz().isStandAndCharge || (!Char.myCharz().isDie && Char.myCharz().cgender == 2 && Char.myCharz().myskill == Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[4]))) && SuicideRange.mapObjsInMyRange.Contains(ch)) charDesc += " - Trong tầm";
                     charDescriptions.Add(new KeyValuePair<string, GUIStyle>(charDesc, /*mfont*/gUIStyle));
                     if (charDesc.Length > longestStr.Length) longestStr = charDesc;
@@ -97,15 +109,19 @@ namespace Mod
                 for (int i = 0; i < listChars.Count; i++)
                 {
                     longestStrWidth = Utilities.getWidth(charDescriptions[i].Value, longestStr);
-                    g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.6f));
-                    if (Char.myCharz().charFocus == listChars[i]) g.setColor(new Color(1f, 1f, 0f, 0.3f));
+                    g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.4f));
+                    if (GameCanvas.isMouseFocus(GameCanvas.w - paddingRight - longestStrWidth, startY + 1 + distanceBetweenLines * i, longestStrWidth, 7))
+                        g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.7f));
+                    if (Char.myCharz().charFocus == listChars[i])
+                        g.setColor(new Color(1f, .5f, 0f, .5f));
                     if (SuicideRange.isShowSuicideRange && SuicideRange.mapObjsInMyRange.Contains(listChars[i]))
                     {
                         g.setColor(new Color(0.5f, 0.5f, 0f, 1f));
-                        if (Char.myCharz().isStandAndCharge && GameCanvas.gameTick % 10 >= 5) g.setColor(new Color(1f, 0f, 0f, 1f));
+                        if (Char.myCharz().isStandAndCharge && GameCanvas.gameTick % 10 >= 5)
+                            g.setColor(new Color(1f, 0f, 0f, 1f));
                     }
                     g.fillRect(GameCanvas.w - paddingRight - longestStrWidth, startY + 1 + distanceBetweenLines * i, longestStrWidth, 7);
-                    g.drawString(charDescriptions[i].Key, GameCanvas.w - paddingRight - longestStrWidth, startY + 1 + distanceBetweenLines * i, charDescriptions[i].Value, longestStrWidth * 2);
+                    g.drawString(charDescriptions[i].Key, -paddingRight, mGraphics.zoomLevel - 3 + startY + distanceBetweenLines * i, charDescriptions[i].Value);
                     Char ch = listChars[i];
                     g.setColor(CharExtensions.getFlagColor(ch));
                     g.fillRect(GameCanvas.w - paddingRight + 2, startY + 1 + distanceBetweenLines * i, 7, 7);
@@ -116,9 +132,9 @@ namespace Mod
                         gUIStyle1.alignment = TextAnchor.UpperCenter;
                         gUIStyle1.fontSize = 13;
                         if (ch.cFlag == 9)
-                            g.drawString("K", GameCanvas.w - paddingRight + 5, startY + distanceBetweenLines * i, gUIStyle1);
+                            g.drawString("K", -paddingRight + 5, mGraphics.zoomLevel - 3 + startY + distanceBetweenLines * i, gUIStyle1);
                         if (ch.cFlag == 10)
-                            g.drawString("M", GameCanvas.w - paddingRight + 5, startY + distanceBetweenLines * i, gUIStyle1);
+                            g.drawString("M", -paddingRight + 5, mGraphics.zoomLevel - 3 + startY + distanceBetweenLines * i, gUIStyle1);
                     }
                 }
             }
@@ -132,7 +148,6 @@ namespace Mod
             try
             {
                 if (!GameCanvas.isTouch || ChatTextField.gI().isShow || GameCanvas.menu.showMenu) return;
-                int startY = 50;
                 for (int i = 0; i < listChars.Count; i++)
                 {
                     if (GameCanvas.isPointerHoldIn(GameCanvas.w - paddingRight - longestStrWidth, startY + 1 + distanceBetweenLines * i, longestStrWidth, 7))

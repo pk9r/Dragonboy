@@ -4,7 +4,7 @@ using System.Collections;
 namespace Mod
 {
     /// <summary>
-    /// Class để các extension override, chứa các method được gọi khi một sự kiện nào đó trong game diễn ra.
+    /// Class để các extension kế thừa, chứa các method được gọi khi một sự kiện nào đó trong game diễn ra.
     /// </summary>
     public class Extension
     {
@@ -192,6 +192,11 @@ namespace Mod
 
         public virtual Image onCreateImage(string filename)
 		{
+            throw new NotImplementedException();
+        }
+
+        public virtual void onChatVip(string chatVip)
+        {
             throw new NotImplementedException();
         }
     }

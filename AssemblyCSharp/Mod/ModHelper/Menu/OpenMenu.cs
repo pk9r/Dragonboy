@@ -34,13 +34,15 @@ namespace Mod.ModHelper.Menu
             }));
         }
 
-        public static void start(MenuItemCollection menuItemCollection)
+        public static void start(MenuItemCollection menuItemCollection, string chatPopup = "")
         {
             var myVector = getMyVectorStartMenu(menuItemCollection);
             if (myVector.size() > 0)
             {
                 GameCanvas.menu.startAt(myVector, 3);
             }
+            if (!string.IsNullOrEmpty(chatPopup))
+                ChatPopup.addChatPopup(chatPopup, 100000, new Npc(5, 0, -100, 100, 5, Utilities.ID_NPC_MOD_FACE));
         }
 
         public static void start(MenuItemCollection menuItemCollection, int x, int y)
@@ -107,6 +109,8 @@ namespace Mod.ModHelper.Menu
 
             var caption = captions[selected];
             action.Invoke(selected, caption, captions);
+            if (Char.chatPopup != null && Char.chatPopup.c.avatar == Utilities.ID_NPC_MOD_FACE)
+                Char.chatPopup = null;
         }
 
         private static MyVector getMyVectorStartMenu(MenuItemCollection menuItemCollection)

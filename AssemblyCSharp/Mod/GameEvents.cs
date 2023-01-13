@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using UnityEngine;
 using Vietpad.InputMethod;
 
@@ -101,7 +102,18 @@ namespace Mod
             {
                 int width = (int)Utilities.sizeData["width"];
                 int height = (int)Utilities.sizeData["height"];
-                if (Screen.width != width || Screen.height != height) Screen.SetResolution(width, height, fullscreen: false);
+                bool fullScreen = (bool)Utilities.sizeData["fullScreen"];
+                if (Screen.width != width || Screen.height != height)
+                    Screen.SetResolution(width, height, fullScreen);
+                new Thread(delegate ()
+                {
+                    Thread.Sleep(500);
+                    while (Screen.fullScreen != fullScreen)
+                    {
+                        Screen.fullScreen = fullScreen;
+                        Thread.Sleep(100);
+                    }
+                }).Start();
                 return true;
             }
             return false;
@@ -235,7 +247,9 @@ namespace Mod
             AutoT77.update();
             AutoPet.update();
             SuicideRange.update();
-            if (!AutoSS.isAutoSS && !AutoT77.isAutoT77) Pk9rPickMob.Update();
+            if (!AutoSS.isAutoSS && !AutoT77.isAutoT77)
+                Pk9rPickMob.Update();
+            Boss.Update();
             //NOTE onUpdateChatTextField không thể bấm tab.
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();
@@ -377,6 +391,7 @@ namespace Mod
             ListCharsInMap.paint(g);
             CharEffect.Paint(g);
             SuicideRange.paint(g);
+            Boss.Paint(g);
             //CustomGraphics.DrawCircle(g, Char.myCharz().cx, Char.myCharz().cy, 100, 2);
             //if (Char.myCharz().charFocus != null) mFont.tahoma_7_yellow.drawString(g, Extensions.getDistance(Char.myCharz(), Char.myCharz().charFocus).ToString(), GameCanvas.w / 2, 10, mFont.CENTER);
             ExtensionManager.Invoke(g);
@@ -408,6 +423,7 @@ namespace Mod
         public static void onUpdateKeyTouchControl()
         {
             ListCharsInMap.updateTouch();
+            Boss.UpdateTouch();
             ExtensionManager.Invoke();
         }
 
@@ -497,6 +513,12 @@ namespace Mod
             image.texture.wrapMode = TextureWrapMode.Clamp;
             ExtensionManager.Invoke(filename);
             return image;
+        }
+
+        public static void onChatVip(string chatVip)
+        {
+            Boss.AddBoss(chatVip);
+            ExtensionManager.Invoke(chatVip);
         }
     }
 }

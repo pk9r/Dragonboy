@@ -13,11 +13,14 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DebugType>none</DebugType>
+    <DebugType>full</DebugType>
     <NoWarn>1701;1702;1591</NoWarn>
+    <Deterministic>False</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;1591</NoWarn>
+    <DebugType>full</DebugType>
+    <Deterministic>False</Deterministic>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
@@ -50,6 +53,6 @@
 	  </Reference>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(TargetDir)Assembly-CSharp.dll&quot; &quot;$(SolutionDir)Game\Game_Data\Managed\&quot;&#xD;&#xA;copy &quot;$(TargetDir)Assembly-CSharp.xml&quot; &quot;$(SolutionDir)Game\Game_Data\Managed\&quot;" />
+    <Exec Command="copy &quot;$(TargetDir)Assembly-CSharp.dll&quot; &quot;$(SolutionDir)Game\Game_Data\Managed\&quot;&#xD;&#xA;copy &quot;$(TargetDir)Assembly-CSharp.xml&quot; &quot;$(SolutionDir)Game\Game_Data\Managed\&quot;&#xD;&#xA;copy &quot;$(TargetDir)Assembly-CSharp.pdb&quot; &quot;$(SolutionDir)Game\Game_Data\Managed\&quot;&#xD;&#xA;cd &quot;$(SolutionDir)Game\Game_Data\Managed\&quot;&#xD;&#xA;echo Generating Unity mdb debug symbols...&#xD;&#xA;&quot;$(SolutionDir)pdb2mdb\pdb2mdb.exe&quot; &quot;$(SolutionDir)Game\Game_Data\Managed\Assembly-CSharp.dll&quot;&#xD;&#xA;echo Generating hash...&#xD;&#xA;cd &quot;$(SolutionDir)&quot;&#xD;&#xA;powershell -Command &quot;$hash = Get-FileHash \&quot;Game\Game_Data\Managed\Assembly-CSharp.dll\&quot; -Algorithm MD5 | Select-Object -ExpandProperty Hash ; $hash += \&quot;`n\&quot; + [System.BitConverter]::ToInt32([System.IO.File]::ReadAllBytes(\&quot;Game\Game_Data\Managed\Assembly-CSharp.dll\&quot;), 0x00000088) + \&quot;`n\&quot;; $hash += Get-FileHash \&quot;Game\QLTK.exe\&quot; -Algorithm MD5 | Select-Object -ExpandProperty Hash ; $hash += \&quot;`n\&quot; + [System.BitConverter]::ToInt32([System.IO.File]::ReadAllBytes(\&quot;Game\QLTK.exe\&quot;), 0x00000088) ; Out-File -Encoding utf8 -FilePath \&quot;HashAndTimeStamp.txt\&quot; -InputObject $hash&quot;" />
   </Target>
 </Project>

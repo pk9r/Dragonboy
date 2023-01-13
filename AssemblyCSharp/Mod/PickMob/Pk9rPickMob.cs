@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Mod.ModHelper.Menu;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Mod.PickMob
 {
-    public class Pk9rPickMob : IActionListener
+    public class Pk9rPickMob
     {
         private const int ID_ITEM_GEM = 77;
         private const int ID_ITEM_GEM_LOCK = 861;
@@ -410,55 +411,9 @@ namespace Mod.PickMob
 
         public static void ShowMenu()
         {
-            MyVector menuItems = new MyVector();
             string menuDesc = string.Empty;
             Mob mobFocus = Char.myCharz().mobFocus;
             ItemMap itemFocus = Char.myCharz().itemFocus;
-            if (mobFocus != null || itemFocus != null)
-            {
-                if (mobFocus != null)
-                {
-                    if (IdMobsTanSat.Contains(mobFocus.mobId)) menuDesc = $"Xóa quái id ({mobFocus.mobId}) khỏi danh sách";
-                    else menuDesc = $"Thêm quái id ({mobFocus.mobId}) vào danh sách";
-                }
-                else if (itemFocus != null)
-                {
-                    if (IdItemPicks.Contains(itemFocus.template.id)) menuDesc = $"Xóa item khỏi danh sách";
-                    else menuDesc = $"Thêm item vào danh sách";
-                }
-                menuItems.addElement(new Command(menuDesc, getInstance(), 1, null));
-                if (mobFocus != null)
-                {
-                    if (TypeMobsTanSat.Contains(mobFocus.templateId)) menuDesc = $"Xóa {mobFocus.getTemplate().name} khỏi danh sách";
-                    else menuDesc = $"Thêm {mobFocus.getTemplate().name} vào danh sách";
-                }
-                else if (itemFocus != null)
-                {
-                    if (TypeItemPicks.Contains(itemFocus.template.type)) menuDesc = $"Xóa loại item ({itemFocus.template.type}) khỏi danh sách";
-                    else menuDesc = $"Thêm loại item ({itemFocus.template.type}) vào danh sách";
-                }
-                menuItems.addElement(new Command(menuDesc, getInstance(), 2, null));
-                if (itemFocus != null)
-                {
-                    if (IdItemBlocks.Contains(itemFocus.template.id)) menuDesc = $"Xóa {itemFocus.template.name} khỏi danh sách không nhặt";
-                    else menuDesc = $"Thêm {itemFocus.template.name} vào danh sách không nhặt";
-                    menuItems.addElement(new Command(menuDesc, getInstance(), 3, itemFocus));
-                    if (TypeItemBlocks.Contains(itemFocus.template.type)) menuDesc = $"Xóa loại item ({itemFocus.template.type}) khỏi danh sách không nhặt";
-                    else menuDesc = $"Thêm loại item ({itemFocus.template.type}) vào danh sách không nhặt";
-                    menuItems.addElement(new Command(menuDesc, getInstance(), 4, itemFocus));
-                }
-            }
-            if (IdMobsTanSat.Count + TypeMobsTanSat.Count > 0) menuItems.addElement(new Command("Xóa danh sách tàn sát", getInstance(), 5, null));
-            SkillTemplate mySkillTemplate = Char.myCharz().myskill.template;
-            if (IdSkillsTanSat.Contains(mySkillTemplate.id)) menuDesc = $"Xóa {mySkillTemplate.name} khỏi danh sách skill";
-            else menuDesc = $"Thêm {mySkillTemplate.name} vào danh sách skill";
-            menuItems.addElement(new Command(menuDesc, getInstance(), 6, null));
-            menuItems.addElement(new Command("Đặt lại danh sách skill", getInstance(), 7, null));
-            menuItems.addElement(new Command("Đặt lại danh sách item", getInstance(), 8, null));
-            if (IdMobsTanSat.Count + TypeMobsTanSat.Count > 0) menuItems.addElement(new Command("Xem danh sách quái", getInstance(), 9, null));
-            if (IdItemPicks.Count + TypeItemPicks.Count + IdItemBlocks.Count + TypeItemBlocks.Count > 0) menuItems.addElement(new Command("Xem danh sách vật phẩm", getInstance(), 10, null));
-            menuItems.addElement(new Command("Xem danh sách skill", getInstance(), 11, null));
-            GameCanvas.menu.startAt(menuItems, 0);
             string cpDesc = "PickMobNRO by Phucprotein\n";
             if (mobFocus != null || itemFocus != null)
             {
@@ -468,106 +423,146 @@ namespace Mod.PickMob
                 }
                 else cpDesc += $"Item đang trỏ vào: {itemFocus.template.name}, id: {itemFocus.template.id}, loại: {itemFocus.template.type}";
             }
-            ChatPopup.addChatPopup(cpDesc, 100000, new Npc(5, 0, -100, 100, 5, Utilities.ID_NPC_MOD_FACE));
-
-
-        }
-
-        public void perform(int idAction, object p)
-        {
-            switch (idAction)
+            OpenMenu.start(new(menuItems =>
             {
-                case 1:
-                    Chat("add");
-                    break;
-                case 2:
-                    Chat("addt");
-                    break;
-                case 3:
-                    Chat("blocki" + ((ItemMap)p).template.id);
-                    break;
-                case 4:
-                    Chat("blockti" + ((ItemMap)p).template.type);
-                    break;
-                case 5:
-                    Chat("clrm");
-                    break;
-                case 6:
+                if (mobFocus != null || itemFocus != null)
+                {
+                    if (mobFocus != null)
+                    {
+                        if (IdMobsTanSat.Contains(mobFocus.mobId)) menuDesc = $"Xóa quái id ({mobFocus.mobId}) khỏi danh sách";
+                        else menuDesc = $"Thêm quái id ({mobFocus.mobId}) vào danh sách";
+                    }
+                    else if (itemFocus != null)
+                    {
+                        if (IdItemPicks.Contains(itemFocus.template.id)) menuDesc = $"Xóa item khỏi danh sách";
+                        else menuDesc = $"Thêm item vào danh sách";
+                    }
+                    menuItems.Add(new(menuDesc, new(() =>
+                    {
+                        Chat("add");
+                    })));
+                    if (mobFocus != null)
+                    {
+                        if (TypeMobsTanSat.Contains(mobFocus.templateId)) menuDesc = $"Xóa {mobFocus.getTemplate().name} khỏi danh sách";
+                        else menuDesc = $"Thêm {mobFocus.getTemplate().name} vào danh sách";
+                    }
+                    else if (itemFocus != null)
+                    {
+                        if (TypeItemPicks.Contains(itemFocus.template.type)) menuDesc = $"Xóa loại item ({itemFocus.template.type}) khỏi danh sách";
+                        else menuDesc = $"Thêm loại item ({itemFocus.template.type}) vào danh sách";
+                    }
+                    menuItems.Add(new(menuDesc, new(() =>
+                    {
+                        Chat("addt");
+                    })));
+                    if (itemFocus != null)
+                    {
+                        if (IdItemBlocks.Contains(itemFocus.template.id)) menuDesc = $"Xóa {itemFocus.template.name} khỏi danh sách không nhặt";
+                        else menuDesc = $"Thêm {itemFocus.template.name} vào danh sách không nhặt";
+                        menuItems.Add(new(menuDesc, new(() =>
+                        {
+                            Chat("blocki" + itemFocus.template.id);
+                        })));
+                        if (TypeItemBlocks.Contains(itemFocus.template.type)) menuDesc = $"Xóa loại item ({itemFocus.template.type}) khỏi danh sách không nhặt";
+                        else menuDesc = $"Thêm loại item ({itemFocus.template.type}) vào danh sách không nhặt";
+                        menuItems.Add(new(menuDesc, new(() =>
+                        {
+                            Chat("blockti" + itemFocus.template.type);
+                        })));
+                    }
+                }
+                if (IdMobsTanSat.Count + TypeMobsTanSat.Count > 0)
+                    menuItems.Add(new("Xóa danh sách tàn sát", new(() =>
+                    {
+                        Chat("clrm");
+                    })));
+                SkillTemplate mySkillTemplate = Char.myCharz().myskill.template;
+                if (IdSkillsTanSat.Contains(mySkillTemplate.id)) menuDesc = $"Xóa {mySkillTemplate.name} khỏi danh sách skill";
+                else menuDesc = $"Thêm {mySkillTemplate.name} vào danh sách skill";
+                menuItems.Add(new(menuDesc, new(() =>
+                {
                     Chat("skill");
-                    break;
-                case 7:
+                })));
+                menuItems.Add(new("Đặt lại danh sách skill", new(() =>
+                {
                     Chat("clrs");
-                    break;
-                case 8:
+                })));
+                menuItems.Add(new("Đặt lại danh sách item", new(() =>
+                {
                     Chat("clri");
-                    break;
-                case 9:
-                    string infoMob = "Danh sách id quái: ";
-                    if (IdMobsTanSat.Count > 0)
+                })));
+                if (IdMobsTanSat.Count + TypeMobsTanSat.Count > 0)
+                    menuItems.Add(new("Xem danh sách quái", new(() =>
                     {
-                        foreach (int mobId in IdMobsTanSat)
+                        string infoMob = "Danh sách id quái: ";
+                        if (IdMobsTanSat.Count > 0)
                         {
-                            infoMob += mobId + ", ";
+                            foreach (int mobId in IdMobsTanSat)
+                            {
+                                infoMob += mobId + ", ";
+                            }
+                            infoMob = infoMob.Remove(infoMob.LastIndexOf(','), 2);
                         }
-                        infoMob = infoMob.Remove(infoMob.LastIndexOf(','), 2);
-                    }
-                    else infoMob += "Rỗng";
-                    infoMob += "\nDanh sách loại quái: ";
-                    if (TypeMobsTanSat.Count > 0)
+                        else infoMob += "Rỗng";
+                        infoMob += "\nDanh sách loại quái: ";
+                        if (TypeMobsTanSat.Count > 0)
+                        {
+                            foreach (int mobType in TypeMobsTanSat)
+                            {
+                                infoMob += $"{Mob.arrMobTemplate[mobType].name} [{mobType}], ";
+                            }
+                            infoMob = infoMob.Remove(infoMob.LastIndexOf(','), 2);
+                        }
+                        else infoMob += "Rỗng";
+                        GameCanvas.startOKDlg(infoMob);
+                    })));
+                if (IdItemPicks.Count + TypeItemPicks.Count + IdItemBlocks.Count + TypeItemBlocks.Count > 0)
+                    menuItems.Add(new("Xem danh sách vật phẩm", new(() =>
                     {
-                        foreach (int mobType in TypeMobsTanSat)
+                        string infoItem = "Danh sách vật phẩm tự động nhặt: ";
+                        if (IdItemPicks.Count > 0)
                         {
-                            infoMob += $"{Mob.arrMobTemplate[mobType].name} [{mobType}], ";
+                            foreach (short itemIdPick in IdItemPicks)
+                            {
+                                infoItem += $"{ItemTemplates.get(itemIdPick).name} [{itemIdPick}], ";
+                            }
+                            infoItem = infoItem.Remove(infoItem.LastIndexOf(','), 2);
                         }
-                        infoMob = infoMob.Remove(infoMob.LastIndexOf(','), 2);
-                    }
-                    else infoMob += "Rỗng";
-                    GameCanvas.startOKDlg(infoMob);
-                    break;
-                case 10:
-                    string infoItem = "Danh sách vật phẩm tự động nhặt: ";
-                    if (IdItemPicks.Count > 0)
-                    {
-                        foreach (short itemIdPick in IdItemPicks)
+                        else infoItem += "Rỗng";
+                        infoItem += "\nDanh sách loại vật phẩm tự động nhặt: ";
+                        if (TypeItemPicks.Count > 0)
                         {
-                            infoItem += $"{ItemTemplates.get(itemIdPick).name} [{itemIdPick}], ";
+                            foreach (sbyte itemTypePick in TypeItemPicks)
+                            {
+                                infoItem += itemTypePick + ", ";
+                            }
+                            infoItem = infoItem.Remove(infoItem.LastIndexOf(','), 2);
                         }
-                        infoItem = infoItem.Remove(infoItem.LastIndexOf(','), 2);
-                    }
-                    else infoItem += "Rỗng";
-                    infoItem += "\nDanh sách loại vật phẩm tự động nhặt: ";
-                    if (TypeItemPicks.Count > 0)
-                    {
-                        foreach (sbyte itemTypePick in TypeItemPicks)
+                        else infoItem += "Rỗng";
+                        infoItem += "\nDanh sách vật phẩm không nhặt: ";
+                        if (IdItemBlocks.Count > 0)
                         {
-                            infoItem += itemTypePick + ", ";
+                            foreach (short itemIdBlock in IdItemBlocks)
+                            {
+                                infoItem += $"{ItemTemplates.get(itemIdBlock).name} [{itemIdBlock}], ";
+                            }
+                            infoItem = infoItem.Remove(infoItem.LastIndexOf(','), 2);
                         }
-                        infoItem = infoItem.Remove(infoItem.LastIndexOf(','), 2);
-                    }
-                    else infoItem += "Rỗng";
-                    infoItem += "\nDanh sách vật phẩm không nhặt: ";
-                    if (IdItemBlocks.Count > 0)
-                    {
-                        foreach (short itemIdBlock in IdItemBlocks)
+                        else infoItem += "Rỗng";
+                        infoItem += "\nDanh sách loại vật phẩm không nhặt: ";
+                        if (TypeItemBlocks.Count > 0)
                         {
-                            infoItem += $"{ItemTemplates.get(itemIdBlock).name} [{itemIdBlock}], ";
+                            foreach (sbyte itemTypeBlock in TypeItemBlocks)
+                            {
+                                infoItem += itemTypeBlock + ", ";
+                            }
+                            infoItem = infoItem.Remove(infoItem.LastIndexOf(','), 2);
                         }
-                        infoItem = infoItem.Remove(infoItem.LastIndexOf(','), 2);
-                    }
-                    else infoItem += "Rỗng";
-                    infoItem += "\nDanh sách loại vật phẩm không nhặt: ";
-                    if (TypeItemBlocks.Count > 0)
-                    {
-                        foreach (sbyte itemTypeBlock in TypeItemBlocks)
-                        {
-                            infoItem += itemTypeBlock + ", ";
-                        }
-                        infoItem = infoItem.Remove(infoItem.LastIndexOf(','), 2);
-                    }
-                    else infoItem += "Rỗng";
-                    GameCanvas.startOKDlg(infoItem);
-                    break;
-                case 11:
+                        else infoItem += "Rỗng";
+                        GameCanvas.startOKDlg(infoItem);
+                    })));
+                menuItems.Add(new("Xem danh sách skill", new(() =>
+                {
                     string infoskill = "Danh sách skill tự động đánh quái: ";
                     foreach (sbyte skillid in IdSkillsTanSat)
                     {
@@ -583,11 +578,10 @@ namespace Mod.PickMob
                     }
                 here:;
                     GameCanvas.startOKDlg(infoskill);
-                    break;
-            }
-            Char.chatPopup = null;
-
+                })));
+            }), cpDesc);
         }
+
         #region Không cần liên kết với game
         private static bool IsGetInfoChat<T>(string text, string s)
         {

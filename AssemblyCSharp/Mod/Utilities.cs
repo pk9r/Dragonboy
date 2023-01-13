@@ -16,21 +16,21 @@ namespace Mod
 {
     public static class Utilities
     {
-        public const string PathChatCommand = @"ModData\chatCommands.json";
-        public const string PathChatHistory = @"ModData\chat.txt";
-        public const string PathHotkeyCommand = @"ModData\hotkeyCommands.json";
+        public static readonly string PathChatCommand = @"ModData\chatCommands.json";
+        public static readonly string PathChatHistory = @"ModData\chat.txt";
+        public static readonly string PathHotkeyCommand = @"ModData\hotkeyCommands.json";
 
 
-        public const sbyte ID_SKILL_BUFF = 7;
-        public const int ID_ICON_ITEM_TDLT = 4387;
-        public const short ID_NPC_MOD_FACE = 7333;// Doraemon, TODO: custom npc avatar
+        public static readonly sbyte ID_SKILL_BUFF = 7;
+        public static readonly short ID_ICON_ITEM_TDLT = 4387;
+        public static readonly short ID_NPC_MOD_FACE = 7333;// Doraemon, TODO: custom npc avatar
 
-        public const int ID_ITEM_CAPSULE_VIP = 194;
-        public const int ID_ITEM_CAPSULE_NORMAL = 193;
+        public static readonly short ID_ITEM_CAPSULE_VIP = 194;
+        public static readonly short ID_ITEM_CAPSULE_NORMAL = 193;
 
-        public const int ID_MAP_HOME_BASE = 21;
-        public const int ID_MAP_LANG_BASE = 7;
-        public const int ID_MAP_TTVT_BASE = 24;
+        public static readonly int ID_MAP_HOME_BASE = 21;
+        public static readonly int ID_MAP_LANG_BASE = 7;
+        public static readonly int ID_MAP_TTVT_BASE = 24;
 
         public static string status = "Đã kết nối";
 
@@ -342,7 +342,18 @@ namespace Mod
         [ChatCommand("test")]
         public static void test()
         {
+            //test check khu
+            Boss.AddBoss($"BOSS {((Char)GameScr.vCharInMap.elementAt(Res.random(0, GameScr.vCharInMap.size()))).cName} vừa xuất hiện tại {TileMap.mapName}");
 
+            //test stacktrace
+            //try
+            //{
+            //    throw new Exception("test StackTrace with file name and line number");
+            //}
+            //catch (Exception ex)
+            //{
+            //    UnityEngine.Debug.LogException(ex);
+            //}
         }
 
         [ChatCommand("skey")]
@@ -782,6 +793,11 @@ namespace Mod
                 result = true;
             starE -= star;
             return result;
+        }
+
+        public static long GetLastTimePress()
+        {
+            return (long)typeof(GameCanvas).GetField("lastTimePress", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
         }
     }
 }

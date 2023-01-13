@@ -66,7 +66,7 @@ namespace Mod.Graphics
                     ChatTextField.gI().startChat2(instance, string.Empty);
                     ChatTextField.gI().tfChat.setText(BackgroundGif.speed.ToString());
                 })));
-            }));
+            }), "Loại background được hỗ trợ: ảnh (*.png), ảnh động (*.gif), video (*.mp4).\nẢnh động và video tiêu tốn nhiều tài nguyên máy, nên cân nhắc trước khi\nsử dụng.");
         }
 
         public static void setTabCustomBackgroundPanel()
