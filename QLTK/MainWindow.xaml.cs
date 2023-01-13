@@ -123,7 +123,7 @@ namespace QLTK
                         else if (timeStampGameAssemblyLocal < timeStampGameAssemblyRemote || timeStampQLTKLocal < timeStampQLTKRemote)
                         {
                             if (MessageBox.Show($"Đã có phiên bản mới!{Environment.NewLine}Bạn có muốn cập nhật không?", "Cập nhật", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.OK)
-                                Process.Start("https://github.com/pk9r327/Dragonboy");
+                                Process.Start("https://github.com/ElectroHeavenVN/Dragonboy");
                         }
                     }
                 }

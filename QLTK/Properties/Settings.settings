@@ -18,7 +18,7 @@
       <Value Profile="(Default)">https://raw.githubusercontent.com/pk9r327/Dragonboy/master/notification.txt</Value>
     </Setting>
     <Setting Name="LinkHash" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://raw.githubusercontent.com/pk9r327/Dragonboy/master/HashAndTimeStamp.txt</Value>
+      <Value Profile="(Default)">https://raw.githubusercontent.com/ElectroHeavenVN/Dragonboy/master/HashAndTimeStamp.txt</Value>
     </Setting>
   </Settings>
 </SettingsFile>

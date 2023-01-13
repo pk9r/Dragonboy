@@ -85,7 +85,8 @@ namespace QLTK.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://raw.githubusercontent.com/pk9r327/Dragonboy/master/HashAndTimeStamp.txt")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://raw.githubusercontent.com/ElectroHeavenVN/Dragonboy/master/HashAndTimeSta" +
+            "mp.txt")]
         public string LinkHash {
             get {
                 return ((string)(this["LinkHash"]));
