@@ -39,13 +39,19 @@ namespace Mod
         {
             this.name = name;
             this.map = map;
-            mapId = GetMapID(map);
+            if (map == "Trạm tàu vũ trụ") 
+            {
+                if (name.StartsWith("Số ") || name.StartsWith("Tiểu đội"))
+                    mapId = 25;
+                else if (name.Contains("Bojack") || name.StartsWith("Bujin") || name.StartsWith("Bido") || name.StartsWith("Zangya") || name.StartsWith("Bido"))
+                    mapId = 24;
+            }
+            else mapId = GetMapID(map);
             AppearTime = DateTime.Now;
         }
 
         public static void AddBoss(string chatVip)
         {
-            //TODO: Ckeck boss type => correct mapId
             if (!chatVip.StartsWith("BOSS"))
                 return;
             chatVip = chatVip.Replace("BOSS ", "").Replace(" vừa xuất hiện tại ", "|").Replace(" appear at ", "|").Replace(" khu vực ", "|").Replace(" zone ", "|");
@@ -249,7 +255,7 @@ namespace Mod
                 if (boss.zoneId == TileMap.zoneID)
                     break;
             }
-            if (GameCanvas.isMouseFocus(GameCanvas.w - x - maxLength, y + 1, maxLength, 8 * 5))
+            if (isEnabled && GameCanvas.isMouseFocus(GameCanvas.w - x - maxLength, y + 1, maxLength, 8 * 5))
             {
                 if (GameCanvas.pXYScrollMouse > 0)
                     if (offset < bosses.Count - 5)
