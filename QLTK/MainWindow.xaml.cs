@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -78,24 +79,62 @@ namespace QLTK
                     LargeImageText = "Mod Cộng Đồng",
                 }
             });
-            if (!int.TryParse(FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\cmd.exe").FileVersion.Split('.')[0], out int winVer) || winVer <= 7) 
-                return;
-            using (WebClient client = new WebClient())
+            new Thread(CheckUpdateAndNotification).Start();
+        }
+
+        private void CheckUpdateAndNotification()
+        {
+            try
             {
-                var data = client.DownloadData(Settings.Default.LinkNotification);
-                var strings = Encoding.UTF8.GetString(data).Split('\n');
-                if (SaveSettings.Instance.versionNotification != strings[0])
+                using (WebClient client = new WebClient())
                 {
-                    for (int i = 1; i < strings.Length; i++)
+                    string[] notifications = Encoding.UTF8.GetString(client.DownloadData(Settings.Default.LinkNotification)).Split('\n');
+                    if (SaveSettings.Instance.versionNotification != notifications[0])
                     {
-                        strings[i] = strings[i].Trim();
-                        if (strings[i] != "")
+                        for (int i = 1; i < notifications.Length; i++)
                         {
-                            MessageBox.Show(strings[i], "Thông báo", MessageBoxButton.OK);
+                            notifications[i] = notifications[i].Trim();
+                            if (notifications[i] != "")
+                            {
+                                MessageBox.Show(notifications[i], "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
+                        }
+                        SaveSettings.Instance.versionNotification = notifications[0];
+                    }
+                    MD5CryptoServiceProvider md5CryptoServiceProvider = new MD5CryptoServiceProvider();
+                    string[] hashesRemote = Encoding.UTF8.GetString(client.DownloadData(Settings.Default.LinkHash)).Split('\n');
+
+                    string hashGameAssemblyLocal = Encoding.UTF8.GetString(md5CryptoServiceProvider.ComputeHash(File.ReadAllBytes(@"Game_Data\Managed\Assembly-CSharp.dll")));
+                    string hashQLTKLocal = Encoding.UTF8.GetString(md5CryptoServiceProvider.ComputeHash(File.ReadAllBytes("QLTK.exe")));
+
+                    string hashGameAssemblyRemote = hashesRemote[0];
+                    string hashQLTKRemote = hashesRemote[2];
+
+                    if (hashQLTKLocal != hashQLTKRemote || hashGameAssemblyLocal != hashGameAssemblyRemote)
+                    {
+                        int timeStampGameAssemblyRemote = int.Parse(hashesRemote[1]);
+                        int timeStampQLTKRemote = int.Parse(hashesRemote[3]);
+                        int timeStampGameAssemblyLocal = BitConverter.ToInt32(File.ReadAllBytes(@"Game_Data\Managed\Assembly-CSharp.dll"), 0x00000088);
+                        int timeStampQLTKLocal = BitConverter.ToInt32(File.ReadAllBytes(@"QLTK.exe"), 0x00000088);
+                        if (timeStampGameAssemblyLocal > timeStampGameAssemblyRemote || timeStampQLTKLocal > timeStampQLTKRemote)
+                        {
+                            MessageBox.Show("Nếu bạn có ý tưởng hay chức năng mới, đừng ngại ngần mà hãy đóng góp cho Mod Cộng Đồng!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        else if (timeStampGameAssemblyLocal < timeStampGameAssemblyRemote || timeStampQLTKLocal < timeStampQLTKRemote)
+                        {
+                            if (MessageBox.Show($"Đã có phiên bản mới!{Environment.NewLine}Bạn có muốn cập nhật không?", "Cập nhật", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.OK)
+                                Process.Start("https://github.com/pk9r327/Dragonboy");
                         }
                     }
-                    SaveSettings.Instance.versionNotification = strings[0];
                 }
+            }
+            catch (WebException ex)
+            {
+                MessageBox.Show("Không thể kết nối đến máy chủ!" + Environment.NewLine + ex, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Có lỗi xảy ra:" + Environment.NewLine + ex, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
