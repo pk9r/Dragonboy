@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
+using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -52,6 +54,9 @@ namespace QLTK
             Servers.AddRange(Utilities.LoadServersFromFile());
             Servers.Add(new Server("Local", "127.0.0.1", 14445));
         }
+
+        [DllImport("user32.dll", EntryPoint = "MessageBox", BestFitMapping = false, CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int MessageBoxNative(IntPtr hWnd, string text, string caption, int type);
 
         public MainWindow()
         {
@@ -102,28 +107,28 @@ namespace QLTK
                         SaveSettings.Instance.versionNotification = notifications[0];
                     }
                     MD5CryptoServiceProvider md5CryptoServiceProvider = new MD5CryptoServiceProvider();
-                    string[] hashesRemote = Encoding.UTF8.GetString(client.DownloadData(Settings.Default.LinkHash)).Split('\n');
+                    string[] remoteInfo = Encoding.UTF8.GetString(client.DownloadData(Settings.Default.LinkHash)).Split('\n');
 
                     string hashGameAssemblyLocal = Encoding.UTF8.GetString(md5CryptoServiceProvider.ComputeHash(File.ReadAllBytes(@"Game_Data\Managed\Assembly-CSharp.dll")));
                     string hashQLTKLocal = Encoding.UTF8.GetString(md5CryptoServiceProvider.ComputeHash(File.ReadAllBytes("QLTK.exe")));
 
-                    string hashGameAssemblyRemote = hashesRemote[0];
-                    string hashQLTKRemote = hashesRemote[2];
+                    string hashGameAssemblyRemote = remoteInfo[0];
+                    string hashQLTKRemote = remoteInfo[2];
 
                     if (hashQLTKLocal != hashQLTKRemote || hashGameAssemblyLocal != hashGameAssemblyRemote)
                     {
-                        int timeStampGameAssemblyRemote = int.Parse(hashesRemote[1]);
-                        int timeStampQLTKRemote = int.Parse(hashesRemote[3]);
+                        int timeStampGameAssemblyRemote = int.Parse(remoteInfo[1]);
+                        int timeStampQLTKRemote = int.Parse(remoteInfo[3]);
                         int timeStampGameAssemblyLocal = BitConverter.ToInt32(File.ReadAllBytes(@"Game_Data\Managed\Assembly-CSharp.dll"), 0x00000088);
                         int timeStampQLTKLocal = BitConverter.ToInt32(File.ReadAllBytes(@"QLTK.exe"), 0x00000088);
-                        if (timeStampGameAssemblyLocal > timeStampGameAssemblyRemote || timeStampQLTKLocal > timeStampQLTKRemote)
+                        if (timeStampGameAssemblyLocal >= timeStampGameAssemblyRemote || timeStampQLTKLocal >= timeStampQLTKRemote)
                         {
-                            MessageBox.Show("Nếu bạn có ý tưởng hay chức năng mới, đừng ngại ngần mà hãy đóng góp cho Mod Cộng Đồng!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                            MessageBoxNative(IntPtr.Zero, "Nếu bạn có ý tưởng hay chức năng mới, đừng ngại ngần mà hãy đóng góp cho Mod Cộng Đồng!", "Thông báo", 0x00000040 | 0x00040000);
                         }
                         else if (timeStampGameAssemblyLocal < timeStampGameAssemblyRemote || timeStampQLTKLocal < timeStampQLTKRemote)
                         {
-                            if (MessageBox.Show($"Đã có phiên bản mới!{Environment.NewLine}Bạn có muốn cập nhật không?", "Cập nhật", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.OK)
-                                Process.Start("https://github.com/ElectroHeavenVN/Dragonboy");
+                            if (MessageBoxNative(IntPtr.Zero, $"Đã có phiên bản mới!{Environment.NewLine}Bạn có muốn cập nhật không?", "Cập nhật", 0x00000004 | 0x00000040 | 0x00040000) == 6)
+                                Process.Start("https://github.com/pk9r327/Dragonboy");
                         }
                     }
                 }
