@@ -247,7 +247,9 @@ namespace Mod
             AutoT77.update();
             AutoPet.update();
             SuicideRange.update();
-            if (!AutoSS.isAutoSS && !AutoT77.isAutoT77) Pk9rPickMob.Update();
+            if (!AutoSS.isAutoSS && !AutoT77.isAutoT77)
+                Pk9rPickMob.Update();
+            Boss.Update();
             //NOTE onUpdateChatTextField không thể bấm tab.
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();

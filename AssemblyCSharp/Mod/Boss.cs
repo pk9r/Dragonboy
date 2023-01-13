@@ -27,7 +27,7 @@ namespace Mod
 
         static int offset = 0;
 
-        static int x = -1;
+        static int x = 15;
 
         static int y = 50;
 
@@ -45,6 +45,7 @@ namespace Mod
 
         public static void AddBoss(string chatVip)
         {
+            //TODO: Ckeck boss type => correct mapId
             if (!chatVip.StartsWith("BOSS"))
                 return;
             chatVip = chatVip.Replace("BOSS ", "").Replace(" vừa xuất hiện tại ", "|").Replace(" appear at ", "|").Replace(" khu vực ", "|").Replace(" zone ", "|");
@@ -75,8 +76,6 @@ namespace Mod
         {
             if (!isEnabled)
                 return;
-            if (x == -1)
-                x = (int)(-7.5f * mGraphics.zoomLevel);
             int start = 0;
             if (bosses.Count > 5)
                 start = bosses.Count - 5;
@@ -86,45 +85,50 @@ namespace Mod
                 styles[i - start + offset] = new GUIStyle(GUI.skin.label)
                 {
                     alignment = TextAnchor.UpperRight,
-                    fontSize = 13,
-                    fontStyle = FontStyle.Bold
+                    fontSize = 6 * mGraphics.zoomLevel,
+                    fontStyle = FontStyle.Bold,
                 };
                 Boss boss = bosses[i];
                 styles[i - start + offset].normal.textColor = Color.yellow;
                 if (TileMap.mapID == boss.mapId)
                 {
-                    styles[i - start + offset].normal.textColor = Color.red;
+                    styles[i - start + offset].normal.textColor = new Color(1f, .5f, 0);
                     for (int j = 0; j < GameScr.vCharInMap.size(); j++)
-                        if (((Char)GameScr.vCharInMap.elementAt(j)).cName.Equals(boss.name))
+                        if (((Char)GameScr.vCharInMap.elementAt(j)).cName == boss.name)
                         {
-                            styles[i - start + offset].fontStyle = FontStyle.Bold;
+                            styles[i - start + offset].normal.textColor = Color.red;
                             break;
                         }
                 }
-                maxLength = Math.max(Utilities.getWidth(styles[i - start + offset], boss.ToString()), maxLength);
+                int length = Utilities.getWidth(styles[i - start + offset], boss.ToString());
+                maxLength = Math.max(length, maxLength);
             }
+            int xDraw = GameCanvas.w - x - maxLength;
             for (int i = start - offset; i < bosses.Count - offset; i++)
             {
+                int yDraw = y + distanceBetweenLines * (i - start + offset);
                 Boss boss = bosses[i];
                 g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.4f));
-                if (TileMap.mapID == boss.mapId)
-                {
-                    for (int j = 0; j < GameScr.vCharInMap.size(); j++)
-                        if (((Char)GameScr.vCharInMap.elementAt(j)).cName.Equals(boss.name))
-                        {
-                            g.setColor(new Color(1f, 1f, 0f, 0.3f));
-                            break;
-                        }
-                }
-                g.fillRect(GameCanvas.w - Math.abs(x) - maxLength, y + 2 + distanceBetweenLines * (i - start + offset), maxLength, 7);
-                g.drawString($"{i + 1}. {boss}", x, y + distanceBetweenLines * (i - start + offset), styles[i - start + offset]);
+                if (GameCanvas.isMouseFocus(xDraw, yDraw, maxLength, 7))
+                    g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.7f));
+                //if (TileMap.mapID == boss.mapId)
+                //{
+                //    for (int j = 0; j < GameScr.vCharInMap.size(); j++)
+                //        if (((Char)GameScr.vCharInMap.elementAt(j)).cName == boss.name)
+                //        {
+                //            g.setColor(new Color(1f, 1f, 0f, 0.3f));
+                //            break;
+                //        }
+                //}
+                g.fillRect(xDraw, yDraw + 1, maxLength, 7);
+                g.drawString($"{i + 1}. {boss}", -x, mGraphics.zoomLevel - 3 + yDraw, styles[i - start + offset]);
             }
             if (bosses.Count > 5)
             {
                 if (offset < bosses.Count - 5)
-                    g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 1, GameCanvas.w - Math.abs(x) - 9, y - 5, 0);
+                    g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 1, GameCanvas.w - x - 9, y - 5, 0);
                 if (offset > 0)
-                    g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, GameCanvas.w - Math.abs(x) - 9, y + 2 + distanceBetweenLines * 5, 0);
+                    g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, GameCanvas.w - x - 9, y + 2 + distanceBetweenLines * 5, 0);
             }
         }
 
@@ -151,7 +155,7 @@ namespace Mod
                 start = bosses.Count - 5;
             for (int i = start - offset; i < bosses.Count - offset; i++)
             {
-                if (GameCanvas.isPointerHoldIn(GameCanvas.w - Math.abs(x) - maxLength, y + 2 + distanceBetweenLines * (i - start + offset), maxLength, 7))
+                if (GameCanvas.isPointerHoldIn(GameCanvas.w - x - maxLength, y + 1 + distanceBetweenLines * (i - start + offset), maxLength, 7))
                 {
                     GameCanvas.isPointerJustDown = false;
                     GameScr.gI().isPointerDowning = false;
@@ -165,19 +169,34 @@ namespace Mod
                                     XmapController.finishXmap();
                                 XmapController.start(bosses[i].mapId);
                                 lastBoss = -1;
+                                return;
                             }
-                            else if (bosses[i].zoneId != -1)
+                            if (bosses[i].zoneId != -1 && TileMap.zoneID != bosses[i].zoneId)
                             {
-                                if (TileMap.zoneID != bosses[i].zoneId)
-                                    Service.gI().requestChangeZone(bosses[i].zoneId, 0);
-                                else
-                                    GameScr.info1.addInfo("Đang trong khu rồi!", 0);
+                                Service.gI().requestChangeZone(bosses[i].zoneId, 0);
+                                return;
                             }
-                            else
-                                GameScr.info1.addInfo("Đang trong map rồi!", 0);
                         }
-                        else 
+                        else
                             lastBoss = i;
+                        int j = 0;
+                        for (; j < GameScr.vCharInMap.size(); j++)
+                        {
+                            Char ch = GameScr.vCharInMap.elementAt(j) as Char;
+                            if (ch.cName == bosses[i].name)
+                            {
+                                Char.myCharz().deFocusNPC();
+                                Char.myCharz().itemFocus = null;
+                                Char.myCharz().mobFocus = null;
+                                if (Char.myCharz().charFocus != ch)
+                                    Char.myCharz().charFocus = ch;
+                                else
+                                    Utilities.teleportMyChar(ch);
+                                break;
+                            }
+                        }
+                        if (j == GameScr.vCharInMap.size())
+                            GameScr.info1.addInfo("Boss không có trong khu!", 0);
                     }
                     GameCanvas.clearAllPointerEvent();
                     return;
@@ -185,7 +204,7 @@ namespace Mod
             }
             if (bosses.Count > 5)
             {
-                if (GameCanvas.isPointerHoldIn(GameCanvas.w - Math.abs(x) - 9, y - 5, 9, 6))
+                if (GameCanvas.isPointerHoldIn(GameCanvas.w - x - 9, y - 5, 9, 6))
                 {
                     GameCanvas.isPointerJustDown = false;
                     GameScr.gI().isPointerDowning = false;
@@ -197,7 +216,7 @@ namespace Mod
                     GameCanvas.clearAllPointerEvent();
                     return;
                 }
-                if (GameCanvas.isPointerHoldIn(GameCanvas.w - Math.abs(x) - 9, y + 2 + distanceBetweenLines * 5, 9, 6))
+                if (GameCanvas.isPointerHoldIn(GameCanvas.w - x - 9, y + 2 + distanceBetweenLines * 5, 9, 6))
                 {
                     GameCanvas.isPointerJustDown = false;
                     GameScr.gI().isPointerDowning = false;
@@ -209,6 +228,35 @@ namespace Mod
                     GameCanvas.clearAllPointerEvent();
                     return;
                 }
+            }
+        }
+
+        public static void Update()
+        {
+            foreach (Boss boss in bosses)
+            {
+                if (boss.zoneId != -1)
+                    continue;
+                for (int i = 0; i < GameScr.vCharInMap.size(); i++)
+                {
+                    Char ch = GameScr.vCharInMap.elementAt(i) as Char;
+                    if (ch.cName == boss.name)
+                    {
+                        boss.zoneId = TileMap.zoneID;
+                        break;
+                    }
+                }
+                if (boss.zoneId == TileMap.zoneID)
+                    break;
+            }
+            if (GameCanvas.isMouseFocus(GameCanvas.w - x - maxLength, y + 1, maxLength, 8 * 5))
+            {
+                if (GameCanvas.pXYScrollMouse > 0)
+                    if (offset < bosses.Count - 5)
+                        offset++;
+                if (GameCanvas.pXYScrollMouse < 0)
+                    if (offset > 0)
+                        offset--;
             }
         }
 
