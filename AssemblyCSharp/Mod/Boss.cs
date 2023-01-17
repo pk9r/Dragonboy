@@ -19,7 +19,7 @@ namespace Mod
 
         public DateTime AppearTime;
 
-        static List<Boss> bosses = new List<Boss>();
+        public static List<Boss> bosses = new List<Boss>();
 
         public static bool isEnabled;
 
@@ -117,22 +117,13 @@ namespace Mod
                 g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.4f));
                 if (GameCanvas.isMouseFocus(xDraw, yDraw, maxLength, 7))
                     g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.7f));
-                //if (TileMap.mapID == boss.mapId)
-                //{
-                //    for (int j = 0; j < GameScr.vCharInMap.size(); j++)
-                //        if (((Char)GameScr.vCharInMap.elementAt(j)).cName == boss.name)
-                //        {
-                //            g.setColor(new Color(1f, 1f, 0f, 0.3f));
-                //            break;
-                //        }
-                //}
                 g.fillRect(xDraw, yDraw + 1, maxLength, 7);
                 g.drawString($"{i + 1}. {boss}", -x, mGraphics.zoomLevel - 3 + yDraw, styles[i - start + offset]);
             }
             if (bosses.Count > 5)
             {
                 if (offset < bosses.Count - 5)
-                    g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 1, GameCanvas.w - x - 9, y - 5, 0);
+                    g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 1, GameCanvas.w - x - 9, y - 7, 0);
                 if (offset > 0)
                     g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, GameCanvas.w - x - 9, y + 2 + distanceBetweenLines * 5, 0);
             }
@@ -210,7 +201,7 @@ namespace Mod
             }
             if (bosses.Count > 5)
             {
-                if (GameCanvas.isPointerHoldIn(GameCanvas.w - x - 9, y - 5, 9, 6))
+                if (GameCanvas.isPointerHoldIn(GameCanvas.w - x - 9, y - 7, 9, 6))
                 {
                     GameCanvas.isPointerJustDown = false;
                     GameScr.gI().isPointerDowning = false;
