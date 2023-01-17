@@ -96,6 +96,7 @@ namespace Mod
                 GUIStyle style = new GUIStyle(GUI.skin.label)
                 {
                     fontSize = 6 * mGraphics.zoomLevel,
+                    fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.UpperRight
                 };
                 #region Format

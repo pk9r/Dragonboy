@@ -342,9 +342,8 @@ namespace Mod
         [ChatCommand("test")]
         public static void test()
         {
-            //test check khu
-            Boss.AddBoss($"BOSS {((Char)GameScr.vCharInMap.elementAt(Res.random(0, GameScr.vCharInMap.size()))).cName} vừa xuất hiện tại {TileMap.mapName}");
 
+             
             //test stacktrace
             //try
             //{
