@@ -75,17 +75,9 @@ namespace QLTK
                     state.account.luong = (int)msg["luong"];
                     state.account.luongKhoa = (int)msg["luongKhoa"];
                     if (state.account == SaveSettings.accountConnectToDiscordRPC)
-                        Program.discordClient.SetPresence(new RichPresence()
-                        {
-                            Details = $"{state.account.cName} ({state.account.server.name})",
-                            State = $"Map: {state.account.mapName}, Khu: {state.account.zoneID}",
-                            Timestamps = Program.timestampsStartQLTK,
-                            Assets = new Assets()
-                            {
-                                LargeImageKey = "icon_large",
-                                LargeImageText = "Mod Cộng Đồng",
-                            }
-                        });
+                        Utilities.SetPresence($"Map: {state.account.mapName} [{state.account.mapID}], Khu: {state.account.zoneID}", $"{state.account.cName} ({state.account.server.name})", Program.timestampsStartQLTK);
+                    else
+                        Utilities.SetPresence("Thông tin bị ẩn", "Đã đăng nhập", Program.timestampsStartQLTK);
                     break;
                 case "setStatus":
                     state.account.status = (string)msg["status"];
@@ -121,17 +113,7 @@ namespace QLTK
                         state.account.server,
                         MainWindow.sizeData
                     });
-                    if (state.account == SaveSettings.accountConnectToDiscordRPC)
-                        Program.discordClient.SetPresence(new RichPresence()
-                        {
-                            State = "Đang đăng nhập...",
-                            Timestamps = Program.timestampsStartQLTK = Timestamps.Now,
-                            Assets = new Assets()
-                            {
-                                LargeImageKey = "icon_large",
-                                LargeImageText = "Mod Cộng Đồng",
-                            }
-                        });
+                    Utilities.SetPresence("Đang đăng nhập...", "", Program.timestampsStartQLTK = Timestamps.Now);
                     break;
                 default:
                     break;
@@ -223,16 +205,8 @@ namespace QLTK
             catch (SocketException)
             {
                 state.account.status = "-";
-                if (state.account == SaveSettings.accountConnectToDiscordRPC)
-                    Program.discordClient.SetPresence(new RichPresence()
-                    {
-                        State = "Chưa đăng nhập",
-                        Assets = new Assets()
-                        {
-                            LargeImageKey = "icon_large",
-                            LargeImageText = "Mod Cộng Đồng",
-                        }
-                    });
+                if (SaveSettings.Instance.indexConnectToDiscordRPC == -1 || state.account == SaveSettings.accountConnectToDiscordRPC)
+                    Utilities.SetPresence();
             }
 
             if (bytesRead > 0)
@@ -248,16 +222,8 @@ namespace QLTK
                     handler.Shutdown(SocketShutdown.Both);
                     handler.Close();
                     state.account.status = "-";
-                    if (state.account == SaveSettings.accountConnectToDiscordRPC)
-                        Program.discordClient.SetPresence(new RichPresence()
-                        {
-                            State = "Chưa đăng nhập",
-                            Assets = new Assets()
-                            {
-                                LargeImageKey = "icon_large",
-                                LargeImageText = "Mod Cộng Đồng",
-                            }
-                        });
+                    if (SaveSettings.Instance.indexConnectToDiscordRPC == -1 || state.account == SaveSettings.accountConnectToDiscordRPC)
+                        Utilities.SetPresence();
                     return;
                 }
 

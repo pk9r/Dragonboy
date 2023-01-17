@@ -48,15 +48,12 @@ namespace QLTK
 
         static int width, height;
 
-        static bool isCheckedStateChangedByCode;
+        static bool canSetRichPresence;
         static MainWindow()
         {
             Servers.AddRange(Utilities.LoadServersFromFile());
             Servers.Add(new Server("Local", "127.0.0.1", 14445));
         }
-
-        [DllImport("user32.dll", EntryPoint = "MessageBox", BestFitMapping = false, CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern int MessageBoxNative(IntPtr hWnd, string text, string caption, int type);
 
         public MainWindow()
         {
@@ -64,7 +61,8 @@ namespace QLTK
 
             new Thread(() => AsynchronousSocketListener.StartListening())
             {
-                IsBackground = true
+                IsBackground = true,
+                Name = "AsynchronousSocketListener.StartListening"
             }.Start();
 
             this.ServerComboBox.ItemsSource = Servers;
@@ -75,72 +73,16 @@ namespace QLTK
             this.LoadSaveSettings();
             if (SaveSettings.Instance.indexConnectToDiscordRPC >= 0 && SaveSettings.Instance.indexConnectToDiscordRPC < AccountsDataGrid.Items.Count)
                 SaveSettings.accountConnectToDiscordRPC = AccountsDataGrid.Items[SaveSettings.Instance.indexConnectToDiscordRPC] as Account;
-            Program.discordClient.SetPresence(new DiscordRPC.RichPresence()
+            new Thread(() =>
             {
-                State = "Chưa đăng nhập",
-                Assets = new DiscordRPC.Assets()
-                {
-                    LargeImageKey = "icon_large",
-                    LargeImageText = "Mod Cộng Đồng",
-                }
-            });
-            new Thread(CheckUpdateAndNotification).Start();
-        }
-
-        private void CheckUpdateAndNotification()
-        {
-            try
+                Utilities.CheckUpdateAndNotification();
+                Dispatcher.Invoke(() => Title = Utilities.GetWindowTitle());
+                Utilities.SetPresence();
+            }) 
             {
-                using (WebClient client = new WebClient())
-                {
-                    string[] notifications = Encoding.UTF8.GetString(client.DownloadData(Settings.Default.LinkNotification)).Split('\n');
-                    if (SaveSettings.Instance.versionNotification != notifications[0])
-                    {
-                        for (int i = 1; i < notifications.Length; i++)
-                        {
-                            notifications[i] = notifications[i].Trim();
-                            if (notifications[i] != "")
-                            {
-                                MessageBox.Show(notifications[i], "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                            }
-                        }
-                        SaveSettings.Instance.versionNotification = notifications[0];
-                    }
-                    MD5CryptoServiceProvider md5CryptoServiceProvider = new MD5CryptoServiceProvider();
-                    string[] remoteInfo = Encoding.UTF8.GetString(client.DownloadData(Settings.Default.LinkHash)).Split('\n');
-
-                    string hashGameAssemblyLocal = BitConverter.ToString(md5CryptoServiceProvider.ComputeHash(File.ReadAllBytes(@"Game_Data\Managed\Assembly-CSharp.dll"))).Replace("-", "");
-                    string hashQLTKLocal = BitConverter.ToString(md5CryptoServiceProvider.ComputeHash(File.ReadAllBytes("QLTK.exe"))).Replace("-", "");
-
-                    string hashGameAssemblyRemote = remoteInfo[0].TrimStart('\ufeff');
-                    string hashQLTKRemote = remoteInfo[2];
-
-                    if (hashQLTKLocal != hashQLTKRemote || hashGameAssemblyLocal != hashGameAssemblyRemote)
-                    {
-                        int timeStampGameAssemblyRemote = int.Parse(remoteInfo[1]);
-                        int timeStampQLTKRemote = int.Parse(remoteInfo[3]);
-                        int timeStampGameAssemblyLocal = BitConverter.ToInt32(File.ReadAllBytes(@"Game_Data\Managed\Assembly-CSharp.dll"), 0x00000088);
-                        int timeStampQLTKLocal = BitConverter.ToInt32(File.ReadAllBytes(@"QLTK.exe"), 0x00000088);
-                        if (timeStampGameAssemblyLocal >= timeStampGameAssemblyRemote || timeStampQLTKLocal >= timeStampQLTKRemote)
-                        {
-                            MessageBoxNative(IntPtr.Zero, "Nếu bạn có ý tưởng hay chức năng mới, đừng ngại ngần mà hãy đóng góp cho Mod Cộng Đồng!", "Thông báo", 0x00000040 | 0x00040000);
-                        }
-                        else if (timeStampGameAssemblyLocal < timeStampGameAssemblyRemote || timeStampQLTKLocal < timeStampQLTKRemote)
-                        {
-                            if (MessageBoxNative(IntPtr.Zero, $"Đã có phiên bản mới!{Environment.NewLine}Bạn có muốn cập nhật không?", "Cập nhật", 0x00000004 | 0x00000040 | 0x00040000) == 6)
-                                Process.Start("https://github.com/pk9r327/Dragonboy");
-                        }
-                    }
-                }
-            }
-            catch (WebException ex)
-            {
-                MessageBox.Show("Không thể kết nối đến máy chủ!" + Environment.NewLine + ex, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Có lỗi xảy ra:" + Environment.NewLine + ex, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+                IsBackground = true,
+                Name = "CheckUpdateAndNotification"
+            }.Start();
         }
 
         private static bool ExistedWindow(Account account, out IntPtr hWnd)
@@ -628,11 +570,12 @@ namespace QLTK
                 this.UsernameTextBox.Text = account.username;
                 this.PasswordPasswordBox.Password = account.password;
                 this.ServerComboBox.SelectedIndex = account.indexServer;
-                isCheckedStateChangedByCode = true;
+                canSetRichPresence = false;
                 if (account.Equals(SaveSettings.accountConnectToDiscordRPC))
                     IsDisplayInDiscordRichPresence.IsChecked = true;
                 else
                     IsDisplayInDiscordRichPresence.IsChecked = false;
+                canSetRichPresence = true;
             }
         }
 
@@ -640,7 +583,7 @@ namespace QLTK
         {
             if (this.AccountsDataGrid.SelectedItem is Account account)
             {
-                isCheckedStateChangedByCode = false;
+                canSetRichPresence = true;
                 this.MainGrid.IsEnabled = false;
                 
                 if (ExistedWindow(account, out IntPtr hWnd))
@@ -760,42 +703,20 @@ namespace QLTK
 
         private void IsDisplayInDiscordRichPresence_Checked(object sender, RoutedEventArgs e)
         {
-            if (isCheckedStateChangedByCode)
-            {
-                isCheckedStateChangedByCode = false;
+            if (!canSetRichPresence)
                 return;
-            }
             SaveSettings.Instance.indexConnectToDiscordRPC = AccountsDataGrid.SelectedIndex;
             SaveSettings.accountConnectToDiscordRPC = AccountsDataGrid.SelectedItem as Account;
-            Program.discordClient.SetPresence(new DiscordRPC.RichPresence()
-            {
-                State = "Chưa đăng nhập",
-                Assets = new DiscordRPC.Assets()
-                {
-                    LargeImageKey = "icon_large",
-                    LargeImageText = "Mod Cộng Đồng",
-                }
-            });
+            Utilities.SetPresence();
         }
 
         private void IsDisplayInDiscordRichPresence_Unchecked(object sender, RoutedEventArgs e)
         {
-            if (isCheckedStateChangedByCode)
-            {
-                isCheckedStateChangedByCode = false;
+            if (!canSetRichPresence)
                 return;
-            }
             SaveSettings.Instance.indexConnectToDiscordRPC = -1;
             SaveSettings.accountConnectToDiscordRPC = null;
-            Program.discordClient.SetPresence(new DiscordRPC.RichPresence()
-            {
-                State = "Chưa đăng nhập",
-                Assets = new DiscordRPC.Assets()
-                {
-                    LargeImageKey = "icon_large",
-                    LargeImageText = "Mod Cộng Đồng",
-                }
-            });
+            Utilities.SetPresence();
         }
 
         private void AccountsDataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
