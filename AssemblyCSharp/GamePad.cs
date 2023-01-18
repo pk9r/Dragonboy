@@ -90,17 +90,13 @@ public class GamePad
 		try
 		{
 			if (GameScr.isAnalog == 0)
-			{
 				return;
-			}
 			if (GameCanvas.isPointerDown && !GameCanvas.isPointerJustRelease)
 			{
 				xTemp = GameCanvas.pxFirst;
 				yTemp = GameCanvas.pyFirst;
 				if (xTemp < xZone || xTemp > wZone || yTemp < yZone || yTemp > hZone)
-				{
 					return;
-				}
 				if (!isGamePad)
 				{
 					xC = (xM = xTemp);
@@ -112,9 +108,7 @@ public class GamePad
 				delta = Math.pow(deltaX, 2) + Math.pow(deltaY, 2);
 				d = Res.sqrt(delta);
 				if (Math.abs(deltaX) <= 4 && Math.abs(deltaY) <= 4)
-				{
 					return;
-				}
 				angle = Res.angle(deltaX, deltaY);
 				if (!GameCanvas.isPointerHoldIn(xC - R, yC - R, 2 * R, 2 * R))
 				{
@@ -195,21 +189,15 @@ public class GamePad
 					}
 				}
 				else
-				{
 					resetHold();
-				}
 			}
 			else
 			{
 				xM = (xC = 45);
 				if (!isLargeGamePad)
-				{
 					yM = (yC = GameCanvas.h - 90);
-				}
 				else
-				{
 					yM = (yC = GameCanvas.h - 45);
-				}
 				isGamePad = false;
 				resetHold();
 			}
@@ -222,13 +210,9 @@ public class GamePad
 	private bool checkPointerMove(int distance)
 	{
 		if (GameScr.isAnalog == 0)
-		{
 			return false;
-		}
 		if (Char.myCharz().statusMe == 3)
-		{
 			return true;
-		}
 		try
 		{
 			for (int num = 2; num > 0; num--)
@@ -236,9 +220,7 @@ public class GamePad
 				int i = GameCanvas.arrPos[num].x - GameCanvas.arrPos[num - 1].x;
 				int i2 = GameCanvas.arrPos[num].y - GameCanvas.arrPos[num - 1].y;
 				if (Res.abs(i) > distance && Res.abs(i2) > distance)
-				{
 					return false;
-				}
 			}
 		}
 		catch (Exception)
@@ -264,9 +246,7 @@ public class GamePad
 	public bool disableCheckDrag()
 	{
 		if (GameScr.isAnalog == 0)
-		{
 			return false;
-		}
 		return isGamePad;
 	}
 
@@ -275,14 +255,10 @@ public class GamePad
 		try
 		{
 			if (GameScr.isAnalog == 0)
-			{
 				return false;
-			}
 			bool flag = false;
 			if ((GameCanvas.px >= xZone && GameCanvas.px <= wZone && GameCanvas.py >= yZone && GameCanvas.py <= hZone) || GameCanvas.px >= GameCanvas.w - 50)
-			{
 				return true;
-			}
 			return false;
 		}
 		catch (Exception)

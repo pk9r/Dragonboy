@@ -2,6 +2,7 @@ public class T2 : mResources
 {
 	public static void load()
 	{
+		mResources.delacc = "Delete account";
 		mResources.notiINAPP = "You bought many gems today. Let's try again tomorrow!";
 		mResources.notiRuby = "When selling successfully, you will receive Ruby non Gem. Do you want to continue consign?";
 		mResources.equip = "Equip";
@@ -18,7 +19,7 @@ public class T2 : mResources
 		mResources.gameInfo = "Notification";
 		mResources.useGem = "Auto reborn";
 		mResources.autoFunction = "Auto function";
-		mResources.sure_fusion = "Are you sure you fusion forever with your disciple? You will lost your disciple, all disciple's power will convert to your potential.";
+		mResources.sure_fusion = "Are you sure you fusion forever with your disciple? You will lost your disciple and all disciple's equip, all disciple's power will convert to your potential.";
 		mResources.fusionForever = "Fusion dance forever";
 		mResources.fusion = "Fusion dance";
 		mResources.nhanngoc = "Receive gem";
@@ -31,8 +32,8 @@ public class T2 : mResources
 		mResources.follow = "Follow";
 		mResources.pet = "Disciple";
 		mResources.maychutathoacmatsong = "Connect fail, please try again";
-		mResources.cauhinhthap = "Low\ngraphics";
-		mResources.cauhinhcao = "High\ngraphics";
+		mResources.cauhinhthap = "Low graphics";
+		mResources.cauhinhcao = "High graphics";
 		mResources.taidulieu = "Download";
 		mResources.xoadulieu = "Clear data";
 		mResources.deletaDataNote = "When game have data errors, you should delete data. After delete data, you have to download data to play game.";
@@ -72,8 +73,8 @@ public class T2 : mResources
 		mResources.daban = "Sold";
 		mResources.dangban = "Selling";
 		mResources.kigui = "Consign";
-		mResources.turnOnSound = "Turn on sound";
-		mResources.turnOffSound = "Turn off sound";
+		mResources.turnOnSound = "Sound";
+		mResources.turnOffSound = "Sound";
 		mResources.no_enemy = "No enemy";
 		mResources.selectServer2 = "Select server";
 		mResources.rank = "Rank";
@@ -155,9 +156,7 @@ public class T2 : mResources
 		};
 		mResources.MENUGENDER = new string[3] { "Earth", "Namekian", "Saiyan" };
 		if (mSystem.clientType == 7)
-		{
 			mResources.MENUGENDER = new string[3] { "Earth dragon", "Green dragon", "Red dragon" };
-		}
 		mResources.CHAR_ORDER = new string[10] { "Challenge", "Practice", "PK", "Add friend", "Invite clan", "Recover", "Information", "Private chat", "Invite to clan", "Block invite to clan" };
 		mResources.mainTab1 = new string[4][]
 		{
@@ -303,10 +302,14 @@ public class T2 : mResources
 		mResources.low = "Low";
 		mResources.increase_vga = "Increase resolution (strong devices)";
 		mResources.decrease_vga = "Decrease resolution (weak devices)";
-		mResources.serverchat_off = "Turn off server notice";
-		mResources.serverchat_on = "Turn on server notice";
-		mResources.aura_on = "Turn on special aura";
-		mResources.aura_off = "Turn off special aura";
+		mResources.serverchat_off = "Server notice";
+		mResources.serverchat_on = "Server notice";
+		mResources.aura_on = "Special aura";
+		mResources.aura_off = "Special aura";
+		mResources.aura_on_2 = "Power aura";
+		mResources.aura_off_2 = "Power aura";
+		mResources.hat_on = "Show accessories";
+		mResources.hat_off = "Hide accessories";
 		mResources.x1Screen = "Small screen";
 		mResources.x2Screen = "Big screen";
 		mResources.changeSizeScreen = "Do you want to exit game to change screen size?";
@@ -529,14 +532,12 @@ public class T2 : mResources
 			new string[3] { "Vegeta", "Raditz", "Kakarot" }
 		};
 		if (mSystem.clientType == 7)
-		{
 			mResources.hairStyleName = new string[3][]
 			{
 				new string[3] { "Hango", "Linkhi", "Chayam" },
 				new string[3] { "Deden", "Cololo", "Mika" },
 				new string[3] { "Tageve", "Ditra", "Rotkaka" }
 			};
-		}
 		mResources.hp_ki_full = "HP and KI are full, no need to use bean";
 		mResources.quest_place = "Quest place";
 		mResources.no_mission = "You don't have quest";

@@ -96,28 +96,20 @@ public class Command
 	public void perform(string str)
 	{
 		if (actionChat != null)
-		{
 			actionChat(str);
-		}
 	}
 
 	public void performAction()
 	{
 		GameCanvas.clearAllPointerEvent();
 		if (isPlaySoundButton && ((caption != null && !caption.Equals(string.Empty) && !caption.Equals(mResources.saying)) || img != null))
-		{
 			SoundMn.gI().buttonClick();
-		}
 		if (idAction > 0)
 		{
 			if (actionListener != null)
-			{
 				actionListener.perform(idAction, p);
-			}
 			else
-			{
 				GameScr.gI().actionPerform(idAction, p);
-			}
 		}
 	}
 
@@ -138,29 +130,19 @@ public class Command
 				if (imgFocus == null)
 				{
 					if (cmdClosePanel)
-					{
 						g.drawImage(ItemMap.imageFlare, x + 8, y + mGraphics.addYWhenOpenKeyBoard + 8, 3);
-					}
 					else
-					{
 						g.drawImage(ItemMap.imageFlare, x - (img.Equals(GameScr.imgMenu) ? 10 : 0), y + mGraphics.addYWhenOpenKeyBoard, 0);
-					}
 				}
 				else
-				{
 					g.drawImage(imgFocus, x, y + mGraphics.addYWhenOpenKeyBoard, 0);
-				}
 			}
 			if (caption != "menu" && caption != null)
 			{
 				if (!isFocus)
-				{
 					mFont.tahoma_7b_dark.drawString(g, caption, x + mGraphics.getImageWidth(img) / 2, y + mGraphics.getImageHeight(img) / 2 - 5, 2);
-				}
 				else
-				{
 					mFont.tahoma_7b_green2.drawString(g, caption, x + mGraphics.getImageWidth(img) / 2, y + mGraphics.getImageHeight(img) / 2 - 5, 2);
-				}
 			}
 			return;
 		}
@@ -169,13 +151,9 @@ public class Command
 			if (type == 1)
 			{
 				if (!isFocus)
-				{
 					paintOngMau(btn0left, btn0mid, btn0right, x, y, 160, g);
-				}
 				else
-				{
 					paintOngMau(btn1left, btn1mid, btn1right, x, y, 160, g);
-				}
 			}
 			else if (!isFocus)
 			{
@@ -188,13 +166,9 @@ public class Command
 		}
 		int num = ((type != 1) ? (x + 38) : (x + hw));
 		if (!isFocus)
-		{
 			mFont.tahoma_7b_dark.drawString(g, caption, num, y + 7, 2);
-		}
 		else
-		{
 			mFont.tahoma_7b_green2.drawString(g, caption, num, y + 7, 2);
-		}
 	}
 
 	public static void paintOngMau(Image img0, Image img1, Image img2, int x, int y, int size, mGraphics g)
@@ -205,9 +179,7 @@ public class Command
 		}
 		int num = size % 10;
 		if (num > 0)
-		{
 			g.drawRegion(img1, 0, 0, num, 24, 0, x + size - 10 - num, y, 0);
-		}
 		g.drawImage(img0, x, y, 0);
 		g.drawImage(img2, x + size - 10, y, 0);
 	}
@@ -218,13 +190,9 @@ public class Command
 		if (GameCanvas.isPointerHoldIn(x, y, w, h))
 		{
 			if (GameCanvas.isPointerDown)
-			{
 				isFocus = true;
-			}
 			if (GameCanvas.isPointerJustRelease && GameCanvas.isPointerClick)
-			{
 				return true;
-			}
 		}
 		return false;
 	}
@@ -236,13 +204,9 @@ public class Command
 		{
 			Res.outz("w= " + w);
 			if (GameCanvas.isPointerDown)
-			{
 				isFocus = true;
-			}
 			if (GameCanvas.isPointerJustRelease && GameCanvas.isPointerClick)
-			{
 				return true;
-			}
 		}
 		return false;
 	}

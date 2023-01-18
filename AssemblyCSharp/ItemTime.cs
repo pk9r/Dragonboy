@@ -31,13 +31,9 @@ public class ItemTime
 	public void initTimeText(sbyte id, string text, int time)
 	{
 		if (time == -1)
-		{
 			dontClear = true;
-		}
 		else
-		{
 			dontClear = false;
-		}
 		isText = true;
 		minute = time / 60;
 		second = time % 60;
@@ -58,11 +54,8 @@ public class ItemTime
 	{
 		for (int i = 0; i < Char.vItemTime.size(); i++)
 		{
-			ItemTime itemTime = (ItemTime)Char.vItemTime.elementAt(i);
-			if (itemTime.idIcon == id)
-			{
+			if (((ItemTime)Char.vItemTime.elementAt(i)).idIcon == id)
 				return true;
-			}
 		}
 		return false;
 	}
@@ -73,9 +66,7 @@ public class ItemTime
 		{
 			ItemTime itemTime = (ItemTime)GameScr.textTime.elementAt(i);
 			if (itemTime.idIcon == id)
-			{
 				return itemTime;
-			}
 		}
 		return null;
 	}
@@ -84,11 +75,8 @@ public class ItemTime
 	{
 		for (int i = 0; i < GameScr.textTime.size(); i++)
 		{
-			ItemTime itemTime = (ItemTime)GameScr.textTime.elementAt(i);
-			if (itemTime.idIcon == id)
-			{
+			if (((ItemTime)GameScr.textTime.elementAt(i)).idIcon == id)
 				return true;
-			}
 		}
 		return false;
 	}
@@ -99,9 +87,7 @@ public class ItemTime
 		{
 			ItemTime itemTime = (ItemTime)Char.vItemTime.elementAt(i);
 			if (itemTime.idIcon == id)
-			{
 				return itemTime;
-			}
 		}
 		return null;
 	}
@@ -119,9 +105,7 @@ public class ItemTime
 		string empty = string.Empty;
 		empty = minute + "'";
 		if (minute == 0)
-		{
 			empty = second + "s";
-		}
 		mFont.tahoma_7b_white.drawString(g, empty, x, y + 15, 2, mFont.tahoma_7b_dark);
 	}
 
@@ -130,17 +114,11 @@ public class ItemTime
 		string empty = string.Empty;
 		empty = minute + "'";
 		if (minute < 1)
-		{
 			empty = second + "s";
-		}
 		if (minute < 0)
-		{
 			empty = string.Empty;
-		}
 		if (dontClear)
-		{
 			empty = string.Empty;
-		}
 		mFont.tahoma_7b_white.drawString(g, text + " " + empty, x, y, mFont.LEFT, mFont.tahoma_7b_dark);
 	}
 
@@ -158,12 +136,8 @@ public class ItemTime
 			}
 		}
 		if (minute < 0 && !isText)
-		{
 			Char.vItemTime.removeElement(this);
-		}
 		if (minute < 0 && isText && !dontClear)
-		{
 			GameScr.textTime.removeElement(this);
-		}
 	}
 }

@@ -1,8 +1,9 @@
-namespace Assets.src.e;
-
-internal class SmallSave
+namespace Assets.src.e
 {
-	public sbyte[] data;
+	internal class SmallSave
+	{
+		public sbyte[] data;
 
-	public int id;
+		public int id;
+	}
 }

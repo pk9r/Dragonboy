@@ -27,9 +27,7 @@ public class MyHashTable
 	public void put(object k, object v)
 	{
 		if (h.ContainsKey(k))
-		{
 			h.Remove(k);
-		}
 		h.Add(k, v);
 	}
 

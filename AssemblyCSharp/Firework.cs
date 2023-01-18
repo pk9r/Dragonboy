@@ -75,9 +75,7 @@ public class Firework
 			Drawline(g, w - arr_x[i], h - arr_y[i], cl);
 		}
 		if (act)
-		{
 			preDraw();
-		}
 	}
 
 	public long time()

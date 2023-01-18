@@ -14,6 +14,8 @@ public class SoundMn
 	{
 	}
 
+	public static bool IsDelAcc;
+
 	public static SoundMn gIz;
 
 	public static bool isSound = true;
@@ -110,9 +112,7 @@ public class SoundMn
 	public static SoundMn gI()
 	{
 		if (gIz == null)
-		{
 			gIz = new SoundMn();
-		}
 		return gIz;
 	}
 
@@ -145,7 +145,6 @@ public class SoundMn
 				mResources.REGISTOPROTECT
 			};
 			if (Char.myCharz().havePet)
-			{
 				Panel.strTool = new string[11]
 				{
 					mResources.radaCard,
@@ -160,7 +159,6 @@ public class SoundMn
 					mResources.change_account,
 					mResources.REGISTOPROTECT
 				};
-			}
 		}
 		else
 		{
@@ -177,7 +175,6 @@ public class SoundMn
 				mResources.change_account
 			};
 			if (Char.myCharz().havePet)
-			{
 				Panel.strTool = new string[10]
 				{
 					mResources.radaCard,
@@ -191,30 +188,47 @@ public class SoundMn
 					mResources.option,
 					mResources.change_account
 				};
+		}
+		if (IsDelAcc)
+		{
+			string[] array = new string[Panel.strTool.Length + 1];
+			for (int i = 0; i < Panel.strTool.Length; i++)
+			{
+				array[i] = Panel.strTool[i];
 			}
+			array[Panel.strTool.Length] = mResources.delacc;
+			Panel.strTool = array;
 		}
 	}
 
 	public void getStrOption()
 	{
+		string text = "[x]   ";
+		string text2 = "[  ]   ";
 		if (Main.isPC)
 		{
-			Panel.strCauhinh = new string[3]
+			Panel.strCauhinh = new string[5]
 			{
-				(!Char.isPaintAura) ? mResources.aura_on : mResources.aura_off,
-				(!GameCanvas.isPlaySound) ? mResources.turnOnSound : mResources.turnOffSound,
+				(Char.myCharz().idHat == -1) ? (text + mResources.hat_off.Trim()) : (text2 + mResources.hat_off.Trim()),
+				(!Char.isPaintAura) ? (text + mResources.aura_off.Trim()) : (text2 + mResources.aura_off.Trim()),
+				(!Char.isPaintAura2) ? (text + mResources.aura_off_2.Trim()) : (text2 + mResources.aura_off_2.Trim()),
+				(!GameCanvas.isPlaySound) ? (text + mResources.turnOffSound.Trim()) : (text2 + mResources.turnOffSound.Trim()),
 				(mGraphics.zoomLevel <= 1) ? mResources.x2Screen : mResources.x1Screen
 			};
+			return;
 		}
-		else
+		string text3 = ((GameScr.isAnalog != 0) ? (text2 + mResources.turnOffAnalog) : (text + mResources.turnOnAnalog));
+		if (!GameCanvas.isTouch)
+			text3 = (GameScr.isPaintChatVip ? (text + mResources.serverchat_off) : (text2 + mResources.serverchat_off));
+		Panel.strCauhinh = new string[6]
 		{
-			Panel.strCauhinh = new string[3]
-			{
-				(!Char.isPaintAura) ? mResources.aura_on : mResources.aura_off,
-				(!GameCanvas.isPlaySound) ? mResources.turnOnSound : mResources.turnOffSound,
-				(GameScr.isAnalog != 0) ? mResources.turnOffAnalog : mResources.turnOnAnalog
-			};
-		}
+			(Char.myCharz().idHat == -1) ? (text + mResources.hat_off.Trim()) : (text2 + mResources.hat_off.Trim()),
+			(!Char.isPaintAura) ? (text + mResources.aura_off.Trim()) : (text2 + mResources.aura_off.Trim()),
+			(!Char.isPaintAura2) ? (text + mResources.aura_off_2.Trim()) : (text2 + mResources.aura_off_2.Trim()),
+			(!GameCanvas.isPlaySound) ? (text + mResources.turnOffSound.Trim()) : (text2 + mResources.turnOffSound.Trim()),
+			(!GameCanvas.lowGraphic) ? (text + mResources.cauhinhthap.Trim()) : (text2 + mResources.cauhinhthap.Trim()),
+			text3
+		};
 	}
 
 	public void HP_MPup()
@@ -225,22 +239,14 @@ public class SoundMn
 	public void charPunch(bool isKick, float volumn)
 	{
 		if (!Char.myCharz().me)
-		{
 			volume /= 2f;
-		}
 		if (volumn <= 0f)
-		{
 			volumn = 0.01f;
-		}
 		int num = Res.random(0, 3);
 		if (isKick)
-		{
 			Sound.playSound((num != 0) ? MEDIUM_KICK : LOW_KICK, 0.1f);
-		}
 		else
-		{
 			Sound.playSound((num != 0) ? MEDIUM_PUNCH : LOW_PUNCH, 0.1f);
-		}
 		poolCount++;
 	}
 
@@ -252,7 +258,7 @@ public class SoundMn
 
 	public void rain()
 	{
-		Sound.playMus(RAIN, 0.3f, loop: true);
+		Sound.playMus(RAIN, 0.3f, true);
 	}
 
 	public void gongName()
@@ -289,6 +295,59 @@ public class SoundMn
 		getStrOption();
 	}
 
+	public void chatVipToolOption()
+	{
+		GameScr.isPaintChatVip = !GameScr.isPaintChatVip;
+		if (GameScr.isPaintChatVip)
+			Rms.saveRMSInt("serverchat", 0);
+		else
+			Rms.saveRMSInt("serverchat", 1);
+		getStrOption();
+	}
+
+	public void analogToolOption()
+	{
+		if (GameScr.isAnalog == 0)
+		{
+			GameScr.isAnalog = 1;
+			Rms.saveRMSInt("analog", GameScr.isAnalog);
+			GameScr.setSkillBarPosition();
+		}
+		else
+		{
+			GameScr.isAnalog = 0;
+			Rms.saveRMSInt("analog", GameScr.isAnalog);
+			GameScr.setSkillBarPosition();
+		}
+		getStrOption();
+	}
+
+	public void CaseAnalog()
+	{
+		if (!Main.isPC)
+		{
+			if (!GameCanvas.isTouch)
+				chatVipToolOption();
+			else
+				analogToolOption();
+		}
+	}
+
+	public void CaseSizeScr()
+	{
+		if (GameCanvas.lowGraphic)
+		{
+			Rms.saveRMSInt("lowGraphic", 0);
+			GameCanvas.startOK(mResources.plsRestartGame, 8885, null);
+		}
+		else
+		{
+			Rms.saveRMSInt("lowGraphic", 1);
+			GameCanvas.startOK(mResources.plsRestartGame, 8885, null);
+		}
+		getStrOption();
+	}
+
 	public void AuraToolOption()
 	{
 		if (Char.isPaintAura)
@@ -304,6 +363,26 @@ public class SoundMn
 		getStrOption();
 	}
 
+	public void AuraToolOption2()
+	{
+		if (Char.isPaintAura2)
+		{
+			Rms.saveRMSInt("isPaintAura2", 0);
+			Char.isPaintAura2 = false;
+		}
+		else
+		{
+			Rms.saveRMSInt("isPaintAura2", 1);
+			Char.isPaintAura2 = true;
+		}
+		getStrOption();
+	}
+
+	public void HatToolOption()
+	{
+		Service.gI().sendOptHat();
+	}
+
 	public void update()
 	{
 	}
@@ -317,9 +396,7 @@ public class SoundMn
 	public void openSound()
 	{
 		if (Sound.music == null)
-		{
 			loadSound(0);
-		}
 		Sound.stopAll = false;
 	}
 
@@ -369,9 +446,7 @@ public class SoundMn
 	{
 		int id = XAYDA_KAME;
 		if (type == 13)
-		{
 			id = NORMAL_KAME;
-		}
 		Sound.playSound(id, 0.1f);
 		poolCount++;
 	}
@@ -382,9 +457,7 @@ public class SoundMn
 		{
 			volume /= 2f;
 			if (volumn <= 0f)
-			{
 				volumn = 0.01f;
-			}
 		}
 		if (GameCanvas.gameTick % 8 == 0)
 		{
@@ -477,7 +550,7 @@ public class SoundMn
 
 	public void taitao()
 	{
-		Sound.playMus(TAITAONANGLUONG, 0.5f, loop: true);
+		Sound.playMus(TAITAONANGLUONG, 0.5f, true);
 	}
 
 	public void taitaoPause()
@@ -505,9 +578,7 @@ public class SoundMn
 	{
 		cout++;
 		if (cout % 2 == 0)
-		{
-			Sound.playMus(AIR_SHIP, 0.3f, loop: false);
-		}
+			Sound.playMus(AIR_SHIP, 0.3f, false);
 	}
 
 	public void pauseAirShip()
@@ -535,9 +606,7 @@ public class SoundMn
 	{
 		poolCount++;
 		if (poolCount % 15 == 0)
-		{
 			Sound.playSound(TRAIDAT_KAME, 0.5f);
-		}
 	}
 
 	public void radarClick()

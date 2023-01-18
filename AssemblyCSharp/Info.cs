@@ -67,9 +67,7 @@ public class Info : IActionListener
 	public void paint(mGraphics g, int x, int y, int dir)
 	{
 		if (infoWaitToShow.size() == 0)
-		{
 			return;
-		}
 		g.translate(x, y);
 		if (says != null && says.Length != 0 && type != 1)
 		{
@@ -81,17 +79,11 @@ public class Info : IActionListener
 			}
 			int num = ((mGraphics.zoomLevel != 1) ? 10 : 0);
 			if (info.charInfo == null)
-			{
-				PopUp.paintPopUp(g, X, Y, W, H, 16777215, isButton: false);
-			}
+				PopUp.paintPopUp(g, X, Y, W, H, 16777215, false);
 			else
-			{
 				mSystem.paintPopUp2(g, X - 23, Y - num / 2, W + 15, H + ((!GameCanvas.isTouch) ? 14 : 0) + num);
-			}
 			if (info.charInfo == null)
-			{
 				g.drawRegion(gocnhon, 0, 0, 9, 8, (dir != 1) ? 2 : 0, cx - 3 + ((dir != 1) ? 20 : (-15)), cy - ch - 20 + sayRun + 2, mGraphics.TOP | mGraphics.HCENTER);
-			}
 			int num2 = -1;
 			for (int i = 0; i < says.Length; i++)
 			{
@@ -103,9 +95,7 @@ public class Info : IActionListener
 				{
 					string[] array = Res.split(says[i], "|", 0);
 					if (array.Length == 3)
-					{
 						text = array[2];
-					}
 					if (array.Length == 4)
 					{
 						text = array[3];
@@ -115,9 +105,7 @@ public class Info : IActionListener
 					num2 = num4;
 				}
 				else
-				{
 					num4 = num2;
-				}
 				switch (num4)
 				{
 				case -1:
@@ -158,34 +146,22 @@ public class Info : IActionListener
 				g.fillRect(num5, num6 + num8, num7, 2);
 				int num9 = info.timeCount * num7 / info.maxTime;
 				if (num9 < 0)
-				{
 					num9 = 0;
-				}
 				g.setColor(43758);
 				g.fillRect(num5, num6 + num8, num9, 2);
 				if (info.timeCount == 0)
-				{
 					return;
-				}
-				info.charInfo.paintHead(g, X + 10, Y + H / 2, 0);
+				info.charInfo.paintHead(g, X + 5, Y + H / 2, 0);
 				if (mGraphics.zoomLevel == 1)
-				{
 					((!info.isChatServer) ? mFont.tahoma_7b_greenSmall : mFont.tahoma_7b_yellowSmall2).drawString(g, info.charInfo.cName, X + 12, Y + 3, 0);
-				}
 				else
-				{
 					((!info.isChatServer) ? mFont.tahoma_7b_greenSmall : mFont.tahoma_7b_yellowSmall2).drawString(g, info.charInfo.cName, X + 12, Y - 3, 0);
-				}
 				if (!GameCanvas.isTouch)
 				{
 					if (!TField.isQwerty)
-					{
 						mFont.tahoma_7b_green2Small.drawString(g, "Nhấn # để chat", X + W / 2 + 10, Y + H, mFont.CENTER);
-					}
 					else
-					{
 						mFont.tahoma_7b_green2Small.drawString(g, "Nhấn Y để chat", X + W / 2 + 10, Y + H, mFont.CENTER);
-					}
 				}
 				if (mGraphics.zoomLevel == 1)
 				{
@@ -200,8 +176,7 @@ public class Info : IActionListener
 				GameCanvas.resetTrans(g);
 			}
 			if (info.charInfo == null)
-			{
-			}
+				;
 		}
 		g.translate(-x, -y);
 	}
@@ -209,9 +184,7 @@ public class Info : IActionListener
 	public void update()
 	{
 		if (infoWaitToShow.size() == 0 || info.timeCount != 0)
-		{
 			return;
-		}
 		time++;
 		if (time >= info.speed)
 		{
@@ -219,7 +192,7 @@ public class Info : IActionListener
 			infoWaitToShow.removeElementAt(0);
 			if (infoWaitToShow.size() != 0)
 			{
-				InfoItem infoItem = (info = (InfoItem)infoWaitToShow.firstElement());
+				info = (InfoItem)infoWaitToShow.firstElement();
 				getInfo();
 			}
 		}
@@ -229,22 +202,12 @@ public class Info : IActionListener
 	{
 		sayWidth = 100;
 		if (GameCanvas.w == 128)
-		{
 			sayWidth = 128;
-		}
 		int num;
 		if (info.charInfo != null)
 		{
 			says = new string[1] { info.s };
-			if (mGraphics.zoomLevel == 1)
-			{
-				num = says.Length;
-			}
-			else
-			{
-				string[] array = mFont.tahoma_7_whiteSmall.splitFontArray(info.s, 120);
-				num = array.Length;
-			}
+			num = ((mGraphics.zoomLevel != 1) ? mFont.tahoma_7_whiteSmall.splitFontArray(info.s, 120).Length : says.Length);
 		}
 		else
 		{
@@ -262,40 +225,27 @@ public class Info : IActionListener
 	{
 		type = Type;
 		if (GameCanvas.w == 128)
-		{
 			limLeft = 1;
-		}
 		if (infoWaitToShow.size() > 10)
-		{
 			infoWaitToShow.removeElementAt(0);
-		}
-		if (infoWaitToShow.size() > 0 && s.Equals(((InfoItem)infoWaitToShow.lastElement()).s))
-		{
-			Res.outz("return");
-			return;
-		}
+		if (infoWaitToShow.size() <= 0 || s.Equals(((InfoItem)infoWaitToShow.lastElement()).s))
+			;
 		InfoItem infoItem = new InfoItem(s);
 		if (type == 0)
-		{
 			infoItem.speed = s.Length;
-		}
 		if (infoItem.speed < 70)
-		{
 			infoItem.speed = 70;
-		}
 		if (type == 1)
-		{
 			infoItem.speed = 10000000;
-		}
 		if (type == 3)
 		{
 			infoItem.speed = 300;
 			infoItem.last = mSystem.currentTimeMillis();
-			infoItem.timeCount = s.Length * 10 / 4;
-			if (infoItem.timeCount < 150)
-			{
-				infoItem.timeCount = 150;
-			}
+			infoItem.timeCount = s.Length;
+			if (infoItem.timeCount < 15)
+				infoItem.timeCount = 15;
+			if (infoItem.timeCount > 100)
+				infoItem.timeCount = 100;
 			infoItem.maxTime = infoItem.timeCount;
 		}
 		if (cInfo != null)
@@ -304,14 +254,10 @@ public class Info : IActionListener
 			infoItem.isChatServer = isChatServer;
 			GameCanvas.panel.addChatMessage(infoItem);
 			if (GameCanvas.isTouch && GameCanvas.panel.isViewChatServer)
-			{
 				GameScr.info2.cmdChat = new Command(mResources.CHAT, this, 1000, infoItem);
-			}
 		}
 		if ((cInfo != null && GameCanvas.panel.isViewChatServer) || cInfo == null)
-		{
 			infoWaitToShow.addElement(infoItem);
-		}
 		if (infoWaitToShow.size() == 1)
 		{
 			info = (InfoItem)infoWaitToShow.firstElement();
@@ -327,13 +273,9 @@ public class Info : IActionListener
 	public void addInfo(string s, int speed, mFont f)
 	{
 		if (GameCanvas.w == 128)
-		{
 			limLeft = 1;
-		}
 		if (infoWaitToShow.size() > 10)
-		{
 			infoWaitToShow.removeElementAt(0);
-		}
 		infoWaitToShow.addElement(new InfoItem(s, f, speed));
 	}
 
@@ -345,9 +287,7 @@ public class Info : IActionListener
 	public void perform(int idAction, object p)
 	{
 		if (idAction == 1000)
-		{
 			ChatTextField.gI().startChat(GameScr.gI(), mResources.chat_player);
-		}
 	}
 
 	public void onCancelChat()

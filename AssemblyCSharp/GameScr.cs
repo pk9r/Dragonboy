@@ -433,6 +433,14 @@ public class GameScr : mScreen, IChatable
 
 	public static Image imgMPLost;
 
+	public static Image imgHP_tm_do;
+
+	public static Image imgHP_tm_vang;
+
+	public static Image imgHP_tm_xam;
+
+	public static Image imgHP_tm_xanh;
+
 	public Mob mobCapcha;
 
 	public MagicTree magicTree;
@@ -914,9 +922,7 @@ public class GameScr : mScreen, IChatable
 	public GameScr()
 	{
 		if (GameCanvas.w == 128 || GameCanvas.h <= 208)
-		{
 			indexSize = 20;
-		}
 		cmdback = new Command(string.Empty, 11021);
 		cmdMenu = new Command("menu", 11000);
 		cmdFocus = new Command(string.Empty, 11001);
@@ -940,9 +946,7 @@ public class GameScr : mScreen, IChatable
 		right = cmdFocus;
 		isPaintRada = 1;
 		if (GameCanvas.isTouch)
-		{
 			isHaveSelectSkill = true;
-		}
 	}
 
 	public static void loadBg()
@@ -968,6 +972,10 @@ public class GameScr : mScreen, IChatable
 		imgSkill2 = GameCanvas.loadImage("/mainImage/myTexture2dskill2.png");
 		imgMenu = GameCanvas.loadImage("/mainImage/myTexture2dmenu.png");
 		imgFocus = GameCanvas.loadImage("/mainImage/myTexture2dfocus.png");
+		imgHP_tm_do = GameCanvas.loadImage("/mainImage/tm-do.png");
+		imgHP_tm_vang = GameCanvas.loadImage("/mainImage/tm-vang.png");
+		imgHP_tm_xam = GameCanvas.loadImage("/mainImage/tm-xam.png");
+		imgHP_tm_xanh = GameCanvas.loadImage("/mainImage/tm-xanh.png");
 		imgChatPC = GameCanvas.loadImage("/pc/chat.png");
 		imgChatsPC2 = GameCanvas.loadImage("/pc/chat2.png");
 		if (GameCanvas.isTouch)
@@ -1004,21 +1012,13 @@ public class GameScr : mScreen, IChatable
 		sbyte[] array3 = Rms.loadRMS("NRskillVersion");
 		sbyte[] array4 = Rms.loadRMS("NRitemVersion");
 		if (array != null)
-		{
 			vcData = array[0];
-		}
 		if (array2 != null)
-		{
 			vcMap = array2[0];
-		}
 		if (array3 != null)
-		{
 			vcSkill = array3[0];
-		}
 		if (array4 != null)
-		{
 			vcItem = array4[0];
-		}
 		imgNut = GameCanvas.loadImage("/mainImage/myTexture2dnut.png");
 		imgNutF = GameCanvas.loadImage("/mainImage/myTexture2dnutF.png");
 		MobCapcha.init();
@@ -1071,18 +1071,14 @@ public class GameScr : mScreen, IChatable
 	public bool isMapDocNhan()
 	{
 		if (TileMap.mapID >= 53 && TileMap.mapID <= 62)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public bool isMapFize()
 	{
 		if (TileMap.mapID >= 63)
-		{
 			return true;
-		}
 		return false;
 	}
 
@@ -1091,19 +1087,13 @@ public class GameScr : mScreen, IChatable
 		vChatVip.removeAllElements();
 		ServerListScreen.isWait = false;
 		if (BackgroudEffect.isHaveRain())
-		{
 			SoundMn.gI().rain();
-		}
 		LoginScr.isContinueToLogin = false;
 		Char.isLoadingMap = false;
 		if (!isPaintOther)
-		{
 			Service.gI().finishLoadMap();
-		}
 		if (TileMap.isTrainingMap())
-		{
 			initTraining();
-		}
 		info1.isUpdate = true;
 		info2.isUpdate = true;
 		resetButton();
@@ -1194,9 +1184,7 @@ public class GameScr : mScreen, IChatable
 		if (cSkillID == null || cSkillID.Length == 0)
 		{
 			if (Char.myCharz().vSkillFight.size() > 0)
-			{
 				Char.myCharz().myskill = (Skill)Char.myCharz().vSkillFight.elementAt(0);
-			}
 		}
 		else
 		{
@@ -1222,8 +1210,8 @@ public class GameScr : mScreen, IChatable
 		Cout.println("LOAD DEFAULT ONmScreen SKILL");
 		for (int i = 0; i < onScreenSkill.Length && i < Char.myCharz().vSkillFight.size(); i++)
 		{
-			Skill skill = (Skill)Char.myCharz().vSkillFight.elementAt(i);
-			onScreenSkill[i] = skill;
+			Skill obj = (Skill)Char.myCharz().vSkillFight.elementAt(i);
+			onScreenSkill[i] = obj;
 		}
 		saveonScreenSkillToRMS();
 	}
@@ -1233,8 +1221,8 @@ public class GameScr : mScreen, IChatable
 		Cout.println("LOAD DEFAULT KEY SKILL");
 		for (int i = 0; i < keySkill.Length && i < Char.myCharz().vSkillFight.size(); i++)
 		{
-			Skill skill = (Skill)Char.myCharz().vSkillFight.elementAt(i);
-			keySkill[i] = skill;
+			Skill obj = (Skill)Char.myCharz().vSkillFight.elementAt(i);
+			keySkill[i] = obj;
 		}
 		saveKeySkillToRMS();
 	}
@@ -1277,13 +1265,9 @@ public class GameScr : mScreen, IChatable
 		for (int i = 0; i < onScreenSkill.Length; i++)
 		{
 			if (onScreenSkill[i] == null)
-			{
 				array[i] = -1;
-			}
 			else
-			{
 				array[i] = onScreenSkill[i].template.id;
-			}
 		}
 		Service.gI().changeOnKeyScr(array);
 	}
@@ -1294,13 +1278,9 @@ public class GameScr : mScreen, IChatable
 		for (int i = 0; i < keySkill.Length; i++)
 		{
 			if (keySkill[i] == null)
-			{
 				array[i] = -1;
-			}
 			else
-			{
 				array[i] = keySkill[i].template.id;
-			}
 		}
 		Service.gI().changeOnKeyScr(array);
 	}
@@ -1329,9 +1309,7 @@ public class GameScr : mScreen, IChatable
 			}
 		}
 		if (Char.myCharz().myskill == null)
-		{
 			Char.myCharz().myskill = skill;
-		}
 		saveKeySkillToRMS();
 		saveonScreenSkillToRMS();
 	}
@@ -1341,9 +1319,7 @@ public class GameScr : mScreen, IChatable
 		for (int num = Char.myCharz().arrItemBag.Length - 1; num >= 0; num--)
 		{
 			if (Char.myCharz().arrItemBag[num] == null)
-			{
 				return false;
-			}
 		}
 		return true;
 	}
@@ -1376,8 +1352,8 @@ public class GameScr : mScreen, IChatable
 			parts = new Part[num];
 			for (int i = 0; i < num; i++)
 			{
-				int type = dataInputStream.readByte();
-				parts[i] = new Part(type);
+				sbyte num2 = dataInputStream.readByte();
+				parts[i] = new Part(num2);
 				for (int j = 0; j < parts[i].pi.Length; j++)
 				{
 					parts[i].pi[j] = new PartImage();
@@ -1562,59 +1538,54 @@ public class GameScr : mScreen, IChatable
 		{
 			dataInputStream = new DataInputStream(Rms.loadRMS("NR_skill"));
 			int num = dataInputStream.readShort();
-			int num2 = Skills.skills.size();
-			sks = new SkillPaint[num2];
+			sks = new SkillPaint[Skills.skills.size()];
 			for (int i = 0; i < num; i++)
 			{
-				short num3 = dataInputStream.readShort();
-				Res.outz("skill id= " + num3);
-				if (num3 == 1111)
+				short num2 = dataInputStream.readShort();
+				Res.outz("skill id= " + num2);
+				if (num2 == 1111)
+					num2 = (short)(num - 1);
+				sks[num2] = new SkillPaint();
+				sks[num2].id = num2;
+				sks[num2].effectHappenOnMob = dataInputStream.readShort();
+				if (sks[num2].effectHappenOnMob <= 0)
+					sks[num2].effectHappenOnMob = 80;
+				sks[num2].numEff = dataInputStream.readByte();
+				sks[num2].skillStand = new SkillInfoPaint[dataInputStream.readByte()];
+				for (int j = 0; j < sks[num2].skillStand.Length; j++)
 				{
-					num3 = (short)(num - 1);
+					sks[num2].skillStand[j] = new SkillInfoPaint();
+					sks[num2].skillStand[j].status = dataInputStream.readByte();
+					sks[num2].skillStand[j].effS0Id = dataInputStream.readShort();
+					sks[num2].skillStand[j].e0dx = dataInputStream.readShort();
+					sks[num2].skillStand[j].e0dy = dataInputStream.readShort();
+					sks[num2].skillStand[j].effS1Id = dataInputStream.readShort();
+					sks[num2].skillStand[j].e1dx = dataInputStream.readShort();
+					sks[num2].skillStand[j].e1dy = dataInputStream.readShort();
+					sks[num2].skillStand[j].effS2Id = dataInputStream.readShort();
+					sks[num2].skillStand[j].e2dx = dataInputStream.readShort();
+					sks[num2].skillStand[j].e2dy = dataInputStream.readShort();
+					sks[num2].skillStand[j].arrowId = dataInputStream.readShort();
+					sks[num2].skillStand[j].adx = dataInputStream.readShort();
+					sks[num2].skillStand[j].ady = dataInputStream.readShort();
 				}
-				sks[num3] = new SkillPaint();
-				sks[num3].id = num3;
-				sks[num3].effectHappenOnMob = dataInputStream.readShort();
-				if (sks[num3].effectHappenOnMob <= 0)
+				sks[num2].skillfly = new SkillInfoPaint[dataInputStream.readByte()];
+				for (int k = 0; k < sks[num2].skillfly.Length; k++)
 				{
-					sks[num3].effectHappenOnMob = 80;
-				}
-				sks[num3].numEff = dataInputStream.readByte();
-				sks[num3].skillStand = new SkillInfoPaint[dataInputStream.readByte()];
-				for (int j = 0; j < sks[num3].skillStand.Length; j++)
-				{
-					sks[num3].skillStand[j] = new SkillInfoPaint();
-					sks[num3].skillStand[j].status = dataInputStream.readByte();
-					sks[num3].skillStand[j].effS0Id = dataInputStream.readShort();
-					sks[num3].skillStand[j].e0dx = dataInputStream.readShort();
-					sks[num3].skillStand[j].e0dy = dataInputStream.readShort();
-					sks[num3].skillStand[j].effS1Id = dataInputStream.readShort();
-					sks[num3].skillStand[j].e1dx = dataInputStream.readShort();
-					sks[num3].skillStand[j].e1dy = dataInputStream.readShort();
-					sks[num3].skillStand[j].effS2Id = dataInputStream.readShort();
-					sks[num3].skillStand[j].e2dx = dataInputStream.readShort();
-					sks[num3].skillStand[j].e2dy = dataInputStream.readShort();
-					sks[num3].skillStand[j].arrowId = dataInputStream.readShort();
-					sks[num3].skillStand[j].adx = dataInputStream.readShort();
-					sks[num3].skillStand[j].ady = dataInputStream.readShort();
-				}
-				sks[num3].skillfly = new SkillInfoPaint[dataInputStream.readByte()];
-				for (int k = 0; k < sks[num3].skillfly.Length; k++)
-				{
-					sks[num3].skillfly[k] = new SkillInfoPaint();
-					sks[num3].skillfly[k].status = dataInputStream.readByte();
-					sks[num3].skillfly[k].effS0Id = dataInputStream.readShort();
-					sks[num3].skillfly[k].e0dx = dataInputStream.readShort();
-					sks[num3].skillfly[k].e0dy = dataInputStream.readShort();
-					sks[num3].skillfly[k].effS1Id = dataInputStream.readShort();
-					sks[num3].skillfly[k].e1dx = dataInputStream.readShort();
-					sks[num3].skillfly[k].e1dy = dataInputStream.readShort();
-					sks[num3].skillfly[k].effS2Id = dataInputStream.readShort();
-					sks[num3].skillfly[k].e2dx = dataInputStream.readShort();
-					sks[num3].skillfly[k].e2dy = dataInputStream.readShort();
-					sks[num3].skillfly[k].arrowId = dataInputStream.readShort();
-					sks[num3].skillfly[k].adx = dataInputStream.readShort();
-					sks[num3].skillfly[k].ady = dataInputStream.readShort();
+					sks[num2].skillfly[k] = new SkillInfoPaint();
+					sks[num2].skillfly[k].status = dataInputStream.readByte();
+					sks[num2].skillfly[k].effS0Id = dataInputStream.readShort();
+					sks[num2].skillfly[k].e0dx = dataInputStream.readShort();
+					sks[num2].skillfly[k].e0dy = dataInputStream.readShort();
+					sks[num2].skillfly[k].effS1Id = dataInputStream.readShort();
+					sks[num2].skillfly[k].e1dx = dataInputStream.readShort();
+					sks[num2].skillfly[k].e1dy = dataInputStream.readShort();
+					sks[num2].skillfly[k].effS2Id = dataInputStream.readShort();
+					sks[num2].skillfly[k].e2dx = dataInputStream.readShort();
+					sks[num2].skillfly[k].e2dy = dataInputStream.readShort();
+					sks[num2].skillfly[k].arrowId = dataInputStream.readShort();
+					sks[num2].skillfly[k].adx = dataInputStream.readShort();
+					sks[num2].skillfly[k].ady = dataInputStream.readShort();
 				}
 			}
 		}
@@ -1638,9 +1609,7 @@ public class GameScr : mScreen, IChatable
 	public static GameScr gI()
 	{
 		if (instance == null)
-		{
 			instance = new GameScr();
-		}
 		return instance;
 	}
 
@@ -1695,9 +1664,7 @@ public class GameScr : mScreen, IChatable
 		girlHPBarY = 0;
 		csPadMaxH = GameCanvas.h / 6;
 		if (csPadMaxH < 48)
-		{
 			csPadMaxH = 48;
-		}
 		gW2 = gW >> 1;
 		gH2 = gH >> 1;
 		gW3 = gW / 3;
@@ -1711,9 +1678,7 @@ public class GameScr : mScreen, IChatable
 		gssw = gW / TileMap.size + 2;
 		gssh = gH / TileMap.size + 2;
 		if (gW % 24 != 0)
-		{
 			gssw++;
-		}
 		cmxLim = (TileMap.tmw - 1) * TileMap.size - gW;
 		cmyLim = (TileMap.tmh - 1) * TileMap.size - gH;
 		if (cx == -1 && cy == -1)
@@ -1728,67 +1693,41 @@ public class GameScr : mScreen, IChatable
 		}
 		firstY = cmy;
 		if (cmx < 24)
-		{
 			cmx = (cmtoX = 24);
-		}
 		if (cmx > cmxLim)
-		{
 			cmx = (cmtoX = cmxLim);
-		}
 		if (cmy < 0)
-		{
 			cmy = (cmtoY = 0);
-		}
 		if (cmy > cmyLim)
-		{
 			cmy = (cmtoY = cmyLim);
-		}
 		gssx = cmx / TileMap.size - 1;
 		if (gssx < 0)
-		{
 			gssx = 0;
-		}
 		gssy = cmy / TileMap.size;
 		gssxe = gssx + gssw;
 		gssye = gssy + gssh;
 		if (gssy < 0)
-		{
 			gssy = 0;
-		}
 		if (gssye > TileMap.tmh - 1)
-		{
 			gssye = TileMap.tmh - 1;
-		}
 		TileMap.countx = (gssxe - gssx) * 4;
 		if (TileMap.countx > TileMap.tmw)
-		{
 			TileMap.countx = TileMap.tmw;
-		}
 		TileMap.county = (gssye - gssy) * 4;
 		if (TileMap.county > TileMap.tmh)
-		{
 			TileMap.county = TileMap.tmh;
-		}
 		TileMap.gssx = (Char.myCharz().cx - 2 * gW) / TileMap.size;
 		if (TileMap.gssx < 0)
-		{
 			TileMap.gssx = 0;
-		}
 		TileMap.gssxe = TileMap.gssx + TileMap.countx;
 		if (TileMap.gssxe > TileMap.tmw)
-		{
 			TileMap.gssxe = TileMap.tmw;
-		}
 		TileMap.gssy = (Char.myCharz().cy - 2 * gH) / TileMap.size;
 		if (TileMap.gssy < 0)
-		{
 			TileMap.gssy = 0;
-		}
 		TileMap.gssye = TileMap.gssy + TileMap.county;
 		if (TileMap.gssye > TileMap.tmh)
-		{
 			TileMap.gssye = TileMap.tmh;
-		}
 		ChatTextField.gI().parentScreen = instance;
 		ChatTextField.gI().tfChat.y = GameCanvas.h - 35 - ChatTextField.gI().tfChat.height;
 		ChatTextField.gI().initChatTextField();
@@ -1817,14 +1756,7 @@ public class GameScr : mScreen, IChatable
 		}
 		setSkillBarPosition();
 		disXC = ((GameCanvas.w <= 200) ? 30 : 40);
-		if (Rms.loadRMSInt("viewchat") == -1)
-		{
-			GameCanvas.panel.isViewChatServer = true;
-		}
-		else
-		{
-			GameCanvas.panel.isViewChatServer = Rms.loadRMSInt("viewchat") == 1;
-		}
+		GameCanvas.panel.isViewChatServer = true;
 	}
 
 	public static void setSkillBarPosition()
@@ -1878,9 +1810,7 @@ public class GameScr : mScreen, IChatable
 			yHP = ySkill;
 		}
 		if (!GameCanvas.isTouch)
-		{
 			return;
-		}
 		xSkill = 17;
 		ySkill = GameCanvas.h - 40;
 		if (gamePad.isSmallGamePad && isAnalog == 1)
@@ -1909,9 +1839,7 @@ public class GameScr : mScreen, IChatable
 	private static void updateCamera()
 	{
 		if (isPaintOther)
-		{
 			return;
-		}
 		if (cmx != cmtoX || cmy != cmtoY)
 		{
 			cmvx = cmtoX - cmx << 2;
@@ -1923,43 +1851,27 @@ public class GameScr : mScreen, IChatable
 			cmy += cmdy >> 4;
 			cmdy &= 15;
 			if (cmx < 24)
-			{
 				cmx = 24;
-			}
 			if (cmx > cmxLim)
-			{
 				cmx = cmxLim;
-			}
 			if (cmy < 0)
-			{
 				cmy = 0;
-			}
 			if (cmy > cmyLim)
-			{
 				cmy = cmyLim;
-			}
 		}
 		gssx = cmx / TileMap.size - 1;
 		if (gssx < 0)
-		{
 			gssx = 0;
-		}
 		gssy = cmy / TileMap.size;
 		gssxe = gssx + gssw;
 		gssye = gssy + gssh;
 		if (gssy < 0)
-		{
 			gssy = 0;
-		}
 		if (gssye > TileMap.tmh - 1)
-		{
 			gssye = TileMap.tmh - 1;
-		}
 		TileMap.gssx = (Char.myCharz().cx - 2 * gW) / TileMap.size;
 		if (TileMap.gssx < 0)
-		{
 			TileMap.gssx = 0;
-		}
 		TileMap.gssxe = TileMap.gssx + TileMap.countx;
 		if (TileMap.gssxe > TileMap.tmw)
 		{
@@ -1968,9 +1880,7 @@ public class GameScr : mScreen, IChatable
 		}
 		TileMap.gssy = (Char.myCharz().cy - 2 * gH) / TileMap.size;
 		if (TileMap.gssy < 0)
-		{
 			TileMap.gssy = 0;
-		}
 		TileMap.gssye = TileMap.gssy + TileMap.county;
 		if (TileMap.gssye > TileMap.tmh)
 		{
@@ -1986,9 +1896,7 @@ public class GameScr : mScreen, IChatable
 		for (sbyte b = 2; b < 9; b = (sbyte)(b + 2))
 		{
 			if (GameCanvas.keyHold[b])
-			{
 				return false;
-			}
 		}
 		return true;
 	}
@@ -2006,71 +1914,49 @@ public class GameScr : mScreen, IChatable
 		auto = 0;
 		GameCanvas.clearKeyHold();
 		if (Char.myCharz().charFocus.charID < 0 || Char.myCharz().charID < 0)
-		{
 			return;
-		}
 		MyVector vPlayerMenu = GameCanvas.panel.vPlayerMenu;
 		if (vPlayerMenu.size() > 0)
-		{
 			return;
-		}
 		if (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId > 1)
 		{
 			vPlayerMenu.addElement(new Command(mResources.make_friend, 11112, Char.myCharz().charFocus));
 			vPlayerMenu.addElement(new Command(mResources.trade, 11113, Char.myCharz().charFocus));
 		}
 		if (Char.myCharz().clan != null && Char.myCharz().role < 2 && Char.myCharz().charFocus.clanID == -1)
-		{
 			vPlayerMenu.addElement(new Command(mResources.CHAR_ORDER[4], 110391));
-		}
 		if (Char.myCharz().charFocus.statusMe != 14 && Char.myCharz().charFocus.statusMe != 5)
 		{
 			if (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId >= 14)
-			{
 				vPlayerMenu.addElement(new Command(mResources.CHAR_ORDER[0], 2003));
-			}
 		}
 		else if (Char.myCharz().myskill.template.type != 4)
 		{
 		}
 		if (Char.myCharz().clan != null && Char.myCharz().clan.ID == Char.myCharz().charFocus.clanID && Char.myCharz().charFocus.statusMe != 14 && Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId >= 14)
-		{
 			vPlayerMenu.addElement(new Command(mResources.CHAR_ORDER[1], 2004));
-		}
 		int num = Char.myCharz().nClass.skillTemplates.Length;
 		for (int i = 0; i < num; i++)
 		{
 			SkillTemplate skillTemplate = Char.myCharz().nClass.skillTemplates[i];
 			Skill skill = Char.myCharz().getSkill(skillTemplate);
 			if (skill != null && skillTemplate.isBuffToPlayer() && skill.point >= 1)
-			{
 				vPlayerMenu.addElement(new Command(skillTemplate.name, 12004, skill));
-			}
 		}
 	}
 
 	public bool isAttack()
 	{
 		if (checkClickToBotton(Char.myCharz().charFocus))
-		{
 			return false;
-		}
 		if (checkClickToBotton(Char.myCharz().mobFocus))
-		{
 			return false;
-		}
 		if (checkClickToBotton(Char.myCharz().npcFocus))
-		{
 			return false;
-		}
 		if (ChatTextField.gI().isShow)
-		{
 			return false;
-		}
 		if (InfoDlg.isLock || Char.myCharz().isLockAttack || Char.isLockKey)
-		{
 			return false;
-		}
 		if (Char.myCharz().myskill != null && Char.myCharz().myskill.template.id == 6 && Char.myCharz().itemFocus != null)
 		{
 			pickItem();
@@ -2079,15 +1965,11 @@ public class GameScr : mScreen, IChatable
 		if (Char.myCharz().myskill != null && Char.myCharz().myskill.template.type == 2 && Char.myCharz().npcFocus == null && Char.myCharz().myskill.template.id != 6)
 		{
 			if (!checkSkillValid())
-			{
 				return false;
-			}
 			return true;
 		}
 		if (Char.myCharz().skillPaint != null || (Char.myCharz().mobFocus == null && Char.myCharz().npcFocus == null && Char.myCharz().charFocus == null && Char.myCharz().itemFocus == null))
-		{
 			return false;
-		}
 		if (Char.myCharz().mobFocus != null)
 		{
 			if (Char.myCharz().mobFocus.isBigBoss() && Char.myCharz().mobFocus.status == 4)
@@ -2102,42 +1984,26 @@ public class GameScr : mScreen, IChatable
 				return false;
 			}
 			if (mobCapcha != null)
-			{
 				return false;
-			}
 			if (Char.myCharz().myskill == null)
-			{
 				return false;
-			}
 			if (Char.myCharz().isSelectingSkillUseAlone())
-			{
 				return false;
-			}
 			if (Char.myCharz().mobFocus.status == 1 || Char.myCharz().mobFocus.status == 0 || Char.myCharz().myskill.template.type == 4)
-			{
 				return false;
-			}
 			if (!checkSkillValid())
-			{
 				return false;
-			}
 			if (Char.myCharz().cx < Char.myCharz().mobFocus.getX())
-			{
 				Char.myCharz().cdir = 1;
-			}
 			else
-			{
 				Char.myCharz().cdir = -1;
-			}
 			int num = Math.abs(Char.myCharz().cx - Char.myCharz().mobFocus.getX());
 			int num2 = Math.abs(Char.myCharz().cy - Char.myCharz().mobFocus.getY());
 			Char.myCharz().cvx = 0;
 			if (num <= Char.myCharz().myskill.dx && num2 <= Char.myCharz().myskill.dy)
 			{
 				if (Char.myCharz().myskill.template.id == 20)
-				{
 					return true;
-				}
 				if (num2 > num && Res.abs(Char.myCharz().cy - Char.myCharz().mobFocus.getY()) > 30 && Char.myCharz().mobFocus.getTemplate().type == 4)
 				{
 					Char.myCharz().currentMovePoint = new MovePoint(Char.myCharz().cx + Char.myCharz().cdir, Char.myCharz().mobFocus.getY());
@@ -2149,25 +2015,19 @@ public class GameScr : mScreen, IChatable
 				int num3 = 20;
 				bool flag = false;
 				if (Char.myCharz().mobFocus is BigBoss || Char.myCharz().mobFocus is BigBoss2)
-				{
 					flag = true;
-				}
 				if (Char.myCharz().myskill.dx > 100)
 				{
 					num3 = 60;
 					if (num < 20)
-					{
 						Char.myCharz().createShadow(Char.myCharz().cx, Char.myCharz().cy, 10);
-					}
 				}
 				bool flag2 = false;
 				if ((TileMap.tileTypeAtPixel(Char.myCharz().cx, Char.myCharz().cy + 3) & 2) == 2)
 				{
 					int num4 = ((Char.myCharz().cx > Char.myCharz().mobFocus.getX()) ? 1 : (-1));
 					if ((TileMap.tileTypeAtPixel(Char.myCharz().mobFocus.getX() + num3 * num4, Char.myCharz().cy + 3) & 2) != 2)
-					{
 						flag2 = true;
-					}
 				}
 				if (num <= num3 && !flag2)
 				{
@@ -2198,14 +2058,10 @@ public class GameScr : mScreen, IChatable
 			}
 			bool flag3 = false;
 			if (Char.myCharz().mobFocus is BigBoss || Char.myCharz().mobFocus is BigBoss2)
-			{
 				flag3 = true;
-			}
 			int num6 = (Char.myCharz().myskill.dx - ((!flag3) ? 20 : 50)) * ((Char.myCharz().cx > Char.myCharz().mobFocus.getX()) ? 1 : (-1));
 			if (num <= Char.myCharz().myskill.dx)
-			{
 				num6 = 0;
-			}
 			Char.myCharz().currentMovePoint = new MovePoint(Char.myCharz().mobFocus.getX() + num6, Char.myCharz().mobFocus.getY());
 			Char.myCharz().endMovePointCommand = new Command(null, null, 8002, null);
 			GameCanvas.clearKeyHold();
@@ -2215,31 +2071,18 @@ public class GameScr : mScreen, IChatable
 		if (Char.myCharz().npcFocus != null)
 		{
 			if (Char.myCharz().npcFocus.isHide)
-			{
 				return false;
-			}
 			if (Char.myCharz().cx < Char.myCharz().npcFocus.cx)
-			{
 				Char.myCharz().cdir = 1;
-			}
 			else
-			{
 				Char.myCharz().cdir = -1;
-			}
 			if (Char.myCharz().cx < Char.myCharz().npcFocus.cx)
-			{
 				Char.myCharz().npcFocus.cdir = -1;
-			}
 			else
-			{
 				Char.myCharz().npcFocus.cdir = 1;
-			}
 			int num7 = Math.abs(Char.myCharz().cx - Char.myCharz().npcFocus.cx);
-			int num8 = Math.abs(Char.myCharz().cy - Char.myCharz().npcFocus.cy);
-			if (num8 > 40)
-			{
+			if (Math.abs(Char.myCharz().cy - Char.myCharz().npcFocus.cy) > 40)
 				Char.myCharz().cy = Char.myCharz().npcFocus.cy - 40;
-			}
 			if (num7 < 60)
 			{
 				GameCanvas.clearKeyHold();
@@ -2249,13 +2092,9 @@ public class GameScr : mScreen, IChatable
 					if (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId == 0)
 					{
 						if (Char.myCharz().taskMaint.index < 4 && Char.myCharz().npcFocus.template.npcTemplateId == 4)
-						{
 							return false;
-						}
 						if (Char.myCharz().taskMaint.index < 3 && Char.myCharz().npcFocus.template.npcTemplateId == 3)
-						{
 							return false;
-						}
 					}
 					tMenuDelay = 50;
 					InfoDlg.showWait();
@@ -2265,8 +2104,9 @@ public class GameScr : mScreen, IChatable
 			}
 			else
 			{
-				int num9 = (20 + Res.r.nextInt(20)) * ((Char.myCharz().cx > Char.myCharz().npcFocus.cx) ? 1 : (-1));
-				Char.myCharz().currentMovePoint = new MovePoint(Char.myCharz().npcFocus.cx + num9, Char.myCharz().cy);
+				int num8 = 20 + Res.r.nextInt(20);
+				int num9 = ((Char.myCharz().cx > Char.myCharz().npcFocus.cx) ? 1 : (-1));
+				Char.myCharz().currentMovePoint = new MovePoint(Char.myCharz().npcFocus.cx + num8 * num9, Char.myCharz().cy);
 				Char.myCharz().endMovePointCommand = new Command(null, null, 8002, null);
 				GameCanvas.clearKeyHold();
 				GameCanvas.clearKeyPressed();
@@ -2276,61 +2116,41 @@ public class GameScr : mScreen, IChatable
 		if (Char.myCharz().charFocus != null)
 		{
 			if (mobCapcha != null)
-			{
 				return false;
-			}
 			if (Char.myCharz().cx < Char.myCharz().charFocus.cx)
-			{
 				Char.myCharz().cdir = 1;
-			}
 			else
-			{
 				Char.myCharz().cdir = -1;
-			}
 			int num10 = Math.abs(Char.myCharz().cx - Char.myCharz().charFocus.cx);
 			int num11 = Math.abs(Char.myCharz().cy - Char.myCharz().charFocus.cy);
 			if (Char.myCharz().isMeCanAttackOtherPlayer(Char.myCharz().charFocus) || Char.myCharz().isSelectingSkillBuffToPlayer())
 			{
 				if (Char.myCharz().myskill == null)
-				{
 					return false;
-				}
 				if (!checkSkillValid())
-				{
 					return false;
-				}
 				if (Char.myCharz().cx < Char.myCharz().charFocus.cx)
-				{
 					Char.myCharz().cdir = 1;
-				}
 				else
-				{
 					Char.myCharz().cdir = -1;
-				}
 				Char.myCharz().cvx = 0;
 				if (num10 <= Char.myCharz().myskill.dx && num11 <= Char.myCharz().myskill.dy)
 				{
 					if (Char.myCharz().myskill.template.id == 20)
-					{
 						return true;
-					}
 					int num12 = 20;
 					if (Char.myCharz().myskill.dx > 60)
 					{
 						num12 = 60;
 						if (num10 < 20)
-						{
 							Char.myCharz().createShadow(Char.myCharz().cx, Char.myCharz().cy, 10);
-						}
 					}
 					bool flag4 = false;
 					if ((TileMap.tileTypeAtPixel(Char.myCharz().cx, Char.myCharz().cy + 3) & 2) == 2)
 					{
 						int num13 = ((Char.myCharz().cx > Char.myCharz().charFocus.cx) ? 1 : (-1));
 						if ((TileMap.tileTypeAtPixel(Char.myCharz().charFocus.cx + num12 * num13, Char.myCharz().cy + 3) & 2) != 2)
-						{
 							flag4 = true;
-						}
 					}
 					if (num10 <= num12 && !flag4)
 					{
@@ -2352,9 +2172,7 @@ public class GameScr : mScreen, IChatable
 				}
 				int num14 = (Char.myCharz().myskill.dx - 20) * ((Char.myCharz().cx > Char.myCharz().charFocus.cx) ? 1 : (-1));
 				if (num10 <= Char.myCharz().myskill.dx)
-				{
 					num14 = 0;
-				}
 				Char.myCharz().currentMovePoint = new MovePoint(Char.myCharz().charFocus.cx + num14, Char.myCharz().charFocus.cy);
 				Char.myCharz().endMovePointCommand = new Command(null, null, 8002, null);
 				GameCanvas.clearKeyHold();
@@ -2374,8 +2192,9 @@ public class GameScr : mScreen, IChatable
 			}
 			else
 			{
-				int num15 = (20 + Res.r.nextInt(20)) * ((Char.myCharz().cx > Char.myCharz().charFocus.cx) ? 1 : (-1));
-				Char.myCharz().currentMovePoint = new MovePoint(Char.myCharz().charFocus.cx + num15, Char.myCharz().charFocus.cy);
+				int num15 = 20 + Res.r.nextInt(20);
+				int num16 = ((Char.myCharz().cx > Char.myCharz().charFocus.cx) ? 1 : (-1));
+				Char.myCharz().currentMovePoint = new MovePoint(Char.myCharz().charFocus.cx + num15 * num16, Char.myCharz().charFocus.cy);
 				Char.myCharz().endMovePointCommand = new Command(null, null, 8002, null);
 				GameCanvas.clearKeyHold();
 				GameCanvas.clearKeyPressed();
@@ -2393,34 +2212,20 @@ public class GameScr : mScreen, IChatable
 	public bool isMeCanAttackMob(Mob m)
 	{
 		if (m == null)
-		{
 			return false;
-		}
 		if (Char.myCharz().cTypePk == 5)
-		{
 			return true;
-		}
 		if (Char.myCharz().isAttacPlayerStatus() && !m.isMobMe)
-		{
 			return false;
-		}
 		if (Char.myCharz().mobMe != null && m.Equals(Char.myCharz().mobMe))
-		{
 			return false;
-		}
 		Char @char = findCharInMap(m.mobId);
 		if (@char == null)
-		{
 			return true;
-		}
 		if (@char.cTypePk == 5)
-		{
 			return true;
-		}
 		if (Char.myCharz().isMeCanAttackOtherPlayer(@char))
-		{
 			return true;
-		}
 		return false;
 	}
 
@@ -2443,13 +2248,9 @@ public class GameScr : mScreen, IChatable
 	private bool checkSkillValid2()
 	{
 		if (Char.myCharz().myskill != null && ((Char.myCharz().myskill.template.manaUseType != 1 && Char.myCharz().cMP < Char.myCharz().myskill.manaUse) || (Char.myCharz().myskill.template.manaUseType == 1 && Char.myCharz().cMP < Char.myCharz().cMPFull * Char.myCharz().myskill.manaUse / 100)))
-		{
 			return false;
-		}
 		if (Char.myCharz().myskill == null || (Char.myCharz().myskill.template.maxPoint > 0 && Char.myCharz().myskill.point == 0))
-		{
 			return false;
-		}
 		return true;
 	}
 
@@ -2479,9 +2280,7 @@ public class GameScr : mScreen, IChatable
 			isHaveSelectSkill = false;
 		}
 		else
-		{
 			isHaveSelectSkill = true;
-		}
 		scrMain.clear();
 	}
 
@@ -2493,13 +2292,9 @@ public class GameScr : mScreen, IChatable
 	public override void updateKey()
 	{
 		if (Controller.isStopReadMessage || Char.myCharz().isTeleport || InfoDlg.isLock)
-		{
 			return;
-		}
 		if (GameCanvas.isTouch && !ChatTextField.gI().isShow && !GameCanvas.menu.showMenu)
-		{
 			updateKeyTouchControl();
-		}
 		checkAuto();
 		GameCanvas.debug("F2", 0);
 		if (ChatPopup.currChatPopup != null)
@@ -2522,9 +2317,7 @@ public class GameScr : mScreen, IChatable
 				GameCanvas.keyPressed[12] = false;
 				mScreen.keyTouch = -1;
 				if (left != null)
-				{
 					left.performAction();
-				}
 			}
 			if ((GameCanvas.keyPressed[13] || mScreen.getCmdPointerLast(GameCanvas.currentScreen.right)) && right != null)
 			{
@@ -2533,9 +2326,7 @@ public class GameScr : mScreen, IChatable
 				GameCanvas.keyPressed[13] = false;
 				mScreen.keyTouch = -1;
 				if (right != null)
-				{
 					right.performAction();
-				}
 			}
 			if ((GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] || mScreen.getCmdPointerLast(GameCanvas.currentScreen.center)) && center != null)
 			{
@@ -2543,25 +2334,17 @@ public class GameScr : mScreen, IChatable
 				GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
 				mScreen.keyTouch = -1;
 				if (center != null)
-				{
 					center.performAction();
-				}
 			}
 		}
 		else
 		{
 			if (ChatTextField.gI().left != null && (GameCanvas.keyPressed[12] || mScreen.getCmdPointerLast(ChatTextField.gI().left)) && ChatTextField.gI().left != null)
-			{
 				ChatTextField.gI().left.performAction();
-			}
 			if (ChatTextField.gI().right != null && (GameCanvas.keyPressed[13] || mScreen.getCmdPointerLast(ChatTextField.gI().right)) && ChatTextField.gI().right != null)
-			{
 				ChatTextField.gI().right.performAction();
-			}
 			if (ChatTextField.gI().center != null && (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] || mScreen.getCmdPointerLast(ChatTextField.gI().center)) && ChatTextField.gI().center != null)
-			{
 				ChatTextField.gI().center.performAction();
-			}
 		}
 		GameCanvas.debug("F6", 0);
 		updateKeyAlert();
@@ -2591,9 +2374,7 @@ public class GameScr : mScreen, IChatable
 		else
 		{
 			if (GameCanvas.menu.showMenu || isOpenUI() || Char.isLockKey)
-			{
 				return;
-			}
 			if (GameCanvas.keyPressed[10])
 			{
 				GameCanvas.keyPressed[10] = false;
@@ -2603,9 +2384,7 @@ public class GameScr : mScreen, IChatable
 			if (GameCanvas.keyPressed[11] && mobCapcha == null)
 			{
 				if (popUpYesNo != null)
-				{
 					popUpYesNo.cmdYes.performAction();
-				}
 				else if (info2.info.info != null && info2.info.info.charInfo != null)
 				{
 					GameCanvas.panel.setTypeMessage();
@@ -2644,17 +2423,11 @@ public class GameScr : mScreen, IChatable
 			}
 			checkDrag();
 			if (!Char.myCharz().isFlyAndCharge)
-			{
 				checkClick();
-			}
 			if (Char.myCharz().cmdMenu != null && Char.myCharz().cmdMenu.isPointerPressInside())
-			{
 				Char.myCharz().cmdMenu.performAction();
-			}
 			if (Char.myCharz().skillPaint != null)
-			{
 				return;
-			}
 			if (GameCanvas.keyAsciiPress != 0)
 			{
 				if (mobCapcha == null)
@@ -2664,72 +2437,52 @@ public class GameScr : mScreen, IChatable
 						if (GameCanvas.keyPressed[1])
 						{
 							if (keySkill[0] != null)
-							{
-								doSelectSkill(keySkill[0], isShortcut: true);
-							}
+								doSelectSkill(keySkill[0], true);
 						}
 						else if (GameCanvas.keyPressed[2])
 						{
 							if (keySkill[1] != null)
-							{
-								doSelectSkill(keySkill[1], isShortcut: true);
-							}
+								doSelectSkill(keySkill[1], true);
 						}
 						else if (GameCanvas.keyPressed[3])
 						{
 							if (keySkill[2] != null)
-							{
-								doSelectSkill(keySkill[2], isShortcut: true);
-							}
+								doSelectSkill(keySkill[2], true);
 						}
 						else if (GameCanvas.keyPressed[4])
 						{
 							if (keySkill[3] != null)
-							{
-								doSelectSkill(keySkill[3], isShortcut: true);
-							}
+								doSelectSkill(keySkill[3], true);
 						}
 						else if (GameCanvas.keyPressed[5])
 						{
 							if (keySkill[4] != null)
-							{
-								doSelectSkill(keySkill[4], isShortcut: true);
-							}
+								doSelectSkill(keySkill[4], true);
 						}
 						else if (GameCanvas.keyPressed[6])
 						{
 							if (keySkill[5] != null)
-							{
-								doSelectSkill(keySkill[5], isShortcut: true);
-							}
+								doSelectSkill(keySkill[5], true);
 						}
 						else if (GameCanvas.keyPressed[7])
 						{
 							if (keySkill[6] != null)
-							{
-								doSelectSkill(keySkill[6], isShortcut: true);
-							}
+								doSelectSkill(keySkill[6], true);
 						}
 						else if (GameCanvas.keyPressed[8])
 						{
 							if (keySkill[7] != null)
-							{
-								doSelectSkill(keySkill[7], isShortcut: true);
-							}
+								doSelectSkill(keySkill[7], true);
 						}
 						else if (GameCanvas.keyPressed[9])
 						{
 							if (keySkill[8] != null)
-							{
-								doSelectSkill(keySkill[8], isShortcut: true);
-							}
+								doSelectSkill(keySkill[8], true);
 						}
 						else if (GameCanvas.keyPressed[0])
 						{
 							if (keySkill[9] != null)
-							{
-								doSelectSkill(keySkill[9], isShortcut: true);
-							}
+								doSelectSkill(keySkill[9], true);
 						}
 						else if (GameCanvas.keyAsciiPress == 114)
 						{
@@ -2743,23 +2496,17 @@ public class GameScr : mScreen, IChatable
 					else if (GameCanvas.keyAsciiPress == 55)
 					{
 						if (keySkill[0] != null)
-						{
-							doSelectSkill(keySkill[0], isShortcut: true);
-						}
+							doSelectSkill(keySkill[0], true);
 					}
 					else if (GameCanvas.keyAsciiPress == 56)
 					{
 						if (keySkill[1] != null)
-						{
-							doSelectSkill(keySkill[1], isShortcut: true);
-						}
+							doSelectSkill(keySkill[1], true);
 					}
 					else if (GameCanvas.keyAsciiPress == 57)
 					{
 						if (keySkill[(!Main.isPC) ? 2 : 21] != null)
-						{
-							doSelectSkill(keySkill[2], isShortcut: true);
-						}
+							doSelectSkill(keySkill[2], true);
 					}
 					else if (GameCanvas.keyAsciiPress == 48)
 					{
@@ -2777,9 +2524,7 @@ public class GameScr : mScreen, IChatable
 					myVector.removeElementAt(0);
 					string text = (char)GameCanvas.keyAsciiPress + string.Empty;
 					if (text.Equals(string.Empty) || text == null || text.Equals("\n"))
-					{
 						text = "-";
-					}
 					myVector.insertElementAt(text, myVector.size());
 					keyInput = string.Empty;
 					for (int k = 0; k < myVector.size(); k++)
@@ -2798,14 +2543,12 @@ public class GameScr : mScreen, IChatable
 					if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
 					{
 						GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
-						doFire(isFireByShortCut: false, skipWaypoint: false);
+						doFire(false, false);
 					}
 					else if (GameCanvas.keyHold[(!Main.isPC) ? 2 : 21])
 					{
 						if (!Char.myCharz().isLockMove)
-						{
 							setCharJump(0);
-						}
 					}
 					else if (GameCanvas.keyHold[1] && mobCapcha == null)
 					{
@@ -2813,9 +2556,7 @@ public class GameScr : mScreen, IChatable
 						{
 							Char.myCharz().cdir = -1;
 							if (!Char.myCharz().isLockMove)
-							{
 								setCharJump(-4);
-							}
 						}
 					}
 					else if (GameCanvas.keyHold[(!Main.isPC) ? 5 : 25] && mobCapcha == null)
@@ -2824,9 +2565,7 @@ public class GameScr : mScreen, IChatable
 						{
 							Char.myCharz().cdir = 1;
 							if (!Char.myCharz().isLockMove)
-							{
 								setCharJump(4);
-							}
 						}
 					}
 					else if (GameCanvas.keyHold[(!Main.isPC) ? 4 : 23])
@@ -2834,15 +2573,11 @@ public class GameScr : mScreen, IChatable
 						isAutoPlay = false;
 						Char.myCharz().isAttack = false;
 						if (Char.myCharz().cdir == 1)
-						{
 							Char.myCharz().cdir = -1;
-						}
 						else if (!Char.myCharz().isLockMove)
 						{
 							if (Char.myCharz().cx - Char.myCharz().cxSend != 0)
-							{
 								Service.gI().charMove();
-							}
 							Char.myCharz().statusMe = 2;
 							Char.myCharz().cvx = -Char.myCharz().cspeed;
 						}
@@ -2853,15 +2588,11 @@ public class GameScr : mScreen, IChatable
 						isAutoPlay = false;
 						Char.myCharz().isAttack = false;
 						if (Char.myCharz().cdir == -1)
-						{
 							Char.myCharz().cdir = 1;
-						}
 						else if (!Char.myCharz().isLockMove)
 						{
 							if (Char.myCharz().cx - Char.myCharz().cxSend != 0)
-							{
 								Service.gI().charMove();
-							}
 							Char.myCharz().statusMe = 2;
 							Char.myCharz().cvx = Char.myCharz().cspeed;
 						}
@@ -2875,14 +2606,12 @@ public class GameScr : mScreen, IChatable
 				if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
 				{
 					GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
-					doFire(isFireByShortCut: false, skipWaypoint: true);
+					doFire(false, true);
 				}
 				else if (GameCanvas.keyHold[(!Main.isPC) ? 2 : 21])
 				{
 					if (Char.myCharz().cx - Char.myCharz().cxSend != 0 || Char.myCharz().cy - Char.myCharz().cySend != 0)
-					{
 						Service.gI().charMove();
-					}
 					Char.myCharz().cvy = -10;
 					Char.myCharz().statusMe = 3;
 					Char.myCharz().cp1 = 0;
@@ -2892,9 +2621,7 @@ public class GameScr : mScreen, IChatable
 					if (Main.isPC)
 					{
 						if (Char.myCharz().cx - Char.myCharz().cxSend != 0 || Char.myCharz().cy - Char.myCharz().cySend != 0)
-						{
 							Service.gI().charMove();
-						}
 						Char.myCharz().cdir = -1;
 						Char.myCharz().cvy = -10;
 						Char.myCharz().cvx = -4;
@@ -2907,9 +2634,7 @@ public class GameScr : mScreen, IChatable
 					if (!Main.isPC)
 					{
 						if (Char.myCharz().cx - Char.myCharz().cxSend != 0 || Char.myCharz().cy - Char.myCharz().cySend != 0)
-						{
 							Service.gI().charMove();
-						}
 						Char.myCharz().cdir = 1;
 						Char.myCharz().cvy = -10;
 						Char.myCharz().cvx = 4;
@@ -2921,25 +2646,17 @@ public class GameScr : mScreen, IChatable
 				{
 					isAutoPlay = false;
 					if (Char.myCharz().cdir == 1)
-					{
 						Char.myCharz().cdir = -1;
-					}
 					else
-					{
 						Char.myCharz().cvx = -Char.myCharz().cspeed + Char.myCharz().cBonusSpeed;
-					}
 				}
 				else if (GameCanvas.keyHold[(!Main.isPC) ? 6 : 24])
 				{
 					isAutoPlay = false;
 					if (Char.myCharz().cdir == -1)
-					{
 						Char.myCharz().cdir = 1;
-					}
 					else
-					{
 						Char.myCharz().cvx = Char.myCharz().cspeed + Char.myCharz().cBonusSpeed;
-					}
 				}
 			}
 			else if (Char.myCharz().statusMe == 3)
@@ -2949,29 +2666,21 @@ public class GameScr : mScreen, IChatable
 				if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
 				{
 					GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
-					doFire(isFireByShortCut: false, skipWaypoint: true);
+					doFire(false, true);
 				}
 				if (GameCanvas.keyHold[(!Main.isPC) ? 4 : 23] || (GameCanvas.keyHold[1] && mobCapcha == null))
 				{
 					if (Char.myCharz().cdir == 1)
-					{
 						Char.myCharz().cdir = -1;
-					}
 					else
-					{
 						Char.myCharz().cvx = -Char.myCharz().cspeed;
-					}
 				}
 				else if (GameCanvas.keyHold[(!Main.isPC) ? 6 : 24] || (GameCanvas.keyHold[3] && mobCapcha == null))
 				{
 					if (Char.myCharz().cdir == -1)
-					{
 						Char.myCharz().cdir = 1;
-					}
 					else
-					{
 						Char.myCharz().cvx = Char.myCharz().cspeed;
-					}
 				}
 				if ((GameCanvas.keyHold[(!Main.isPC) ? 2 : 21] || ((GameCanvas.keyHold[1] || GameCanvas.keyHold[3]) && mobCapcha == null)) && Char.myCharz().canFly && Char.myCharz().cMP > 0 && Char.myCharz().cp1 < 8 && Char.myCharz().cvy > -4)
 				{
@@ -2985,15 +2694,13 @@ public class GameScr : mScreen, IChatable
 				if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
 				{
 					GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
-					doFire(isFireByShortCut: false, skipWaypoint: true);
+					doFire(false, true);
 				}
 				if (GameCanvas.keyHold[(!Main.isPC) ? 2 : 21] && Char.myCharz().cMP > 0 && Char.myCharz().canFly)
 				{
 					isAutoPlay = false;
 					if ((Char.myCharz().cx - Char.myCharz().cxSend != 0 || Char.myCharz().cy - Char.myCharz().cySend != 0) && (Res.abs(Char.myCharz().cx - Char.myCharz().cxSend) > 96 || Res.abs(Char.myCharz().cy - Char.myCharz().cySend) > 24))
-					{
 						Service.gI().charMove();
-					}
 					Char.myCharz().cvy = -10;
 					Char.myCharz().statusMe = 3;
 					Char.myCharz().cp1 = 0;
@@ -3002,9 +2709,7 @@ public class GameScr : mScreen, IChatable
 				{
 					isAutoPlay = false;
 					if (Char.myCharz().cdir == 1)
-					{
 						Char.myCharz().cdir = -1;
-					}
 					else
 					{
 						Char.myCharz().cp1++;
@@ -3021,9 +2726,7 @@ public class GameScr : mScreen, IChatable
 				{
 					isAutoPlay = false;
 					if (Char.myCharz().cdir == -1)
-					{
 						Char.myCharz().cdir = 1;
-					}
 					else
 					{
 						Char.myCharz().cp1++;
@@ -3043,7 +2746,7 @@ public class GameScr : mScreen, IChatable
 				if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
 				{
 					GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
-					doFire(isFireByShortCut: false, skipWaypoint: true);
+					doFire(false, true);
 				}
 				if (Char.myCharz().canFly && Char.myCharz().cMP > 0)
 				{
@@ -3051,9 +2754,7 @@ public class GameScr : mScreen, IChatable
 					{
 						isAutoPlay = false;
 						if ((Char.myCharz().cx - Char.myCharz().cxSend != 0 || Char.myCharz().cy - Char.myCharz().cySend != 0) && (Res.abs(Char.myCharz().cx - Char.myCharz().cxSend) > 96 || Res.abs(Char.myCharz().cy - Char.myCharz().cySend) > 24))
-						{
 							Service.gI().charMove();
-						}
 						Char.myCharz().cvy = -10;
 						Char.myCharz().statusMe = 3;
 						Char.myCharz().cp1 = 0;
@@ -3062,24 +2763,16 @@ public class GameScr : mScreen, IChatable
 					{
 						isAutoPlay = false;
 						if (Char.myCharz().cdir == 1)
-						{
 							Char.myCharz().cdir = -1;
-						}
 						else
-						{
 							Char.myCharz().cvx = -(Char.myCharz().cspeed + 1);
-						}
 					}
 					else if (GameCanvas.keyHold[(!Main.isPC) ? 6 : 24])
 					{
 						if (Char.myCharz().cdir == -1)
-						{
 							Char.myCharz().cdir = 1;
-						}
 						else
-						{
 							Char.myCharz().cvx = Char.myCharz().cspeed + 1;
-						}
 					}
 				}
 			}
@@ -3087,32 +2780,22 @@ public class GameScr : mScreen, IChatable
 			{
 				GameCanvas.debug("F15", 0);
 				if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
-				{
 					GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
-				}
 				if (GameCanvas.keyHold[(!Main.isPC) ? 4 : 23])
 				{
 					isAutoPlay = false;
 					if (Char.myCharz().cdir == 1)
-					{
 						Char.myCharz().cdir = -1;
-					}
 					else
-					{
 						Char.myCharz().cvx = -Char.myCharz().cspeed + 2;
-					}
 				}
 				else if (GameCanvas.keyHold[(!Main.isPC) ? 6 : 24])
 				{
 					isAutoPlay = false;
 					if (Char.myCharz().cdir == -1)
-					{
 						Char.myCharz().cdir = 1;
-					}
 					else
-					{
 						Char.myCharz().cvx = Char.myCharz().cspeed - 2;
-					}
 				}
 			}
 			GameCanvas.debug("F17", 0);
@@ -3141,14 +2824,10 @@ public class GameScr : mScreen, IChatable
 	private void checkDrag()
 	{
 		if (isAnalog == 1 || gamePad.disableCheckDrag())
-		{
 			return;
-		}
 		Char.myCharz().cmtoChar = true;
 		if (isUseTouch)
-		{
 			return;
-		}
 		if (GameCanvas.isPointerJustDown)
 		{
 			GameCanvas.isPointerJustDown = false;
@@ -3162,9 +2841,7 @@ public class GameScr : mScreen, IChatable
 			int num = GameCanvas.px - ptLastDownX;
 			int num2 = GameCanvas.py - ptLastDownY;
 			if (!isChangingCameraMode && (Res.abs(GameCanvas.px - ptFirstDownX) > 15 || Res.abs(GameCanvas.py - ptFirstDownY) > 15))
-			{
 				isChangingCameraMode = true;
-			}
 			ptLastDownX = GameCanvas.px;
 			ptLastDownY = GameCanvas.py;
 			ptDownTime++;
@@ -3177,42 +2854,28 @@ public class GameScr : mScreen, IChatable
 				{
 					int num3 = (24 - cmx) / 3;
 					if (num3 != 0)
-					{
 						cmx += num - num / num3;
-					}
 				}
 				if (cmx < (isVsMap() ? 24 : 0))
-				{
 					cmx = (isVsMap() ? 24 : 0);
-				}
 				if (cmx > cmxLim)
 				{
 					int num4 = (cmx - cmxLim) / 3;
 					if (num4 != 0)
-					{
 						cmx += num - num / num4;
-					}
 				}
 				if (cmx > cmxLim + ((!isVsMap()) ? 24 : 0))
-				{
 					cmx = cmxLim + ((!isVsMap()) ? 24 : 0);
-				}
 				if (cmy < 0)
 				{
 					int num5 = -cmy / 3;
 					if (num5 != 0)
-					{
 						cmy += num2 - num2 / num5;
-					}
 				}
 				if (cmy < -((!isVsMap()) ? 24 : 0))
-				{
 					cmy = -((!isVsMap()) ? 24 : 0);
-				}
 				if (cmy > cmyLim)
-				{
 					cmy = cmyLim;
-				}
 				cmtoX = cmx;
 				cmtoY = cmy;
 			}
@@ -3222,28 +2885,20 @@ public class GameScr : mScreen, IChatable
 			isPointerDowning = false;
 			isChangingCameraMode = false;
 			if (Res.abs(GameCanvas.px - ptFirstDownX) > 15 || Res.abs(GameCanvas.py - ptFirstDownY) > 15)
-			{
 				GameCanvas.isPointerJustRelease = false;
-			}
 		}
 	}
 
 	private void checkClick()
 	{
 		if (isCharging())
-		{
 			return;
-		}
 		if (popUpYesNo != null && popUpYesNo.cmdYes != null && popUpYesNo.cmdYes.isPointerPressInside())
-		{
 			popUpYesNo.cmdYes.performAction();
-		}
 		else
 		{
 			if (checkClickToCapcha())
-			{
 				return;
-			}
 			long num = mSystem.currentTimeMillis();
 			if (lastSingleClick != 0 && num - lastSingleClick > 300)
 			{
@@ -3286,33 +2941,25 @@ public class GameScr : mScreen, IChatable
 			{
 				IMapObject mapObject2 = (IMapObject)array[i].elementAt(j);
 				if (mapObject2.isInvisible())
-				{
 					continue;
-				}
 				if (mapObject2 is Mob)
 				{
 					Mob mob = (Mob)mapObject2;
 					if (mob.isMobMe && mob.Equals(Char.myCharz().mobMe))
-					{
 						continue;
-					}
 				}
 				int x = mapObject2.getX();
 				int y = mapObject2.getY();
 				int w = mapObject2.getW();
 				int h = mapObject2.getH();
 				if (!inRectangle(px, py, x - w / 2 - num2, y - h - num2, w + num2 * 2, h + num2 * 2))
-				{
 					continue;
-				}
 				if (mapObject == null)
 				{
 					mapObject = mapObject2;
 					num = Res.abs(px - x) + Res.abs(py - y);
 					if (i == 1)
-					{
 						return mapObject;
-					}
 				}
 				else
 				{
@@ -3361,9 +3008,7 @@ public class GameScr : mScreen, IChatable
 				return false;
 			}
 			if (Char.myCharz().skillPaint != null || Char.myCharz().arr != null || Char.myCharz().dart != null || Char.myCharz().skillInfoPaint() != null)
-			{
 				return false;
-			}
 			Char.myCharz().focusManualTo(mapObject);
 			mapObject.stopMoving();
 			return false;
@@ -3377,22 +3022,16 @@ public class GameScr : mScreen, IChatable
 		int num2 = GameCanvas.py + lastClickCMY;
 		int cy = Char.myCharz().cy;
 		if (isLockKey)
-		{
 			return;
-		}
 		IMapObject mapObject = findClickToItem(num, num2);
 		if (mapObject != null)
 		{
 			if (mapObject is Mob && !isMeCanAttackMob((Mob)mapObject))
-			{
 				checkClickMoveTo(num, num2);
-			}
 			else
 			{
 				if (checkClickToBotton(mapObject) || (!mapObject.Equals(Char.myCharz().npcFocus) && mobCapcha != null))
-				{
 					return;
-				}
 				if (Char.myCharz().isAttacPlayerStatus() && Char.myCharz().charFocus != null && !mapObject.Equals(Char.myCharz().charFocus) && !mapObject.Equals(Char.myCharz().charFocus.mobMe) && mapObject is Char)
 				{
 					Char @char = (Char)mapObject;
@@ -3403,13 +3042,9 @@ public class GameScr : mScreen, IChatable
 					}
 				}
 				if (TileMap.mapID == 51 && mapObject.Equals(Char.myCharz().npcFocus))
-				{
 					checkClickMoveTo(num, num2);
-				}
 				else
-				{
 					doDoubleClickToObj(mapObject);
-				}
 			}
 		}
 		else if (!checkClickToPopup(num, num2) && !checkClipTopChatPopUp(num, num2) && !Main.isPC)
@@ -3421,9 +3056,7 @@ public class GameScr : mScreen, IChatable
 	private bool checkClickToBotton(IMapObject Object)
 	{
 		if (Object == null)
-		{
 			return false;
-		}
 		int y = Object.getY();
 		int num = Char.myCharz().cy;
 		if (y < num)
@@ -3453,7 +3086,7 @@ public class GameScr : mScreen, IChatable
 			Char.myCharz().cvx = (Char.myCharz().cvy = 0);
 			obj.stopMoving();
 			auto = 10;
-			doFire(isFireByShortCut: false, skipWaypoint: true);
+			doFire(false, true);
 			clickToX = obj.getX();
 			clickToY = obj.getY();
 			clickOnTileTop = false;
@@ -3469,24 +3102,18 @@ public class GameScr : mScreen, IChatable
 		int xClick = GameCanvas.px + lastClickCMX;
 		int yClick = GameCanvas.py + lastClickCMY;
 		if (!isLockKey && !checkClickToPopup(xClick, yClick) && !checkClipTopChatPopUp(xClick, yClick))
-		{
 			checkClickMoveTo(xClick, yClick);
-		}
 	}
 
 	private bool checkClipTopChatPopUp(int xClick, int yClick)
 	{
 		if (Equals(info2) && gI().popUpYesNo != null)
-		{
 			return false;
-		}
 		if (info2.info.info != null && info2.info.info.charInfo != null)
 		{
 			int num = 0;
 			int num2 = 0;
-			num = Res.abs(info2.cmx) + info2.info.X - 40;
-			num2 = Res.abs(info2.cmy) + info2.info.Y;
-			if (inRectangle(xClick - cmx, yClick - cmy, num, num2, 200, info2.info.H))
+			if (inRectangle(x: Res.abs(info2.cmx) + info2.info.X - 40, y: Res.abs(info2.cmy) + info2.info.Y, xClick: xClick - cmx, yClick: yClick - cmy, w: 200, h: info2.info.H))
 			{
 				info2.doClick(10);
 				return true;
@@ -3503,9 +3130,7 @@ public class GameScr : mScreen, IChatable
 			if (inRectangle(xClick, yClick, popUp.cx, popUp.cy, popUp.cw, popUp.ch))
 			{
 				if (popUp.cy <= 24 && TileMap.isInAirMap() && Char.myCharz().cTypePk != 0)
-				{
 					return false;
-				}
 				if (popUp.isPaint)
 				{
 					popUp.doClick(10);
@@ -3519,9 +3144,7 @@ public class GameScr : mScreen, IChatable
 	private void checkClickMoveTo(int xClick, int yClick)
 	{
 		if (gamePad.disableClickMove())
-		{
 			return;
-		}
 		Char.myCharz().cancelAttack();
 		if (xClick < TileMap.pxw && xClick > TileMap.pxw - 32)
 		{
@@ -3549,9 +3172,7 @@ public class GameScr : mScreen, IChatable
 		Char.myCharz().delayFall = 0;
 		int num = ((!Char.myCharz().canFly || Char.myCharz().cMP <= 0) ? 1000 : 0);
 		if (clickToY > Char.myCharz().cy && Res.abs(clickToX - Char.myCharz().cx) < 12)
-		{
 			return;
-		}
 		for (int i = 0; i < 60 + num && clickToY + i < TileMap.pxh - 24; i += 24)
 		{
 			if (TileMap.tileTypeAt(clickToX, clickToY + i, 2))
@@ -3575,15 +3196,11 @@ public class GameScr : mScreen, IChatable
 		clickMovingP1 = ((!clickOnTileTop) ? 30 : ((yClick >= clickToY) ? clickToY : yClick));
 		Char.myCharz().delayFall = 0;
 		if (!clickOnTileTop && clickToY < Char.myCharz().cy - 50)
-		{
 			Char.myCharz().delayFall = 20;
-		}
 		clickMovingTimeOut = 30;
 		auto = 0;
 		if (Char.myCharz().holder)
-		{
 			Char.myCharz().removeHoleEff();
-		}
 		Char.myCharz().currentMovePoint = new MovePoint(clickToX, clickToY);
 		Char.myCharz().cdir = ((Char.myCharz().cx - Char.myCharz().currentMovePoint.xEnd <= 0) ? 1 : (-1));
 		Char.myCharz().endMovePointCommand = null;
@@ -3619,30 +3236,22 @@ public class GameScr : mScreen, IChatable
 		if (GameCanvas.gameTick % 5 == 0 && auto > 0 && Char.myCharz().currentMovePoint == null)
 		{
 			if (Char.myCharz().myskill != null && (Char.myCharz().myskill.template.isUseAlone() || Char.myCharz().myskill.paintCanNotUseSkill))
-			{
 				return;
-			}
 			if ((Char.myCharz().mobFocus != null && Char.myCharz().mobFocus.status != 1 && Char.myCharz().mobFocus.status != 0 && Char.myCharz().charFocus == null) || (Char.myCharz().charFocus != null && Char.myCharz().isMeCanAttackOtherPlayer(Char.myCharz().charFocus)))
 			{
 				if (Char.myCharz().myskill.paintCanNotUseSkill)
-				{
 					return;
-				}
-				doFire(isFireByShortCut: false, skipWaypoint: true);
+				doFire(false, true);
 			}
 		}
 		if (auto > 1)
-		{
 			auto--;
-		}
 	}
 
 	public void doUseHP()
 	{
 		if (Char.myCharz().stone || Char.myCharz().blindEff || Char.myCharz().holdEffID > 0)
-		{
 			return;
-		}
 		long num = mSystem.currentTimeMillis();
 		if (num - lastUsePotion >= 10000)
 		{
@@ -3677,10 +3286,7 @@ public class GameScr : mScreen, IChatable
 		isUseFreez = true;
 		isMeCallRongThan = true;
 		if (isMe)
-		{
-			Effect me = new Effect(20, Char.myCharz().cx, Char.myCharz().cy - 77, 2, 8, 1);
-			EffecMn.addEff(me);
-		}
+			EffecMn.addEff(new Effect(20, Char.myCharz().cx, Char.myCharz().cy - 77, 2, 8, 1));
 	}
 
 	public void hideRongThanEff()
@@ -3700,8 +3306,7 @@ public class GameScr : mScreen, IChatable
 	{
 		Res.outz("VE RONG THAN O VI TRI x= " + x + " y=" + y);
 		doiMauTroi();
-		Effect me = new Effect((!isRongNamek) ? 17 : 25, x, y - 77, 2, -1, 1);
-		EffecMn.addEff(me);
+		EffecMn.addEff(new Effect((!isRongNamek) ? 17 : 25, x, y - 77, 2, -1, 1));
 	}
 
 	public void hideRongThan()
@@ -3718,26 +3323,18 @@ public class GameScr : mScreen, IChatable
 	private void autoPlay()
 	{
 		if (timeSkill > 0)
-		{
 			timeSkill--;
-		}
 		if (!canAutoPlay || isChangeZone || Char.myCharz().statusMe == 14 || Char.myCharz().statusMe == 5 || Char.myCharz().isCharge || Char.myCharz().isFlyAndCharge || Char.myCharz().isUseChargeSkill())
-		{
 			return;
-		}
 		bool flag = false;
 		for (int i = 0; i < vMob.size(); i++)
 		{
 			Mob mob = (Mob)vMob.elementAt(i);
 			if (mob.status != 0 && mob.status != 1)
-			{
 				flag = true;
-			}
 		}
 		if (!flag)
-		{
 			return;
-		}
 		bool flag2 = false;
 		for (int j = 0; j < Char.myCharz().arrItemBag.Length; j++)
 		{
@@ -3749,13 +3346,9 @@ public class GameScr : mScreen, IChatable
 			}
 		}
 		if (!flag2 && GameCanvas.gameTick % 150 == 0)
-		{
 			Service.gI().requestPean();
-		}
 		if (Char.myCharz().cHP <= Char.myCharz().cHPFull * 20 / 100 || Char.myCharz().cMP <= Char.myCharz().cMPFull * 20 / 100)
-		{
 			doUseHP();
-		}
 		if (Char.myCharz().mobFocus == null || (Char.myCharz().mobFocus != null && Char.myCharz().mobFocus.isMobMe))
 		{
 			for (int k = 0; k < vMob.size(); k++)
@@ -3777,26 +3370,20 @@ public class GameScr : mScreen, IChatable
 			Char.myCharz().mobFocus = null;
 		}
 		if (Char.myCharz().mobFocus == null || timeSkill != 0 || (Char.myCharz().skillInfoPaint() != null && Char.myCharz().indexSkill < Char.myCharz().skillInfoPaint().Length && Char.myCharz().dart != null && Char.myCharz().arr != null))
-		{
 			return;
-		}
 		Skill skill = null;
 		if (GameCanvas.isTouch)
 		{
 			for (int l = 0; l < onScreenSkill.Length; l++)
 			{
 				if (onScreenSkill[l] == null || onScreenSkill[l].paintCanNotUseSkill || onScreenSkill[l].template.id == 10 || onScreenSkill[l].template.id == 11 || onScreenSkill[l].template.id == 14 || onScreenSkill[l].template.id == 23 || onScreenSkill[l].template.id == 7 || Char.myCharz().skillInfoPaint() != null)
-				{
 					continue;
-				}
 				int num = 0;
 				num = ((onScreenSkill[l].template.manaUseType == 2) ? 1 : ((onScreenSkill[l].template.manaUseType == 1) ? (onScreenSkill[l].manaUse * Char.myCharz().cMPFull / 100) : onScreenSkill[l].manaUse));
 				if (Char.myCharz().cMP >= num)
 				{
 					if (skill == null)
-					{
 						skill = onScreenSkill[l];
-					}
 					else if (skill.coolDown < onScreenSkill[l].coolDown)
 					{
 						skill = onScreenSkill[l];
@@ -3805,7 +3392,7 @@ public class GameScr : mScreen, IChatable
 			}
 			if (skill != null)
 			{
-				doSelectSkill(skill, isShortcut: true);
+				doSelectSkill(skill, true);
 				doDoubleClickToObj(Char.myCharz().mobFocus);
 			}
 			return;
@@ -3813,17 +3400,13 @@ public class GameScr : mScreen, IChatable
 		for (int m = 0; m < keySkill.Length; m++)
 		{
 			if (keySkill[m] == null || keySkill[m].paintCanNotUseSkill || keySkill[m].template.id == 10 || keySkill[m].template.id == 11 || keySkill[m].template.id == 14 || keySkill[m].template.id == 23 || keySkill[m].template.id == 7 || Char.myCharz().skillInfoPaint() != null)
-			{
 				continue;
-			}
 			int num2 = 0;
 			num2 = ((keySkill[m].template.manaUseType == 2) ? 1 : ((keySkill[m].template.manaUseType == 1) ? (keySkill[m].manaUse * Char.myCharz().cMPFull / 100) : keySkill[m].manaUse));
 			if (Char.myCharz().cMP >= num2)
 			{
 				if (skill == null)
-				{
 					skill = keySkill[m];
-				}
 				else if (skill.coolDown < keySkill[m].coolDown)
 				{
 					skill = keySkill[m];
@@ -3832,7 +3415,7 @@ public class GameScr : mScreen, IChatable
 		}
 		if (skill != null)
 		{
-			doSelectSkill(skill, isShortcut: true);
+			doSelectSkill(skill, true);
 			doDoubleClickToObj(Char.myCharz().mobFocus);
 		}
 	}
@@ -3843,9 +3426,7 @@ public class GameScr : mScreen, IChatable
 		Waypoint waypoint = Char.myCharz().isInEnterOfflinePoint();
 		Waypoint waypoint2 = Char.myCharz().isInEnterOnlinePoint();
 		if (!skipWaypoint && waypoint != null && (Char.myCharz().mobFocus == null || (Char.myCharz().mobFocus != null && Char.myCharz().mobFocus.templateId == 0)))
-		{
 			waypoint.popup.command.performAction();
-		}
 		else if (!skipWaypoint && waypoint2 != null && (Char.myCharz().mobFocus == null || (Char.myCharz().mobFocus != null && Char.myCharz().mobFocus.templateId == 0)))
 		{
 			waypoint2.popup.command.performAction();
@@ -3853,9 +3434,7 @@ public class GameScr : mScreen, IChatable
 		else
 		{
 			if ((TileMap.mapID == 51 && Char.myCharz().npcFocus != null) || Char.myCharz().statusMe == 14)
-			{
 				return;
-			}
 			Char.myCharz().cvx = (Char.myCharz().cvy = 0);
 			if (Char.myCharz().isSelectingSkillUseAlone() && Char.myCharz().focusToAttack())
 			{
@@ -3875,25 +3454,19 @@ public class GameScr : mScreen, IChatable
 						Char.myCharz().sendUseChargeSkill();
 					}
 					else
-					{
 						Char.myCharz().stopUseChargeSkill();
-					}
 				}
 				else
 				{
 					bool flag = TileMap.tileTypeAt(Char.myCharz().cx, Char.myCharz().cy, 2);
 					Char.myCharz().setSkillPaint(sks[Char.myCharz().myskill.skillId], (!flag) ? 1 : 0);
 					if (flag)
-					{
 						Char.myCharz().delayFall = 20;
-					}
 					Char.myCharz().currentFireByShortcut = isFireByShortCut;
 				}
 			}
 			if (Char.myCharz().isSelectingSkillBuffToPlayer())
-			{
 				auto = 0;
-			}
 		}
 	}
 
@@ -3914,17 +3487,11 @@ public class GameScr : mScreen, IChatable
 	private void pickItem()
 	{
 		if (Char.myCharz().itemFocus == null)
-		{
 			return;
-		}
 		if (Char.myCharz().cx < Char.myCharz().itemFocus.x)
-		{
 			Char.myCharz().cdir = 1;
-		}
 		else
-		{
 			Char.myCharz().cdir = -1;
-		}
 		int num = Math.abs(Char.myCharz().cx - Char.myCharz().itemFocus.x);
 		int num2 = Math.abs(Char.myCharz().cy - Char.myCharz().itemFocus.y);
 		if (num <= 40 && num2 < 40)
@@ -3932,13 +3499,9 @@ public class GameScr : mScreen, IChatable
 			GameCanvas.clearKeyHold();
 			GameCanvas.clearKeyPressed();
 			if (Char.myCharz().itemFocus.template.id != 673)
-			{
 				Service.gI().pickItem(Char.myCharz().itemFocus.itemMapID);
-			}
 			else
-			{
 				askToPick();
-			}
 		}
 		else
 		{
@@ -3952,18 +3515,14 @@ public class GameScr : mScreen, IChatable
 	public bool isCharging()
 	{
 		if (Char.myCharz().isFlyAndCharge || Char.myCharz().isUseSkillAfterCharge || Char.myCharz().isStandAndCharge || Char.myCharz().isWaitMonkey || isSuperPower || Char.myCharz().isFreez)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public void doSelectSkill(Skill skill, bool isShortcut)
 	{
 		if (Char.myCharz().isCreateDark || isCharging() || Char.myCharz().taskMaint.taskId <= 1)
-		{
 			return;
-		}
 		Char.myCharz().myskill = skill;
 		if (lastSkill != skill && lastSkill != null)
 		{
@@ -3984,9 +3543,7 @@ public class GameScr : mScreen, IChatable
 		}
 		selectedIndexSkill = -1;
 		if (skill == null)
-		{
 			return;
-		}
 		Res.outz("only select skill");
 		if (lastSkill != skill)
 		{
@@ -3998,7 +3555,7 @@ public class GameScr : mScreen, IChatable
 		{
 			if (Char.myCharz().focusToAttack())
 			{
-				doFire(isShortcut, skipWaypoint: true);
+				doFire(isShortcut, true);
 				doSeleckSkillFlag = true;
 			}
 			lastSkill = skill;
@@ -4008,9 +3565,7 @@ public class GameScr : mScreen, IChatable
 	public void doUseSkill(Skill skill, bool isShortcut)
 	{
 		if ((TileMap.mapID == 112 || TileMap.mapID == 113) && Char.myCharz().cTypePk == 0)
-		{
 			return;
-		}
 		if (Char.myCharz().isSelectingSkillUseAlone())
 		{
 			Res.outz("HERE");
@@ -4024,7 +3579,7 @@ public class GameScr : mScreen, IChatable
 			saveRMSCurrentSkill(skill.template.id);
 			resetButton();
 			Char.myCharz().myskill = skill;
-			doFire(isShortcut, skipWaypoint: true);
+			doFire(isShortcut, true);
 		}
 	}
 
@@ -4069,29 +3624,18 @@ public class GameScr : mScreen, IChatable
 	public void updateKeyTouchCapcha()
 	{
 		if (isNotPaintTouchControl())
-		{
 			return;
-		}
 		for (int i = 0; i < strCapcha.Length; i++)
 		{
 			keyCapcha[i] = -1;
 			if (!GameCanvas.isTouchControl)
-			{
 				continue;
-			}
 			int num = (GameCanvas.w - strCapcha.Length * disXC) / 2;
-			int w = strCapcha.Length * disXC;
-			int y = GameCanvas.h - 40;
-			int h = disXC;
-			if (!GameCanvas.isPointerHoldIn(num, y, w, h))
-			{
+			if (!GameCanvas.isPointerHoldIn(w: strCapcha.Length * disXC, x: num, y: GameCanvas.h - 40, h: disXC))
 				continue;
-			}
 			int num2 = (GameCanvas.px - num) / disXC;
 			if (i == num2)
-			{
 				keyCapcha[i] = 1;
-			}
 			if (GameCanvas.isPointerClick && GameCanvas.isPointerJustRelease && i == num2)
 			{
 				char[] array = keyInput.ToCharArray();
@@ -4115,17 +3659,9 @@ public class GameScr : mScreen, IChatable
 	public bool checkClickToCapcha()
 	{
 		if (mobCapcha == null)
-		{
 			return false;
-		}
-		int x = (GameCanvas.w - 5 * disXC) / 2;
-		int w = 5 * disXC;
-		int y = GameCanvas.h - 40;
-		int h = disXC;
-		if (GameCanvas.isPointerHoldIn(x, y, w, h))
-		{
+		if (GameCanvas.isPointerHoldIn((GameCanvas.w - 5 * disXC) / 2, w: 5 * disXC, y: GameCanvas.h - 40, h: disXC))
 			return true;
-		}
 		return false;
 	}
 
@@ -4134,23 +3670,17 @@ public class GameScr : mScreen, IChatable
 		if (GameCanvas.isMouseFocus(xC, yC, 34, 34))
 		{
 			if (!TileMap.isOfflineMap())
-			{
 				mScreen.keyMouse = 15;
-			}
 		}
 		else if (GameCanvas.isMouseFocus(xHP, yHP, 40, 40))
 		{
 			if (Char.myCharz().statusMe != 14)
-			{
 				mScreen.keyMouse = 10;
-			}
 		}
 		else if (GameCanvas.isMouseFocus(xF, yF, 40, 40))
 		{
 			if (Char.myCharz().statusMe != 14)
-			{
 				mScreen.keyMouse = 5;
-			}
 		}
 		else if (cmdMenu != null && GameCanvas.isMouseFocus(cmdMenu.x, cmdMenu.y, cmdMenu.w / 2, cmdMenu.h))
 		{
@@ -4165,18 +3695,14 @@ public class GameScr : mScreen, IChatable
 	private void updateKeyTouchControl()
 	{
 		if (isNotPaintTouchControl())
-		{
 			return;
-		}
 		mScreen.keyTouch = -1;
 		if (GameCanvas.isTouchControl)
 		{
 			if (GameCanvas.isPointerHoldIn(0, 0, 60, 50) && GameCanvas.isPointerClick && GameCanvas.isPointerJustRelease)
 			{
 				if (Char.myCharz().cmdMenu != null)
-				{
 					Char.myCharz().cmdMenu.performAction();
-				}
 				Char.myCharz().currentMovePoint = null;
 				GameCanvas.clearAllPointerEvent();
 				flareFindFocus = true;
@@ -4184,9 +3710,7 @@ public class GameScr : mScreen, IChatable
 				return;
 			}
 			if (Main.isPC)
-			{
 				checkMouseChat();
-			}
 			if (!TileMap.isOfflineMap() && GameCanvas.isPointerHoldIn(xC, yC, 34, 34))
 			{
 				mScreen.keyTouch = 15;
@@ -4227,45 +3751,33 @@ public class GameScr : mScreen, IChatable
 			}
 		}
 		if (mobCapcha != null)
-		{
 			updateKeyTouchCapcha();
-		}
 		else if (isHaveSelectSkill)
 		{
 			if (isCharging())
-			{
 				return;
-			}
 			keyTouchSkill = -1;
 			bool flag = false;
 			if (onScreenSkill.Length > 5 && (GameCanvas.isPointerHoldIn(xSkill + xS[0] - wSkill / 2 + 12, yS[0] - wSkill / 2 + 12, 5 * wSkill, wSkill) || GameCanvas.isPointerHoldIn(xSkill + xS[5] - wSkill / 2 + 12, yS[5] - wSkill / 2 + 12, 5 * wSkill, wSkill)))
-			{
 				flag = true;
-			}
 			if (flag || GameCanvas.isPointerHoldIn(xSkill + xS[0] - wSkill / 2 + 12, yS[0] - wSkill / 2 + 12, 5 * wSkill, wSkill) || (!GameCanvas.isTouchControl && GameCanvas.isPointerHoldIn(xSkill + xS[0] - wSkill / 2 + 12, yS[0] - wSkill / 2 + 12, wSkill, onScreenSkill.Length * wSkill)))
 			{
 				GameCanvas.isPointerJustDown = false;
 				isPointerDowning = false;
 				int num = (GameCanvas.pxLast - (xSkill + xS[0] - wSkill / 2 + 12)) / wSkill;
 				if (flag && GameCanvas.pyLast < yS[0])
-				{
 					num += 5;
-				}
 				keyTouchSkill = num;
 				if (GameCanvas.isPointerClick && GameCanvas.isPointerJustRelease)
 				{
 					GameCanvas.isPointerClick = (GameCanvas.isPointerJustDown = (GameCanvas.isPointerJustRelease = false));
 					selectedIndexSkill = num;
 					if (indexSelect < 0)
-					{
 						indexSelect = 0;
-					}
 					if (!Main.isPC)
 					{
 						if (selectedIndexSkill > onScreenSkill.Length - 1)
-						{
 							selectedIndexSkill = onScreenSkill.Length - 1;
-						}
 					}
 					else if (selectedIndexSkill > keySkill.Length - 1)
 					{
@@ -4274,18 +3786,14 @@ public class GameScr : mScreen, IChatable
 					Skill skill = null;
 					skill = (Main.isPC ? keySkill[selectedIndexSkill] : onScreenSkill[selectedIndexSkill]);
 					if (skill != null)
-					{
-						doSelectSkill(skill, isShortcut: true);
-					}
+						doSelectSkill(skill, true);
 				}
 			}
 		}
 		if (GameCanvas.isPointerJustRelease)
 		{
 			if (GameCanvas.keyHold[1] || GameCanvas.keyHold[(!Main.isPC) ? 2 : 21] || GameCanvas.keyHold[3] || GameCanvas.keyHold[(!Main.isPC) ? 4 : 23] || GameCanvas.keyHold[(!Main.isPC) ? 6 : 24])
-			{
 				GameCanvas.isPointerJustRelease = false;
-			}
 			GameCanvas.keyHold[1] = false;
 			GameCanvas.keyHold[(!Main.isPC) ? 2 : 21] = false;
 			GameCanvas.keyHold[3] = false;
@@ -4304,9 +3812,7 @@ public class GameScr : mScreen, IChatable
 	public void setCharJump(int cvx)
 	{
 		if (Char.myCharz().cx - Char.myCharz().cxSend != 0 || Char.myCharz().cy - Char.myCharz().cySend != 0)
-		{
 			Service.gI().charMove();
-		}
 		Char.myCharz().cvy = -10;
 		Char.myCharz().cvx = cvx;
 		Char.myCharz().statusMe = 3;
@@ -4318,25 +3824,15 @@ public class GameScr : mScreen, IChatable
 		if (isstarOpen)
 		{
 			if (moveUp > -3)
-			{
 				moveUp -= 4;
-			}
 			else
-			{
 				moveUp = -2;
-			}
 			if (moveDow < GameCanvas.h + 3)
-			{
 				moveDow += 4;
-			}
 			else
-			{
 				moveDow = GameCanvas.h + 2;
-			}
 			if (moveUp <= -2 && moveDow >= GameCanvas.h + 2)
-			{
 				isstarOpen = false;
-			}
 		}
 	}
 
@@ -4351,9 +3847,7 @@ public class GameScr : mScreen, IChatable
 	public void updateXoSo()
 	{
 		if (tShow == 0)
-		{
 			return;
-		}
 		currXS = mSystem.currentTimeMillis();
 		if (currXS - lastXS > 1000)
 		{
@@ -4390,9 +3884,7 @@ public class GameScr : mScreen, IChatable
 			if (tMove[moveIndex] == 15)
 			{
 				if (randomNumber[moveIndex] == winnumber[moveIndex] - 1)
-				{
 					delayMove[moveIndex] = 10;
-				}
 				if (randomNumber[moveIndex] == winnumber[moveIndex])
 				{
 					tMove[moveIndex] = -1;
@@ -4407,18 +3899,14 @@ public class GameScr : mScreen, IChatable
 		for (int j = 0; j < winnumber.Length; j++)
 		{
 			if (tMove[j] == -1)
-			{
 				continue;
-			}
 			moveCount[j]++;
 			if (moveCount[j] > tMove[j] + delayMove[j])
 			{
 				moveCount[j] = 0;
 				randomNumber[j]++;
 				if (randomNumber[j] >= 10)
-				{
 					randomNumber[j] = 0;
-				}
 			}
 		}
 	}
@@ -4440,31 +3928,21 @@ public class GameScr : mScreen, IChatable
 			GameCanvas.keyPressed[17] = false;
 			Char.myCharz().searchItem();
 			if (Char.myCharz().itemFocus != null)
-			{
 				pickItem();
-			}
 		}
 		if (GameCanvas.gameTick % 100 == 0 && TileMap.mapID == 137)
-		{
 			shock_scr = 30;
-		}
 		if (isAutoPlay && GameCanvas.gameTick % 20 == 0)
-		{
 			autoPlay();
-		}
 		updateXoSo();
 		mSystem.checkAdComlete();
 		SmallImage.update();
 		try
 		{
 			if (LoginScr.isContinueToLogin)
-			{
 				LoginScr.isContinueToLogin = false;
-			}
 			if (tickMove == 1)
-			{
 				lastTick = mSystem.currentTimeMillis();
-			}
 			if (tickMove == 100)
 			{
 				tickMove = 0;
@@ -4476,9 +3954,7 @@ public class GameScr : mScreen, IChatable
 			{
 				lockTick--;
 				if (lockTick == 0)
-				{
 					Controller.isStopReadMessage = false;
-				}
 			}
 			checkCharFocus();
 			GameCanvas.debug("E1", 0);
@@ -4496,12 +3972,9 @@ public class GameScr : mScreen, IChatable
 			}
 			Char.myCharz().update();
 			if (Char.myCharz().statusMe == 1)
-			{
-			}
+				;
 			if (popUpYesNo != null)
-			{
 				popUpYesNo.update();
-			}
 			EffecMn.update();
 			GameCanvas.debug("E5x", 0);
 			for (int i = 0; i < vMob.size(); i++)
@@ -4516,8 +3989,7 @@ public class GameScr : mScreen, IChatable
 			nSkill = onScreenSkill.Length;
 			for (int i = onScreenSkill.Length - 1; i >= 0; i--)
 			{
-				Skill skill = onScreenSkill[i];
-				if (skill != null)
+				if (onScreenSkill[i] != null)
 				{
 					nSkill = i + 1;
 					break;
@@ -4525,9 +3997,7 @@ public class GameScr : mScreen, IChatable
 				nSkill--;
 			}
 			if (nSkill == 1 && GameCanvas.isTouch)
-			{
 				xSkill = -200;
-			}
 			else if (xSkill < 0)
 			{
 				setSkillBarPosition();
@@ -4556,42 +4026,33 @@ public class GameScr : mScreen, IChatable
 			}
 			for (int i = 0; i < Effect2.vEffect2.size(); i++)
 			{
-				Effect2 effect = (Effect2)Effect2.vEffect2.elementAt(i);
-				effect.update();
+				((Effect2)Effect2.vEffect2.elementAt(i)).update();
 			}
 			for (int i = 0; i < Effect2.vEffect2Outside.size(); i++)
 			{
-				Effect2 effect2 = (Effect2)Effect2.vEffect2Outside.elementAt(i);
-				effect2.update();
+				((Effect2)Effect2.vEffect2Outside.elementAt(i)).update();
 			}
 			for (int i = 0; i < Effect2.vAnimateEffect.size(); i++)
 			{
-				Effect2 effect3 = (Effect2)Effect2.vAnimateEffect.elementAt(i);
-				effect3.update();
+				((Effect2)Effect2.vAnimateEffect.elementAt(i)).update();
 			}
 			for (int i = 0; i < Effect2.vEffectFeet.size(); i++)
 			{
-				Effect2 effect4 = (Effect2)Effect2.vEffectFeet.elementAt(i);
-				effect4.update();
+				((Effect2)Effect2.vEffectFeet.elementAt(i)).update();
 			}
 			for (int i = 0; i < Effect2.vEffect3.size(); i++)
 			{
-				Effect2 effect5 = (Effect2)Effect2.vEffect3.elementAt(i);
-				effect5.update();
+				((Effect2)Effect2.vEffect3.elementAt(i)).update();
 			}
 			BackgroudEffect.updateEff();
 			info1.update();
 			info2.update();
 			GameCanvas.debug("E15", 0);
 			if (currentCharViewInfo != null && !currentCharViewInfo.Equals(Char.myCharz()))
-			{
 				currentCharViewInfo.update();
-			}
 			runArrow++;
 			if (runArrow > 3)
-			{
 				runArrow = 0;
-			}
 			if (isInjureHp)
 			{
 				twHp++;
@@ -4605,9 +4066,7 @@ public class GameScr : mScreen, IChatable
 			{
 				int num = dHP - Char.myCharz().cHP >> 1;
 				if (num < 1)
-				{
 					num = 1;
-				}
 				dHP -= num;
 			}
 			else
@@ -4627,9 +4086,7 @@ public class GameScr : mScreen, IChatable
 			{
 				int num2 = dMP - Char.myCharz().cMP >> 1;
 				if (num2 < 1)
-				{
 					num2 = 1;
-				}
 				dMP -= num2;
 			}
 			else
@@ -4637,9 +4094,7 @@ public class GameScr : mScreen, IChatable
 				dMP = Char.myCharz().cMP;
 			}
 			if (tMenuDelay > 0)
-			{
 				tMenuDelay--;
-			}
 			if (isRongThanMenu())
 			{
 				int num3 = 100;
@@ -4661,11 +4116,8 @@ public class GameScr : mScreen, IChatable
 		catch (Exception)
 		{
 		}
-		int num4 = GameCanvas.gameTick % 4000;
-		if (num4 == 1000)
-		{
+		if (GameCanvas.gameTick % 4000 == 1000)
 			checkRemoveImage();
-		}
 		EffectManager.update();
 	}
 
@@ -4676,9 +4128,7 @@ public class GameScr : mScreen, IChatable
 	public bool isRongThanMenu()
 	{
 		if (isMeCallRongThan)
-		{
 			return true;
-		}
 		return false;
 	}
 
@@ -4688,22 +4138,18 @@ public class GameScr : mScreen, IChatable
 		{
 			Effect2 effect = (Effect2)Effect2.vEffect2.elementAt(i);
 			if (!(effect is ChatPopup))
-			{
 				effect.paint(g);
-			}
 		}
 		if (!GameCanvas.lowGraphic)
 		{
 			for (int i = 0; i < Effect2.vAnimateEffect.size(); i++)
 			{
-				Effect2 effect2 = (Effect2)Effect2.vAnimateEffect.elementAt(i);
-				effect2.paint(g);
+				((Effect2)Effect2.vAnimateEffect.elementAt(i)).paint(g);
 			}
 		}
 		for (int i = 0; i < Effect2.vEffect2Outside.size(); i++)
 		{
-			Effect2 effect3 = (Effect2)Effect2.vEffect2Outside.elementAt(i);
-			effect3.paint(g);
+			((Effect2)Effect2.vEffect2Outside.elementAt(i)).paint(g);
 		}
 	}
 
@@ -4713,11 +4159,9 @@ public class GameScr : mScreen, IChatable
 		{
 			BgItem bgItem = (BgItem)TileMap.vCurrItem.elementAt(i);
 			if (bgItem.idImage != -1 && bgItem.layer == layer)
-			{
 				bgItem.paint(g);
-			}
 		}
-		if (TileMap.mapID == 48 && layer == 3 && !GameCanvas.lowGraphic && GameCanvas.bgW != null && GameCanvas.bgW[0] != 0)
+		if (TileMap.mapID == 48 && layer == 3 && GameCanvas.bgW != null && GameCanvas.bgW[0] != 0)
 		{
 			for (int j = 0; j < TileMap.pxw / GameCanvas.bgW[0] + 1; j++)
 			{
@@ -4729,9 +4173,7 @@ public class GameScr : mScreen, IChatable
 	public void paintBlackSky(mGraphics g)
 	{
 		if (!GameCanvas.lowGraphic)
-		{
 			g.fillTrans(imgTrans, 0, 0, GameCanvas.w, GameCanvas.h);
-		}
 	}
 
 	public void paintCapcha(mGraphics g)
@@ -4739,9 +4181,7 @@ public class GameScr : mScreen, IChatable
 		MobCapcha.paint(g, Char.myCharz().cx, Char.myCharz().cy);
 		g.translate(-g.getTranslateX(), -g.getTranslateY());
 		if (GameCanvas.menu.showMenu || GameCanvas.panel.isShow || ChatPopup.currChatPopup != null || !GameCanvas.isTouch)
-		{
 			return;
-		}
 		for (int i = 0; i < strCapcha.Length; i++)
 		{
 			int x = (GameCanvas.w - strCapcha.Length * disXC) / 2 + i * disXC + disXC / 2;
@@ -4762,9 +4202,7 @@ public class GameScr : mScreen, IChatable
 	{
 		countEff = 0;
 		if (!isPaint)
-		{
 			return;
-		}
 		GameCanvas.debug("PA1", 1);
 		if (isFreez || (isUseFreez && ChatPopup.currChatPopup == null))
 		{
@@ -4774,21 +4212,15 @@ public class GameScr : mScreen, IChatable
 				g.setColor(16777215);
 				g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
 				if (dem <= 50)
-				{
 					return;
-				}
 				if (isUseFreez)
 				{
 					isUseFreez = false;
 					dem = 0;
 					if (activeRongThan)
-					{
 						callRongThan(xR, yR);
-					}
 					else
-					{
 						hideRongThan();
-					}
 				}
 				paintInfoBar(g);
 				g.translate(-cmx, -cmy);
@@ -4803,9 +4235,7 @@ public class GameScr : mScreen, IChatable
 		GameCanvas.debug("PA2", 1);
 		GameCanvas.paintBGGameScr(g);
 		if ((isRongThanXuatHien || isFireWorks) && TileMap.bgID != 3)
-		{
 			paintBlackSky(g);
-		}
 		GameCanvas.debug("PA3", 1);
 		if (shock_scr > 0)
 		{
@@ -4813,14 +4243,9 @@ public class GameScr : mScreen, IChatable
 			shock_scr--;
 		}
 		else
-		{
 			g.translate(-cmx, -cmy);
-		}
 		if (isSuperPower)
-		{
-			int tx = ((GameCanvas.gameTick % 3 != 0) ? (-3) : 3);
-			g.translate(tx, 0);
-		}
+			g.translate((GameCanvas.gameTick % 3 != 0) ? (-3) : 3, 0);
 		BackgroudEffect.paintBehindTileAll(g);
 		EffecMn.paintLayer1(g);
 		TileMap.paintTilemap(g);
@@ -4829,25 +4254,17 @@ public class GameScr : mScreen, IChatable
 		{
 			Char @char = (Char)vCharInMap.elementAt(i);
 			if (@char.isMabuHold && TileMap.mapID == 128)
-			{
 				@char.paintHeadWithXY(g, @char.cx, @char.cy, 0);
-			}
 		}
 		if (Char.myCharz().isMabuHold && TileMap.mapID == 128)
-		{
 			Char.myCharz().paintHeadWithXY(g, Char.myCharz().cx, Char.myCharz().cy, 0);
-		}
 		paintBgItem(g, 2);
 		if (Char.myCharz().cmdMenu != null && GameCanvas.isTouch)
 		{
 			if (mScreen.keyTouch == 20)
-			{
 				g.drawImage(imgChat2, Char.myCharz().cmdMenu.x + cmx, Char.myCharz().cmdMenu.y + cmy, mGraphics.HCENTER | mGraphics.VCENTER);
-			}
 			else
-			{
 				g.drawImage(imgChat, Char.myCharz().cmdMenu.x + cmx, Char.myCharz().cmdMenu.y + cmy, mGraphics.HCENTER | mGraphics.VCENTER);
-			}
 		}
 		GameCanvas.debug("PA4", 1);
 		GameCanvas.debug("PA5", 1);
@@ -4855,8 +4272,7 @@ public class GameScr : mScreen, IChatable
 		EffectManager.lowEffects.paintAll(g);
 		for (int i = 0; i < Effect2.vEffectFeet.size(); i++)
 		{
-			Effect2 effect = (Effect2)Effect2.vEffectFeet.elementAt(i);
-			effect.paint(g);
+			((Effect2)Effect2.vEffectFeet.elementAt(i)).paint(g);
 		}
 		for (int i = 0; i < Teleport.vTeleport.size(); i++)
 		{
@@ -4866,9 +4282,7 @@ public class GameScr : mScreen, IChatable
 		{
 			Npc npc = (Npc)vNpc.elementAt(i);
 			if (npc.cHP > 0)
-			{
 				npc.paintShadow(g);
-			}
 		}
 		for (int i = 0; i < vNpc.size(); i++)
 		{
@@ -4889,9 +4303,7 @@ public class GameScr : mScreen, IChatable
 				Cout.LogError("Loi ham paint char gamesc: " + ex.ToString());
 			}
 			if (char2 != null && (!GameCanvas.panel.isShow || !GameCanvas.panel.isTypeShop()) && char2.isShadown)
-			{
 				char2.paintShadow(g);
-			}
 		}
 		Char.myCharz().paintShadow(g);
 		EffecMn.paintLayer2(g);
@@ -4914,9 +4326,7 @@ public class GameScr : mScreen, IChatable
 			{
 			}
 			if (char3 != null && (!GameCanvas.panel.isShow || !GameCanvas.panel.isTypeShop()))
-			{
 				char3.paint(g);
-			}
 		}
 		Char.myCharz().paint(g);
 		if (Char.myCharz().skillPaint != null && Char.myCharz().skillInfoPaint() != null && Char.myCharz().indexSkill < Char.myCharz().skillInfoPaint().Length)
@@ -4956,17 +4366,14 @@ public class GameScr : mScreen, IChatable
 		paintBgItem(g, 3);
 		for (int i = 0; i < vNpc.size(); i++)
 		{
-			Npc npc2 = (Npc)vNpc.elementAt(i);
-			npc2.paintName(g);
+			((Npc)vNpc.elementAt(i)).paintName(g);
 		}
 		EffecMn.paintLayer3(g);
 		for (int i = 0; i < vNpc.size(); i++)
 		{
-			Npc npc3 = (Npc)vNpc.elementAt(i);
-			if (npc3.chatInfo != null)
-			{
-				npc3?.chatInfo.paint(g, npc3.cx, npc3.cy - npc3.ch - GameCanvas.transY, npc3.cdir);
-			}
+			Npc npc2 = (Npc)vNpc.elementAt(i);
+			if (npc2.chatInfo != null)
+				npc2?.chatInfo.paint(g, npc2.cx, npc2.cy - npc2.ch - GameCanvas.transY, npc2.cdir);
 		}
 		for (int i = 0; i < vCharInMap.size(); i++)
 		{
@@ -4979,22 +4386,16 @@ public class GameScr : mScreen, IChatable
 			{
 			}
 			if (char5 != null && char5.chatInfo != null)
-			{
 				char5.chatInfo.paint(g, char5.cx, char5.cy - char5.ch, char5.cdir);
-			}
 		}
 		if (Char.myCharz().chatInfo != null)
-		{
 			Char.myCharz().chatInfo.paint(g, Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch, Char.myCharz().cdir);
-		}
 		BackgroudEffect.paintFrontAll(g);
 		for (int j = 0; j < TileMap.vCurrItem.size(); j++)
 		{
 			BgItem bgItem = (BgItem)TileMap.vCurrItem.elementAt(j);
 			if (bgItem.idImage != -1 && bgItem.layer > 3)
-			{
 				bgItem.paint(g);
-			}
 		}
 		PopUp.paintAll(g);
 		if (TileMap.mapID == 120)
@@ -5012,19 +4413,11 @@ public class GameScr : mScreen, IChatable
 			{
 				tMabuEff++;
 				if (GameCanvas.gameTick % 3 == 0)
-				{
-					Effect me = new Effect(19, Res.random(TileMap.pxw / 2 - 50, TileMap.pxw / 2 + 50), 340, 2, 1, -1);
-					EffecMn.addEff(me);
-				}
+					EffecMn.addEff(new Effect(19, Res.random(TileMap.pxw / 2 - 50, TileMap.pxw / 2 + 50), 340, 2, 1, -1));
 				if (GameCanvas.gameTick % 15 == 0)
-				{
-					Effect me2 = new Effect(18, Res.random(TileMap.pxw / 2 - 5, TileMap.pxw / 2 + 5), Res.random(300, 320), 2, 1, -1);
-					EffecMn.addEff(me2);
-				}
+					EffecMn.addEff(new Effect(18, Res.random(TileMap.pxw / 2 - 5, TileMap.pxw / 2 + 5), Res.random(300, 320), 2, 1, -1));
 				if (tMabuEff == 100)
-				{
 					activeSuperPower(TileMap.pxw / 2, 300);
-				}
 				if (tMabuEff == 110)
 				{
 					tMabuEff = 0;
@@ -5036,35 +4429,27 @@ public class GameScr : mScreen, IChatable
 		bool flag = true;
 		for (int i = 0; i < BackgroudEffect.vBgEffect.size(); i++)
 		{
-			BackgroudEffect backgroudEffect = (BackgroudEffect)BackgroudEffect.vBgEffect.elementAt(i);
-			if (backgroudEffect.typeEff == 0)
+			if (((BackgroudEffect)BackgroudEffect.vBgEffect.elementAt(i)).typeEff == 0)
 			{
 				flag = false;
 				break;
 			}
 		}
 		if (mGraphics.zoomLevel <= 1 || Main.isIpod || Main.isIphone4)
-		{
 			flag = false;
-		}
 		if (flag && !isRongThanXuatHien)
 		{
 			int num2 = TileMap.pxw / (mGraphics.getImageWidth(TileMap.imgLight) + 50);
 			if (num2 <= 0)
-			{
 				num2 = 1;
-			}
 			if (TileMap.tileID != 28)
 			{
 				for (int i = 0; i < num2; i++)
 				{
 					int num3 = 100 + i * (mGraphics.getImageWidth(TileMap.imgLight) + 50) - cmx / 2;
 					int num4 = -20;
-					int imageWidth = mGraphics.getImageWidth(TileMap.imgLight);
-					if (num3 + imageWidth >= cmx && num3 <= cmx + GameCanvas.w && num4 + mGraphics.getImageHeight(TileMap.imgLight) >= cmy && num4 <= cmy + GameCanvas.h)
-					{
+					if (num3 + mGraphics.getImageWidth(TileMap.imgLight) >= cmx && num3 <= cmx + GameCanvas.w && num4 + mGraphics.getImageHeight(TileMap.imgLight) >= cmy && num4 <= cmy + GameCanvas.h)
 						g.drawImage(TileMap.imgLight, 100 + i * (mGraphics.getImageWidth(TileMap.imgLight) + 50) - cmx / 2, num4, 0);
-					}
 				}
 			}
 		}
@@ -5075,10 +4460,9 @@ public class GameScr : mScreen, IChatable
 		paintArrowPointToNPC(g);
 		GameCanvas.debug("PA17", 1);
 		if (!isPaintOther && isPaintRada == 1 && !GameCanvas.panel.isShow)
-		{
 			paintInfoBar(g);
-		}
 		resetTranslate(g);
+		paint_xp_bar(g);
 		if (!isPaintOther)
 		{
 			if (GameCanvas.open3Hour)
@@ -5121,9 +4505,7 @@ public class GameScr : mScreen, IChatable
 					g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
 				}
 				if (Char.myCharz().tFusion >= 100)
-				{
 					Char.myCharz().fusionComplete();
-				}
 			}
 			for (int i = 0; i < vCharInMap.size(); i++)
 			{
@@ -5144,9 +4526,7 @@ public class GameScr : mScreen, IChatable
 						g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
 					}
 					if (char6.tFusion >= 100)
-					{
 						char6.fusionComplete();
-					}
 				}
 			}
 			GameCanvas.paintz.paintTabSoft(g);
@@ -5157,18 +4537,14 @@ public class GameScr : mScreen, IChatable
 			GameCanvas.debug("PA22", 1);
 			resetTranslate(g);
 			if (GameCanvas.isTouch && GameCanvas.isTouchControl)
-			{
 				paintTouchControl(g);
-			}
 			resetTranslate(g);
 			paintChatVip(g);
 			if (!GameCanvas.panel.isShow && GameCanvas.currentDialog == null && ChatPopup.currChatPopup == null && ChatPopup.serverChatPopUp == null && GameCanvas.currentScreen.Equals(instance))
 			{
 				base.paint(g);
 				if (mScreen.keyMouse == 1 && cmdMenu != null)
-				{
 					g.drawImage(ItemMap.imageFlare, cmdMenu.x + 7, cmdMenu.y + 15, 3);
-				}
 			}
 			resetTranslate(g);
 			int num7 = 100 + ((Char.vItemTime.size() != 0) ? (textTime.size() * 12) : 0);
@@ -5181,16 +4557,12 @@ public class GameScr : mScreen, IChatable
 				{
 					Char char7 = (Char)vCharInMap.elementAt(i);
 					if (char7.clanID == -1 || char7.clanID != Char.myCharz().clan.ID)
-					{
 						continue;
-					}
 					if (char7.isOutX() && char7.cx < Char.myCharz().cx)
 					{
 						int num11 = num10;
 						if (Char.vItemTime.size() != 0)
-						{
 							num11 -= textTime.size();
-						}
 						if (num8 <= num11)
 						{
 							mFont.tahoma_7_green.drawString(g, char7.cName, 20, num7 - 12 + num8 * 12, mFont.LEFT, mFont.tahoma_7_grey);
@@ -5208,16 +4580,12 @@ public class GameScr : mScreen, IChatable
 			}
 			ChatTextField.gI().paint(g);
 			if (isNewClanMessage && !GameCanvas.panel.isShow && GameCanvas.gameTick % 4 == 0)
-			{
 				g.drawImage(ItemMap.imageFlare, cmdMenu.x + 15, cmdMenu.y + 30, mGraphics.BOTTOM | mGraphics.HCENTER);
-			}
 			if (isSuperPower)
 			{
 				dxPower += 5;
 				if (tPower >= 0)
-				{
 					tPower += dxPower;
-				}
 				Res.outz("x power= " + xPower);
 				if (tPower < 0)
 				{
@@ -5233,13 +4601,9 @@ public class GameScr : mScreen, IChatable
 				{
 					g.setColor(16777215);
 					if (!GameCanvas.lowGraphic)
-					{
 						g.fillArg(0, 0, GameCanvas.w, GameCanvas.h, 0, 0);
-					}
 					else
-					{
 						g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
-					}
 				}
 				else
 				{
@@ -5257,8 +4621,9 @@ public class GameScr : mScreen, IChatable
 			paintXoSo(g);
 			if (mResources.language == 1)
 			{
-				long second = mSystem.currentTimeMillis() + deltaTime;
-				mFont.tahoma_7b_white.drawString(g, NinjaUtil.getDate2(second), 10, GameCanvas.h - 65, 0, mFont.tahoma_7b_dark);
+				long num12 = mSystem.currentTimeMillis();
+				long num13 = deltaTime;
+				mFont.tahoma_7b_white.drawString(g, NinjaUtil.getDate2(num12 + num13), 10, GameCanvas.h - 65, 0, mFont.tahoma_7b_dark);
 			}
 			if (!yourNumber.Equals(string.Empty))
 			{
@@ -5268,13 +4633,11 @@ public class GameScr : mScreen, IChatable
 				}
 			}
 		}
-		int num12 = 0;
-		int num13 = GameCanvas.hw;
-		if (num13 > 200)
-		{
-			num13 = 200;
-		}
-		paintPhuBanBar(g, num12 + GameCanvas.w / 2, 0, num13);
+		int num14 = 0;
+		int num15 = GameCanvas.hw;
+		if (num15 > 200)
+			num15 = 200;
+		paintPhuBanBar(g, num14 + GameCanvas.w / 2, 0, num15);
 		EffectManager.hiEffects.paintAll(g);
 	}
 
@@ -5287,7 +4650,7 @@ public class GameScr : mScreen, IChatable
 			{
 				text = text + randomNumber[i] + " ";
 			}
-			PopUp.paintPopUp(g, 20, 45, 95, 35, 16777215, isButton: false);
+			PopUp.paintPopUp(g, 20, 45, 95, 35, 16777215, false);
 			mFont.tahoma_7b_dark.drawString(g, mResources.kquaVongQuay, 68, 50, 2);
 			mFont.tahoma_7b_dark.drawString(g, text + string.Empty, 68, 65, 2);
 		}
@@ -5304,9 +4667,7 @@ public class GameScr : mScreen, IChatable
 			num = ((num2 <= 80) ? 1 : ((num2 > 80 && num2 <= 200) ? 2 : ((num2 <= 200 || num2 > 400) ? 4 : 3)));
 			Res.outz("nLoop= " + num);
 			if (obj.Equals(Char.myCharz().mobFocus) || (obj.Equals(Char.myCharz().charFocus) && Char.myCharz().isMeCanAttackOtherPlayer(Char.myCharz().charFocus)))
-			{
 				ServerEffect.addServerEffect(135, obj.getX(), obj.getY(), num);
-			}
 			else if (obj.Equals(Char.myCharz().npcFocus) || obj.Equals(Char.myCharz().itemFocus) || obj.Equals(Char.myCharz().charFocus))
 			{
 				ServerEffect.addServerEffect(136, obj.getX(), obj.getY(), num);
@@ -5317,17 +4678,13 @@ public class GameScr : mScreen, IChatable
 	private void updateClickToArrow()
 	{
 		if (tDoubleDelay > 0)
-		{
 			tDoubleDelay--;
-		}
 		if (clickMoving)
 		{
 			clickMoving = false;
 			IMapObject mapObject = findClickToItem(clickToX, clickToY);
 			if (mapObject == null || (mapObject != null && mapObject.Equals(Char.myCharz().npcFocus) && TileMap.mapID == 51))
-			{
 				ServerEffect.addServerEffect(134, clickToX, clickToY + GameCanvas.transY / 2, 3);
-			}
 		}
 	}
 
@@ -5336,9 +4693,7 @@ public class GameScr : mScreen, IChatable
 		int num = 10;
 		Task taskMaint = Char.myCharz().taskMaint;
 		if (taskMaint != null && taskMaint.taskId == 0 && ((taskMaint.index != 1 && taskMaint.index < 6) || taskMaint.index == 0))
-		{
 			return;
-		}
 		for (int i = 0; i < TileMap.vGo.size(); i++)
 		{
 			Waypoint waypoint = (Waypoint)TileMap.vGo.elementAt(i);
@@ -5349,9 +4704,7 @@ public class GameScr : mScreen, IChatable
 					int x = waypoint.minX + (waypoint.maxX - waypoint.minX) / 2;
 					int y = waypoint.minY + (waypoint.maxY - waypoint.minY) / 2 + runArrow;
 					if (GameCanvas.isTouch)
-					{
 						y = waypoint.maxY + (waypoint.maxY - waypoint.minY) + runArrow + num;
-					}
 					g.drawRegion(arrow, 0, 0, 13, 16, 6, x, y, StaticObj.VCENTER_HCENTER);
 				}
 				else if (waypoint.minY >= TileMap.pxh / 2)
@@ -5362,24 +4715,16 @@ public class GameScr : mScreen, IChatable
 			else if (waypoint.minX >= 0 && waypoint.minX < 24)
 			{
 				if (!GameCanvas.isTouch)
-				{
 					g.drawRegion(arrow, 0, 0, 13, 16, 2, waypoint.maxX + 12 + runArrow, waypoint.maxY - 12, StaticObj.VCENTER_HCENTER);
-				}
 				else
-				{
 					g.drawRegion(arrow, 0, 0, 13, 16, 2, waypoint.maxX + 12 + runArrow, waypoint.maxY - 32, StaticObj.VCENTER_HCENTER);
-				}
 			}
 			else if (waypoint.minX <= TileMap.tmw * 24 && waypoint.minX >= TileMap.tmw * 24 - 48)
 			{
 				if (!GameCanvas.isTouch)
-				{
 					g.drawRegion(arrow, 0, 0, 13, 16, 0, waypoint.minX - 12 - runArrow, waypoint.maxY - 12, StaticObj.VCENTER_HCENTER);
-				}
 				else
-				{
 					g.drawRegion(arrow, 0, 0, 13, 16, 0, waypoint.minX - 12 - runArrow, waypoint.maxY - 32, StaticObj.VCENTER_HCENTER);
-				}
 			}
 			else
 			{
@@ -5394,9 +4739,7 @@ public class GameScr : mScreen, IChatable
 		{
 			Npc npc = (Npc)vNpc.elementAt(i);
 			if (npc.template.npcTemplateId == id)
-			{
 				return npc;
-			}
 		}
 		return null;
 	}
@@ -5407,9 +4750,7 @@ public class GameScr : mScreen, IChatable
 		{
 			Char @char = (Char)vCharInMap.elementAt(i);
 			if (@char.charID == charId)
-			{
 				return @char;
-			}
 		}
 		return null;
 	}
@@ -5425,9 +4766,7 @@ public class GameScr : mScreen, IChatable
 		{
 			Mob mob = (Mob)vMob.elementAt(i);
 			if (mob.mobId == mobId)
-			{
 				return mob;
-			}
 		}
 		return null;
 	}
@@ -5438,9 +4777,7 @@ public class GameScr : mScreen, IChatable
 		{
 			Npc npc = (Npc)vNpc.elementAt(i);
 			if (npc.template.npcTemplateId == getTaskNpcId())
-			{
 				return npc;
-			}
 		}
 		return null;
 	}
@@ -5450,14 +4787,10 @@ public class GameScr : mScreen, IChatable
 		try
 		{
 			if (ChatPopup.currChatPopup != null)
-			{
 				return;
-			}
 			int num = getTaskNpcId();
 			if (num == -1)
-			{
 				return;
-			}
 			Npc npc = null;
 			for (int i = 0; i < vNpc.size(); i++)
 			{
@@ -5465,9 +4798,7 @@ public class GameScr : mScreen, IChatable
 				if (npc2.template.npcTemplateId == num)
 				{
 					if (npc == null)
-					{
 						npc = npc2;
-					}
 					else if (Res.abs(npc2.cx - Char.myCharz().cx) < Res.abs(npc.cx - Char.myCharz().cx))
 					{
 						npc = npc2;
@@ -5475,9 +4806,7 @@ public class GameScr : mScreen, IChatable
 				}
 			}
 			if (npc == null || npc.statusMe == 15 || (npc.cx > cmx && npc.cx < cmx + gW && npc.cy > cmy && npc.cy < cmy + gH) || GameCanvas.gameTick % 10 < 5)
-			{
 				return;
-			}
 			int num2 = npc.cx - Char.myCharz().cx;
 			int num3 = npc.cy - Char.myCharz().cy;
 			int x = 0;
@@ -5490,9 +4819,7 @@ public class GameScr : mScreen, IChatable
 					x = gW - 10;
 					y = gH / 2 + 30;
 					if (GameCanvas.isTouch)
-					{
 						y = gH / 2 + 10;
-					}
 					arg = 0;
 				}
 				else
@@ -5509,9 +4836,7 @@ public class GameScr : mScreen, IChatable
 					x = gW - 10;
 					y = gH / 2 + 30;
 					if (GameCanvas.isTouch)
-					{
 						y = gH / 2 + 10;
-					}
 					arg = 0;
 				}
 				else
@@ -5528,9 +4853,7 @@ public class GameScr : mScreen, IChatable
 					x = 10;
 					y = gH / 2 + 30;
 					if (GameCanvas.isTouch)
-					{
 						y = gH / 2 + 10;
-					}
 					arg = 3;
 				}
 				else
@@ -5547,9 +4870,7 @@ public class GameScr : mScreen, IChatable
 					x = 10;
 					y = gH / 2 + 30;
 					if (GameCanvas.isTouch)
-					{
 						y = gH / 2 + 10;
-					}
 					arg = 3;
 				}
 				else
@@ -5577,24 +4898,17 @@ public class GameScr : mScreen, IChatable
 	private void paintTouchControl(mGraphics g)
 	{
 		if (isNotPaintTouchControl())
-		{
 			return;
-		}
 		resetTranslate(g);
 		if (!TileMap.isOfflineMap() && !isVS())
 		{
 			if (mScreen.keyTouch == 15 || mScreen.keyMouse == 15)
-			{
 				g.drawImage((!Main.isPC) ? imgChat2 : imgChatsPC2, xC + 17, yC + 17 + mGraphics.addYWhenOpenKeyBoard, mGraphics.HCENTER | mGraphics.VCENTER);
-			}
 			else
-			{
 				g.drawImage((!Main.isPC) ? imgChat : imgChatPC, xC + 17, yC + 17 + mGraphics.addYWhenOpenKeyBoard, mGraphics.HCENTER | mGraphics.VCENTER);
-			}
 		}
 		if (isUseTouch)
-		{
-		}
+			;
 	}
 
 	public void paintImageBarRight(mGraphics g, Char c)
@@ -5651,48 +4965,30 @@ public class GameScr : mScreen, IChatable
 				mFont.tahoma_7_white.drawString(g, Char.myCharz().strInfo + ":" + Char.myCharz().powerPoint + "/" + Char.myCharz().maxPowerPoint, 115, 29, 2);
 			}
 			if (c.charID != Char.myCharz().charID)
-			{
 				g.setClip(mGraphics.getImageWidth(imgPanel) - 95, 0, 95, 100);
-			}
 			g.drawImage(imgPanel, 0, 0, 0);
 			if (isLeft)
-			{
 				g.setClip(83, 5, num, 10);
-			}
 			else
-			{
 				g.setClip(83 + hpBarW - num, 5, num, 10);
-			}
 			g.drawImage(imgHPLost, 83, 5, 0);
 			g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
 			if (isLeft)
-			{
 				g.setClip(83, 5, num3, 10);
-			}
 			else
-			{
 				g.setClip(83 + hpBarW - num3, 5, num3, 10);
-			}
 			g.drawImage(imgHP, 83, 5, 0);
 			g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
 			if (isLeft)
-			{
 				g.setClip(83, 20, num2, 6);
-			}
 			else
-			{
 				g.setClip(83 + mpBarW - num2, 20, num2, 6);
-			}
 			g.drawImage(imgMPLost, 83, 20, 0);
 			g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
 			if (isLeft)
-			{
 				g.setClip(83, 20, num2, 6);
-			}
 			else
-			{
 				g.setClip(83 + mpBarW - num4, 20, num4, 6);
-			}
 			g.drawImage(imgMP, 83, 20, 0);
 			g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
 			if (Char.myCharz().cMP == 0 && GameCanvas.gameTick % 10 > 5)
@@ -5720,9 +5016,7 @@ public class GameScr : mScreen, IChatable
 		{
 			Char @char = (Char)vCharInMap.elementAt(i);
 			if (@char.cTypePk != 0)
-			{
 				return @char;
-			}
 		}
 		return null;
 	}
@@ -5733,9 +5027,7 @@ public class GameScr : mScreen, IChatable
 		{
 			Char @char = (Char)vCharInMap.elementAt(i);
 			if (@char.cTypePk != 0 && @char != findCharVS1())
-			{
 				return @char;
-			}
 		}
 		return null;
 	}
@@ -5743,23 +5035,23 @@ public class GameScr : mScreen, IChatable
 	private void paintInfoBar(mGraphics g)
 	{
 		resetTranslate(g);
-		if (isVS() && Char.myCharz().charFocus != null)
+		if (TileMap.mapID == 130 && findCharVS1() != null && findCharVS2() != null)
 		{
 			g.translate(GameCanvas.w / 2 - 62, 0);
-			paintImageBar(g, isLeft: true, Char.myCharz().charFocus);
-			g.translate(-(GameCanvas.w / 2 - 65), 0);
-			paintImageBarRight(g, Char.myCharz());
-			Char.myCharz().paintHeadWithXY(g, 15, 20, 0);
-			Char.myCharz().charFocus.paintHeadWithXY(g, GameCanvas.w - 15, 20, 2);
-		}
-		else if (TileMap.mapID == 130 && findCharVS1() != null && findCharVS2() != null)
-		{
-			g.translate(GameCanvas.w / 2 - 62, 0);
-			paintImageBar(g, isLeft: true, findCharVS1());
+			paintImageBar(g, true, findCharVS1());
 			g.translate(-(GameCanvas.w / 2 - 65), 0);
 			paintImageBarRight(g, findCharVS2());
 			findCharVS1().paintHeadWithXY(g, 15, 20, 0);
 			findCharVS2().paintHeadWithXY(g, GameCanvas.w - 15, 20, 2);
+		}
+		else if (isVS() && Char.myCharz().charFocus != null)
+		{
+			g.translate(GameCanvas.w / 2 - 62, 0);
+			paintImageBar(g, true, Char.myCharz().charFocus);
+			g.translate(-(GameCanvas.w / 2 - 65), 0);
+			paintImageBarRight(g, Char.myCharz());
+			Char.myCharz().paintHeadWithXY(g, 15, 20, 0);
+			Char.myCharz().charFocus.paintHeadWithXY(g, GameCanvas.w - 15, 20, 2);
 		}
 		else if (ispaintPhubangBar() && isSmallScr())
 		{
@@ -5767,29 +5059,21 @@ public class GameScr : mScreen, IChatable
 		}
 		else
 		{
-			paintImageBar(g, isLeft: true, Char.myCharz());
+			paintImageBar(g, true, Char.myCharz());
 			if (Char.myCharz().isInEnterOfflinePoint() != null || Char.myCharz().isInEnterOnlinePoint() != null)
-			{
 				mFont.tahoma_7_green2.drawString(g, mResources.enter, imgScrW / 2, 8 + mGraphics.addYWhenOpenKeyBoard, mFont.CENTER);
-			}
 			else if (Char.myCharz().mobFocus != null)
 			{
 				if (Char.myCharz().mobFocus.getTemplate() != null)
-				{
 					mFont.tahoma_7b_green2.drawString(g, Char.myCharz().mobFocus.getTemplate().name, imgScrW / 2, 9 + mGraphics.addYWhenOpenKeyBoard, mFont.CENTER);
-				}
 				if (Char.myCharz().mobFocus.templateId != 0)
-				{
 					mFont.tahoma_7b_green2.drawString(g, NinjaUtil.getMoneys(Char.myCharz().mobFocus.hp) + string.Empty, imgScrW / 2, 22 + mGraphics.addYWhenOpenKeyBoard, mFont.CENTER);
-				}
 			}
 			else if (Char.myCharz().npcFocus != null)
 			{
 				mFont.tahoma_7b_green2.drawString(g, Char.myCharz().npcFocus.template.name, imgScrW / 2, 9 + mGraphics.addYWhenOpenKeyBoard, mFont.CENTER);
 				if (Char.myCharz().npcFocus.template.npcTemplateId == 4)
-				{
 					mFont.tahoma_7b_green2.drawString(g, gI().magicTree.currPeas + "/" + gI().magicTree.maxPeas, imgScrW / 2, 22 + mGraphics.addYWhenOpenKeyBoard, mFont.CENTER);
-				}
 			}
 			else if (Char.myCharz().charFocus != null)
 			{
@@ -5827,42 +5111,33 @@ public class GameScr : mScreen, IChatable
 
 	public bool isVS()
 	{
-		if ((TileMap.mapID == 130 || TileMap.mapID == 51 || TileMap.mapID == 112 || TileMap.mapID == 113 || TileMap.mapID == 129) && (Char.myCharz().cTypePk != 0 || (TileMap.mapID == 130 && findCharVS1() != null && findCharVS2() != null)))
-		{
+		if (TileMap.isVoDaiMap() && (Char.myCharz().cTypePk != 0 || (TileMap.mapID == 130 && findCharVS1() != null && findCharVS2() != null)))
 			return true;
-		}
 		return false;
 	}
 
 	private void paintSelectedSkill(mGraphics g)
 	{
 		if (mobCapcha != null)
-		{
 			paintCapcha(g);
-		}
 		else
 		{
 			if (GameCanvas.currentDialog != null || ChatPopup.currChatPopup != null || GameCanvas.menu.showMenu || isPaintPopup() || GameCanvas.panel.isShow || Char.myCharz().taskMaint.taskId == 0 || ChatTextField.gI().isShow || GameCanvas.currentScreen == MoneyCharge.instance)
-			{
 				return;
-			}
-			long num = mSystem.currentTimeMillis();
-			long num2 = num - lastUsePotion;
-			int num3 = 0;
-			if (num2 < 10000)
-			{
-				num3 = (int)(num2 * 20 / 10000);
-			}
+			long num = mSystem.currentTimeMillis() - lastUsePotion;
+			int num2 = 0;
+			if (num < 10000)
+				num2 = (int)(num * 20 / 10000);
 			if (!GameCanvas.isTouch)
 			{
 				g.drawImage((mScreen.keyTouch != 10) ? imgSkill : imgSkill2, xSkill + xHP - 1, yHP - 1, 0);
 				SmallImage.drawSmallImage(g, 542, xSkill + xHP + 3, yHP + 3, 0, 0);
 				mFont.number_gray.drawString(g, string.Empty + hpPotion, xSkill + xHP + 22, yHP + 15, 1);
-				if (num2 < 10000)
+				if (num < 10000)
 				{
 					g.setColor(2721889);
-					num3 = (int)(num2 * 20 / 10000);
-					g.fillRect(xSkill + xHP + 3, yHP + 3 + num3, 20, 20 - num3);
+					num2 = (int)(num * 20 / 10000);
+					g.fillRect(xSkill + xHP + 3, yHP + 3 + num2, 20, 20 - num2);
 				}
 			}
 			else if (Char.myCharz().statusMe != 14)
@@ -5874,7 +5149,7 @@ public class GameScr : mScreen, IChatable
 						g.setColor(9670800);
 						g.fillRect(xHP + 9, yHP + 10, 22, 20);
 						g.setColor(16777215);
-						g.fillRect(xHP + 9, yHP + 10 + ((num3 != 0) ? (20 - num3) : 0), 22, (num3 == 0) ? 20 : num3);
+						g.fillRect(xHP + 9, yHP + 10 + ((num2 != 0) ? (20 - num2) : 0), 22, (num2 == 0) ? 20 : num2);
 						g.drawImage((mScreen.keyTouch != 10) ? imgHP1 : imgHP2, xHP, yHP, 0);
 						mFont.tahoma_7_red.drawString(g, string.Empty + hpPotion, xHP + 20, yHP + 15, 2);
 					}
@@ -5883,84 +5158,77 @@ public class GameScr : mScreen, IChatable
 						g.drawImage((mScreen.keyTouch != 10) ? imgSkill : imgSkill2, xSkill + xHP - 1, yHP - 1, 0);
 						SmallImage.drawSmallImage(g, 542, xSkill + xHP + 3, yHP + 3, 0, 0);
 						mFont.number_gray.drawString(g, string.Empty + hpPotion, xSkill + xHP + 22, yHP + 13, 1);
-						if (num2 < 10000)
+						if (num < 10000)
 						{
 							g.setColor(2721889);
-							num3 = (int)(num2 * 20 / 10000);
-							g.fillRect(xSkill + xHP + 3, yHP + 3 + num3, 20, 20 - num3);
+							num2 = (int)(num * 20 / 10000);
+							g.fillRect(xSkill + xHP + 3, yHP + 3 + num2, 20, 20 - num2);
 						}
 					}
 				}
-				else if (!gamePad.isSmallGamePad)
+				else if (isAnalog != 1)
 				{
-					if (isAnalog != 1)
-					{
-						g.setColor(9670800);
-						g.fillRect(xHP + 9, yHP + 10, 22, 20);
-						g.setColor(16777215);
-						g.fillRect(xHP + 9, yHP + 10 + ((num3 != 0) ? (20 - num3) : 0), 22, (num3 == 0) ? 20 : num3);
-						g.drawImage((mScreen.keyTouch != 10) ? imgHP1 : imgHP2, xHP, yHP, 0);
-						mFont.tahoma_7_red.drawString(g, string.Empty + hpPotion, xHP + 20, yHP + 15, 2);
-					}
-					else
-					{
-						g.setColor(9670800);
-						g.fillRect(xHP + 10, yHP + 10, 20, 18);
-						g.setColor(16777215);
-						g.fillRect(xHP + 10, yHP + 10 + ((num3 != 0) ? (20 - num3) : 0), 20, (num3 == 0) ? 18 : num3);
-						g.drawImage((mScreen.keyTouch != 10) ? imgHP3 : imgHP4, xHP + 20, yHP + 20, mGraphics.HCENTER | mGraphics.VCENTER);
-						mFont.tahoma_7_red.drawString(g, string.Empty + hpPotion, xHP + 20, yHP + 15, 2);
-					}
+					g.setColor(9670800);
+					g.fillRect(xHP + 9, yHP + 10 - 6, 22, 20);
+					g.setColor(16777215);
+					g.fillRect(xHP + 9, yHP + 10 + ((num2 != 0) ? (20 - num2) : 0) - 6, 22, (num2 == 0) ? 20 : num2);
+					g.drawImage((mScreen.keyTouch != 10) ? imgHP1 : imgHP2, xHP, yHP - 6, 0);
+					mFont.tahoma_7_red.drawString(g, string.Empty + hpPotion, xHP + 20, yHP + 15 - 6, 2);
+				}
+				else
+				{
+					g.setColor(9670800);
+					g.fillRect(xHP + 10, yHP + 10 - 6, 20, 18);
+					g.setColor(16777215);
+					g.fillRect(xHP + 10, yHP + 10 + ((num2 != 0) ? (20 - num2) : 0) - 6, 20, (num2 == 0) ? 18 : num2);
+					g.drawImage((mScreen.keyTouch != 10) ? imgHP3 : imgHP4, xHP + 20, yHP + 20 - 6, mGraphics.HCENTER | mGraphics.VCENTER);
+					mFont.tahoma_7_red.drawString(g, string.Empty + hpPotion, xHP + 20, yHP + 15 - 6, 2);
 				}
 			}
 			if (isHaveSelectSkill)
 			{
-				Skill[] array = (Main.isPC ? keySkill : onScreenSkill);
+				Skill[] array = (Main.isPC ? keySkill : ((!GameCanvas.isTouch) ? keySkill : onScreenSkill));
 				if (mScreen.keyTouch == 10)
-				{
-				}
+					;
 				if (!GameCanvas.isTouch)
 				{
 					g.setColor(11152401);
-					g.fillRect(xSkill + xHP + 2, yHP - 10, 20, 10);
-					mFont.tahoma_7_white.drawString(g, "*", xSkill + xHP + 12, yHP - 8, mFont.CENTER);
+					g.fillRect(xSkill + xHP + 2, yHP - 10 + 6, 20, 10);
+					mFont.tahoma_7_white.drawString(g, "*", xSkill + xHP + 12, yHP - 8 + 6, mFont.CENTER);
 				}
-				int num4 = ((!Main.isPC) ? nSkill : array.Length);
-				for (int i = 0; i < num4; i++)
+				int num3 = (Main.isPC ? array.Length : ((!GameCanvas.isTouch) ? array.Length : nSkill));
+				for (int i = 0; i < num3; i++)
 				{
 					if (Main.isPC)
 					{
 						string[] array2 = (TField.isQwerty ? new string[10] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" } : new string[5] { "7", "8", "9", "10", "11" });
-						int num5 = -13;
-						if (num4 > 5 && i < 5)
-						{
-							num5 = 27;
-						}
-						mFont.tahoma_7b_dark.drawString(g, array2[i], xSkill + xS[i] + 14, yS[i] + num5, mFont.CENTER);
-						mFont.tahoma_7b_white.drawString(g, array2[i], xSkill + xS[i] + 14, yS[i] + num5 + 1, mFont.CENTER);
+						int num4 = -13;
+						if (num3 > 5 && i < 5)
+							num4 = 27;
+						mFont.tahoma_7b_dark.drawString(g, array2[i], xSkill + xS[i] + 14, yS[i] + num4, mFont.CENTER);
+						mFont.tahoma_7b_white.drawString(g, array2[i], xSkill + xS[i] + 14, yS[i] + num4 + 1, mFont.CENTER);
+					}
+					else if (!GameCanvas.isTouch)
+					{
+						string[] array3 = (TField.isQwerty ? new string[5] { "Q", "W", "E", "R", "T" } : new string[5] { "7", "8", "9", "1", "3" });
+						g.setColor(11152401);
+						g.fillRect(xSkill + xS[i] + 2, yS[i] - 10 + 8, 20, 10);
+						mFont.tahoma_7_white.drawString(g, array3[i], xSkill + xS[i] + 12, yS[i] - 10 + 6, mFont.CENTER);
 					}
 					Skill skill = array[i];
 					if (skill != Char.myCharz().myskill)
-					{
 						g.drawImage(imgSkill, xSkill + xS[i] - 1, yS[i] - 1, 0);
-					}
 					if (skill == null)
-					{
 						continue;
-					}
 					if (skill == Char.myCharz().myskill)
 					{
 						g.drawImage(imgSkill2, xSkill + xS[i] - 1, yS[i] - 1, 0);
 						if (GameCanvas.isTouch && !Main.isPC)
-						{
 							g.drawRegion(Mob.imgHP, 0, 12, 9, 6, 0, xSkill + xS[i] + 8, yS[i] - 7, 0);
-						}
 					}
 					skill.paint(xSkill + xS[i] + 13, yS[i] + 13, g);
 					if ((i == selectedIndexSkill && !isPaintUI() && GameCanvas.gameTick % 10 > 5) || i == keyTouchSkill)
-					{
 						g.drawImage(ItemMap.imageFlare, xSkill + xS[i] + 13, yS[i] + 14, 3);
-					}
 				}
 			}
 			paintGamePad(g);
@@ -5991,9 +5259,7 @@ public class GameScr : mScreen, IChatable
 			}
 		}
 		if (num == -1)
-		{
 			return;
-		}
 		flyTextColor[num] = color;
 		flyTextString[num] = flyString;
 		flyTextX[num] = x;
@@ -6006,9 +5272,7 @@ public class GameScr : mScreen, IChatable
 		for (int j = 0; j < 5; j++)
 		{
 			if (flyTextState[j] != -1 && num != j && flyTextDy[num] < 0 && Res.abs(flyTextX[num] - flyTextX[j]) <= 20 && flyTextYTo[num] == flyTextYTo[j])
-			{
 				flyTextYTo[num] += 10;
-			}
 		}
 	}
 
@@ -6017,9 +5281,7 @@ public class GameScr : mScreen, IChatable
 		for (int i = 0; i < 5; i++)
 		{
 			if (flyTextState[i] == -1)
-			{
 				continue;
-			}
 			if (flyTextState[i] > flyTextYTo[i])
 			{
 				flyTime[i]++;
@@ -6063,9 +5325,7 @@ public class GameScr : mScreen, IChatable
 	{
 		int num = ((splashState[0] != -1) ? 1 : 0);
 		if (splashState[num] != -1)
-		{
 			return false;
-		}
 		splashState[num] = 0;
 		splashDir[num] = dir;
 		splashX[num] = x;
@@ -6083,13 +5343,9 @@ public class GameScr : mScreen, IChatable
 				splashX[i] += splashDir[i] << 2;
 				splashY[i]--;
 				if (splashState[i] >= 6)
-				{
 					splashState[i] = -1;
-				}
 				else
-				{
 					splashF[i] = (splashState[i] >> 1) % 3;
-				}
 			}
 		}
 	}
@@ -6101,13 +5357,9 @@ public class GameScr : mScreen, IChatable
 			if (splashState[i] != -1)
 			{
 				if (splashDir[i] == 1)
-				{
 					g.drawImage(imgSplash[splashF[i]], splashX[i], splashY[i], 3);
-				}
 				else
-				{
 					g.drawRegion(imgSplash[splashF[i]], 0, 0, mGraphics.getImageWidth(imgSplash[splashF[i]]), mGraphics.getImageHeight(imgSplash[splashF[i]]), 2, splashX[i], splashY[i], 3);
-				}
 			}
 		}
 	}
@@ -6135,39 +5387,29 @@ public class GameScr : mScreen, IChatable
 				cmdySK &= 15;
 			}
 			if (Math.abs(cmtoYSK - cmySK) < 15 && cmySK < 0)
-			{
 				cmtoYSK = 0;
-			}
 			if (Math.abs(cmtoYSK - cmySK) < 15 && cmySK > cmyLimSK)
-			{
 				cmtoYSK = cmyLimSK;
-			}
 		}
 	}
 
 	public void updateKeyAlert()
 	{
 		if (!isPaintAlert || GameCanvas.currentDialog != null)
-		{
 			return;
-		}
 		bool flag = false;
 		if (GameCanvas.keyPressed[Key.NUM8])
 		{
 			indexRow++;
 			if (indexRow >= texts.size())
-			{
 				indexRow = 0;
-			}
 			flag = true;
 		}
 		else if (GameCanvas.keyPressed[Key.NUM2])
 		{
 			indexRow--;
 			if (indexRow < 0)
-			{
 				indexRow = texts.size() - 1;
-			}
 			flag = true;
 		}
 		if (flag)
@@ -6186,9 +5428,7 @@ public class GameScr : mScreen, IChatable
 			}
 		}
 		if (!flag || indexRow < 0 || indexRow >= texts.size())
-		{
 			return;
-		}
 		string text = (string)texts.elementAt(indexRow);
 		int num = -1;
 		fnick = null;
@@ -6201,31 +5441,23 @@ public class GameScr : mScreen, IChatable
 			alertURL = text.Substring(num);
 			center = new Command(mResources.open_link, 12000);
 			if (!GameCanvas.isTouch)
-			{
 				ChatTextField.gI().center = new Command(mResources.open_link, null, 12000, null);
-			}
 		}
 		else
 		{
 			if ((num = text.IndexOf("@")) < 0)
-			{
 				return;
-			}
-			string text2 = text.Substring(2);
-			text2 = text2.Trim();
+			string text2 = text.Substring(2).Trim();
 			num = text2.IndexOf("@");
 			string text3 = text2.Substring(num);
 			int num2 = -1;
 			num2 = text3.IndexOf(" ");
-			num2 = ((num2 > 0) ? (num2 + num) : (num + text3.Length));
-			fnick = text2.Substring(num + 1, num2);
+			fnick = text2.Substring(num + 1, (num2 > 0) ? (num2 + num) : (num + text3.Length));
 			if (!fnick.Equals(string.Empty) && !fnick.Equals(Char.myCharz().cName))
 			{
 				center = new Command(mResources.SELECT, 12009, fnick);
 				if (!GameCanvas.isTouch)
-				{
 					ChatTextField.gI().center = new Command(mResources.SELECT, null, 12009, fnick);
-				}
 			}
 			else
 			{
@@ -6238,52 +5470,36 @@ public class GameScr : mScreen, IChatable
 	public bool isPaintPopup()
 	{
 		if (isPaintItemInfo || isPaintInfoMe || isPaintStore || isPaintWeapon || isPaintNonNam || isPaintNonNu || isPaintAoNam || isPaintAoNu || isPaintGangTayNam || isPaintGangTayNu || isPaintQuanNam || isPaintQuanNu || isPaintGiayNam || isPaintGiayNu || isPaintLien || isPaintNhan || isPaintNgocBoi || isPaintPhu || isPaintStack || isPaintStackLock || isPaintGrocery || isPaintGroceryLock || isPaintUpGrade || isPaintConvert || isPaintSplit || isPaintUpPearl || isPaintBox || isPaintTrade || isPaintAlert || isPaintZone || isPaintTeam || isPaintClan || isPaintFindTeam || isPaintTask || isPaintFriend || isPaintEnemies || isPaintCharInMap || isPaintMessage)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public bool isNotPaintTouchControl()
 	{
 		if (!GameCanvas.isTouchControl && GameCanvas.currentScreen == gI())
-		{
 			return true;
-		}
 		if (!GameCanvas.isTouch)
-		{
 			return true;
-		}
 		if (ChatTextField.gI().isShow)
-		{
 			return true;
-		}
 		if (InfoDlg.isShow)
-		{
 			return true;
-		}
 		if (GameCanvas.currentDialog != null || ChatPopup.currChatPopup != null || GameCanvas.menu.showMenu || GameCanvas.panel.isShow || isPaintPopup())
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public bool isPaintUI()
 	{
 		if (isPaintStore || isPaintWeapon || isPaintNonNam || isPaintNonNu || isPaintAoNam || isPaintAoNu || isPaintGangTayNam || isPaintGangTayNu || isPaintQuanNam || isPaintQuanNu || isPaintGiayNam || isPaintGiayNu || isPaintLien || isPaintNhan || isPaintNgocBoi || isPaintPhu || isPaintStack || isPaintStackLock || isPaintGrocery || isPaintGroceryLock || isPaintUpGrade || isPaintConvert || isPaintSplit || isPaintUpPearl || isPaintBox || isPaintTrade)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public bool isOpenUI()
 	{
 		if (isPaintItemInfo || isPaintInfoMe || isPaintStore || isPaintNonNam || isPaintNonNu || isPaintAoNam || isPaintAoNu || isPaintGangTayNam || isPaintGangTayNu || isPaintQuanNam || isPaintQuanNu || isPaintGiayNam || isPaintGiayNu || isPaintLien || isPaintNhan || isPaintNgocBoi || isPaintPhu || isPaintWeapon || isPaintStack || isPaintStackLock || isPaintGrocery || isPaintGroceryLock || isPaintUpGrade || isPaintConvert || isPaintUpPearl || isPaintBox || isPaintSplit || isPaintTrade)
-		{
 			return true;
-		}
 		return false;
 	}
 
@@ -6302,9 +5518,7 @@ public class GameScr : mScreen, IChatable
 		if (GameCanvas.isTouch && !isPaintZone && !isPaintTeam && !isPaintClan && !isPaintCharInMap && !isPaintFindTeam && !isPaintFriend && !isPaintEnemies && !isPaintTask && !isPaintMessage)
 		{
 			if (GameCanvas.h <= 240)
-			{
 				popupY -= 10;
-			}
 			if (GameCanvas.isTouch && !GameCanvas.isTouchControlSmallScreen && GameCanvas.currentScreen is GameScr)
 			{
 				popupW = 310;
@@ -6317,17 +5531,11 @@ public class GameScr : mScreen, IChatable
 			}
 		}
 		if (popupY < -10)
-		{
 			popupY = -10;
-		}
 		if (GameCanvas.h > 208 && popupY < 0)
-		{
 			popupY = 0;
-		}
 		if (GameCanvas.h == 208 && popupY < 10)
-		{
 			popupY = 10;
-		}
 	}
 
 	public static void loadImg()
@@ -6347,13 +5555,9 @@ public class GameScr : mScreen, IChatable
 			SmallImage.drawSmallImage(g, 989, num + mFont.tahoma_8b.getWidth(title) / 2 + 15 + 5 + ((GameCanvas.gameTick % 8 <= 3) ? 2 : 0), popupY + 16, 0, StaticObj.VCENTER_HCENTER);
 		}
 		if (indexTitle == 0)
-		{
 			g.setColor(Paint.COLORFOCUS);
-		}
 		else
-		{
 			g.setColor(Paint.COLORBORDER);
-		}
 		g.drawRoundRect(num - mFont.tahoma_8b.getWidth(title) / 2 - 12, popupY + 4, mFont.tahoma_8b.getWidth(title) + 22, 24, 6, 6);
 		mFont.tahoma_8b.drawString(g, title, num, popupY + 9, 2);
 	}
@@ -6362,9 +5566,7 @@ public class GameScr : mScreen, IChatable
 	{
 		int num = 0;
 		if (Char.myCharz().taskMaint == null)
-		{
 			return -1;
-		}
 		return mapTasks[Char.myCharz().taskMaint.index];
 	}
 
@@ -6372,9 +5574,7 @@ public class GameScr : mScreen, IChatable
 	{
 		sbyte result = 0;
 		if (Char.myCharz().taskMaint == null)
-		{
 			result = -1;
-		}
 		else if (Char.myCharz().taskMaint.index <= tasks.Length - 1)
 		{
 			result = (sbyte)tasks[Char.myCharz().taskMaint.index];
@@ -6390,15 +5590,11 @@ public class GameScr : mScreen, IChatable
 	{
 		Res.outz("CHAT");
 		if (!isPaintMessage || GameCanvas.isTouch)
-		{
 			ChatTextField.gI().isShow = false;
-		}
 		if (to.Equals(mResources.chat_player))
 		{
 			if (info2.playerID != Char.myCharz().charID)
-			{
 				Service.gI().chatPlayer(text, info2.playerID);
-			}
 		}
 		else if (!text.Equals(string.Empty))
 		{
@@ -6469,8 +5665,7 @@ public class GameScr : mScreen, IChatable
 				pts[i] = message.reader().readByte();
 				numPlayer[i] = message.reader().readByte();
 				maxPlayer[i] = message.reader().readByte();
-				sbyte b = message.reader().readByte();
-				if (b == 1)
+				if (message.reader().readByte() == 1)
 				{
 					rankName1[i] = message.reader().readUTF();
 					rank1[i] = message.reader().readInt();
@@ -6515,13 +5710,9 @@ public class GameScr : mScreen, IChatable
 		if (@char != null)
 		{
 			if (typePK == 3)
-			{
 				startYesNoPopUp(info, new Command(mResources.OK, 2000, @char), new Command(mResources.CLOSE, 2009, @char));
-			}
 			if (typePK == 4)
-			{
 				startYesNoPopUp(info, new Command(mResources.OK, 2005, @char), new Command(mResources.CLOSE, 2009, @char));
-			}
 		}
 	}
 
@@ -6529,9 +5720,7 @@ public class GameScr : mScreen, IChatable
 	{
 		Char @char = findCharInMap(playerID);
 		if (@char != null)
-		{
 			startYesNoPopUp(@char.cName + mResources.want_to_trade, new Command(mResources.YES, 11114, @char), new Command(mResources.NO, 2009, @char));
-		}
 	}
 
 	public void getFlagImage(int charID, sbyte cflag)
@@ -6567,9 +5756,7 @@ public class GameScr : mScreen, IChatable
 		}
 		Res.outz("my cflag: not me");
 		if (findCharInMap(charID) == null)
-		{
 			return;
-		}
 		if (findCharInMap(charID).isGetFlagImage(cflag))
 		{
 			Res.outz("my cflag: true");
@@ -6595,217 +5782,136 @@ public class GameScr : mScreen, IChatable
 		Cout.println("PERFORM WITH ID = " + idAction);
 		switch (idAction)
 		{
-		case 888351:
-			Service.gI().petStatus(5);
-			GameCanvas.endDlg();
-			break;
-		case 11112:
-		{
-			Char @char = (Char)p;
-			Service.gI().friend(1, @char.charID);
-			break;
-		}
-		case 11113:
-		{
-			Char char2 = (Char)p;
-			if (char2 != null)
-			{
-				Service.gI().giaodich(0, char2.charID, -1, -1);
-			}
-			break;
-		}
-		case 11114:
-		{
-			popUpYesNo = null;
-			GameCanvas.endDlg();
-			Char char3 = (Char)p;
-			if (char3 != null)
-			{
-				Service.gI().giaodich(1, char3.charID, -1, -1);
-			}
-			break;
-		}
-		case 11111:
-			if (Char.myCharz().charFocus != null)
-			{
-				InfoDlg.showWait();
-				if (GameCanvas.panel.vPlayerMenu.size() <= 0)
-				{
-					playerMenu(Char.myCharz().charFocus);
-				}
-				GameCanvas.panel.setTypePlayerMenu(Char.myCharz().charFocus);
-				GameCanvas.panel.show();
-				Service.gI().getPlayerMenu(Char.myCharz().charFocus.charID);
-				Service.gI().messagePlayerMenu(Char.myCharz().charFocus.charID);
-			}
-			break;
-		case 11115:
-			if (Char.myCharz().charFocus != null)
-			{
-				InfoDlg.showWait();
-				Service.gI().playerMenuAction(Char.myCharz().charFocus.charID, (short)Char.myCharz().charFocus.menuSelect);
-			}
-			break;
 		case 2000:
 			popUpYesNo = null;
 			GameCanvas.endDlg();
 			if ((Char)p == null)
 			{
 				Service.gI().player_vs_player(1, 3, -1);
-				break;
+				return;
 			}
 			Service.gI().player_vs_player(1, 3, ((Char)p).charID);
 			Service.gI().charMove();
-			break;
+			return;
 		case 2001:
 			GameCanvas.endDlg();
-			break;
+			return;
 		case 2003:
 			GameCanvas.endDlg();
 			InfoDlg.showWait();
 			Service.gI().player_vs_player(0, 3, Char.myCharz().charFocus.charID);
-			break;
+			return;
 		case 2004:
 			GameCanvas.endDlg();
 			Service.gI().player_vs_player(0, 4, Char.myCharz().charFocus.charID);
-			break;
+			return;
 		case 2005:
 			GameCanvas.endDlg();
 			popUpYesNo = null;
 			if ((Char)p == null)
-			{
 				Service.gI().player_vs_player(1, 4, -1);
-			}
 			else
-			{
 				Service.gI().player_vs_player(1, 4, ((Char)p).charID);
-			}
-			break;
+			return;
 		case 2009:
 			popUpYesNo = null;
-			break;
+			return;
 		case 2006:
 			GameCanvas.endDlg();
 			Service.gI().player_vs_player(2, 4, Char.myCharz().charFocus.charID);
-			break;
+			return;
 		case 2007:
 			GameCanvas.endDlg();
 			GameMidlet.instance.exit();
-			break;
-		case 11038:
-			actDead();
-			break;
-		case 110382:
-			Service.gI().returnTownFromDead();
-			break;
-		case 110383:
-			Service.gI().wakeUpFromDead();
-			break;
-		case 1:
-			GameCanvas.endDlg();
-			break;
-		case 2:
-			GameCanvas.menu.showMenu = false;
-			break;
-		case 8002:
-			doFire(isFireByShortCut: false, skipWaypoint: true);
-			GameCanvas.clearKeyHold();
-			GameCanvas.clearKeyPressed();
-			break;
-		case 11057:
-		{
-			Effect2.vEffect2Outside.removeAllElements();
-			Effect2.vEffect2.removeAllElements();
-			Npc npc = (Npc)p;
-			if (npc.idItem == 0)
-			{
-				Service.gI().confirmMenu((short)npc.template.npcTemplateId, (sbyte)GameCanvas.menu.menuSelectedItem);
-			}
-			else if (GameCanvas.menu.menuSelectedItem == 0)
-			{
-				Service.gI().pickItem(npc.idItem);
-			}
-			break;
+			return;
 		}
-		case 11000:
-			actMenu();
-			break;
-		case 11001:
-			Char.myCharz().findNextFocusByKey();
-			break;
-		case 11002:
-			GameCanvas.panel.hide();
-			break;
+		switch (idAction)
+		{
+		case 11112:
+		{
+			Char obj = (Char)p;
+			Service.gI().friend(1, obj.charID);
+			return;
+		}
+		case 11113:
+		{
+			Char @char = (Char)p;
+			if (@char != null)
+				Service.gI().giaodich(0, @char.charID, -1, -1);
+			return;
+		}
+		case 11114:
+		{
+			popUpYesNo = null;
+			GameCanvas.endDlg();
+			Char char2 = (Char)p;
+			if (char2 != null)
+				Service.gI().giaodich(1, char2.charID, -1, -1);
+			return;
+		}
+		case 11111:
+			if (Char.myCharz().charFocus != null)
+			{
+				InfoDlg.showWait();
+				if (GameCanvas.panel.vPlayerMenu.size() <= 0)
+					playerMenu(Char.myCharz().charFocus);
+				GameCanvas.panel.setTypePlayerMenu(Char.myCharz().charFocus);
+				GameCanvas.panel.show();
+				Service.gI().getPlayerMenu(Char.myCharz().charFocus.charID);
+				Service.gI().messagePlayerMenu(Char.myCharz().charFocus.charID);
+			}
+			return;
+		case 11115:
+			if (Char.myCharz().charFocus != null)
+			{
+				InfoDlg.showWait();
+				Service.gI().playerMenuAction(Char.myCharz().charFocus.charID, (short)Char.myCharz().charFocus.menuSelect);
+			}
+			return;
 		case 11120:
 		{
 			object[] array2 = (object[])p;
-			Skill skill4 = (Skill)array2[0];
+			Skill skill2 = (Skill)array2[0];
 			int num2 = int.Parse((string)array2[1]);
 			for (int j = 0; j < onScreenSkill.Length; j++)
 			{
-				if (onScreenSkill[j] == skill4)
-				{
+				if (onScreenSkill[j] == skill2)
 					onScreenSkill[j] = null;
-				}
 			}
-			onScreenSkill[num2] = skill4;
+			onScreenSkill[num2] = skill2;
 			saveonScreenSkillToRMS();
-			break;
+			return;
 		}
 		case 11121:
 		{
 			object[] array = (object[])p;
-			Skill skill3 = (Skill)array[0];
+			Skill skill = (Skill)array[0];
 			int num = int.Parse((string)array[1]);
 			for (int i = 0; i < keySkill.Length; i++)
 			{
-				if (keySkill[i] == skill3)
-				{
+				if (keySkill[i] == skill)
 					keySkill[i] = null;
-				}
 			}
-			keySkill[num] = skill3;
+			keySkill[num] = skill;
 			saveKeySkillToRMS();
-			break;
+			return;
 		}
-		case 110001:
-			GameCanvas.panel.setTypeMain();
-			GameCanvas.panel.show();
-			break;
-		case 110004:
-			GameCanvas.menu.showMenu = false;
-			break;
-		case 11067:
-			if (TileMap.zoneID != indexSelect)
-			{
-				Service.gI().requestChangeZone(indexSelect, indexItemUse);
-				InfoDlg.showWait();
-			}
-			else
-			{
-				info1.addInfo(mResources.ZONE_HERE, 0);
-			}
-			break;
-		case 11059:
+		}
+		switch (idAction)
 		{
-			Skill skill2 = onScreenSkill[selectedIndexSkill];
-			doUseSkill(skill2, isShortcut: false);
-			center = null;
-			break;
-		}
 		case 12000:
 			Service.gI().getClan(1, -1, null);
-			break;
+			return;
 		case 12001:
 			GameCanvas.endDlg();
-			break;
+			return;
 		case 12002:
 		{
 			GameCanvas.endDlg();
 			ClanObject clanObject = (ClanObject)p;
 			Service.gI().clanInvite(1, -1, clanObject.clanID, clanObject.code);
 			popUpYesNo = null;
-			break;
+			return;
 		}
 		case 12003:
 		{
@@ -6813,19 +5919,121 @@ public class GameScr : mScreen, IChatable
 			GameCanvas.endDlg();
 			Service.gI().clanInvite(2, -1, clanObject.clanID, clanObject.code);
 			popUpYesNo = null;
-			break;
+			return;
 		}
 		case 12004:
-		{
-			Skill skill = (Skill)p;
-			doUseSkill(skill, isShortcut: true);
+			doUseSkill((Skill)p, true);
 			Char.myCharz().saveLoadPreviousSkill();
-			break;
+			return;
+		case 12005:
+			if (GameCanvas.serverScr == null)
+				GameCanvas.serverScr = new ServerScr();
+			GameCanvas.serverScr.switchToMe();
+			GameCanvas.endDlg();
+			return;
+		case 12006:
+			GameCanvas.gI().onConnectionFail();
+			GameCanvas.endDlg();
+			return;
 		}
-		case 110391:
-			Service.gI().clanInvite(0, Char.myCharz().charFocus.charID, -1, -1);
-			break;
+		switch (idAction)
+		{
+		case 11000:
+			actMenu();
+			return;
+		case 11001:
+			Char.myCharz().findNextFocusByKey();
+			return;
+		case 11002:
+			GameCanvas.panel.hide();
+			return;
 		}
+		if (idAction != 1)
+		{
+			if (idAction != 2)
+			{
+				switch (idAction)
+				{
+				case 11057:
+				{
+					Effect2.vEffect2Outside.removeAllElements();
+					Effect2.vEffect2.removeAllElements();
+					Npc npc = (Npc)p;
+					if (npc.idItem == 0)
+						Service.gI().confirmMenu((short)npc.template.npcTemplateId, (sbyte)GameCanvas.menu.menuSelectedItem);
+					else if (GameCanvas.menu.menuSelectedItem == 0)
+					{
+						Service.gI().pickItem(npc.idItem);
+					}
+					return;
+				}
+				case 11059:
+					doUseSkill(onScreenSkill[selectedIndexSkill], false);
+					center = null;
+					return;
+				}
+				switch (idAction)
+				{
+				case 110001:
+					GameCanvas.panel.setTypeMain();
+					GameCanvas.panel.show();
+					return;
+				case 110004:
+					GameCanvas.menu.showMenu = false;
+					return;
+				}
+				if (idAction != 110382)
+				{
+					if (idAction != 110383)
+					{
+						if (idAction != 8002)
+						{
+							if (idAction != 11038)
+							{
+								if (idAction != 11067)
+								{
+									if (idAction != 110391)
+									{
+										if (idAction == 888351)
+										{
+											Service.gI().petStatus(5);
+											GameCanvas.endDlg();
+										}
+									}
+									else
+										Service.gI().clanInvite(0, Char.myCharz().charFocus.charID, -1, -1);
+								}
+								else if (TileMap.zoneID != indexSelect)
+								{
+									Service.gI().requestChangeZone(indexSelect, indexItemUse);
+									InfoDlg.showWait();
+								}
+								else
+								{
+									info1.addInfo(mResources.ZONE_HERE, 0);
+								}
+							}
+							else
+								actDead();
+						}
+						else
+						{
+							doFire(false, true);
+							GameCanvas.clearKeyHold();
+							GameCanvas.clearKeyPressed();
+						}
+					}
+					else
+						Service.gI().wakeUpFromDead();
+				}
+				else
+					Service.gI().returnTownFromDead();
+			}
+			else
+				GameCanvas.menu.showMenu = false;
+		}
+		else
+			GameCanvas.endDlg();
 	}
 
 	private static void setTouchBtn()
@@ -6835,7 +6043,7 @@ public class GameScr : mScreen, IChatable
 			xTG = (xF = GameCanvas.w - 45);
 			if (gamePad.isLargeGamePad)
 			{
-				xSkill = gamePad.wZone - 20;
+				xSkill = gamePad.wZone + 20;
 				wSkill = 35;
 				xHP = xF - 45;
 			}
@@ -6851,9 +6059,7 @@ public class GameScr : mScreen, IChatable
 	private void updateGamePad()
 	{
 		if (isAnalog == 0 || Char.myCharz().statusMe == 14)
-		{
 			return;
-		}
 		if (GameCanvas.isPointerHoldIn(xF, yF, 40, 40))
 		{
 			mScreen.keyTouch = 5;
@@ -6944,9 +6150,7 @@ public class GameScr : mScreen, IChatable
 	public void updateChatVip()
 	{
 		if (!startChat)
-		{
 			return;
-		}
 		xChatVip -= 2;
 		if (xChatVip < -currChatWidth)
 		{
@@ -6958,9 +6162,7 @@ public class GameScr : mScreen, IChatable
 				startChat = false;
 			}
 			else
-			{
 				currChatWidth = mFont.tahoma_7b_white.getWidth((string)vChatVip.elementAt(0));
-			}
 		}
 	}
 
@@ -6972,7 +6174,7 @@ public class GameScr : mScreen, IChatable
 
 	public static void checkRemoveImage()
 	{
-		ImgByName.checkDelHash(ImgByName.hashImagePath, 10, isTrue: false);
+		ImgByName.checkDelHash(ImgByName.hashImagePath, 10, false);
 	}
 
 	public static void StartServerPopUp(string strMsg)
@@ -6990,30 +6192,20 @@ public class GameScr : mScreen, IChatable
 	public static bool ispaintPhubangBar()
 	{
 		if (TileMap.mapPhuBang() && phuban_Info.type_PB == 0)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public void paintPhuBanBar(mGraphics g, int x, int y, int w)
 	{
 		if (phuban_Info == null || isPaintOther || isPaintRada != 1 || GameCanvas.panel.isShow || !ispaintPhubangBar())
-		{
 			return;
-		}
 		if (w < fra_PVE_Bar_1.frameWidth + fra_PVE_Bar_0.frameWidth * 4)
-		{
 			w = fra_PVE_Bar_1.frameWidth + fra_PVE_Bar_0.frameWidth * 4;
-		}
 		if (x > GameCanvas.w - w / 2)
-		{
 			x = GameCanvas.w - w / 2;
-		}
 		if (x < mGraphics.getImageWidth(imgKhung) + w / 2 + 10)
-		{
 			x = mGraphics.getImageWidth(imgKhung) + w / 2 + 10;
-		}
 		int frameHeight = fra_PVE_Bar_0.frameHeight;
 		int num = y + frameHeight + imgBall.getHeight() / 2 + 2;
 		int frameWidth = fra_PVE_Bar_1.frameWidth;
@@ -7024,27 +6216,17 @@ public class GameScr : mScreen, IChatable
 		int num5 = num2 - fra_PVE_Bar_0.frameWidth;
 		int num6 = num5 / fra_PVE_Bar_0.frameWidth;
 		if (num5 % fra_PVE_Bar_0.frameWidth > 0)
-		{
 			num6++;
-		}
 		for (int i = 0; i < num6; i++)
 		{
 			if (i < num6 - 1)
-			{
 				fra_PVE_Bar_0.drawFrame(1, num3 + fra_PVE_Bar_0.frameWidth + i * fra_PVE_Bar_0.frameWidth, y2, 0, 0, g);
-			}
 			else
-			{
 				fra_PVE_Bar_0.drawFrame(1, num3 + num5, y2, 0, 0, g);
-			}
 			if (i < num6 - 1)
-			{
 				fra_PVE_Bar_0.drawFrame(1, num4 + i * fra_PVE_Bar_0.frameWidth, y2, 0, 0, g);
-			}
 			else
-			{
 				fra_PVE_Bar_0.drawFrame(1, num4 + num5 - fra_PVE_Bar_0.frameWidth, y2, 0, 0, g);
-			}
 		}
 		fra_PVE_Bar_0.drawFrame(0, num3, y2, 2, 0, g);
 		fra_PVE_Bar_0.drawFrame(0, num4 + num5, y2, 0, 0, g);
@@ -7059,24 +6241,16 @@ public class GameScr : mScreen, IChatable
 			}
 			int num7 = phuban_Info.pointTeam1 * num2 / phuban_Info.maxPoint;
 			if (num7 < 0)
-			{
 				num7 = 0;
-			}
 			if (num7 > num2)
-			{
 				num7 = num2;
-			}
 			g.setClip(num3 + num2 - num7, y2, num7, frameHeight);
 			for (int j = 0; j < num6; j++)
 			{
 				if (j < num6 - 1)
-				{
 					fra_PVE_Bar_0.drawFrame(idx2, num3 + fra_PVE_Bar_0.frameWidth + j * fra_PVE_Bar_0.frameWidth, y2, 0, 0, g);
-				}
 				else
-				{
 					fra_PVE_Bar_0.drawFrame(idx2, num3 + num5, y2, 0, 0, g);
-				}
 			}
 			fra_PVE_Bar_0.drawFrame(idx, num3, y2, 2, 0, g);
 			GameCanvas.resetTrans(g);
@@ -7092,30 +6266,22 @@ public class GameScr : mScreen, IChatable
 			}
 			int num8 = phuban_Info.pointTeam2 * num2 / phuban_Info.maxPoint;
 			if (num8 < 0)
-			{
 				num8 = 0;
-			}
 			if (num8 > num2)
-			{
 				num8 = num2;
-			}
 			g.setClip(num4, y2, num8, frameHeight);
 			for (int k = 0; k < num6; k++)
 			{
 				if (k < num6 - 1)
-				{
 					fra_PVE_Bar_0.drawFrame(idx4, num4 + k * fra_PVE_Bar_0.frameWidth, y2, 0, 0, g);
-				}
 				else
-				{
 					fra_PVE_Bar_0.drawFrame(idx4, num4 + num5 - fra_PVE_Bar_0.frameWidth, y2, 0, 0, g);
-				}
 			}
 			fra_PVE_Bar_0.drawFrame(idx3, num4 + num5, y2, 0, 0, g);
 			GameCanvas.resetTrans(g);
 		}
 		fra_PVE_Bar_1.drawFrame(0, x - frameWidth / 2, y, 0, 0, g);
-		string timeCountDown = mSystem.getTimeCountDown(phuban_Info.timeStart, phuban_Info.timeSecond, isOnlySecond: true, isShortText: false);
+		string timeCountDown = mSystem.getTimeCountDown(phuban_Info.timeStart, phuban_Info.timeSecond, true, false);
 		mFont.tahoma_7b_yellow.drawString(g, timeCountDown, x + 1, y + fra_PVE_Bar_1.frameHeight / 2 - mFont.tahoma_7b_green2.getHeight() / 2, 2);
 		Panel.setTextColor(phuban_Info.color_1, 1).drawString(g, phuban_Info.nameTeam1, x - 5, num + 5, 1);
 		Panel.setTextColor(phuban_Info.color_2, 1).drawString(g, phuban_Info.nameTeam2, x + 5, num + 5, 0);
@@ -7127,34 +6293,26 @@ public class GameScr : mScreen, IChatable
 		}
 		g.drawImage(imgVS, x, y + fra_PVE_Bar_1.frameHeight + 2, 3);
 		if (phuban_Info.type_PB == 0)
-		{
 			paintChienTruong_Life(g, phuban_Info.maxLife, phuban_Info.color_1, phuban_Info.lifeTeam1, x - 13, phuban_Info.color_2, phuban_Info.lifeTeam2, x + 13, num);
-		}
 	}
 
 	public static void paintChienTruong_Life(mGraphics g, int maxLife, int cl1, int lifeTeam1, int x1, int cl2, int lifeTeam2, int x2, int y)
 	{
 		if (imgBall == null)
-		{
 			return;
-		}
 		int num = imgBall.getHeight() / 2;
 		for (int i = 0; i < maxLife; i++)
 		{
 			int num2 = 0;
 			if (i < lifeTeam1)
-			{
 				num2 = 1;
-			}
 			g.drawRegion(imgBall, 0, num2 * num, imgBall.getWidth(), num, 0, x1 - i * (num + 1), y, mGraphics.VCENTER | mGraphics.HCENTER);
 		}
 		for (int j = 0; j < maxLife; j++)
 		{
 			int num3 = 0;
 			if (j < lifeTeam2)
-			{
 				num3 = 1;
-			}
 			g.drawRegion(imgBall, 0, num3 * num, imgBall.getWidth(), num, 0, x2 + j * (num + 1), y, mGraphics.VCENTER | mGraphics.HCENTER);
 		}
 	}
@@ -7170,9 +6328,7 @@ public class GameScr : mScreen, IChatable
 		int num4 = imgHP_NEW.getHeight() / 2;
 		num2 = c.cHP * width / c.cHPFull;
 		if (num2 <= 0)
-		{
 			num2 = 1;
-		}
 		else if (num2 > width)
 		{
 			num2 = width;
@@ -7180,9 +6336,7 @@ public class GameScr : mScreen, IChatable
 		g.drawRegion(imgHP_NEW, 0, num4, num2, num4, 0, x2, num, 0);
 		num3 = c.cMP * width / c.cMPFull;
 		if (num3 <= 0)
-		{
 			num3 = 1;
-		}
 		else if (num3 > width)
 		{
 			num3 = width;
@@ -7194,9 +6348,7 @@ public class GameScr : mScreen, IChatable
 		if (c.mobFocus != null)
 		{
 			if (c.mobFocus.getTemplate() != null)
-			{
 				mFont.tahoma_7_green2.drawString(g, c.mobFocus.getTemplate().name, x3, y2, 2);
-			}
 		}
 		else if (c.npcFocus != null)
 		{
@@ -7210,16 +6362,13 @@ public class GameScr : mScreen, IChatable
 
 	public static void addEffectEnd(int type, int subtype, int x, int y, int levelPaint, int dir)
 	{
-		Effect_End eff = new Effect_End(type, subtype, x, y, levelPaint, dir);
-		addEffect2Vector(eff);
+		addEffect2Vector(new Effect_End(type, subtype, x, y, levelPaint, dir));
 	}
 
 	public static void addEffect2Vector(Effect_End eff)
 	{
 		if (eff.levelPaint == 0)
-		{
 			EffectManager.addHiEffect(eff);
-		}
 		else if (eff.levelPaint == 1)
 		{
 			EffectManager.addMidEffects(eff);
@@ -7233,18 +6382,30 @@ public class GameScr : mScreen, IChatable
 	public static bool setIsInScreen(int x, int y, int wOne, int hOne)
 	{
 		if (x < cmx - wOne || x > cmx + GameCanvas.w + wOne || y < cmy - hOne || y > cmy + GameCanvas.h + hOne * 3 / 2)
-		{
 			return false;
-		}
 		return true;
 	}
 
 	public static bool isSmallScr()
 	{
 		if (GameCanvas.w <= 320)
-		{
 			return true;
-		}
 		return false;
+	}
+
+	private void paint_xp_bar(mGraphics g)
+	{
+		g.setColor(8421504);
+		g.fillRect(0, GameCanvas.h - 8 + 2 + 1 - 3, GameCanvas.w, 8);
+		g.setColor(16777215);
+		g.fillRect(w: (int)(Char.myCharz().cLevelPercent * GameCanvas.w / 10000), x: 0, y: GameCanvas.h - 8 + 2 + 1 - 3, h: 8);
+		g.setColor(0);
+		int num = GameCanvas.w / 10;
+		for (int i = 1; i < 10; i++)
+		{
+			g.fillRect(i * num, GameCanvas.h - 8 + 2 + 1 - 3, 1, 8);
+		}
+		string st = Char.myCharz().cLevelPercent / 100 + "." + Char.myCharz().cLevelPercent % 100 + "%";
+		mFont.tahoma_7_greySmall.drawString(g, st, GameCanvas.w - 5, GameCanvas.h - mFont.tahoma_7.getHeight() + 1, mFont.RIGHT);
 	}
 }

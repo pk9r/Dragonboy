@@ -48,13 +48,9 @@ public class PopUp
 	{
 		sayWidth = 100;
 		if (info.Length < 10)
-		{
 			sayWidth = 60;
-		}
 		if (GameCanvas.w == 128)
-		{
 			sayWidth = 128;
-		}
 		says = mFont.tahoma_7b_dark.splitFontArray(info, sayWidth - 10);
 		sayRun = 7;
 		cx = x - sayWidth / 2 - 1;
@@ -70,13 +66,9 @@ public class PopUp
 			ch++;
 		}
 		if (x >= 0 && x <= 24)
-		{
 			cx += cw / 2 + 30;
-		}
 		if (x <= TileMap.tmw * 24 && x >= TileMap.tmw * 24 - 24)
-		{
 			cx -= cw / 2 + 6;
-		}
 		while (cx <= 30)
 		{
 			cx += 2;
@@ -90,17 +82,11 @@ public class PopUp
 	public static void loadBg()
 	{
 		if (goc == null)
-		{
 			goc = GameCanvas.loadImage("/mainImage/myTexture2dbd3.png");
-		}
 		if (imgPopUp == null)
-		{
 			imgPopUp = GameCanvas.loadImage("/mainImage/myTexture2dimgPopup.png");
-		}
 		if (imgPopUp2 == null)
-		{
 			imgPopUp2 = GameCanvas.loadImage("/mainImage/myTexture2dimgPopup2.png");
-		}
 	}
 
 	public void updateXYWH(string[] info, int x, int y)
@@ -109,9 +95,7 @@ public class PopUp
 		for (int i = 0; i < info.Length; i++)
 		{
 			if (sayWidth < mFont.tahoma_7b_dark.getWidth(info[i]))
-			{
 				sayWidth = mFont.tahoma_7b_dark.getWidth(info[i]);
-			}
 		}
 		sayWidth += 20;
 		says = info;
@@ -129,13 +113,9 @@ public class PopUp
 			ch++;
 		}
 		if (x >= 0 && x <= 24)
-		{
 			cx += cw / 2 + 30;
-		}
 		if (x <= TileMap.tmw * 24 && x >= TileMap.tmw * 24 - 24)
-		{
 			cx -= cw / 2 + 6;
-		}
 		while (cx <= 30)
 		{
 			cx += 2;
@@ -164,13 +144,9 @@ public class PopUp
 	public void paintClipPopUp(mGraphics g, int x, int y, int w, int h, int color, bool isFocus)
 	{
 		if (color == 1)
-		{
 			g.fillRect(x, y, w, h, 16777215, 90);
-		}
 		else
-		{
 			g.fillRect(x, y, w, h, 0, 77);
-		}
 	}
 
 	public static void paintPopUp(mGraphics g, int x, int y, int w, int h, int color, bool isButton)
@@ -220,7 +196,7 @@ public class PopUp
 	{
 		if (isPaint && says != null && ChatPopup.currChatPopup == null && !isHide)
 		{
-			paintClipPopUp(g, cx, cy - GameCanvas.transY, cw, ch, (timeDelay != 0) ? 1 : 0, isFocus: true);
+			paintClipPopUp(g, cx, cy - GameCanvas.transY, cw, ch, (timeDelay != 0) ? 1 : 0, true);
 			for (int i = 0; i < says.Length; i++)
 			{
 				((timeDelay != 0) ? mFont.tahoma_7b_green2 : mFont.tahoma_7b_white).drawString(g, says[i], cx + cw / 2, cy + (ch / 2 - says.Length * 12 / 2) + i * 12 - GameCanvas.transY, 2);
@@ -233,61 +209,41 @@ public class PopUp
 		if (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId == 0)
 		{
 			if (cx + cw >= GameScr.cmx && cx <= GameCanvas.w + GameScr.cmx && cy + ch >= GameScr.cmy && cy <= GameCanvas.h + GameScr.cmy)
-			{
 				isHide = false;
-			}
 			else
-			{
 				isHide = true;
-			}
 		}
 		if (Char.myCharz().taskMaint == null || (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId != 0))
 		{
 			if (cx + cw / 2 >= Char.myCharz().cx - 100 && cx + cw / 2 <= Char.myCharz().cx + 100 && cy + ch >= GameScr.cmy && cy <= GameCanvas.h + GameScr.cmy)
-			{
 				isHide = false;
-			}
 			else
-			{
 				isHide = true;
-			}
 		}
 		if (timeDelay > 0)
 		{
 			timeDelay--;
 			if (timeDelay == 0 && command != null)
-			{
 				command.performAction();
-			}
 		}
 		if (!isWayPoint)
-		{
 			return;
-		}
 		if (Char.myCharz().taskMaint != null)
 		{
 			if (Char.myCharz().taskMaint.taskId == 0)
 			{
 				if (Char.myCharz().taskMaint.index == 0)
-				{
 					isPaint = false;
-				}
 				if (Char.myCharz().taskMaint.index == 1)
-				{
 					isPaint = true;
-				}
 				if (Char.myCharz().taskMaint.index > 1 && Char.myCharz().taskMaint.index < 6)
-				{
 					isPaint = false;
-				}
 			}
 			else if (!isPaint)
 			{
 				tDelay++;
 				if (tDelay == 50)
-				{
 					isPaint = true;
-				}
 			}
 		}
 		else if (!isPaint)

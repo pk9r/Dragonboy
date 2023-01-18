@@ -137,10 +137,12 @@ public class NewBoss : Mob, IMapObject
 		base.maxHp = maxHp;
 		base.hp = hp;
 		templateId = templateID;
+		h_hp_bar = 6;
+		w_hp_bar = 100;
+		len = w_hp_bar;
+		updateHp_bar();
 		if (Mob.arrMobTemplate[templateId].data == null)
-		{
 			Service.gI().requestModTemplate(templateId);
-		}
 		status = 2;
 		frameArr = null;
 	}
@@ -160,11 +162,8 @@ public class NewBoss : Mob, IMapObject
 	{
 		for (int i = 0; i < Mob.newMob.size(); i++)
 		{
-			string text = (string)Mob.newMob.elementAt(i);
-			if (text.Equals(id))
-			{
+			if (((string)Mob.newMob.elementAt(i)).Equals(id))
 				return true;
-			}
 		}
 		return false;
 	}
@@ -173,9 +172,7 @@ public class NewBoss : Mob, IMapObject
 	{
 		tick++;
 		if (tick > array.Length - 1)
-		{
 			tick = 0;
-		}
 		frame = array[tick];
 	}
 
@@ -196,9 +193,7 @@ public class NewBoss : Mob, IMapObject
 			if (TileMap.tileTypeAt(xSd, ySd, 2))
 			{
 				if (ySd % 24 != 0)
-				{
 					ySd -= ySd % 24;
-				}
 				break;
 			}
 		}
@@ -210,9 +205,7 @@ public class NewBoss : Mob, IMapObject
 		if ((TileMap.mapID < 114 || TileMap.mapID > 120) && TileMap.mapID != 127 && TileMap.mapID != 128)
 		{
 			if (TileMap.tileTypeAt(xSd + num / 2, ySd + 1, 4))
-			{
 				g.setClip(xSd / num * num, (ySd - 30) / num * num, num, 100);
-			}
 			else if (TileMap.tileTypeAt((xSd - num / 2) / num, (ySd + 1) / num) == 0)
 			{
 				g.setClip(xSd / num * num, (ySd - 30) / num * num, 100, 100);
@@ -237,13 +230,9 @@ public class NewBoss : Mob, IMapObject
 	public override void update()
 	{
 		if (frameArr == null && Mob.arrMobTemplate[templateId].data != null)
-		{
 			GetFrame();
-		}
 		if (frameArr == null || !isUpdate())
-		{
 			return;
-		}
 		updateShadown();
 		switch (status)
 		{
@@ -285,9 +274,7 @@ public class NewBoss : Mob, IMapObject
 	{
 		tick++;
 		if (tick > frameArr[13].Length - 1)
-		{
 			tick = frameArr[13].Length - 1;
-		}
 		frame = frameArr[13][tick];
 		if (x != xTo || y != yTo)
 		{
@@ -314,19 +301,13 @@ public class NewBoss : Mob, IMapObject
 		if (Res.abs(cx - x) < w * 2 && Res.abs(cy - y) < h * 2)
 		{
 			if (x < cx)
-			{
 				x = cx - w;
-			}
 			else
-			{
 				x = cx + w;
-			}
 			p3 = 0;
 		}
 		else
-		{
 			p3 = 1;
-		}
 	}
 
 	private void updateInjure()
@@ -366,15 +347,13 @@ public class NewBoss : Mob, IMapObject
 	public new void updateMobAttack()
 	{
 		if (tick == frameArr[type + 1].Length - 1)
-		{
 			status = 2;
-		}
 		checkFrameTick(frameArr[type + 1]);
 		if (tick == frameArr[15][type - 1])
 		{
 			for (int i = 0; i < charAttack.Length; i++)
 			{
-				charAttack[i].doInjure(dameHP[i], 0, isCrit: false, isMob: false);
+				charAttack[i].doInjure(dameHP[i], 0, false, false);
 				ServerEffect.addServerEffect(frameArr[16][type - 1], charAttack[i].cx, charAttack[i].cy, 1);
 			}
 		}
@@ -386,15 +365,11 @@ public class NewBoss : Mob, IMapObject
 		sbyte speed = Mob.arrMobTemplate[templateId].speed;
 		int num = speed;
 		if (Res.abs(x - xTo) < speed)
-		{
 			num = Res.abs(x - xTo);
-		}
 		x += ((x >= xTo) ? (-num) : num);
 		y = yTo;
 		if (x < xTo)
-		{
 			dir = 1;
-		}
 		else if (x > xTo)
 		{
 			dir = -1;
@@ -409,34 +384,22 @@ public class NewBoss : Mob, IMapObject
 	public new bool isPaint()
 	{
 		if (x < GameScr.cmx)
-		{
 			return false;
-		}
 		if (x > GameScr.cmx + GameScr.gW)
-		{
 			return false;
-		}
 		if (y < GameScr.cmy)
-		{
 			return false;
-		}
 		if (y > GameScr.cmy + GameScr.gH + 30)
-		{
 			return false;
-		}
 		if (status == 0)
-		{
 			return false;
-		}
 		return true;
 	}
 
 	public new bool isUpdate()
 	{
 		if (status == 0)
-		{
 			return false;
-		}
 		return true;
 	}
 
@@ -445,21 +408,15 @@ public class NewBoss : Mob, IMapObject
 		if (Mob.arrMobTemplate[templateId].data != null)
 		{
 			if (isShadown)
-			{
 				paintShadow(g);
-			}
 			g.translate(0, GameCanvas.transY);
 			Mob.arrMobTemplate[templateId].data.paintFrame(g, frame, x, y + fy, (dir != 1) ? 1 : 0, 2);
 			g.translate(0, -GameCanvas.transY);
-			int num = (int)((long)hp * 50L / maxHp);
-			if (num != 0)
-			{
-				int num2 = y - h - 5;
-				g.setColor(0);
-				g.fillRect(x - 27, num2 - 2, 54, 8);
-				g.setColor(16711680);
-				g.fillRect(x - 25, num2, num, 4);
-			}
+			int width = GameScr.imgHP_tm_do.getWidth();
+			int height = GameScr.imgHP_tm_do.getHeight();
+			int w = width * per / 100;
+			g.drawImage(GameScr.imgHP_tm_xam, x - (width >> 1), y - h - 5, mGraphics.TOP | mGraphics.LEFT);
+			g.drawRegion(imgHPtem, 0, 0, w, height, 0, x - (width >> 1), y - h - 5, mGraphics.TOP | mGraphics.LEFT);
 		}
 	}
 
@@ -493,19 +450,13 @@ public class NewBoss : Mob, IMapObject
 		if (Res.abs(num - x) < w * 2 && Res.abs(num2 - y) < h * 2)
 		{
 			if (x < num)
-			{
 				x = num - w;
-			}
 			else
-			{
 				x = num + w;
-			}
 			p3 = 0;
 		}
 		else
-		{
 			p3 = 1;
-		}
 	}
 
 	public new int getX()
@@ -546,9 +497,7 @@ public class NewBoss : Mob, IMapObject
 	public new void removeHoldEff()
 	{
 		if (holdEffID != 0)
-		{
 			holdEffID = 0;
-		}
 	}
 
 	public new void removeBlindEff()

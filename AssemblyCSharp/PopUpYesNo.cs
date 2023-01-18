@@ -35,15 +35,13 @@ public class PopUpYesNo : IActionListener
 		last = mSystem.currentTimeMillis();
 		dem = this.info[0].Length / 3;
 		if (dem < 15)
-		{
 			dem = 15;
-		}
 		TextInfo.reset();
 	}
 
 	public void paint(mGraphics g)
 	{
-		PopUp.paintPopUp(g, X, Y, W, H + ((!GameCanvas.isTouch) ? 10 : 0), 16777215, isButton: false);
+		PopUp.paintPopUp(g, X, Y, W, H + ((!GameCanvas.isTouch) ? 10 : 0), 16777215, false);
 		if (info != null)
 		{
 			TextInfo.paint(g, info[0], X + 5, Y + H / 2 - ((!GameCanvas.isTouch) ? 6 : 4), W - 10, H, mFont.tahoma_7);
@@ -84,9 +82,7 @@ public class PopUpYesNo : IActionListener
 				dem--;
 			}
 			if (dem == 0)
-			{
 				GameScr.gI().popUpYesNo = null;
-			}
 		}
 	}
 

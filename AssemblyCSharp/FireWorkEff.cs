@@ -43,9 +43,7 @@ public class FireWorkEff
 	public static void preDraw()
 	{
 		if (st)
-		{
 			animate();
-		}
 		if (t > 32 && st)
 		{
 			st = false;
@@ -65,9 +63,7 @@ public class FireWorkEff
 			((FireWorkMn)mg.elementAt(i)).paint(g);
 		}
 		if (!st)
-		{
 			keyPressed(-(Math.abs(r.nextInt() % 3) + 5));
-		}
 	}
 
 	public static void keyPressed(int k)
