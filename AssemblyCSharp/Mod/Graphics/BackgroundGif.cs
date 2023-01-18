@@ -42,10 +42,10 @@ namespace Mod.Graphics
             frames = GetEmptyFrames(width, height);
         }
 
-        public void FixedUpdateDifferentThread()
+        public void LoadFrameGif()
         {
-            while (isLocking)
-                Thread.Sleep(10);
+            if (isLocking)
+                return;
             try
             {
                 isLocking = true;
@@ -68,8 +68,6 @@ namespace Mod.Graphics
             }
             catch (Exception)
             { }
-            if (CustomBackground.threadCount > 0)
-                CustomBackground.threadCount--;
         }
 
         public void FixedUpdate()

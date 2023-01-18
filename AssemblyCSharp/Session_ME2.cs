@@ -284,7 +284,7 @@ public class Session_ME2 : ISession
 			Debug.Log("connecting...!");
 			Debug.Log("host: " + host);
 			Debug.Log("port: " + port);
-			initThread = new Thread(NetworkInit);
+			initThread = new Thread(NetworkInit) { Name = "Session_ME2::NetworkInit" };
 			initThread.Start();
 		}
 	}
@@ -317,10 +317,10 @@ public class Session_ME2 : ISession
 		dataStream = sc.GetStream();
 		dis = new BinaryReader(dataStream, new UTF8Encoding());
 		dos = new BinaryWriter(dataStream, new UTF8Encoding());
-		new Thread(sender.run).Start();
+		new Thread(sender.run) { Name = "Session_ME2.Sender::run" }.Start();
 		MessageCollector @object = new MessageCollector();
 		Cout.LogError("new -----");
-		collectorThread = new Thread(@object.run);
+		collectorThread = new Thread(@object.run) { Name = "Session_ME2.MessageCollector::run" };
 		collectorThread.Start();
 		timeConnected = currentTimeMillis();
 		connecting = false;

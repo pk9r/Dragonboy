@@ -31,7 +31,11 @@ namespace Mod.Graphics
                     logos.Add(logopath, null);
                 }
                 isLogoLoaded = true;
-            }).Start();
+            })
+            {
+                IsBackground = true,
+                Name = "OpenSelectLogoFileDialog"
+            }.Start();
         }
 
         public static void update()
