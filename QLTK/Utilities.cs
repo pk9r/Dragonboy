@@ -164,13 +164,13 @@ namespace QLTK
                         break;
                     case DevelopStatus.Developing:
                         new Thread(() =>
-                        MessageBoxNative(IntPtr.Zero, "Nếu bạn có ý tưởng hay chức năng mới, đừng ngại ngần mà hãy đóng góp cho Mod Cộng Đồng!", "Thông báo", 0x00000040 | 0x00040000)
+                        MessageBoxNative(Process.GetCurrentProcess().MainWindowHandle, "Nếu bạn có ý tưởng hay chức năng mới, đừng ngại ngần mà hãy đóng góp cho Mod Cộng Đồng!", "Thông báo", 0x00000040 | 0x00040000)
                         ).Start();
                         break;
                     case DevelopStatus.OldVersion:
                         new Thread(() =>
                         {
-                            if (MessageBoxNative(IntPtr.Zero, $"Đã có phiên bản mới!{Environment.NewLine}Bạn có muốn cập nhật không?", "Cập nhật", 0x00000004 | 0x00000040 | 0x00040000) == 6)
+                            if (MessageBoxNative(Process.GetCurrentProcess().MainWindowHandle, $"Đã có phiên bản mới!{Environment.NewLine}Bạn có muốn cập nhật không?", "Cập nhật", 0x00000004 | 0x00000040 | 0x00040000) == 6)
                                 Process.Start("https://github.com/pk9r327/Dragonboy");
                         }).Start();
                         break;

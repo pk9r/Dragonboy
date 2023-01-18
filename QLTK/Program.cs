@@ -6,6 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Threading;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace QLTK
 {
@@ -14,19 +18,31 @@ namespace QLTK
         public static DiscordRpcClient discordClient;
 
         public static Timestamps timestampsStartQLTK = new Timestamps(DateTime.UtcNow);
-            
+
+        static Mutex mutex = new Mutex(true, "{b2dbc8db-7340-4a4a-8e63-f9ec86e5a4fd}");
+
         [STAThread]
         static void Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            Initialize();
-            App.Main();
-            discordClient.Dispose();
+            if (mutex.WaitOne(TimeSpan.Zero, true))
+            {
+                Initialize();
+                App.Main();
+                discordClient?.Dispose();
+                mutex.ReleaseMutex();
+            }
+            else
+            {
+                Process otherInstance = Process.GetProcessesByName(Assembly.GetEntryAssembly().GetName().Name).First(p => p.MainWindowHandle != IntPtr.Zero);
+                Utilities.ShowWindowAsync(otherInstance.MainWindowHandle, 9);
+                Utilities.SetForegroundWindow(otherInstance.MainWindowHandle);
+            }
         }
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            discordClient.Dispose();
+            discordClient?.Dispose();
             MessageBox.Show($"Có lỗi xảy ra:{Environment.NewLine}{e.ExceptionObject}", "QLTK", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
