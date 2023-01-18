@@ -18,14 +18,13 @@ namespace Mod.Graphics
 
         public static Dictionary<string, IBackground> backgroundWallpapers = new Dictionary<string, IBackground>();
 
-        public static int inveralChangeBackgroundWallpaper = 30000;
+        public static int intervalChangeBackgroundWallpaper = 30000;
         private static int backgroundIndex;
         private static bool isAllWallpaperLoaded;
         private static long lastTimeChangedWallpaper;
         private static bool isChangeWallpaper = true;
         static int updateGifBackgroundIndex;
         static int ticks;
-        public static int threadCount;
         static CustomBackground instance = new CustomBackground();
 
         public static void ShowMenu()
@@ -163,7 +162,8 @@ namespace Mod.Graphics
                 }
             })
             {
-                IsBackground = true
+                IsBackground = true,
+                Name = "OpenSelectBackgroundFileDialog"
             }.Start();
         }
 
@@ -211,11 +211,7 @@ namespace Mod.Graphics
                 gif.FixedUpdate();
                 if (!gif.isFullyLoaded)
                 {
-                    if (threadCount <= 50)
-                    {
-                        new Thread(gif.FixedUpdateDifferentThread).Start();
-                        threadCount++;
-                    }
+                        new Thread(gif.LoadFrameGif) { IsBackground = true, Name = "LoadFrameGif" }.Start();
                 }
                 else
                     updateGifBackgroundIndex++;
@@ -240,7 +236,7 @@ namespace Mod.Graphics
             background.Paint(g, 0, 0);
             if (isChangeWallpaper)
             { 
-                if (mSystem.currentTimeMillis() - lastTimeChangedWallpaper > inveralChangeBackgroundWallpaper - 2000)
+                if (mSystem.currentTimeMillis() - lastTimeChangedWallpaper > intervalChangeBackgroundWallpaper - 2000)
                 {
                     int index = backgroundIndex + 1;
                     if (index >= backgroundWallpapers.Count)
@@ -248,7 +244,7 @@ namespace Mod.Graphics
                     if (backgroundWallpapers.ElementAt(index).Value is BackgroundVideo backgroundVideo1 && !backgroundVideo1.isPreparing && !backgroundVideo1.isPrepared)
                         backgroundVideo1.Prepare();
                 }
-                if (mSystem.currentTimeMillis() - lastTimeChangedWallpaper > inveralChangeBackgroundWallpaper)
+                if (mSystem.currentTimeMillis() - lastTimeChangedWallpaper > intervalChangeBackgroundWallpaper)
                 {
                     lastTimeChangedWallpaper = mSystem.currentTimeMillis();
                     if (background is BackgroundVideo backgroundVideo1 && backgroundVideo1.isPlaying)
@@ -317,7 +313,7 @@ namespace Mod.Graphics
                     backgroundVideo.Stop();
         }
 
-        public static void setState(int value) => inveralChangeBackgroundWallpaper = value * 1000;
+        public static void setState(int value) => intervalChangeBackgroundWallpaper = value * 1000;
 
         public void onChatFromMe(string text, string to)
         {

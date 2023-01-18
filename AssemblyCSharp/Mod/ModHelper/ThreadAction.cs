@@ -46,7 +46,8 @@ namespace Mod.ModHelper
             {
                 threadAction = new Thread(executeAction)
                 {
-                    IsBackground = true
+                    IsBackground = true,
+                    Name = "ExecuteAction"
                 };
                 threadAction.Start();
                 return;
