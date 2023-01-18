@@ -19,21 +19,15 @@ public class Rms
 	public static void saveRMS(string filename, sbyte[] data)
 	{
 		if (Thread.CurrentThread.Name == Main.mainThreadName)
-		{
 			__saveRMS(filename, data);
-		}
 		else
-		{
 			_saveRMS(filename, data);
-		}
 	}
 
 	public static sbyte[] loadRMS(string filename)
 	{
 		if (Thread.CurrentThread.Name == Main.mainThreadName)
-		{
 			return __loadRMS(filename);
-		}
 		return _loadRMS(filename);
 	}
 
@@ -41,9 +35,7 @@ public class Rms
 	{
 		sbyte[] array = loadRMS(fileName);
 		if (array == null)
-		{
 			return null;
-		}
 		DataInputStream dataInputStream = new DataInputStream(array);
 		try
 		{
@@ -64,13 +56,9 @@ public class Rms
 		for (int i = 0; i < var.Length; i++)
 		{
 			if (var[i] > 0)
-			{
 				array[i] = (byte)var[i];
-			}
 			else
-			{
 				array[i] = (byte)(var[i] + 256);
-			}
 		}
 		return array;
 	}
@@ -107,14 +95,10 @@ public class Rms
 		{
 			Thread.Sleep(5);
 			if (status == 0)
-			{
 				break;
-			}
 		}
 		if (i == 500)
-		{
 			Debug.LogError("TOO LONG TO SAVE RMS " + filename);
-		}
 	}
 
 	private static sbyte[] _loadRMS(string filename)
@@ -132,14 +116,10 @@ public class Rms
 		{
 			Thread.Sleep(5);
 			if (status == 0)
-			{
 				break;
-			}
 		}
 		if (i == 500)
-		{
 			Debug.LogError("TOO LONG TO LOAD RMS " + filename);
-		}
 		return data;
 	}
 
@@ -221,9 +201,9 @@ public class Rms
         
 		Cout.LogError3("clean rms");
 		FileInfo[] files = new DirectoryInfo(GetiPhoneDocumentsPath() + "/").GetFiles();
-		foreach (FileInfo fileInfo in files)
+		for (int i = 0; i < files.Length; i++)
 		{
-			fileInfo.Delete();
+			files[i].Delete();
 		}
 	}
 
@@ -240,8 +220,7 @@ public class Rms
 
 	public static string ByteArrayToString(byte[] ba)
 	{
-		string text = BitConverter.ToString(ba);
-		return text.Replace("-", string.Empty);
+		return BitConverter.ToString(ba).Replace("-", string.Empty);
 	}
 
 	public static byte[] StringToByteArray(string hex)
@@ -288,9 +267,7 @@ public class Rms
 	{
 		string text = loadRMSString("NRIPlink");
 		if (text == null)
-		{
 			return null;
-		}
 		return text;
 	}
 }

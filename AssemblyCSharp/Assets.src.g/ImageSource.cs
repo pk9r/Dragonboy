@@ -2,7 +2,6 @@ using System;
 
 namespace Assets.src.g
 {
-
 	internal class ImageSource
 	{
 		public sbyte version;
@@ -31,9 +30,7 @@ namespace Assets.src.g
 			vRms = new MyVector();
 			DataInputStream dataInputStream = new DataInputStream(array);
 			if (dataInputStream == null)
-			{
 				return;
-			}
 			try
 			{
 				short num = dataInputStream.readShort();
@@ -52,20 +49,19 @@ namespace Assets.src.g
 				ex.StackTrace.ToString();
 			}
 			Res.outz("vS size= " + vSource.size() + " vRMS size= " + vRms.size());
-			for (int j = 0; j < vSource.size(); j++)
+			if (false)
 			{
-				ImageSource imageSource = (ImageSource)vSource.elementAt(j);
-				if (!isExistID(imageSource.id))
+				for (int j = 0; j < vSource.size(); j++)
 				{
-					myVector.addElement(imageSource);
+					ImageSource imageSource = (ImageSource)vSource.elementAt(j);
+					if (!isExistID(imageSource.id))
+						myVector.addElement(imageSource);
 				}
-			}
-			for (int k = 0; k < vRms.size(); k++)
-			{
-				ImageSource imageSource2 = (ImageSource)vRms.elementAt(k);
-				if (getVersionRMSByID(imageSource2.id) != getCurrVersionByID(imageSource2.id))
+				for (int k = 0; k < vRms.size(); k++)
 				{
-					myVector.addElement(imageSource2);
+					ImageSource imageSource2 = (ImageSource)vRms.elementAt(k);
+					if (getVersionRMSByID(imageSource2.id) != getCurrVersionByID(imageSource2.id))
+						myVector.addElement(imageSource2);
 				}
 			}
 			Service.gI().imageSource(myVector);
@@ -76,9 +72,7 @@ namespace Assets.src.g
 			for (int i = 0; i < vRms.size(); i++)
 			{
 				if (id.Equals(((ImageSource)vRms.elementAt(i)).id))
-				{
 					return ((ImageSource)vRms.elementAt(i)).version;
-				}
 			}
 			return -1;
 		}
@@ -88,9 +82,7 @@ namespace Assets.src.g
 			for (int i = 0; i < vSource.size(); i++)
 			{
 				if (id.Equals(((ImageSource)vSource.elementAt(i)).id))
-				{
 					return ((ImageSource)vSource.elementAt(i)).version;
-				}
 			}
 			return -1;
 		}
@@ -100,9 +92,7 @@ namespace Assets.src.g
 			for (int i = 0; i < vRms.size(); i++)
 			{
 				if (id.Equals(((ImageSource)vRms.elementAt(i)).id))
-				{
 					return true;
-				}
 			}
 			return false;
 		}

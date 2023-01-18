@@ -29,14 +29,12 @@ public class SplashScr : mScreen
 		if (splashScrStat == 30 && !isCheckConnect)
 		{
 			isCheckConnect = true;
+			if (Rms.loadRMSInt("serverchat") != -1)
+				GameScr.isPaintChatVip = ((Rms.loadRMSInt("serverchat") == 0) ? true : false);
 			if (Rms.loadRMSInt("isPlaySound") != -1)
-			{
 				GameCanvas.isPlaySound = Rms.loadRMSInt("isPlaySound") == 1;
-			}
 			if (GameCanvas.isPlaySound)
-			{
 				SoundMn.gI().loadSound(TileMap.mapID);
-			}
 			SoundMn.gI().getStrOption();
 			ServerListScreen.loadIP();
 		}
@@ -57,13 +55,9 @@ public class SplashScr : mScreen
 				}
 			}
 			if (ServerListScreen.serverPriority == -1)
-			{
 				ServerListScreen.ipSelect = num + Res.random(0, ServerListScreen.lengthServer[mResources.language]);
-			}
 			else
-			{
 				ServerListScreen.ipSelect = ServerListScreen.serverPriority;
-			}
 			Rms.saveRMSInt("svselect", ServerListScreen.ipSelect);
 			GameMidlet.IP = ServerListScreen.address[ServerListScreen.ipSelect];
 			GameMidlet.PORT = ServerListScreen.port[ServerListScreen.ipSelect];
@@ -109,9 +103,7 @@ public class SplashScr : mScreen
 			g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
 			GameCanvas.paintShukiren(GameCanvas.hw, GameCanvas.hh, g);
 			if (ServerListScreen.cmdDeleteRMS != null)
-			{
 				mFont.tahoma_7_white.drawString(g, mResources.xoadulieu, GameCanvas.w - 2, GameCanvas.h - 15, 1, mFont.tahoma_7_grey);
-			}
 		}
 	}
 

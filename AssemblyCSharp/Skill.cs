@@ -52,9 +52,7 @@ public class Skill
 	public string strTimeReplay()
 	{
 		if (coolDown % 1000 == 0)
-		{
 			return coolDown / 1000 + string.Empty;
-		}
 		int num = coolDown % 1000;
 		return coolDown / 1000 + "." + ((num % 100 != 0) ? (num / 10) : (num / 100));
 	}
@@ -268,8 +266,6 @@ public class Skill
 			mFont.tahoma_7_yellow.drawString(g, cooldownpaint, x + 1, y - 12 + mFont.tahoma_7.getHeight() / 2, mFont.CENTER);
 		}
 		else
-		{
 			paintCanNotUseSkill = false;
-		}
 	}
 }

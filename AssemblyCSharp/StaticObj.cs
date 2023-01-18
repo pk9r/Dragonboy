@@ -72,23 +72,6 @@ public class StaticObj
 
 	public const int FOCUS_NPC = 5;
 
-	public static int[][] TYPEBG = new int[13][]
-	{
-		new int[4],
-		new int[4] { 1, 1, 1, 1 },
-		new int[4],
-		new int[4] { 2, 2, 2, 2 },
-		new int[4] { 3, 3, 3, 3 },
-		new int[4] { 4, -1, -1, 4 },
-		new int[4] { 5, 5, 5, -1 },
-		new int[4] { 6, 6, 6, 5 },
-		new int[4] { 7, 7, -1, -1 },
-		new int[4] { 8, 8, 8, 7 },
-		new int[4] { 9, -1, -1, 8 },
-		new int[4] { 10, -1, -1, 9 },
-		new int[4] { 11, -1, -1, -1 }
-	};
-
 	public static int[] SKYCOLOR = new int[17]
 	{
 		1618168, 1938102, 43488, 16316528, 1628316, 3270903, 3576979, 6999725, 14594155, 8562616,

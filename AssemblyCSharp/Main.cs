@@ -90,13 +90,9 @@ public class Main : MonoBehaviour
 		//BackgroundVideo.Start();
 		Time.timeScale = 1.5f;
 		if (started)
-		{
 			return;
-		}
 		if (Thread.CurrentThread.Name != "Main")
-		{
 			Thread.CurrentThread.Name = "Main";
-		}
 		mainThreadName = Thread.CurrentThread.Name;
 		isPC = true;
 		started = true;
@@ -110,13 +106,9 @@ public class Main : MonoBehaviour
 		{
 			level = Rms.loadRMSInt("levelScreenKN");
 			if (level == 1)
-			{
-				Screen.SetResolution(720, 320, fullscreen: false);
-			}
+				Screen.SetResolution(720, 320, false);
 			else
-			{
-				Screen.SetResolution(1024, 600, fullscreen: false);
-			}
+				Screen.SetResolution(1024, 600, false);
 		}
 	}
 
@@ -128,13 +120,9 @@ public class Main : MonoBehaviour
 	private void OnHideUnity(bool isGameShown)
 	{
 		if (!isGameShown)
-		{
 			Time.timeScale = 0f;
-		}
 		else
-		{
 			Time.timeScale = 1f;
-		}
 	}
 
 	private void OnGUI()
@@ -142,9 +130,7 @@ public class Main : MonoBehaviour
 		if (count >= 10)
 		{
 			if (fps == 0)
-			{
 				timefps = mSystem.currentTimeMillis();
-			}
 			else if (mSystem.currentTimeMillis() - timefps > 1000)
 			{
 				max = fps;
@@ -179,44 +165,26 @@ public class Main : MonoBehaviour
 			base.useGUILayout = false;
 			isCompactDevice = detectCompactDevice();
 			if (main == null)
-			{
 				main = this;
-			}
 			isRun = true;
 			ScaleGUI.initScaleGUI();
 			if (isPC)
-			{
 				IMEI = SystemInfo.deviceUniqueIdentifier;
-			}
 			else
-			{
 				IMEI = GetMacAddress();
-			}
 			isPC = true;
 			if (isPC)
-			{
 				Screen.fullScreen = false;
-			}
 			if (isWindowsPhone)
-			{
 				typeClient = 6;
-			}
 			if (isPC)
-			{
 				typeClient = 4;
-			}
 			if (IphoneVersionApp)
-			{
 				typeClient = 5;
-			}
 			if (iPhoneSettings.generation == iPhoneGeneration.iPodTouch4Gen)
-			{
 				isIpod = true;
-			}
 			if (iPhoneSettings.generation == iPhoneGeneration.iPhone4)
-			{
 				isIphone4 = true;
-			}
 			g = new mGraphics();
 			midlet = new GameMidlet();
 			TileMap.loadBg();
@@ -246,24 +214,18 @@ public class Main : MonoBehaviour
 		{
 			PhysicalAddress physicalAddress = allNetworkInterfaces[i].GetPhysicalAddress();
 			if (physicalAddress.ToString() != string.Empty)
-			{
 				return physicalAddress.ToString();
-			}
 		}
 		return string.Empty;
 	}
 
 	public void doClearRMS()
 	{
-		if (isPC)
+		if (isPC && Rms.loadRMSInt("lastZoomlevel") != mGraphics.zoomLevel)
 		{
-			int num = Rms.loadRMSInt("lastZoomlevel");
-			if (num != mGraphics.zoomLevel)
-			{
-				Rms.clearAll();
-				Rms.saveRMSInt("lastZoomlevel", mGraphics.zoomLevel);
-				Rms.saveRMSInt("levelScreenKN", level);
-			}
+			Rms.clearAll();
+			Rms.saveRMSInt("lastZoomlevel", mGraphics.zoomLevel);
+			Rms.saveRMSInt("levelScreenKN", level);
 		}
 	}
 
@@ -283,9 +245,7 @@ public class Main : MonoBehaviour
 		if (count >= 10)
 		{
 			if (up == 0)
-			{
 				timeup = mSystem.currentTimeMillis();
-			}
 			else if (mSystem.currentTimeMillis() - timeup > 1000)
 			{
 				upmax = up;
@@ -304,9 +264,7 @@ public class Main : MonoBehaviour
 			GameEvents.onFixedUpdateMain();
 			f++;
 			if (f > 8)
-			{
 				f = 0;
-			}
 			if (!isPC)
 			{
 				int num = 1 / a;
@@ -345,17 +303,13 @@ public class Main : MonoBehaviour
 		{
 			int num = MyKeyMap.map(Event.current.keyCode);
 			if (num != 0)
-			{
 				GameMidlet.gameCanvas.keyPressedz(num);
-			}
 		}
 		if (Event.current.type == EventType.KeyUp)
 		{
 			int num2 = MyKeyMap.map(Event.current.keyCode);
 			if (num2 != 0)
-			{
 				GameMidlet.gameCanvas.keyReleasedz(num2);
-			}
 		}
 		if (isPC)
 		{
@@ -381,9 +335,7 @@ public class Main : MonoBehaviour
 		Session_ME.gI().close();
 		Session_ME2.gI().close();
 		if (isPC)
-		{
 			Application.Quit();
-		}
 	}
 
 	private void OnApplicationPause(bool paused)
@@ -392,52 +344,38 @@ public class Main : MonoBehaviour
 		if (paused)
 		{
 			if (GameCanvas.isWaiting())
-			{
 				isQuitApp = true;
-			}
 		}
 		else
-		{
 			isResume = true;
-		}
 		if (TouchScreenKeyboard.visible)
 		{
 			TField.kb.active = false;
 			TField.kb = null;
 		}
 		if (isQuitApp)
-		{
 			Application.Quit();
-		}
 	}
 
 	public static void exit()
 	{
 		if (isPC)
-		{
 			main.OnApplicationQuit();
-		}
 		else
-		{
 			a = 0;
-		}
 	}
 
 	public static bool detectCompactDevice()
 	{
 		if (iPhoneSettings.generation == iPhoneGeneration.iPhone || iPhoneSettings.generation == iPhoneGeneration.iPhone3G || iPhoneSettings.generation == iPhoneGeneration.iPodTouch1Gen || iPhoneSettings.generation == iPhoneGeneration.iPodTouch2Gen)
-		{
 			return false;
-		}
 		return true;
 	}
 
 	public static bool checkCanSendSMS()
 	{
 		if (iPhoneSettings.generation == iPhoneGeneration.iPhone3GS || iPhoneSettings.generation == iPhoneGeneration.iPhone4 || iPhoneSettings.generation > iPhoneGeneration.iPodTouch4Gen)
-		{
 			return true;
-		}
 		return false;
 	}
 }

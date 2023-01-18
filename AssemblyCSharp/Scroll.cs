@@ -71,18 +71,14 @@ public class Scroll
 	public ScrollResult updateKey()
 	{
 		if (styleUPDOWN)
-		{
-			return updateKeyScrollUpDown(isGetNow: false);
-		}
+			return updateKeyScrollUpDown(false);
 		return updateKeyScrollLeftRight();
 	}
 
 	public ScrollResult updateKey(bool isGetSelectNow)
 	{
 		if (styleUPDOWN)
-		{
 			return updateKeyScrollUpDown(isGetSelectNow);
-		}
 		return updateKeyScrollLeftRight();
 	}
 
@@ -103,9 +99,7 @@ public class Scroll
 				pointerDownFirstX = GameCanvas.py;
 				pointerIsDowning = true;
 				if (!isGetNow)
-				{
 					selectedItem = -1;
-				}
 				isDownWhenRunning = cmRun != 0;
 				cmRun = 0;
 			}
@@ -122,22 +116,16 @@ public class Scroll
 						selectedItem = num3 * ITEM_PER_LINE + num4;
 					}
 					else
-					{
 						selectedItem = (cmtoY + GameCanvas.py - num2) / ITEM_SIZE;
-					}
 				}
 				int num5 = GameCanvas.py - pointerDownLastX[0];
 				if (!isGetNow)
 				{
 					if (num5 != 0 && selectedItem != -1)
-					{
 						selectedItem = -1;
-					}
 				}
 				else
-				{
 					selectedItem = (cmtoY + GameCanvas.py - num2) / ITEM_SIZE;
-				}
 				for (int num6 = pointerDownLastX.Length - 1; num6 > 0; num6--)
 				{
 					pointerDownLastX[num6] = pointerDownLastX[num6 - 1];
@@ -145,17 +133,11 @@ public class Scroll
 				pointerDownLastX[0] = GameCanvas.py;
 				cmtoY -= num5;
 				if (cmtoY < 0)
-				{
 					cmtoY = 0;
-				}
 				if (cmtoY > cmyLim)
-				{
 					cmtoY = cmyLim;
-				}
 				if (cmy < 0 || cmy > cmyLim)
-				{
 					num5 /= 2;
-				}
 				cmy -= num5;
 			}
 		}
@@ -176,9 +158,7 @@ public class Scroll
 					selectedItem = num7 * ITEM_PER_LINE + num8;
 				}
 				else
-				{
 					selectedItem = (cmtoY + GameCanvas.py - num2) / ITEM_SIZE;
-				}
 				pointerDownTime = 0;
 				isFinish = true;
 			}
@@ -190,9 +170,7 @@ public class Scroll
 			else if ((selectedItem == -1 && !isDownWhenRunning) || (isGetNow && selectedItem != -1 && !isDownWhenRunning))
 			{
 				if (cmy < 0)
-				{
 					cmtoY = 0;
-				}
 				else if (cmy > cmyLim)
 				{
 					cmtoY = cmyLim;
@@ -200,8 +178,7 @@ public class Scroll
 				else
 				{
 					int num9 = GameCanvas.py - pointerDownLastX[0] + (pointerDownLastX[0] - pointerDownLastX[1]) + (pointerDownLastX[1] - pointerDownLastX[2]);
-					num9 = ((num9 > 10) ? 10 : ((num9 < -10) ? (-10) : 0));
-					cmRun = -num9 * 100;
+					cmRun = -((num9 > 10) ? 10 : ((num9 < -10) ? (-10) : 0)) * 100;
 				}
 			}
 			pointerIsDowning = false;
@@ -245,9 +222,7 @@ public class Scroll
 				}
 				int num2 = GameCanvas.px - pointerDownLastX[0];
 				if (num2 != 0 && selectedItem != -1)
-				{
 					selectedItem = -1;
-				}
 				for (int num3 = pointerDownLastX.Length - 1; num3 > 0; num3--)
 				{
 					pointerDownLastX[num3] = pointerDownLastX[num3 - 1];
@@ -255,17 +230,11 @@ public class Scroll
 				pointerDownLastX[0] = GameCanvas.px;
 				cmtoX -= num2;
 				if (cmtoX < 0)
-				{
 					cmtoX = 0;
-				}
 				if (cmtoX > cmxLim)
-				{
 					cmtoX = cmxLim;
-				}
 				if (cmx < 0 || cmx > cmxLim)
-				{
 					num2 /= 2;
-				}
 				cmx -= num2;
 			}
 		}
@@ -291,9 +260,7 @@ public class Scroll
 			else if (selectedItem == -1 && !isDownWhenRunning)
 			{
 				if (cmx < 0)
-				{
 					cmtoX = 0;
-				}
 				else if (cmx > cmxLim)
 				{
 					cmtoX = cmxLim;
@@ -301,8 +268,7 @@ public class Scroll
 				else
 				{
 					int num4 = GameCanvas.px - pointerDownLastX[0] + (pointerDownLastX[0] - pointerDownLastX[1]) + (pointerDownLastX[1] - pointerDownLastX[2]);
-					num4 = ((num4 > 10) ? 10 : ((num4 < -10) ? (-10) : 0));
-					cmRun = -num4 * 100;
+					cmRun = -((num4 > 10) ? 10 : ((num4 < -10) ? (-10) : 0)) * 100;
 				}
 			}
 			pointerIsDowning = false;
@@ -324,9 +290,7 @@ public class Scroll
 			{
 				cmtoY += cmRun / 100;
 				if (cmtoY < 0)
-				{
 					cmtoY = 0;
-				}
 				else if (cmtoY > cmyLim)
 				{
 					cmtoY = cmyLim;
@@ -340,9 +304,7 @@ public class Scroll
 			{
 				cmtoX += cmRun / 100;
 				if (cmtoX < 0)
-				{
 					cmtoX = 0;
-				}
 				else if (cmtoX > cmxLim)
 				{
 					cmtoX = cmxLim;
@@ -354,9 +316,7 @@ public class Scroll
 			}
 			cmRun = cmRun * 9 / 10;
 			if (cmRun < 100 && cmRun > -100)
-			{
 				cmRun = 0;
-			}
 		}
 		if (cmx != cmtoX && !pointerIsDowning)
 		{
@@ -389,23 +349,15 @@ public class Scroll
 		{
 			int num = nItem / ITEM_PER_LINE;
 			if (nItem % ITEM_PER_LINE != 0)
-			{
 				num++;
-			}
 			cmyLim = num * ITEM_SIZE - height;
 		}
 		else
-		{
 			cmxLim = ITEM_PER_LINE * ITEM_SIZE - width;
-		}
 		if (cmyLim < 0)
-		{
 			cmyLim = 0;
-		}
 		if (cmxLim < 0)
-		{
 			cmxLim = 0;
-		}
 	}
 
 	public void moveTo(int to)
@@ -415,35 +367,25 @@ public class Scroll
 			to -= (height - ITEM_SIZE) / 2;
 			cmtoY = to;
 			if (cmtoY < 0)
-			{
 				cmtoY = 0;
-			}
 			if (cmtoY > cmyLim)
-			{
 				cmtoY = cmyLim;
-			}
 		}
 		else
 		{
 			to -= (width - ITEM_SIZE) / 2;
 			cmtoX = to;
 			if (cmtoX < 0)
-			{
 				cmtoX = 0;
-			}
 			if (cmtoX > cmxLim)
-			{
 				cmtoX = cmxLim;
-			}
 		}
 	}
 
 	public static Scroll gIz()
 	{
 		if (gI == null)
-		{
 			gI = new Scroll();
-		}
 		return gI;
 	}
 }

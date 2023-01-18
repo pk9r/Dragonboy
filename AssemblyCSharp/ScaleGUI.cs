@@ -18,8 +18,7 @@ public class ScaleGUI
 		HEIGHT = Screen.height;
 		scaleScreen = false;
 		if (Screen.width <= 1200)
-		{
-		}
+			;
 	}
 
 	public static void BeginGUI()
@@ -28,13 +27,11 @@ public class ScaleGUI
 		{
 			stack.Add(GUI.matrix);
 			Matrix4x4 matrix4x = default(Matrix4x4);
-			float num = Screen.width;
-			float num2 = Screen.height;
-			float num3 = num / num2;
-			float num4 = 1f;
+			float num = (float)Screen.width / (float)Screen.height;
+			float num2 = 1f;
 			Vector3 zero = Vector3.zero;
-			num4 = ((!(num3 < WIDTH / HEIGHT)) ? ((float)Screen.height / HEIGHT) : ((float)Screen.width / WIDTH));
-			matrix4x.SetTRS(zero, Quaternion.identity, Vector3.one * num4);
+			num2 = ((!(num < WIDTH / HEIGHT)) ? ((float)Screen.height / HEIGHT) : ((float)Screen.width / WIDTH));
+			matrix4x.SetTRS(zero, Quaternion.identity, Vector3.one * num2);
 			GUI.matrix *= matrix4x;
 		}
 	}
@@ -51,9 +48,7 @@ public class ScaleGUI
 	public static float scaleX(float x)
 	{
 		if (!scaleScreen)
-		{
 			return x;
-		}
 		x = x * WIDTH / (float)Screen.width;
 		return x;
 	}
@@ -61,9 +56,7 @@ public class ScaleGUI
 	public static float scaleY(float y)
 	{
 		if (!scaleScreen)
-		{
 			return y;
-		}
 		y = y * HEIGHT / (float)Screen.height;
 		return y;
 	}

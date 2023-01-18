@@ -2,7 +2,6 @@ using System;
 
 namespace Assets.src.g
 {
-
 	public class RegisterScreen : mScreen, IActionListener
 	{
 		public TField tfUser;
@@ -142,45 +141,33 @@ namespace Assets.src.g
 			yLog = 130;
 			TileMap.bgID = (sbyte)(mSystem.currentTimeMillis() % 9);
 			if (TileMap.bgID == 5 || TileMap.bgID == 6)
-			{
 				TileMap.bgID = 4;
-			}
-			GameScr.loadCamera(fullmScreen: true, -1, -1);
+			GameScr.loadCamera(true, -1, -1);
 			GameScr.cmx = 100;
 			GameScr.cmy = 200;
 			if (GameCanvas.h > 200)
-			{
 				defYL = GameCanvas.hh - 80;
-			}
 			else
-			{
 				defYL = GameCanvas.hh - 65;
-			}
 			resetLogo();
-			int num = (wC = ((GameCanvas.w < 200) ? 140 : 160));
+			wC = ((GameCanvas.w < 200) ? 140 : 160);
 			yt = GameCanvas.hh - mScreen.ITEM_HEIGHT - 5;
 			if (GameCanvas.h <= 160)
-			{
 				yt = 20;
-			}
 			tfSodt = new TField();
 			tfSodt.setIputType(TField.INPUT_TYPE_NUMERIC);
 			tfSodt.width = 220;
 			tfSodt.height = mScreen.ITEM_HEIGHT + 2;
 			tfSodt.name = "Số điện thoại/ địa chỉ email";
 			if (haveName == 1)
-			{
 				tfSodt.setText("01234567890");
-			}
 			tfUser = new TField();
 			tfUser.width = 220;
 			tfUser.height = mScreen.ITEM_HEIGHT + 2;
 			tfUser.isFocus = true;
 			tfUser.name = "Họ và tên";
 			if (haveName == 1)
-			{
 				tfUser.setText("Nguyễn Văn A");
-			}
 			tfUser.setIputType(TField.INPUT_TYPE_ANY);
 			tfNgay = new TField();
 			tfNgay.setIputType(TField.INPUT_TYPE_NUMERIC);
@@ -188,63 +175,49 @@ namespace Assets.src.g
 			tfNgay.height = mScreen.ITEM_HEIGHT + 2;
 			tfNgay.name = "Ngày sinh";
 			if (haveName == 1)
-			{
 				tfNgay.setText("01");
-			}
 			tfThang = new TField();
 			tfThang.setIputType(TField.INPUT_TYPE_NUMERIC);
 			tfThang.width = 70;
 			tfThang.height = mScreen.ITEM_HEIGHT + 2;
 			tfThang.name = "Tháng sinh";
 			if (haveName == 1)
-			{
 				tfThang.setText("01");
-			}
 			tfNam = new TField();
 			tfNam.setIputType(TField.INPUT_TYPE_NUMERIC);
 			tfNam.width = 70;
 			tfNam.height = mScreen.ITEM_HEIGHT + 2;
 			tfNam.name = "Năm sinh";
 			if (haveName == 1)
-			{
 				tfNam.setText("1990");
-			}
 			tfDiachi = new TField();
 			tfDiachi.setIputType(TField.INPUT_TYPE_ANY);
 			tfDiachi.width = 220;
 			tfDiachi.height = mScreen.ITEM_HEIGHT + 2;
 			tfDiachi.name = "Địa chỉ đăng ký thường trú";
 			if (haveName == 1)
-			{
 				tfDiachi.setText("123 đường số 1, Quận 1, TP.HCM");
-			}
 			tfCMND = new TField();
 			tfCMND.setIputType(TField.INPUT_TYPE_NUMERIC);
 			tfCMND.width = 220;
 			tfCMND.height = mScreen.ITEM_HEIGHT + 2;
 			tfCMND.name = "Số Chứng minh nhân dân hoặc số hộ chiếu";
 			if (haveName == 1)
-			{
 				tfCMND.setText("123456789");
-			}
 			tfNgayCap = new TField();
 			tfNgayCap.setIputType(TField.INPUT_TYPE_NUMERIC);
 			tfNgayCap.width = 220;
 			tfNgayCap.height = mScreen.ITEM_HEIGHT + 2;
 			tfNgayCap.name = "Ngày cấp";
 			if (haveName == 1)
-			{
 				tfNgayCap.setText("01/01/2005");
-			}
 			tfNoiCap = new TField();
 			tfNoiCap.setIputType(TField.INPUT_TYPE_ANY);
 			tfNoiCap.width = 220;
 			tfNoiCap.height = mScreen.ITEM_HEIGHT + 2;
 			tfNoiCap.name = "Nơi cấp";
 			if (haveName == 1)
-			{
 				tfNoiCap.setText("TP.HCM");
-			}
 			yt += 35;
 			isCheck = true;
 			focus = 0;
@@ -271,14 +244,11 @@ namespace Assets.src.g
 			hP = ((!isRes) ? 100 : 110);
 			xP = GameCanvas.hw - wP / 2;
 			yP = tfUser.y - 15;
-			int num2 = 4;
-			int num3 = num2 * 32 + 23 + 33;
-			if (num3 >= GameCanvas.w)
-			{
-				num2--;
-				num3 = num2 * 32 + 23 + 33;
-			}
-			xLog = GameCanvas.w / 2 - num3 / 2;
+			int num = 4;
+			int num2 = num * 32 + 23 + 33;
+			if (num2 >= GameCanvas.w)
+				num2 = (num - 1) * 32 + 23 + 33;
+			xLog = GameCanvas.w / 2 - num2 / 2;
 			yLog = 5;
 			lY = ((GameCanvas.w < 200) ? (tfUser.y - 30) : (yLog - 30));
 			tfUser.x = xLog + 10;
@@ -319,20 +289,13 @@ namespace Assets.src.g
 			MyVector myVector = new MyVector("vMenu Login");
 			myVector.addElement(new Command(mResources.registerNewAcc, this, 2004, null));
 			if (!isLogin2)
-			{
 				myVector.addElement(new Command(mResources.selectServer, this, 1004, null));
-			}
 			myVector.addElement(new Command(mResources.forgetPass, this, 1003, null));
 			myVector.addElement(new Command(mResources.website, this, 1005, null));
-			int num = Rms.loadRMSInt("lowGraphic");
-			if (num == 1)
-			{
+			if (Rms.loadRMSInt("lowGraphic") == 1)
 				myVector.addElement(new Command(mResources.increase_vga, this, 10041, null));
-			}
 			else
-			{
 				myVector.addElement(new Command(mResources.decrease_vga, this, 10042, null));
-			}
 			myVector.addElement(new Command(mResources.EXIT, GameCanvas.instance, 8885, null));
 			GameCanvas.menu.startAt(myVector, 0);
 		}
@@ -360,39 +323,27 @@ namespace Assets.src.g
 			if (mResources.language == 2)
 			{
 				if (tfUser.getText().IndexOf("@") == -1 || tfUser.getText().IndexOf(".") == -1)
-				{
 					text = mResources.emailInvalid;
-				}
 				num = 0;
 			}
 			else
-			{
 				try
 				{
 					long num2 = long.Parse(tfUser.getText());
 					if (tfUser.getText().Length < 8 || tfUser.getText().Length > 12 || (!tfUser.getText().StartsWith("0") && !tfUser.getText().StartsWith("84")))
-					{
 						text = mResources.phoneInvalid;
-					}
 					num = 1;
 				}
 				catch (Exception)
 				{
 					if (tfUser.getText().IndexOf("@") == -1 || tfUser.getText().IndexOf(".") == -1)
-					{
 						text = mResources.emailInvalid;
-					}
 					num = 0;
 				}
-			}
 			if (text != null)
-			{
 				GameCanvas.startOKDlg(text);
-			}
 			else
-			{
 				GameCanvas.msgdlg.setInfo(mResources.plsCheckAcc + ((num != 1) ? (mResources.email + ": ") : (mResources.phone + ": ")) + tfUser.getText() + "\n" + mResources.password + ": " + tfNgay.getText(), new Command(mResources.ACCEPT, this, 4000, null), null, new Command(mResources.NO, GameCanvas.instance, 8882, null));
-			}
 			GameCanvas.currentDialog = GameCanvas.msgdlg;
 		}
 
@@ -403,8 +354,7 @@ namespace Assets.src.g
 		public void doViewFAQ()
 		{
 			if (!listFAQ.Equals(string.Empty) || !listFAQ.Equals(string.Empty))
-			{
-			}
+				;
 			if (!Session_ME.connected)
 			{
 				isFAQ = true;
@@ -417,17 +367,13 @@ namespace Assets.src.g
 		{
 			MyVector myVector = new MyVector("vServer");
 			if (isLocal)
-			{
 				myVector.addElement(new Command("Server LOCAL", this, 20004, null));
-			}
 			myVector.addElement(new Command("Server Bokken", this, 20001, null));
 			myVector.addElement(new Command("Server Shuriken", this, 20002, null));
 			myVector.addElement(new Command("Server Tessen (mới)", this, 20003, null));
 			GameCanvas.menu.startAt(myVector, 0);
 			if (loadIndexServer() != -1 && !GameCanvas.isTouch)
-			{
 				GameCanvas.menu.menuSelectedItem = loadIndexServer();
-			}
 		}
 
 		protected void saveIndexServer(int index)
@@ -461,8 +407,7 @@ namespace Assets.src.g
 			tfNgayCap.update();
 			for (int i = 0; i < Effect2.vEffect2.size(); i++)
 			{
-				Effect2 effect = (Effect2)Effect2.vEffect2.elementAt(i);
-				effect.update();
+				((Effect2)Effect2.vEffect2.elementAt(i)).update();
 			}
 			if (isUpdateAll && !isUpdateData && !isUpdateItem && !isUpdateMap && !isUpdateSkill)
 			{
@@ -472,13 +417,9 @@ namespace Assets.src.g
 			}
 			GameScr.cmx++;
 			if (GameScr.cmx > GameCanvas.w * 3 + 100)
-			{
 				GameScr.cmx = 100;
-			}
 			if (ChatPopup.currChatPopup != null)
-			{
 				return;
-			}
 			GameCanvas.debug("LGU1", 0);
 			GameCanvas.debug("LGU2", 0);
 			GameCanvas.debug("LGU3", 0);
@@ -490,9 +431,7 @@ namespace Assets.src.g
 				ylogo += dir * g;
 				g += dir * v;
 				if (g <= 0)
-				{
 					dir *= -1;
-				}
 				if (ylogo > 0)
 				{
 					dir *= -1;
@@ -501,9 +440,7 @@ namespace Assets.src.g
 			}
 			GameCanvas.debug("LGU6", 0);
 			if (tipid >= 0 && GameCanvas.gameTick % 100 == 0)
-			{
 				doChangeTip();
-			}
 			if (GameCanvas.isTouch)
 			{
 				if (isRes)
@@ -533,29 +470,21 @@ namespace Assets.src.g
 		{
 			tipid++;
 			if (tipid >= mResources.tips.Length)
-			{
 				tipid = 0;
-			}
 			if (GameCanvas.currentDialog == GameCanvas.msgdlg && GameCanvas.msgdlg.isWait)
-			{
 				GameCanvas.msgdlg.setInfo(mResources.tips[tipid]);
-			}
 		}
 
 		public void updateLogo()
 		{
 			if (defYL != yL)
-			{
 				yL += defYL - yL >> 1;
-			}
 		}
 
 		public override void keyPress(int keyCode)
 		{
 			if (tfUser.isFocus)
-			{
 				tfUser.keyPressed(keyCode);
-			}
 			else if (tfNgay.isFocus)
 			{
 				tfNgay.keyPressed(keyCode);
@@ -603,35 +532,25 @@ namespace Assets.src.g
 			GameCanvas.debug("PLG2", 2);
 			int num = tfUser.y - 50;
 			if (GameCanvas.h <= 220)
-			{
 				num += 5;
-			}
 			if (ChatPopup.currChatPopup != null || ChatPopup.serverChatPopUp != null)
-			{
 				return;
-			}
 			if (GameCanvas.currentDialog == null)
 			{
 				xLog = 5;
 				int num2 = 233;
 				if (GameCanvas.w < 260)
-				{
 					xLog = (GameCanvas.w - 240) / 2;
-				}
 				yLog = (GameCanvas.h - num2) / 2;
 				int num3 = ((GameCanvas.w < 200) ? 160 : 180);
-				PopUp.paintPopUp(g, xLog, yLog, 240, num2, -1, isButton: true);
+				PopUp.paintPopUp(g, xLog, yLog, 240, num2, -1, true);
 				if (GameCanvas.h > 160 && imgTitle != null)
-				{
 					g.drawImage(imgTitle, GameCanvas.hw, num, 3);
-				}
 				GameCanvas.debug("PLG4", 1);
 				int num4 = 4;
-				int num5 = num4 * 32 + 23 + 33;
-				if (num5 >= GameCanvas.w)
+				if (num4 * 32 + 23 + 33 >= GameCanvas.w)
 				{
-					num4--;
-					num5 = num4 * 32 + 23 + 33;
+					int num5 = (num4 - 1) * 32 + 23 + 33;
 				}
 				tfSodt.x = xLog + 10;
 				tfSodt.y = yLog + 15;
@@ -662,17 +581,14 @@ namespace Assets.src.g
 				tfSodt.paint(g);
 				int num6 = 0;
 				if (GameCanvas.w >= 176)
-				{
 					num6 = 50;
-				}
 				else
 				{
 					mFont.tahoma_7b_green2.drawString(g, mResources.acc + ":", tfUser.x - 35, tfUser.y + 7, 0);
 					mFont.tahoma_7b_green2.drawString(g, mResources.pwd + ":", tfNgay.x - 35, tfNgay.y + 7, 0);
 					mFont.tahoma_7b_green2.drawString(g, mResources.server + ": " + serverName, GameCanvas.w / 2, tfNgay.y + 32, 2);
 					if (isRes)
-					{
-					}
+						;
 					num6 = 0;
 				}
 			}
@@ -716,48 +632,44 @@ namespace Assets.src.g
 			turnOffFocus();
 			switch (focus)
 			{
-				case 0:
-					tfUser.isFocus = true;
-					break;
-				case 1:
-					tfNgay.isFocus = true;
-					break;
-				case 2:
-					tfThang.isFocus = true;
-					break;
-				case 3:
-					tfNam.isFocus = true;
-					break;
-				case 4:
-					tfDiachi.isFocus = true;
-					break;
-				case 5:
-					tfCMND.isFocus = true;
-					break;
-				case 6:
-					tfNgayCap.isFocus = true;
-					break;
-				case 7:
-					tfNoiCap.isFocus = true;
-					break;
-				case 8:
-					tfSodt.isFocus = true;
-					break;
+			case 0:
+				tfUser.isFocus = true;
+				break;
+			case 1:
+				tfNgay.isFocus = true;
+				break;
+			case 2:
+				tfThang.isFocus = true;
+				break;
+			case 3:
+				tfNam.isFocus = true;
+				break;
+			case 4:
+				tfDiachi.isFocus = true;
+				break;
+			case 5:
+				tfCMND.isFocus = true;
+				break;
+			case 6:
+				tfNgayCap.isFocus = true;
+				break;
+			case 7:
+				tfNoiCap.isFocus = true;
+				break;
+			case 8:
+				tfSodt.isFocus = true;
+				break;
 			}
 		}
 
 		public override void updateKey()
 		{
 			if (isContinueToLogin)
-			{
 				return;
-			}
 			if (!GameCanvas.isTouch)
 			{
 				if (tfUser.isFocus)
-				{
 					right = tfUser.cmdClear;
-				}
 				else if (tfNgay.isFocus)
 				{
 					right = tfNgay.cmdClear;
@@ -795,18 +707,14 @@ namespace Assets.src.g
 			{
 				focus--;
 				if (focus < 0)
-				{
 					focus = 8;
-				}
 				processFocus();
 			}
 			else if (GameCanvas.keyPressed[22])
 			{
 				focus++;
 				if (focus > 8)
-				{
 					focus = 0;
-				}
 				processFocus();
 			}
 			if (GameCanvas.keyPressed[21] || GameCanvas.keyPressed[22])
@@ -915,75 +823,81 @@ namespace Assets.src.g
 		{
 			switch (idAction)
 			{
-				case 1000:
-					try
-					{
-						GameMidlet.instance.platformRequest((string)p);
-					}
-					catch (Exception ex)
-					{
-						ex.StackTrace.ToString();
-					}
-					GameCanvas.endDlg();
-					break;
-				case 1001:
-					GameCanvas.endDlg();
-					isRes = false;
-					break;
-				case 1004:
-					ServerListScreen.doUpdateServer();
-					GameCanvas.serverScreen.switchToMe();
-					break;
-				case 10021:
-					actRegisterLeft();
-					break;
-				case 1003:
-					Session_ME.gI().close();
-					GameCanvas.serverScreen.switchToMe();
-					break;
-				case 1005:
-					try
-					{
-						GameMidlet.instance.platformRequest("http://ngocrongonline.com");
-						break;
-					}
-					catch (Exception ex2)
-					{
-						ex2.StackTrace.ToString();
-						break;
-					}
-				case 2001:
-					if (isCheck)
-					{
-						isCheck = false;
-					}
-					else
-					{
-						isCheck = true;
-					}
-					break;
-				case 2002:
-					doRegister();
-					break;
-				case 2003:
-					doMenu();
-					break;
-				case 2004:
-					actRegister();
-					break;
-				case 2008:
-					if (tfNgay.getText().Equals(string.Empty) || tfThang.getText().Equals(string.Empty) || tfNam.getText().Equals(string.Empty) || tfDiachi.getText().Equals(string.Empty) || tfCMND.getText().Equals(string.Empty) || tfNgayCap.getText().Equals(string.Empty) || tfNoiCap.getText().Equals(string.Empty) || tfSodt.getText().Equals(string.Empty) || tfUser.getText().Equals(string.Empty))
-					{
-						GameCanvas.startOKDlg("Vui lòng điền đầy đủ thông tin");
-						break;
-					}
-					GameCanvas.startOKDlg(mResources.PLEASEWAIT);
-					Service.gI().charInfo(tfNgay.getText(), tfThang.getText(), tfNam.getText(), tfDiachi.getText(), tfCMND.getText(), tfNgayCap.getText(), tfNoiCap.getText(), tfSodt.getText(), tfUser.getText());
-					break;
-				case 4000:
-					doRegister(tfUser.getText());
-					break;
+			case 1000:
+				try
+				{
+					GameMidlet.instance.platformRequest((string)p);
+				}
+				catch (Exception ex2)
+				{
+					ex2.StackTrace.ToString();
+				}
+				GameCanvas.endDlg();
+				return;
+			case 1001:
+				GameCanvas.endDlg();
+				isRes = false;
+				return;
+			case 1002:
+				return;
+			case 1004:
+				ServerListScreen.doUpdateServer();
+				GameCanvas.serverScreen.switchToMe();
+				return;
+			case 1003:
+				Session_ME.gI().close();
+				GameCanvas.serverScreen.switchToMe();
+				return;
+			case 1005:
+				try
+				{
+					GameMidlet.instance.platformRequest("http://ngocrongonline.com");
+					return;
+				}
+				catch (Exception ex)
+				{
+					ex.StackTrace.ToString();
+					return;
+				}
 			}
+			switch (idAction)
+			{
+			case 2000:
+				return;
+			case 2001:
+				if (isCheck)
+					isCheck = false;
+				else
+					isCheck = true;
+				return;
+			case 2002:
+				doRegister();
+				return;
+			case 2003:
+				doMenu();
+				return;
+			case 2004:
+				actRegister();
+				return;
+			case 2008:
+				if (tfNgay.getText().Equals(string.Empty) || tfThang.getText().Equals(string.Empty) || tfNam.getText().Equals(string.Empty) || tfDiachi.getText().Equals(string.Empty) || tfCMND.getText().Equals(string.Empty) || tfNgayCap.getText().Equals(string.Empty) || tfNoiCap.getText().Equals(string.Empty) || tfSodt.getText().Equals(string.Empty) || tfUser.getText().Equals(string.Empty))
+				{
+					GameCanvas.startOKDlg("Vui lòng điền đầy đủ thông tin");
+					return;
+				}
+				GameCanvas.startOKDlg(mResources.PLEASEWAIT);
+				Service.gI().charInfo(tfNgay.getText(), tfThang.getText(), tfNam.getText(), tfDiachi.getText(), tfCMND.getText(), tfNgayCap.getText(), tfNoiCap.getText(), tfSodt.getText(), tfUser.getText());
+				return;
+			}
+			if (idAction == 10041 || idAction == 10042)
+				return;
+			if (idAction != 4000)
+			{
+				if (idAction == 10021)
+					actRegisterLeft();
+			}
+			else
+				doRegister(tfUser.getText());
 		}
 
 		public void actRegisterLeft()

@@ -64,11 +64,8 @@ public class BgItem
 	{
 		for (int i = 0; i < vKeysNew.size(); i++)
 		{
-			string text = (string)vKeysNew.elementAt(i);
-			if (text.Equals(keyNew))
-			{
+			if (((string)vKeysNew.elementAt(i)).Equals(keyNew))
 				return true;
-			}
 		}
 		return false;
 	}
@@ -77,11 +74,8 @@ public class BgItem
 	{
 		for (int i = 0; i < vKeysLast.size(); i++)
 		{
-			string text = (string)vKeysLast.elementAt(i);
-			if (text.Equals(keyLast))
-			{
+			if (((string)vKeysLast.elementAt(i)).Equals(keyLast))
 				return true;
-			}
 		}
 		return false;
 	}
@@ -89,19 +83,13 @@ public class BgItem
 	public bool isNotBlend()
 	{
 		if (mGraphics.zoomLevel == 1)
-		{
 			return true;
-		}
 		if (TileMap.isInAirMap())
-		{
 			return true;
-		}
 		for (int i = 0; i < idNotBlend.Length; i++)
 		{
 			if (idImage == idNotBlend[i])
-			{
 				return true;
-			}
 		}
 		return false;
 	}
@@ -111,9 +99,7 @@ public class BgItem
 		for (int i = 0; i < isMiniBgz.Length; i++)
 		{
 			if (idImage == isMiniBgz[i])
-			{
 				return true;
-			}
 		}
 		return false;
 	}
@@ -121,9 +107,7 @@ public class BgItem
 	public void changeColor()
 	{
 		if (isNotBlend() || layer == 2 || layer == 4 || imgNew.containsKey(idImage + "blend" + layer))
-		{
 			return;
-		}
 		Image image = (Image)imgNew.get(idImage + string.Empty);
 		if (image != null && image.getRealImageWidth() > 4)
 		{
@@ -143,27 +127,18 @@ public class BgItem
 		if (Char.isLoadingMap || (idImage == 279 && GameScr.gI().tMabuEff >= 110) || ModMenuMain.getStatusInt("levelreducegraphics") > 0)
 		{
 			return;
-		}
 		int cmx = GameScr.cmx;
 		int cmy = GameScr.cmy;
 		Image image = null;
 		image = ((layer == 2 || layer == 4) ? ((Image)imgNew.get(idImage + string.Empty)) : (isNotBlend() ? ((Image)imgNew.get(idImage + string.Empty)) : ((Image)imgNew.get(idImage + "blend" + layer))));
 		if (image == null || idImage == 96)
-		{
 			return;
-		}
 		if (layer == 4)
-		{
 			transX = -cmx / 2 + 100;
-		}
 		if (idImage == 28 && layer == 3)
-		{
 			transX = -cmx / 3 + 200;
-		}
 		if ((idImage == 67 || idImage == 68 || idImage == 69 || idImage == 70) && layer == 3)
-		{
 			transX = -cmx / 3 + 200;
-		}
 		if (isMiniBg() && layer < 4)
 		{
 			transX = -(cmx >> 4) + 50;
@@ -185,8 +160,6 @@ public class BgItem
 			}
 		}
 		if (TileMap.isDoubleMap() && idImage > 137 && idImage != 156 && idImage != 159 && idImage != 157 && idImage != 165 && idImage != 167 && idImage != 168 && idImage != 169 && idImage != 170 && idImage != 238 && TileMap.pxw - (x + dx + transX) >= cmx && TileMap.pxw - (x + dx + transX + image.getWidth()) <= cmx + GameCanvas.w && y + dy + transY + image.getHeight() >= cmy && y + dy + transY <= cmy + GameCanvas.h && (idImage < 241 || idImage >= 266))
-		{
 			g.drawRegion(image, 0, 0, mGraphics.getImageWidth(image), mGraphics.getImageHeight(image), 2, TileMap.pxw - (x + dx + transX), y + dy + transY, StaticObj.TOP_RIGHT);
-		}
 	}
 }

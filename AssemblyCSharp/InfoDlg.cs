@@ -62,9 +62,7 @@ public class InfoDlg
 		{
 			delay--;
 			if (delay == 0)
-			{
 				hide();
-			}
 		}
 	}
 

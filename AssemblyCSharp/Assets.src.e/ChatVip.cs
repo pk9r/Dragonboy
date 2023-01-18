@@ -1,6 +1,5 @@
 namespace Assets.src.e
 {
-
 	internal class ChatVip
 	{
 		public string chat;

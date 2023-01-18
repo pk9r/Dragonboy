@@ -2,6 +2,7 @@ public class T1 : mResources
 {
 	public static void load()
 	{
+		mResources.delacc = "Xóa tài khoản";
 		mResources.notiINAPP = "Hôm nay bạn đã nạp nhiều ngọc. Ngày mai hãy nạp tiếp nhé!";
 		mResources.notiRuby = "Khi bán thành công sẽ nhận lại Hồng Ngọc không phải Ngọc, bạn có muốn tiếp tục kí gửi?";
 		mResources.equip = "Sử dụng";
@@ -18,7 +19,7 @@ public class T1 : mResources
 		mResources.gameInfo = "Thông báo";
 		mResources.useGem = "Tự động hồi sinh";
 		mResources.autoFunction = "Chức năng auto";
-		mResources.sure_fusion = "Bạn có chắc muốn kết hợp vĩnh viễn với đệ tử của mình không? Bạn sẽ mất đệ tử, toàn bộ sức mạnh của đệ tử sẽ chuyển thành tiềm năng của bạn";
+		mResources.sure_fusion = "Bạn có chắc muốn kết hợp vĩnh viễn với đệ tử của mình không? Bạn sẽ mất đệ tử và toàn bộ trang bị đệ tử đang mặc, toàn bộ sức mạnh của đệ tử sẽ chuyển thành tiềm năng của bạn";
 		mResources.fusionForever = "Hợp thể vĩnh viễn";
 		mResources.fusion = "Hợp thể";
 		mResources.nhanngoc = "Nhận ngọc";
@@ -31,8 +32,8 @@ public class T1 : mResources
 		mResources.follow = "Đi theo";
 		mResources.pet = "Đệ tử";
 		mResources.maychutathoacmatsong = "Máy chủ tắt hoặc mất sóng";
-		mResources.cauhinhthap = "Cấu hình\nthấp";
-		mResources.cauhinhcao = "Cấu hình\ncao";
+		mResources.cauhinhthap = "Cấu hình thấp";
+		mResources.cauhinhcao = "Cấu hình cao";
 		mResources.taidulieu = "Tải dữ liệu";
 		mResources.xoadulieu = "Xóa dữ liệu";
 		mResources.deletaDataNote = "Bạn cần xóa trong trường hợp có lỗi tải dữ liệu. Khi xóa xong, bạn phải tải lại toàn bộ để có thể chơi.";
@@ -46,8 +47,8 @@ public class T1 : mResources
 		mResources.fasterQuestion = "Bạn có đến tương lai ngay bây giờ với giá 1 ngọc không ?";
 		mResources.faster = "Tăng tốc";
 		mResources.remain = "Còn lại";
-		mResources.turnOnAnalog = "Bật bàn phím ảo";
-		mResources.turnOffAnalog = "Tắt bàn phím ảo";
+		mResources.turnOnAnalog = "Bàn phím ảo";
+		mResources.turnOffAnalog = "Bàn phím ảo";
 		mResources.analog = "Bàn phím ảo";
 		mResources.inventory_Pass = "Mã bảo vệ";
 		mResources.input_Inventory_Pass = "Nhập mã bảo vệ";
@@ -72,8 +73,8 @@ public class T1 : mResources
 		mResources.daban = "Đã bán";
 		mResources.dangban = "Đang bán";
 		mResources.kigui = "Kí gửi";
-		mResources.turnOnSound = "Bật âm thanh";
-		mResources.turnOffSound = "Tắt âm thanh";
+		mResources.turnOnSound = "Âm thanh";
+		mResources.turnOffSound = "Âm thanh";
 		mResources.rank = "Hạng";
 		mResources.selectServer2 = "Chọn máy chủ";
 		mResources.active_point = "Năng động";
@@ -151,9 +152,7 @@ public class T1 : mResources
 		};
 		mResources.MENUGENDER = new string[3] { "Trái đất", "Namếc", "Xayda" };
 		if (mSystem.clientType == 7)
-		{
 			mResources.MENUGENDER = new string[3] { "Rồng đất", "Rồng xanh", "Rồng đỏ" };
-		}
 		mResources.CHAR_ORDER = new string[10] { "Thách đấu", "Luyện tập", "Cừu sát", "Kết bạn", "Mời vào bang", "Phục hồi", "Xem thông tin", "Chat riêng", "Mời vào tộc", "Chặn xin vào tộc" };
 		mResources.mainTab1 = new string[4][]
 		{
@@ -271,10 +270,14 @@ public class T1 : mResources
 		mResources.low = "Thấp";
 		mResources.increase_vga = "Tăng đồ họa (cho máy mạnh)";
 		mResources.decrease_vga = "Giảm đồ họa (cho máy yếu)";
-		mResources.serverchat_off = "Tắt thông báo từ máy chủ";
-		mResources.serverchat_on = "Bật thông báo từ máy chủ";
-		mResources.aura_on = "Bật hào quang đặc biệt";
-		mResources.aura_off = "Tắt hào quang đặc biệt";
+		mResources.serverchat_off = "Thông báo từ máy chủ";
+		mResources.serverchat_on = "Thông báo từ máy chủ";
+		mResources.aura_on = "Hào quang đặc biệt";
+		mResources.aura_off = "Hào quang đặc biệt";
+		mResources.aura_on_2 = "Hào quang sức mạnh";
+		mResources.aura_off_2 = "Hào quang sức mạnh";
+		mResources.hat_on = "Hiện phụ kiện";
+		mResources.hat_off = "Phụ kiện";
 		mResources.x2Screen = "Màn hình lớn";
 		mResources.x1Screen = "Màn hình nhỏ";
 		mResources.changeSizeScreen = "Bạn có muốn thoát game để thay đổi cỡ màn hình không ?";
@@ -477,14 +480,12 @@ public class T1 : mResources
 			new string[3] { "Cađic", "Rađic", "Kakalot" }
 		};
 		if (mSystem.clientType == 7)
-		{
 			mResources.hairStyleName = new string[3][]
 			{
 				new string[3] { "Hango", "Linkhi", "Chayam" },
 				new string[3] { "Deden", "Cololo", "Mika" },
 				new string[3] { "Tageve", "Ditra", "Rotkaka" }
 			};
-		}
 		mResources.hp_ki_full = "HP và KI đã đầy, không cần dùng đậu thần";
 		mResources.quest_place = "Địa điểm nhiệm vụ";
 		mResources.no_mission = "Không có nhiệm vụ";

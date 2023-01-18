@@ -210,26 +210,27 @@ public class TileMap
 	{
 		bong = GameCanvas.loadImage("/mainImage/myTexture2dbong.png");
 		if (mGraphics.zoomLevel != 1 && !Main.isIpod && !Main.isIphone4)
-		{
 			imgLight = GameCanvas.loadImage("/bg/light.png");
-		}
+	}
+
+	public static bool isVoDaiMap()
+	{
+		if (mapID == 51 || mapID == 103 || mapID == 112 || mapID == 113 || mapID == 129 || mapID == 130)
+			return true;
+		return false;
 	}
 
 	public static bool isTrainingMap()
 	{
 		if (mapID == 39 || mapID == 40 || mapID == 41)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public static bool mapPhuBang()
 	{
 		if (GameScr.phuban_Info != null && mapID == GameScr.phuban_Info.idmapPaint)
-		{
 			return true;
-		}
 		return false;
 	}
 
@@ -239,9 +240,7 @@ public class TileMap
 		{
 			BgItem bgItem = (BgItem)vItemBg.elementAt(i);
 			if (bgItem.id == id)
-			{
 				return bgItem;
-			}
 		}
 		return null;
 	}
@@ -251,9 +250,7 @@ public class TileMap
 		for (int i = 0; i < offlineId.Length; i++)
 		{
 			if (mapID == offlineId[i])
-			{
 				return true;
-			}
 		}
 		return false;
 	}
@@ -263,9 +260,7 @@ public class TileMap
 		for (int i = 0; i < offlineId.Length; i++)
 		{
 			if (mapID == highterId[i])
-			{
 				return true;
-			}
 		}
 		return false;
 	}
@@ -275,9 +270,7 @@ public class TileMap
 		for (int i = 0; i < toOfflineId.Length; i++)
 		{
 			if (mapID == toOfflineId[i])
-			{
 				return true;
-			}
 		}
 		return false;
 	}
@@ -295,51 +288,32 @@ public class TileMap
 	public static bool isExistMoreOne(int id)
 	{
 		if (id == 156 || id == 330 || id == 345 || id == 334)
-		{
 			return false;
-		}
 		if (mapID == 54 || mapID == 55 || mapID == 56 || mapID == 57 || mapID == 58 || mapID == 59 || mapID == 103)
-		{
 			return false;
-		}
 		int num = 0;
 		for (int i = 0; i < vCurrItem.size(); i++)
 		{
-			BgItem bgItem = (BgItem)vCurrItem.elementAt(i);
-			if (bgItem.id == id)
-			{
+			if (((BgItem)vCurrItem.elementAt(i)).id == id)
 				num++;
-			}
 		}
 		if (num > 2)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public static void loadTileImage()
 	{
 		if (imgWaterfall == null)
-		{
 			imgWaterfall = GameCanvas.loadImageRMS("/tWater/wtf.png");
-		}
 		if (imgTopWaterfall == null)
-		{
 			imgTopWaterfall = GameCanvas.loadImageRMS("/tWater/twtf.png");
-		}
 		if (imgWaterflow == null)
-		{
 			imgWaterflow = GameCanvas.loadImageRMS("/tWater/wts.png");
-		}
 		if (imgWaterlowN == null)
-		{
 			imgWaterlowN = GameCanvas.loadImageRMS("/tWater/wtsN.png");
-		}
 		if (imgWaterlowN2 == null)
-		{
 			imgWaterlowN2 = GameCanvas.loadImageRMS("/tWater/wtsN2.png");
-		}
 		mSystem.gcc();
 	}
 
@@ -381,18 +355,14 @@ public class TileMap
 	public static bool isInAirMap()
 	{
 		if (mapID == 45 || mapID == 46 || mapID == 48)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public static bool isDoubleMap()
 	{
 		if (isMapDouble || mapID == 45 || mapID == 46 || mapID == 48 || mapID == 51 || mapID == 52 || mapID == 103 || mapID == 112 || mapID == 113 || mapID == 115 || mapID == 117 || mapID == 118 || mapID == 119 || mapID == 120 || mapID == 121 || mapID == 125 || mapID == 129 || mapID == 130)
-		{
 			return true;
-		}
 		return false;
 	}
 
@@ -411,9 +381,8 @@ public class TileMap
 			{
 				imgTile[i] = GameCanvas.loadImage("/t/" + tileID + "/" + (i + 1) + ".png");
 			}
-			return;
 		}
-		if (mGraphics.zoomLevel == 1)
+		else if (mGraphics.zoomLevel == 1)
 		{
 			if (imgTile != null)
 			{
@@ -434,10 +403,8 @@ public class TileMap
 				empty = ((k >= 9) ? ("/t/" + tileID + "/t_" + (k + 1)) : ("/t/" + tileID + "/t_0" + (k + 1)));
 				imgTile[k] = GameCanvas.loadImage(empty);
 			}
-			return;
 		}
-		Image image = GameCanvas.loadImageRMS("/t/" + tileID + "$1.png");
-		if (image != null)
+		else if (GameCanvas.loadImageRMS("/t/" + tileID + "$1.png") != null)
 		{
 			Rms.DeleteStorage("x" + mGraphics.zoomLevel + "t" + tileID);
 			imgTile = new Image[100];
@@ -448,7 +415,7 @@ public class TileMap
 		}
 		else
 		{
-			image = GameCanvas.loadImageRMS("/t/" + tileID + ".png");
+			Image image = GameCanvas.loadImageRMS("/t/" + tileID + ".png");
 			if (image != null)
 			{
 				Rms.DeleteStorage("$");
@@ -463,13 +430,9 @@ public class TileMap
 		if (imgTile != null)
 		{
 			if (imgTile.Length == 1)
-			{
 				g.drawRegion(imgTile[0], 0, frame * size, size, size, 0, indexX * size, indexY * size, 0);
-			}
 			else
-			{
 				g.drawImage(imgTile[frame], indexX * size, indexY * size, 0);
-			}
 		}
 	}
 
@@ -478,13 +441,9 @@ public class TileMap
 		if (imgTile != null)
 		{
 			if (imgTile.Length == 1)
-			{
 				g.drawRegion(imgTile[0], 0, frame * w, w, w, 0, x, y, 0);
-			}
 			else
-			{
 				g.drawImage(imgTile[frame], x, y, 0);
-			}
 		}
 	}
 
@@ -496,33 +455,24 @@ public class TileMap
 			{
 				int num = maps[j * tmw + i] - 1;
 				if (num != -1)
-				{
 					paintTile(g, num, i, j);
-				}
 				if ((tileTypeAt(i, j) & 0x20) == 32)
-				{
 					g.drawRegion(imgWaterfall, 0, 24 * (GameCanvas.gameTick % 4), 24, 24, 0, i * size, j * size, 0);
-				}
 				else if ((tileTypeAt(i, j) & 0x40) == 64)
 				{
 					if ((tileTypeAt(i, j - 1) & 0x20) == 32)
-					{
 						g.drawRegion(imgWaterfall, 0, 24 * (GameCanvas.gameTick % 4), 24, 24, 0, i * size, j * size, 0);
-					}
 					else if ((tileTypeAt(i, j - 1) & 0x1000) == 4096)
 					{
 						paintTile(g, 21, i, j);
 					}
 					Image image = null;
-					image = ((tileID == 5) ? imgWaterlowN : ((tileID != 8) ? imgWaterflow : imgWaterlowN2));
-					g.drawRegion(image, 0, (GameCanvas.gameTick % 8 >> 2) * 24, 24, 24, 0, i * size, j * size, 0);
+					g.drawRegion((tileID == 5) ? imgWaterlowN : ((tileID != 8) ? imgWaterflow : imgWaterlowN2), 0, (GameCanvas.gameTick % 8 >> 2) * 24, 24, 24, 0, i * size, j * size, 0);
 				}
 				if ((tileTypeAt(i, j) & 0x800) == 2048)
 				{
 					if ((tileTypeAt(i, j - 1) & 0x20) == 32)
-					{
 						g.drawRegion(imgWaterfall, 0, 24 * (GameCanvas.gameTick % 4), 24, 24, 0, i * size, j * size, 0);
-					}
 					else if ((tileTypeAt(i, j - 1) & 0x1000) == 4096)
 					{
 						paintTile(g, 21, i, j);
@@ -569,63 +519,47 @@ public class TileMap
 			for (int k = GameScr.gssy; k < GameScr.gssye; k++)
 			{
 				if (j == 0 || j == tmw - 1)
-				{
 					continue;
-				}
 				int num = maps[k * tmw + j] - 1;
 				if ((tileTypeAt(j, k) & 0x100) == 256)
-				{
 					continue;
-				}
 				if ((tileTypeAt(j, k) & 0x20) == 32)
-				{
 					g.drawRegion(imgWaterfall, 0, 24 * (GameCanvas.gameTick % 8 >> 1), 24, 24, 0, j * size, k * size, 0);
-					continue;
-				}
-				if ((tileTypeAt(j, k) & 0x80) == 128)
+				else if ((tileTypeAt(j, k) & 0x80) == 128)
 				{
 					g.drawRegion(imgTopWaterfall, 0, 24 * (GameCanvas.gameTick % 8 >> 1), 24, 24, 0, j * size, k * size, 0);
-					continue;
 				}
-				if (tileID == 13)
+				else
 				{
-					if (!GameCanvas.lowGraphic)
-					{
-						return;
-					}
-					if (num != -1)
-					{
-						paintTile(g, 0, j, k);
-					}
-					continue;
-				}
-				if (tileID == 2 && (tileTypeAt(j, k) & 0x200) == 512 && num != -1)
-				{
-					paintTile(g, num, j * size, k * size, 24, 1);
-					paintTile(g, num, j * size, k * size + 1, 24, 24);
-				}
-				if (tileID == 3)
-				{
-				}
-				if ((tileTypeAt(j, k) & 0x10) == 16)
-				{
-					bx = j * size - GameScr.cmx;
-					dbx = bx - GameScr.gW2;
-					dfx = (size - 2) * dbx / size;
-					fx = dfx + GameScr.gW2;
-					paintTile(g, num, fx + GameScr.cmx, k * size, 24, 24);
-				}
-				else if ((tileTypeAt(j, k) & 0x200) == 512)
-				{
-					if (num != -1)
+					if (tileID == 13 && num != -1)
+						continue;
+					if (tileID == 2 && (tileTypeAt(j, k) & 0x200) == 512 && num != -1)
 					{
 						paintTile(g, num, j * size, k * size, 24, 1);
 						paintTile(g, num, j * size, k * size + 1, 24, 24);
 					}
-				}
-				else if (num != -1)
-				{
-					paintTile(g, num, j, k);
+					if (tileID == 3)
+						;
+					if ((tileTypeAt(j, k) & 0x10) == 16)
+					{
+						bx = j * size - GameScr.cmx;
+						dbx = bx - GameScr.gW2;
+						dfx = (size - 2) * dbx / size;
+						fx = dfx + GameScr.gW2;
+						paintTile(g, num, fx + GameScr.cmx, k * size, 24, 24);
+					}
+					else if ((tileTypeAt(j, k) & 0x200) == 512)
+					{
+						if (num != -1)
+						{
+							paintTile(g, num, j * size, k * size, 24, 1);
+							paintTile(g, num, j * size, k * size + 1, 24, 24);
+						}
+					}
+					else if (num != -1)
+					{
+						paintTile(g, num, j, k);
+					}
 				}
 			}
 		}
@@ -635,32 +569,24 @@ public class TileMap
 			{
 				int num2 = maps[l * tmw + 1] - 1;
 				if (num2 != -1)
-				{
 					paintTile(g, num2, 0, l);
-				}
 			}
 		}
 		if (GameScr.cmx <= GameScr.cmxLim)
-		{
 			return;
-		}
 		int num3 = tmw - 2;
 		for (int m = GameScr.gssy; m < GameScr.gssye; m++)
 		{
 			int num4 = maps[m * tmw + num3] - 1;
 			if (num4 != -1)
-			{
 				paintTile(g, num4, num3 + 1, m);
-			}
 		}
 	}
 
 	public static bool isWaterEff()
 	{
 		if (mapID == 54 || mapID == 55 || mapID == 56 || mapID == 57 || mapID == 138)
-		{
 			return false;
-		}
 		return true;
 	}
 
@@ -669,7 +595,6 @@ public class TileMap
 		if (GameCanvas.lowGraphic || ModMenuMain.getStatusInt("levelreducegraphics") > 0)
 		{
 			return;
-		}
 		int num = 0;
 		for (int i = GameScr.gssx; i < GameScr.gssxe; i++)
 		{
@@ -677,9 +602,7 @@ public class TileMap
 			{
 				num++;
 				if ((tileTypeAt(i, j) & 0x40) != 64)
-				{
 					continue;
-				}
 				Image image = null;
 				image = ((tileID == 5) ? imgWaterlowN : ((tileID != 8) ? imgWaterflow : imgWaterlowN2));
 				if (!isWaterEff())
@@ -693,9 +616,7 @@ public class TileMap
 					yWater = j * size - 12;
 					int color = 16777215;
 					if (GameCanvas.typeBg == 2)
-					{
 						color = 10871287;
-					}
 					else if (GameCanvas.typeBg == 4)
 					{
 						color = 8111470;

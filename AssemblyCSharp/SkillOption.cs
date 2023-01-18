@@ -9,9 +9,7 @@ public class SkillOption
 	public string getOptionString()
 	{
 		if (optionString == null)
-		{
 			optionString = NinjaUtil.replace(optionTemplate.name, "#", string.Empty + param);
-		}
 		return optionString;
 	}
 }

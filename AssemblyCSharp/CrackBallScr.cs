@@ -105,12 +105,9 @@ public class CrackBallScr : mScreen
 		xSkill[0] = 16;
 		ySkill = GameCanvas.h - 41;
 		xSkill[1] = GameCanvas.w - 40;
-		Image img = GameCanvas.loadImage("/e/e_1.png");
-		fraImgKame = new FrameImage(img, 30, 30);
-		Image img2 = GameCanvas.loadImage("/e/e_0.png");
-		fraImgKame_1 = new FrameImage(img2, 68, 65);
-		Image img3 = GameCanvas.loadImage("/e/e_2.png");
-		fraImgKame_2 = new FrameImage(img3, 66, 70);
+		fraImgKame = new FrameImage(GameCanvas.loadImage("/e/e_1.png"), 30, 30);
+		fraImgKame_1 = new FrameImage(GameCanvas.loadImage("/e/e_0.png"), 68, 65);
+		fraImgKame_2 = new FrameImage(GameCanvas.loadImage("/e/e_2.png"), 66, 70);
 		imgReplay = GameCanvas.loadImage("/e/nut2.png");
 		imgX = GameCanvas.loadImage("/e/nut3.png");
 		wP = 230;
@@ -122,9 +119,7 @@ public class CrackBallScr : mScreen
 	public static CrackBallScr gI()
 	{
 		if (instance == null)
-		{
 			instance = new CrackBallScr();
-		}
 		return instance;
 	}
 
@@ -175,9 +170,7 @@ public class CrackBallScr : mScreen
 	{
 		rO = GameCanvas.hh / 3 + 10;
 		if (rO > 50)
-		{
 			rO = 50;
-		}
 		xO = 360;
 		GameScr.cmx = GameScr.cmxLim / 2;
 		yO = GameScr.cmy + GameCanvas.hh / 3 + 30;
@@ -194,9 +187,7 @@ public class CrackBallScr : mScreen
 	private void setDotPosition()
 	{
 		//if (GameCanvas.lowGraphic)
-		//{
 		//	return;
-		//}
 		for (int i = 0; i < yArg.Length; i++)
 		{
 			yArg[i] = Res.abs(rO * Res.sin(angle) / 1024);
@@ -242,61 +233,44 @@ public class CrackBallScr : mScreen
 				{
 					listBall[i].count += 2;
 					if (listBall[i].count >= iDot)
-					{
 						listBall[i].count = 0;
-					}
 					listBall[i].x = xDot[listBall[i].count];
 					listBall[i].y = yDot[listBall[i].count];
 				}
 				return;
 			}
 			if (step == 0)
-			{
 				step = 1;
-			}
 			if (step == 1)
 			{
 				for (int j = 0; j < listBall.Length; j++)
 				{
 					if (listBall[j].yTo == -999 || listBall[j].isDone)
-					{
 						continue;
-					}
 					if (listBall[j].y < listBall[j].yTo)
 					{
 						if (listBall[j].vy < 0)
-						{
 							listBall[j].vy = 0;
-						}
 						if (listBall[j].y + listBall[j].vy > listBall[j].yTo)
-						{
 							listBall[j].y = listBall[j].yTo;
-						}
 						else
-						{
 							listBall[j].y += listBall[j].vy;
-						}
 						listBall[j].vy++;
 					}
 					else
 					{
 						if (listBall[j].vy > 0)
-						{
 							listBall[j].vy = 0;
-						}
 						listBall[j].y += listBall[j].vy;
 						listBall[j].vy--;
 					}
 					if (listBall[j].y == listBall[j].yTo)
 					{
-						Effect me = new Effect(19, listBall[j].x - 5, listBall[j].y + 25, 2, 1, -1);
-						EffecMn.addEff(me);
+						EffecMn.addEff(new Effect(19, listBall[j].x - 5, listBall[j].y + 25, 2, 1, -1));
 						SoundMn.gI().charFall();
 						listBall[j].isDone = true;
 						if (!isCanSkill)
-						{
 							isCanSkill = true;
-						}
 					}
 				}
 			}
@@ -305,24 +279,18 @@ public class CrackBallScr : mScreen
 				for (int k = 0; k < listBall.Length; k++)
 				{
 					if (listBall[k].isDone)
-					{
 						continue;
-					}
 					if (listBall[k].y > -10)
 					{
 						if (listBall[k].vy > 0)
-						{
 							listBall[k].vy = 0;
-						}
 						listBall[k].y += listBall[k].vy;
 						listBall[k].vy--;
 						listBall[k].x += listBall[k].vx * listBall[k].dir;
 						listBall[k].vx -= 3;
 					}
 					if (listBall[k].y == -10)
-					{
 						listBall[k].isPaint = false;
-					}
 				}
 				countFr++;
 				if (countFr > fr.Length - 1)
@@ -339,17 +307,13 @@ public class CrackBallScr : mScreen
 				Char.myCharz().cf = fr[countFr];
 				countKame++;
 				if (countKame > 5)
-				{
 					countKame = 0;
-				}
 				frame = nFrame[countKame];
 			}
 			if (step == 3)
 			{
 				if (countKame <= 5)
-				{
 					countKame = 5;
-				}
 				countKame++;
 				if (countKame > nFrame.Length - 1)
 				{
@@ -374,63 +338,43 @@ public class CrackBallScr : mScreen
 				for (int m = 0; m < listBall.Length; m++)
 				{
 					if (listBall[m].isPaint)
-					{
 						listBall[m].xTo = Char.myCharz().cx;
-					}
 				}
 				step = 5;
 			}
 			if (step != 5)
-			{
 				return;
-			}
 			vp++;
 			if (yP < GameCanvas.hh / 3)
 			{
 				if (yP + vp > GameCanvas.hh / 3)
-				{
 					yP = GameCanvas.hh / 3;
-				}
 				else
-				{
 					yP += vp;
-				}
 			}
 			for (int n = 0; n < listBall.Length; n++)
 			{
 				if (!listBall[n].isPaint)
-				{
 					continue;
-				}
 				if (listBall[n].x < listBall[n].xTo)
 				{
 					if (listBall[n].vx < 0)
-					{
 						listBall[n].vx = 0;
-					}
 					if (listBall[n].x + listBall[n].vx > listBall[n].xTo)
-					{
 						listBall[n].x = listBall[n].xTo;
-					}
 					else
-					{
 						listBall[n].x += listBall[n].vx;
-					}
 					listBall[n].vx++;
 				}
 				else
 				{
 					if (listBall[n].vx > 0)
-					{
 						listBall[n].vx = 0;
-					}
 					listBall[n].x += listBall[n].vx;
 					listBall[n].vx--;
 				}
 				if (listBall[n].x == listBall[n].xTo)
-				{
 					listBall[n].isPaint = false;
-				}
 			}
 		}
 		catch (Exception)
@@ -441,13 +385,9 @@ public class CrackBallScr : mScreen
 	public override void updateKey()
 	{
 		if (InfoDlg.isLock)
-		{
 			return;
-		}
 		if (GameCanvas.isTouch && !ChatTextField.gI().isShow && !GameCanvas.menu.showMenu)
-		{
 			updateKeyTouchControl();
-		}
 		for (int i = 1; i < 8; i++)
 		{
 			if (GameCanvas.keyPressed[i])
@@ -476,21 +416,15 @@ public class CrackBallScr : mScreen
 			for (int i = 0; i < listBall.Length; i++)
 			{
 				if (GameCanvas.isPointerHoldIn(listBall[i].x - 20 - GameScr.cmx, listBall[i].y - 10 - GameScr.cmy, 30, 30) && GameCanvas.isPointerClick && GameCanvas.isPointerJustRelease)
-				{
 					doClickBall(i);
-				}
 			}
 		}
 		if (!GameCanvas.isPointerClick)
-		{
 			return;
-		}
 		for (int j = 0; j < xSkill.Length; j++)
 		{
 			if (GameCanvas.isPointerHoldIn(xSkill[j], ySkill, 36, 36) && GameCanvas.isPointerClick && GameCanvas.isPointerJustRelease)
-			{
 				doClickSkill(j);
-			}
 		}
 	}
 
@@ -516,9 +450,7 @@ public class CrackBallScr : mScreen
 	private void doClickSkill(int index)
 	{
 		if (indexSkillSelect != index)
-		{
 			indexSkillSelect = index;
-		}
 		else if (index == 0)
 		{
 			if (step < 2)
@@ -553,16 +485,12 @@ public class CrackBallScr : mScreen
 			for (int i = 0; i < listBall.Length; i++)
 			{
 				if (listBall[i].isPaint && listBall[i].y > listBall[i].yTo - 20)
-				{
 					g.drawImage(TileMap.bong, listBall[i].x, listBall[i].yTo + 7, mGraphics.VCENTER | mGraphics.HCENTER);
-				}
 			}
 			for (int j = 0; j < listBall.Length; j++)
 			{
 				if (listBall[j].isPaint)
-				{
 					SmallImage.drawSmallImage(g, listBall[j].idImg, listBall[j].x, listBall[j].y, 0, mGraphics.VCENTER | mGraphics.HCENTER);
-				}
 			}
 			if (isKame)
 			{
@@ -576,69 +504,60 @@ public class CrackBallScr : mScreen
 				}
 				if (fraImgKame_1 != null)
 				{
-					int num2 = Char.myCharz().cx - fraImgKame_1.frameWidth - 10;
-					fraImgKame_1.drawFrame(frame, num2 - 5, Char.myCharz().cy - fraImgKame_1.frameHeight / 2 - 12, 0, 0, g);
+					int cx = Char.myCharz().cx;
+					int frameWidth = fraImgKame_1.frameWidth;
+					fraImgKame_1.drawFrame(frame, cx - frameWidth - 10 - 5, Char.myCharz().cy - fraImgKame_1.frameHeight / 2 - 12, 0, 0, g);
 				}
 			}
 			GameScr.resetTranslate(g);
-			int num3 = 240;
-			int num4 = GameCanvas.w - num3;
-			int num5 = 15;
+			int num2 = 240;
+			int num3 = GameCanvas.w - num2;
+			int num4 = 15;
 			g.setColor(13524492);
-			g.fillRect(num4, num5 - 15, num3, 15);
-			g.drawImage(Panel.imgXu, num4 + 11, num5 - 7, 3);
-			g.drawImage(Panel.imgLuong, num4 + 90, num5 - 8, 3);
-			mFont.tahoma_7_yellow.drawString(g, Char.myCharz().xuStr + string.Empty, num4 + 24, num5 - 13, mFont.LEFT, mFont.tahoma_7_grey);
-			mFont.tahoma_7_yellow.drawString(g, Char.myCharz().luongStr + string.Empty, num4 + 100, num5 - 13, mFont.LEFT, mFont.tahoma_7_grey);
-			g.drawImage(Panel.imgLuongKhoa, num4 + 150, num5 - 7, 3);
-			mFont.tahoma_7_yellow.drawString(g, Char.myCharz().luongKhoaStr + string.Empty, num4 + 160, num5 - 13, mFont.LEFT, mFont.tahoma_7_grey);
-			g.drawImage(Panel.imgTicket, num4 + 200, num5 - 7, 3);
-			mFont.tahoma_7_yellow.drawString(g, numTicket + string.Empty, num4 + 210, num5 - 13, mFont.LEFT, mFont.tahoma_7_grey);
+			g.fillRect(num3, num4 - 15, num2, 15);
+			g.drawImage(Panel.imgXu, num3 + 11, num4 - 7, 3);
+			g.drawImage(Panel.imgLuong, num3 + 90, num4 - 8, 3);
+			mFont.tahoma_7_yellow.drawString(g, Char.myCharz().xuStr + string.Empty, num3 + 24, num4 - 13, mFont.LEFT, mFont.tahoma_7_grey);
+			mFont.tahoma_7_yellow.drawString(g, Char.myCharz().luongStr + string.Empty, num3 + 100, num4 - 13, mFont.LEFT, mFont.tahoma_7_grey);
+			g.drawImage(Panel.imgLuongKhoa, num3 + 150, num4 - 7, 3);
+			mFont.tahoma_7_yellow.drawString(g, Char.myCharz().luongKhoaStr + string.Empty, num3 + 160, num4 - 13, mFont.LEFT, mFont.tahoma_7_grey);
+			g.drawImage(Panel.imgTicket, num3 + 200, num4 - 7, 3);
+			mFont.tahoma_7_yellow.drawString(g, numTicket + string.Empty, num3 + 210, num4 - 13, mFont.LEFT, mFont.tahoma_7_grey);
 			if (step < 4)
 			{
-				int num6 = num3 / 2 + 20;
-				int num7 = GameCanvas.w - num6;
+				int num5 = num2 / 2 + 20;
+				int num6 = GameCanvas.w - num5;
 				g.setColor(11837316);
-				g.fillRect(num7, num5, num6, 15);
+				g.fillRect(num6, num4, num5, 15);
 				if (typePrice == 0)
-				{
-					g.drawImage(Panel.imgXu, num7 + 21, num5 + 8, 3);
-				}
+					g.drawImage(Panel.imgXu, num6 + 21, num4 + 8, 3);
 				else
 				{
-					g.drawImage(Panel.imgLuongKhoa, num7 + 21, num5 + 7, 3);
-					g.drawImage(Panel.imgLuong, num7 + 18, num5 + 7, 3);
+					g.drawImage(Panel.imgLuongKhoa, num6 + 21, num4 + 7, 3);
+					g.drawImage(Panel.imgLuong, num6 + 18, num4 + 7, 3);
 				}
-				mFont.tahoma_7_red.drawString(g, " -" + cost, num7 + 30, num5 + 2, mFont.LEFT, mFont.tahoma_7_grey);
-				g.drawImage(Panel.imgTicket, num7 + 80, num5 + 7, 3);
-				mFont.tahoma_7_red.drawString(g, " -" + checkTicket(), num7 + 90, num5 + 2, mFont.LEFT, mFont.tahoma_7_grey);
+				mFont.tahoma_7_red.drawString(g, " -" + cost, num6 + 30, num4 + 2, mFont.LEFT, mFont.tahoma_7_grey);
+				g.drawImage(Panel.imgTicket, num6 + 80, num4 + 7, 3);
+				mFont.tahoma_7_red.drawString(g, " -" + checkTicket(), num6 + 90, num4 + 2, mFont.LEFT, mFont.tahoma_7_grey);
 			}
 			g.drawImage(GameScr.imgSkill, xSkill[0], ySkill, 0);
 			if (indexSkillSelect == 0)
-			{
 				g.drawImage(GameScr.imgSkill2, xSkill[0], ySkill, 0);
-			}
 			if (step < 3)
-			{
 				SmallImage.drawSmallImage(g, 540, xSkill[0] + 14, ySkill + 14, 0, StaticObj.VCENTER_HCENTER);
-			}
 			else
-			{
 				g.drawImage(imgReplay, xSkill[0] + 14 - 10, ySkill + 14 - 10, 0);
-			}
 			g.drawImage(GameScr.imgSkill, xSkill[1], ySkill, 0);
 			if (indexSkillSelect == 1)
-			{
 				g.drawImage(GameScr.imgSkill2, xSkill[1], ySkill, 0);
-			}
 			g.drawImage(imgX, xSkill[1] + 14 - 10, ySkill + 14 - 10, 0);
 			if (step > 3)
 			{
 				GameCanvas.paintz.paintFrameSimple(xP, yP, wP, hP, g);
-				int num8 = GameCanvas.hw - idItem.Length * 30 / 2;
+				int num7 = GameCanvas.hw - idItem.Length * 30 / 2;
 				for (int l = 0; l < idItem.Length; l++)
 				{
-					SmallImage.drawSmallImage(g, idItem[l], num8 + 5 + l * 30, yP + 10, 0, 0);
+					SmallImage.drawSmallImage(g, idItem[l], num7 + 5 + l * 30, yP + 10, 0, 0);
 				}
 			}
 		}
@@ -666,14 +585,10 @@ public class CrackBallScr : mScreen
 		for (int i = 0; i < listBall.Length; i++)
 		{
 			if (listBall[i].isDone)
-			{
 				b = (byte)(b + 1);
-			}
 		}
 		if (b > numTicket)
-		{
 			b = (byte)numTicket;
-		}
 		return b;
 	}
 
@@ -683,15 +598,11 @@ public class CrackBallScr : mScreen
 		for (int i = 0; i < listBall.Length; i++)
 		{
 			if (listBall[i].isDone)
-			{
 				b = (byte)(b + 1);
-			}
 		}
 		b = (byte)(b - checkTicket());
 		if (b <= 0)
-		{
 			b = 0;
-		}
 		return b;
 	}
 

@@ -27,9 +27,7 @@ public class SMS
 	public static int send(string content, string to)
 	{
 		if (Thread.CurrentThread.Name == Main.mainThreadName)
-		{
 			return __send(content, to);
-		}
 		return _send(content, to);
 	}
 
@@ -41,9 +39,7 @@ public class SMS
 			{
 				Thread.Sleep(5);
 				if (status == 0)
-				{
 					break;
-				}
 			}
 			if (status != 0)
 			{
@@ -60,9 +56,7 @@ public class SMS
 		{
 			Thread.Sleep(5);
 			if (status == 0)
-			{
 				break;
-			}
 		}
 		if (j == 500)
 		{
@@ -70,9 +64,7 @@ public class SMS
 			status = 0;
 		}
 		else
-		{
 			Debug.Log("Send SMS " + content + " done in " + j * 5 + "ms");
-		}
 		return _result;
 	}
 
@@ -92,15 +84,10 @@ public class SMS
 
 	public static void update()
 	{
-		float num = Time.time;
-		if (num - (float)time > 1f)
-		{
+		if (Time.time - (float)time > 1f)
 			time++;
-		}
 		if (f)
-		{
 			OnSMS();
-		}
 		if (status == 2)
 		{
 			status = 1;
@@ -121,9 +108,7 @@ public class SMS
 		if (sendEnable)
 		{
 			if (iOSPlugins.checkRotation() == 1)
-			{
 				Screen.orientation = ScreenOrientation.LandscapeLeft;
-			}
 			else if (iOSPlugins.checkRotation() == -1)
 			{
 				Screen.orientation = ScreenOrientation.Portrait;
@@ -141,9 +126,7 @@ public class SMS
 				Screen.orientation = ScreenOrientation.PortraitUpsideDown;
 			}
 			if (time0 < 5)
-			{
 				time0++;
-			}
 			else
 			{
 				iOSPlugins.Send();

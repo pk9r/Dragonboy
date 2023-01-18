@@ -118,9 +118,7 @@ public class Paint
 			if (lenCaption > 0)
 			{
 				if (left.x >= 0 && left.y > 0)
-				{
 					left.paint(g);
-				}
 				else
 				{
 					g.drawImage((mScreen.keyTouch != 0) ? GameScr.imgLbtn : GameScr.imgLbtnFocus, 1, GameCanvas.h - mScreen.cmdH - 1, 0);
@@ -134,9 +132,7 @@ public class Paint
 			if (lenCaption > 0)
 			{
 				if (center.x > 0 && center.y > 0)
-				{
 					center.paint(g);
-				}
 				else
 				{
 					g.drawImage((mScreen.keyTouch != 1) ? GameScr.imgLbtn : GameScr.imgLbtnFocus, GameCanvas.hw - 35, GameCanvas.h - mScreen.cmdH - 1, 0);
@@ -145,9 +141,7 @@ public class Paint
 			}
 		}
 		if (right == null)
-		{
 			return;
-		}
 		lenCaption = mFont2.getWidth(right.caption);
 		if (lenCaption > 0)
 		{
@@ -209,9 +203,7 @@ public class Paint
 	{
 		g.drawImage(imgTick[1], x, y, 3);
 		if (index == 1)
-		{
 			g.drawImage(imgTick[0], x + 1, y - 3, 3);
-		}
 	}
 
 	public void paintImgMsg(mGraphics g, int x, int y, int index)
@@ -227,13 +219,9 @@ public class Paint
 	public void paintCheckPass(mGraphics g, int x, int y, bool check, bool focus)
 	{
 		if (focus)
-		{
 			g.drawRegion(imgCheck, 0, ((!check) ? 1 : 3) * 18, 20, 18, 0, x, y, 0);
-		}
 		else
-		{
 			g.drawRegion(imgCheck, 0, (check ? 2 : 0) * 18, 20, 18, 0, x, y, 0);
-		}
 	}
 
 	public void paintInputDlg(mGraphics g, int x, int y, int w, int h, string[] str)
@@ -293,9 +281,7 @@ public class Paint
 	{
 		int num = 0;
 		if (!isRes && GameCanvas.h <= 240)
-		{
 			num = 15;
-		}
 		mFont.tahoma_7b_green2.drawString(g, mResources.LOGINLABELS[0], GameCanvas.hw, GameCanvas.hh + 60 - num, 2);
 		mFont.tahoma_7b_green2.drawString(g, mResources.LOGINLABELS[1], GameCanvas.hw, GameCanvas.hh + 73 - num, 2);
 	}

@@ -1,6 +1,5 @@
 namespace Assets.src.e
 {
-
 	public class Small
 	{
 		public Image img;
@@ -31,7 +30,7 @@ namespace Assets.src.e
 
 		public void paint(mGraphics g, int transform, int f, int x, int y, int w, int h, int anchor)
 		{
-			paint(g, transform, f, x, y, w, h, anchor, isClip: false);
+			paint(g, transform, f, x, y, w, h, anchor, false);
 		}
 
 		public void paint(mGraphics g, int transform, int f, int x, int y, int w, int h, int anchor, bool isClip)
@@ -51,9 +50,7 @@ namespace Assets.src.e
 		{
 			timeUpdate++;
 			if (timeUpdate - timePaint > 1 && !Char.myCharz().isCharBodyImageID(id))
-			{
 				SmallImage.imgNew[id] = null;
-			}
 		}
 	}
 }

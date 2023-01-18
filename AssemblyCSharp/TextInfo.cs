@@ -29,18 +29,12 @@ public class TextInfo
 		}
 		g.setClip(x, y, w, h);
 		if (wStr > w)
-		{
 			f.drawString(g, str, x - dx, y, 0);
-		}
 		else
-		{
 			f.drawString(g, str, x + w / 2, y, 2);
-		}
 		GameCanvas.resetTrans(g);
 		if (wStr <= w)
-		{
 			return;
-		}
 		if (!isBack)
 		{
 			tx++;
@@ -57,14 +51,9 @@ public class TextInfo
 			return;
 		}
 		if (dx < 0)
-		{
-			int num = w + dx >> 1;
-			dx += num;
-		}
+			dx += w + dx >> 1;
 		if (dx > 0)
-		{
 			dx = 0;
-		}
 		if (dx == 0)
 		{
 			tx++;

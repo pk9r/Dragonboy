@@ -22,16 +22,12 @@ public class Timer
 	{
 		long num = mSystem.currentTimeMillis();
 		if (!isON || num <= timeExecute)
-		{
 			return;
-		}
 		isON = false;
 		try
 		{
 			if (idAction > 0)
-			{
 				GameScr.gI().actionPerform(idAction, null);
-			}
 		}
 		catch (Exception)
 		{

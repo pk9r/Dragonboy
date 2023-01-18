@@ -10,9 +10,7 @@ public class InputDlg : Dialog
 	{
 		padLeft = 40;
 		if (GameCanvas.w <= 176)
-		{
 			padLeft = 10;
-		}
 		tfInput = new TField();
 		tfInput.x = padLeft + 10;
 		tfInput.y = GameCanvas.h - mScreen.ITEM_HEIGHT - 43;

@@ -27,44 +27,34 @@ public class MyVector
 	public bool contains(object o)
 	{
 		if (a.Contains(o))
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public int size()
 	{
 		if (a == null)
-		{
 			return 0;
-		}
 		return a.Count;
 	}
 
 	public object elementAt(int index)
 	{
 		if (index > -1 && index < a.Count)
-		{
 			return a[index];
-		}
 		return null;
 	}
 
 	public void set(int index, object obj)
 	{
 		if (index > -1 && index < a.Count)
-		{
 			a[index] = obj;
-		}
 	}
 
 	public void setElementAt(object obj, int index)
 	{
 		if (index > -1 && index < a.Count)
-		{
 			a[index] = obj;
-		}
 	}
 
 	public int indexOf(object o)
@@ -75,9 +65,7 @@ public class MyVector
 	public void removeElementAt(int index)
 	{
 		if (index > -1 && index < a.Count)
-		{
 			a.RemoveAt(index);
-		}
 	}
 
 	public void removeElement(object o)
