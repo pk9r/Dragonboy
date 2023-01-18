@@ -3404,7 +3404,7 @@ public class Panel : IActionListener, IChatable
 				}
 				SmallImage.drawSmallImage(g, item.template.iconID, num5 + num7 / 2, num6 + num8 / 2, 0, 3);
 				if (item.quantity > 1)
-					mFont.tahoma_7_yellow.drawString(g, string.Empty + item.quantity, num5 + num7, num6 + num8 - mFont.tahoma_7_yellow.getHeight(), 1);
+					mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num5 + num7, num6 + num8 - mFont.tahoma_7_yellow.getHeight(), 1);
 				if (item.newItem && GameCanvas.gameTick % 10 > 5)
 					g.drawImage(imgNew, num5 + num7 / 2, num3 + 19, 3);
                 CustomGraphics.PaintStar(g, this, item, num3);
@@ -3577,7 +3577,7 @@ public class Panel : IActionListener, IChatable
 					}
 				}
 				if (item.quantity > 1)
-					mFont.tahoma_7_yellow.drawString(g, string.Empty + item.quantity, num6 + num8, num7 + num9 - mFont.tahoma_7_yellow.getHeight(), 1);
+					mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num6 + num8, num7 + num9 - mFont.tahoma_7_yellow.getHeight(), 1);
                 CustomGraphics.PaintStar(g, this, item, num4);
 			}
 			else if (!flag)
@@ -4003,7 +4003,7 @@ public class Panel : IActionListener, IChatable
 					}
 				}
 				if (item.quantity > 1)
-					mFont.tahoma_7_yellow.drawString(g, string.Empty + item.quantity, num5 + num7, num6 + num8 - mFont.tahoma_7_yellow.getHeight(), 1);
+					mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num5 + num7, num6 + num8 - mFont.tahoma_7_yellow.getHeight(), 1);
 			mFont.tahoma_7_yellow.drawStringBorder(g, i.ToString(), num2 - 35, num3, 0, mFont.tahoma_7b_dark);
             CustomGraphics.PaintStar(g, this, item, num3);
 			}
@@ -4697,7 +4697,7 @@ public class Panel : IActionListener, IChatable
 					}
 				}
 				if (item.quantity > 1)
-					mFont.tahoma_7_yellow.drawString(g, string.Empty + item.quantity, num6 + num8, num7 + num9 - mFont.tahoma_7_yellow.getHeight(), 1);
+					mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num6 + num8, num7 + num9 - mFont.tahoma_7_yellow.getHeight(), 1);
 				mFont.tahoma_7_yellow.drawStringBorder(g, j.ToString(), num3 - 35, num4, 0, mFont.tahoma_7b_dark);
 				CustomGraphics.PaintStar(g, this, item, num4);
 			}
