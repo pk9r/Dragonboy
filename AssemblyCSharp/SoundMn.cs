@@ -134,7 +134,7 @@ public class SoundMn
 			Panel.strTool = new string[11]
 			{
 				"Menu Mod",
-                mResources.radaCard,
+				mResources.radaCard,
 				mResources.quayso,
 				mResources.gameInfo,
 				mResources.change_flag,
@@ -149,8 +149,8 @@ public class SoundMn
 			{
 				Panel.strTool = new string[12]
 				{
-                    "Menu Mod",
-                    mResources.radaCard,
+					"Menu Mod",
+					mResources.radaCard,
 					mResources.quayso,
 					mResources.gameInfo,
 					mResources.pet,
@@ -162,6 +162,7 @@ public class SoundMn
 					mResources.change_account,
 					mResources.REGISTOPROTECT
 				};
+			}
 		}
 		else
 		{
@@ -182,8 +183,8 @@ public class SoundMn
 			{
 				Panel.strTool = new string[11]
 				{
-                    "Menu Mod",
-                    mResources.radaCard,
+					"Menu Mod",
+					mResources.radaCard,
 					mResources.quayso,
 					mResources.gameInfo,
 					mResources.pet,
@@ -194,16 +195,17 @@ public class SoundMn
 					mResources.option,
 					mResources.change_account
 				};
-		}
-		if (IsDelAcc)
-		{
-			string[] array = new string[Panel.strTool.Length + 1];
-			for (int i = 0; i < Panel.strTool.Length; i++)
-			{
-				array[i] = Panel.strTool[i];
 			}
-			array[Panel.strTool.Length] = mResources.delacc;
-			Panel.strTool = array;
+			if (IsDelAcc)
+			{
+				string[] array = new string[Panel.strTool.Length + 1];
+				for (int i = 0; i < Panel.strTool.Length; i++)
+				{
+					array[i] = Panel.strTool[i];
+				}
+				array[Panel.strTool.Length] = mResources.delacc;
+				Panel.strTool = array;
+			}
 		}
 	}
 

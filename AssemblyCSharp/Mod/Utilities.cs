@@ -343,7 +343,15 @@ namespace Mod
         public static void test()
         {
 
-             
+            GameCanvas.startOKDlg(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}", 
+            mResources.gameInfo,
+            mResources.change_flag,
+            mResources.change_zone,
+            mResources.chat_world,
+            mResources.account,
+            mResources.option,
+            mResources.change_account
+            ));
             //test stacktrace
             //try
             //{

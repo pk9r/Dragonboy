@@ -502,7 +502,7 @@ public class TileMap
 						{
 							if (ModMenuMain.getStatusInt("levelreducegraphics") == 2 && i > 0) g.drawRect(i * size, j * size + 8, 24, 24);
 							else g.fillRect(i * size, j * size + 8, 24, 24);
-							//perfomance issuse
+							//performance issue
                         }
                     }
                 }
@@ -593,7 +593,6 @@ public class TileMap
 	public static void paintOutTilemap(mGraphics g)
 	{
 		if (GameCanvas.lowGraphic || ModMenuMain.getStatusInt("levelreducegraphics") > 0)
-		{
 			return;
 		int num = 0;
 		for (int i = GameScr.gssx; i < GameScr.gssxe; i++)

@@ -125,7 +125,6 @@ public class BgItem
 	public void paint(mGraphics g)
 	{
 		if (Char.isLoadingMap || (idImage == 279 && GameScr.gI().tMabuEff >= 110) || ModMenuMain.getStatusInt("levelreducegraphics") > 0)
-		{
 			return;
 		int cmx = GameScr.cmx;
 		int cmy = GameScr.cmy;

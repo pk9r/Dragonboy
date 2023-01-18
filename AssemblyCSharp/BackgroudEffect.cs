@@ -402,7 +402,6 @@ public class BackgroudEffect
 	public static void updateCloud2()
 	{
 		if (mSystem.clientType == 1 || GameCanvas.lowGraphic || nCloud <= 0 || ModMenuMain.getStatusInt("levelreducegraphics") > 0)
-		{
 			return;
 		int num = ((GameCanvas.currentScreen != GameScr.gI()) ? (GameScr.cmx + GameCanvas.w) : TileMap.pxw);
 		for (int i = 0; i < nCloud; i++)
@@ -426,7 +425,6 @@ public class BackgroudEffect
 	public static void paintCloud2(mGraphics g)
 	{
 		if (mSystem.clientType == 1 || GameCanvas.lowGraphic || nCloud == 0 || imgCloud1 == null || ModMenuMain.getStatusInt("levelreducegraphics") > 0)
-		{
 			return;
 		for (int i = 0; i < nCloud; i++)
 		{
@@ -442,7 +440,6 @@ public class BackgroudEffect
 	public static void paintFog(mGraphics g)
 	{
 		if (mSystem.clientType == 1 || GameCanvas.lowGraphic || !isFog || imgFog == null || ModMenuMain.getStatusInt("levelreducegraphics") > 0)
-		{
 			return;
 		for (int i = xfog; i < TileMap.pxw; i += fogw)
 		{

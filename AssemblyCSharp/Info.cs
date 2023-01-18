@@ -111,30 +111,30 @@ public class Info : IActionListener
 					num4 = num2;
 				switch (num4)
 				{
-				case -1:
-					mFont2 = mFont.tahoma_7;
-					break;
-				case 0:
-					mFont2 = mFont.tahoma_7b_dark;
-					break;
-				case 1:
-					mFont2 = mFont.tahoma_7b_green;
-					break;
-				case 2:
-					mFont2 = mFont.tahoma_7b_blue;
-					break;
-				case 3:
-					mFont2 = mFont.tahoma_7_red;
-					break;
-				case 4:
-					mFont2 = mFont.tahoma_7_green;
-					break;
-				case 5:
-					mFont2 = mFont.tahoma_7_blue;
-					break;
-				case 7:
-					mFont2 = mFont.tahoma_7b_red;
-					break;
+					case -1:
+						mFont2 = mFont.tahoma_7;
+						break;
+					case 0:
+						mFont2 = mFont.tahoma_7b_dark;
+						break;
+					case 1:
+						mFont2 = mFont.tahoma_7b_green;
+						break;
+					case 2:
+						mFont2 = mFont.tahoma_7b_blue;
+						break;
+					case 3:
+						mFont2 = mFont.tahoma_7_red;
+						break;
+					case 4:
+						mFont2 = mFont.tahoma_7_green;
+						break;
+					case 5:
+						mFont2 = mFont.tahoma_7_blue;
+						break;
+					case 7:
+						mFont2 = mFont.tahoma_7b_red;
+						break;
 				}
 				if (info.charInfo == null)
 				{
@@ -155,10 +155,9 @@ public class Info : IActionListener
 				g.fillRect(num5, num6 + num8, num9, 2);
 				if (info.timeCount == 0)
 					return;
-				}
 				info.charInfo.paintHead(g, X + 10, Y + H / 2, 0);
 				//if (mGraphics.zoomLevel == 1)
-					((!info.isChatServer) ? mFont.tahoma_7b_greenSmall : mFont.tahoma_7b_yellowSmall2).drawString(g, info.charInfo.cName, X + 12, Y + 3, 0);
+				((!info.isChatServer) ? mFont.tahoma_7b_greenSmall : mFont.tahoma_7b_yellowSmall2).drawString(g, info.charInfo.cName, X + 12, Y + 3, 0);
 				//else
 				//	((!info.isChatServer) ? mFont.tahoma_7b_greenSmall : mFont.tahoma_7b_yellowSmall2).drawString(g, info.charInfo.cName, X + 12, Y - 3, 0);
 				if (!GameCanvas.isTouch)
@@ -170,7 +169,7 @@ public class Info : IActionListener
 				}
 				//if (mGraphics.zoomLevel == 1)
 				//{
-					TextInfo.paint(g, text, X + 14, Y + H / 2 + 2, W - 16, H, mFont.tahoma_7_whiteSmall);
+				TextInfo.paint(g, text, X + 14, Y + H / 2 + 2, W - 16, H, mFont.tahoma_7_whiteSmall);
 				//	continue;
 				//}
 				//string[] array2 = mFont.tahoma_7_whiteSmall.splitFontArray(text, 120);
@@ -180,8 +179,6 @@ public class Info : IActionListener
 				//}
 				//GameCanvas.resetTrans(g);
 			}
-			if (info.charInfo == null)
-				;
 		}
 		g.translate(-x, -y);
 	}

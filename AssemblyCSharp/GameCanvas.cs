@@ -1748,55 +1748,52 @@ public class GameCanvas : IActionListener
 				keyPressed[5] = true;
 			}
 			return;
-		}
-		switch (keyCode)
-		{
-		default:
-			if (keyCode == -39)
-				goto case -2;
-			if (keyCode == -38)
-				goto case -1;
-			if (keyCode != -22)
-			{
-				if (keyCode != -21)
-				{
-					if (keyCode != -26)
-					{
-						if (keyCode != 10)
-						{
-							if (keyCode != 35)
-							{
-								if (keyCode != 42)
-								{
-									if (keyCode == 113)
-									{
-										keyHold[17] = true;
-										keyPressed[17] = true;
-									}
-								}
-								else
-								{
-									keyHold[10] = true;
-									keyPressed[10] = true;
-								}
-							}
-							else
-							{
-								keyHold[11] = true;
-								keyPressed[11] = true;
-							}
-							break;
-						}
-						goto case -5;
-					}
-					keyHold[16] = true;
-					keyPressed[16] = true;
-					break;
-				}
-				goto case -6;
-			}
-			goto case -7;
-		case -1:
+            default:
+                if (keyCode == -39)
+                    goto case -2;
+                if (keyCode == -38)
+                    goto case -1;
+                if (keyCode == -22)
+                {
+                    goto case -7;
+                }
+                if (keyCode == -21)
+                {
+                    goto case -6;
+                }
+                if (keyCode == -26)
+                {
+                    keyHold[16] = true;
+                    keyPressed[16] = true;
+                    break;
+                }
+                if (keyCode == 10)
+                {
+                    goto case -5;
+                }
+                if (keyCode == 35)
+                {
+                    keyHold[11] = true;
+                    keyPressed[11] = true;
+                }
+                else
+                {
+                    if (keyCode == 42)
+                    {
+                        keyHold[10] = true;
+                        keyPressed[10] = true;
+                    }
+                    else
+                    {
+                        if (keyCode == 113)
+                        {
+                            keyHold[17] = true;
+                            keyPressed[17] = true;
+                        }
+                    }
+                }
+                break;
+            case -1:
 			if ((currentScreen is GameScr || currentScreen is CrackBallScr) && Char.myCharz().isAttack)
 			{
 				clearKeyHold();

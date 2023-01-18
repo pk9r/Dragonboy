@@ -3320,7 +3320,6 @@ public class Panel : IActionListener, IChatable
 								mFont2 = GetFont(7);
 							}
 						}
-						CustomGraphics.PaintItemEffectInPanel(g, num5 + 18, num6 + 12, item.itemOption[j].param);
 					}
 				}
 				mFont2.drawString(g, item.template.name + text, num2 + 5, num3 + 1, 0);
@@ -3969,7 +3968,7 @@ public class Panel : IActionListener, IChatable
 								mFont2 = GetFont(7);
 							}
 						}
-						CustomGraphics.PaintItemEffectInPanel(g, num5 + 18, num6 + 12, item.itemOption[k].param);
+						CustomGraphics.PaintItemEffectInPanel(g, num5 + 18, num6 + 12, item.itemOption[l].param);
 					}
 				}
 				mFont2.drawString(g, item.template.name + text, num2 + 5, num3 + 1, 0);
@@ -4005,9 +4004,9 @@ public class Panel : IActionListener, IChatable
 				}
 				if (item.quantity > 1)
 					mFont.tahoma_7_yellow.drawString(g, string.Empty + item.quantity, num5 + num7, num6 + num8 - mFont.tahoma_7_yellow.getHeight(), 1);
-			}
 			mFont.tahoma_7_yellow.drawStringBorder(g, i.ToString(), num2 - 35, num3, 0, mFont.tahoma_7b_dark);
             CustomGraphics.PaintStar(g, this, item, num3);
+			}
 		}
 		catch (Exception)
 		{
@@ -4591,7 +4590,7 @@ public class Panel : IActionListener, IChatable
 				g.setColor(13524492);
 				g.fillRect(xScroll + i * TAB_W_NEW, 89 + num2 - 10 + 21 - 3, TAB_W_NEW - 1, 3);
 			}
-			mFont.tahoma_7_grey.drawString(g, "x" + (i + 1), xScroll + i * TAB_W_NEW + TAB_W_NEW / 2, 91 + num2 - 10, mFont.CENTER);
+			mFont.tahoma_7_grey.drawString(g, (i + 1).ToString(), xScroll + i * TAB_W_NEW + TAB_W_NEW / 2, 91 + num2 - 10, mFont.CENTER);
 		}
 		g.setClip(xScroll, yScroll + 21, wScroll, hScroll - 21);
 		g.translate(0, -cmy);
@@ -4645,7 +4644,7 @@ public class Panel : IActionListener, IChatable
 						if (item.itemOption[l].optionTemplate.id == 72)
 						{
 							text = " [+" + item.itemOption[l].param + "]";
-							CustomGraphics.PaintItemEffectInPanel(g, num6 + 18, num7 + 12, item.itemOption[k].param);
+							CustomGraphics.PaintItemEffectInPanel(g, num6 + 18, num7 + 12, item.itemOption[l].param);
 						}
 						if (item.itemOption[l].optionTemplate.id == 41)
 						{
@@ -4699,9 +4698,9 @@ public class Panel : IActionListener, IChatable
 				}
 				if (item.quantity > 1)
 					mFont.tahoma_7_yellow.drawString(g, string.Empty + item.quantity, num6 + num8, num7 + num9 - mFont.tahoma_7_yellow.getHeight(), 1);
+				mFont.tahoma_7_yellow.drawStringBorder(g, j.ToString(), num3 - 35, num4, 0, mFont.tahoma_7b_dark);
+				CustomGraphics.PaintStar(g, this, item, num4);
 			}
-			mFont.tahoma_7_yellow.drawStringBorder(g, i.ToString(), num3 - 35, num4, 0, mFont.tahoma_7b_dark);
-            CustomGraphics.PaintStar(g, this, item, num4);
 		}
 		catch (Exception)
 		{

@@ -176,24 +176,27 @@ namespace Mod
                         }
                         else
                             lastBoss = i;
-                        int j = 0;
-                        for (; j < GameScr.vCharInMap.size(); j++)
+                        if (TileMap.mapID == bosses[i].mapId)
                         {
-                            Char ch = GameScr.vCharInMap.elementAt(j) as Char;
-                            if (ch.cName == bosses[i].name)
+                            int j = 0;
+                            for (; j < GameScr.vCharInMap.size(); j++)
                             {
-                                Char.myCharz().deFocusNPC();
-                                Char.myCharz().itemFocus = null;
-                                Char.myCharz().mobFocus = null;
-                                if (Char.myCharz().charFocus != ch)
-                                    Char.myCharz().charFocus = ch;
-                                else
-                                    Utilities.teleportMyChar(ch);
-                                break;
+                                Char ch = GameScr.vCharInMap.elementAt(j) as Char;
+                                if (ch.cName == bosses[i].name)
+                                {
+                                    Char.myCharz().deFocusNPC();
+                                    Char.myCharz().itemFocus = null;
+                                    Char.myCharz().mobFocus = null;
+                                    if (Char.myCharz().charFocus != ch)
+                                        Char.myCharz().charFocus = ch;
+                                    else
+                                        Utilities.teleportMyChar(ch);
+                                    break;
+                                }
                             }
+                            if (j == GameScr.vCharInMap.size())
+                                GameScr.info1.addInfo("Boss không có trong khu!", 0);
                         }
-                        if (j == GameScr.vCharInMap.size())
-                            GameScr.info1.addInfo("Boss không có trong khu!", 0);
                     }
                     GameCanvas.clearAllPointerEvent();
                     return;
