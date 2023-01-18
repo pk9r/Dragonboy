@@ -105,9 +105,7 @@ public class Menu
 	{
 		if (GameEvents.onMenuStartAt(menuItems)) return;
 		if (showMenu)
-		{
 			return;
-		}
 		isClose = false;
 		touch = false;
 		close = false;
@@ -151,14 +149,10 @@ public class Menu
 			menuTemY = new int[menuItems.size()];
 			menuX = (GameCanvas.w - menuItems.size() * menuW) / 2;
 			if (menuX < 1)
-			{
 				menuX = 1;
-			}
 			menuY = GameCanvas.h - menuH - (Paint.hTab + 1) - 1;
 			if (GameCanvas.isTouch)
-			{
 				menuY -= 3;
-			}
 			menuY += 27;
 			for (int k = 0; k < menuTemY.Length; k++)
 			{
@@ -168,57 +162,43 @@ public class Menu
 			menuSelectedItem = 0;
 			cmxLim = this.menuItems.size() * menuW - GameCanvas.w;
 			if (cmxLim < 0)
-			{
 				cmxLim = 0;
-			}
 			cmtoX = 0;
 			cmx = 0;
 			xc = 50;
 			w = menuItems.size() * menuW - 1;
 			if (w > GameCanvas.w - 2)
-			{
 				w = GameCanvas.w - 2;
-			}
 			if (GameCanvas.isTouch && !Main.isPC)
-			{
 				menuSelectedItem = -1;
-			}
 		}
 	}
 
 	public bool isScrolling()
 	{
 		if ((!isClose && menuTemY[menuTemY.Length - 1] > menuY) || (isClose && menuTemY[menuTemY.Length - 1] < GameCanvas.h))
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public void updateMenuKey()
 	{
 		if ((GameScr.gI().activeRongThan && GameScr.gI().isUseFreez) || !showMenu || isScrolling())
-		{
 			return;
-		}
 		bool flag = false;
 		if (GameCanvas.keyPressed[(!Main.isPC) ? 2 : 21] || GameCanvas.keyPressed[(!Main.isPC) ? 4 : 23])
 		{
 			flag = true;
 			menuSelectedItem--;
 			if (menuSelectedItem < 0)
-			{
 				menuSelectedItem = menuItems.size() - 1;
-			}
 		}
 		else if (GameCanvas.keyPressed[(!Main.isPC) ? 8 : 22] || GameCanvas.keyPressed[(!Main.isPC) ? 6 : 24])
 		{
 			flag = true;
 			menuSelectedItem++;
 			if (menuSelectedItem > menuItems.size() - 1)
-			{
 				menuSelectedItem = 0;
-			}
 		}
 		else if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
 		{
@@ -227,46 +207,30 @@ public class Menu
 				if (center.idAction > 0)
 				{
 					if (center.actionListener == GameScr.gI())
-					{
 						GameScr.gI().actionPerform(center.idAction, center.p);
-					}
 					else
-					{
 						perform(center.idAction, center.p);
-					}
 				}
 			}
 			else
-			{
 				waitToPerform = 2;
-			}
 		}
 		else if (GameCanvas.keyPressed[12] && !GameScr.gI().isRongThanMenu())
 		{
 			if (isScrolling())
-			{
 				return;
-			}
 			if (left.idAction > 0)
-			{
 				perform(left.idAction, left.p);
-			}
 			else
-			{
 				waitToPerform = 2;
-			}
 			SoundMn.gI().buttonClose();
 		}
 		else if (!GameScr.gI().isRongThanMenu() && !disableClose && (GameCanvas.keyPressed[13] || mScreen.getCmdPointerLast(right)))
 		{
 			if (isScrolling())
-			{
 				return;
-			}
 			if (!close)
-			{
 				close = true;
-			}
 			isClose = true;
 			SoundMn.gI().buttonClose();
 		}
@@ -274,25 +238,17 @@ public class Menu
 		{
 			cmtoX = menuSelectedItem * menuW + menuW - GameCanvas.w / 2;
 			if (cmtoX > cmxLim)
-			{
 				cmtoX = cmxLim;
-			}
 			if (cmtoX < 0)
-			{
 				cmtoX = 0;
-			}
 			if (menuSelectedItem == menuItems.size() - 1 || menuSelectedItem == 0)
-			{
 				cmx = cmtoX;
-			}
 		}
 		bool flag2 = true;
 		if (GameCanvas.panel.cp != null && GameCanvas.panel.cp.isClip)
 		{
 			if (!GameCanvas.isPointerHoldIn(GameCanvas.panel.cp.cx, 0, GameCanvas.panel.cp.sayWidth + 2, GameCanvas.panel.cp.ch))
-			{
 				flag2 = true;
-			}
 			else
 			{
 				flag2 = false;
@@ -336,9 +292,7 @@ public class Menu
 				}
 				int num = GameCanvas.px - pointerDownLastX[0];
 				if (num != 0 && menuSelectedItem != -1)
-				{
 					menuSelectedItem = -1;
-				}
 				for (int num2 = pointerDownLastX.Length - 1; num2 > 0; num2--)
 				{
 					pointerDownLastX[num2] = pointerDownLastX[num2 - 1];
@@ -346,26 +300,16 @@ public class Menu
 				pointerDownLastX[0] = GameCanvas.px;
 				cmtoX -= num;
 				if (cmtoX < 0)
-				{
 					cmtoX = 0;
-				}
 				if (cmtoX > cmxLim)
-				{
 					cmtoX = cmxLim;
-				}
 				if (cmx < 0 || cmx > cmxLim)
-				{
 					num /= 2;
-				}
 				cmx -= num;
 				if (cmx < -(GameCanvas.h / 3))
-				{
 					wantUpdateList = true;
-				}
 				else
-				{
 					wantUpdateList = false;
-				}
 			}
 		}
 		if (GameCanvas.isPointerJustRelease && pointerIsDowning)
@@ -389,9 +333,7 @@ public class Menu
 			else if (menuSelectedItem == -1 && !isDownWhenRunning)
 			{
 				if (cmx < 0)
-				{
 					cmtoX = 0;
-				}
 				else if (cmx > cmxLim)
 				{
 					cmtoX = cmxLim;
@@ -399,8 +341,7 @@ public class Menu
 				else
 				{
 					int num3 = GameCanvas.px - pointerDownLastX[0] + (pointerDownLastX[0] - pointerDownLastX[1]) + (pointerDownLastX[1] - pointerDownLastX[2]);
-					num3 = ((num3 > 10) ? 10 : ((num3 < -10) ? (-10) : 0));
-					cmRun = -num3 * 100;
+					cmRun = -((num3 > 10) ? 10 : ((num3 < -10) ? (-10) : 0)) * 100;
 				}
 			}
 			pointerIsDowning = false;
@@ -417,9 +358,7 @@ public class Menu
 		{
 			cmtoX += cmRun / 100;
 			if (cmtoX < 0)
-			{
 				cmtoX = 0;
-			}
 			else if (cmtoX > cmxLim)
 			{
 				cmtoX = cmxLim;
@@ -430,9 +369,7 @@ public class Menu
 			}
 			cmRun = cmRun * 9 / 10;
 			if (cmRun < 100 && cmRun > -100)
-			{
 				cmRun = 0;
-			}
 		}
 		if (cmx != cmtoX && !pointerIsDowning)
 		{
@@ -446,38 +383,26 @@ public class Menu
 	public void paintMenu(mGraphics g)
 	{
 		if (GameScr.gI().activeRongThan && GameScr.gI().isUseFreez)
-		{
 			return;
-		}
 		g.translate(-g.getTranslateX(), -g.getTranslateY());
 		g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
 		g.translate(-cmx, 0);
 		for (int i = 0; i < menuItems.size(); i++)
 		{
 			if (i == menuSelectedItem)
-			{
 				g.drawImage(imgMenu2, menuX + i * menuW + 1, menuTemY[i], 0);
-			}
 			else
-			{
 				g.drawImage(imgMenu1, menuX + i * menuW + 1, menuTemY[i], 0);
-			}
 			string[] array = ((Command)menuItems.elementAt(i)).subCaption;
 			if (array == null)
-			{
 				array = new string[1] { ((Command)menuItems.elementAt(i)).caption };
-			}
 			int num = menuTemY[i] + (menuH - array.Length * 14) / 2 + 1;
 			for (int j = 0; j < array.Length; j++)
 			{
 				if (i == menuSelectedItem)
-				{
 					mFont.tahoma_7b_green2.drawString(g, array[j], menuX + i * menuW + menuW / 2, num + j * 14, 2);
-				}
 				else
-				{
 					mFont.tahoma_7b_dark.drawString(g, array[j], menuX + i * menuW + menuW / 2, num + j * 14, 2);
-				}
 			}
 		}
 		g.translate(-g.getTranslateX(), -g.getTranslateY());
@@ -494,21 +419,15 @@ public class Menu
 			GameCanvas.panel.cp = null;
 			Char.chatPopup = null;
 			if (GameCanvas.panel2 != null && GameCanvas.panel2.cp != null)
-			{
 				GameCanvas.panel2.cp = null;
-			}
 		}
 		else
 		{
 			if (!touch)
-			{
 				return;
-			}
 			GameCanvas.panel.cp = null;
 			if (GameCanvas.panel2 != null && GameCanvas.panel2.cp != null)
-			{
 				GameCanvas.panel2.cp = null;
-			}
 			if (menuSelectedItem >= 0)
 			{
 				Command command = (Command)menuItems.elementAt(menuSelectedItem);
@@ -525,9 +444,7 @@ public class Menu
 	{
 		InfoDlg.hide();
 		if (menuSelectedItem >= 0)
-		{
 			((Command)menuItems.elementAt(menuSelectedItem))?.performAction();
-		}
 	}
 
 	public void updateMenu()
@@ -542,19 +459,13 @@ public class Menu
 				{
 					int num = menuTemY[i] - menuY >> 1;
 					if (num < 1)
-					{
 						num = 1;
-					}
 					if (tDelay > i)
-					{
 						menuTemY[i] -= num;
-					}
 				}
 			}
 			if (menuTemY[menuTemY.Length - 1] <= menuY)
-			{
 				tDelay = 0;
-			}
 		}
 		else
 		{
@@ -565,13 +476,9 @@ public class Menu
 				{
 					int num2 = (GameCanvas.h - menuTemY[j] >> 1) + 2;
 					if (num2 < 1)
-					{
 						num2 = 1;
-					}
 					if (tDelay > j)
-					{
 						menuTemY[j] += num2;
-					}
 				}
 			}
 			if (menuTemY[menuTemY.Length - 1] >= GameCanvas.h)
@@ -584,14 +491,10 @@ public class Menu
 		{
 			xc >>= 1;
 			if (xc < 0)
-			{
 				xc = 0;
-			}
 		}
 		if (isScrolling() || waitToPerform <= 0)
-		{
 			return;
-		}
 		waitToPerform--;
 		if (waitToPerform == 0)
 		{
@@ -602,9 +505,7 @@ public class Menu
 				GameCanvas.panel.cp = null;
 			}
 			else
-			{
 				performSelect();
-			}
 		}
 	}
 

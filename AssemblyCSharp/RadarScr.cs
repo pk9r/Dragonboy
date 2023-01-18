@@ -225,9 +225,7 @@ public class RadarScr : mScreen
 	public static RadarScr gI()
 	{
 		if (instance == null)
-		{
 			instance = new RadarScr();
-		}
 		return instance;
 	}
 
@@ -241,13 +239,9 @@ public class RadarScr : mScreen
 		TYPE_UI = true;
 		SetListUse();
 		if (TYPE_UI)
-		{
 			maxpage = list.size() / 5 + ((list.size() % 5 > 0) ? 1 : 0);
-		}
 		else
-		{
 			maxpage = listUse.size() / 5 + ((listUse.size() % 5 > 0) ? 1 : 0);
-		}
 	}
 
 	public static void SetNum(int num, int numMax)
@@ -263,9 +257,7 @@ public class RadarScr : mScreen
 		{
 			Info_RadaScr info_RadaScr = (Info_RadaScr)list.elementAt(i);
 			if (info_RadaScr != null && info_RadaScr.isUse == 1)
-			{
 				listUse.addElement(info_RadaScr);
-			}
 		}
 	}
 
@@ -273,9 +265,7 @@ public class RadarScr : mScreen
 	{
 		MyVector myVector = listUse;
 		if (TYPE_UI)
-		{
 			myVector = list;
-		}
 		int num = (page - 1) * 5;
 		int num2 = num + 5;
 		for (int i = num; i < num2; i++)
@@ -287,9 +277,7 @@ public class RadarScr : mScreen
 			}
 			Info_RadaScr info_RadaScr = (Info_RadaScr)myVector.elementAt(i);
 			if (info_RadaScr != null)
-			{
 				index[i - num] = info_RadaScr.id;
-			}
 		}
 		cmyText = 0;
 		hText = 0;
@@ -304,33 +292,23 @@ public class RadarScr : mScreen
 			{
 				hText += 4;
 				if (hText > 80)
-				{
 					hText = 80;
-				}
 			}
 			focus_card = Info_RadaScr.GetInfo(listUse, index[indexFocus]);
 			if (TYPE_UI)
-			{
 				focus_card = Info_RadaScr.GetInfo(list, index[indexFocus]);
-			}
 			GameScr.gI().update();
 			if (GameCanvas.gameTick % 10 < 6)
 			{
 				if (GameCanvas.gameTick % 2 == 0)
-				{
 					dyArrow--;
-				}
 			}
 			else
-			{
 				dyArrow = 0;
-			}
 			if (focus_card != null)
 			{
-				int num = focus_card.amount * 100 / focus_card.max_amount;
-				hClip = num * imgBar_1.getHeight() / 100;
-				int num2 = RadarScr.num * 100 / list.size();
-				wClip = num2 * imgPro_1.getWidth() / 100;
+				hClip = focus_card.amount * 100 / focus_card.max_amount * imgBar_1.getHeight() / 100;
+				wClip = num * 100 / list.size() * imgPro_1.getWidth() / 100;
 			}
 		}
 		catch (Exception ex)
@@ -344,9 +322,7 @@ public class RadarScr : mScreen
 		if (!InfoDlg.isLock)
 		{
 			if (GameCanvas.isTouch && !ChatTextField.gI().isShow && !GameCanvas.menu.showMenu)
-			{
 				updateKeyTouchControl();
-			}
 			if (GameCanvas.keyPressed[(!Main.isPC) ? 8 : 22])
 			{
 				GameCanvas.keyPressed[(!Main.isPC) ? 8 : 22] = false;
@@ -373,9 +349,7 @@ public class RadarScr : mScreen
 				doClickUse(1);
 			}
 			if (GameCanvas.keyPressed[13])
-			{
 				doClickUse(2);
-			}
 			if (GameCanvas.keyPressed[12])
 			{
 				GameCanvas.keyPressed[12] = false;
@@ -391,13 +365,9 @@ public class RadarScr : mScreen
 		page = 1;
 		indexFocus = 0;
 		if (TYPE_UI)
-		{
 			maxpage = list.size() / 5 + ((list.size() % 5 > 0) ? 1 : 0);
-		}
 		else
-		{
 			maxpage = listUse.size() / 5 + ((listUse.size() % 5 > 0) ? 1 : 0);
-		}
 		listIndex();
 	}
 
@@ -408,16 +378,12 @@ public class RadarScr : mScreen
 			for (int i = 0; i < 5; i++)
 			{
 				if (GameCanvas.isPointerHoldIn(xyItem[i][0], xyItem[i][1], 30, 30) && GameCanvas.isPointerClick && GameCanvas.isPointerJustRelease && i != indexFocus)
-				{
 					doClickItem(i);
-				}
 			}
 			if (GameCanvas.isPointerHoldIn(xyArrow[0][0] - 5, xyArrow[0][1] - 5, 20, 20))
 			{
 				if (GameCanvas.isPointerDown)
-				{
 					dxArrow[0] = 1;
-				}
 				if (GameCanvas.isPointerClick && GameCanvas.isPointerJustRelease)
 				{
 					doClickArrow(0);
@@ -427,9 +393,7 @@ public class RadarScr : mScreen
 			if (GameCanvas.isPointerHoldIn(xyArrow[2][0] - 5, xyArrow[2][1] - 5, 20, 20))
 			{
 				if (GameCanvas.isPointerDown)
-				{
 					dxArrow[1] = 1;
-				}
 				if (GameCanvas.isPointerClick && GameCanvas.isPointerJustRelease)
 				{
 					doClickArrow(1);
@@ -441,9 +405,7 @@ public class RadarScr : mScreen
 				if (GameCanvas.isPointerHoldIn(xCmd[j] - 5, yCmd - 5, 20, 20))
 				{
 					if (GameCanvas.isPointerDown)
-					{
 						dxCmd[j] = 1;
-					}
 					if (GameCanvas.isPointerClick && GameCanvas.isPointerJustRelease)
 					{
 						doClickUse(j);
@@ -461,15 +423,11 @@ public class RadarScr : mScreen
 			dxArrow[1] = 0;
 		}
 		if (!GameCanvas.isPointerHoldIn(xText, 0, wText, yText + hText))
-		{
 			return;
-		}
 		if (GameCanvas.isPointerMove)
 		{
 			if (pyy == 0)
-			{
 				pyy = GameCanvas.py;
-			}
 			pxx = pyy - GameCanvas.py;
 			if (pxx != 0)
 			{
@@ -477,13 +435,9 @@ public class RadarScr : mScreen
 				pyy = GameCanvas.py;
 			}
 			if (cmyText < 0)
-			{
 				cmyText = 0;
-			}
 			if (cmyText > focus_card.cp.lim)
-			{
 				cmyText = focus_card.cp.lim;
-			}
 		}
 		else
 		{
@@ -494,20 +448,16 @@ public class RadarScr : mScreen
 
 	private void doClickUse(int i)
 	{
-		switch (i)
-		{
-		case 0:
+		if (i == 0)
 			doChangeUI();
-			break;
-		case 1:
+		else if (i == 1)
+		{
 			if (focus_card != null)
-			{
 				Service.gI().SendRada(1, focus_card.id);
-			}
-			break;
-		case 2:
+		}
+		else if (i == 2)
+		{
 			GameScr.gI().switchToMe();
-			break;
 		}
 		SoundMn.gI().radarClick();
 	}
@@ -515,37 +465,25 @@ public class RadarScr : mScreen
 	private void doClickArrow(int dir)
 	{
 		if (TYPE_UI)
-		{
 			maxpage = list.size() / 5 + ((list.size() % 5 > 0) ? 1 : 0);
-		}
 		else
-		{
 			maxpage = listUse.size() / 5 + ((listUse.size() % 5 > 0) ? 1 : 0);
-		}
 		int num = page;
 		if (dir == 0)
 		{
 			if (page == 1)
-			{
 				return;
-			}
 			num--;
 			if (num < 1)
-			{
 				num = 1;
-			}
 		}
 		else
 		{
 			if (page == maxpage)
-			{
 				return;
-			}
 			num++;
 			if (num > maxpage)
-			{
 				num = maxpage;
-			}
 		}
 		if (num != page)
 		{
@@ -564,13 +502,9 @@ public class RadarScr : mScreen
 	{
 		cmyText += 12 * type;
 		if (cmyText < 0)
-		{
 			cmyText = 0;
-		}
 		if (cmyText > focus_card.cp.lim)
-		{
 			cmyText = focus_card.cp.lim;
-		}
 	}
 
 	private void doKeyItem(int type)
@@ -586,9 +520,7 @@ public class RadarScr : mScreen
 				num2++;
 			}
 			else
-			{
 				num = index.Length - 1;
-			}
 		}
 		if (num < 0)
 		{
@@ -598,9 +530,7 @@ public class RadarScr : mScreen
 				num2--;
 			}
 			else
-			{
 				num = 0;
-			}
 		}
 		if (num != indexFocus)
 		{
@@ -632,13 +562,9 @@ public class RadarScr : mScreen
 			g.drawImage(imgUse_0, xCmd[1], yCmd + dxCmd[1], 0);
 			g.drawImage(imgBack, xCmd[2], yCmd + dxCmd[2], 0);
 			if (TYPE_UI)
-			{
 				g.drawRegion(imgUse, 0, 0, 17, 17, 0, xCmd[1], yCmd + dxCmd[1], 0);
-			}
 			else
-			{
 				g.drawRegion(imgUse, 0, 0, 17, 17, 1, xCmd[1], yCmd + dxCmd[1], 0);
-			}
 			if (focus_card != null)
 			{
 				g.setClip(xUi + 30, yUi + 13, wUi - 60, hUi / 2);
@@ -654,30 +580,22 @@ public class RadarScr : mScreen
 			}
 			g.setClip(xText, yText, wText + 5, hText + 8);
 			if (focus_card != null)
-			{
 				g.drawImage(imgUIText, xText, yText, 0);
-			}
 			GameScr.resetTranslate(g);
 			g.setClip(xText, yText + 1, wText, hText + 5);
 			if (focus_card != null && focus_card.cp != null)
 			{
 				if (focus_card.cp.says == null)
-				{
 					return;
-				}
 				focus_card.cp.paintRada(g, cmyText);
 			}
 			GameScr.resetTranslate(g);
 			if ((!TYPE_UI && listUse.size() > 5) || TYPE_UI)
 			{
 				if (page > 1)
-				{
 					g.drawImage(imgArrow_Left, xyArrow[0][0], xyArrow[0][1] + dxArrow[0], 0);
-				}
 				if (page < maxpage)
-				{
 					g.drawImage(imgArrow_Right, xyArrow[2][0], xyArrow[2][1] + dxArrow[1], 0);
-				}
 			}
 			for (int i = 0; i < index.Length; i++)
 			{
@@ -693,31 +611,21 @@ public class RadarScr : mScreen
 				}
 				Info_RadaScr info = Info_RadaScr.GetInfo(listUse, index[i]);
 				if (TYPE_UI)
-				{
 					info = Info_RadaScr.GetInfo(list, index[i]);
-				}
 				if (info != null)
 				{
 					fraImgFocus.drawFrame(info.rank, xyItem[i][0], xyItem[i][1] + num + num2, 0, 0, g);
 					SmallImage.drawSmallImage(g, info.idIcon, xyItem[i][0] + 14, xyItem[i][1] + 14 + num + num2, 0, StaticObj.VCENTER_HCENTER);
 					info.paintEff(g, xyItem[i][0], xyItem[i][1] + num + num2);
 					if (info.level == 0)
-					{
 						g.drawImage(imgLock, xyItem[i][0], xyItem[i][1] + num + num2, 0);
-					}
 					if (i == indexFocus)
-					{
 						fraImgFocus.drawFrame(7, xyItem[i][0], xyItem[i][1] + num + num2, 0, 0, g);
-					}
 					if (info.isUse == 1)
-					{
 						fraImgFocus.drawFrame(8, xyItem[i][0], xyItem[i][1] + num + num2, 0, 0, g);
-					}
 				}
 				else
-				{
 					fraImgFocusNone.drawFrame(idx, xyItem[i][0] - 1, xyItem[i][1] - 1 + num + num2, 0, 0, g);
-				}
 			}
 		}
 		catch (Exception ex)

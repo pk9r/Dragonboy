@@ -14,13 +14,9 @@ public class MsgDlg : Dialog
 	{
 		padLeft = 35;
 		if (GameCanvas.w <= 176)
-		{
 			padLeft = 10;
-		}
 		if (GameCanvas.w > 320)
-		{
 			padLeft = 80;
-		}
 	}
 
 	public void pleasewait()
@@ -41,9 +37,7 @@ public class MsgDlg : Dialog
 		this.info = mFont.tahoma_8b.splitFontArray(info, GameCanvas.w - (padLeft * 2 + 20));
 		h = 80;
 		if (this.info.Length >= 5)
-		{
 			h = this.info.Length * mFont.tahoma_8b.getHeight() + 20;
-		}
 	}
 
 	public void setInfo(string info, Command left, Command center, Command right)
@@ -54,9 +48,7 @@ public class MsgDlg : Dialog
 		base.right = right;
 		h = 80;
 		if (this.info.Length >= 5)
-		{
 			h = this.info.Length * mFont.tahoma_8b.getHeight() + 20;
-		}
 		if (GameCanvas.isTouch)
 		{
 			if (left != null)
@@ -76,6 +68,7 @@ public class MsgDlg : Dialog
 			}
 		}
 		isWait = false;
+		time = -1L;
 	}
 
 	public override void paint(mGraphics g)
@@ -84,21 +77,22 @@ public class MsgDlg : Dialog
 		if (!LoginScr.isContinueToLogin)
 		{
 			int num = GameCanvas.h - h - 38;
-			int w = GameCanvas.w - padLeft * 2;
-			GameCanvas.paintz.paintPopUp(padLeft, num, w, h, g);
-			int num2 = num + (h - info.Length * mFont.tahoma_8b.getHeight()) / 2 - 2;
+			int w = GameCanvas.w;
+			int num2 = padLeft;
+			GameCanvas.paintz.paintPopUp(padLeft, num, w - num2 * 2, h, g);
+			int num3 = num + (h - info.Length * mFont.tahoma_8b.getHeight()) / 2 - 2;
 			if (isWait)
 			{
-				num2 += 8;
-				GameCanvas.paintShukiren(GameCanvas.hw, num2 - 12, g);
+				num3 += 8;
+				GameCanvas.paintShukiren(GameCanvas.hw, num3 - 12, g);
 			}
-			int num3 = 0;
-			int num4 = num2;
-			while (num3 < info.Length)
+			int num4 = 0;
+			int num5 = num3;
+			while (num4 < info.Length)
 			{
-				mFont.tahoma_7b_dark.drawString(g, info[num3], GameCanvas.hw, num4, 2);
-				num3++;
-				num4 += mFont.tahoma_8b.getHeight();
+				mFont.tahoma_7b_dark.drawString(g, info[num4], GameCanvas.hw, num5, 2);
+				num4++;
+				num5 += mFont.tahoma_8b.getHeight();
 			}
 			base.paint(g);
 		}
@@ -108,8 +102,6 @@ public class MsgDlg : Dialog
 	{
 		base.update();
 		if (time != -1 && mSystem.currentTimeMillis() > time)
-		{
 			GameCanvas.endDlg();
-		}
 	}
 }

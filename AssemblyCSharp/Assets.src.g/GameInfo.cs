@@ -1,6 +1,5 @@
 namespace Assets.src.g
 {
-
 	internal class GameInfo
 	{
 		public string main;

@@ -2,7 +2,6 @@ using System;
 
 namespace Assets.src.g
 {
-
 	public class BigBoss : Mob, IMapObject
 	{
 		public static Image shadowBig = GameCanvas.loadImage("/mainImage/shadowBig.png");
@@ -65,64 +64,64 @@ namespace Assets.src.g
 
 		public new int[] stand = new int[12]
 		{
-		0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-		1, 1
+			0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+			1, 1
 		};
 
 		public int[] stand_1 = new int[17]
 		{
-		37, 37, 37, 38, 38, 38, 39, 39, 40, 40,
-		40, 39, 39, 39, 38, 38, 38
+			37, 37, 37, 38, 38, 38, 39, 39, 40, 40,
+			40, 39, 39, 39, 38, 38, 38
 		};
 
 		public new int[] move = new int[15]
 		{
-		1, 1, 1, 1, 2, 2, 2, 2, 3, 3,
-		3, 3, 2, 2, 2
+			1, 1, 1, 1, 2, 2, 2, 2, 3, 3,
+			3, 3, 2, 2, 2
 		};
 
 		public new int[] moveFast = new int[7] { 1, 1, 2, 2, 3, 3, 2 };
 
 		public new int[] attack1 = new int[12]
 		{
-		0, 0, 34, 34, 35, 35, 36, 36, 2, 2,
-		1, 1
+			0, 0, 34, 34, 35, 35, 36, 36, 2, 2,
+			1, 1
 		};
 
 		public new int[] attack2 = new int[23]
 		{
-		0, 0, 0, 4, 4, 6, 6, 9, 9, 10,
-		10, 13, 13, 15, 15, 17, 17, 19, 19, 21,
-		21, 23, 23
+			0, 0, 0, 4, 4, 6, 6, 9, 9, 10,
+			10, 13, 13, 15, 15, 17, 17, 19, 19, 21,
+			21, 23, 23
 		};
 
 		public int[] attack3 = new int[24]
 		{
-		0, 0, 1, 1, 4, 4, 6, 6, 8, 8,
-		25, 25, 26, 26, 28, 28, 30, 30, 32, 32,
-		2, 2, 1, 1
+			0, 0, 1, 1, 4, 4, 6, 6, 8, 8,
+			25, 25, 26, 26, 28, 28, 30, 30, 32, 32,
+			2, 2, 1, 1
 		};
 
 		public int[] attack2_1 = new int[20]
 		{
-		37, 37, 5, 5, 7, 7, 11, 11, 14, 14,
-		16, 16, 18, 18, 20, 20, 22, 22, 24, 24
+			37, 37, 5, 5, 7, 7, 11, 11, 14, 14,
+			16, 16, 18, 18, 20, 20, 22, 22, 24, 24
 		};
 
 		public int[] attack3_1 = new int[21]
 		{
-		37, 37, 37, 38, 38, 5, 5, 7, 7, 11,
-		11, 27, 27, 29, 29, 31, 31, 33, 33, 38,
-		38
+			37, 37, 37, 38, 38, 5, 5, 7, 7, 11,
+			11, 27, 27, 29, 29, 31, 31, 33, 33, 38,
+			38
 		};
 
 		public int[] fly = new int[8] { 8, 8, 9, 9, 10, 10, 12, 12 };
 
 		public int[] hitground = new int[24]
 		{
-		0, 0, 1, 1, 4, 4, 6, 6, 8, 8,
-		25, 25, 26, 26, 28, 28, 30, 30, 32, 32,
-		2, 2, 1, 1
+			0, 0, 1, 1, 4, 4, 6, 6, 8, 8,
+			25, 25, 26, 26, 28, 28, 30, 30, 32, 32,
+			2, 2, 1, 1
 		};
 
 		private bool shock;
@@ -149,14 +148,14 @@ namespace Assets.src.g
 			base.hp = hp;
 			maxHp = maxhp;
 			templateId = templateID;
+			w_hp_bar = 100;
+			h_hp_bar = 6;
+			len = w_hp_bar;
+			updateHp_bar();
 			if (s == 0)
-			{
 				getDataB();
-			}
 			if (s == 1)
-			{
 				getDataB2();
-			}
 			if (s == 2)
 			{
 				getDataB2();
@@ -218,11 +217,8 @@ namespace Assets.src.g
 		{
 			for (int i = 0; i < Mob.newMob.size(); i++)
 			{
-				string text = (string)Mob.newMob.elementAt(i);
-				if (text.Equals(id))
-				{
+				if (((string)Mob.newMob.elementAt(i)).Equals(id))
 					return true;
-				}
 			}
 			return false;
 		}
@@ -231,9 +227,7 @@ namespace Assets.src.g
 		{
 			tick++;
 			if (tick > array.Length - 1)
-			{
 				tick = 0;
-			}
 			frame = array[tick];
 		}
 
@@ -243,13 +237,9 @@ namespace Assets.src.g
 			xSd = x;
 			wCount = 0;
 			if (ySd <= 0 || TileMap.tileTypeAt(xSd, ySd, 2))
-			{
 				return;
-			}
 			if (TileMap.tileTypeAt(xSd / num, ySd / num) == 0)
-			{
 				isOutMap = true;
-			}
 			else if (TileMap.tileTypeAt(xSd / num, ySd / num) != 0 && !TileMap.tileTypeAt(xSd, ySd, 2))
 			{
 				xSd = x;
@@ -263,9 +253,7 @@ namespace Assets.src.g
 				if (TileMap.tileTypeAt(xSd, ySd, 2))
 				{
 					if (ySd % 24 != 0)
-					{
 						ySd -= ySd % 24;
-					}
 					break;
 				}
 			}
@@ -284,44 +272,42 @@ namespace Assets.src.g
 		public override void update()
 		{
 			if (!isUpdate())
-			{
 				return;
-			}
 			updateShadown();
 			switch (status)
 			{
-				case 2:
-					updateMobStandWait();
-					break;
-				case 4:
-					timeStatus = 0;
-					updateMobFly();
-					break;
-				case 3:
-					updateMobAttack();
-					break;
-				case 5:
-					timeStatus = 0;
-					updateMobWalk();
-					break;
-				case 6:
-					timeStatus = 0;
-					p1++;
-					y += p1;
-					if (y >= yFirst)
-					{
-						y = yFirst;
-						p1 = 0;
-						status = 5;
-					}
-					break;
-				case 7:
-					updateInjure();
-					break;
-				case 0:
-				case 1:
-					updateDead();
-					break;
+			case 2:
+				updateMobStandWait();
+				break;
+			case 4:
+				timeStatus = 0;
+				updateMobFly();
+				break;
+			case 3:
+				updateMobAttack();
+				break;
+			case 5:
+				timeStatus = 0;
+				updateMobWalk();
+				break;
+			case 6:
+				timeStatus = 0;
+				p1++;
+				y += p1;
+				if (y >= yFirst)
+				{
+					y = yFirst;
+					p1 = 0;
+					status = 5;
+				}
+				break;
+			case 7:
+				updateInjure();
+				break;
+			case 0:
+			case 1:
+				updateDead();
+				break;
 			}
 		}
 
@@ -329,9 +315,7 @@ namespace Assets.src.g
 		{
 			checkFrameTick((!haftBody) ? stand : stand_1);
 			if (GameCanvas.gameTick % 5 == 0)
-			{
 				ServerEffect.addServerEffect(167, Res.random(x - getW() / 2, x + getW() / 2), Res.random(getY() + getH() / 2, getY() + getH()), 1);
-			}
 			if (x != xFirst || y != yFirst)
 			{
 				x += (xFirst - x) / 4;
@@ -390,27 +374,19 @@ namespace Assets.src.g
 			if (Res.abs(cx - x) < w * 2 && Res.abs(cy - y) < h * 2)
 			{
 				if (x < cx)
-				{
 					x = cx - w;
-				}
 				else
-				{
 					x = cx + w;
-				}
 				p3 = 0;
 			}
 			else
-			{
 				p3 = 1;
-			}
 		}
 
 		private bool isSpecial()
 		{
 			if ((templateId >= 58 && templateId <= 65) || templateId == 67 || templateId == 68)
-			{
 				return true;
-			}
 			return false;
 		}
 
@@ -441,9 +417,7 @@ namespace Assets.src.g
 			this.type = type;
 			tick = 0;
 			if (type < 3)
-			{
 				status = 3;
-			}
 			if (type == 3)
 			{
 				flyUp = true;
@@ -453,13 +427,11 @@ namespace Assets.src.g
 			{
 				for (int i = 0; i < charAttack.Length; i++)
 				{
-					charAttack[i].doInjure(dameHP[i], 0, isCrit: false, isMob: false);
+					charAttack[i].doInjure(dameHP[i], 0, false, false);
 				}
 			}
 			if (type == 7)
-			{
 				status = 3;
-			}
 		}
 
 		public new void updateMobAttack()
@@ -467,37 +439,29 @@ namespace Assets.src.g
 			if (type == 7)
 			{
 				if (tick > 8)
-				{
 					tick = 8;
-				}
 				checkFrameTick(attack1);
 				if (GameCanvas.gameTick % 4 == 0)
-				{
 					ServerEffect.addServerEffect(70, x + ((dir != 1) ? (-15) : 15), y - 40, 1);
-				}
 			}
 			if (type == 0)
 			{
 				if (tick == attack1.Length - 1)
-				{
 					status = 2;
-				}
 				dir = ((x < charAttack[0].cx) ? 1 : (-1));
 				checkFrameTick(attack1);
 				if (tick == 8)
 				{
 					for (int i = 0; i < charAttack.Length; i++)
 					{
-						MonsterDart.addMonsterDart(x + ((dir != 1) ? (-45) : 45), y - 30, isBoss: true, dameHP[i], 0, charAttack[i], 24);
+						MonsterDart.addMonsterDart(x + ((dir != 1) ? (-45) : 45), y - 30, true, dameHP[i], 0, charAttack[i], 24);
 					}
 				}
 			}
 			if (type == 1)
 			{
 				if (tick == ((!haftBody) ? (attack2.Length - 1) : (attack2_1.Length - 1)))
-				{
 					status = 2;
-				}
 				dir = ((x < charAttack[0].cx) ? 1 : (-1));
 				checkFrameTick((!haftBody) ? attack2 : attack2_1);
 				x += (charAttack[0].cx - x) / 4;
@@ -506,22 +470,17 @@ namespace Assets.src.g
 				{
 					for (int j = 0; j < charAttack.Length; j++)
 					{
-						charAttack[j].doInjure(dameHP[j], 0, isCrit: false, isMob: false);
+						charAttack[j].doInjure(dameHP[j], 0, false, false);
 						ServerEffect.addServerEffect(102, charAttack[j].cx, charAttack[j].cy, 1);
 					}
 				}
 			}
 			if (type == 8)
-			{
-			}
+				;
 			if (type != 2)
-			{
 				return;
-			}
 			if (tick == ((!haftBody) ? (attack3.Length - 1) : (attack3_1.Length - 1)))
-			{
 				status = 2;
-			}
 			dir = ((x < charAttack[0].cx) ? 1 : (-1));
 			checkFrameTick((!haftBody) ? attack3 : attack3_1);
 			if (tick == 13)
@@ -530,7 +489,7 @@ namespace Assets.src.g
 				shock = true;
 				for (int k = 0; k < charAttack.Length; k++)
 				{
-					charAttack[k].doInjure(dameHP[k], 0, isCrit: false, isMob: false);
+					charAttack[k].doInjure(dameHP[k], 0, false, false);
 				}
 			}
 		}
@@ -542,77 +501,52 @@ namespace Assets.src.g
 		public new bool isPaint()
 		{
 			if (x < GameScr.cmx)
-			{
 				return false;
-			}
 			if (x > GameScr.cmx + GameScr.gW)
-			{
 				return false;
-			}
 			if (y < GameScr.cmy)
-			{
 				return false;
-			}
 			if (y > GameScr.cmy + GameScr.gH + 30)
-			{
 				return false;
-			}
 			if (status == 0)
-			{
 				return false;
-			}
 			return true;
 		}
 
 		public new bool isUpdate()
 		{
 			if (status == 0)
-			{
 				return false;
-			}
 			return true;
 		}
 
 		public new bool checkIsBoss()
 		{
 			if (isBoss || levelBoss > 0)
-			{
 				return true;
-			}
 			return false;
 		}
 
 		public override void paint(mGraphics g)
 		{
 			if (data == null)
-			{
 				return;
-			}
 			if (isShadown && status != 0)
-			{
 				paintShadow(g);
-			}
 			g.translate(0, GameCanvas.transY);
 			data.paintFrame(g, frame, x, y + fy, (dir != 1) ? 1 : 0, 2);
 			g.translate(0, -GameCanvas.transY);
-			int num = (int)((long)hp * 50L / maxHp);
-			if (num != 0)
-			{
-				g.setColor(0);
-				g.fillRect(x - 27, y - 112, 54, 8);
-				g.setColor(16711680);
-				g.setClip(x - 25, y - 110, num, 4);
-				g.fillRect(x - 25, y - 110, 50, 4);
-				g.setClip(0, 0, 3000, 3000);
-			}
+			int width = GameScr.imgHP_tm_do.getWidth();
+			int height = GameScr.imgHP_tm_do.getHeight();
+			int w = width * per / 100;
+			g.drawImage(GameScr.imgHP_tm_xam, x - (width >> 1), y - h - 5, mGraphics.TOP | mGraphics.LEFT);
+			g.drawRegion(imgHPtem, 0, 0, w, height, 0, x - (width >> 1), y - h - 5, mGraphics.TOP | mGraphics.LEFT);
 			if (shock)
 			{
 				Res.outz("type= " + type);
 				tShock++;
-				Effect me = new Effect((type != 2) ? 22 : 19, x + tShock * 50, y + 25, 2, 1, -1);
-				EffecMn.addEff(me);
-				Effect me2 = new Effect((type != 2) ? 22 : 19, x - tShock * 50, y + 25, 2, 1, -1);
-				EffecMn.addEff(me2);
+				EffecMn.addEff(new Effect((type != 2) ? 22 : 19, x + tShock * 50, y + 25, 2, 1, -1));
+				EffecMn.addEff(new Effect((type != 2) ? 22 : 19, x - tShock * 50, y + 25, 2, 1, -1));
 				if (tShock == 50)
 				{
 					tShock = 0;
@@ -652,19 +586,13 @@ namespace Assets.src.g
 			if (Res.abs(num - x) < w * 2 && Res.abs(num2 - y) < h * 2)
 			{
 				if (x < num)
-				{
 					x = num - w;
-				}
 				else
-				{
 					x = num + w;
-				}
 				p3 = 0;
 			}
 			else
-			{
 				p3 = 1;
-			}
 		}
 
 		public new int getX()
@@ -705,9 +633,7 @@ namespace Assets.src.g
 		public new void removeHoldEff()
 		{
 			if (holdEffID != 0)
-			{
 				holdEffID = 0;
-			}
 		}
 
 		public new void removeBlindEff()

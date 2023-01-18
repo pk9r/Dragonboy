@@ -1,6 +1,5 @@
 namespace Assets.src.g
 {
-
 	public class ClientInput : mScreen, IActionListener
 	{
 		public static ClientInput instance;
@@ -25,9 +24,7 @@ namespace Assets.src.g
 		{
 			w = GameCanvas.w - 20;
 			if (w > 320)
-			{
 				w = 320;
-			}
 			Res.outz("title= " + t);
 			strPaint = mFont.tahoma_7b_dark.splitFontArray(t, w - 20);
 			x = (GameCanvas.w - w) / 2;
@@ -43,17 +40,11 @@ namespace Assets.src.g
 				tf[i].width = w - 20;
 				tf[i].height = mScreen.ITEM_HEIGHT + 2;
 				if (GameCanvas.isTouch)
-				{
 					tf[0].isFocus = false;
-				}
 				else
-				{
 					tf[0].isFocus = true;
-				}
 				if (!GameCanvas.isTouch)
-				{
 					right = tf[0].cmdClear;
-				}
 			}
 			left = new Command(mResources.CLOSE, this, 1, null);
 			center = new Command(mResources.OK, this, 2, null);
@@ -68,9 +59,7 @@ namespace Assets.src.g
 		public static ClientInput gI()
 		{
 			if (instance == null)
-			{
 				instance = new ClientInput();
-			}
 			return instance;
 		}
 
@@ -90,7 +79,7 @@ namespace Assets.src.g
 		public override void paint(mGraphics g)
 		{
 			GameScr.gI().paint(g);
-			PopUp.paintPopUp(g, x, y, w, h, -1, isButton: true);
+			PopUp.paintPopUp(g, x, y, w, h, -1, true);
 			for (int i = 0; i < strPaint.Length; i++)
 			{
 				mFont.tahoma_7b_green2.drawString(g, strPaint[i], GameCanvas.w / 2, y + 15 + i * 20, mFont.CENTER);
@@ -130,17 +119,13 @@ namespace Assets.src.g
 			{
 				focus--;
 				if (focus < 0)
-				{
 					focus = tf.Length - 1;
-				}
 			}
 			else if (GameCanvas.keyPressed[8])
 			{
 				focus++;
 				if (focus > tf.Length - 1)
-				{
 					focus = 0;
-				}
 			}
 			if (GameCanvas.keyPressed[2] || GameCanvas.keyPressed[8])
 			{
@@ -151,14 +136,10 @@ namespace Assets.src.g
 					{
 						tf[i].isFocus = true;
 						if (!GameCanvas.isTouch)
-						{
 							right = tf[i].cmdClear;
-						}
 					}
 					else
-					{
 						tf[i].isFocus = false;
-					}
 					if (GameCanvas.isPointerJustRelease && GameCanvas.isPointerHoldIn(tf[i].x, tf[i].y, tf[i].width, tf[i].height))
 					{
 						focus = i;
@@ -183,9 +164,7 @@ namespace Assets.src.g
 				clearScreen();
 			}
 			if (idAction != 2)
-			{
 				return;
-			}
 			for (int i = 0; i < tf.Length; i++)
 			{
 				if (tf[i].getText() == null || tf[i].getText().Equals(string.Empty))

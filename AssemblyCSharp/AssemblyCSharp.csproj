@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>Assembly-CSharp</AssemblyName>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
@@ -14,11 +14,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DebugType>full</DebugType>
-    <NoWarn>1701;1702;1591</NoWarn>
+    <NoWarn>1701;1702;1591;0642</NoWarn>
     <Deterministic>False</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;1591</NoWarn>
+    <NoWarn>1701;1702;1591;0642</NoWarn>
     <DebugType>full</DebugType>
     <Deterministic>False</Deterministic>
   </PropertyGroup>

@@ -1,5 +1,7 @@
 public class mResources
 {
+	public static string delacc = string.Empty;
+
 	public static string notiINAPP = string.Empty;
 
 	public static string notiRuby = string.Empty;
@@ -538,6 +540,14 @@ public class mResources
 	public static string aura_off = string.Empty;
 
 	public static string aura_on = string.Empty;
+
+	public static string aura_off_2 = string.Empty;
+
+	public static string aura_on_2 = string.Empty;
+
+	public static string hat_off = string.Empty;
+
+	public static string hat_on = string.Empty;
 
 	public static string chest = string.Empty;
 
@@ -1126,23 +1136,30 @@ public class mResources
 	public static void loadLanguague(sbyte newLanguage)
 	{
 		language = newLanguage;
-		switch (language)
+		sbyte b = language;
+		if (b != 0)
 		{
-		case 0:
+			if (b != 1)
+			{
+				if (b == 2)
+				{
+					LoginScr.imgTitle = GameCanvas.loadImage("/mainImage/logo1E.png");
+					T3.load();
+					ServerListScreen.linkweb = "http://dragonball.indonaga.com";
+				}
+			}
+			else
+			{
+				LoginScr.imgTitle = GameCanvas.loadImage("/mainImage/logo1E.png");
+				T2.load();
+				ServerListScreen.linkweb = "http://world.teamobi.com";
+			}
+		}
+		else
+		{
 			LoginScr.imgTitle = GameCanvas.loadImage("/mainImage/logo1.png");
 			T1.load();
 			ServerListScreen.linkweb = "http://ngocrongonline.com";
-			break;
-		case 1:
-			LoginScr.imgTitle = GameCanvas.loadImage("/mainImage/logo1E.png");
-			T2.load();
-			ServerListScreen.linkweb = "http://world.teamobi.com";
-			break;
-		case 2:
-			LoginScr.imgTitle = GameCanvas.loadImage("/mainImage/logo1E.png");
-			T3.load();
-			ServerListScreen.linkweb = "http://dragonball.indonaga.com";
-			break;
 		}
 	}
 

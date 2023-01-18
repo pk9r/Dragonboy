@@ -57,32 +57,22 @@ public class TransportScr : mScreen, IActionListener
 	public static TransportScr gI()
 	{
 		if (instance == null)
-		{
 			instance = new TransportScr();
-		}
 		return instance;
 	}
 
 	public override void switchToMe()
 	{
 		if (ship == null)
-		{
 			ship = GameCanvas.loadImage("/mainImage/myTexture2dfutherShip.png");
-		}
 		if (taungam == null)
-		{
 			taungam = GameCanvas.loadImage("/mainImage/taungam.png");
-		}
 		isSpeed = false;
 		transNow = false;
 		if (Char.myCharz().checkLuong() > 0 && type == 0)
-		{
 			center = new Command(mResources.faster, this, 1, null);
-		}
 		else
-		{
 			center = null;
-		}
 		currSpeed = 0;
 		base.switchToMe();
 	}
@@ -97,13 +87,9 @@ public class TransportScr : mScreen, IActionListener
 			g.fillRect(posX[i], posY[i], 10, 2);
 		}
 		if (type == 0)
-		{
 			g.drawRegion(ship, 0, 0, 72, 95, 7, cmx + currSpeed, GameCanvas.h / 2, 3);
-		}
 		if (type == 1)
-		{
 			g.drawRegion(taungam, 0, 0, 144, 79, 2, cmx + currSpeed, GameCanvas.h / 2, 3);
-		}
 		for (int j = 0; j < n; j++)
 		{
 			g.setColor((type != 0) ? 7536127 : 14935011);
@@ -117,44 +103,30 @@ public class TransportScr : mScreen, IActionListener
 		if (type == 0)
 		{
 			if (!isSpeed)
-			{
 				currSpeed = GameCanvas.w / 2 * time / maxTime;
-			}
 		}
 		else
-		{
 			currSpeed += 2;
-		}
 		Controller.isStopReadMessage = false;
 		cmx = (((GameCanvas.w / 2 + cmx) / 2 + cmx) / 2 + cmx) / 2;
 		if (type == 1)
-		{
 			cmx = 0;
-		}
 		for (int i = 0; i < n; i++)
 		{
 			posX[i] -= speed / 2;
 			if (posX[i] < -20)
-			{
 				posX[i] = GameCanvas.w;
-			}
 		}
 		for (int j = 0; j < n; j++)
 		{
 			posX2[j] -= speed;
 			if (posX2[j] < -20)
-			{
 				posX2[j] = GameCanvas.w;
-			}
 		}
 		if (GameCanvas.gameTick % 3 == 0)
-		{
 			speed += ((!isSpeed) ? 1 : 2);
-		}
 		if (speed > ((!isSpeed) ? 25 : 80))
-		{
 			speed = ((!isSpeed) ? 25 : 80);
-		}
 		curr = mSystem.currentTimeMillis();
 		if (curr - last >= 1000)
 		{
@@ -162,9 +134,7 @@ public class TransportScr : mScreen, IActionListener
 			last = curr;
 		}
 		if (isSpeed)
-		{
 			currSpeed += 3;
-		}
 		if (currSpeed >= GameCanvas.w / 2 + 30 && !transNow)
 		{
 			transNow = true;
@@ -181,9 +151,7 @@ public class TransportScr : mScreen, IActionListener
 	public void perform(int idAction, object p)
 	{
 		if (idAction == 1)
-		{
 			GameCanvas.startYesNoDlg(mResources.fasterQuestion, new Command(mResources.YES, this, 2, null), new Command(mResources.NO, this, 3, null));
-		}
 		if (idAction == 2 && Char.myCharz().checkLuong() > 0)
 		{
 			isSpeed = true;
@@ -191,8 +159,6 @@ public class TransportScr : mScreen, IActionListener
 			center = null;
 		}
 		if (idAction == 3)
-		{
 			GameCanvas.endDlg();
-		}
 	}
 }

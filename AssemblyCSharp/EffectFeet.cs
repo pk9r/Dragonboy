@@ -28,18 +28,14 @@ public class EffectFeet : Effect2
 	public override void update()
 	{
 		if (mSystem.currentTimeMillis() - endTime > 0)
-		{
 			Effect2.vEffectFeet.removeElement(this);
-		}
 	}
 
 	public override void paint(mGraphics g)
 	{
 		int num = TileMap.size;
 		if (TileMap.tileTypeAt(x + num / 2, y + 1, 4))
-		{
 			g.setClip(x / num * num, (y - 30) / num * num, num, 100);
-		}
 		else if (TileMap.tileTypeAt((x - num / 2) / num, (y + 1) / num) == 0)
 		{
 			g.setClip(x / num * num, (y - 30) / num * num, 100, 100);

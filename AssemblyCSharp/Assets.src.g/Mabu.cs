@@ -2,7 +2,6 @@ using System;
 
 namespace Assets.src.g
 {
-
 	internal class Mabu : Char
 	{
 		public static EffectData data1;
@@ -35,22 +34,22 @@ namespace Assets.src.g
 
 		public static int[] skill1 = new int[30]
 		{
-		0, 0, 1, 1, 2, 2, 3, 3, 4, 4,
-		5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-		5, 5, 5, 5, 5, 5, 5, 5, 5, 5
+			0, 0, 1, 1, 2, 2, 3, 3, 4, 4,
+			5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+			5, 5, 5, 5, 5, 5, 5, 5, 5, 5
 		};
 
 		public static int[] skill2 = new int[15]
 		{
-		0, 0, 6, 6, 7, 7, 8, 8, 9, 9,
-		9, 9, 9, 10, 10
+			0, 0, 6, 6, 7, 7, 8, 8, 9, 9,
+			9, 9, 9, 10, 10
 		};
 
 		public static int[] skill3 = new int[26]
 		{
-		0, 0, 1, 1, 2, 2, 3, 3, 4, 4,
-		5, 5, 6, 6, 7, 7, 8, 8, 9, 9,
-		10, 10, 11, 11, 12, 12
+			0, 0, 1, 1, 2, 2, 3, 3, 4, 4,
+			5, 5, 6, 6, 7, 7, 8, 8, 9, 9,
+			10, 10, 11, 11, 12, 12
 		};
 
 		public static int[] skill4 = new int[8] { 13, 13, 14, 14, 15, 15, 16, 16 };
@@ -74,13 +73,9 @@ namespace Assets.src.g
 			effEat = new Effect(105, cx, cy + 20, 2, 1, -1);
 			EffecMn.addEff(effEat);
 			if (id == Char.myCharz().charID)
-			{
 				focus = Char.myCharz();
-			}
 			else
-			{
 				focus = GameScr.findCharInMap(id);
-			}
 		}
 
 		public new void checkFrameTick(int[] array)
@@ -90,8 +85,7 @@ namespace Assets.src.g
 				if (tick == 11)
 				{
 					addFoot = true;
-					Effect effect = new Effect(19, cx, cy + 20, 2, 1, -1);
-					EffecMn.addEff(effect);
+					EffecMn.addEff(new Effect(19, cx, cy + 20, 2, 1, -1));
 				}
 				if (tick >= array.Length - 1)
 				{
@@ -107,9 +101,7 @@ namespace Assets.src.g
 			}
 			tick++;
 			if (tick > array.Length - 1)
-			{
 				tick = 0;
-			}
 			frame = array[tick];
 		}
 
@@ -191,28 +183,23 @@ namespace Assets.src.g
 						cdir = lastDir;
 						for (int i = 0; i < charAttack.Length; i++)
 						{
-							charAttack[i].doInjure(damageAttack[i], 0, isCrit: false, isMob: false);
+							charAttack[i].doInjure(damageAttack[i], 0, false, false);
 						}
 					}
 				}
 				if (skillID != 3)
-				{
 					return;
-				}
 				xTo = charAttack[pIndex].cx;
 				yTo = charAttack[pIndex].cy;
 				cx += (xTo - cx) / 3;
 				cy += (yTo - cy) / 3;
 				if (GameCanvas.gameTick % 5 == 0)
-				{
-					Effect effect2 = new Effect(19, cx, cy, 2, 1, -1);
-					EffecMn.addEff(effect2);
-				}
+					EffecMn.addEff(new Effect(19, cx, cy, 2, 1, -1));
 				if (Res.abs(cx - xTo) <= 20 && Res.abs(cy - yTo) <= 20)
 				{
 					cx = xTo;
 					cy = yTo;
-					charAttack[pIndex].doInjure(damageAttack[pIndex], 0, isCrit: false, isMob: false);
+					charAttack[pIndex].doInjure(damageAttack[pIndex], 0, false, false);
 					pIndex++;
 					if (pIndex == charAttack.Length)
 					{
@@ -222,9 +209,7 @@ namespace Assets.src.g
 				}
 			}
 			else
-			{
 				base.update();
-			}
 		}
 
 		public override void paint(mGraphics g)
@@ -235,19 +220,13 @@ namespace Assets.src.g
 				g.translate(0, GameCanvas.transY);
 				checkFrameTick(skills[skillID]);
 				if (skillID == 0 || skillID == 1)
-				{
 					data1.paintFrame(g, frame, cx, cy + fy, (cdir != 1) ? 1 : 0, 2);
-				}
 				else
-				{
 					data2.paintFrame(g, frame, cx, cy + fy, (cdir != 1) ? 1 : 0, 2);
-				}
 				g.translate(0, -GameCanvas.transY);
 			}
 			else
-			{
 				base.paint(g);
-			}
 		}
 	}
 }

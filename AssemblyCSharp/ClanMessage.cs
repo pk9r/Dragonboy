@@ -37,41 +37,27 @@ public class ClanMessage : IActionListener
 			{
 				vMessage.removeElement(clanMessage);
 				if (!upToTop)
-				{
 					vMessage.insertElementAt(cm, i);
-				}
 				else
-				{
 					vMessage.insertElementAt(cm, 0);
-				}
 				return;
 			}
 			if (clanMessage.maxCap != 0 && clanMessage.recieve == clanMessage.maxCap)
-			{
 				vMessage.removeElement(clanMessage);
-			}
 		}
 		if (index == -1)
-		{
 			vMessage.addElement(cm);
-		}
 		else
-		{
 			vMessage.insertElementAt(cm, 0);
-		}
 		if (vMessage.size() > 20)
-		{
 			vMessage.removeElementAt(vMessage.size() - 1);
-		}
 	}
 
 	public void paint(mGraphics g, int x, int y)
 	{
 		mFont mFont2 = mFont.tahoma_7b_dark;
 		if (role == 0)
-		{
 			mFont2 = mFont.tahoma_7b_red;
-		}
 		else if (role == 1)
 		{
 			mFont2 = mFont.tahoma_7b_green;
@@ -84,13 +70,9 @@ public class ClanMessage : IActionListener
 		{
 			mFont2.drawString(g, playerName, x + 3, y + 1, 0);
 			if (color == 0)
-			{
 				mFont.tahoma_7_grey.drawString(g, chat[0] + ((chat.Length <= 1) ? string.Empty : "..."), x + 3, y + 11, 0);
-			}
 			else
-			{
 				mFont.tahoma_7_red.drawString(g, chat[0] + ((chat.Length <= 1) ? string.Empty : "..."), x + 3, y + 11, 0);
-			}
 			mFont.tahoma_7_grey.drawString(g, NinjaUtil.getTimeAgo(timeAgo) + " " + mResources.ago, x + GameCanvas.panel.wScroll - 3, y + 1, mFont.RIGHT);
 		}
 		if (type == 1)
@@ -112,8 +94,6 @@ public class ClanMessage : IActionListener
 	public void update()
 	{
 		if (time != 0)
-		{
 			timeAgo = (int)(mSystem.currentTimeMillis() / 1000 - time);
-		}
 	}
 }

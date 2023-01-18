@@ -68,9 +68,7 @@ public class MagicTree : Npc, IActionListener
 	public override void paint(mGraphics g)
 	{
 		if (id == 0)
-		{
 			return;
-		}
 		if (ModMenuMain.getStatusInt("levelreducegraphics") == 2)
 		{
             g.setColor(Color.green);
@@ -81,9 +79,7 @@ public class MagicTree : Npc, IActionListener
 		{
 			g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx, cy - SmallImage.smallImg[id][4] - 1, mGraphics.BOTTOM | mGraphics.HCENTER);
 			if (name != null)
-			{
 				mFont.tahoma_7b_white.drawString(g, name, cx, cy - SmallImage.smallImg[id][4] - 20, mFont.CENTER, mFont.tahoma_7_grey);
-			}
 		}
 		else if (name != null)
 		{
@@ -105,17 +101,13 @@ public class MagicTree : Npc, IActionListener
 		{
 		}
 		if (indexEffTask < 0 || effTask == null || cTypePk != 0)
-		{
 			return;
-		}
 		SmallImage.drawSmallImage(g, effTask.arrEfInfo[indexEffTask].idImg, cx + effTask.arrEfInfo[indexEffTask].dx + SmallImage.smallImg[id][3] / 2 + 5, cy - 15 + effTask.arrEfInfo[indexEffTask].dy, 0, mGraphics.VCENTER | mGraphics.HCENTER);
 		if (GameCanvas.gameTick % 2 == 0)
 		{
 			indexEffTask++;
 			if (indexEffTask >= effTask.arrEfInfo.Length)
-			{
 				indexEffTask = 0;
-			}
 		}
 	}
 
@@ -128,16 +120,12 @@ public class MagicTree : Npc, IActionListener
 			seconds--;
 			last = cur;
 			if (seconds < 0)
-			{
 				seconds = 0;
-			}
 		}
 		if (!isUpdate)
 		{
 			if (currPeas < maxPeas && seconds == 0)
-			{
 				waitToUpdate = true;
-			}
 		}
 		else if (seconds == 0)
 		{
@@ -159,13 +147,11 @@ public class MagicTree : Npc, IActionListener
 		{
 			isUpdateTree = false;
 			if ((seconds >= 0 && currPeas < maxPeas) || (seconds >= 0 && isUpdate) || isPeasEffect)
-			{
 				p.updateXYWH(new string[2]
 				{
 					isUpdate ? mResources.UPGRADING : (currPeas + "/" + maxPeas),
 					NinjaUtil.getTime(seconds)
 				}, cx, cy - 20 - SmallImage.smallImg[id][4]);
-			}
 			else if (currPeas == maxPeas && !isUpdate)
 			{
 				p.updateXYWH(new string[2]
@@ -176,18 +162,14 @@ public class MagicTree : Npc, IActionListener
 			}
 		}
 		if ((seconds >= 0 && currPeas < maxPeas) || (seconds >= 0 && isUpdate))
-		{
 			p.says[p.says.Length - 1] = NinjaUtil.getTime(seconds);
-		}
 		if (isPeasEffect)
 		{
 			p.isPaint = false;
 			ServerEffect.addServerEffect(98, cx + peaPostionX[currPeas - 1] - SmallImage.smallImg[id][3] / 2, cy + peaPostionY[currPeas - 1] - SmallImage.smallImg[id][4], 1);
 			currPeas--;
 			if (GameCanvas.gameTick % 2 == 0)
-			{
 				SoundMn.gI().HP_MPup();
-			}
 			if (currPeas == remainPeas)
 			{
 				p.isPaint = true;
@@ -201,8 +183,6 @@ public class MagicTree : Npc, IActionListener
 	public void perform(int idAction, object p)
 	{
 		if (idAction == 1)
-		{
 			Service.gI().magicTree(1);
-		}
 	}
 }

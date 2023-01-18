@@ -1,6 +1,5 @@
 namespace Assets.src.g
 {
-
 	public class PetFollow
 	{
 		public short smallID;
@@ -82,9 +81,7 @@ namespace Assets.src.g
 				count++;
 			}
 			if (count >= frame.Length)
-			{
 				count = 0;
-			}
 		}
 
 		public void remove()

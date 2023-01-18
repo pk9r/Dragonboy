@@ -1,17 +1,26 @@
-﻿using HardwareId;
+﻿using DiscordRPC;
+using HardwareId;
 using QLTK.Models;
+using QLTK.Properties;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Windows;
 
 namespace QLTK
 {
     public class Utilities
     {
+        internal static DevelopStatus currentDevelopStatus;
+
+        [DllImport("user32.dll", EntryPoint = "MessageBox", BestFitMapping = false, CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int MessageBoxNative(IntPtr hWnd, string text, string caption, int type);
 
         internal static List<Server> LoadServersFromFile()
         {
@@ -126,5 +135,149 @@ namespace QLTK
 
             return decodedString;
         }
+
+        internal static void CheckUpdateAndNotification()
+        {
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    string[] notifications = Encoding.UTF8.GetString(client.DownloadData(Settings.Default.LinkNotification)).Split('\n');
+                    if (SaveSettings.Instance.versionNotification != notifications[0])
+                    {
+                        for (int i = 1; i < notifications.Length; i++)
+                        {
+                            notifications[i] = notifications[i].Trim();
+                            if (notifications[i] != "")
+                            {
+                                MessageBox.Show(notifications[i], "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
+                        }
+                        SaveSettings.Instance.versionNotification = notifications[0];
+                    }
+                }
+                switch (currentDevelopStatus = GetCurrentDevelopStatus())
+                {
+                    case DevelopStatus.None:
+                        throw new NullReferenceException(nameof(currentDevelopStatus) + " is not initialized!");
+                    case DevelopStatus.NormalUser:
+                        break;
+                    case DevelopStatus.Developing:
+                        new Thread(() =>
+                        MessageBoxNative(IntPtr.Zero, "Nếu bạn có ý tưởng hay chức năng mới, đừng ngại ngần mà hãy đóng góp cho Mod Cộng Đồng!", "Thông báo", 0x00000040 | 0x00040000)
+                        ).Start();
+                        break;
+                    case DevelopStatus.OldVersion:
+                        new Thread(() =>
+                        {
+                            if (MessageBoxNative(IntPtr.Zero, $"Đã có phiên bản mới!{Environment.NewLine}Bạn có muốn cập nhật không?", "Cập nhật", 0x00000004 | 0x00000040 | 0x00040000) == 6)
+                                Process.Start("https://github.com/pk9r327/Dragonboy");
+                        }).Start();
+                        break;
+                }
+
+            }
+            catch (WebException ex)
+            {
+                MessageBox.Show("Không thể kết nối đến máy chủ!" + Environment.NewLine + ex, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Có lỗi xảy ra:" + Environment.NewLine + ex, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private static DevelopStatus GetCurrentDevelopStatus()
+        {
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    MD5CryptoServiceProvider md5CryptoServiceProvider = new MD5CryptoServiceProvider();
+                    string[] remoteInfo = Encoding.UTF8.GetString(client.DownloadData(Settings.Default.LinkHash)).Split('\n');
+
+                    string hashGameAssemblyLocal = BitConverter.ToString(md5CryptoServiceProvider.ComputeHash(File.ReadAllBytes(@"Game_Data\Managed\Assembly-CSharp.dll"))).Replace("-", "");
+                    string hashQLTKLocal = BitConverter.ToString(md5CryptoServiceProvider.ComputeHash(File.ReadAllBytes("QLTK.exe"))).Replace("-", "");
+
+                    string hashGameAssemblyRemote = remoteInfo[0].TrimStart('\ufeff');
+                    string hashQLTKRemote = remoteInfo[2];
+
+                    if (hashQLTKLocal != hashQLTKRemote || hashGameAssemblyLocal != hashGameAssemblyRemote)
+                    {
+                        int timeStampGameAssemblyRemote = int.Parse(remoteInfo[1]);
+                        int timeStampQLTKRemote = int.Parse(remoteInfo[3]);
+                        int timeStampGameAssemblyLocal = BitConverter.ToInt32(File.ReadAllBytes(@"Game_Data\Managed\Assembly-CSharp.dll"), 0x00000088);
+                        int timeStampQLTKLocal = BitConverter.ToInt32(File.ReadAllBytes(@"QLTK.exe"), 0x00000088);
+                        if (timeStampGameAssemblyLocal >= timeStampGameAssemblyRemote || timeStampQLTKLocal >= timeStampQLTKRemote)
+                            return DevelopStatus.Developing;
+                        else if (timeStampGameAssemblyLocal < timeStampGameAssemblyRemote || timeStampQLTKLocal < timeStampQLTKRemote)
+                            return DevelopStatus.OldVersion;
+                    }
+                    else
+                        return DevelopStatus.NormalUser;
+                }
+            }
+            catch (WebException ex)
+            {
+                MessageBox.Show("Không thể kết nối đến máy chủ!" + Environment.NewLine + ex, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return DevelopStatus.NormalUser;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Có lỗi xảy ra:" + Environment.NewLine + ex, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return DevelopStatus.NormalUser;
+            }
+            return DevelopStatus.None;
+        }
+
+        internal static void SetPresence(string state = "Chưa đăng nhập", string details = "", Timestamps timeStamps = null)
+        {
+            string name = "Mod Cộng Đồng";
+            RichPresence richPresence = new RichPresence()
+            {
+                State = state,
+                Assets = new Assets()
+                {
+                    LargeImageKey = "icon_large",
+                    LargeImageText = name,
+                }
+            };
+            if (timeStamps != null)
+                richPresence.Timestamps = timeStamps;
+            if (!string.IsNullOrEmpty(details))
+                richPresence.Details = details;
+            if (currentDevelopStatus == DevelopStatus.Developing)
+            {
+                richPresence.Assets.SmallImageKey = "icon_developing";
+                richPresence.Assets.SmallImageText = "Đang phát triển";
+            }
+            Program.discordClient.SetPresence(richPresence);
+        }
+        
+        internal static string GetWindowTitle()
+        {
+            string name = "QLTK - NRO";
+            switch (currentDevelopStatus)
+            {
+                case DevelopStatus.None:
+                case DevelopStatus.NormalUser:
+                    break;
+                case DevelopStatus.Developing:
+                    name += " [Chế độ phát triển]";
+                    break;
+                case DevelopStatus.OldVersion:
+                    name += " [Phiên bản cũ]";
+                    break;
+            }
+            return name;
+        }
+    }
+
+    enum DevelopStatus
+    {
+        None,
+        NormalUser,
+        Developing,
+        OldVersion
     }
 }

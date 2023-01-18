@@ -37,31 +37,23 @@ public class Hint
 	public static bool isOnTask(int tastId, int index)
 	{
 		if (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId == tastId && Char.myCharz().taskMaint.index == index)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public static bool isPaintz()
 	{
 		if (isOnTask(0, 3) && GameCanvas.panel.currentTabIndex == 0 && (GameCanvas.panel.cmy < 0 || GameCanvas.panel.cmy > 30))
-		{
 			return false;
-		}
 		if (isOnTask(2, 0) && GameCanvas.panel.isShow && GameCanvas.panel.currentTabIndex != 0)
-		{
 			return false;
-		}
 		return true;
 	}
 
 	public static void clickNpc()
 	{
 		if (GameCanvas.panel.isShow)
-		{
 			isPaint = false;
-		}
 		if (GameScr.getNpcTask() != null)
 		{
 			x = GameScr.getNpcTask().cx;
@@ -80,20 +72,14 @@ public class Hint
 			x = popUp.cx + popUp.sayWidth / 2;
 			y = popUp.cy + 30;
 			if (popUp.isHide || !popUp.isPaint)
-			{
 				isPaint = false;
-			}
 			else
-			{
 				isPaint = true;
-			}
 			type = 0;
 			isCamera = true;
 			trans = 0;
 			if (!GameCanvas.isTouch)
-			{
 				isPaint = false;
-			}
 		}
 	}
 
@@ -101,14 +87,11 @@ public class Hint
 	{
 		type = 1;
 		if (GameCanvas.panel.isShow)
-		{
 			isPaint = false;
-		}
 		bool flag = false;
 		for (int i = 0; i < GameScr.vMob.size(); i++)
 		{
-			Mob mob = (Mob)GameScr.vMob.elementAt(i);
-			if (mob.isHintFocus)
+			if (((Mob)GameScr.vMob.elementAt(i)).isHintFocus)
 			{
 				flag = true;
 				break;
@@ -116,26 +99,24 @@ public class Hint
 		}
 		for (int j = 0; j < GameScr.vMob.size(); j++)
 		{
-			Mob mob2 = (Mob)GameScr.vMob.elementAt(j);
-			if (mob2.isHintFocus)
+			Mob mob = (Mob)GameScr.vMob.elementAt(j);
+			if (mob.isHintFocus)
 			{
-				x = mob2.x;
-				y = mob2.y + 5;
+				x = mob.x;
+				y = mob.y + 5;
 				isCamera = true;
-				if (mob2.status == 0)
-				{
-					mob2.isHintFocus = false;
-				}
+				if (mob.status == 0)
+					mob.isHintFocus = false;
 				break;
 			}
 			if (!flag)
 			{
-				if (mob2.status != 0)
+				if (mob.status != 0)
 				{
-					mob2.isHintFocus = true;
+					mob.isHintFocus = true;
 					break;
 				}
-				mob2.isHintFocus = false;
+				mob.isHintFocus = false;
 			}
 		}
 	}
@@ -143,9 +124,7 @@ public class Hint
 	public static bool isHaveItem()
 	{
 		if (GameCanvas.panel.isShow)
-		{
 			isPaint = false;
-		}
 		for (int i = 0; i < GameScr.vItemMap.size(); i++)
 		{
 			ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(i);
@@ -166,9 +145,7 @@ public class Hint
 		try
 		{
 			if (!isPaintArrow || (x > GameScr.cmx && x < GameScr.cmx + GameScr.gW && y > GameScr.cmy && y < GameScr.cmy + GameScr.gH) || GameCanvas.gameTick % 10 < 5 || ChatPopup.currChatPopup != null || ChatPopup.serverChatPopUp != null || GameCanvas.panel.isShow || !isCamera)
-			{
 				return;
-			}
 			int num = x - Char.myCharz().cx;
 			int num2 = y - Char.myCharz().cy;
 			int num3 = 0;
@@ -181,9 +158,7 @@ public class Hint
 					num3 = GameScr.gW - 10;
 					num4 = GameScr.gH / 2 + 30;
 					if (GameCanvas.isTouch)
-					{
 						num4 = GameScr.gH / 2 + 10;
-					}
 					arg = 0;
 				}
 				else
@@ -200,9 +175,7 @@ public class Hint
 					num3 = GameScr.gW - 10;
 					num4 = GameScr.gH / 2 + 30;
 					if (GameCanvas.isTouch)
-					{
 						num4 = GameScr.gH / 2 + 10;
-					}
 					arg = 0;
 				}
 				else
@@ -219,9 +192,7 @@ public class Hint
 					num3 = 10;
 					num4 = GameScr.gH / 2 + 30;
 					if (GameCanvas.isTouch)
-					{
 						num4 = GameScr.gH / 2 + 10;
-					}
 					arg = 3;
 				}
 				else
@@ -238,9 +209,7 @@ public class Hint
 					num3 = 10;
 					num4 = GameScr.gH / 2 + 30;
 					if (GameCanvas.isTouch)
-					{
 						num4 = GameScr.gH / 2 + 10;
-					}
 					arg = 3;
 				}
 				else
@@ -261,28 +230,18 @@ public class Hint
 	public static void paint(mGraphics g)
 	{
 		if (ChatPopup.serverChatPopUp != null || Char.myCharz().isUsePlane || Char.myCharz().isTeleport)
-		{
 			return;
-		}
 		paintArrowPointToHint(g);
 		if (GameCanvas.menu.tDelay == 0 && isPaint && ChatPopup.scr == null && !Char.ischangingMap && GameCanvas.currentScreen == GameScr.gI() && (!GameCanvas.panel.isShow || GameCanvas.panel.cmx == 0))
 		{
 			if (isCamera)
-			{
 				g.translate(-GameScr.cmx, -GameScr.cmy);
-			}
 			if (trans == 0)
-			{
 				g.drawImage(Panel.imgBantay, x - 15, y, 0);
-			}
 			if (trans == 1)
-			{
 				g.drawRegion(Panel.imgBantay, 0, 0, 14, 16, 2, x + 15, y, StaticObj.TOP_RIGHT);
-			}
 			if (paintFlare)
-			{
 				g.drawImage(ItemMap.imageFlare, x, y, 3);
-			}
 		}
 	}
 
@@ -298,9 +257,7 @@ public class Hint
 			isPaint = true;
 			isPaintArrow = true;
 			if (GameCanvas.menu.showMenu && taskId > 0)
-			{
 				isPaint = false;
-			}
 			switch (taskId)
 			{
 			case 0:
@@ -317,19 +274,13 @@ public class Hint
 					isCamera = true;
 				}
 				if (index == 1)
-				{
 					nextMap(0);
-				}
 				if (index == 2)
-				{
 					clickNpc();
-				}
 				if (index == 3)
 				{
 					if (!GameCanvas.panel.isShow)
-					{
 						clickNpc();
-					}
 					else if (GameCanvas.panel.currentTabIndex == 0)
 					{
 						if (GameCanvas.panel.cp == null)
@@ -367,9 +318,7 @@ public class Hint
 					}
 				}
 				if (index == 5)
-				{
 					clickNpc();
-				}
 				return;
 			case 1:
 				if (ChatPopup.currChatPopup != null || Char.myCharz().statusMe == 14)
@@ -381,24 +330,16 @@ public class Hint
 				if (index == 0)
 				{
 					if (TileMap.isOfflineMap())
-					{
 						nextMap(0);
-					}
 					else
-					{
 						clickMob();
-					}
 				}
 				if (index == 1)
 				{
 					if (!TileMap.isOfflineMap())
-					{
 						nextMap(1);
-					}
 					else
-					{
 						clickNpc();
-					}
 				}
 				return;
 			case 2:
@@ -411,9 +352,7 @@ public class Hint
 				if (index == 0)
 				{
 					if (!TileMap.isOfflineMap())
-					{
 						isViewMap = true;
-					}
 					if (!GameCanvas.panel.isShow)
 					{
 						if (!isViewMap)
@@ -427,18 +366,12 @@ public class Hint
 							if (GameScr.getTaskMapId() == TileMap.mapID)
 							{
 								if (!isHaveItem())
-								{
 									clickMob();
-								}
 							}
 							else
-							{
 								nextMap(0);
-							}
 							if (isViewMap)
-							{
 								isCloseMap = true;
-							}
 						}
 					}
 					else if (!isViewMap)
@@ -537,20 +470,14 @@ public class Hint
 				t = 0;
 			}
 			if (t > 4)
-			{
 				activeClick = false;
-			}
 		}
 		if (type != 1)
-		{
 			return;
-		}
 		if (t == 2)
 		{
 			if (GameCanvas.isTouch)
-			{
 				GameScr.startFlyText(mResources.press_twice, x, y + 10, 0, 20, mFont.MISS_ME);
-			}
 			paintFlare = true;
 			x += 2 * num;
 			y -= 4;

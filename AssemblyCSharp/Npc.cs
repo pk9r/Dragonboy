@@ -65,13 +65,9 @@ public class Npc : Char
 		ySd = cy;
 		statusMe = status;
 		if (npcId != -1)
-		{
 			template = arrNpcTemplate[templateId];
-		}
 		if (templateId == 23 || templateId == 42)
-		{
 			ch = 45;
-		}
 		if (templateId == 51)
 		{
 			isShadown = false;
@@ -80,9 +76,7 @@ public class Npc : Char
 		if (template != null)
 		{
 			if (template.name == null)
-			{
 				template.name = string.Empty;
-			}
 			template.name = Res.changeString(template.name);
 		}
 	}
@@ -114,15 +108,11 @@ public class Npc : Char
 				seconds--;
 				last = cur;
 				if (seconds < 0)
-				{
 					seconds = 0;
-				}
 			}
 		}
 		if (isShadown)
-		{
 			updateShadown();
-		}
 		if (effTask == null)
 		{
 			sbyte[] array = new sbyte[7] { -1, 9, 9, 10, 10, 11, 11 };
@@ -143,46 +133,30 @@ public class Npc : Char
 			{
 				sbyte taskNpcId = GameScr.getTaskNpcId();
 				if (Char.myCharz().taskMaint == null && taskNpcId == template.npcTemplateId)
-				{
 					indexEffTask = 0;
-				}
 				else if (Char.myCharz().taskMaint != null && taskNpcId == template.npcTemplateId)
 				{
 					if (Char.myCharz().taskMaint.index + 1 == Char.myCharz().taskMaint.subNames.Length)
-					{
 						effTask = GameScr.efs[98];
-					}
 					else
-					{
 						effTask = GameScr.efs[98];
-					}
 					indexEffTask = 0;
 				}
 			}
 		}
 		base.update();
 		if (TileMap.mapID != 51)
-		{
 			return;
-		}
 		if (cx > Char.myCharz().cx)
-		{
 			cdir = -1;
-		}
 		else
-		{
 			cdir = 1;
-		}
 		if (template.npcTemplateId % 2 == 0)
 		{
 			if (cf == 1)
-			{
 				cf = 0;
-			}
 			else
-			{
 				cf = 1;
-			}
 		}
 	}
 
@@ -190,35 +164,23 @@ public class Npc : Char
 	{
 		Part part = GameScr.parts[template.headId];
 		if (cdir == 1)
-		{
 			SmallImage.drawSmallImage(g, part.pi[Char.CharInfo[cf][0][0]].id, GameCanvas.w - 31 - g.getTranslateX(), 2 - g.getTranslateY(), 0, 0);
-		}
 		else
-		{
 			SmallImage.drawSmallImage(g, part.pi[Char.CharInfo[cf][0][0]].id, GameCanvas.w - 31 - g.getTranslateX(), 2 - g.getTranslateY(), 2, 24);
-		}
 	}
 
 	public override void paint(mGraphics g)
 	{
-		if (isLoadingMap || isHide || !isPaint() || statusMe == 15)
-		{
+		if (Char.isLoadingMap || isHide || !isPaint() || statusMe == 15)
 			return;
-		}
 		if (cTypePk != 0)
-		{
 			base.paint(g);
-		}
 		else
 		{
 			if (template == null)
-			{
 				return;
-			}
 			if (template.npcTemplateId != 4 && template.npcTemplateId != 51 && template.npcTemplateId != 50)
-			{
 				g.drawImage(TileMap.bong, cx, cy, 3);
-			}
 			if (ModMenuMain.getStatusInt("levelreducegraphics") == 2)
 			{
                 g.setColor(Color.green);
@@ -234,9 +196,7 @@ public class Npc : Char
 			{
 				SmallImage.drawSmallImage(g, 265, cx, cy, 0, mGraphics.BOTTOM | mGraphics.HCENTER);
 				if (myCharz().npcFocus != null && myCharz().npcFocus.Equals(this) && ChatPopup.currChatPopup == null)
-				{
 					g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx, cy - ch + 4, mGraphics.BOTTOM | mGraphics.HCENTER);
-				}
 				dyEff = 60;
 			}
 			else if (template.npcTemplateId != 4)
@@ -249,19 +209,11 @@ public class Npc : Char
 						{
 							tMabuEff++;
 							if (GameCanvas.gameTick % 3 == 0)
-							{
-								Effect effect = new Effect(19, cx + Res.random(-50, 50), cy, 2, 1, -1);
-								EffecMn.addEff(effect);
-							}
+								EffecMn.addEff(new Effect(19, cx + Res.random(-50, 50), cy, 2, 1, -1));
 							if (GameCanvas.gameTick % 15 == 0)
-							{
-								Effect effect2 = new Effect(18, cx + Res.random(-5, 5), cy + Res.random(-90, 0), 2, 1, -1);
-								EffecMn.addEff(effect2);
-							}
+								EffecMn.addEff(new Effect(18, cx + Res.random(-5, 5), cy + Res.random(-90, 0), 2, 1, -1));
 							if (tMabuEff == 100)
-							{
 								GameScr.gI().activeSuperPower(cx, cy);
-							}
 							if (tMabuEff == 110)
 							{
 								mabuEff = false;
@@ -270,31 +222,23 @@ public class Npc : Char
 						}
 						int num = 0;
 						if (SmallImage.imgNew[duahau[duaHauIndex]] != null && SmallImage.imgNew[duahau[duaHauIndex]].img != null)
-						{
 							num = mGraphics.getImageHeight(SmallImage.imgNew[duahau[duaHauIndex]].img);
-						}
 						SmallImage.drawSmallImage(g, duahau[duaHauIndex], cx + Res.random(-1, 1), cy, 0, mGraphics.BOTTOM | mGraphics.HCENTER);
 						if (Char.myCharz().npcFocus != null && Char.myCharz().npcFocus.Equals(this))
 						{
 							if (ChatPopup.currChatPopup == null)
-							{
 								g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx, cy - ch - 9 + 16 - num, mGraphics.BOTTOM | mGraphics.HCENTER);
-							}
 							mFont.tahoma_7b_white.drawString(g, NinjaUtil.getTime(seconds), cx, cy - ch - 16 - mFont.tahoma_7.getHeight() - 20 - num + 16, mFont.CENTER, mFont.tahoma_7b_dark);
 						}
 						else
-						{
 							mFont.tahoma_7b_white.drawString(g, NinjaUtil.getTime(seconds), cx, cy - ch - 8 - mFont.tahoma_7.getHeight() - 20 - num + 16, mFont.CENTER, mFont.tahoma_7b_dark);
-						}
 					}
 				}
 				else if (template.npcTemplateId == 6)
 				{
 					SmallImage.drawSmallImage(g, 545, cx, cy + 5, 0, mGraphics.BOTTOM | mGraphics.HCENTER);
 					if (Char.myCharz().npcFocus != null && Char.myCharz().npcFocus.Equals(this) && ChatPopup.currChatPopup == null)
-					{
 						g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx, cy - ch - 9, mGraphics.BOTTOM | mGraphics.HCENTER);
-					}
 					mFont.tahoma_7b_white.drawString(g, TileMap.zoneID + string.Empty, cx, cy - ch + 19 - mFont.tahoma_7.getHeight(), mFont.CENTER);
 				}
 				else
@@ -321,40 +265,30 @@ public class Npc : Char
 					{
 						int num2 = 15;
 						if (template.npcTemplateId == 47)
-						{
 							num2 = 47;
-						}
 						if (Char.myCharz().npcFocus != null && Char.myCharz().npcFocus.Equals(this))
 						{
 							if (ChatPopup.currChatPopup == null)
-							{
 								g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx, cy - ch - (num2 - 8), mGraphics.BOTTOM | mGraphics.HCENTER);
-							}
 						}
 						else
 						{
 							num2 = 8;
 							if (template.npcTemplateId == 47)
-							{
 								num2 = 40;
-							}
 						}
 					}
 					dyEff = 65;
 				}
 			}
 			if (indexEffTask < 0 || effTask == null || cTypePk != 0)
-			{
 				return;
-			}
 			SmallImage.drawSmallImage(g, effTask.arrEfInfo[indexEffTask].idImg, cx + effTask.arrEfInfo[indexEffTask].dx, cy + effTask.arrEfInfo[indexEffTask].dy - dyEff, 0, mGraphics.VCENTER | mGraphics.HCENTER);
 			if (GameCanvas.gameTick % 2 == 0)
 			{
 				indexEffTask++;
 				if (indexEffTask >= effTask.arrEfInfo.Length)
-				{
 					indexEffTask = 0;
-				}
 			}
 		}
 	}
@@ -362,84 +296,58 @@ public class Npc : Char
 	public new void paintName(mGraphics g)
 	{
 		if (Char.isLoadingMap || isHide || !isPaint() || statusMe == 15 || template == null)
-		{
 			return;
-		}
 		if (template.npcTemplateId == 3)
 		{
 			if (Char.myCharz().npcFocus != null && Char.myCharz().npcFocus.Equals(this))
-			{
 				mFont.tahoma_7_yellow.drawString(g, template.name, cx, cy - ch - mFont.tahoma_7.getHeight() - 5, mFont.CENTER, mFont.tahoma_7_grey);
-			}
 			else
-			{
 				mFont.tahoma_7_yellow.drawString(g, template.name, cx, cy - ch - 3 - mFont.tahoma_7.getHeight(), mFont.CENTER, mFont.tahoma_7_grey);
-			}
 			dyEff = 60;
 		}
 		else
 		{
 			if (template.npcTemplateId == 4)
-			{
 				return;
-			}
 			if (template.npcTemplateId == 50 || template.npcTemplateId == 51)
 			{
 				if (duahau != null)
 				{
 					int num = 0;
 					if (SmallImage.imgNew[duahau[duaHauIndex]] != null && SmallImage.imgNew[duahau[duaHauIndex]].img != null)
-					{
 						num = mGraphics.getImageHeight(SmallImage.imgNew[duahau[duaHauIndex]].img);
-					}
 					if (Char.myCharz().npcFocus != null && Char.myCharz().npcFocus.Equals(this))
-					{
 						mFont.tahoma_7_yellow.drawString(g, template.name, cx, cy - ch - mFont.tahoma_7.getHeight() - num, mFont.CENTER, mFont.tahoma_7_grey);
-					}
 					else
-					{
 						mFont.tahoma_7_yellow.drawString(g, template.name, cx, cy - ch - 8 - mFont.tahoma_7.getHeight() - num + 16, mFont.CENTER, mFont.tahoma_7_grey);
-					}
 				}
 				return;
 			}
 			if (template.npcTemplateId == 6)
 			{
 				if (Char.myCharz().npcFocus != null && Char.myCharz().npcFocus.Equals(this))
-				{
 					mFont.tahoma_7_yellow.drawString(g, template.name, cx, cy - ch - mFont.tahoma_7.getHeight() - 16, mFont.CENTER, mFont.tahoma_7_grey);
-				}
 				else
-				{
 					mFont.tahoma_7_yellow.drawString(g, template.name, cx, cy - ch - 8 - mFont.tahoma_7.getHeight(), mFont.CENTER, mFont.tahoma_7_grey);
-				}
 				return;
 			}
 			if (TileMap.mapID != 51)
 			{
 				int num2 = 15;
 				if (template.npcTemplateId == 47)
-				{
 					num2 = 47;
-				}
 				if (Char.myCharz().npcFocus != null && Char.myCharz().npcFocus.Equals(this))
 				{
 					if (TileMap.mapID != 113)
-					{
 						mFont.tahoma_7_yellow.drawString(g, template.name, cx, cy - ch - mFont.tahoma_7.getHeight() - num2, mFont.CENTER, mFont.tahoma_7_grey);
-					}
 				}
 				else
 				{
 					num2 = 8;
 					if (template.npcTemplateId == 47)
-					{
 						num2 = 40;
-					}
 					if (TileMap.mapID != 113)
-					{
 						mFont.tahoma_7_yellow.drawString(g, template.name, cx, cy - ch - num2 - mFont.tahoma_7.getHeight(), mFont.CENTER, mFont.tahoma_7_grey);
-					}
 				}
 			}
 			dyEff = 65;

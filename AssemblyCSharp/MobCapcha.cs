@@ -48,13 +48,9 @@ public class MobCapcha
 			if (GameCanvas.gameTick % 3 == 0)
 			{
 				if (Char.myCharz().cdir == 1)
-				{
 					cmtoX = x - 20 - GameScr.cmx;
-				}
 				if (Char.myCharz().cdir == -1)
-				{
 					cmtoX = x + 20 - GameScr.cmx;
-				}
 			}
 			cmtoY = Char.myCharz().cy - 40 - GameScr.cmy;
 		}
@@ -70,15 +66,11 @@ public class MobCapcha
 			cmtoY = y - GameScr.cmy;
 		}
 		if (cmx > x - GameScr.cmx)
-		{
 			dir = -1;
-		}
 		else
-		{
 			dir = 1;
-		}
 		g.drawImage(GameScr.imgCapcha, cmx, cmy - 40, 3);
-		PopUp.paintPopUp(g, cmx - 25, cmy - 70, 50, 20, 16777215, isButton: false);
+		PopUp.paintPopUp(g, cmx - 25, cmy - 70, 50, 20, 16777215, false);
 		mFont.tahoma_7b_dark.drawString(g, GameScr.gI().keyInput, cmx, cmy - 65, 2);
 		if (isCreateMob)
 		{
@@ -119,9 +111,7 @@ public class MobCapcha
 			tF = 0;
 			f++;
 			if (f > 2)
-			{
 				f = 0;
-			}
 		}
 	}
 }
