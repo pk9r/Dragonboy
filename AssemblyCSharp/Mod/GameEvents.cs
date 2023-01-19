@@ -55,6 +55,7 @@ namespace Mod
             ModMenuMain.LoadData();
             CustomBackground.LoadData();
             CustomLogo.LoadData();
+            CustomCursor.LoadData();
             VietKeyHandler.SmartMark = true;
             ExtensionManager.LoadExtensions();
             ExtensionManager.Invoke();
@@ -71,6 +72,7 @@ namespace Mod
             TeleportMenu.TeleportMenu.SaveData();
             CustomBackground.SaveData();
             CustomLogo.SaveData();
+            CustomCursor.SaveData();
             ExtensionManager.Invoke();
             return false;
         }
@@ -409,6 +411,11 @@ namespace Mod
             //Pk9rXmap.Update();
             CustomBackground.FixedUpdate();
             CustomLogo.update();
+            ExtensionManager.Invoke();
+        }
+        public static void onUpdateMain()
+        {
+            CustomCursor.Update();
             ExtensionManager.Invoke();
         }
 

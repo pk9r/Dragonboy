@@ -7,10 +7,10 @@ using UnityEngine;
 
 namespace Mod.Graphics
 {
-    internal class BackgroundStatic : IBackground
+    internal class StaticImage : IImage
     {
-        Image image;
-        public BackgroundStatic(string path, int width, int height)
+        public Image image;
+        public StaticImage(string path, int width, int height)
         {
             Texture2D texture = new Texture2D(1, 1);
             image = new Image();
@@ -34,6 +34,27 @@ namespace Mod.Graphics
             texture.Apply();
             image.texture = texture;
         }
+
+        public StaticImage(string path)
+        {
+            Texture2D texture = new Texture2D(1, 1);
+            image = new Image();
+            Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+            byte[] imageData = new byte[stream.Length];
+            stream.Read(imageData, 0, imageData.Length);
+            stream.Close();
+            texture.LoadImage(imageData);
+            texture.anisoLevel = 0;
+            texture.filterMode = FilterMode.Point;
+            texture.mipMapBias = 0f;
+            texture.wrapMode = TextureWrapMode.Clamp;
+            texture.Apply();
+            image.texture = texture;
+            image.w = texture.width;
+            image.h = texture.height;
+        }
+
+        public Texture2D[] Textures => new Texture2D[] { image.texture };
 
         public void Paint(mGraphics g, int x, int y)
         {
