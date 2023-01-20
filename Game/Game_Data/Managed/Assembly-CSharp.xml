@@ -4,6 +4,56 @@
         <name>Assembly-CSharp</name>
     </assembly>
     <members>
+        <member name="M:Mod.Auto.AutoSS.AutoNV0">
+            <summary>
+            Làm nhiệm vụ đầu tiên
+            </summary>
+        </member>
+        <member name="M:Mod.Auto.AutoSS.AutoNV1">
+            <summary>
+            Làm nhiệm vụ đánh mộc nhân 
+            </summary>
+        </member>
+        <member name="M:Mod.Auto.AutoSS.AutoNV2">
+            <summary>
+            Làm nhiệm vụ đùi gà
+            </summary>
+        </member>
+        <member name="M:Mod.Auto.AutoSS.AutoNV3">
+            <summary>
+            Làm nhiệm vụ sao băng
+            </summary>
+        </member>
+        <member name="M:Mod.Auto.AutoSS.AutoNV4to6">
+            <summary>
+            Làm nhiệm vụ đánh quái mẹ
+            </summary>
+        </member>
+        <member name="M:Mod.Auto.AutoSS.AutoNV7">
+            <summary>
+            Làm nhiệm vụ đánh 20 quái bay
+            </summary>
+        </member>
+        <member name="M:Mod.Auto.AutoSS.AutoNV8">
+            <summary>
+            Làm nhiệm vụ ngọc rồng 7 sao
+            </summary>
+        </member>
+        <member name="M:Mod.Auto.AutoSS.AutoNV9">
+            <summary>
+            Làm nhiệm vụ vào rừng Karin
+            </summary>
+        </member>
+        <member name="M:Mod.Auto.AutoSS.AutoNV10">
+            <summary>
+            Làm nhiệm vụ thách đấu thần Mèo
+            </summary>
+        </member>
+        <member name="M:Mod.Auto.AutoSS.AutoNV11">
+            <summary>
+            Làm nhiệm vụ gặp sư phụ mới
+            </summary>
+        </member>
         <member name="T:Mod.Dialogs.FileDialog.OpenFileName">
             <summary>
             Link: https://docs.microsoft.com/en-us/windows/win32/api/commdlg/ns-commdlg-openfilenamea
