@@ -111,9 +111,9 @@ namespace Mod.Graphics
         void GetDelay()
         {
             PropertyItem item = gifImage.GetPropertyItem(0x5100);
-            delays = new float[item.Value.Length - 1];
-            for (int i = 0; i < item.Value.Length - 1; i++)
-                delays[i] = (item.Value[i] + item.Value[i + 1] * 256) / 100f /* * 10 / 1000 */;
+            delays = new float[gifImage.GetFrameCount(dimension)];
+            for (int i = 0; i < item.Value.Length - 1; i += 4)
+                delays[i / 4] = (item.Value[i] + item.Value[i + 1] * 256) / 100f /* * 10 / 1000 */;
         }
 
         List<Texture2D> GetEmptyFrames()

@@ -173,13 +173,13 @@ namespace Mod.Graphics
                 if (customCursors.ElementAt(cursorIndex).Value is StaticImage image)
                     Cursor.SetCursor(image.Textures[0], Vector2.zero, CursorMode.Auto);
             }
-            if (customCursors.ElementAt(cursorIndex).Value is GifImage gif && gif.isFullyLoaded && mSystem.currentTimeMillis() - lastTimeChangeFrame > gif.delays[cursorIndex] * 1000f / speed)
+            if (customCursors.ElementAt(cursorIndex).Value is GifImage gif && gif.isFullyLoaded && mSystem.currentTimeMillis() - lastTimeChangeFrame > gif.delays[gif.paintFrameIndex] * 1000f / speed)
             {
                 lastTimeChangeFrame = mSystem.currentTimeMillis();
-                Cursor.SetCursor(gif.Textures[gif.paintFrameIndex], Vector2.zero, CursorMode.Auto);
                 gif.paintFrameIndex++;
                 if (gif.paintFrameIndex >= gif.Textures.Length)
                     gif.paintFrameIndex = 0;
+                Cursor.SetCursor(gif.Textures[gif.paintFrameIndex], Vector2.zero, CursorMode.Auto);
             }
             ticks++;
             if (ticks > 50)
