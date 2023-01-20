@@ -62,6 +62,10 @@ namespace Mod.ModMenu
             {
                 CustomLogo.setTabCustomLogoPanel();
             }
+            if (PanelType == 4) //Custom cursor
+            {
+                CustomCursor.setTabCustomCursorPanel();
+            }
         }
 
         public static void setTabModMenuMain()
@@ -79,6 +83,9 @@ namespace Mod.ModMenu
                     break;
                 case 3:
                     CustomLogo.setTabCustomLogoPanel();
+                    break;
+                case 4:
+                    CustomCursor.setTabCustomCursorPanel();
                     break;
             }
         }
@@ -112,7 +119,10 @@ namespace Mod.ModMenu
                     CustomBackground.doFireCustomBackgroundListPanel();
                     break;
                 case 3:
-                    CustomLogo.doFireCustomBackgroundListPanel();
+                    CustomLogo.doFireCustomLogoListPanel();
+                    break;
+                case 4:
+                    CustomCursor.doFireCustomCursorListPanel();
                     break;
             }
         }
@@ -179,6 +189,9 @@ namespace Mod.ModMenu
                     break;
                 case 3:
                     CustomLogo.paintCustomLogoPanel(g);
+                    break;
+                case 4:
+                    CustomCursor.paintCustomCursorPanel(g);
                     break;
             }
         }
@@ -431,6 +444,10 @@ namespace Mod.ModMenu
             else if (PanelType == 3)
             {
                 mFont.tahoma_7b_dark.drawString(g, "Danh sách logo tùy chỉnh", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
+            }
+            else if (PanelType == 4)
+            {
+                mFont.tahoma_7b_dark.drawString(g, "Danh sách con trỏ chuột tùy chỉnh", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
             }
             else return false;
             return true;

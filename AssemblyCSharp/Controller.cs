@@ -2735,9 +2735,14 @@ public class Controller : IMessageHandler
 					ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(num103);
 					if (itemMap.itemMapID != itemMapID)
 						continue;
+					//Fix item ảo
 					if (@char == null)
+					{
+						itemMap.setPoint(0, 0);
 						return;
-					itemMap.setPoint(@char.cx, @char.cy - 10);
+					}
+					else
+						itemMap.setPoint(@char.cx, @char.cy - 10);
 					if (itemMap.x < @char.cx)
 						@char.cdir = -1;
 					else if (itemMap.x > @char.cx)

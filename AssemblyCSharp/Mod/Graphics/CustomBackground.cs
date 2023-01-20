@@ -16,7 +16,7 @@ namespace Mod.Graphics
 
         public static bool isEnabled;
 
-        public static Dictionary<string, IBackground> backgroundWallpapers = new Dictionary<string, IBackground>();
+        public static Dictionary<string, IImage> backgroundWallpapers = new Dictionary<string, IImage>();
 
         public static int intervalChangeBackgroundWallpaper = 30000;
         private static int backgroundIndex;
@@ -25,6 +25,7 @@ namespace Mod.Graphics
         private static bool isChangeWallpaper = true;
         static int updateGifBackgroundIndex;
         static int ticks;
+        static float speed;
         static CustomBackground instance = new CustomBackground();
 
         public static void ShowMenu()
@@ -63,7 +64,7 @@ namespace Mod.Graphics
                     ChatTextField.gI().tfChat.name = "Tốc độ";
                     ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_ANY);
                     ChatTextField.gI().startChat2(instance, string.Empty);
-                    ChatTextField.gI().tfChat.setText(BackgroundGif.speed.ToString());
+                    ChatTextField.gI().tfChat.setText(speed.ToString());
                 })));
             }), "Loại background được hỗ trợ: ảnh (*.png), ảnh động (*.gif), video (*.mp4).\nẢnh động và video tiêu tốn nhiều tài nguyên máy, nên cân nhắc trước khi\nsử dụng.");
         }
@@ -158,7 +159,7 @@ namespace Mod.Graphics
                 {
                     foreach (string path in paths)
                         backgroundWallpapers.Add(path, null);
-                    isAllWallpaperLoaded = true;
+                    isAllWallpaperLoaded = false;
                 }
             })
             {
@@ -169,9 +170,9 @@ namespace Mod.Graphics
 
         public static void FixedUpdate()
         {
-            if (isAllWallpaperLoaded)
+            if (!isAllWallpaperLoaded)
             {
-                isAllWallpaperLoaded = false;
+                isAllWallpaperLoaded = true;
                 List<string> paths = new List<string>(backgroundWallpapers.Keys);
                 for (int i = paths.Count - 1; i >= 0; i--)
                 {
@@ -179,11 +180,11 @@ namespace Mod.Graphics
                     try
                     {
                         if (path.EndsWith(".gif"))
-                            backgroundWallpapers[path] = new BackgroundGif(path, Screen.width, Screen.height);
+                            backgroundWallpapers[path] = new GifImage(path, Screen.width, Screen.height);
                         else if (path.EndsWith(".mp4"))
                             backgroundWallpapers[path] = new BackgroundVideo(path);
                         else
-                            backgroundWallpapers[path] = new BackgroundStatic(path, Screen.width, Screen.height);
+                            backgroundWallpapers[path] = new StaticImage(path, Screen.width, Screen.height);
                     }
                     catch (FileNotFoundException)
                     {
@@ -206,7 +207,7 @@ namespace Mod.Graphics
                 return;
             if (updateGifBackgroundIndex >= backgroundWallpapers.Count)
                 return;
-            if (backgroundWallpapers.ElementAt(updateGifBackgroundIndex).Value is BackgroundGif gif)
+            if (backgroundWallpapers.ElementAt(updateGifBackgroundIndex).Value is GifImage gif)
             {
                 gif.FixedUpdate();
                 if (!gif.isFullyLoaded)
@@ -216,6 +217,8 @@ namespace Mod.Graphics
                 else
                     updateGifBackgroundIndex++;
             }
+            else
+                updateGifBackgroundIndex++;
         }
 
         public static void paint(mGraphics g)
@@ -224,7 +227,7 @@ namespace Mod.Graphics
                 return;
             if (backgroundIndex >= backgroundWallpapers.Count)
                 backgroundIndex = 0;
-            IBackground background = backgroundWallpapers.ElementAt(backgroundIndex).Value;
+            IImage background = backgroundWallpapers.ElementAt(backgroundIndex).Value;
             if (background == null)
                 return;
             if (background is BackgroundVideo backgroundVideo && !backgroundVideo.isPlaying)
@@ -233,6 +236,8 @@ namespace Mod.Graphics
                     backgroundVideo.Prepare();
                 backgroundVideo.Play();
             }
+            if (background is GifImage gif && gif.speed != speed)
+                gif.speed = speed;
             background.Paint(g, 0, 0);
             if (isChangeWallpaper)
             { 
@@ -285,10 +290,10 @@ namespace Mod.Graphics
                     if (!string.IsNullOrEmpty(path))
                         backgroundWallpapers.Add(path, null);
                 }
-                isAllWallpaperLoaded = true;
+                isAllWallpaperLoaded = false;
                 isChangeWallpaper = Utilities.loadRMSBool("ischangewallpaper");
                 backgroundIndex = Utilities.loadRMSInt("backgroundindex");
-                BackgroundGif.speed = Utilities.loadRMSFloat("gifspeed");
+                speed = Utilities.loadRMSFloat("gifbackgroundspeed");
                 if (backgroundIndex >= backgroundWallpapers.Count)
                     backgroundIndex = 0;
             }
@@ -302,7 +307,7 @@ namespace Mod.Graphics
             Utilities.saveRMSString("custombackgroundpath", data);
             Utilities.saveRMSBool("ischangewallpaper", isChangeWallpaper);
             Utilities.saveRMSInt("backgroundindex", backgroundIndex);
-            Utilities.saveRMSFloat("gifspeed", BackgroundGif.speed);
+            Utilities.saveRMSFloat("gifbackgroundspeed", speed);
         }
 
         public static void setState(bool value)
@@ -332,9 +337,9 @@ namespace Mod.Graphics
                         GameCanvas.startOKDlg("Số đã nhập phải trong khoảng 0.1 và 10!");
                         return;
                     }
-                    if (value == BackgroundGif.speed)
+                    if (value == speed)
                         return;
-                    BackgroundGif.speed = value;
+                    speed = value;
                     GameScr.info1.addInfo($"Thay đổi tốc độ ảnh động thành: {value}!", 0);
                     SaveData();
                     Utilities.ResetTF();

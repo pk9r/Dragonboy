@@ -274,7 +274,8 @@ public class Main : MonoBehaviour
 
 	private void Update()
 	{
-	}
+		GameEvents.onUpdateMain();
+    }
 
 	private void checkInput()
 	{

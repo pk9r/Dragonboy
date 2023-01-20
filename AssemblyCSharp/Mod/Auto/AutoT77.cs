@@ -10,9 +10,11 @@ namespace Mod.Auto
         public static bool isNoLongerReceivePoint;
         public static bool isT77TeleToGround;
         public static bool isTeleToT77;
+        static bool isPicking;
         private static bool isAK;
         private static long lastTimeCheckTN;
         private static long lastTN;
+        private static long lastTimePickedItem;
 
         public static void update()
         {
@@ -25,7 +27,8 @@ namespace Mod.Auto
                 GameScr.info1.addInfo("Đã up Tàu Pảy Pảy xong!", 0);
                 return;
             }
-            if (TileMap.mapID != Char.myCharz().cgender + 21 && GameCanvas.gameTick % (20 * Time.timeScale) == 0 && Char.myCharz().cHP * 100 / Char.myCharz().cHPFull < 6) GameScr.gI().doUseHP();
+            if (TileMap.mapID != Char.myCharz().cgender + 21 && GameCanvas.gameTick % (20 * Time.timeScale) == 0 && Char.myCharz().cHP * 100 / Char.myCharz().cHPFull < 6)
+                GameScr.gI().doUseHP();
             if (TileMap.mapID != 111)
             {
                 if (TileMap.mapID == 47) GameScr.gI().dHP = Char.myCharz().cHP;
@@ -36,11 +39,11 @@ namespace Mod.Auto
                 {
                     if (TileMap.mapID == Char.myCharz().cgender + 21)
                     {
-                        AutoSS.AutoPick();
+                        AutoPick();
                         Service.gI().openMenu(4);
                         Service.gI().confirmMenu(4, 0);
                         GameCanvas.menu.doCloseMenu();
-                        if (!AutoSS.isPicking && Char.myCharz().cHP > 1)
+                        if (!isPicking && Char.myCharz().cHP > 1)
                         {
                             if (XmapController.gI.IsActing) XmapController.finishXmap();
                             if (!XmapController.gI.IsActing) XmapController.start(111);
@@ -111,6 +114,51 @@ namespace Mod.Auto
             MyVector myVector = new MyVector();
             myVector.addElement(@char);
             Service.gI().sendPlayerAttack(new MyVector(), myVector, 2);
+        }
+
+        public static void AutoPick()
+        {
+            if (GameScr.vItemMap.size() == 0)
+            {
+                isPicking = false;
+                return;
+            }
+            bool hasPickableItem = false;
+            for (int i = GameScr.vItemMap.size() - 1; i >= 0; i--)
+            {
+                ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(i);
+                if (itemMap == null) continue;
+                int distance = Res.distance(Char.myCharz().cx, Char.myCharz().cy, itemMap.x, itemMap.y);
+                if (itemMap.playerId == Char.myCharz().charID || itemMap.playerId == -1 && distance <= 60 || itemMap.template.id == 74) hasPickableItem = true;
+                if (itemMap.template.id >= 828 && itemMap.template.id <= 842 || itemMap.template.id == 859 || itemMap.template.id == 362 || itemMap.template.id >= 353 && itemMap.template.id <= 360)
+                {
+                    GameScr.vItemMap.removeElementAt(i);
+                    continue;
+                }
+                if (mSystem.currentTimeMillis() - lastTimePickedItem > 550)
+                {
+                    if (itemMap.playerId == Char.myCharz().charID)
+                    {
+                        isPicking = true;
+                        Char.myCharz().mobFocus = null;
+                        if (distance > 60 && distance < 100) Char.myCharz().currentMovePoint = new MovePoint(itemMap.x, itemMap.y);
+                        if (distance >= 100) Utilities.teleportMyChar(itemMap.x, itemMap.y);
+                        Service.gI().pickItem(itemMap.itemMapID);
+                        lastTimePickedItem = mSystem.currentTimeMillis();
+                        continue;
+                    }
+                    else if (itemMap.playerId == -1 && distance <= 60 || itemMap.template.id == 74)
+                    {
+                        isPicking = true;
+                        Char.myCharz().mobFocus = null;
+                        Service.gI().pickItem(itemMap.itemMapID);
+                        lastTimePickedItem = mSystem.currentTimeMillis();
+                        continue;
+                    }
+                }
+            }
+            if (!hasPickableItem) isPicking = false;
+            //if (mSystem.currentTimeMillis() - lastTimePickedItem <= 550) isPicking = false;
         }
 
         public static void setState(bool value) => isAutoT77 = value;

@@ -4,8 +4,7 @@ using UnityEngine.Video;
 
 namespace Mod.Graphics
 {
-    //[Obsolete("Tốn nhiểu CPU + RAM, máy mạnh mới chạy được!")]
-    public class BackgroundVideo : IBackground
+    public class BackgroundVideo : IImage
     {
         VideoPlayer videoPlayer = GameObject.Find("Main Camera").AddComponent<VideoPlayer>();
         public bool isPreparing;
@@ -52,5 +51,7 @@ namespace Mod.Graphics
 
         public bool isPrepared =>
             videoPlayer.isPrepared;
+
+        public Texture2D[] Textures => throw new NotSupportedException("Video does not have an array of texture!");
     }
 }

@@ -145,6 +145,11 @@ namespace Mod
             throw new NotImplementedException();
         }
 
+        public virtual void onUpdateMain()
+		{
+            throw new NotImplementedException();
+        }
+
         public virtual void onAddInfoMe(string str)
 		{
             throw new NotImplementedException();

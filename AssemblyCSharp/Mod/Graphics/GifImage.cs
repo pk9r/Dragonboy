@@ -10,21 +10,23 @@ using System.Drawing.Drawing2D;
 
 namespace Mod.Graphics
 {
-    public class BackgroundGif : IBackground
+    public class GifImage : IImage
     {
         System.Drawing.Image gifImage;
         FrameDimension dimension;  
         List<Texture2D> frames;
         Stack<int> applyIndex = new Stack<int>();
-        public float delay = 0.1f;
-        int paintFrameIndex;
+        public float[] delays;
+        public int paintFrameIndex;
         long lastTimePaintAFrame;
         int frameIndex;
         bool isLocking;
         public bool isFullyLoaded;
-        public static float speed = 1f;
+        public float speed = 1f;
 
-        public BackgroundGif(string filepath)
+        public Texture2D[] Textures => frames.ToArray();
+
+        public GifImage(string filepath)
         {
             gifImage = System.Drawing.Image.FromFile(filepath);
             dimension = new FrameDimension(gifImage.FrameDimensionsList[0]);
@@ -33,7 +35,7 @@ namespace Mod.Graphics
             frames = GetEmptyFrames();
         }
 
-        public BackgroundGif(string filepath, int width, int height)
+        public GifImage(string filepath, int width, int height)
         {
             gifImage = System.Drawing.Image.FromFile(filepath);
             dimension = new FrameDimension(gifImage.FrameDimensionsList[0]);
@@ -109,7 +111,9 @@ namespace Mod.Graphics
         void GetDelay()
         {
             PropertyItem item = gifImage.GetPropertyItem(0x5100);
-            delay = (item.Value[0] + item.Value[1] * 256) / 100f /* * 10 / 1000 */;
+            delays = new float[gifImage.GetFrameCount(dimension)];
+            for (int i = 0; i < item.Value.Length - 1; i += 4)
+                delays[i / 4] = (item.Value[i] + item.Value[i + 1] * 256) / 100f /* * 10 / 1000 */;
         }
 
         List<Texture2D> GetEmptyFrames()
@@ -144,7 +148,7 @@ namespace Mod.Graphics
             if (paintFrameIndex >= frames.Count)
                 paintFrameIndex = 0;
             UnityEngine.Graphics.DrawTexture(new Rect(x, y, frames[paintFrameIndex].width, frames[paintFrameIndex].height), frames[paintFrameIndex]);
-            if (mSystem.currentTimeMillis() - lastTimePaintAFrame > delay * 1000f / speed)
+            if (mSystem.currentTimeMillis() - lastTimePaintAFrame > delays[paintFrameIndex] * 1000f / speed)
             {
                 lastTimePaintAFrame = mSystem.currentTimeMillis();
                 paintFrameIndex++;

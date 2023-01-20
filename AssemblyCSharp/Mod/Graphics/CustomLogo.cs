@@ -103,7 +103,7 @@ namespace Mod.Graphics
             if (GameCanvas.panel.cmy > GameCanvas.panel.cmyLim) GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = GameCanvas.panel.cmyLim;
         }
 
-        public static void doFireCustomBackgroundListPanel()
+        public static void doFireCustomLogoListPanel()
         {
             int selected = GameCanvas.panel.selected;
             if (selected < 0) return;

@@ -1251,41 +1251,41 @@ public class Char : IMapObject
 		}
 		GameScr.isHaveSelectSkill = true;
 		Cout.println("TASKx " + myCharz().taskMaint.taskId);
-		if (myCharz().taskMaint.taskId <= 2)
-			myCharz().canFly = false;
-		else
+		//if (myCharz().taskMaint.taskId <= 2)
+			//myCharz().canFly = false;
+		//else
 			myCharz().canFly = true;
 		GameScr.gI().left = null;
-		if (task.taskId == 0)
-		{
-			Hint.isViewMap = false;
-			GameScr.gI().right = null;
-			GameScr.isHaveSelectSkill = false;
-			GameScr.gI().left = null;
-			if (task.index < 4)
-			{
-				MagicTree.isPaint = false;
-				GameScr.isPaintRada = -1;
-			}
-			if (task.index == 4)
-			{
-				GameScr.isPaintRada = 1;
-				MagicTree.isPaint = true;
-			}
-			if (task.index >= 5)
-				GameScr.gI().right = GameScr.gI().cmdFocus;
-		}
-		if (task.taskId == 1)
-			GameScr.isHaveSelectSkill = true;
-		if (task.taskId >= 1)
-		{
+		//if (task.taskId == 0)
+		//{
+		//	Hint.isViewMap = false;
+		//	GameScr.gI().right = null;
+		//	GameScr.isHaveSelectSkill = false;
+		//	GameScr.gI().left = null;
+		//	if (task.index < 4)
+		//	{
+		//		MagicTree.isPaint = false;
+		//		GameScr.isPaintRada = -1;
+		//	}
+		//	if (task.index == 4)
+		//	{
+		//		GameScr.isPaintRada = 1;
+		//		MagicTree.isPaint = true;
+		//	}
+		//	if (task.index >= 5)
+		//		GameScr.gI().right = GameScr.gI().cmdFocus;
+		//}
+		//if (task.taskId == 1)
+		//	 GameScr.isHaveSelectSkill = true;
+		//if (task.taskId >= 1)
+		//{
 			GameScr.gI().right = GameScr.gI().cmdFocus;
 			GameScr.gI().left = GameScr.gI().cmdMenu;
-		}
-		if (task.taskId >= 0)
+		//}
+		//if (task.taskId >= 0)
 			Panel.isPaintMap = true;
-		else
-			Panel.isPaintMap = false;
+		//else
+		//	Panel.isPaintMap = false;
 		if (task.taskId < 12)
 			GameCanvas.panel.mainTabName = mResources.mainTab1;
 		else
