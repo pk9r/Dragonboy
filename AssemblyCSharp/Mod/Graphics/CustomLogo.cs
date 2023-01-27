@@ -1,6 +1,6 @@
-﻿using Mod.Dialogs;
+﻿using Mod.CustomPanel;
+using Mod.Dialogs;
 using Mod.ModHelper.Menu;
-using Mod.ModMenu;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -78,8 +78,7 @@ namespace Mod.Graphics
                 if (logos.Count > 0)
                     menuItems.Add(new("Mở danh sách logo đã lưu", new(() =>
                     {
-                        ModMenuPanel.setTypeModMenuMain(3);
-                        GameCanvas.panel.show();
+                        CustomPanelMenu.CreateCustomPanelMenu(setTabCustomLogoPanel, doFireCustomLogoListPanel, paintTabHeader, paintCustomLogoPanel);
                     })));
                 menuItems.Add(new("Thêm logo vào danh sách", new(SelectLogos)));
                 if (logos.Count > 0)
@@ -89,6 +88,13 @@ namespace Mod.Graphics
                         GameScr.info1.addInfo("Đã xóa hết logo trong danh sách!", 0);
                     })));
             }));
+        }
+
+        private static void paintTabHeader(mGraphics g)
+        {
+            g.setColor(13524492);
+            g.fillRect(GameCanvas.panel.X + 1, 78, GameCanvas.panel.W - 2, 1);
+            mFont.tahoma_7b_dark.drawString(g, "Danh sách logo tùy chỉnh", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
         }
 
         public static void setTabCustomLogoPanel()

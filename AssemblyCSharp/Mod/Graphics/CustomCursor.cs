@@ -1,5 +1,4 @@
 ﻿using Mod.ModHelper.Menu;
-using Mod.ModMenu;
 using System;
 using System.Collections.Generic;
 using System.IO.IsolatedStorage;
@@ -9,6 +8,7 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 using Mod.Dialogs;
+using Mod.CustomPanel;
 
 namespace Mod.Graphics
 {
@@ -33,8 +33,7 @@ namespace Mod.Graphics
                 if (customCursors.Count > 0)
                     menuItems.Add(new("Mở danh sách con trỏ đã lưu", new(() =>
                     {
-                        ModMenuPanel.setTypeModMenuMain(4);
-                        GameCanvas.panel.show();
+                        CustomPanelMenu.CreateCustomPanelMenu(setTabCustomCursorPanel, doFireCustomCursorListPanel, paintTabHeader, paintCustomCursorPanel);
                     })));
                 menuItems.Add(new("Thêm con trỏ vào danh sách", new(SelectBackgrounds)));
                 if (customCursors.Count > 0)
@@ -52,6 +51,13 @@ namespace Mod.Graphics
                     ChatTextField.gI().tfChat.setText(speed.ToString());
                 })));
             }), "Loại con trỏ chuột được hỗ trợ: ảnh (*.png), ảnh động (*.gif).");
+        }
+
+        private static void paintTabHeader(mGraphics g)
+        {
+            g.setColor(13524492);
+            g.fillRect(GameCanvas.panel.X + 1, 78, GameCanvas.panel.W - 2, 1);
+            mFont.tahoma_7b_dark.drawString(g, "Danh sách con trỏ chuột tùy chỉnh", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
         }
 
         public static void setTabCustomCursorPanel()

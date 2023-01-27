@@ -1,4 +1,5 @@
-﻿using Mod.Dialogs;
+﻿using Mod.CustomPanel;
+using Mod.Dialogs;
 using Mod.ModHelper.Menu;
 using Mod.ModMenu;
 using System;
@@ -35,8 +36,7 @@ namespace Mod.Graphics
                 if (backgroundWallpapers.Count > 0)
                     menuItems.Add(new("Mở danh sách nền đã lưu", new(() =>
                     {
-                        ModMenuPanel.setTypeModMenuMain(2);
-                        GameCanvas.panel.show();
+                        CustomPanelMenu.CreateCustomPanelMenu(setTabCustomBackgroundPanel, doFireCustomBackgroundListPanel, paintTabHeader, paintCustomBackgroundPanel);
                     })));
                 menuItems.Add(new("Thêm nền vào danh sách", new(SelectBackgrounds)));
                 if (backgroundWallpapers.Count > 0)
@@ -279,6 +279,13 @@ namespace Mod.Graphics
                 mFont.tahoma_7_blue.drawString(g, $"Đường dẫn đầy đủ: {backgroundWallpapers.ElementAt(i).Key}", num + 5, num2 + 11, 0);
             }
             GameCanvas.panel.paintScrollArrow(g);
+        }
+
+        public static void paintTabHeader(mGraphics g)
+        {
+            g.setColor(13524492);
+            g.fillRect(GameCanvas.panel.X + 1, 78, GameCanvas.panel.W - 2, 1);
+            mFont.tahoma_7b_dark.drawString(g, "Danh sách nền tùy chỉnh", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
         }
 
         public static void LoadData()
