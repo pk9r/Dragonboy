@@ -204,7 +204,10 @@ public class Panel : IActionListener, IChatable
 
 	private static string[][] boxPet = mResources.petMainTab;
 
-	public string[][][] tabName = new string[27][][]
+    /// <summary>
+    /// Tăng kích thước mảng này lên 1 để chứa thêm 1 tabName cho CustomPanelMenu
+    /// </summary>
+    public string[][][] tabName = new string[27][][]
 	{
 		null,
 		null,

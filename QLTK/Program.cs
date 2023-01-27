@@ -1,15 +1,10 @@
-﻿using DiscordRPC.Logging;
-using DiscordRPC;
+﻿using DiscordRPC;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Threading;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Windows;
 
 namespace QLTK
 {
@@ -29,6 +24,7 @@ namespace QLTK
             {
                 Initialize();
                 App.Main();
+                discordClient?.ClearPresence();
                 discordClient?.Dispose();
                 mutex.ReleaseMutex();
             }
@@ -55,8 +51,10 @@ namespace QLTK
             NOTE: 	If you are using Unity3D, you must use the full constructor and define
                      the pipe connection.
             */
-            discordClient = new DiscordRpcClient("1055462814166294559");
-
+            discordClient = new DiscordRpcClient("1055462814166294559")
+            {
+                ShutdownOnly = true
+            };
             //Set the logger
             //client.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
 
@@ -70,7 +68,6 @@ namespace QLTK
             //{
             //    Console.WriteLine("Received Update! {0}", e.Presence);
             //};
-
             //Connect to the RPC
             discordClient.Initialize();
         }

@@ -581,6 +581,11 @@
             <param name="x">Hoành độ x</param>
             <returns>Tung độ y thỏa mãn (x, y) là mặt đất</returns>
         </member>
+        <member name="F:Panel.tabName">
+            <summary>
+            Tăng kích thước mảng này lên 1 để chứa thêm 1 tabName cho CustomPanelMenu
+            </summary>
+        </member>
         <member name="M:Service.sendPlayerAttack(MyVector,MyVector,System.Int32)">
             <summary>
             Gửi sự tấn công của người chơi.
