@@ -114,7 +114,7 @@ namespace QLTK
                         state.account.server,
                         MainWindow.sizeData
                     });
-                    if (Application.Current.Dispatcher.Invoke(() => ((MainWindow)Application.Current.MainWindow).GetAllAccounts().Where(a => a.process != null && !a.process.HasExited).Count() == 0))
+                    if (Application.Current.Dispatcher.Invoke(() => ((MainWindow)Application.Current.MainWindow).GetAllAccounts().Where(a => a.process != null && !a.process.HasExited).Count() == 1))
                         Utilities.SetPresence("Đang đăng nhập...", "", Program.timestampsStartQLTK = Timestamps.Now);
                     break;
                 default:
@@ -207,7 +207,7 @@ namespace QLTK
             catch (SocketException)
             {
                 state.account.status = "-";
-                if ((SaveSettings.Instance.indexConnectToDiscordRPC == -1 || state.account == SaveSettings.accountConnectToDiscordRPC) && Application.Current.Dispatcher.Invoke(() => ((MainWindow)Application.Current.MainWindow).GetAllAccounts().Where(a => a.process != null && !a.process.HasExited).Count() == 0))
+                if ((SaveSettings.Instance.indexConnectToDiscordRPC == -1 || state.account == SaveSettings.accountConnectToDiscordRPC) && Application.Current.Dispatcher.Invoke(() => ((MainWindow)Application.Current.MainWindow).GetAllAccounts().Where(a => a.status != "-" && !string.IsNullOrEmpty(a.status)).Count() == 0))
                     Utilities.SetPresence();
             }
 
@@ -224,7 +224,7 @@ namespace QLTK
                     handler.Shutdown(SocketShutdown.Both);
                     handler.Close();
                     state.account.status = "-";
-                    if ((SaveSettings.Instance.indexConnectToDiscordRPC == -1 || state.account == SaveSettings.accountConnectToDiscordRPC) && Application.Current.Dispatcher.Invoke(() => ((MainWindow)Application.Current.MainWindow).GetAllAccounts().Where(a => a.process != null && !a.process.HasExited).Count() == 0))
+                    if ((SaveSettings.Instance.indexConnectToDiscordRPC == -1 || state.account == SaveSettings.accountConnectToDiscordRPC) && Application.Current.Dispatcher.Invoke(() => ((MainWindow)Application.Current.MainWindow).GetAllAccounts().Where(a => a.status != "-" && !string.IsNullOrEmpty(a.status)).Count() == 0))
                         Utilities.SetPresence();
                     return;
                 }
