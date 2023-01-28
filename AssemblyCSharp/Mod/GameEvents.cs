@@ -5,6 +5,7 @@ using Mod.ModHelper.CommandMod.Chat;
 using Mod.ModHelper.CommandMod.Hotkey;
 using Mod.ModMenu;
 using Mod.PickMob;
+using Mod.Set;
 using Mod.Xmap;
 using System;
 using System.Collections;
@@ -252,6 +253,7 @@ namespace Mod
             if (!AutoSS.isAutoSS && !AutoT77.isAutoT77)
                 Pk9rPickMob.Update();
             Boss.Update();
+            SetDo.UpdateScrollMouse();
             //NOTE onUpdateChatTextField không thể bấm tab.
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();
@@ -394,6 +396,7 @@ namespace Mod
             CharEffect.Paint(g);
             SuicideRange.paint(g);
             Boss.Paint(g);
+            //mFont.tahoma_7.drawString(g, $"x={GameCanvas.pxMouse}, y={GameCanvas.pyMouse}", GameCanvas.w / 2, 10, mFont.CENTER);
             //CustomGraphics.DrawCircle(g, Char.myCharz().cx, Char.myCharz().cy, 100, 2);
             //if (Char.myCharz().charFocus != null) mFont.tahoma_7_yellow.drawString(g, Extensions.getDistance(Char.myCharz(), Char.myCharz().charFocus).ToString(), GameCanvas.w / 2, 10, mFont.CENTER);
             ExtensionManager.Invoke(g);
@@ -427,10 +430,16 @@ namespace Mod
             ExtensionManager.Invoke(str);
         }
 
-        public static void onUpdateKeyTouchControl()
+        public static void onUpdateTouchGameScr()
         {
             ListCharsInMap.updateTouch();
             Boss.UpdateTouch();
+            ExtensionManager.Invoke();
+        }
+
+        public static void onUpdateTouchPanel()
+        {
+            SetDo.UpdateTouch();
             ExtensionManager.Invoke();
         }
 
@@ -526,6 +535,11 @@ namespace Mod
         {
             Boss.AddBoss(chatVip);
             ExtensionManager.Invoke(chatVip);
+        }
+
+        public static void onUpdateScrollMousePanel(Panel instance, int a)
+        {
+            ExtensionManager.Invoke(instance, a);
         }
     }
 }

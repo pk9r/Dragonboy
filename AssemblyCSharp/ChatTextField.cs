@@ -136,7 +136,9 @@ public class ChatTextField : IActionListener
 
 	public void startChat(int firstCharacter, IChatable parentScreen, string to)
 	{
-		right.caption = mResources.CLOSE;
+        if (Mod.GameEvents.onStartChatTextField(this))
+            return;
+        right.caption = mResources.CLOSE;
 		this.to = to;
 		if (Main.isWindowsPhone)
 			tfChat.showSubTextField = false;

@@ -155,7 +155,12 @@ namespace Mod
             throw new NotImplementedException();
         }
 
-        public virtual void onUpdateKeyTouchControl()
+        public virtual void onUpdateTouchGameScr()
+		{
+            throw new NotImplementedException();
+        }
+
+        public virtual void onUpdateTouchPanel()
 		{
             throw new NotImplementedException();
         }
@@ -201,6 +206,11 @@ namespace Mod
         }
 
         public virtual void onChatVip(string chatVip)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void onUpdateScrollMousePanel(Panel instance, int a)
         {
             throw new NotImplementedException();
         }

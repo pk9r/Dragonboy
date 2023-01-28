@@ -1587,7 +1587,7 @@ public class Panel : IActionListener, IChatable
 
 	public void updateKey()
 	{
-		if ((chatTField != null && chatTField.isShow) || !GameCanvas.panel.isDoneCombine || InfoDlg.isShow)
+        if ((chatTField != null && chatTField.isShow) || !GameCanvas.panel.isDoneCombine || InfoDlg.isShow)
 			return;
 		if (tabIcon != null && tabIcon.isShow)
 			tabIcon.updateKey();
@@ -1600,7 +1600,8 @@ public class Panel : IActionListener, IChatable
 				cmdClose.performAction();
 				return;
 			}
-			if (GameCanvas.keyPressed[13])
+			GameEvents.onUpdateTouchPanel();
+            if (GameCanvas.keyPressed[13])
 			{
 				if (type != 4)
 				{
@@ -1724,7 +1725,7 @@ public class Panel : IActionListener, IChatable
 				updateKeyAuto();
 				break;
 			default:
-				if (type == CustomPanelMenu.TYPE_MOD_MENU)
+				if (type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
 					updateKeyScrollView();
 				break;
             }
@@ -2222,7 +2223,8 @@ public class Panel : IActionListener, IChatable
 
 	public void updateScroolMouse(int a)
 	{
-		bool flag = false;
+		GameEvents.onUpdateScrollMousePanel(this, a);
+        bool flag = false;
 		if (GameCanvas.pxMouse > wScroll)
 			return;
 		if (indexMouse == -1)
@@ -2572,7 +2574,7 @@ public class Panel : IActionListener, IChatable
                 setTabInventory(true);
 			break;
         default:
-			if (type == CustomPanelMenu.TYPE_MOD_MENU)
+			if (type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
 				CustomPanelMenu.setTabCustomPanelMenu();
 			break;
 		}
@@ -3212,7 +3214,7 @@ public class Panel : IActionListener, IChatable
 			paintAuto(g);
 			break;
 		default:
-			if (type == CustomPanelMenu.TYPE_MOD_MENU)
+			if (type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
 				CustomPanelMenu.paintModMenuMain(g);
 			break;
 		}
@@ -4840,7 +4842,7 @@ public class Panel : IActionListener, IChatable
 			g.fillRect(X + 1, 78, W - 2, 1);
 			return;
 		}
-		if (type == CustomPanelMenu.TYPE_MOD_MENU && CustomPanelMenu.paintTabHeader(g))
+		if (type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU && CustomPanelMenu.paintTabHeader(g))
 			return;
 		if (currentTabIndex == 3 && mainTabName.Length != 4)
 			g.translate(-cmx, 0);
@@ -5289,7 +5291,7 @@ public class Panel : IActionListener, IChatable
 		case 6:
 			break;
 		default:
-			if (type == CustomPanelMenu.TYPE_MOD_MENU)
+			if (type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
 			{
 				SmallImage.drawSmallImage(g, Char.myCharz().avatarz(), X + 25, 50, 0, 33);
 				paintToolInfo(g);
@@ -5923,7 +5925,7 @@ public class Panel : IActionListener, IChatable
 					doFireAuto();
 					break;
 				default:
-					if (type == CustomPanelMenu.TYPE_MOD_MENU)
+					if (type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
 						CustomPanelMenu.doFireCustomPanelMenu();
 					break;
 				}

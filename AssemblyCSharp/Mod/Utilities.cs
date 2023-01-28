@@ -3,6 +3,7 @@ using Mod.Graphics;
 using Mod.ModHelper.CommandMod.Chat;
 using Mod.ModHelper.CommandMod.Hotkey;
 using Mod.ModHelper.Menu;
+using Mod.Set;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -342,25 +343,7 @@ namespace Mod
         [ChatCommand("test")]
         public static void test()
         {
-
-            GameCanvas.startOKDlg(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}", 
-            mResources.gameInfo,
-            mResources.change_flag,
-            mResources.change_zone,
-            mResources.chat_world,
-            mResources.account,
-            mResources.option,
-            mResources.change_account
-            ));
-            //test stacktrace
-            //try
-            //{
-            //    throw new Exception("test StackTrace with file name and line number");
-            //}
-            //catch (Exception ex)
-            //{
-            //    UnityEngine.Debug.LogException(ex);
-            //}
+            SetDo.ShowMenu();
         }
 
         [ChatCommand("skey")]
@@ -805,6 +788,61 @@ namespace Mod
         public static long GetLastTimePress()
         {
             return (long)typeof(GameCanvas).GetField("lastTimePress", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+        }
+
+        /// <summary>
+        /// Mô phỏng <see cref="Panel.setType(int)"/> mà không mở lại panel
+        /// </summary>
+        public static void EmulateSetTypePanel()
+        {
+            GameCanvas.panel.TAB_W = GameCanvas.panel.W / 5 - 1;
+            if (GameCanvas.panel.currentTabName.Length < 5)
+                GameCanvas.panel.TAB_W += 5;
+            GameCanvas.panel.startTabPos = GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2 - GameCanvas.panel.currentTabName.Length * GameCanvas.panel.TAB_W / 2;
+            GameCanvas.panel.cmyLast = new int[GameCanvas.panel.currentTabName.Length];
+            int[] lastSelect = new int[GameCanvas.panel.currentTabName.Length];
+            //GameCanvas.panel.lastSelect = new int[GameCanvas.panel.currentTabName.Length];
+            for (int i = 0; i < GameCanvas.panel.currentTabName.Length; i++)
+                lastSelect[i] = GameCanvas.isTouch ? (-1) : 0;
+            typeof(Panel).GetField("lastSelect", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(GameCanvas.panel, lastSelect);
+            //GameCanvas.panel.scroll = null;
+            typeof(Panel).GetField("scroll", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(GameCanvas.panel, null);
+        }
+
+        /// <summary>
+        /// Lấy tên đầy đủ (gồm tên, chi tiết, level, ...) của item
+        /// </summary>
+        /// <param name="item">Item cần lấy tên</param>
+        /// <returns></returns>
+        public static string GetFullName(this Item item)
+        {
+            string text = item.template.name;
+            if (item.itemOption != null)
+                for (int i = 0; i < item.itemOption.Length; i++)
+                    if (item.itemOption[i].optionTemplate.id == 72)
+                    {
+                        text = text + " [+" + item.itemOption[i].param.ToString() + "]";
+                        break;
+                    }
+            if (item.itemOption != null)
+            for (int j = 0; j < item.itemOption.Length; j++)
+                if (item.itemOption[j].optionTemplate.name.StartsWith("$"))
+                {
+                    string optionColor = item.itemOption[j].getOptiongColor();
+                    if (item.itemOption[j].param == 1)
+                        text = text + "\n" + optionColor;
+                    if (item.itemOption[j].param == 0)
+                        text = text + "\n" + optionColor;
+                }
+                else
+                {
+                    string optionString = item.itemOption[j].getOptionString();
+                    if (!optionString.Equals(string.Empty) && item.itemOption[j].optionTemplate.id != 72)
+                        text = text + "\n" + optionString;
+                }
+            if (item.template.strRequire > 1)
+                text += "\n" + mResources.pow_request + ": " + item.template.strRequire.ToString();
+            return text + "\n" + item.template.description;
         }
     }
 }

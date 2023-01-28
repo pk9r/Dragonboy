@@ -581,6 +581,18 @@
             <param name="x">Hoành độ x</param>
             <returns>Tung độ y thỏa mãn (x, y) là mặt đất</returns>
         </member>
+        <member name="M:Mod.Utilities.EmulateSetTypePanel">
+            <summary>
+            Mô phỏng <see cref="M:Panel.setType(System.Int32)"/> mà không mở lại panel
+            </summary>
+        </member>
+        <member name="M:Mod.Utilities.GetFullName(Item)">
+            <summary>
+            Lấy tên đầy đủ (gồm tên, chi tiết, level, ...) của item
+            </summary>
+            <param name="item">Item cần lấy tên</param>
+            <returns></returns>
+        </member>
         <member name="F:Panel.tabName">
             <summary>
             Tăng kích thước mảng này lên 1 để chứa thêm 1 tabName cho CustomPanelMenu

@@ -9,7 +9,7 @@ namespace Mod.CustomPanel
 {
     public class CustomPanelMenu
     {
-        public static readonly int TYPE_MOD_MENU = 26;
+        public static readonly int TYPE_CUSTOM_PANEL_MENU = 26;
 
         static Action setTab;
         static Action doFireItem;
@@ -18,7 +18,7 @@ namespace Mod.CustomPanel
 
         public static void CreateCustomPanelMenu(Action setTabAction, Action doFireItemAction, Action<mGraphics> paintTabAction, Action<mGraphics> paintPanelAction)
         {
-            GameCanvas.panel.type = TYPE_MOD_MENU;
+            GameCanvas.panel.type = TYPE_CUSTOM_PANEL_MENU;
             setTab = setTabAction;
             doFireItem = doFireItemAction;
             paintPanel = paintPanelAction;
@@ -33,14 +33,14 @@ namespace Mod.CustomPanel
             GameCanvas.panel.setType(0);
             if (setTab.Method == typeof(ModMenuMain).GetMethod(nameof(ModMenuMain.setTabModMenu))) //Mod menu main
             {
-                GameCanvas.panel.tabName[TYPE_MOD_MENU] = new string[][]
+                GameCanvas.panel.tabName[TYPE_CUSTOM_PANEL_MENU] = new string[][]
                 {
                     new string[]{ "Bật/tắt", "" },
                     new string[]{ "Điều", "chỉnh" },
                     new string[]{ "Chức", "năng" },
                 };
                 if (ExtensionManager.Extensions.Count > 0)
-                    GameCanvas.panel.tabName[TYPE_MOD_MENU] = new string[][]
+                    GameCanvas.panel.tabName[TYPE_CUSTOM_PANEL_MENU] = new string[][]
                     {
                         new string[]{ "Bật/tắt", "" },
                         new string[]{ "Điều", "chỉnh" },
