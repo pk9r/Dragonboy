@@ -41,6 +41,12 @@ namespace Mod.Set
             {
                 if (!GameCanvas.panel.isShow)
                     return false;
+                if (GameCanvas.panel.currentTabName == null)
+                    return false;
+                if (GameCanvas.panel.currentTabName.Length != Math.min(4, setDos.Count + 1))
+                    return false;
+                if (!GameCanvas.panel.currentTabName[0][0].Contains("Set") && !GameCanvas.panel.currentTabName[0][1].Contains("Set"))
+                    return false;
                 Action action = (Action)typeof(CustomPanelMenu).GetField("setTab", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
                 return action != null && action.Method == typeof(SetDo).GetMethod("setTabSetPanel");
             }
