@@ -30,7 +30,6 @@ namespace Mod.CustomPanel
         public static void setTypeModMenu()
         {
             SoundMn.gI().getSoundOption();
-            GameCanvas.panel.setType(0);
             if (setTab.Method == typeof(ModMenuMain).GetMethod(nameof(ModMenuMain.setTabModMenu))) //Mod menu main
             {
                 GameCanvas.panel.tabName[TYPE_CUSTOM_PANEL_MENU] = new string[][]
@@ -47,12 +46,17 @@ namespace Mod.CustomPanel
                         new string[]{ "Chức", "năng" },
                         new string[]{ "Phần", "mở rộng" }
                     };
-                GameCanvas.panel.setType(0);
+                GameCanvas.panel.currentTabName = GameCanvas.panel.tabName[TYPE_CUSTOM_PANEL_MENU];
+                GameCanvas.panel.currentTabIndex = 0;
+                Utilities.EmulateSetTypePanel();
                 setTabCustomPanelMenu();
                 ModMenuMain.onModMenuValueChanged();
             }
             else
+            {
+                GameCanvas.panel.setType(0);
                 setTabCustomPanelMenu();
+            }
         }
 
         public static bool paintTabHeader(mGraphics g)

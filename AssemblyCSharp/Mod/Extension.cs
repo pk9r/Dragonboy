@@ -210,7 +210,7 @@ namespace Mod
             throw new NotImplementedException();
         }
 
-        public virtual void onUpdateScrollMousePanel(Panel instance, int a)
+        public virtual void onUpdateScrollMousePanel(Panel instance, int pXYScrollMouse)
         {
             throw new NotImplementedException();
         }

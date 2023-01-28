@@ -253,7 +253,7 @@ namespace Mod
             if (!AutoSS.isAutoSS && !AutoT77.isAutoT77)
                 Pk9rPickMob.Update();
             Boss.Update();
-            SetDo.UpdateScrollMouse();
+            SetDo.Update();
             //NOTE onUpdateChatTextField không thể bấm tab.
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();
@@ -537,9 +537,10 @@ namespace Mod
             ExtensionManager.Invoke(chatVip);
         }
 
-        public static void onUpdateScrollMousePanel(Panel instance, int a)
+        public static void onUpdateScrollMousePanel(Panel instance, ref int pXYScrollMouse)
         {
-            ExtensionManager.Invoke(instance, a);
+            SetDo.UpdateScrollMouse(ref pXYScrollMouse);
+            ExtensionManager.Invoke(instance, pXYScrollMouse);
         }
     }
 }

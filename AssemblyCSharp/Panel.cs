@@ -2223,7 +2223,7 @@ public class Panel : IActionListener, IChatable
 
 	public void updateScroolMouse(int a)
 	{
-		GameEvents.onUpdateScrollMousePanel(this, a);
+		GameEvents.onUpdateScrollMousePanel(this, ref a);
         bool flag = false;
 		if (GameCanvas.pxMouse > wScroll)
 			return;

@@ -35,6 +35,17 @@ namespace Mod.Set
         private static bool isShowMenu;
         private static long lastTimeSetDisableCloseMenu;
 
+        public static bool IsCurrentPanelIsSetDoPanel
+        {
+            get
+            {
+                if (!GameCanvas.panel.isShow)
+                    return false;
+                Action action = (Action)typeof(CustomPanelMenu).GetField("setTab", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+                return action != null && action.Method == typeof(SetDo).GetMethod("setTabSetPanel");
+            }
+        }
+
         SetDo(string name, Item ao, Item quan, Item giay, Item gang, Item rada, Item caiTrang, Item giapLuyenTap, Item item8, Item deoLung, Item bay)
         {
             Name = name;
@@ -276,6 +287,8 @@ namespace Mod.Set
 
         public static void doFireSetPanel()
         {
+            if (!IsCurrentPanelIsSetDoPanel)
+                return;
             int selected = GameCanvas.panel.selected;
             if (selected < 0)
                 return;
@@ -319,8 +332,10 @@ namespace Mod.Set
                 GameCanvas.panel.cp = null;
         }
 
-        public static void UpdateScrollMouse()
+        public static void Update()
         {
+            if (!IsCurrentPanelIsSetDoPanel)
+                return;
             if (GameCanvas.isMouseFocus(GameCanvas.panel.X, GameCanvas.panel.Y + 50, GameCanvas.panel.W, 28))
             {
                 if (GameCanvas.pXYScrollMouse > 0)
@@ -354,8 +369,18 @@ namespace Mod.Set
             }
         }
 
+        public static void UpdateScrollMouse(ref int pXYScrollMouse)
+        {
+            if (!IsCurrentPanelIsSetDoPanel)
+                return;
+            if (GameCanvas.isMouseFocus(GameCanvas.panel.X, GameCanvas.panel.Y + 50, GameCanvas.panel.W, 28) && pXYScrollMouse != 0)
+                pXYScrollMouse = 0;
+        }
+
         public static void UpdateTouch()
         {
+            if (!IsCurrentPanelIsSetDoPanel)
+                return;
             if (offset < setDos.Count - 3 && GameCanvas.isPointerHoldIn(GameCanvas.panel.wScroll - 7, 61, 6, 9))
             {
                 GameCanvas.isPointerJustDown = false;
@@ -416,9 +441,10 @@ namespace Mod.Set
                         }), 3, 61);
                         string str = "Set đồ " + (string.IsNullOrEmpty(setDos[i + offset].Name) ? i + offset + 1 : setDos[i + offset].Name);
                         GameCanvas.panel.popUpDetailInit(GameCanvas.panel.cp = new ChatPopup(), str);
-                        GameCanvas.panel.idIcon = 0;
+                        GameCanvas.panel.idIcon = -1;
                         GameCanvas.panel.partID = null;
                         GameCanvas.panel.charInfo = null;
+                        GameCanvas.panel.currItem = null;
                         GameCanvas.panel.cp.cy = 30;
                         typeof(Menu).GetField("disableClose", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(GameCanvas.menu, true);
                         isShowMenu = true;
