@@ -136,7 +136,9 @@ public class ChatTextField : IActionListener
 
 	public void startChat(int firstCharacter, IChatable parentScreen, string to)
 	{
-		right.caption = mResources.CLOSE;
+        if (Mod.GameEvents.onStartChatTextField(this))
+            return;
+        right.caption = mResources.CLOSE;
 		this.to = to;
 		if (Main.isWindowsPhone)
 			tfChat.showSubTextField = false;
@@ -251,7 +253,7 @@ public class ChatTextField : IActionListener
 				GameCanvas.paintz.paintCmdBar(g, left, center, right);
 			}
 			tfChat.paint(g);
-            Mod.GameEvents.onPaintChatTextField(g);
+            Mod.GameEvents.onPaintChatTextField(this, g);
 		}
 	}
 

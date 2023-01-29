@@ -49,14 +49,14 @@ namespace Mod.ModMenu
                 if (SelectedValue < Values.Length - 1) setValue(SelectedValue + 1);
                 else setValue(0);
             }
-            ModMenuPanel.onModMenuIntsValueChanged();
+            ModMenuMain.onModMenuValueChanged();
         }
 
         public void setValue(int value)
         {
             SelectedValue = value;
             Action?.Invoke(value);
-            ModMenuPanel.onModMenuIntsValueChanged();
+            ModMenuMain.onModMenuValueChanged();
         }
 
         public override bool Equals(object obj)

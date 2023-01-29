@@ -35,7 +35,7 @@ namespace Mod.ModMenu
         {
             Value = value;
             if (Action != null) Action(value);
-            ModMenuPanel.onModMenuBoolsValueChanged();
+            ModMenuMain.onModMenuValueChanged();
         }
 
         public override bool Equals(object obj)

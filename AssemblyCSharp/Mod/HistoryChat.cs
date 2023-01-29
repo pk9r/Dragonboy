@@ -32,7 +32,7 @@ namespace Mod
         /// <summary>
         /// Danh sách gợi ý.
         /// </summary>
-        public List<string> hints;
+        public List<string> hints = new List<string>();
 
         /// <summary>
         /// Thứ tự lệnh gợi ý lựa chọn.
@@ -93,7 +93,8 @@ namespace Mod
                         File.ReadAllText(Utilities.PathChatHistory));
             }
             catch { }
-
+            if (histories == null)
+                histories = new List<string>();
             histories.Remove(text);
             histories.Insert(0, text);
 

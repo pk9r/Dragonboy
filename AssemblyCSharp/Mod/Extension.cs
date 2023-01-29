@@ -43,8 +43,8 @@ namespace Mod
             throw new NotImplementedException();
         }
 
-        public virtual void onPaintChatTextField(mGraphics g)
-		{
+        public virtual void onPaintChatTextField(ChatTextField instance, mGraphics g)
+        {
             throw new NotImplementedException();
         }
 
@@ -155,7 +155,12 @@ namespace Mod
             throw new NotImplementedException();
         }
 
-        public virtual void onUpdateKeyTouchControl()
+        public virtual void onUpdateTouchGameScr()
+		{
+            throw new NotImplementedException();
+        }
+
+        public virtual void onUpdateTouchPanel()
 		{
             throw new NotImplementedException();
         }
@@ -201,6 +206,11 @@ namespace Mod
         }
 
         public virtual void onChatVip(string chatVip)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void onUpdateScrollMousePanel(Panel instance, int pXYScrollMouse)
         {
             throw new NotImplementedException();
         }

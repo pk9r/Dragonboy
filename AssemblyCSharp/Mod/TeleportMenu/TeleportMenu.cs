@@ -1,7 +1,7 @@
-﻿using Mod.ModHelper.CommandMod.Chat;
+﻿using Mod.CustomPanel;
+using Mod.ModHelper.CommandMod.Chat;
 using Mod.ModHelper.CommandMod.Hotkey;
 using Mod.ModHelper.Menu;
-using Mod.ModMenu;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -122,7 +122,7 @@ namespace Mod.TeleportMenu
         public void onCancelChat()
         {
             ChatTextField.gI().isShow = false;
-            Utilities.ResetTF();
+            ChatTextField.gI().ResetTF();
         }
 
         public void onChatFromMe(string text, string to)
@@ -148,7 +148,7 @@ namespace Mod.TeleportMenu
                 }
             }
             else ChatTextField.gI().isShow = false;
-            Utilities.ResetTF();
+            ChatTextField.gI().ResetTF();
             SortList();
         }
 
@@ -228,7 +228,7 @@ namespace Mod.TeleportMenu
                         listTeleportChars.Remove(teleportChar);
                         SaveData();
                         GameScr.info1.addInfo($"Đã xóa nhân vật {teleportChar.cName}!", 0);
-                        ModMenuPanel.setTypeModMenuMain(1);
+                        CustomPanelMenu.CreateCustomPanelMenu(setTabTeleportListPanel, doFireTeleportListPanel, paintTabHeader, paintTeleportListPanel);
                     }
                     else GameCanvas.startOKDlg("Không thể xóa nhân vật đang auto dịch chuyển!");
                     break;
@@ -239,18 +239,15 @@ namespace Mod.TeleportMenu
                     break;
                 case 12:
                     currentTeleportStatus = TeleportStatus.TeleportTo;
-                    ModMenuPanel.setTypeModMenuMain(1);
-                    GameCanvas.panel.show();
+                    CustomPanelMenu.CreateCustomPanelMenu(setTabTeleportListPanel, doFireTeleportListPanel, paintTabHeader, paintTeleportListPanel);
                     break;
                 case 13:
                     currentTeleportStatus = TeleportStatus.Delete;
-                    ModMenuPanel.setTypeModMenuMain(1);
-                    GameCanvas.panel.show();
+                    CustomPanelMenu.CreateCustomPanelMenu(setTabTeleportListPanel, doFireTeleportListPanel, paintTabHeader, paintTeleportListPanel);
                     break;
                 case 14:
                     currentTeleportStatus = TeleportStatus.AutoTeleportTo;
-                    ModMenuPanel.setTypeModMenuMain(1);
-                    GameCanvas.panel.show();
+                    CustomPanelMenu.CreateCustomPanelMenu(setTabTeleportListPanel, doFireTeleportListPanel, paintTabHeader, paintTeleportListPanel);
                     break;
             }
             SortList();
@@ -315,8 +312,7 @@ namespace Mod.TeleportMenu
                     menuItems.Add(new("Thêm nữa", new(() =>
                     {
                         currentTeleportStatus = status;
-                        ModMenuPanel.setTypeModMenuMain(1);
-                        GameCanvas.panel.show();
+                        CustomPanelMenu.CreateCustomPanelMenu(setTabTeleportListPanel, doFireTeleportListPanel, paintTabHeader, paintTeleportListPanel);
                     })));
                 if (menuItems.Count <= 0)
                     GameScr.info1.addInfo("Danh sách nhân vật xóa được trống!", 0);
@@ -446,7 +442,7 @@ namespace Mod.TeleportMenu
                             listTeleportChars.Remove(teleportChar);
                             SaveData();
                             GameScr.info1.addInfo($"Đã xóa nhân vật {teleportChar.cName}!", 0);
-                            ModMenuPanel.setTypeModMenuMain(1);
+                            CustomPanelMenu.CreateCustomPanelMenu(setTabTeleportListPanel, doFireTeleportListPanel, paintTabHeader, paintTeleportListPanel);
                         }
                         else GameCanvas.startOKDlg("Không thể xóa nhân vật đang auto dịch chuyển!");
                     };
@@ -456,8 +452,7 @@ namespace Mod.TeleportMenu
                     action = () =>
                     {
                         currentTeleportStatus = TeleportStatus.TeleportTo;
-                        ModMenuPanel.setTypeModMenuMain(1);
-                        GameCanvas.panel.show();
+                        CustomPanelMenu.CreateCustomPanelMenu(setTabTeleportListPanel, doFireTeleportListPanel, paintTabHeader, paintTeleportListPanel);
                     };
                     break;
                 default:
@@ -497,6 +492,13 @@ namespace Mod.TeleportMenu
             }
             GameCanvas.panel.cp.mH = 0;
             GameCanvas.panel.cp.strY = 10;
+        }
+
+        private static void paintTabHeader(mGraphics g)
+        {
+            g.setColor(13524492);
+            g.fillRect(GameCanvas.panel.X + 1, 78, GameCanvas.panel.W - 2, 1);
+            mFont.tahoma_7b_dark.drawString(g, "Danh sách nhân vật", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
         }
 
         public static void paintTeleportListPanel(mGraphics g)

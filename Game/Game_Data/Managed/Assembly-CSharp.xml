@@ -127,7 +127,7 @@
             Kích hoạt khi nhấn phím tắt (GameScr) chưa được xử lý.
             </summary>
         </member>
-        <member name="M:Mod.GameEvents.onPaintChatTextField(mGraphics)">
+        <member name="M:Mod.GameEvents.onPaintChatTextField(ChatTextField,mGraphics)">
             <summary>
             Kích hoạt sau khi vẽ khung chat.
             </summary>
@@ -515,7 +515,12 @@
         </member>
         <member name="F:Mod.ModMenu.ModMenuMain.modMenuItemInts">
             <summary>
-            Thêm điều chỉnh chỉ số chức năng mod ở đây
+            Thêm điều chỉnh chỉ số của chức năng mod ở đây
+            </summary>
+        </member>
+        <member name="F:Mod.ModMenu.ModMenuMain.modMenuItemFunctions">
+            <summary>
+            Thêm mở chức năng mod ở đây
             </summary>
         </member>
         <member name="M:Mod.Utilities.getMyVectorMe">
@@ -562,6 +567,12 @@
             <param name="x">Toạ độ x.</param>
             <param name="y">Toạ độ y.</param>
         </member>
+        <member name="M:Mod.Utilities.ResetTF(ChatTextField)">
+            <summary>
+            Khôi phục trạng thái mặc định của <paramref name="tf"/>
+            </summary>
+            <param name="tf">ChatTextField cần khôi phục</param>
+        </member>
         <member name="M:Mod.Utilities.teleportMyChar(IMapObject)">
             <summary>
             Dịch chuyển đến đối tượng trong map
@@ -580,6 +591,29 @@
             </summary>
             <param name="x">Hoành độ x</param>
             <returns>Tung độ y thỏa mãn (x, y) là mặt đất</returns>
+        </member>
+        <member name="M:Mod.Utilities.EmulateSetTypePanel(Panel,System.Int32)">
+            <summary>
+            Mô phỏng <see cref="M:Panel.setType(System.Int32)"/> mà không mở lại panel
+            </summary>
+        </member>
+        <member name="M:Mod.Utilities.GetFullInfo(Item)">
+            <summary>
+            Lấy thông tin đầy đủ (gồm tên, chi tiết, level, ...) của <paramref name="item"/>
+            </summary>
+            <param name="item">Item cần lấy tên</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mod.Utilities.GetPetGender">
+            <summary>
+            Lấy hệ của đệ tử bằng cách kiểm tra skill 1
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:Panel.tabName">
+            <summary>
+            Tăng kích thước mảng này lên 1 để chứa thêm 1 tabName cho CustomPanelMenu
+            </summary>
         </member>
         <member name="M:Service.sendPlayerAttack(MyVector,MyVector,System.Int32)">
             <summary>

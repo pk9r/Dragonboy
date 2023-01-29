@@ -1,8 +1,10 @@
 ﻿using LitJson;
+using Mod.CustomPanel;
 using Mod.Graphics;
 using Mod.ModHelper.CommandMod.Chat;
 using Mod.ModHelper.CommandMod.Hotkey;
 using Mod.ModHelper.Menu;
+using Mod.Set;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -343,24 +345,6 @@ namespace Mod
         public static void test()
         {
 
-            GameCanvas.startOKDlg(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}", 
-            mResources.gameInfo,
-            mResources.change_flag,
-            mResources.change_zone,
-            mResources.chat_world,
-            mResources.account,
-            mResources.option,
-            mResources.change_account
-            ));
-            //test stacktrace
-            //try
-            //{
-            //    throw new Exception("test StackTrace with file name and line number");
-            //}
-            //catch (Exception ex)
-            //{
-            //    UnityEngine.Debug.LogException(ex);
-            //}
         }
 
         [ChatCommand("skey")]
@@ -419,13 +403,17 @@ namespace Mod
             return TileMap.mapID >= 85 && TileMap.mapID <= 91;
         }
 
-        public static void ResetTF()
+        /// <summary>
+        /// Khôi phục trạng thái mặc định của <paramref name="tf"/>
+        /// </summary>
+        /// <param name="tf">ChatTextField cần khôi phục</param>
+        public static void ResetTF(this ChatTextField tf)
         {
-            ChatTextField.gI().strChat = "Chat";
-            ChatTextField.gI().tfChat.name = "chat";
-            ChatTextField.gI().to = "";
-            ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_ANY);
-            ChatTextField.gI().isShow = false;
+            tf.strChat = "Chat";
+            tf.tfChat.name = "chat";
+            tf.to = "";
+            tf.tfChat.setIputType(TField.INPUT_TYPE_ANY);
+            tf.isShow = false;
         }
 
 
@@ -805,6 +793,103 @@ namespace Mod
         public static long GetLastTimePress()
         {
             return (long)typeof(GameCanvas).GetField("lastTimePress", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+        }
+
+        /// <summary>
+        /// Mô phỏng <see cref="Panel.setType(int)"/> mà không mở lại panel
+        /// </summary>
+        public static void EmulateSetTypePanel(this Panel panel, int position)
+        {
+            panel.typeShop = -1;
+            panel.W = Panel.WIDTH_PANEL;
+            panel.H = GameCanvas.h;
+            panel.X = 0;
+            panel.Y = 0;
+            panel.ITEM_HEIGHT = 24;
+            typeof(Panel).GetField("position", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(panel, position);
+            if (position == 0)
+            {
+                panel.xScroll = 2;
+                panel.yScroll = 80;
+                panel.wScroll = panel.W - 4;
+                panel.hScroll = panel.H - 96;
+                //panel.cmx = panel.wScroll;
+                panel.cmtoX = 0;
+                panel.X = 0;
+            }
+            else if (position == 1)
+            {
+                panel.wScroll = panel.W - 4;
+                panel.xScroll = GameCanvas.w - panel.wScroll;
+                panel.yScroll = 80;
+                panel.hScroll = panel.H - 96;
+                panel.X = panel.xScroll - 2;
+                //panel.cmx = -(GameCanvas.w + panel.W);
+                panel.cmtoX = GameCanvas.w - panel.W;
+            }
+            panel.TAB_W = panel.W / 5 - 1;
+            if (panel.currentTabName.Length < 5)
+                panel.TAB_W += 5;
+            panel.startTabPos = panel.xScroll + panel.wScroll / 2 - panel.currentTabName.Length * panel.TAB_W / 2;
+            panel.cmyLast = new int[panel.currentTabName.Length];
+            int[] lastSelect = new int[panel.currentTabName.Length];
+            for (int i = 0; i < panel.currentTabName.Length; i++)
+                lastSelect[i] = GameCanvas.isTouch ? (-1) : 0;
+            typeof(Panel).GetField("lastSelect", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(panel, lastSelect);
+            typeof(Panel).GetField("scroll", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(panel, null);
+            panel.lastTabIndex[CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU] = panel.currentTabIndex;
+        }
+
+        /// <summary>
+        /// Lấy thông tin đầy đủ (gồm tên, chi tiết, level, ...) của <paramref name="item"/>
+        /// </summary>
+        /// <param name="item">Item cần lấy tên</param>
+        /// <returns></returns>
+        public static string GetFullInfo(this Item item)
+        {
+            string text = item.template.name;
+            if (item.itemOption != null)
+                for (int i = 0; i < item.itemOption.Length; i++)
+                    if (item.itemOption[i].optionTemplate.id == 72)
+                    {
+                        text = text + " [+" + item.itemOption[i].param.ToString() + "]";
+                        break;
+                    }
+            if (item.itemOption != null)
+            for (int j = 0; j < item.itemOption.Length; j++)
+                if (item.itemOption[j].optionTemplate.name.StartsWith("$"))
+                {
+                    string optionColor = item.itemOption[j].getOptiongColor();
+                    if (item.itemOption[j].param == 1)
+                        text = text + "\n" + optionColor;
+                    if (item.itemOption[j].param == 0)
+                        text = text + "\n" + optionColor;
+                }
+                else
+                {
+                    string optionString = item.itemOption[j].getOptionString();
+                    if (!optionString.Equals(string.Empty) && item.itemOption[j].optionTemplate.id != 72)
+                        text = text + "\n" + optionString;
+                }
+            if (item.template.strRequire > 1)
+                text += "\n" + mResources.pow_request + ": " + item.template.strRequire.ToString();
+            return text + "\n" + item.template.description;
+        }
+
+        /// <summary>
+        /// Lấy hệ của đệ tử bằng cách kiểm tra skill 1
+        /// </summary>
+        /// <returns></returns>
+        public static int GetPetGender()
+        {
+            string skill1Pet = Char.myPetz().arrPetSkill[0].template.name;
+            if (skill1Pet == GameScr.nClasss[0].skillTemplates[0].name)
+                return GameScr.nClasss[0].classId;
+            if (skill1Pet == GameScr.nClasss[1].skillTemplates[0].name)
+                return GameScr.nClasss[1].classId;
+            if (skill1Pet == GameScr.nClasss[2].skillTemplates[0].name)
+                return GameScr.nClasss[2].classId;
+            return 3;
         }
     }
 }

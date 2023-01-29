@@ -45,13 +45,15 @@ namespace Mod.ModHelper.Menu
                 ChatPopup.addChatPopup(chatPopup, 100000, new Npc(5, 0, -100, 100, 5, Utilities.ID_NPC_MOD_FACE));
         }
 
-        public static void start(MenuItemCollection menuItemCollection, int x, int y)
+        public static void start(MenuItemCollection menuItemCollection, int x, int y, string chatPopup = "")
         {
             var myVector = getMyVectorStartMenu(menuItemCollection);
             if (myVector.size() > 0)
             {
                 GameCanvas.menu.startAt(myVector, x, y);
             }
+            if (!string.IsNullOrEmpty(chatPopup))
+                ChatPopup.addChatPopup(chatPopup, 100000, new Npc(5, 0, -100, 100, 5, Utilities.ID_NPC_MOD_FACE));
         }
 
         //public static void start(List<string> captions, MenuAction action)
@@ -108,9 +110,9 @@ namespace Mod.ModHelper.Menu
             var captions = p.getValueProperty<string[]>("captions");
 
             var caption = captions[selected];
-            action.Invoke(selected, caption, captions);
             if (Char.chatPopup != null && Char.chatPopup.c.avatar == Utilities.ID_NPC_MOD_FACE)
                 Char.chatPopup = null;
+            action.Invoke(selected, caption, captions);
         }
 
         private static MyVector getMyVectorStartMenu(MenuItemCollection menuItemCollection)

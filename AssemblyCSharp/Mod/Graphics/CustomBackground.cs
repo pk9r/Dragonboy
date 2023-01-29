@@ -1,4 +1,5 @@
-﻿using Mod.Dialogs;
+﻿using Mod.CustomPanel;
+using Mod.Dialogs;
 using Mod.ModHelper.Menu;
 using Mod.ModMenu;
 using System;
@@ -35,8 +36,7 @@ namespace Mod.Graphics
                 if (backgroundWallpapers.Count > 0)
                     menuItems.Add(new("Mở danh sách nền đã lưu", new(() =>
                     {
-                        ModMenuPanel.setTypeModMenuMain(2);
-                        GameCanvas.panel.show();
+                        CustomPanelMenu.CreateCustomPanelMenu(setTabCustomBackgroundPanel, doFireCustomBackgroundListPanel, paintTabHeader, paintCustomBackgroundPanel);
                     })));
                 menuItems.Add(new("Thêm nền vào danh sách", new(SelectBackgrounds)));
                 if (backgroundWallpapers.Count > 0)
@@ -281,6 +281,13 @@ namespace Mod.Graphics
             GameCanvas.panel.paintScrollArrow(g);
         }
 
+        public static void paintTabHeader(mGraphics g)
+        {
+            g.setColor(13524492);
+            g.fillRect(GameCanvas.panel.X + 1, 78, GameCanvas.panel.W - 2, 1);
+            mFont.tahoma_7b_dark.drawString(g, "Danh sách nền tùy chỉnh", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
+        }
+
         public static void LoadData()
         {
             try
@@ -342,7 +349,7 @@ namespace Mod.Graphics
                     speed = value;
                     GameScr.info1.addInfo($"Thay đổi tốc độ ảnh động thành: {value}!", 0);
                     SaveData();
-                    Utilities.ResetTF();
+                    ChatTextField.gI().ResetTF();
                 }
                 catch (FormatException)
                 {
@@ -371,7 +378,7 @@ namespace Mod.Graphics
                     ModMenuMain.modMenuItemInts[6].setValue(value);
                     GameScr.info1.addInfo($"Thay đổi thời gian chuyển nền thành: {text} giây!", 0);
                     SaveData();
-                    Utilities.ResetTF();
+                    ChatTextField.gI().ResetTF();
                 }
                 catch (FormatException)
                 {
@@ -386,7 +393,7 @@ namespace Mod.Graphics
 
         public void onCancelChat()
         {
-            Utilities.ResetTF();
+            ChatTextField.gI().ResetTF();
         }
     }
 }

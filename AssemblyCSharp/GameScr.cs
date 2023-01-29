@@ -3712,7 +3712,7 @@ public class GameScr : mScreen, IChatable
 	{
 		if (isNotPaintTouchControl())
 			return;
-        GameEvents.onUpdateKeyTouchControl();
+        GameEvents.onUpdateTouchGameScr();
         mScreen.keyTouch = -1;
 		if (GameCanvas.isTouchControl)
 		{

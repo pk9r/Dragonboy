@@ -4,6 +4,7 @@ using UnityEngine;
 using Mod;
 using Mod.ModMenu;
 using Mod.Graphics;
+using Mod.CustomPanel;
 
 public class Panel : IActionListener, IChatable
 {
@@ -203,7 +204,10 @@ public class Panel : IActionListener, IChatable
 
 	private static string[][] boxPet = mResources.petMainTab;
 
-	public string[][][] tabName = new string[27][][]
+    /// <summary>
+    /// Tăng kích thước mảng này lên 1 để chứa thêm 1 tabName cho CustomPanelMenu
+    /// </summary>
+    public string[][][] tabName = new string[27][][]
 	{
 		null,
 		null,
@@ -1583,7 +1587,7 @@ public class Panel : IActionListener, IChatable
 
 	public void updateKey()
 	{
-		if ((chatTField != null && chatTField.isShow) || !GameCanvas.panel.isDoneCombine || InfoDlg.isShow)
+        if ((chatTField != null && chatTField.isShow) || !GameCanvas.panel.isDoneCombine || InfoDlg.isShow)
 			return;
 		if (tabIcon != null && tabIcon.isShow)
 			tabIcon.updateKey();
@@ -1596,7 +1600,8 @@ public class Panel : IActionListener, IChatable
 				cmdClose.performAction();
 				return;
 			}
-			if (GameCanvas.keyPressed[13])
+			GameEvents.onUpdateTouchPanel();
+            if (GameCanvas.keyPressed[13])
 			{
 				if (type != 4)
 				{
@@ -1719,8 +1724,9 @@ public class Panel : IActionListener, IChatable
 			case 22:
 				updateKeyAuto();
 				break;
-			case ModMenuPanel.TYPE_MOD_MENU:
-                updateKeyScrollView();
+			default:
+				if (type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
+					updateKeyScrollView();
 				break;
             }
 			GameCanvas.clearKeyHold();
@@ -2217,7 +2223,8 @@ public class Panel : IActionListener, IChatable
 
 	public void updateScroolMouse(int a)
 	{
-		bool flag = false;
+		GameEvents.onUpdateScrollMousePanel(this, ref a);
+        bool flag = false;
 		if (GameCanvas.pxMouse > wScroll)
 			return;
 		if (indexMouse == -1)
@@ -2503,50 +2510,8 @@ public class Panel : IActionListener, IChatable
 			return;
 		size_tab = 0;
 		SoundMn.gI().panelClick();
-		int num2 = type;
-		switch (num2)
+		switch (type)
 		{
-		default:
-			if (num2 != 12)
-			{
-				if (num2 != 13)
-				{
-					if (num2 != 21)
-					{
-						if (num2 == 25)
-							setTabSpeacialSkill();
-						break;
-					}
-					if (currentTabIndex == 0)
-						setTabPetInventory();
-					if (currentTabIndex == 1)
-						setTabPetStatus();
-					if (currentTabIndex == 2)
-						setTabInventory(true);
-					break;
-				}
-				if (currentTabIndex == 0)
-				{
-					if (Equals(GameCanvas.panel))
-						setTabInventory(true);
-					else if (Equals(GameCanvas.panel2))
-					{
-						setTabGiaoDich(false);
-					}
-				}
-				if (currentTabIndex == 1)
-					setTabGiaoDich(true);
-				if (currentTabIndex == 2)
-					setTabGiaoDich(false);
-			}
-			else
-			{
-				if (currentTabIndex == 0)
-					setTabCombine();
-				if (currentTabIndex == 1)
-					setTabInventory(true);
-			}
-			break;
 		case 0:
 			if (currentTabIndex == 0)
 				setTabTask();
@@ -2576,8 +2541,41 @@ public class Panel : IActionListener, IChatable
 		case 1:
 			setTabShop();
 			break;
-		case ModMenuPanel.TYPE_MOD_MENU:
-			ModMenuPanel.setTabModMenuMain();
+		case 13:
+            if (currentTabIndex == 0)
+            {
+                if (Equals(GameCanvas.panel))
+                    setTabInventory(true);
+                else if (Equals(GameCanvas.panel2))
+                {
+                    setTabGiaoDich(false);
+                }
+            }
+            if (currentTabIndex == 1)
+                setTabGiaoDich(true);
+            if (currentTabIndex == 2)
+                setTabGiaoDich(false);
+			break;
+		case 21:
+            if (currentTabIndex == 0)
+                setTabPetInventory();
+            if (currentTabIndex == 1)
+                setTabPetStatus();
+            if (currentTabIndex == 2)
+                setTabInventory(true);
+            break;
+		case 25:
+            setTabSpeacialSkill();
+            break;
+		case 12:
+            if (currentTabIndex == 0)
+                setTabCombine();
+            if (currentTabIndex == 1)
+                setTabInventory(true);
+			break;
+        default:
+			if (type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
+				CustomPanelMenu.setTabCustomPanelMenu();
 			break;
 		}
 		selected = lastSelect[currentTabIndex];
@@ -3215,8 +3213,9 @@ public class Panel : IActionListener, IChatable
 		case 22:
 			paintAuto(g);
 			break;
-        case ModMenuPanel.TYPE_MOD_MENU:
-            ModMenuPanel.paintModMenuMain(g);
+		default:
+			if (type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
+				CustomPanelMenu.paintModMenuMain(g);
 			break;
 		}
 		GameScr.resetTranslate(g);
@@ -3451,21 +3450,21 @@ public class Panel : IActionListener, IChatable
 	{
 		g.setClip(xScroll, yScroll, wScroll, hScroll);
 		g.translate(0, -cmy);
-		for (int i = 0; i < strStatus.Length; i++)
-		{
-			int x = xScroll;
-			int num = yScroll + i * ITEM_HEIGHT;
-			int num2 = wScroll - 1;
-			int h = ITEM_HEIGHT - 1;
-			if (num - cmy <= yScroll + hScroll && num - cmy >= yScroll - ITEM_HEIGHT)
-			{
-				g.setColor((i != selected) ? 15196114 : 16383818);
-				g.fillRect(x, num, num2, h);
-				mFont.tahoma_7b_dark.drawString(g, strStatus[i], xScroll + 25, num + 6, mFont.CENTER);
-			}
-		}
-		paintScrollArrow(g);
-	}
+        for (int i = 0; i < strStatus.Length; i++)
+        {
+            int num = yScroll + i * ITEM_HEIGHT;
+            if (num - cmy <= yScroll + hScroll)
+            {
+                if (num - cmy >= yScroll - ITEM_HEIGHT)
+                {
+                    g.setColor((i != selected) ? 15196114 : 16383818);
+                    g.fillRect(xScroll, num, wScroll - 1, ITEM_HEIGHT - 1);
+                    mFont.tahoma_7b_dark.drawString(g, strStatus[i], xScroll + wScroll / 2, num + 6, mFont.CENTER);
+                }
+            }
+        }
+        paintScrollArrow(g);
+    }
 
 	private void paintPetSkill()
 	{
@@ -3542,7 +3541,6 @@ public class Panel : IActionListener, IChatable
 								mFont2 = GetFont(7);
 							}
 						}
-						CustomGraphics.PaintItemEffectInPanel(g, num6 + 18, num7 + 12, item.itemOption[k].param);
 					}
 				}
 				mFont2.drawString(g, item.template.name + text, num3 + 5, num4 + 1, 0);
@@ -4843,7 +4841,8 @@ public class Panel : IActionListener, IChatable
 			g.fillRect(X + 1, 78, W - 2, 1);
 			return;
 		}
-		if (type == ModMenuPanel.TYPE_MOD_MENU && ModMenuPanel.paintTab(g)) return;
+		if (type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU && CustomPanelMenu.paintTabHeader(g))
+			return;
 		if (currentTabIndex == 3 && mainTabName.Length != 4)
 			g.translate(-cmx, 0);
 		for (int i = 0; i < currentTabName.Length; i++)
@@ -5290,9 +5289,12 @@ public class Panel : IActionListener, IChatable
 		case 5:
 		case 6:
 			break;
-		case ModMenuPanel.TYPE_MOD_MENU:
-            SmallImage.drawSmallImage(g, Char.myCharz().avatarz(), X + 25, 50, 0, 33);
-            paintToolInfo(g);
+		default:
+			if (type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
+			{
+				SmallImage.drawSmallImage(g, Char.myCharz().avatarz(), X + 25, 50, 0, 33);
+				paintToolInfo(g);
+			}
             break;
 		}
 	}
@@ -5921,8 +5923,9 @@ public class Panel : IActionListener, IChatable
 				case 22:
 					doFireAuto();
 					break;
-				case ModMenuPanel.TYPE_MOD_MENU:
-                    ModMenuPanel.doFireModMenuMain();
+				default:
+					if (type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
+						CustomPanelMenu.doFireCustomPanelMenu();
 					break;
 				}
 			}
@@ -6339,7 +6342,7 @@ public class Panel : IActionListener, IChatable
 			switch (selected)
 			{
 			case 0:
-                ModMenuPanel.setTypeModMenuMain(0);
+                CustomPanelMenu.CreateCustomPanelMenu(ModMenuMain.setTabModMenu, ModMenuMain.doFireModMenu, null, ModMenuMain.paintModMenu);
 				break;
 			case 1:
 				doRada();
@@ -6409,7 +6412,7 @@ public class Panel : IActionListener, IChatable
 		switch (selected)
 		{
         case 0:
-            ModMenuPanel.setTypeModMenuMain(0);
+            CustomPanelMenu.CreateCustomPanelMenu(ModMenuMain.setTabModMenu, ModMenuMain.doFireModMenu, null, ModMenuMain.paintModMenu);
             break;
         case 1:
 			doRada();
