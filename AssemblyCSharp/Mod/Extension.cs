@@ -43,8 +43,8 @@ namespace Mod
             throw new NotImplementedException();
         }
 
-        public virtual void onPaintChatTextField(mGraphics g)
-		{
+        public virtual void onPaintChatTextField(ChatTextField instance, mGraphics g)
+        {
             throw new NotImplementedException();
         }
 

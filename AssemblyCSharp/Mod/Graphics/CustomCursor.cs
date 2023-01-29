@@ -284,7 +284,7 @@ namespace Mod.Graphics
                     speed = value;
                     GameScr.info1.addInfo($"Thay đổi tốc độ ảnh động thành: {value}!", 0);
                     SaveData();
-                    Utilities.ResetTF();
+                    ChatTextField.gI().ResetTF();
                 }
                 catch (FormatException)
                 {
@@ -299,7 +299,7 @@ namespace Mod.Graphics
 
         public void onCancelChat()
         {
-            Utilities.ResetTF();
+            ChatTextField.gI().ResetTF();
         }
     }
 }

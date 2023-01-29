@@ -253,7 +253,7 @@ public class ChatTextField : IActionListener
 				GameCanvas.paintz.paintCmdBar(g, left, center, right);
 			}
 			tfChat.paint(g);
-            Mod.GameEvents.onPaintChatTextField(g);
+            Mod.GameEvents.onPaintChatTextField(this, g);
 		}
 	}
 

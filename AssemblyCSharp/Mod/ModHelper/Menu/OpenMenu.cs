@@ -110,9 +110,9 @@ namespace Mod.ModHelper.Menu
             var captions = p.getValueProperty<string[]>("captions");
 
             var caption = captions[selected];
-            action.Invoke(selected, caption, captions);
             if (Char.chatPopup != null && Char.chatPopup.c.avatar == Utilities.ID_NPC_MOD_FACE)
                 Char.chatPopup = null;
+            action.Invoke(selected, caption, captions);
         }
 
         private static MyVector getMyVectorStartMenu(MenuItemCollection menuItemCollection)

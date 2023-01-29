@@ -1,6 +1,7 @@
 ﻿using Mod.Auto;
 using Mod.Graphics;
 using Mod.PickMob;
+using Mod.Set;
 using Mod.Xmap;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace Mod.ModMenu
         };
 
         /// <summary>
-        /// Thêm điều chỉnh chỉ số chức năng mod ở đây
+        /// Thêm điều chỉnh chỉ số của chức năng mod ở đây
         /// </summary>
         public static ModMenuItemInt[] modMenuItemInts = new ModMenuItemInt[]
         {
@@ -65,14 +66,18 @@ namespace Mod.ModMenu
             new ModMenuItemInt("Chiều cao của logo", null, "Điều chỉnh chiều cao của logo", 80, CustomLogo.setLogoHeight, "logoheight"),
         };
 
+        /// <summary>
+        /// Thêm mở chức năng mod ở đây
+        /// </summary>
         public static ModMenuItemFunction[] modMenuItemFunctions = new ModMenuItemFunction[]
         {
-            new ModMenuItemFunction("Menu Xmap", "Mở menu Xmap (chat \"xmp\" hoặc bấm nút x)", Pk9rXmap.showXmapMenu),
-            new ModMenuItemFunction("Menu PickMob", "Mở menu PickMob (chat \"pickmob\")", Pk9rPickMob.ShowMenu),
-            new ModMenuItemFunction("Menu Teleport", "Mở menu dịch chuyển (chat \"tele\" hoặc bấm nút z)", TeleportMenu.TeleportMenu.ShowMenu),
+            new ModMenuItemFunction("Menu Xmap", "Mở menu Xmap (lệnh \"xmp\" hoặc bấm nút x)", Pk9rXmap.showXmapMenu),
+            new ModMenuItemFunction("Menu PickMob", "Mở menu PickMob (lệnhj \"pickmob\")", Pk9rPickMob.ShowMenu),
+            new ModMenuItemFunction("Menu Teleport", "Mở menu dịch chuyển (lệnh \"tele\" hoặc bấm nút z)", TeleportMenu.TeleportMenu.ShowMenu),
             new ModMenuItemFunction("Menu Custom Background", "Mở menu nền tùy chỉnh", CustomBackground.ShowMenu),
             new ModMenuItemFunction("Menu Custom Logo", "Mở menu logo tùy chỉnh", CustomLogo.ShowMenu),
             new ModMenuItemFunction("Menu Custom Cursor", "Mở menu con trỏ tùy chỉnh", CustomCursor.ShowMenu),
+            new ModMenuItemFunction("Menu Set đồ", "Mở menu set đồ (lệnh \"set\" hoặc bấm nút \'`\')", SetDo.ShowMenu),
         };
 
         public static Dictionary<int, string[]> inputModMenuItemInts = new Dictionary<int, string[]>()
@@ -142,11 +147,13 @@ namespace Mod.ModMenu
             if (modMenuItemInts[selected].Values != null) modMenuItemInts[selected].SwitchSelection();
             else
             {
-                ChatTextField.gI().strChat = inputModMenuItemInts[selected][0];
-                ChatTextField.gI().tfChat.name = inputModMenuItemInts[selected][1];
-                ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
-                ChatTextField.gI().startChat2(new ModMenuMain(), string.Empty);
-                GameCanvas.panel.hide();
+                GameCanvas.panel.chatTField = new ChatTextField();
+                GameCanvas.panel.chatTField.tfChat.y = GameCanvas.h - 35 - ChatTextField.gI().tfChat.height;
+                GameCanvas.panel.chatTField.initChatTextField();
+                GameCanvas.panel.chatTField.strChat = string.Empty;
+                GameCanvas.panel.chatTField.tfChat.name = inputModMenuItemInts[selected][1];
+                GameCanvas.panel.chatTField.tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
+                GameCanvas.panel.chatTField.startChat2(new ModMenuMain(), inputModMenuItemInts[selected][0]);
             }
         }
 
@@ -481,10 +488,9 @@ namespace Mod.ModMenu
 
         public void onChatFromMe(string text, string to)
         {
-            if (!string.IsNullOrEmpty(ChatTextField.gI().tfChat.getText()) && !string.IsNullOrEmpty(text))
+            if (!string.IsNullOrEmpty(text))
             {
-                string strChat = ChatTextField.gI().strChat;
-                if (strChat == inputModMenuItemInts[0][0])
+                if (to == inputModMenuItemInts[0][0])
                 {
                     try
                     {
@@ -498,7 +504,7 @@ namespace Mod.ModMenu
                         GameCanvas.startOKDlg("Mức FPS không hợp lệ!");
                     }
                 }
-                else if (strChat == inputModMenuItemInts[6][0])
+                else if (to == inputModMenuItemInts[6][0])
                 {
                     try
                     {
@@ -512,7 +518,7 @@ namespace Mod.ModMenu
                         GameCanvas.startOKDlg("Thời gian không hợp lệ!");
                     }
                 }
-                else if (strChat == inputModMenuItemInts[7][0])
+                else if (to == inputModMenuItemInts[7][0])
                 {
                     try
                     {
@@ -526,7 +532,7 @@ namespace Mod.ModMenu
                         GameCanvas.startOKDlg("Thời gian không hợp lệ!");
                     }
                 }
-                else if (strChat == inputModMenuItemInts[8][0])
+                else if (to == inputModMenuItemInts[8][0])
                 {
                     try
                     {
@@ -542,13 +548,14 @@ namespace Mod.ModMenu
                     }
                 }
             }
-            else ChatTextField.gI().isShow = false;
-            Utilities.ResetTF();
+            else 
+                GameCanvas.panel.chatTField.isShow = false;
+            GameCanvas.panel.chatTField.ResetTF();
         }
 
         public void onCancelChat()
         {
-            Utilities.ResetTF();
+            GameCanvas.panel.chatTField.ResetTF();
         }
     }
 }

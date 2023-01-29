@@ -122,7 +122,7 @@ namespace Mod.TeleportMenu
         public void onCancelChat()
         {
             ChatTextField.gI().isShow = false;
-            Utilities.ResetTF();
+            ChatTextField.gI().ResetTF();
         }
 
         public void onChatFromMe(string text, string to)
@@ -148,7 +148,7 @@ namespace Mod.TeleportMenu
                 }
             }
             else ChatTextField.gI().isShow = false;
-            Utilities.ResetTF();
+            ChatTextField.gI().ResetTF();
             SortList();
         }
 

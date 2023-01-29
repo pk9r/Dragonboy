@@ -48,7 +48,7 @@ namespace Mod.CustomPanel
                     };
                 GameCanvas.panel.currentTabName = GameCanvas.panel.tabName[TYPE_CUSTOM_PANEL_MENU];
                 GameCanvas.panel.currentTabIndex = 0;
-                Utilities.EmulateSetTypePanel();
+                GameCanvas.panel.EmulateSetTypePanel(0);
                 setTabCustomPanelMenu();
                 ModMenuMain.onModMenuValueChanged();
             }

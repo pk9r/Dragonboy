@@ -3450,21 +3450,21 @@ public class Panel : IActionListener, IChatable
 	{
 		g.setClip(xScroll, yScroll, wScroll, hScroll);
 		g.translate(0, -cmy);
-		for (int i = 0; i < strStatus.Length; i++)
-		{
-			int x = xScroll;
-			int num = yScroll + i * ITEM_HEIGHT;
-			int num2 = wScroll - 1;
-			int h = ITEM_HEIGHT - 1;
-			if (num - cmy <= yScroll + hScroll && num - cmy >= yScroll - ITEM_HEIGHT)
-			{
-				g.setColor((i != selected) ? 15196114 : 16383818);
-				g.fillRect(x, num, num2, h);
-				mFont.tahoma_7b_dark.drawString(g, strStatus[i], xScroll + 25, num + 6, mFont.CENTER);
-			}
-		}
-		paintScrollArrow(g);
-	}
+        for (int i = 0; i < strStatus.Length; i++)
+        {
+            int num = yScroll + i * ITEM_HEIGHT;
+            if (num - cmy <= yScroll + hScroll)
+            {
+                if (num - cmy >= yScroll - ITEM_HEIGHT)
+                {
+                    g.setColor((i != selected) ? 15196114 : 16383818);
+                    g.fillRect(xScroll, num, wScroll - 1, ITEM_HEIGHT - 1);
+                    mFont.tahoma_7b_dark.drawString(g, strStatus[i], xScroll + wScroll / 2, num + 6, mFont.CENTER);
+                }
+            }
+        }
+        paintScrollArrow(g);
+    }
 
 	private void paintPetSkill()
 	{
@@ -3541,7 +3541,6 @@ public class Panel : IActionListener, IChatable
 								mFont2 = GetFont(7);
 							}
 						}
-						CustomGraphics.PaintItemEffectInPanel(g, num6 + 18, num7 + 12, item.itemOption[k].param);
 					}
 				}
 				mFont2.drawString(g, item.template.name + text, num3 + 5, num4 + 1, 0);

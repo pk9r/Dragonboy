@@ -57,6 +57,7 @@ namespace Mod
             CustomBackground.LoadData();
             CustomLogo.LoadData();
             CustomCursor.LoadData();
+            SetDo.LoadData();
             VietKeyHandler.SmartMark = true;
             ExtensionManager.LoadExtensions();
             ExtensionManager.Invoke();
@@ -74,6 +75,7 @@ namespace Mod
             CustomBackground.SaveData();
             CustomLogo.SaveData();
             CustomCursor.SaveData();
+            SetDo.SaveData();
             ExtensionManager.Invoke();
             return false;
         }
@@ -135,11 +137,11 @@ namespace Mod
         /// Kích hoạt sau khi vẽ khung chat.
         /// </summary>
         /// <param name="g"></param>
-        public static void onPaintChatTextField(mGraphics g)
+        public static void onPaintChatTextField(ChatTextField instance, mGraphics g)
         {
-            ExtensionManager.Invoke(g);
-            if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
-            HistoryChat.gI.paint(g);
+            if (instance == ChatTextField.gI() && instance.strChat.Replace(" ", "") == "Chat" && instance.tfChat.name == "chat")
+                HistoryChat.gI.paint(g);
+            ExtensionManager.Invoke(instance, g);
         }
 
         /// <summary>
