@@ -19,9 +19,9 @@ using UnityEngine.Analytics;
 
 namespace Mod.Set
 {
-    internal class SetDo : IChatable, IActionListener
+    public class SetDo : IChatable, IActionListener
     {
-        internal class ItemSet
+        public class ItemSet
         {
             public string name = "";
             public string fullName = "";

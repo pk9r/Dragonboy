@@ -12,7 +12,7 @@ namespace Mod.ModHelper.CommandMod.Chat
         /// <summary>
         /// Tải lệnh chat mặc định. (các lệnh được định nghĩa trên code)
         /// </summary>
-        public static void loadDefalut()
+        public static void loadDefault()
         {
             var methods = Utils.GetMethods();
 
@@ -31,7 +31,7 @@ namespace Mod.ModHelper.CommandMod.Chat
                             delimiter = cca.delimiter,
                             fullCommand = method.DeclaringType.FullName + "." + method.Name,
                             method = method,
-                            parameterInfos = method.GetParameters()
+                            parameterInfos = method.GetParameters() 
                         });
                     }
                 }

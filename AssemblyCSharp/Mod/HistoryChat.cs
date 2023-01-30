@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Mod
@@ -254,11 +255,12 @@ namespace Mod
             // Tab
             if (GameCanvas.keyPressed[16])
             {
-                if (endStr != hints[selectedIndex])
+                try
                 {
-                    tfChat.setText(startStr + hints[selectedIndex]);
+                    if (endStr != hints[selectedIndex])
+                        tfChat.setText(startStr + hints[selectedIndex]);
                 }
-
+                catch (Exception) { }
                 GameCanvas.keyPressed[16] = false;
                 GameCanvas.clearKeyPressed();
                 GameCanvas.clearKeyHold();

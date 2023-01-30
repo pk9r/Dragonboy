@@ -50,7 +50,7 @@ namespace Mod
         /// </summary>
         public static void onGameStarted()
         {
-            ChatCommandHandler.loadDefalut();
+            ChatCommandHandler.loadDefault();
             HotkeyCommandHandler.loadDefalut();
             SocketClient.gI.initSender();
             ModMenuMain.LoadData();
