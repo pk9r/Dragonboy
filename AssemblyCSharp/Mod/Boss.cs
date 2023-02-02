@@ -106,7 +106,7 @@ namespace Mod
                             break;
                         }
                 }
-                int length = Utilities.getWidth(styles[i - start + offset], boss.ToString());
+                int length = Utilities.getWidth(styles[i - start + offset], $"{i + 1}. {boss}");
                 maxLength = Math.max(length, maxLength);
             }
             int xDraw = GameCanvas.w - x - maxLength;

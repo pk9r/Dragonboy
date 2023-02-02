@@ -549,29 +549,10 @@ namespace Mod
         {
             teleportMyChar(x, getYGround(x));
         }
-        [Obsolete("Không dùng nữa")]
-        internal static int getWidth(mFont mfont, string s)
-        {
-            return 0;
-            //if (mfont == mFont.tahoma_7b_red_tiny || mfont == mFont.tahoma_7b_yellow_tiny || mfont == mFont.tahoma_7_blue_tiny || mfont == mFont.tahoma_7_tiny || mfont == mFont.tahoma_7_white_tiny)
-            //{
-            //    try
-            //    {
-            //        GUIStyle gUIStyle = new GUIStyle(GUI.skin.label);
-            //        gUIStyle.fontSize = 13;
-            //        return (int)gUIStyle.CalcSize(new GUIContent(s)).x / mGraphics.zoomLevel + 30;
-            //    }
-            //    catch (Exception)
-            //    {
-            //        return mfont.getWidthNotExactOf(s);
-            //    }
-            //}
-            //else throw new ArgumentException();
-        }
 
         internal static int getWidth(GUIStyle gUIStyle, string s)
         {
-            return (int)gUIStyle.CalcSize(new GUIContent(s)).x / mGraphics.zoomLevel + 30;
+            return (int)(gUIStyle.CalcSize(new GUIContent(s)).x * 1.05f / mGraphics.zoomLevel);
         }
 
         internal static int getHeight(GUIStyle gUIStyle, string content)
