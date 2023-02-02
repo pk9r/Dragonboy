@@ -2437,6 +2437,7 @@ public class GameScr : mScreen, IChatable
                 {
                     if (TField.isQwerty)
                     {
+                        GameEvents.onGameScrPressHotkeys();
                         if (GameCanvas.keyPressed[1])
                         {
                             if (keySkill[0] != null)

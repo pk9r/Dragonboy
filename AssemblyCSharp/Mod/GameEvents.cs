@@ -134,6 +134,15 @@ namespace Mod
         }
 
         /// <summary>
+        /// Kích hoạt khi nhấn phím tắt (GameScr).
+        /// </summary>
+        public static void onGameScrPressHotkeys()
+        {
+            SetDo.UpdateKey();
+            ExtensionManager.Invoke();
+        }
+
+        /// <summary>
         /// Kích hoạt sau khi vẽ khung chat.
         /// </summary>
         /// <param name="g"></param>

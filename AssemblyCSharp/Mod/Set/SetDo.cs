@@ -29,13 +29,6 @@ namespace Mod.Set
 
             public ItemSet() { }
 
-            public ItemSet(string name, string fullName, int gender)
-            {
-                this.name = name;
-                this.fullName = fullName;
-                this.gender = gender;
-            }
-
             public ItemSet(Item item)
             {
                 if (item == null)
@@ -654,6 +647,66 @@ namespace Mod.Set
                 isShowMenu = false;
                 typeof(Menu).GetField("disableClose", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(GameCanvas.menu, false);
                 typeof(Menu).GetField("isClose", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(GameCanvas.menu, false);
+            }
+        }
+
+        public static void UpdateKey()
+        {
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            {
+                for (int i = 0; i < Math.min(9, setDos.Count); i++)
+                {
+                    int keyPressReal = GameCanvas.keyAsciiPress;
+                    switch (keyPressReal)
+                    {
+                        case '!':
+                            keyPressReal = '1';
+                            break;
+                        case '@':
+                            keyPressReal = '2';
+                            break;
+                        case '#':
+                            keyPressReal = '3';
+                            break;
+                        case '$':
+                            keyPressReal = '4';
+                            break;
+                        case '%':
+                            keyPressReal = '5';
+                            break;
+                        case '^':
+                            keyPressReal = '6';
+                            break;
+                        case '&':
+                            keyPressReal = '7';
+                            break;
+                        case '*':
+                            keyPressReal = '8';
+                            break;
+                        case '(':
+                            keyPressReal = '9';
+                            break;
+                    }
+                    if (keyPressReal == i + 49)
+                    {
+                        GameCanvas.keyAsciiPress = 0;
+                        GameCanvas.clearKeyHold();
+                        GameCanvas.clearKeyPressed();
+                        if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+                        {
+                            if (setDos[i].CanWearForPet())
+                                GameScr.info1.addInfo($"Mặc set {(string.IsNullOrEmpty(setDos[i].Name) ? i + 1 : ("\"" + setDos[i].Name + "\""))} cho đệ tử!", 0);
+                            setDos[i].WearForPet();
+                        }
+                        else
+                        {
+                            if (setDos[i].CanWearForMe())
+                                GameScr.info1.addInfo($"Mặc set {(string.IsNullOrEmpty(setDos[i].Name) ? i + 1 : ("\"" + setDos[i].Name + "\""))} cho bản thân!", 0);
+                            setDos[i].Wear();
+                        }
+                        break;
+                    }
+                }
             }
         }
 

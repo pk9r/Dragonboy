@@ -127,6 +127,11 @@
             Kích hoạt khi nhấn phím tắt (GameScr) chưa được xử lý.
             </summary>
         </member>
+        <member name="M:Mod.GameEvents.onGameScrPressHotkeys">
+            <summary>
+            Kích hoạt khi nhấn phím tắt (GameScr).
+            </summary>
+        </member>
         <member name="M:Mod.GameEvents.onPaintChatTextField(ChatTextField,mGraphics)">
             <summary>
             Kích hoạt sau khi vẽ khung chat.
