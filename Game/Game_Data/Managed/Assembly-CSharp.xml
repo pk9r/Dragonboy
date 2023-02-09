@@ -136,7 +136,6 @@
             <summary>
             Kích hoạt sau khi vẽ khung chat.
             </summary>
-            <param name="g"></param>
         </member>
         <member name="M:Mod.GameEvents.onStartChatTextField(ChatTextField)">
             <summary>

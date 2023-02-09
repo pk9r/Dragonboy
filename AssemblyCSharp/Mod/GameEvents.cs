@@ -145,7 +145,6 @@ namespace Mod
         /// <summary>
         /// Kích hoạt sau khi vẽ khung chat.
         /// </summary>
-        /// <param name="g"></param>
         public static void onPaintChatTextField(ChatTextField instance, mGraphics g)
         {
             if (instance == ChatTextField.gI() && instance.strChat.Replace(" ", "") == "Chat" && instance.tfChat.name == "chat")
