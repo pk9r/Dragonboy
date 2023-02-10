@@ -304,15 +304,22 @@ namespace Mod
                 return;
             }
 
-            OpenMenu.start(new(menuItems =>
-            {
-                for (int i = 0; i < vNpcSize; i++)
+            new MenuBuilder()
+                .map<Npc>(GameScr.vNpc, npc =>
                 {
-                    var npc = (Npc)GameScr.vNpc.elementAt(i);
                     var npcName = string.IsNullOrEmpty(npc.template.name.Trim()) ? "(no name)" : npc.template.name;
-                    menuItems.Add(new(npcName, new(() => teleToNpc(npc))));
-                }
-            }));
+                    return new(npcName, new(() => teleToNpc(npc)));
+                }).start();
+
+            //OpenMenu.start(new(menuItems =>
+            //{
+            //    for (int i = 0; i < vNpcSize; i++)
+            //    {
+            //        var npc = (Npc)GameScr.vNpc.elementAt(i);
+            //        var npcName = string.IsNullOrEmpty(npc.template.name.Trim()) ? "(no name)" : npc.template.name;
+            //        menuItems.Add(new(npcName, new(() => teleToNpc(npc))));
+            //    }
+            //}));
         }
 
         [ChatCommand("csb"), HotkeyCommand('c')]
@@ -856,21 +863,21 @@ namespace Mod
                         break;
                     }
             if (item.itemOption != null)
-            for (int j = 0; j < item.itemOption.Length; j++)
-                if (item.itemOption[j].optionTemplate.name.StartsWith("$"))
-                {
-                    string optionColor = item.itemOption[j].getOptiongColor();
-                    if (item.itemOption[j].param == 1)
-                        text = text + "\n" + optionColor;
-                    if (item.itemOption[j].param == 0)
-                        text = text + "\n" + optionColor;
-                }
-                else
-                {
-                    string optionString = item.itemOption[j].getOptionString();
-                    if (!optionString.Equals(string.Empty) && item.itemOption[j].optionTemplate.id != 72)
-                        text = text + "\n" + optionString;
-                }
+                for (int j = 0; j < item.itemOption.Length; j++)
+                    if (item.itemOption[j].optionTemplate.name.StartsWith("$"))
+                    {
+                        string optionColor = item.itemOption[j].getOptiongColor();
+                        if (item.itemOption[j].param == 1)
+                            text = text + "\n" + optionColor;
+                        if (item.itemOption[j].param == 0)
+                            text = text + "\n" + optionColor;
+                    }
+                    else
+                    {
+                        string optionString = item.itemOption[j].getOptionString();
+                        if (!optionString.Equals(string.Empty) && item.itemOption[j].optionTemplate.id != 72)
+                            text = text + "\n" + optionString;
+                    }
             if (item.template.strRequire > 1)
                 text += "\n" + mResources.pow_request + ": " + item.template.strRequire.ToString();
             return text + "\n" + item.template.description;

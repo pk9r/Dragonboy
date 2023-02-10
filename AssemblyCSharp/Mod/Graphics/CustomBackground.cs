@@ -31,42 +31,78 @@ namespace Mod.Graphics
 
         public static void ShowMenu()
         {
-            OpenMenu.start(new(menuItems =>
-            {
-                if (backgroundWallpapers.Count > 0)
-                    menuItems.Add(new("Mở danh sách nền đã lưu", new(() =>
-                    {
-                        CustomPanelMenu.CreateCustomPanelMenu(setTabCustomBackgroundPanel, doFireCustomBackgroundListPanel, paintTabHeader, paintCustomBackgroundPanel);
-                    })));
-                menuItems.Add(new("Thêm nền vào danh sách", new(SelectBackgrounds)));
-                if (backgroundWallpapers.Count > 0)
-                    menuItems.Add(new("Xóa hết danh sách", new(() =>
+            new MenuBuilder()
+                .setChatPopup("Loại background được hỗ trợ: ảnh (*.png), ảnh động (*.gif), video (*.mp4).\n" +
+                               "Ảnh động và video tiêu tốn nhiều tài nguyên máy, nên cân nhắc trước khi\nsử dụng.")
+                .addItem(ifCondition: backgroundWallpapers.Count > 0,
+                    "Mở danh sách nền đã lưu", new(() =>
+                        CustomPanelMenu.CreateCustomPanelMenu(setTabCustomBackgroundPanel, 
+                            doFireCustomBackgroundListPanel, paintTabHeader, paintCustomBackgroundPanel)))
+                .addItem("Thêm nền vào danh sách", new(SelectBackgrounds))
+                .addItem(ifCondition: backgroundWallpapers.Count > 0,
+                    "Xóa hết danh sách", new(() =>
                     {
                         backgroundWallpapers.Clear();
                         GameScr.info1.addInfo("Đã xóa hết nền trong danh sách!", 0);
-                    })));
-                menuItems.Add(new("Tự động chuyển nền: " + (isChangeWallpaper ? "Bật" : "Tắt"), new(() =>
+                    }))
+                .addItem("Tự động chuyển nền: " + (isChangeWallpaper ? "Bật" : "Tắt"), new(() =>
                 {
                     isChangeWallpaper = !isChangeWallpaper;
                     lastTimeChangedWallpaper = mSystem.currentTimeMillis();
                     GameScr.info1.addInfo("Đã " + (isChangeWallpaper ? "bật" : "tắt") + " tự động chuyển nền!", 0);
-                })));
-                menuItems.Add(new("Thay đổi thời gian chuyển nền", new(() =>
+                }))
+                .addItem("Thay đổi thời gian chuyển nền", new(() =>
                 {
                     ChatTextField.gI().strChat = "Nhập thời gian thay đổi nền";
                     ChatTextField.gI().tfChat.name = "Thời gian (giây)";
                     ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
                     ChatTextField.gI().startChat2(instance, string.Empty);
-                })));
-                menuItems.Add(new("Thay đổi tốc độ ảnh động" , new(() =>
+                }))
+                .addItem("Thay đổi tốc độ ảnh động", new(() =>
                 {
                     ChatTextField.gI().strChat = "Nhập tốc độ ảnh động";
                     ChatTextField.gI().tfChat.name = "Tốc độ";
                     ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_ANY);
                     ChatTextField.gI().startChat2(instance, string.Empty);
                     ChatTextField.gI().tfChat.setText(speed.ToString());
-                })));
-            }), "Loại background được hỗ trợ: ảnh (*.png), ảnh động (*.gif), video (*.mp4).\nẢnh động và video tiêu tốn nhiều tài nguyên máy, nên cân nhắc trước khi\nsử dụng.");
+                }))
+                .start();
+            //OpenMenu.start(new(menuItems =>
+            //{
+            //    if (backgroundWallpapers.Count > 0)
+            //        menuItems.Add(new("Mở danh sách nền đã lưu", new(() =>
+            //        {
+            //            CustomPanelMenu.CreateCustomPanelMenu(setTabCustomBackgroundPanel, doFireCustomBackgroundListPanel, paintTabHeader, paintCustomBackgroundPanel);
+            //        })));
+            //    menuItems.Add(new("Thêm nền vào danh sách", new(SelectBackgrounds)));
+            //    if (backgroundWallpapers.Count > 0)
+            //        menuItems.Add(new("Xóa hết danh sách", new(() =>
+            //        {
+            //            backgroundWallpapers.Clear();
+            //            GameScr.info1.addInfo("Đã xóa hết nền trong danh sách!", 0);
+            //        })));
+            //    menuItems.Add(new("Tự động chuyển nền: " + (isChangeWallpaper ? "Bật" : "Tắt"), new(() =>
+            //    {
+            //        isChangeWallpaper = !isChangeWallpaper;
+            //        lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+            //        GameScr.info1.addInfo("Đã " + (isChangeWallpaper ? "bật" : "tắt") + " tự động chuyển nền!", 0);
+            //    })));
+            //    menuItems.Add(new("Thay đổi thời gian chuyển nền", new(() =>
+            //    {
+            //        ChatTextField.gI().strChat = "Nhập thời gian thay đổi nền";
+            //        ChatTextField.gI().tfChat.name = "Thời gian (giây)";
+            //        ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
+            //        ChatTextField.gI().startChat2(instance, string.Empty);
+            //    })));
+            //    menuItems.Add(new("Thay đổi tốc độ ảnh động", new(() =>
+            //    {
+            //        ChatTextField.gI().strChat = "Nhập tốc độ ảnh động";
+            //        ChatTextField.gI().tfChat.name = "Tốc độ";
+            //        ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_ANY);
+            //        ChatTextField.gI().startChat2(instance, string.Empty);
+            //        ChatTextField.gI().tfChat.setText(speed.ToString());
+            //    })));
+            //}), "Loại background được hỗ trợ: ảnh (*.png), ảnh động (*.gif), video (*.mp4).\nẢnh động và video tiêu tốn nhiều tài nguyên máy, nên cân nhắc trước khi\nsử dụng.");
         }
 
         public static void setTabCustomBackgroundPanel()
@@ -86,39 +122,71 @@ namespace Mod.Graphics
             int selected = GameCanvas.panel.selected;
             if (selected < 0) return;
             string fileName = Path.GetFileName(backgroundWallpapers.ElementAt(selected).Key);
-            OpenMenu.start(
-                menuItemCollection: new(menuItems =>
-                {
-                    menuItems.Add(new("Xóa", new(() =>
+
+            new MenuBuilder()
+                .addItem(ifCondition: backgroundIndex != selected,
+                    "Chuyển tới nền này", new(() =>
                     {
-                        if (backgroundWallpapers.ElementAt(selected).Value is BackgroundVideo videoBackground && videoBackground.isPlaying)
+                        if (backgroundWallpapers.ElementAt(backgroundIndex).Value is BackgroundVideo videoBackground && videoBackground.isPlaying)
                             videoBackground.Stop();
-                        backgroundWallpapers.Remove(backgroundWallpapers.ElementAt(selected).Key);
-                        if (selected < backgroundIndex)
-                        {
-                            backgroundIndex--;
-                            lastTimeChangedWallpaper = mSystem.currentTimeMillis();
-                        }
-                        else if (selected == backgroundIndex && backgroundWallpapers.Count == backgroundIndex)
-                        {
-                            backgroundIndex = 0;
-                            lastTimeChangedWallpaper = mSystem.currentTimeMillis();
-                        }
-                        GameScr.info1.addInfo("Đã xóa nền " + selected + "!", 0);
-                        setTabCustomBackgroundPanel();
-                        SaveData();
-                    })));
-                    if (backgroundIndex != selected)
-                        menuItems.Insert(0, new("Chuyển tới nền này", new(() =>
-                        {
-                            if (backgroundWallpapers.ElementAt(backgroundIndex).Value is BackgroundVideo videoBackground && videoBackground.isPlaying)
-                                videoBackground.Stop();
-                            backgroundIndex = selected;
-                            lastTimeChangedWallpaper = mSystem.currentTimeMillis();
-                        })));
-                }),
-                x: GameCanvas.panel.X,
-                y: (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
+                        backgroundIndex = selected;
+                        lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+                    }))
+                .addItem("Xóa", new(() =>
+                {
+                    if (backgroundWallpapers.ElementAt(selected).Value is BackgroundVideo videoBackground && videoBackground.isPlaying)
+                        videoBackground.Stop();
+                    backgroundWallpapers.Remove(backgroundWallpapers.ElementAt(selected).Key);
+                    if (selected < backgroundIndex)
+                    {
+                        backgroundIndex--;
+                        lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+                    }
+                    else if (selected == backgroundIndex && backgroundWallpapers.Count == backgroundIndex)
+                    {
+                        backgroundIndex = 0;
+                        lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+                    }
+                    GameScr.info1.addInfo("Đã xóa nền " + selected + "!", 0);
+                    setTabCustomBackgroundPanel();
+                    SaveData();
+                }))
+                .setPos(GameCanvas.panel.X, (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll)
+                .start();
+
+            //OpenMenu.start(
+            //    menuItemCollection: new(menuItems =>
+            //    {
+            //        menuItems.Add(new("Xóa", new(() =>
+            //        {
+            //            if (backgroundWallpapers.ElementAt(selected).Value is BackgroundVideo videoBackground && videoBackground.isPlaying)
+            //                videoBackground.Stop();
+            //            backgroundWallpapers.Remove(backgroundWallpapers.ElementAt(selected).Key);
+            //            if (selected < backgroundIndex)
+            //            {
+            //                backgroundIndex--;
+            //                lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+            //            }
+            //            else if (selected == backgroundIndex && backgroundWallpapers.Count == backgroundIndex)
+            //            {
+            //                backgroundIndex = 0;
+            //                lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+            //            }
+            //            GameScr.info1.addInfo("Đã xóa nền " + selected + "!", 0);
+            //            setTabCustomBackgroundPanel();
+            //            SaveData();
+            //        })));
+            //        if (backgroundIndex != selected)
+            //            menuItems.Insert(0, new("Chuyển tới nền này", new(() =>
+            //            {
+            //                if (backgroundWallpapers.ElementAt(backgroundIndex).Value is BackgroundVideo videoBackground && videoBackground.isPlaying)
+            //                    videoBackground.Stop();
+            //                backgroundIndex = selected;
+            //                lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+            //            })));
+            //    }),
+            //    x: GameCanvas.panel.X,
+            //    y: (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
 
             GameCanvas.panel.cp = new ChatPopup();
             GameCanvas.panel.cp.isClip = false;
@@ -212,7 +280,7 @@ namespace Mod.Graphics
                 gif.FixedUpdate();
                 if (!gif.isFullyLoaded)
                 {
-                        new Thread(gif.LoadFrameGif) { IsBackground = true, Name = "LoadFrameGif" }.Start();
+                    new Thread(gif.LoadFrameGif) { IsBackground = true, Name = "LoadFrameGif" }.Start();
                 }
                 else
                     updateGifBackgroundIndex++;
@@ -223,7 +291,7 @@ namespace Mod.Graphics
 
         public static void paint(mGraphics g)
         {
-            if (!isEnabled || backgroundWallpapers.Count <= 0) 
+            if (!isEnabled || backgroundWallpapers.Count <= 0)
                 return;
             if (backgroundIndex >= backgroundWallpapers.Count)
                 backgroundIndex = 0;
@@ -240,7 +308,7 @@ namespace Mod.Graphics
                 gif.speed = speed;
             background.Paint(g, 0, 0);
             if (isChangeWallpaper)
-            { 
+            {
                 if (mSystem.currentTimeMillis() - lastTimeChangedWallpaper > intervalChangeBackgroundWallpaper - 2000)
                 {
                     int index = backgroundIndex + 1;
@@ -255,7 +323,7 @@ namespace Mod.Graphics
                     if (background is BackgroundVideo backgroundVideo1 && backgroundVideo1.isPlaying)
                         backgroundVideo1.Stop();
                     backgroundIndex++;
-                } 
+                }
             }
         }
 
