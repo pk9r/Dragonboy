@@ -1,4 +1,5 @@
 ﻿using Mod.Auto;
+using Mod.CSharpInteractive;
 using Mod.Graphics;
 using Mod.PickMob;
 using Mod.Set;
@@ -78,6 +79,7 @@ namespace Mod.ModMenu
             new ModMenuItemFunction("Menu Custom Logo", "Mở menu logo tùy chỉnh", CustomLogo.ShowMenu),
             new ModMenuItemFunction("Menu Custom Cursor", "Mở menu con trỏ tùy chỉnh", CustomCursor.ShowMenu),
             new ModMenuItemFunction("Menu Set đồ", "Mở menu set đồ (lệnh \"set\" hoặc bấm nút \'`\')", SetDo.ShowMenu),
+            new ModMenuItemFunction("C# Interactive", "Mở cửa sổ C# Interactive", CSharpInteractiveForm.ShowForm),
         };
 
         public static Dictionary<int, string[]> inputModMenuItemInts = new Dictionary<int, string[]>()

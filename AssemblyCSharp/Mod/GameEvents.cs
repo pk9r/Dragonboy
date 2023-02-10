@@ -1,4 +1,5 @@
 ﻿using Mod.Auto;
+using Mod.CSharpInteractive;
 using Mod.Graphics;
 using Mod.ModHelper;
 using Mod.ModHelper.CommandMod.Chat;
@@ -60,6 +61,8 @@ namespace Mod
             SetDo.LoadData();
             VietKeyHandler.SmartMark = true;
             ExtensionManager.LoadExtensions();
+            System.Windows.Forms.Application.EnableVisualStyles();
+            System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
             ExtensionManager.Invoke();
         }
 
@@ -76,6 +79,7 @@ namespace Mod
             CustomLogo.SaveData();
             CustomCursor.SaveData();
             SetDo.SaveData();
+            CSharpInteractiveForm.CloseForm();
             ExtensionManager.Invoke();
             return false;
         }
