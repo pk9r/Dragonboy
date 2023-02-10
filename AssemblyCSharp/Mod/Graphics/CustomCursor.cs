@@ -28,29 +28,53 @@ namespace Mod.Graphics
 
         public static void ShowMenu()
         {
-            OpenMenu.start(new(menuItems =>
-            {
-                if (customCursors.Count > 0)
-                    menuItems.Add(new("Mở danh sách con trỏ đã lưu", new(() =>
+            new MenuBuilder()
+                .setChatPopup("Loại con trỏ chuột được hỗ trợ: ảnh (*.png), ảnh động (*.gif).")
+                .addItem(ifCondition: customCursors.Count > 0,
+                    "Mở danh sách con trỏ đã lưu", new(() =>
                     {
                         CustomPanelMenu.CreateCustomPanelMenu(setTabCustomCursorPanel, doFireCustomCursorListPanel, paintTabHeader, paintCustomCursorPanel);
-                    })));
-                menuItems.Add(new("Thêm con trỏ vào danh sách", new(SelectBackgrounds)));
-                if (customCursors.Count > 0)
-                    menuItems.Add(new("Xóa hết danh sách", new(() =>
+                    }))
+                .addItem("Thêm con trỏ vào danh sách", new(SelectBackgrounds))
+                .addItem(ifCondition: customCursors.Count > 0,
+                    "Xóa hết danh sách", new(() =>
                     {
                         customCursors.Clear();
                         GameScr.info1.addInfo("Đã xóa hết con trỏ trong danh sách!", 0);
-                    })));
-                menuItems.Add(new("Thay đổi tốc độ ảnh động", new(() =>
+                    }))
+                .addItem("Thay đổi tốc độ ảnh động", new(() =>
                 {
                     ChatTextField.gI().strChat = "Nhập tốc độ ảnh động";
                     ChatTextField.gI().tfChat.name = "Tốc độ";
                     ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_ANY);
                     ChatTextField.gI().startChat2(instance, string.Empty);
                     ChatTextField.gI().tfChat.setText(speed.ToString());
-                })));
-            }), "Loại con trỏ chuột được hỗ trợ: ảnh (*.png), ảnh động (*.gif).");
+                }))
+                .start();
+            
+            //OpenMenu.start(new(menuItems =>
+            //{
+            //    if (customCursors.Count > 0)
+            //        menuItems.Add(new("Mở danh sách con trỏ đã lưu", new(() =>
+            //        {
+            //            CustomPanelMenu.CreateCustomPanelMenu(setTabCustomCursorPanel, doFireCustomCursorListPanel, paintTabHeader, paintCustomCursorPanel);
+            //        })));
+            //    menuItems.Add(new("Thêm con trỏ vào danh sách", new(SelectBackgrounds)));
+            //    if (customCursors.Count > 0)
+            //        menuItems.Add(new("Xóa hết danh sách", new(() =>
+            //        {
+            //            customCursors.Clear();
+            //            GameScr.info1.addInfo("Đã xóa hết con trỏ trong danh sách!", 0);
+            //        })));
+            //    menuItems.Add(new("Thay đổi tốc độ ảnh động", new(() =>
+            //    {
+            //        ChatTextField.gI().strChat = "Nhập tốc độ ảnh động";
+            //        ChatTextField.gI().tfChat.name = "Tốc độ";
+            //        ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_ANY);
+            //        ChatTextField.gI().startChat2(instance, string.Empty);
+            //        ChatTextField.gI().tfChat.setText(speed.ToString());
+            //    })));
+            //}), "Loại con trỏ chuột được hỗ trợ: ảnh (*.png), ảnh động (*.gif).");
         }
 
         private static void paintTabHeader(mGraphics g)
@@ -77,26 +101,45 @@ namespace Mod.Graphics
             int selected = GameCanvas.panel.selected;
             if (selected < 0) return;
             string fileName = Path.GetFileName(customCursors.ElementAt(selected).Key);
-            OpenMenu.start(
-                menuItemCollection: new(menuItems =>
-                {
-                    menuItems.Add(new("Xóa", new(() =>
+
+            new MenuBuilder()
+                .addItem(ifCondition: cursorIndex != selected,
+                    "Chuyển tới con trỏ này", new(() =>
                     {
-                        customCursors.Remove(customCursors.ElementAt(selected).Key);
-                        GameScr.info1.addInfo("Đã xóa con trỏ " + selected + "!", 0);
-                        setTabCustomCursorPanel();
-                        SaveData();
-                    })));
-                    if (cursorIndex != selected)
-                        menuItems.Insert(0, new("Chuyển tới con trỏ này", new(() =>
-                        {
-                            cursorIndex = selected;
-                            if (!(customCursors.ElementAt(cursorIndex).Value is GifImage))
-                                Cursor.SetCursor(customCursors.ElementAt(cursorIndex).Value.Textures[0], Vector2.zero, CursorMode.Auto);
-                        })));
-                }),
-                x: GameCanvas.panel.X,
-                y: (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
+                        cursorIndex = selected;
+                        if (!(customCursors.ElementAt(cursorIndex).Value is GifImage))
+                            Cursor.SetCursor(customCursors.ElementAt(cursorIndex).Value.Textures[0], Vector2.zero, CursorMode.Auto);
+                    }))
+                .addItem("Xóa", new(() =>
+                {
+                    customCursors.Remove(customCursors.ElementAt(selected).Key);
+                    GameScr.info1.addInfo("Đã xóa con trỏ " + selected + "!", 0);
+                    setTabCustomCursorPanel();
+                    SaveData();
+                }))
+                .setPos(GameCanvas.panel.X, (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll)
+                .start();
+
+            //OpenMenu.start(
+            //    menuItemCollection: new(menuItems =>
+            //    {
+            //        menuItems.Add(new("Xóa", new(() =>
+            //        {
+            //            customCursors.Remove(customCursors.ElementAt(selected).Key);
+            //            GameScr.info1.addInfo("Đã xóa con trỏ " + selected + "!", 0);
+            //            setTabCustomCursorPanel();
+            //            SaveData();
+            //        })));
+            //        if (cursorIndex != selected)
+            //            menuItems.Insert(0, new("Chuyển tới con trỏ này", new(() =>
+            //            {
+            //                cursorIndex = selected;
+            //                if (!(customCursors.ElementAt(cursorIndex).Value is GifImage))
+            //                    Cursor.SetCursor(customCursors.ElementAt(cursorIndex).Value.Textures[0], Vector2.zero, CursorMode.Auto);
+            //            })));
+            //    }),
+            //    x: GameCanvas.panel.X,
+            //    y: (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
 
             GameCanvas.panel.cp = new ChatPopup();
             GameCanvas.panel.cp.isClip = false;

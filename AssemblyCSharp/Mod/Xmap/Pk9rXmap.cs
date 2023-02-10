@@ -39,14 +39,26 @@ namespace Mod.Xmap
             }
 
             XmapData.loadGroupMapsFromFile("TextData\\GroupMapsXmap.txt");
-            OpenMenu.start(new(menuItems =>
-            {
-                foreach (var groupMap in XmapData.groups)
-                    menuItems.Add(new(groupMap.nameGroup, new(() =>
+
+            new MenuBuilder()
+                .setChatPopup($"XmapNRO by Phucprotein\nMap hiện tại: {TileMap.mapName}, ID: {TileMap.mapID}\nVui lòng chọn nơi muốn đến")
+                .map(XmapData.groups, groupMap =>
+                {
+                    return new(groupMap.nameGroup, new(() =>
                     {
                         showXmapPanel(groupMap.maps);
-                    })));
-            }), $"XmapNRO by Phucprotein\nMap hiện tại: {TileMap.mapName}, ID: {TileMap.mapID}\nVui lòng chọn nơi muốn đến");
+                    }));
+                })
+                .start();
+
+            //OpenMenu.start(new(menuItems =>
+            //{
+            //    foreach (var groupMap in XmapData.groups)
+            //        menuItems.Add(new(groupMap.nameGroup, new(() =>
+            //        {
+            //            showXmapPanel(groupMap.maps);
+            //        })));
+            //}), $"XmapNRO by Phucprotein\nMap hiện tại: {TileMap.mapName}, ID: {TileMap.mapID}\nVui lòng chọn nơi muốn đến");
         }
 
         public static void showXmapPanel(List<int> maps)

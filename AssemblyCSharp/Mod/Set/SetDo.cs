@@ -83,11 +83,13 @@ namespace Mod.Set
             {
                 if (!GameCanvas.panel.isShow)
                     return false;
-                if (GameCanvas.panel.currentTabName == null)
+                var currentTabName = GameCanvas.panel.currentTabName;
+                //HACK: Đoạn dưới currentTabName bị IndexOutOfRangeException, fix tạm bằng check length
+                if (currentTabName == null || currentTabName.Length == 0 || currentTabName[0].Length < 2)
                     return false;
-                if (GameCanvas.panel.currentTabName.Length != Math.min(4, setDos.Count + 1))
+                if (currentTabName.Length != Math.min(4, setDos.Count + 1))
                     return false;
-                if (!GameCanvas.panel.currentTabName[0][0].Contains("Set") && !GameCanvas.panel.currentTabName[0][1].Contains("Set"))
+                if (!currentTabName[0][0].Contains("Set") && !currentTabName[0][1].Contains("Set"))
                     return false;
                 Action action = (Action)typeof(CustomPanelMenu).GetField("setTab", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
                 return action != null && action.Method == typeof(SetDo).GetMethod("setTabSetPanel");
@@ -105,7 +107,7 @@ namespace Mod.Set
             itemAo = new ItemSet(ao);
             itemQuan = new ItemSet(quan);
             itemGang = new ItemSet(gang);
-            itemGiay = new ItemSet(giay);    
+            itemGiay = new ItemSet(giay);
             itemRada = new ItemSet(rada);
             itemCaiTrang = new ItemSet(caiTrang);
             itemGiapLuyenTap = new ItemSet(giapLuyenTap);
@@ -146,7 +148,7 @@ namespace Mod.Set
             else if (item.template.type == 23 || item.template.type == 24)
                 itemBay = new ItemSet(item);
         }
-        
+
         public void RemoveItem(Item item)
         {
             if (item == null)
@@ -266,7 +268,7 @@ namespace Mod.Set
                 Name = "SetDo.Wear"
             }.Start();
         }
-        
+
         public void WearForPet()
         {
             if (!CanWearForPet())
@@ -374,19 +376,19 @@ namespace Mod.Set
                 description += $"\nSet {(string.IsNullOrEmpty(setDos[i].Name) ? i + 1 : setDos[i].Name)}: {GetSetItems(setDos[i])}";
             if (setDos.Count > 5)
                 description += "\n...";
-            OpenMenu.start(new MenuItemCollection(menuItems =>
-            {
-                for (int i = 0; i < Math.min(5, setDos.Count); i++)
+
+            new MenuBuilder()
+                .setChatPopup(description)
+                .map(Enumerable.Range(0, Math.min(5, setDos.Count)), index =>
                 {
-                    int index = i;  //bắt buộc phải làm thế này
-                    menuItems.Add(new MenuItem($"Mặc set\n{(string.IsNullOrEmpty(setDos[i].Name) ? i + 1 : setDos[i].Name)}", new MenuAction(() =>
+                    return new($"Mặc set\n{(string.IsNullOrEmpty(setDos[index].Name) ? index + 1 : setDos[index].Name)}", new(() =>
                     {
                         setDos[index].Wear();
-                    })));
-                }
-                if (Char.myCharz().havePet && setDos.Count > 0)
-                    menuItems.Add(new MenuItem("Mặc cho\nđệ tử", new MenuAction(ShowMenuPetSet)));
-                menuItems.Add(new MenuItem("Mở danh sách set đồ", new MenuAction(() =>
+                    }));
+                })
+                .addItem(ifCondition: Char.myCharz().havePet && setDos.Count > 0,
+                    "Mặc cho\nđệ tử", new(ShowMenuPetSet))
+                .addItem("Mở danh sách set đồ", new(() =>
                 {
                     string[][] tabName = new string[Math.min(4, setDos.Count + 1)][];
                     for (int i = offset; i < tabName.Length + offset; i++)
@@ -398,13 +400,48 @@ namespace Mod.Set
                     }
                     GameCanvas.panel.tabName[CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU] = tabName;
                     CustomPanelMenu.CreateCustomPanelMenu(setTabSetPanel, doFireSetPanel, null, paintSetPanel);
-                })));
-                if (setDos.Count > 0)
-                    menuItems.Add(new MenuItem("Xoá hết\nset đồ\nđã lưu", new MenuAction(() =>
-                    {
-                        GameCanvas.startYesNoDlg($"Bạn có chắc chắn muốn xoá hết set đồ đã lưu không?", new Command(mResources.YES, new SetDo(), 2, null), new Command(mResources.NO, new SetDo(), 100, null));
-                    })));
-            }), description);
+                }))
+                .addItem(ifCondition: setDos.Count > 0,
+                "Xoá hết\nset đồ\nđã lưu", new(() =>
+                {
+                    GameCanvas.startYesNoDlg(
+                        $"Bạn có chắc chắn muốn xoá hết set đồ đã lưu không?", 
+                        new Command(mResources.YES, new SetDo(), 2, null), 
+                        new Command(mResources.NO, new SetDo(), 100, null));
+                }))
+                .start();
+
+            //OpenMenu.start(new MenuItemCollection(menuItems =>
+            //{
+            //    for (int i = 0; i < Math.min(5, setDos.Count); i++)
+            //    {
+            //        int index = i;  //bắt buộc phải làm thế này
+            //        menuItems.Add(new MenuItem($"Mặc set\n{(string.IsNullOrEmpty(setDos[i].Name) ? i + 1 : setDos[i].Name)}", new MenuAction(() =>
+            //        {
+            //            setDos[index].Wear();
+            //        })));
+            //    }
+            //    if (Char.myCharz().havePet && setDos.Count > 0)
+            //        menuItems.Add(new MenuItem("Mặc cho\nđệ tử", new MenuAction(ShowMenuPetSet)));
+            //    menuItems.Add(new MenuItem("Mở danh sách set đồ", new MenuAction(() =>
+            //    {
+            //        string[][] tabName = new string[Math.min(4, setDos.Count + 1)][];
+            //        for (int i = offset; i < tabName.Length + offset; i++)
+            //        {
+            //            if (i == setDos.Count)
+            //                tabName[i - offset] = new string[] { "Thêm", "Set mới" };
+            //            else
+            //                tabName[i - offset] = new string[] { "Set đồ", string.IsNullOrEmpty(setDos[i].Name) ? (i + 1).ToString() : setDos[i].Name };
+            //        }
+            //        GameCanvas.panel.tabName[CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU] = tabName;
+            //        CustomPanelMenu.CreateCustomPanelMenu(setTabSetPanel, doFireSetPanel, null, paintSetPanel);
+            //    })));
+            //    if (setDos.Count > 0)
+            //        menuItems.Add(new MenuItem("Xoá hết\nset đồ\nđã lưu", new MenuAction(() =>
+            //        {
+            //            GameCanvas.startYesNoDlg($"Bạn có chắc chắn muốn xoá hết set đồ đã lưu không?", new Command(mResources.YES, new SetDo(), 2, null), new Command(mResources.NO, new SetDo(), 100, null));
+            //        })));
+            //}), description);
         }
 
         private static void ShowMenuPetSet()
@@ -414,18 +451,30 @@ namespace Mod.Set
                 description += $"\nSet {(string.IsNullOrEmpty(setDos[i].Name) ? i + 1 : setDos[i].Name)}: {GetSetItems(setDos[i])}";
             if (setDos.Count > 5)
                 description += "\n...";
-            OpenMenu.start(new MenuItemCollection(menuItems =>
-            {
-                for (int i = 0; i < Math.min(5, setDos.Count); i++)
+            
+            //OpenMenu.start(new MenuItemCollection(menuItems =>
+            //{
+            //    for (int i = 0; i < Math.min(5, setDos.Count); i++)
+            //    {
+            //        int index = i;
+            //        menuItems.Add(new MenuItem($"Mặc cho\nđệ set\n{(string.IsNullOrEmpty(setDos[i].Name) ? i + 1 : setDos[i].Name)}", new MenuAction(() =>
+            //        {
+            //            setDos[index].WearForPet();
+            //        })));
+            //    }
+            //    menuItems.Add(new MenuItem("Quay lại", new MenuAction(ShowMenu)));
+            //}), description);
+
+            new MenuBuilder()
+                .setChatPopup(description)
+                .map(Enumerable.Range(0, Math.min(5, setDos.Count)), index =>
                 {
-                    int index = i;
-                    menuItems.Add(new MenuItem($"Mặc cho\nđệ set\n{(string.IsNullOrEmpty(setDos[i].Name) ? i + 1 : setDos[i].Name)}", new MenuAction(() =>
+                    return new($"Mặc cho\nđệ set\n{(string.IsNullOrEmpty(setDos[index].Name) ? index + 1 : setDos[index].Name)}", new(() =>
                     {
                         setDos[index].WearForPet();
-                    })));
-                }
-                menuItems.Add(new MenuItem("Quay lại", new MenuAction(ShowMenu)));
-            }), description);
+                    }));
+                })
+                .start();
         }
 
         public static void setTabSetPanel()
@@ -562,48 +611,90 @@ namespace Mod.Set
                 GameCanvas.panel.currItem = arrItemBag[selected - arrItemBody.Length];
             else
                 GameCanvas.panel.currItem = arrItemBody[selected];
-            OpenMenu.start(new MenuItemCollection(menuItems =>
+            //OpenMenu.start(new MenuItemCollection(menuItems =>
+            //    {
+            //        string message = "Thêm vào\nset ";
+            //        if (GameCanvas.panel.currentTabIndex + offset == setDos.Count)
+            //            message += "mới";
+            //        else
+            //        {
+            //            if (setDos[GameCanvas.panel.currentTabIndex + offset].HasItem(GameCanvas.panel.currItem))
+            //                message = "Xóa khỏi\nset ";
+            //            message += string.IsNullOrEmpty(setDos[GameCanvas.panel.currentTabIndex + offset].Name) ? GameCanvas.panel.currentTabIndex + offset + 1 : ("\n" + setDos[GameCanvas.panel.currentTabIndex + offset].Name);
+            //        }
+            //        menuItems.Add(new MenuItem(message, new MenuAction(() =>
+            //        {
+            //            if (GameCanvas.panel.currentTabIndex + offset == setDos.Count)
+            //            {
+            //                AddSet("");
+            //                RefreshPanelTabName();
+            //                GameCanvas.panel.EmulateSetTypePanel(0);
+            //            }
+            //            if (setDos[GameCanvas.panel.currentTabIndex + offset].HasItem(GameCanvas.panel.currItem))
+            //            {
+            //                setDos[GameCanvas.panel.currentTabIndex + offset].RemoveItem(GameCanvas.panel.currItem);
+            //                if (!setDos[GameCanvas.panel.currentTabIndex + offset].HasAnyItem)
+            //                {
+            //                    string oldName = string.IsNullOrEmpty(setDos[GameCanvas.panel.currentTabIndex + offset].Name) ? (GameCanvas.panel.currentTabIndex + offset + 1).ToString() : ("\"" + setDos[GameCanvas.panel.currentTabIndex + offset].Name + "\"");
+            //                    setDos.RemoveAt(GameCanvas.panel.currentTabIndex + offset);
+            //                    if (offset >= setDos.Count - 3 && offset > 0)
+            //                        offset--;
+            //                    if (GameCanvas.panel.currentTabIndex >= Math.min(4, setDos.Count + 1) - 1 && GameCanvas.panel.currentTabIndex > 0)
+            //                        GameCanvas.panel.currentTabIndex--;
+            //                    RefreshPanelTabName();
+            //                    GameCanvas.panel.EmulateSetTypePanel(0);
+            //                    GameScr.info1.addInfo($"Đã xóa set {oldName} do set {oldName} không chứa đồ nào!", 0);
+            //                }
+            //            }
+            //            else
+            //                setDos[GameCanvas.panel.currentTabIndex + offset].AddOrReplaceItem(GameCanvas.panel.currItem);
+            //            SaveData();
+            //        })));
+            //    }),
+            //    GameCanvas.panel.X,
+            //    (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
+
+            string message = "Thêm vào\nset ";
+            if (GameCanvas.panel.currentTabIndex + offset == setDos.Count)
+                message += "mới";
+            else
+            {
+                if (setDos[GameCanvas.panel.currentTabIndex + offset].HasItem(GameCanvas.panel.currItem))
+                    message = "Xóa khỏi\nset ";
+                message += string.IsNullOrEmpty(setDos[GameCanvas.panel.currentTabIndex + offset].Name) ? GameCanvas.panel.currentTabIndex + offset + 1 : ("\n" + setDos[GameCanvas.panel.currentTabIndex + offset].Name);
+            }
+            new MenuBuilder()
+                .addItem(message, new(() =>
                 {
-                    string message = "Thêm vào\nset ";
                     if (GameCanvas.panel.currentTabIndex + offset == setDos.Count)
-                        message += "mới";
-                    else
                     {
-                        if (setDos[GameCanvas.panel.currentTabIndex + offset].HasItem(GameCanvas.panel.currItem))
-                            message = "Xóa khỏi\nset ";
-                        message += string.IsNullOrEmpty(setDos[GameCanvas.panel.currentTabIndex + offset].Name) ? GameCanvas.panel.currentTabIndex + offset + 1 : ("\n" + setDos[GameCanvas.panel.currentTabIndex + offset].Name);
+                        AddSet("");
+                        RefreshPanelTabName();
+                        GameCanvas.panel.EmulateSetTypePanel(0);
                     }
-                    menuItems.Add(new MenuItem(message, new MenuAction(() =>
+                    if (setDos[GameCanvas.panel.currentTabIndex + offset].HasItem(GameCanvas.panel.currItem))
                     {
-                        if (GameCanvas.panel.currentTabIndex + offset == setDos.Count)
+                        setDos[GameCanvas.panel.currentTabIndex + offset].RemoveItem(GameCanvas.panel.currItem);
+                        if (!setDos[GameCanvas.panel.currentTabIndex + offset].HasAnyItem)
                         {
-                            AddSet("");
+                            string oldName = string.IsNullOrEmpty(setDos[GameCanvas.panel.currentTabIndex + offset].Name) ? (GameCanvas.panel.currentTabIndex + offset + 1).ToString() : ("\"" + setDos[GameCanvas.panel.currentTabIndex + offset].Name + "\"");
+                            setDos.RemoveAt(GameCanvas.panel.currentTabIndex + offset);
+                            if (offset >= setDos.Count - 3 && offset > 0)
+                                offset--;
+                            if (GameCanvas.panel.currentTabIndex >= Math.min(4, setDos.Count + 1) - 1 && GameCanvas.panel.currentTabIndex > 0)
+                                GameCanvas.panel.currentTabIndex--;
                             RefreshPanelTabName();
                             GameCanvas.panel.EmulateSetTypePanel(0);
+                            GameScr.info1.addInfo($"Đã xóa set {oldName} do set {oldName} không chứa đồ nào!", 0);
                         }
-                        if (setDos[GameCanvas.panel.currentTabIndex + offset].HasItem(GameCanvas.panel.currItem))
-                        {
-                            setDos[GameCanvas.panel.currentTabIndex + offset].RemoveItem(GameCanvas.panel.currItem);
-                            if (!setDos[GameCanvas.panel.currentTabIndex + offset].HasAnyItem)
-                            {
-                                string oldName = string.IsNullOrEmpty(setDos[GameCanvas.panel.currentTabIndex + offset].Name) ? (GameCanvas.panel.currentTabIndex + offset + 1).ToString() : ("\"" + setDos[GameCanvas.panel.currentTabIndex + offset].Name + "\"");
-                                setDos.RemoveAt(GameCanvas.panel.currentTabIndex + offset);
-                                if (offset >= setDos.Count - 3 && offset > 0)
-                                    offset--;
-                                if (GameCanvas.panel.currentTabIndex >= Math.min(4, setDos.Count + 1) - 1 && GameCanvas.panel.currentTabIndex > 0)
-                                    GameCanvas.panel.currentTabIndex--;
-                                RefreshPanelTabName();
-                                GameCanvas.panel.EmulateSetTypePanel(0);
-                                GameScr.info1.addInfo($"Đã xóa set {oldName} do set {oldName} không chứa đồ nào!", 0);
-                            }
-                        }
-                        else
-                            setDos[GameCanvas.panel.currentTabIndex + offset].AddOrReplaceItem(GameCanvas.panel.currItem);
-                        SaveData();
-                    })));
-                }),
-                GameCanvas.panel.X,
-                (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
+                    }
+                    else
+                        setDos[GameCanvas.panel.currentTabIndex + offset].AddOrReplaceItem(GameCanvas.panel.currItem);
+                    SaveData();
+                }))
+                .setPos(GameCanvas.panel.X, (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll)
+                .start();
+
             if (GameCanvas.panel.currItem != null)
             {
                 Char.myCharz().setPartTemp(GameCanvas.panel.currItem.headTemp, GameCanvas.panel.currItem.bodyTemp, GameCanvas.panel.currItem.legTemp, GameCanvas.panel.currItem.bagTemp);
@@ -763,15 +854,15 @@ namespace Mod.Set
                     GameScr.gI().isPointerDowning = false;
                     if (GameCanvas.isPointerClick)
                     {
-                        OpenMenu.start(new MenuItemCollection(menuItems =>
-                        {
-                            int index = i;
-                            if (GameCanvas.panel.currentTabIndex != i)
-                                menuItems.Add(new MenuItem("Xem set", new MenuAction(() =>
+                        int index = i;
+
+                        new MenuBuilder()
+                            .addItem(ifCondition: GameCanvas.panel.currentTabIndex != index,
+                                "Xem set", new(() =>
                                 {
                                     GameCanvas.panel.currentTabIndex = index;
-                                }))); 
-                            menuItems.Add(new MenuItem("Đổi tên set", new MenuAction(() =>
+                                }))
+                            .addItem("Đổi tên set", new(() =>
                             {
                                 indexSetToRename = index + offset;
                                 GameCanvas.panel.chatTField = new ChatTextField();
@@ -781,12 +872,39 @@ namespace Mod.Set
                                 GameCanvas.panel.chatTField.tfChat.name = "Tên set";
                                 GameCanvas.panel.chatTField.tfChat.setIputType(TField.INPUT_TYPE_ANY);
                                 GameCanvas.panel.chatTField.startChat2(new SetDo(), "Nhập tên set mới");
-                            })));  
-                            menuItems.Add(new MenuItem("Xóa set", new MenuAction(() =>
+                            }))
+                            .addItem("Xóa set", new(() =>
                             {
-                                GameCanvas.startYesNoDlg($"Bạn có chắc chắn muốn xoá set {(string.IsNullOrEmpty(setDos[index + offset].Name) ? index + offset + 1 : ("\"" + setDos[index + offset].Name + "\""))} không?", new Command(mResources.YES, new SetDo(), 1, index + offset), new Command(mResources.NO, new SetDo(), 100, null));
-                            })));
-                        }), 3, 61);
+                                GameCanvas.startYesNoDlg(
+                                    $"Bạn có chắc chắn muốn xoá set {(string.IsNullOrEmpty(setDos[index + offset].Name) ? index + offset + 1 : ("\"" + setDos[index + offset].Name + "\""))} không?",
+                                    new Command(mResources.YES, new SetDo(), 1, index + offset), new Command(mResources.NO, new SetDo(), 100, null));
+                            }))
+                            .start();
+                        //OpenMenu.start(new MenuItemCollection(menuItems =>
+                        //{
+                        //    int index = i;
+                        //    if (GameCanvas.panel.currentTabIndex != i)
+                        //        menuItems.Add(new MenuItem("Xem set", new MenuAction(() =>
+                        //        {
+                        //            GameCanvas.panel.currentTabIndex = index;
+                        //        }))); 
+                        //    menuItems.Add(new MenuItem("Đổi tên set", new MenuAction(() =>
+                        //    {
+                        //        indexSetToRename = index + offset;
+                        //        GameCanvas.panel.chatTField = new ChatTextField();
+                        //        GameCanvas.panel.chatTField.tfChat.y = GameCanvas.h - 35 - ChatTextField.gI().tfChat.height;
+                        //        GameCanvas.panel.chatTField.initChatTextField();
+                        //        GameCanvas.panel.chatTField.strChat = string.Empty;
+                        //        GameCanvas.panel.chatTField.tfChat.name = "Tên set";
+                        //        GameCanvas.panel.chatTField.tfChat.setIputType(TField.INPUT_TYPE_ANY);
+                        //        GameCanvas.panel.chatTField.startChat2(new SetDo(), "Nhập tên set mới");
+                        //    })));  
+                        //    menuItems.Add(new MenuItem("Xóa set", new MenuAction(() =>
+                        //    {
+                        //        GameCanvas.startYesNoDlg($"Bạn có chắc chắn muốn xoá set {(string.IsNullOrEmpty(setDos[index + offset].Name) ? index + offset + 1 : ("\"" + setDos[index + offset].Name + "\""))} không?", new Command(mResources.YES, new SetDo(), 1, index + offset), new Command(mResources.NO, new SetDo(), 100, null));
+                        //    })));
+                        //}), 3, 61);
+
                         string str = "Set đồ " + (string.IsNullOrEmpty(setDos[i + offset].Name) ? i + offset + 1 : setDos[i + offset].Name);
                         GameCanvas.panel.popUpDetailInit(GameCanvas.panel.cp = new ChatPopup(), str);
                         GameCanvas.panel.idIcon = -1;

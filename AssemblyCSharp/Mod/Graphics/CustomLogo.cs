@@ -73,21 +73,36 @@ namespace Mod.Graphics
 
         public static void ShowMenu()
         {
-            OpenMenu.start(new(menuItems =>
-            {
-                if (logos.Count > 0)
-                    menuItems.Add(new("Mở danh sách logo đã lưu", new(() =>
+            new MenuBuilder()
+                .addItem(ifCondition: logos.Count > 0,
+                    "Mở danh sách logo đã lưu", new(() =>
                     {
                         CustomPanelMenu.CreateCustomPanelMenu(setTabCustomLogoPanel, doFireCustomLogoListPanel, paintTabHeader, paintCustomLogoPanel);
-                    })));
-                menuItems.Add(new("Thêm logo vào danh sách", new(SelectLogos)));
-                if (logos.Count > 0)
-                    menuItems.Add(new("Xóa hết logo trong danh sách", new(() =>
+                    }))
+                .addItem("Thêm logo vào danh sách", new(SelectLogos))
+                .addItem(ifCondition: logos.Count > 0,
+                    "Xóa hết logo trong danh sách", new(() =>
                     {
                         logos.Clear();
                         GameScr.info1.addInfo("Đã xóa hết logo trong danh sách!", 0);
-                    })));
-            }));
+                    }))
+                .start();
+
+            //OpenMenu.start(new(menuItems =>
+            //{
+            //    if (logos.Count > 0)
+            //        menuItems.Add(new("Mở danh sách logo đã lưu", new(() =>
+            //        {
+            //            CustomPanelMenu.CreateCustomPanelMenu(setTabCustomLogoPanel, doFireCustomLogoListPanel, paintTabHeader, paintCustomLogoPanel);
+            //        })));
+            //    menuItems.Add(new("Thêm logo vào danh sách", new(SelectLogos)));
+            //    if (logos.Count > 0)
+            //        menuItems.Add(new("Xóa hết logo trong danh sách", new(() =>
+            //        {
+            //            logos.Clear();
+            //            GameScr.info1.addInfo("Đã xóa hết logo trong danh sách!", 0);
+            //        })));
+            //}));
         }
 
         private static void paintTabHeader(mGraphics g)
@@ -114,29 +129,51 @@ namespace Mod.Graphics
             int selected = GameCanvas.panel.selected;
             if (selected < 0) return;
             string fileName = Path.GetFileName(logos.ElementAt(selected).Key);
-            OpenMenu.start(
-                menuItemCollection: new(menuItems =>
+
+            new MenuBuilder()
+                .addItem("Xóa", new(() =>
                 {
-                    menuItems.Add(new("Xóa", new(() =>
+                    logos.Remove(logos.ElementAt(selected).Key);
+                    if (selected < logoIndex)
                     {
-                        logos.Remove(logos.ElementAt(selected).Key);
-                        if (selected < logoIndex)
-                        {
-                            logoIndex--;
-                            lastTimeChangedLogo = mSystem.currentTimeMillis();
-                        }
-                        else if (selected == logoIndex && logos.Count == logoIndex)
-                        {
-                            logoIndex = 0;
-                            lastTimeChangedLogo = mSystem.currentTimeMillis();
-                        }
-                        GameScr.info1.addInfo("Đã xóa ảnh " + selected + "!", 0);
-                        setTabCustomLogoPanel();
-                        SaveData();
-                    })));
-                }),
-                x: GameCanvas.panel.X,
-                y: (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
+                        logoIndex--;
+                        lastTimeChangedLogo = mSystem.currentTimeMillis();
+                    }
+                    else if (selected == logoIndex && logos.Count == logoIndex)
+                    {
+                        logoIndex = 0;
+                        lastTimeChangedLogo = mSystem.currentTimeMillis();
+                    }
+                    GameScr.info1.addInfo("Đã xóa ảnh " + selected + "!", 0);
+                    setTabCustomLogoPanel();
+                    SaveData();
+                }))
+                .setPos(GameCanvas.panel.X, (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll)
+                .start();
+
+            //OpenMenu.start(
+            //    menuItemCollection: new(menuItems =>
+            //    {
+            //        menuItems.Add(new("Xóa", new(() =>
+            //        {
+            //            logos.Remove(logos.ElementAt(selected).Key);
+            //            if (selected < logoIndex)
+            //            {
+            //                logoIndex--;
+            //                lastTimeChangedLogo = mSystem.currentTimeMillis();
+            //            }
+            //            else if (selected == logoIndex && logos.Count == logoIndex)
+            //            {
+            //                logoIndex = 0;
+            //                lastTimeChangedLogo = mSystem.currentTimeMillis();
+            //            }
+            //            GameScr.info1.addInfo("Đã xóa ảnh " + selected + "!", 0);
+            //            setTabCustomLogoPanel();
+            //            SaveData();
+            //        })));
+            //    }),
+            //    x: GameCanvas.panel.X,
+            //    y: (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
 
             GameCanvas.panel.cp = new ChatPopup();
             GameCanvas.panel.cp.isClip = false;
