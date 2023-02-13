@@ -2437,6 +2437,7 @@ public class GameScr : mScreen, IChatable
                 {
                     if (TField.isQwerty)
                     {
+                        GameEvents.onGameScrPressHotkeys();
                         if (GameCanvas.keyPressed[1])
                         {
                             if (keySkill[0] != null)
@@ -5021,7 +5022,7 @@ public class GameScr : mScreen, IChatable
 			}
 			if (c == Char.myCharz() && ModMenuMain.getStatusInt("levelreducegraphics") <= 1)
 			{
-                int x = 87;
+                int x = 85;
                 int yHP = 4;
                 int yMP = 19;
                 string cHP = NinjaUtil.getMoneys(Char.myCharz().cHP);
@@ -5029,15 +5030,15 @@ public class GameScr : mScreen, IChatable
                 g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.6f));
                 if (mGraphics.zoomLevel > 1)
 				{
-					GUIStyle guistyle = new GUIStyle(GUI.skin.label);
-					guistyle.normal.textColor = Color.yellow;
-					guistyle.fontStyle = FontStyle.Bold;
-					guistyle.fontSize = (int)(8.5 * mGraphics.zoomLevel);
-					g.fillRect(x - 2, yHP + 1, Utilities.getWidth(guistyle, cHP) - 25, Utilities.getHeight(guistyle, cHP) - 2);
-					g.drawString(cHP, x, yHP, guistyle);
-					guistyle.fontSize = 5 * mGraphics.zoomLevel;
-					g.fillRect(x - 2, yMP + 1, Utilities.getWidth(guistyle, cMP) - 25, Utilities.getHeight(guistyle, cMP) - 2);
-					g.drawString(cMP, x, yMP, guistyle);
+					GUIStyle style = new GUIStyle(GUI.skin.label);
+					style.normal.textColor = Color.yellow;
+					style.fontStyle = FontStyle.Bold;
+					style.fontSize = (int)(8.5 * mGraphics.zoomLevel);
+					g.fillRect(x, yHP + 1, Utilities.getWidth(style, cHP) + 1, Utilities.getHeight(style, cHP) - 2);
+					g.drawString(cHP, x, yHP, style);
+					style.fontSize = 5 * mGraphics.zoomLevel;
+					g.fillRect(x - 1, yMP + 1, Utilities.getWidth(style, cMP) + 1, Utilities.getHeight(style, cMP) - 2);
+					g.drawString(cMP, x, yMP, style);
 				}
 				else
 				{

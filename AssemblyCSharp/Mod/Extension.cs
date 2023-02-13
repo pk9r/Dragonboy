@@ -43,6 +43,11 @@ namespace Mod
             throw new NotImplementedException();
         }
 
+        public virtual void onGameScrPressHotkeys()
+		{
+            throw new NotImplementedException();
+        }
+
         public virtual void onPaintChatTextField(ChatTextField instance, mGraphics g)
         {
             throw new NotImplementedException();

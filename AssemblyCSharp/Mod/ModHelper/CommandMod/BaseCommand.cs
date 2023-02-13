@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Mod.ModHelper.CommandMod
@@ -69,6 +71,13 @@ namespace Mod.ModHelper.CommandMod
         private bool checkCountArgs(string args, out string[] arguments)
         {
             arguments = args.Split(delimiter);
+            Attribute[] attributes = (Attribute[])parameterInfos[0].GetCustomAttributes(false);
+            if (attributes.Any(a => a.GetType() == typeof(ParamArrayAttribute)))    //params object[] parameter
+            {
+                if (arguments.Length >= parameterInfos.Length)
+                    return true;
+                return false;
+            }
             return parameterInfos.Length == arguments.Length;
         }
 
@@ -80,13 +89,26 @@ namespace Mod.ModHelper.CommandMod
         /// <returns></returns>
         private bool checkTypeArgs(string[] arguments, out object[] parameters)
         {
-            parameters = new object[arguments.Length];
-
+            parameters = null;
             try
             {
-                for (int i = 0; i < arguments.Length; i++)
-                    parameters[i] = Convert.ChangeType(arguments[i],
-                        parameterInfos[i].ParameterType);
+                parameters = new object[arguments.Length];
+                Attribute[] attributes = (Attribute[])parameterInfos[0].GetCustomAttributes(false);
+                if (attributes.Any(a => a.GetType() == typeof(ParamArrayAttribute)))
+                {
+                    Type type = parameterInfos[parameterInfos.Length - 1].ParameterType.GetElementType();
+                    List<object> parametersList = new List<object>();
+                    for (int i = 0; i < parameterInfos.Length - 1; i++)
+                        parametersList.Add(Convert.ChangeType(arguments[i], parameterInfos[i].ParameterType));
+                    Array arr = Array.CreateInstance(type, arguments.Length - parameterInfos.Length + 1);
+                    for (int i = 0; i < arr.Length; i++)
+                        arr.SetValue( Convert.ChangeType(arguments[i], type), i);   //params parameter luôn ở cuối
+                    parametersList.Add(arr);
+                    parameters = parametersList.ToArray();
+                }  
+                else 
+                    for (int i = 0; i < arguments.Length; i++)
+                        parameters[i] = Convert.ChangeType(arguments[i], parameterInfos[i].ParameterType);
 
                 return true; // Tất cả đối số đều đúng type
             }

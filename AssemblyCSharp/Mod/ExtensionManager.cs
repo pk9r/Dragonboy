@@ -32,14 +32,17 @@ namespace Mod
         internal ExtensionManager(string path) 
         {
             extensionAssembly = Assembly.LoadFrom(path);
-            extensionAssembly.GetType("Loader").GetMethod("Init", flags).Invoke(null, null);
-            FieldInfo name = extensionAssembly.GetType("MainExt").GetField("name", BindingFlags.Public | BindingFlags.Static);
+            Type loader = extensionAssembly.GetType("Loader") ?? throw new NotAnExtensionException();
+            MethodInfo init = loader.GetMethod("Init", flags) ?? throw new NotAnExtensionException();
+            init.Invoke(null, null);
+            Type mainExt = extensionAssembly.GetType("MainExt") ?? throw new NotAnExtensionException();
+            FieldInfo name = mainExt.GetField("name", BindingFlags.Public | BindingFlags.Static);
             if (name != null)
                 ExtensionName = (string)name.GetRawConstantValue();
-            FieldInfo desc = extensionAssembly.GetType("MainExt").GetField("description", BindingFlags.Public | BindingFlags.Static);
+            FieldInfo desc = mainExt.GetField("description", BindingFlags.Public | BindingFlags.Static);
             if (desc != null)
                 ExtensionDescription = (string)desc.GetRawConstantValue();
-            FieldInfo ver = extensionAssembly.GetType("MainExt").GetField("version", BindingFlags.Public | BindingFlags.Static);
+            FieldInfo ver = mainExt.GetField("version", BindingFlags.Public | BindingFlags.Static);
             if (ver != null)
                 ExtensionVersion = (string)ver.GetRawConstantValue();
             if (string.IsNullOrEmpty(ExtensionName))
@@ -48,7 +51,7 @@ namespace Mod
                 ExtensionDescription = extensionAssembly.ManifestModule.Name;
             if (string.IsNullOrEmpty(ExtensionVersion))
                 ExtensionVersion = extensionAssembly.GetName().Version.ToString();
-            hasMenuItems = extensionAssembly.GetType("MainExt") != null && extensionAssembly.GetType("MainExt").GetMethod("OpenMenu", flags) != null;
+            hasMenuItems = mainExt.GetMethod("OpenMenu", flags) != null;
             isOverrideExtensionClass = extensionAssembly.GetType("GameEvents") != null && extensionAssembly.GetType("GameEvents").IsSubclassOf(typeof(Extension));
             if (isOverrideExtensionClass)
             {
@@ -128,13 +131,14 @@ namespace Mod
             string extensionDir = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))) + "\\Extensions";
             if (!Directory.Exists(extensionDir))
                 Directory.CreateDirectory(extensionDir);
-            foreach (string path in Directory.GetFiles(extensionDir))
+            foreach (string path in Directory.GetFiles(extensionDir).Where(p => Path.GetExtension(p) == ".dll"))
             {
                 try
                 {
                     Extensions.Add(new ExtensionManager(path));
                 }
-                catch(Exception ex)
+                catch (NotAnExtensionException) { }
+                catch (Exception ex)
                 {
                     UnityEngine.Debug.LogError("Exception when loading extension module: " + path);
                     UnityEngine.Debug.LogException(ex);

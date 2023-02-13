@@ -54,6 +54,13 @@
             Làm nhiệm vụ gặp sư phụ mới
             </summary>
         </member>
+        <member name="M:Mod.CSharpInteractive.MonoInteractiveCodeExecutor.RunInteractiveCode(System.String[])">
+            <summary>
+            Using the Mono Compiler Server (MCS) to evaluate script
+            
+            Code is evaluated on the fly (no assemblies generated)
+            </summary>
+        </member>
         <member name="T:Mod.Dialogs.FileDialog.OpenFileName">
             <summary>
             Link: https://docs.microsoft.com/en-us/windows/win32/api/commdlg/ns-commdlg-openfilenamea
@@ -127,11 +134,15 @@
             Kích hoạt khi nhấn phím tắt (GameScr) chưa được xử lý.
             </summary>
         </member>
+        <member name="M:Mod.GameEvents.onGameScrPressHotkeys">
+            <summary>
+            Kích hoạt khi nhấn phím tắt (GameScr).
+            </summary>
+        </member>
         <member name="M:Mod.GameEvents.onPaintChatTextField(ChatTextField,mGraphics)">
             <summary>
             Kích hoạt sau khi vẽ khung chat.
             </summary>
-            <param name="g"></param>
         </member>
         <member name="M:Mod.GameEvents.onStartChatTextField(ChatTextField)">
             <summary>
@@ -322,7 +333,7 @@
             <param name="parameters">Danh sách các đối số đã ép kiểu được.</param>
             <returns></returns>
         </member>
-        <member name="M:Mod.ModHelper.CommandMod.Chat.ChatCommandHandler.loadDefalut">
+        <member name="M:Mod.ModHelper.CommandMod.Chat.ChatCommandHandler.loadDefault">
             <summary>
             Tải lệnh chat mặc định. (các lệnh được định nghĩa trên code)
             </summary>

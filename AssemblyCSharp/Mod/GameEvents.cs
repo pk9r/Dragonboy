@@ -1,4 +1,5 @@
 ﻿using Mod.Auto;
+using Mod.CSharpInteractive;
 using Mod.Graphics;
 using Mod.ModHelper;
 using Mod.ModHelper.CommandMod.Chat;
@@ -50,7 +51,7 @@ namespace Mod
         /// </summary>
         public static void onGameStarted()
         {
-            ChatCommandHandler.loadDefalut();
+            ChatCommandHandler.loadDefault();
             HotkeyCommandHandler.loadDefalut();
             SocketClient.gI.initSender();
             ModMenuMain.LoadData();
@@ -60,6 +61,8 @@ namespace Mod
             SetDo.LoadData();
             VietKeyHandler.SmartMark = true;
             ExtensionManager.LoadExtensions();
+            System.Windows.Forms.Application.EnableVisualStyles();
+            System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
             ExtensionManager.Invoke();
         }
 
@@ -76,6 +79,7 @@ namespace Mod
             CustomLogo.SaveData();
             CustomCursor.SaveData();
             SetDo.SaveData();
+            CSharpInteractiveForm.CloseForm();
             ExtensionManager.Invoke();
             return false;
         }
@@ -134,9 +138,17 @@ namespace Mod
         }
 
         /// <summary>
+        /// Kích hoạt khi nhấn phím tắt (GameScr).
+        /// </summary>
+        public static void onGameScrPressHotkeys()
+        {
+            SetDo.UpdateKey();
+            ExtensionManager.Invoke();
+        }
+
+        /// <summary>
         /// Kích hoạt sau khi vẽ khung chat.
         /// </summary>
-        /// <param name="g"></param>
         public static void onPaintChatTextField(ChatTextField instance, mGraphics g)
         {
             if (instance == ChatTextField.gI() && instance.strChat.Replace(" ", "") == "Chat" && instance.tfChat.name == "chat")

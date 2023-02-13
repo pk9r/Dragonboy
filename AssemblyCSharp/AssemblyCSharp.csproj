@@ -47,9 +47,14 @@
 	<Reference Include="VietKey.NET">
 	  <HintPath>..\Game\Game_Data\Managed\VietKey.NET.dll</HintPath>
 	</Reference>
-
-	  <Reference Include="System.Drawing">
-		  <HintPath>..\Game\Game_Data\Managed\System.Drawing.dll</HintPath>
+	<Reference Include="System.Drawing">
+		<HintPath>..\Game\Game_Data\Managed\System.Drawing.dll</HintPath>
+	</Reference>
+	<Reference Include="Mono.CSharp">
+		<HintPath>..\Game\Game_Data\Managed\Mono.CSharp.dll</HintPath>
+	</Reference>
+	  <Reference Include="System.Windows.Forms">
+		  <HintPath>..\Game\Game_Data\Managed\System.Windows.Forms.dll</HintPath>
 	  </Reference>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

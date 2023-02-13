@@ -12,7 +12,7 @@ using Mod.CustomPanel;
 
 namespace Mod.Graphics
 {
-    internal class CustomCursor : IChatable
+    public class CustomCursor : IChatable
     {
         public static bool isEnabled;
 

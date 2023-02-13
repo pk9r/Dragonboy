@@ -1,5 +1,7 @@
 using System;
 using System.Threading;
+using UnityEngine;
+
 public class TField : IActionListener
 {
 	public bool isFocus;
@@ -335,7 +337,9 @@ public class TField : IActionListener
 
 	private void keyPressedAny(int keyCode)
 	{
-		string[] array = ((inputType != INPUT_TYPE_PASSWORD && inputType != INPUT_ALPHA_NUMBER_ONLY) ? print : printA);
+		if (keyCode == (int)KeyCode.F3 || keyCode == (int)KeyCode.F4 || keyCode == (int)KeyCode.F5 || keyCode == (int)KeyCode.F6 || keyCode == (int)KeyCode.F7 || keyCode == (int)KeyCode.F8 || keyCode == (int)KeyCode.F9 || keyCode == (int)KeyCode.F10 || keyCode == (int)KeyCode.F11 || keyCode == (int)KeyCode.F12 || keyCode == (int)KeyCode.Home || keyCode == (int)KeyCode.End || keyCode == (int)KeyCode.Insert || keyCode == (int)KeyCode.Delete || keyCode == (int)KeyCode.LeftShift || keyCode == (int)KeyCode.RightShift || keyCode == (int)KeyCode.PageUp || keyCode == (int)KeyCode.PageDown || keyCode == (int)KeyCode.LeftControl || keyCode == (int)KeyCode.RightControl || keyCode == (int)KeyCode.AltGr || keyCode == (int)KeyCode.LeftAlt || keyCode == (int)KeyCode.RightAlt || keyCode == (int)KeyCode.LeftWindows || keyCode == (int)KeyCode.RightWindows || keyCode == (int)KeyCode.CapsLock || keyCode == (int)KeyCode.Tab)
+			return;
+        string[] array = ((inputType != INPUT_TYPE_PASSWORD && inputType != INPUT_ALPHA_NUMBER_ONLY) ? print : printA);
 		if (keyCode == lastKey)
 		{
 			indexOfActiveChar = (indexOfActiveChar + 1) % array[keyCode - 48].Length;
@@ -369,7 +373,9 @@ public class TField : IActionListener
 	{
 		if ((inputType == INPUT_TYPE_PASSWORD || inputType == INPUT_ALPHA_NUMBER_ONLY) && (keyCode < 48 || keyCode > 57) && (keyCode < 65 || keyCode > 90) && (keyCode < 97 || keyCode > 122))
 			return;
-		if (this.text.Length < maxTextLenght)
+		if (keyCode == (int)KeyCode.F3 || keyCode == (int)KeyCode.F4 || keyCode == (int)KeyCode.F5 || keyCode == (int)KeyCode.F6 || keyCode == (int)KeyCode.F7 || keyCode == (int)KeyCode.F8 || keyCode == (int)KeyCode.F9 || keyCode == (int)KeyCode.F10 || keyCode == (int)KeyCode.F11 || keyCode == (int)KeyCode.F12 || keyCode == (int)KeyCode.Home || keyCode == (int)KeyCode.End || keyCode == (int)KeyCode.Insert || keyCode == (int)KeyCode.Delete || keyCode == (int)KeyCode.LeftShift || keyCode == (int)KeyCode.RightShift || keyCode == (int)KeyCode.PageUp || keyCode == (int)KeyCode.PageDown || keyCode == (int)KeyCode.LeftControl || keyCode == (int)KeyCode.RightControl || keyCode == (int)KeyCode.AltGr || keyCode == (int)KeyCode.LeftAlt || keyCode == (int)KeyCode.RightAlt || keyCode == (int)KeyCode.LeftWindows || keyCode == (int)KeyCode.RightWindows || keyCode == (int)KeyCode.CapsLock || keyCode == (int)KeyCode.Tab)
+			return;
+        if (this.text.Length < maxTextLenght)
 		{
             string oldText = this.text;
             string text = this.text.Substring(0, caretPos) + (char)keyCode;
