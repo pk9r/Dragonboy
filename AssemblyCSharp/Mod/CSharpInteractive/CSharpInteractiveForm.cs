@@ -71,13 +71,14 @@ namespace Mod.CSharpInteractive
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCode.BackColor = System.Drawing.Color.Black;
             this.textBoxCode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxCode.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxCode.ForeColor = System.Drawing.Color.White;
             this.textBoxCode.Location = new System.Drawing.Point(1, 1);
             this.textBoxCode.Multiline = true;
             this.textBoxCode.Name = "textBoxCode";
             this.textBoxCode.Size = new System.Drawing.Size(646, 300);
             this.textBoxCode.TabIndex = 0;
-            this.textBoxCode.Text = "GameScr.info1.addInfo(\"Hello World!\", 0);";
+            this.textBoxCode.Text = "Char.myCharz().addInfo(\"Hello world!\");";
             // 
             // splitContainerCodeAndOutput
             // 
@@ -137,6 +138,7 @@ namespace Mod.CSharpInteractive
             this.textBoxOutput.BackColor = System.Drawing.Color.Black;
             this.textBoxOutput.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxOutput.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxOutput.ForeColor = System.Drawing.Color.White;
             this.textBoxOutput.Location = new System.Drawing.Point(3, 18);
             this.textBoxOutput.Multiline = true;
@@ -196,11 +198,9 @@ namespace Mod.CSharpInteractive
             this.MinimumSize = new System.Drawing.Size(400, 300);
             this.Name = "CSharpInteractiveForm";
             this.ShowIcon = false;
-            this.ShowInTaskbar = false;
             this.Text = "Mono C# Interactive";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.CSharpInteractiveForm_Load);
-            this.ResizeEnd += new System.EventHandler(this.CSharpInteractiveForm_ResizeEnd);
             this.splitContainerCodeAndOutput.Panel1.ResumeLayout(false);
             this.splitContainerCodeAndOutput.Panel2.ResumeLayout(false);
             this.splitContainerCodeAndOutput.ResumeLayout(false);
@@ -262,7 +262,7 @@ namespace Mod.CSharpInteractive
             textBoxCode.Text = textBoxCode.Text.Trim().TrimEnd('\r', '\n', '\t');
             if (textBoxCode.Text.IndexOf('\n') == -1 && !textBoxCode.Text.EndsWith(";"))
                 textBoxCode.Text += ';';
-            MainThreadDispatcher.dispatcher(() => MonoInteractiveCodeExecutor.RunInteractiveCode(textBoxCode.Text));
+            MonoInteractiveCodeExecutor.RunInteractiveCodeMainThread(textBoxCode.Text);
         }
 
         private void buttonClearLogs_Click(object sender, EventArgs e)
@@ -270,14 +270,20 @@ namespace Mod.CSharpInteractive
             textBoxOutput.Text = "";
         }
 
-        private void CSharpInteractiveForm_ResizeEnd(object sender, EventArgs e)
-        {
-            Refresh();
-        }
-
         private void CSharpInteractiveForm_Load(object sender, EventArgs e)
         {
-
+            new Thread(() =>
+            {
+                while (!Visible)
+                    Thread.Sleep(50);
+                Thread.Sleep(200);
+                do
+                {
+                    WindowState = FormWindowState.Normal;
+                    Thread.Sleep(50);
+                }
+                while (WindowState != FormWindowState.Normal);
+            }).Start();
         }
     }
 }

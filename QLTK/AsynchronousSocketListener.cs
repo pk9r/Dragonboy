@@ -77,7 +77,7 @@ namespace QLTK
                     state.account.luongKhoa = (int)msg["luongKhoa"];
                     if (SaveSettings.accountConnectToDiscordRPC != null && state.account == SaveSettings.accountConnectToDiscordRPC)
                         Utilities.SetPresence($"Map: {state.account.mapName} [{state.account.mapID}], Khu: {state.account.zoneID}", $"{state.account.cName} ({state.account.server.name})", Program.timestampsStartQLTK);
-                    else if (SaveSettings.accountConnectToDiscordRPC == null || SaveSettings.accountConnectToDiscordRPC.process.HasExited)
+                    else if (SaveSettings.accountConnectToDiscordRPC == null || (SaveSettings.accountConnectToDiscordRPC.process != null && SaveSettings.accountConnectToDiscordRPC.process.HasExited))
                         Utilities.SetPresence("Thông tin bị ẩn", "Đã đăng nhập", Program.timestampsStartQLTK);
                     break;
                 case "setStatus":

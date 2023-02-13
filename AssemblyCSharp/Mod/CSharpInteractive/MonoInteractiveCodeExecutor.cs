@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Mod.ModHelper;
 using Mod.ModHelper.CommandMod.Chat;
 using Mono.CSharp;
 using UnityEngine;
@@ -30,7 +31,7 @@ namespace Mod.CSharpInteractive
             Evaluator.Init(new string[] { });
             typeof(Evaluator).GetMethod("Reset", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, null);
             Evaluator.MessageOutput = new LogTextWriter();
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies().Where(a => a.GetName().Name != "Newtonsoft.Json" && a.GetName().Name != "FolderBrowserEx"))
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies().Where(a => a.GetName().Name != "Newtonsoft.Json"))
                 try
                 {
                     Evaluator.ReferenceAssembly(assembly);
@@ -64,17 +65,21 @@ namespace Mod.CSharpInteractive
             catch (Exception ex) { Debug.LogException(ex); }
         }
 
-        public static void RunInteractiveCode(string code)
+        public static void RunInteractiveCodeMainThread(string code)
         {
             try
             {
-                Evaluator.Evaluate(code, out object obj, out bool result_set);
-                if (obj != null)
-                    CSharpInteractiveForm.Log("Giá trị trả về: " + obj.ToString());
+                Evaluator.Compile(code, out CompiledMethod compiledMethod);
+                MainThreadDispatcher.dispatcher(() =>
+                {
+                    object obj = null;
+                    compiledMethod(ref obj);
+                    if (obj != null)
+                        CSharpInteractiveForm.Log("Giá trị trả về: " + obj.ToString());
+                });
             }
             catch (Exception ex) 
             {
-                Debug.LogException(ex);
                 CSharpInteractiveForm.Log(ex);
             }
         }
