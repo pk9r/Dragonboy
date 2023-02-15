@@ -2575,7 +2575,7 @@ public class Panel : IActionListener, IChatable
 			break;
         default:
 			if (type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
-				CustomPanelMenu.setTabCustomPanelMenu();
+				CustomPanelMenu.setTabCustomPanelMenu(this);
 			break;
 		}
 		selected = lastSelect[currentTabIndex];
@@ -3215,7 +3215,7 @@ public class Panel : IActionListener, IChatable
 			break;
 		default:
 			if (type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
-				CustomPanelMenu.paintModMenuMain(g);
+				CustomPanelMenu.paintModMenuMain(this, g);
 			break;
 		}
 		GameScr.resetTranslate(g);
@@ -4841,7 +4841,7 @@ public class Panel : IActionListener, IChatable
 			g.fillRect(X + 1, 78, W - 2, 1);
 			return;
 		}
-		if (type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU && CustomPanelMenu.paintTabHeader(g))
+		if (type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU && CustomPanelMenu.paintTabHeader(this, g))
 			return;
 		if (currentTabIndex == 3 && mainTabName.Length != 4)
 			g.translate(-cmx, 0);
@@ -5925,7 +5925,7 @@ public class Panel : IActionListener, IChatable
 					break;
 				default:
 					if (type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
-						CustomPanelMenu.doFireCustomPanelMenu();
+						CustomPanelMenu.doFireCustomPanelMenu(this);
 					break;
 				}
 			}
@@ -6342,7 +6342,7 @@ public class Panel : IActionListener, IChatable
 			switch (selected)
 			{
 			case 0:
-                CustomPanelMenu.CreateCustomPanelMenu(ModMenuMain.setTabModMenu, ModMenuMain.doFireModMenu, null, ModMenuMain.paintModMenu);
+                CustomPanelMenu.show(ModMenuMain.setTabModMenu, ModMenuMain.doFireModMenu, null, ModMenuMain.paintModMenu);
 				break;
 			case 1:
 				doRada();
@@ -6412,7 +6412,7 @@ public class Panel : IActionListener, IChatable
 		switch (selected)
 		{
         case 0:
-            CustomPanelMenu.CreateCustomPanelMenu(ModMenuMain.setTabModMenu, ModMenuMain.doFireModMenu, null, ModMenuMain.paintModMenu);
+            CustomPanelMenu.show(ModMenuMain.setTabModMenu, ModMenuMain.doFireModMenu, null, ModMenuMain.paintModMenu);
             break;
         case 1:
 			doRada();

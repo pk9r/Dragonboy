@@ -1,5 +1,6 @@
 ﻿using Mod.Auto;
 using Mod.CSharpInteractive;
+using Mod.CustomPanel;
 using Mod.Graphics;
 using Mod.PickMob;
 using Mod.Set;
@@ -90,84 +91,86 @@ namespace Mod.ModMenu
             { 8, new string[]{"Nhập chiều cao logo", "Chiều cao logo" } },
         };
 
-        public static void setTabModMenu()
+        public static void setTabModMenu(Panel panel)
         {
-            GameCanvas.panel.ITEM_HEIGHT = 24;
-            if (GameCanvas.panel.currentTabIndex == 0) GameCanvas.panel.currentListLength = modMenuItemBools.Length;
-            else if (GameCanvas.panel.currentTabIndex == 1) GameCanvas.panel.currentListLength = modMenuItemInts.Length;
-            else if (GameCanvas.panel.currentTabIndex == 2) GameCanvas.panel.currentListLength = modMenuItemFunctions.Length;
-            else GameCanvas.panel.currentListLength = ExtensionManager.Extensions.Count;
-            GameCanvas.panel.selected = (GameCanvas.isTouch ? (-1) : 0);
-            GameCanvas.panel.cmyLim = GameCanvas.panel.currentListLength * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.hScroll;
-            if (GameCanvas.panel.cmyLim < 0) GameCanvas.panel.cmyLim = 0;
-            GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = GameCanvas.panel.cmyLast[GameCanvas.panel.currentTabIndex];
-            if (GameCanvas.panel.cmy < 0) GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = 0;
-            if (GameCanvas.panel.cmy > GameCanvas.panel.cmyLim) GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = GameCanvas.panel.cmyLim;
+            SetTabPanelTemplates.setTabListTemplate(panel, modMenuItemBools, modMenuItemInts, modMenuItemFunctions, ExtensionManager.Extensions);
+
+            //panel.ITEM_HEIGHT = 24;
+            //if (panel.currentTabIndex == 0) panel.currentListLength = modMenuItemBools.Length;
+            //else if (panel.currentTabIndex == 1) panel.currentListLength = modMenuItemInts.Length;
+            //else if (panel.currentTabIndex == 2) panel.currentListLength = modMenuItemFunctions.Length;
+            //else panel.currentListLength = ExtensionManager.Extensions.Count;
+            //panel.selected = (GameCanvas.isTouch ? (-1) : 0);
+            //panel.cmyLim = panel.currentListLength * panel.ITEM_HEIGHT - panel.hScroll;
+            //if (panel.cmyLim < 0) panel.cmyLim = 0;
+            //panel.cmy = panel.cmtoY = panel.cmyLast[panel.currentTabIndex];
+            //if (panel.cmy < 0) panel.cmy = panel.cmtoY = 0;
+            //if (panel.cmy > panel.cmyLim) panel.cmy = panel.cmtoY = panel.cmyLim;
         }
 
-        public static void doFireModMenu()
+        public static void doFireModMenu(Panel panel)
         {
-            if (GameCanvas.panel.currentTabIndex == 0)
-                doFireModMenuBools();
-            else if (GameCanvas.panel.currentTabIndex == 1)
-                doFireModMenuInts();
-            else if (GameCanvas.panel.currentTabIndex == 2)
-                doFireModMenuFunctions();
+            if (panel.currentTabIndex == 0)
+                doFireModMenuBools(panel);
+            else if (panel.currentTabIndex == 1)
+                doFireModMenuInts(panel);
+            else if (panel.currentTabIndex == 2)
+                doFireModMenuFunctions(panel);
             else 
-                doFireModMenuExtensions();
-            notifySelectDisabledItem();
+                doFireModMenuExtensions(panel);
+            notifySelectDisabledItem(panel);
         }
 
-        private static void doFireModMenuExtensions()
+        private static void doFireModMenuExtensions(Panel panel)
         {
-            GameCanvas.panel.hideNow();
-            ExtensionManager.Extensions[GameCanvas.panel.selected].OpenMenu();
+            panel.hideNow();
+            ExtensionManager.Extensions[panel.selected].OpenMenu();
         }
 
-        private static void doFireModMenuFunctions()
+        private static void doFireModMenuFunctions(Panel panel)
         {
-            GameCanvas.panel.hideNow();
-            if (modMenuItemFunctions[GameCanvas.panel.selected].Action != null) 
-                modMenuItemFunctions[GameCanvas.panel.selected].Action();
+            panel.hideNow();
+            if (modMenuItemFunctions[panel.selected].Action != null) 
+                modMenuItemFunctions[panel.selected].Action();
         }
 
-        private static void doFireModMenuBools()
+        private static void doFireModMenuBools(Panel panel)
         {
-            if (GameCanvas.panel.selected < 0) return;
-            if (!modMenuItemBools[GameCanvas.panel.selected].isDisabled)
+            if (panel.selected < 0) return;
+            if (!modMenuItemBools[panel.selected].isDisabled)
             {
-                modMenuItemBools[GameCanvas.panel.selected].setValue(!modMenuItemBools[GameCanvas.panel.selected].Value);
-                GameScr.info1.addInfo("Đã " + (modMenuItemBools[GameCanvas.panel.selected].Value ? "bật" : "tắt") + " " + modMenuItemBools[GameCanvas.panel.selected].Title + "!", 0);
+                modMenuItemBools[panel.selected].setValue(!modMenuItemBools[panel.selected].Value);
+                GameScr.info1.addInfo("Đã " + (modMenuItemBools[panel.selected].Value ? "bật" : "tắt") + " " + modMenuItemBools[panel.selected].Title + "!", 0);
             }
         }
 
-        private static void doFireModMenuInts()
+        private static void doFireModMenuInts(Panel panel)
         {
-            if (GameCanvas.panel.selected < 0) return;
-            int selected = GameCanvas.panel.selected;
+            if (panel.selected < 0) return;
+            int selected = panel.selected;
             if (modMenuItemInts[selected].isDisabled) return;
             if (modMenuItemInts[selected].Values != null) modMenuItemInts[selected].SwitchSelection();
             else
             {
-                GameCanvas.panel.chatTField = new ChatTextField();
-                GameCanvas.panel.chatTField.tfChat.y = GameCanvas.h - 35 - ChatTextField.gI().tfChat.height;
-                GameCanvas.panel.chatTField.initChatTextField();
-                GameCanvas.panel.chatTField.strChat = string.Empty;
-                GameCanvas.panel.chatTField.tfChat.name = inputModMenuItemInts[selected][1];
-                GameCanvas.panel.chatTField.tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
-                GameCanvas.panel.chatTField.startChat2(new ModMenuMain(), inputModMenuItemInts[selected][0]);
+                panel.chatTField = new ChatTextField();
+                panel.chatTField.tfChat.y = GameCanvas.h - 35 - ChatTextField.gI().tfChat.height;
+                panel.chatTField.initChatTextField();
+                panel.chatTField.strChat = string.Empty;
+                panel.chatTField.tfChat.name = inputModMenuItemInts[selected][1];
+                panel.chatTField.tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
+                panel.chatTField.startChat2(new ModMenuMain(), inputModMenuItemInts[selected][0]);
             }
         }
 
-        private static void notifySelectDisabledItem()
+        private static void notifySelectDisabledItem(Panel panel)
         {
-            int selected = GameCanvas.panel.selected;
-            if (GameCanvas.panel.currentTabIndex == 0)
+            int selected = panel.selected;
+            if (panel.currentTabIndex == 0)
             {
                 if (!modMenuItemBools[selected].isDisabled) return;
                 GameScr.info1.addInfo(modMenuItemBools[selected].DisabledReason, 0);
             }
-            else if (GameCanvas.panel.currentTabIndex == 1)
+            else if (panel.currentTabIndex == 1)
             {
                 if (!modMenuItemInts[selected].isDisabled) return;
                 GameScr.info1.addInfo(modMenuItemInts[selected].DisabledReason, 0);
@@ -179,36 +182,36 @@ namespace Mod.ModMenu
             }
         }
 
-        public static void paintModMenu(mGraphics g)
+        public static void paintModMenu(Panel panel, mGraphics g)
         {
-            if (GameCanvas.panel.currentTabIndex == 0)
-                paintModMenuBools(g);
-            else if (GameCanvas.panel.currentTabIndex == 1)
-                paintModMenuInts(g);
-            else if (GameCanvas.panel.currentTabIndex == 2)
-                paintModMenuFunctions(g);
+            if (panel.currentTabIndex == 0)
+                paintModMenuBools(panel ,g);
+            else if (panel.currentTabIndex == 1)
+                paintModMenuInts(panel ,g);
+            else if (panel.currentTabIndex == 2)
+                paintModMenuFunctions(panel ,g);
             else
-                paintModMenuExtensions(g);
+                paintModMenuExtensions(panel ,g);
         }
 
-        private static void paintModMenuExtensions(mGraphics g)
+        private static void paintModMenuExtensions(Panel panel, mGraphics g)
         {
-            g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
-            g.translate(0, -GameCanvas.panel.cmy);
+            g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);
+            g.translate(0, -panel.cmy);
             g.setColor(0);
-            if (ExtensionManager.Extensions == null || ExtensionManager.Extensions.Count != GameCanvas.panel.currentListLength) return;
+            if (ExtensionManager.Extensions == null || ExtensionManager.Extensions.Count != panel.currentListLength) return;
             bool isReset = true;
             string descriptionTextInfo = string.Empty;
             int x = 0, y = 0;
-            for (int i = 0; i < GameCanvas.panel.currentListLength; i++)
+            for (int i = 0; i < panel.currentListLength; i++)
             {
-                int num = GameCanvas.panel.xScroll;
-                int num2 = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
-                int num3 = GameCanvas.panel.wScroll;
-                int num4 = GameCanvas.panel.ITEM_HEIGHT - 1;
+                int num = panel.xScroll;
+                int num2 = panel.yScroll + i * panel.ITEM_HEIGHT;
+                int num3 = panel.wScroll;
+                int num4 = panel.ITEM_HEIGHT - 1;
                 ExtensionManager ext = ExtensionManager.Extensions[i];
-                if (ext.HasMenuItems()) g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
-                else g.setColor((i != GameCanvas.panel.selected) ? new Color(0.54f, 0.51f, 0.46f) : new Color(0.61f, 0.63f, 0.18f));
+                if (ext.HasMenuItems()) g.setColor((i != panel.selected) ? 15196114 : 16383818);
+                else g.setColor((i != panel.selected) ? new Color(0.54f, 0.51f, 0.46f) : new Color(0.61f, 0.63f, 0.18f));
                 g.fillRect(num, num2, num3, num4);
                 if (ext != null)
                 {
@@ -221,7 +224,7 @@ namespace Mod.ModMenu
                         description = str + "...";
                     }
                     else description = ext.ExtensionDescription;
-                    if (i == GameCanvas.panel.selected && mFont.tahoma_7_blue.getWidth(ext.ExtensionDescription) > 160 && !GameCanvas.panel.isClose)
+                    if (i == panel.selected && mFont.tahoma_7_blue.getWidth(ext.ExtensionDescription) > 160 && !panel.isClose)
                     {
                         isReset = false;
                         descriptionTextInfo = ext.ExtensionDescription;
@@ -235,30 +238,30 @@ namespace Mod.ModMenu
             else
             {
                 TextInfo.paint(g, descriptionTextInfo, x, y, 160, 15, mFont.tahoma_7_blue);
-                g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
-                g.translate(0, -GameCanvas.panel.cmy);
+                g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);
+                g.translate(0, -panel.cmy);
             }
-            GameCanvas.panel.paintScrollArrow(g);
+            panel.paintScrollArrow(g);
         }
 
-        private static void paintModMenuFunctions(mGraphics g)
+        private static void paintModMenuFunctions(Panel panel, mGraphics g)
         {
-            g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
-            g.translate(0, -GameCanvas.panel.cmy);
+            g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);
+            g.translate(0, -panel.cmy);
             g.setColor(0);
-            if (modMenuItemFunctions == null || modMenuItemFunctions.Length != GameCanvas.panel.currentListLength) return;
+            if (modMenuItemFunctions == null || modMenuItemFunctions.Length != panel.currentListLength) return;
             bool isReset = true;
             string descriptionTextInfo = string.Empty;
             int x = 0, y = 0;
-            for (int i = 0; i < GameCanvas.panel.currentListLength; i++)
+            for (int i = 0; i < panel.currentListLength; i++)
             {
-                int num = GameCanvas.panel.xScroll;
-                int num2 = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
-                int num3 = GameCanvas.panel.wScroll;
-                int num4 = GameCanvas.panel.ITEM_HEIGHT - 1;
+                int num = panel.xScroll;
+                int num2 = panel.yScroll + i * panel.ITEM_HEIGHT;
+                int num3 = panel.wScroll;
+                int num4 = panel.ITEM_HEIGHT - 1;
                 ModMenuItemFunction modMenuItem = modMenuItemFunctions[i];
-                if (!modMenuItem.isDisabled) g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
-                else g.setColor((i != GameCanvas.panel.selected) ? new Color(0.54f, 0.51f, 0.46f) : new Color(0.61f, 0.63f, 0.18f));
+                if (!modMenuItem.isDisabled) g.setColor((i != panel.selected) ? 15196114 : 16383818);
+                else g.setColor((i != panel.selected) ? new Color(0.54f, 0.51f, 0.46f) : new Color(0.61f, 0.63f, 0.18f));
                 g.fillRect(num, num2, num3, num4);
                 if (modMenuItem != null)
                 {
@@ -272,7 +275,7 @@ namespace Mod.ModMenu
                     }
                     else description = modMenuItem.Description;
                     //modMenuItem.Description.Length > 40 ? (modMenuItem.Description.Substring(0, 38) + "...") : modMenuItem.Description;
-                    if (i == GameCanvas.panel.selected && mFont.tahoma_7_blue.getWidth(modMenuItem.Description) > 160 && !GameCanvas.panel.isClose)
+                    if (i == panel.selected && mFont.tahoma_7_blue.getWidth(modMenuItem.Description) > 160 && !panel.isClose)
                     {
                         isReset = false;
                         descriptionTextInfo = modMenuItem.Description;
@@ -286,31 +289,31 @@ namespace Mod.ModMenu
             else
             {
                 TextInfo.paint(g, descriptionTextInfo, x, y, 160, 15, mFont.tahoma_7_blue);
-                g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
-                g.translate(0, -GameCanvas.panel.cmy);
+                g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);
+                g.translate(0, -panel.cmy);
             }
-            GameCanvas.panel.paintScrollArrow(g);
+            panel.paintScrollArrow(g);
         }
 
-        private static void paintModMenuBools(mGraphics g)
+        private static void paintModMenuBools(Panel panel, mGraphics g)
         {
-            g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
-            g.translate(0, -GameCanvas.panel.cmy);
+            g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);
+            g.translate(0, -panel.cmy);
             g.setColor(0);
-            if (modMenuItemBools == null || modMenuItemBools.Length != GameCanvas.panel.currentListLength) return;
+            if (modMenuItemBools == null || modMenuItemBools.Length != panel.currentListLength) return;
             bool isReset = true;
             string descriptionTextInfo = string.Empty;
             int x = 0, y = 0;
             string str = (mResources.status + ": ") == "Trạng thái: " ? "Đang " : (mResources.status + ": ");
-            for (int i = 0; i < GameCanvas.panel.currentListLength; i++)
+            for (int i = 0; i < panel.currentListLength; i++)
             {
-                int num = GameCanvas.panel.xScroll;
-                int num2 = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
-                int num3 = GameCanvas.panel.wScroll;
-                int num4 = GameCanvas.panel.ITEM_HEIGHT - 1;
+                int num = panel.xScroll;
+                int num2 = panel.yScroll + i * panel.ITEM_HEIGHT;
+                int num3 = panel.wScroll;
+                int num4 = panel.ITEM_HEIGHT - 1;
                 ModMenuItemBoolean modMenuItem = modMenuItemBools[i];
-                if (!modMenuItem.isDisabled) g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
-                else g.setColor((i != GameCanvas.panel.selected) ? new Color(0.54f, 0.51f, 0.46f) : new Color(0.61f, 0.63f, 0.18f));
+                if (!modMenuItem.isDisabled) g.setColor((i != panel.selected) ? 15196114 : 16383818);
+                else g.setColor((i != panel.selected) ? new Color(0.54f, 0.51f, 0.46f) : new Color(0.61f, 0.63f, 0.18f));
                 g.fillRect(num, num2, num3, num4);
                 if (modMenuItem != null)
                 {
@@ -324,7 +327,7 @@ namespace Mod.ModMenu
                     }
                     else description = modMenuItem.Description;
                     //modMenuItem.Description.Length > 28 ? (modMenuItem.Description.Substring(0, 27) + "...") : modMenuItem.Description;
-                    if (i == GameCanvas.panel.selected && mFont.tahoma_7_blue.getWidth(modMenuItem.Description) > 145 - mFont.tahoma_7b_red.getWidth(str) && !GameCanvas.panel.isClose)
+                    if (i == panel.selected && mFont.tahoma_7_blue.getWidth(modMenuItem.Description) > 145 - mFont.tahoma_7b_red.getWidth(str) && !panel.isClose)
                     {
                         isReset = false;
                         descriptionTextInfo = modMenuItem.Description;
@@ -334,37 +337,37 @@ namespace Mod.ModMenu
                     else mFont.tahoma_7_blue.drawString(g, description, num + 5, num2 + 11, 0);
                     mFont mf = mFont.tahoma_7_grey;
                     if (modMenuItem.Value) mf = mFont.tahoma_7b_red;
-                    mf.drawString(g, str + (modMenuItem.Value ? mResources.ON.ToLower() : mResources.OFF.ToLower()), num + num3 - 2, num2 + GameCanvas.panel.ITEM_HEIGHT - 14, mFont.RIGHT);
+                    mf.drawString(g, str + (modMenuItem.Value ? mResources.ON.ToLower() : mResources.OFF.ToLower()), num + num3 - 2, num2 + panel.ITEM_HEIGHT - 14, mFont.RIGHT);
                 }
             }
             if (isReset) TextInfo.reset();
             else
             {
                 TextInfo.paint(g, descriptionTextInfo, x, y, 145 - mFont.tahoma_7b_red.getWidth(str), 15, mFont.tahoma_7_blue);
-                g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
-                g.translate(0, -GameCanvas.panel.cmy);
+                g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);
+                g.translate(0, -panel.cmy);
             }
-            GameCanvas.panel.paintScrollArrow(g);
+            panel.paintScrollArrow(g);
         }
 
-        private static void paintModMenuInts(mGraphics g)
+        private static void paintModMenuInts(Panel panel, mGraphics g)
         {
-            g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
-            g.translate(0, -GameCanvas.panel.cmy);
+            g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);
+            g.translate(0, -panel.cmy);
             g.setColor(0);
-            if (modMenuItemInts == null || modMenuItemInts.Length != GameCanvas.panel.currentListLength) return;
+            if (modMenuItemInts == null || modMenuItemInts.Length != panel.currentListLength) return;
             bool isReset = true;
             string descriptionTextInfo = string.Empty;
             int x = 0, y = 0, currSelectedValue = 0;
-            for (int i = 0; i < GameCanvas.panel.currentListLength; i++)
+            for (int i = 0; i < panel.currentListLength; i++)
             {
-                int num = GameCanvas.panel.xScroll;
-                int num2 = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
-                int num3 = GameCanvas.panel.wScroll;
-                int num4 = GameCanvas.panel.ITEM_HEIGHT - 1;
+                int num = panel.xScroll;
+                int num2 = panel.yScroll + i * panel.ITEM_HEIGHT;
+                int num3 = panel.wScroll;
+                int num4 = panel.ITEM_HEIGHT - 1;
                 ModMenuItemInt modMenuItem = modMenuItemInts[i];
-                if (!modMenuItem.isDisabled) g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
-                else g.setColor((i != GameCanvas.panel.selected) ? new Color(0.54f, 0.51f, 0.46f) : new Color(0.61f, 0.63f, 0.18f));
+                if (!modMenuItem.isDisabled) g.setColor((i != panel.selected) ? 15196114 : 16383818);
+                else g.setColor((i != panel.selected) ? new Color(0.54f, 0.51f, 0.46f) : new Color(0.61f, 0.63f, 0.18f));
                 g.fillRect(num, num2, num3, num4);
                 if (modMenuItem != null)
                 {
@@ -393,9 +396,9 @@ namespace Mod.ModMenu
                             description = str2 + "...";
                         }
                         else description = str;
-                        mFont.tahoma_7b_red.drawString(g, modMenuItem.SelectedValue.ToString(), num + num3 - 2, num2 + GameCanvas.panel.ITEM_HEIGHT - 14, mFont.RIGHT);
+                        mFont.tahoma_7b_red.drawString(g, modMenuItem.SelectedValue.ToString(), num + num3 - 2, num2 + panel.ITEM_HEIGHT - 14, mFont.RIGHT);
                     }
-                    if (i == GameCanvas.panel.selected && mFont.tahoma_7_blue.getWidth(str) > 160 - mFont.tahoma_7_blue.getWidth(modMenuItem.SelectedValue.ToString()) && !GameCanvas.panel.isClose)
+                    if (i == panel.selected && mFont.tahoma_7_blue.getWidth(str) > 160 - mFont.tahoma_7_blue.getWidth(modMenuItem.SelectedValue.ToString()) && !panel.isClose)
                     {
                         isReset = false;
                         descriptionTextInfo = modMenuItem.Description;
@@ -410,10 +413,10 @@ namespace Mod.ModMenu
             else
             {
                 TextInfo.paint(g, descriptionTextInfo, x, y, 160 - mFont.tahoma_7_blue.getWidth(currSelectedValue.ToString()), 15, mFont.tahoma_7_blue);
-                g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
-                g.translate(0, -GameCanvas.panel.cmy);
+                g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);
+                g.translate(0, -panel.cmy);
             }
-            GameCanvas.panel.paintScrollArrow(g);
+            panel.paintScrollArrow(g);
         }
 
         public static void onModMenuValueChanged()
