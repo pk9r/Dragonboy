@@ -51,20 +51,23 @@ internal class ImageSource
 			ex.StackTrace.ToString();
 		}
 		Res.outz("vS size= " + vSource.size() + " vRMS size= " + vRms.size());
-		for (int j = 0; j < vSource.size(); j++)
+		if (false)
 		{
-			ImageSource imageSource = (ImageSource)vSource.elementAt(j);
-			if (!isExistID(imageSource.id))
+			for (int j = 0; j < vSource.size(); j++)
 			{
-				myVector.addElement(imageSource);
+				ImageSource imageSource = (ImageSource)vSource.elementAt(j);
+				if (!isExistID(imageSource.id))
+				{
+					myVector.addElement(imageSource);
+				}
 			}
-		}
-		for (int k = 0; k < vRms.size(); k++)
-		{
-			ImageSource imageSource2 = (ImageSource)vRms.elementAt(k);
-			if (getVersionRMSByID(imageSource2.id) != getCurrVersionByID(imageSource2.id))
+			for (int k = 0; k < vRms.size(); k++)
 			{
-				myVector.addElement(imageSource2);
+				ImageSource imageSource2 = (ImageSource)vRms.elementAt(k);
+				if (getVersionRMSByID(imageSource2.id) != getCurrVersionByID(imageSource2.id))
+				{
+					myVector.addElement(imageSource2);
+				}
 			}
 		}
 		Service.gI().imageSource(myVector);

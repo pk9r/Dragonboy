@@ -444,7 +444,7 @@ public class Cmd
 
 	public const sbyte ITEMMAP_ADD = 68;
 
-	public const sbyte ITEM_BAG_REFRESH = 69;
+	public const sbyte DEL_ACC = 69;
 
 	public const sbyte USE_SKILL_MY_BUFF = 70;
 

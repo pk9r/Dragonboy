@@ -3130,7 +3130,23 @@ public class Service
 		Message message = new Message((sbyte)24);
 		try
 		{
-			message.writer().writeByte(0);
+			message.writer().writeByte((Char.myCharz().idHat != -1) ? (-1) : 0);
+			session.sendMessage(message);
+		}
+		catch (Exception)
+		{
+		}
+		finally
+		{
+			message.cleanup();
+		}
+	}
+
+	public void sendDelAcc()
+	{
+		Message message = new Message((sbyte)69);
+		try
+		{
 			session.sendMessage(message);
 		}
 		catch (Exception)

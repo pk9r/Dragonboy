@@ -21,7 +21,7 @@ internal class Controller2
 			case 114:
 				try
 				{
-					string text3 = msg.reader().readUTF();
+					string text2 = msg.reader().readUTF();
 					mSystem.curINAPP = msg.reader().readByte();
 					mSystem.maxINAPP = msg.reader().readByte();
 					break;
@@ -32,12 +32,24 @@ internal class Controller2
 				}
 			case 113:
 			{
-				int loop = msg.reader().readByte();
-				int layer = msg.reader().readByte();
-				int id4 = msg.reader().readUnsignedByte();
-				short x2 = msg.reader().readShort();
-				short y2 = msg.reader().readShort();
-				short loopCount = msg.reader().readShort();
+				int loop = 0;
+				int layer = 0;
+				int id4 = 0;
+				short x2 = 0;
+				short y2 = 0;
+				short loopCount = -1;
+				try
+				{
+					loop = msg.reader().readByte();
+					layer = msg.reader().readByte();
+					id4 = msg.reader().readUnsignedByte();
+					x2 = msg.reader().readShort();
+					y2 = msg.reader().readShort();
+					loopCount = msg.reader().readShort();
+				}
+				catch (Exception)
+				{
+				}
 				EffecMn.addEff(new Effect(id4, x2, y2, layer, loop, loopCount));
 				break;
 			}
@@ -512,9 +524,9 @@ internal class Controller2
 			case 124:
 			{
 				short num26 = msg.reader().readShort();
-				string text2 = msg.reader().readUTF();
-				Res.outz("noi chuyen = " + text2 + "npc ID= " + num26);
-				GameScr.findNPCInMap(num26)?.addInfo(text2);
+				string text3 = msg.reader().readUTF();
+				Res.outz("noi chuyen = " + text3 + "npc ID= " + num26);
+				GameScr.findNPCInMap(num26)?.addInfo(text3);
 				break;
 			}
 			case 123:
@@ -1008,8 +1020,9 @@ internal class Controller2
 			}
 			}
 		}
-		catch (Exception)
+		catch (Exception ex4)
 		{
+			Res.outz("=====> Controller2 " + ex4.StackTrace);
 		}
 	}
 
@@ -1175,6 +1188,7 @@ internal class Controller2
 				if (@char != null)
 				{
 					@char.idAuraEff = idAuraEff;
+					@char.idEff_Set_Item = msg.reader().readByte();
 				}
 			}
 		}

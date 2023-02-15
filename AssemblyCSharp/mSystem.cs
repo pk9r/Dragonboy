@@ -43,6 +43,24 @@ public class mSystem
 		curINAPP = 0;
 	}
 
+	public static int getWidth(Image img)
+	{
+		if (clientType == 5)
+		{
+			return img.getWidth();
+		}
+		return img.getWidth();
+	}
+
+	public static int getHeight(Image img)
+	{
+		if (clientType == 5)
+		{
+			return img.getHeight();
+		}
+		return img.getWidth();
+	}
+
 	public static void LogCMD(string st)
 	{
 	}

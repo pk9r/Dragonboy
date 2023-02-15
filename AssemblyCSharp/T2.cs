@@ -2,6 +2,7 @@ public class T2 : mResources
 {
 	public static void load()
 	{
+		mResources.delacc = "Delete account";
 		mResources.notiINAPP = "You bought many gems today. Let's try again tomorrow!";
 		mResources.notiRuby = "When selling successfully, you will receive Ruby non Gem. Do you want to continue consign?";
 		mResources.equip = "Equip";
@@ -31,8 +32,8 @@ public class T2 : mResources
 		mResources.follow = "Follow";
 		mResources.pet = "Disciple";
 		mResources.maychutathoacmatsong = "Connect fail, please try again";
-		mResources.cauhinhthap = "Low\ngraphics";
-		mResources.cauhinhcao = "High\ngraphics";
+		mResources.cauhinhthap = "Low graphics";
+		mResources.cauhinhcao = "High graphics";
 		mResources.taidulieu = "Download";
 		mResources.xoadulieu = "Clear data";
 		mResources.deletaDataNote = "When game have data errors, you should delete data. After delete data, you have to download data to play game.";
@@ -72,8 +73,8 @@ public class T2 : mResources
 		mResources.daban = "Sold";
 		mResources.dangban = "Selling";
 		mResources.kigui = "Consign";
-		mResources.turnOnSound = "Turn on sound";
-		mResources.turnOffSound = "Turn off sound";
+		mResources.turnOnSound = "Sound";
+		mResources.turnOffSound = "Sound";
 		mResources.no_enemy = "No enemy";
 		mResources.selectServer2 = "Select server";
 		mResources.rank = "Rank";
@@ -303,10 +304,12 @@ public class T2 : mResources
 		mResources.low = "Low";
 		mResources.increase_vga = "Increase resolution (strong devices)";
 		mResources.decrease_vga = "Decrease resolution (weak devices)";
-		mResources.serverchat_off = "Turn off server notice";
-		mResources.serverchat_on = "Turn on server notice";
-		mResources.aura_on = "Turn on special aura";
-		mResources.aura_off = "Turn off special aura";
+		mResources.serverchat_off = "Server notice";
+		mResources.serverchat_on = "Server notice";
+		mResources.aura_on = "Special aura";
+		mResources.aura_off = "Special aura";
+		mResources.aura_on_2 = "Power aura";
+		mResources.aura_off_2 = "Power aura";
 		mResources.hat_on = "Show accessories";
 		mResources.hat_off = "Hide accessories";
 		mResources.x1Screen = "Small screen";

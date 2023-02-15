@@ -137,6 +137,10 @@ public class NewBoss : Mob, IMapObject
 		base.maxHp = maxHp;
 		base.hp = hp;
 		templateId = templateID;
+		h_hp_bar = 6;
+		w_hp_bar = 100;
+		len = w_hp_bar;
+		updateHp_bar();
 		if (Mob.arrMobTemplate[templateId].data == null)
 		{
 			Service.gI().requestModTemplate(templateId);
@@ -442,25 +446,41 @@ public class NewBoss : Mob, IMapObject
 
 	public override void paint(mGraphics g)
 	{
-		if (Mob.arrMobTemplate[templateId].data != null)
+		if (Mob.arrMobTemplate[templateId].data == null)
 		{
-			if (isShadown)
+			return;
+		}
+		if (isShadown)
+		{
+			paintShadow(g);
+		}
+		g.translate(0, GameCanvas.transY);
+		Mob.arrMobTemplate[templateId].data.paintFrame(g, frame, x, y + fy, (dir != 1) ? 1 : 0, 2);
+		g.translate(0, -GameCanvas.transY);
+		int imageWidth = mGraphics.getImageWidth(imgHPtem);
+		int imageHeight = mGraphics.getImageHeight(imgHPtem);
+		int num = imageWidth;
+		int num2 = imageWidth;
+		int num3 = x - imageWidth;
+		int num4 = y - h - 5;
+		int num5 = imageWidth * 2 * per / 100;
+		if (num5 > num)
+		{
+			num2 = num5 - num;
+			if (num2 <= 0)
 			{
-				paintShadow(g);
-			}
-			g.translate(0, GameCanvas.transY);
-			Mob.arrMobTemplate[templateId].data.paintFrame(g, frame, x, y + fy, (dir != 1) ? 1 : 0, 2);
-			g.translate(0, -GameCanvas.transY);
-			int num = (int)((long)hp * 50L / maxHp);
-			if (num != 0)
-			{
-				int num2 = y - h - 5;
-				g.setColor(0);
-				g.fillRect(x - 27, num2 - 2, 54, 8);
-				g.setColor(16711680);
-				g.fillRect(x - 25, num2, num, 4);
+				num2 = 0;
 			}
 		}
+		else
+		{
+			num = num5;
+			num2 = 0;
+		}
+		g.drawImage(GameScr.imgHP_tm_xam, num3, num4, mGraphics.TOP | mGraphics.LEFT);
+		g.drawImage(GameScr.imgHP_tm_xam, num3 + imageWidth, num4, mGraphics.TOP | mGraphics.LEFT);
+		g.drawRegion(imgHPtem, 0, 0, num, imageHeight, 0, num3, num4, mGraphics.TOP | mGraphics.LEFT);
+		g.drawRegion(imgHPtem, 0, 0, num2, imageHeight, 0, num3 + imageWidth, num4, mGraphics.TOP | mGraphics.LEFT);
 	}
 
 	public new int getHPColor()

@@ -22,6 +22,8 @@ public class Effect
 
 	public const int CHAR = 4;
 
+	public const int CHAR_PET_EFF = 5;
+
 	public const int FIRE_TD = 0;
 
 	public const int BIRD = 1;
@@ -122,6 +124,12 @@ public class Effect
 
 	private bool isGetTime;
 
+	private short[] data;
+
+	public int cLastStatusMe;
+
+	public long cur_time_cLastStatusMe;
+
 	public Effect()
 	{
 	}
@@ -168,6 +176,10 @@ public class Effect
 		indexTo = -1;
 		trans = -1;
 		typeEff = 4;
+		if (id == 78)
+		{
+			typeEff = 5;
+		}
 	}
 
 	public Effect(int id, int x, int y, int layer, int loop, int loopCount)
@@ -211,7 +223,14 @@ public class Effect
 		}
 		indexFrom = -1;
 		indexTo = -1;
-		typeEff = 1;
+		if (id == 78)
+		{
+			typeEff = 5;
+		}
+		else
+		{
+			typeEff = 1;
+		}
 		if (!isExistNewEff(effId + string.Empty))
 		{
 			newEff.addElement(effId + string.Empty);
@@ -317,9 +336,16 @@ public class Effect
 
 	public void paint(mGraphics g)
 	{
-		if (isPaintz() && getEffDataById(effId) != null && getEffDataById(effId).img != null)
+		if (!isPaint || getEffDataById(effId) == null || getEffDataById(effId).img == null)
+		{
+			return;
+		}
+		try
 		{
 			getEffDataById(effId).paintFrame(g, currFrame, x, y, trans, layer);
+		}
+		catch (Exception)
+		{
 		}
 	}
 
@@ -337,12 +363,20 @@ public class Effect
 				{
 					return;
 				}
-				if (getEffDataById(effId).arrFrame != null)
+				if (typeEff == 5)
+				{
+					data = getEffDataById(effId).get(c.statusMe);
+				}
+				else
+				{
+					data = getEffDataById(effId).get();
+				}
+				if (data != null)
 				{
 					if (!isGetTime)
 					{
 						isGetTime = true;
-						int num = getEffDataById(effId).arrFrame.Length - 1;
+						int num = data.Length - 1;
 						if (num > 0 && typeEff != 1)
 						{
 							t = Res.random(0, num);
@@ -357,14 +391,37 @@ public class Effect
 					case 4:
 						x = c.cx;
 						y = c.cy;
-						if (t < getEffDataById(effId).arrFrame.Length)
+						if (t < data.Length)
+						{
+							t++;
+						}
+						break;
+					case 5:
+						trans = ((c.cdir != 1) ? 1 : 0);
+						if (c.cdir == 1)
+						{
+							x = c.cx - 15;
+						}
+						else
+						{
+							x = c.cx + 15;
+						}
+						if (c.isMonkey == 0)
+						{
+							y = c.cy - 25;
+						}
+						else
+						{
+							y = c.cy - 35;
+						}
+						if (t < data.Length)
 						{
 							t++;
 						}
 						break;
 					case 1:
 					case 3:
-						if (t < getEffDataById(effId).arrFrame.Length)
+						if (t < data.Length)
 						{
 							t++;
 						}
@@ -386,13 +443,13 @@ public class Effect
 								t = indexFrom;
 							}
 						}
-						else if (t < getEffDataById(effId).arrFrame.Length)
+						else if (t < data.Length)
 						{
 							t++;
 						}
 						break;
 					case 2:
-						if (t < getEffDataById(effId).arrFrame.Length)
+						if (t < data.Length)
 						{
 							t++;
 						}
@@ -404,16 +461,16 @@ public class Effect
 						}
 						break;
 					}
-					if (t == getEffDataById(effId).arrFrame.Length / 2 && (effId == 62 || effId == 63 || effId == 64 || effId == 65))
+					if (t == data.Length / 2 && (effId == 62 || effId == 63 || effId == 64 || effId == 65))
 					{
 						SoundMn.playSound(x, y, SoundMn.FIREWORK, SoundMn.volume);
 					}
-					if (t <= getEffDataById(effId).arrFrame.Length - 1)
+					if (t <= data.Length - 1)
 					{
-						currFrame = getEffDataById(effId).arrFrame[t];
+						currFrame = data[t];
 					}
 				}
-				if (t >= getEffDataById(effId).arrFrame.Length - 1)
+				if (t >= data.Length - 1)
 				{
 					if (typeEff == 0 || typeEff == 3)
 					{
@@ -432,7 +489,7 @@ public class Effect
 					{
 						isPaint = false;
 					}
-					if (typeEff == 4)
+					if (typeEff == 4 || typeEff == 5)
 					{
 						if (loop == -1)
 						{

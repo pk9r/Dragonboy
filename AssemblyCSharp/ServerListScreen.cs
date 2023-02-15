@@ -30,17 +30,17 @@ public class ServerListScreen : mScreen, IActionListener
 
 	private int lY;
 
-	public static string smartPhoneVN = "Vũ trụ 1:dragon1.teamobi.com:14445:0,Vũ trụ 2:dragon2.teamobi.com:14445:0,Vũ trụ 3:dragon3.teamobi.com:14445:0,Vũ trụ 4:dragon4.teamobi.com:14445:0,Vũ trụ 5:dragon5.teamobi.com:14445:0,Vũ trụ 6:dragon6.teamobi.com:14445:0,Vũ trụ 7:dragon7.teamobi.com:14445:0,Võ đài liên vũ trụ:dragonwar.teamobi.com:20000:0,Universe 1:dragon.indonaga.com:14445:1,0,6";
+	public static string smartPhoneVN = "Vũ trụ 1:dragon1.teamobi.com:14445:0,Vũ trụ 2:dragon2.teamobi.com:14445:0,Vũ trụ 3:dragon3.teamobi.com:14445:0,Vũ trụ 4:dragon4.teamobi.com:14445:0,Vũ trụ 5:dragon5.teamobi.com:14445:0,Vũ trụ 6:dragon6.teamobi.com:14445:0,Vũ trụ 7:dragon7.teamobi.com:14445:0,Võ đài liên vũ trụ:dragonwar.teamobi.com:20000:0,Universe 1:dragon.indonaga.com:14445:1,Naga:dragon.indonaga.com:14446:2,0,6";
 
-	public static string javaVN = "Vũ trụ 1:112.213.94.23:14445:0,Vũ trụ 2:210.211.109.199:14445:0,Vũ trụ 3:112.213.85.88:14445:0,Vũ trụ 4:27.0.12.164:14445:0,Vũ trụ 5:27.0.12.16:14445:0,Vũ trụ 6:27.0.12.173:14445:0,Vũ trụ 7:112.213.94.223:14445:0,Võ đài liên vũ trụ:27.0.12.173:20000:0,Universe 1:54.179.255.27:14445:1,0,6";
+	public static string javaVN = "Vũ trụ 1:112.213.94.23:14445:0,Vũ trụ 2:210.211.109.199:14445:0,Vũ trụ 3:112.213.85.88:14445:0,Vũ trụ 4:27.0.12.164:14445:0,Vũ trụ 5:27.0.12.16:14445:0,Vũ trụ 6:27.0.12.173:14445:0,Vũ trụ 7:112.213.94.223:14445:0,Võ đài liên vũ trụ:27.0.12.173:20000:0,Universe 1:54.255.195.65:14445:1,Naga:54.255.195.65:14446:2,0,6";
 
 	public static string smartPhoneIn = "Naga:dragon.indonaga.com:14446:2,2,0";
 
-	public static string javaIn = "Naga:54.179.255.27:14446:2,2,0";
+	public static string javaIn = "Naga:54.255.195.65:14446:2,2,0";
 
-	public static string smartPhoneE = "Universe 1:54.179.255.27:14445:1,1,0";
+	public static string smartPhoneE = "Universe 1:dragon.indonaga.com:14445:1,1,0";
 
-	public static string javaE = "Universe 1:54.179.255.27:14445:1,1,0";
+	public static string javaE = "Universe 1:54.255.195.65:14445:1,1,0";
 
 	public static string linkGetHost = "http://sv1.ngocrongonline.com/game/ngocrong031_t.php";
 

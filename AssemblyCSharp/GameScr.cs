@@ -433,6 +433,14 @@ public class GameScr : mScreen, IChatable
 
 	public static Image imgMPLost;
 
+	public static Image imgHP_tm_do;
+
+	public static Image imgHP_tm_vang;
+
+	public static Image imgHP_tm_xam;
+
+	public static Image imgHP_tm_xanh;
+
 	public Mob mobCapcha;
 
 	public MagicTree magicTree;
@@ -613,9 +621,9 @@ public class GameScr : mScreen, IChatable
 
 	public static int shock_scr;
 
-	private static int[] shock_x = new int[4] { 3, -3, 3, -3 };
+	private static int[] shock_x = new int[4] { 1, -1, 1, -1 };
 
-	private static int[] shock_y = new int[4] { 3, -3, -3, 3 };
+	private static int[] shock_y = new int[4] { 1, -1, -1, 1 };
 
 	private int tDoubleDelay;
 
@@ -968,6 +976,10 @@ public class GameScr : mScreen, IChatable
 		imgSkill2 = GameCanvas.loadImage("/mainImage/myTexture2dskill2.png");
 		imgMenu = GameCanvas.loadImage("/mainImage/myTexture2dmenu.png");
 		imgFocus = GameCanvas.loadImage("/mainImage/myTexture2dfocus.png");
+		imgHP_tm_do = GameCanvas.loadImage("/mainImage/tm-do.png");
+		imgHP_tm_vang = GameCanvas.loadImage("/mainImage/tm-vang.png");
+		imgHP_tm_xam = GameCanvas.loadImage("/mainImage/tm-xam.png");
+		imgHP_tm_xanh = GameCanvas.loadImage("/mainImage/tm-xanh.png");
 		imgChatPC = GameCanvas.loadImage("/pc/chat.png");
 		imgChatsPC2 = GameCanvas.loadImage("/pc/chat2.png");
 		if (GameCanvas.isTouch)
@@ -1817,14 +1829,7 @@ public class GameScr : mScreen, IChatable
 		}
 		setSkillBarPosition();
 		disXC = ((GameCanvas.w <= 200) ? 30 : 40);
-		if (Rms.loadRMSInt("viewchat") == -1)
-		{
-			GameCanvas.panel.isViewChatServer = true;
-		}
-		else
-		{
-			GameCanvas.panel.isViewChatServer = Rms.loadRMSInt("viewchat") == 1;
-		}
+		GameCanvas.panel.isViewChatServer = true;
 	}
 
 	public static void setSkillBarPosition()
@@ -4717,7 +4722,7 @@ public class GameScr : mScreen, IChatable
 				bgItem.paint(g);
 			}
 		}
-		if (TileMap.mapID == 48 && layer == 3 && !GameCanvas.lowGraphic && GameCanvas.bgW != null && GameCanvas.bgW[0] != 0)
+		if (TileMap.mapID == 48 && layer == 3 && GameCanvas.bgW != null && GameCanvas.bgW[0] != 0)
 		{
 			for (int j = 0; j < TileMap.pxw / GameCanvas.bgW[0] + 1; j++)
 			{
@@ -5079,6 +5084,7 @@ public class GameScr : mScreen, IChatable
 			paintInfoBar(g);
 		}
 		resetTranslate(g);
+		paint_xp_bar(g);
 		if (!isPaintOther)
 		{
 			if (GameCanvas.open3Hour)
@@ -5743,16 +5749,7 @@ public class GameScr : mScreen, IChatable
 	private void paintInfoBar(mGraphics g)
 	{
 		resetTranslate(g);
-		if (isVS() && Char.myCharz().charFocus != null)
-		{
-			g.translate(GameCanvas.w / 2 - 62, 0);
-			paintImageBar(g, isLeft: true, Char.myCharz().charFocus);
-			g.translate(-(GameCanvas.w / 2 - 65), 0);
-			paintImageBarRight(g, Char.myCharz());
-			Char.myCharz().paintHeadWithXY(g, 15, 20, 0);
-			Char.myCharz().charFocus.paintHeadWithXY(g, GameCanvas.w - 15, 20, 2);
-		}
-		else if (TileMap.mapID == 130 && findCharVS1() != null && findCharVS2() != null)
+		if (TileMap.mapID == 130 && findCharVS1() != null && findCharVS2() != null)
 		{
 			g.translate(GameCanvas.w / 2 - 62, 0);
 			paintImageBar(g, isLeft: true, findCharVS1());
@@ -5760,6 +5757,15 @@ public class GameScr : mScreen, IChatable
 			paintImageBarRight(g, findCharVS2());
 			findCharVS1().paintHeadWithXY(g, 15, 20, 0);
 			findCharVS2().paintHeadWithXY(g, GameCanvas.w - 15, 20, 2);
+		}
+		else if (isVS() && Char.myCharz().charFocus != null)
+		{
+			g.translate(GameCanvas.w / 2 - 62, 0);
+			paintImageBar(g, isLeft: true, Char.myCharz().charFocus);
+			g.translate(-(GameCanvas.w / 2 - 65), 0);
+			paintImageBarRight(g, Char.myCharz());
+			Char.myCharz().paintHeadWithXY(g, 15, 20, 0);
+			Char.myCharz().charFocus.paintHeadWithXY(g, GameCanvas.w - 15, 20, 2);
 		}
 		else if (ispaintPhubangBar() && isSmallScr())
 		{
@@ -5827,7 +5833,7 @@ public class GameScr : mScreen, IChatable
 
 	public bool isVS()
 	{
-		if ((TileMap.mapID == 130 || TileMap.mapID == 51 || TileMap.mapID == 112 || TileMap.mapID == 113 || TileMap.mapID == 129) && (Char.myCharz().cTypePk != 0 || (TileMap.mapID == 130 && findCharVS1() != null && findCharVS2() != null)))
+		if (TileMap.isVoDaiMap() && (Char.myCharz().cTypePk != 0 || (TileMap.mapID == 130 && findCharVS1() != null && findCharVS2() != null)))
 		{
 			return true;
 		}
@@ -5891,41 +5897,38 @@ public class GameScr : mScreen, IChatable
 						}
 					}
 				}
-				else if (!gamePad.isSmallGamePad)
+				else if (isAnalog != 1)
 				{
-					if (isAnalog != 1)
-					{
-						g.setColor(9670800);
-						g.fillRect(xHP + 9, yHP + 10, 22, 20);
-						g.setColor(16777215);
-						g.fillRect(xHP + 9, yHP + 10 + ((num3 != 0) ? (20 - num3) : 0), 22, (num3 == 0) ? 20 : num3);
-						g.drawImage((mScreen.keyTouch != 10) ? imgHP1 : imgHP2, xHP, yHP, 0);
-						mFont.tahoma_7_red.drawString(g, string.Empty + hpPotion, xHP + 20, yHP + 15, 2);
-					}
-					else
-					{
-						g.setColor(9670800);
-						g.fillRect(xHP + 10, yHP + 10, 20, 18);
-						g.setColor(16777215);
-						g.fillRect(xHP + 10, yHP + 10 + ((num3 != 0) ? (20 - num3) : 0), 20, (num3 == 0) ? 18 : num3);
-						g.drawImage((mScreen.keyTouch != 10) ? imgHP3 : imgHP4, xHP + 20, yHP + 20, mGraphics.HCENTER | mGraphics.VCENTER);
-						mFont.tahoma_7_red.drawString(g, string.Empty + hpPotion, xHP + 20, yHP + 15, 2);
-					}
+					g.setColor(9670800);
+					g.fillRect(xHP + 9, yHP + 10 - 6, 22, 20);
+					g.setColor(16777215);
+					g.fillRect(xHP + 9, yHP + 10 + ((num3 != 0) ? (20 - num3) : 0) - 6, 22, (num3 == 0) ? 20 : num3);
+					g.drawImage((mScreen.keyTouch != 10) ? imgHP1 : imgHP2, xHP, yHP - 6, 0);
+					mFont.tahoma_7_red.drawString(g, string.Empty + hpPotion, xHP + 20, yHP + 15 - 6, 2);
+				}
+				else
+				{
+					g.setColor(9670800);
+					g.fillRect(xHP + 10, yHP + 10 - 6, 20, 18);
+					g.setColor(16777215);
+					g.fillRect(xHP + 10, yHP + 10 + ((num3 != 0) ? (20 - num3) : 0) - 6, 20, (num3 == 0) ? 18 : num3);
+					g.drawImage((mScreen.keyTouch != 10) ? imgHP3 : imgHP4, xHP + 20, yHP + 20 - 6, mGraphics.HCENTER | mGraphics.VCENTER);
+					mFont.tahoma_7_red.drawString(g, string.Empty + hpPotion, xHP + 20, yHP + 15 - 6, 2);
 				}
 			}
 			if (isHaveSelectSkill)
 			{
-				Skill[] array = (Main.isPC ? keySkill : onScreenSkill);
+				Skill[] array = (Main.isPC ? keySkill : ((!GameCanvas.isTouch) ? keySkill : onScreenSkill));
 				if (mScreen.keyTouch == 10)
 				{
 				}
 				if (!GameCanvas.isTouch)
 				{
 					g.setColor(11152401);
-					g.fillRect(xSkill + xHP + 2, yHP - 10, 20, 10);
-					mFont.tahoma_7_white.drawString(g, "*", xSkill + xHP + 12, yHP - 8, mFont.CENTER);
+					g.fillRect(xSkill + xHP + 2, yHP - 10 + 6, 20, 10);
+					mFont.tahoma_7_white.drawString(g, "*", xSkill + xHP + 12, yHP - 8 + 6, mFont.CENTER);
 				}
-				int num4 = ((!Main.isPC) ? nSkill : array.Length);
+				int num4 = (Main.isPC ? array.Length : ((!GameCanvas.isTouch) ? array.Length : nSkill));
 				for (int i = 0; i < num4; i++)
 				{
 					if (Main.isPC)
@@ -5938,6 +5941,13 @@ public class GameScr : mScreen, IChatable
 						}
 						mFont.tahoma_7b_dark.drawString(g, array2[i], xSkill + xS[i] + 14, yS[i] + num5, mFont.CENTER);
 						mFont.tahoma_7b_white.drawString(g, array2[i], xSkill + xS[i] + 14, yS[i] + num5 + 1, mFont.CENTER);
+					}
+					else if (!GameCanvas.isTouch)
+					{
+						string[] array3 = (TField.isQwerty ? new string[5] { "Q", "W", "E", "R", "T" } : new string[5] { "7", "8", "9", "1", "3" });
+						g.setColor(11152401);
+						g.fillRect(xSkill + xS[i] + 2, yS[i] - 10 + 8, 20, 10);
+						mFont.tahoma_7_white.drawString(g, array3[i], xSkill + xS[i] + 12, yS[i] - 10 + 6, mFont.CENTER);
 					}
 					Skill skill = array[i];
 					if (skill != Char.myCharz().myskill)
@@ -6825,6 +6835,18 @@ public class GameScr : mScreen, IChatable
 		case 110391:
 			Service.gI().clanInvite(0, Char.myCharz().charFocus.charID, -1, -1);
 			break;
+		case 12005:
+			if (GameCanvas.serverScr == null)
+			{
+				GameCanvas.serverScr = new ServerScr();
+			}
+			GameCanvas.serverScr.switchToMe();
+			GameCanvas.endDlg();
+			break;
+		case 12006:
+			GameCanvas.gI().onConnectionFail();
+			GameCanvas.endDlg();
+			break;
 		}
 	}
 
@@ -6894,12 +6916,18 @@ public class GameScr : mScreen, IChatable
 		tMove = new int[num.Length];
 		moveCount = new int[num.Length];
 		delayMove = new int[num.Length];
-		for (int i = 0; i < num.Length; i++)
+		try
 		{
-			winnumber[i] = (short)num[i];
-			randomNumber[i] = Res.random(0, 11);
-			tMove[i] = 1;
-			delayMove[i] = 0;
+			for (int i = 0; i < num.Length; i++)
+			{
+				winnumber[i] = short.Parse(num[i].ToString());
+				randomNumber[i] = Res.random(0, 11);
+				tMove[i] = 1;
+				delayMove[i] = 0;
+			}
+		}
+		catch (Exception)
+		{
 		}
 		tShow = 100;
 		moveIndex = 0;
@@ -7015,7 +7043,7 @@ public class GameScr : mScreen, IChatable
 			x = mGraphics.getImageWidth(imgKhung) + w / 2 + 10;
 		}
 		int frameHeight = fra_PVE_Bar_0.frameHeight;
-		int num = y + frameHeight + imgBall.getHeight() / 2 + 2;
+		int num = y + frameHeight + mGraphics.getImageHeight(imgBall) / 2 + 2;
 		int frameWidth = fra_PVE_Bar_1.frameWidth;
 		int num2 = w / 2 - frameWidth / 2;
 		int num3 = x - w / 2;
@@ -7138,7 +7166,7 @@ public class GameScr : mScreen, IChatable
 		{
 			return;
 		}
-		int num = imgBall.getHeight() / 2;
+		int num = mGraphics.getImageHeight(imgBall) / 2;
 		for (int i = 0; i < maxLife; i++)
 		{
 			int num2 = 0;
@@ -7146,7 +7174,7 @@ public class GameScr : mScreen, IChatable
 			{
 				num2 = 1;
 			}
-			g.drawRegion(imgBall, 0, num2 * num, imgBall.getWidth(), num, 0, x1 - i * (num + 1), y, mGraphics.VCENTER | mGraphics.HCENTER);
+			g.drawRegion(imgBall, 0, num2 * num, mGraphics.getImageWidth(imgBall), num, 0, x1 - i * (num + 1), y, mGraphics.VCENTER | mGraphics.HCENTER);
 		}
 		for (int j = 0; j < maxLife; j++)
 		{
@@ -7155,7 +7183,7 @@ public class GameScr : mScreen, IChatable
 			{
 				num3 = 1;
 			}
-			g.drawRegion(imgBall, 0, num3 * num, imgBall.getWidth(), num, 0, x2 + j * (num + 1), y, mGraphics.VCENTER | mGraphics.HCENTER);
+			g.drawRegion(imgBall, 0, num3 * num, mGraphics.getImageWidth(imgBall), num, 0, x2 + j * (num + 1), y, mGraphics.VCENTER | mGraphics.HCENTER);
 		}
 	}
 
@@ -7246,5 +7274,20 @@ public class GameScr : mScreen, IChatable
 			return true;
 		}
 		return false;
+	}
+
+	private void paint_xp_bar(mGraphics g)
+	{
+		g.setColor(8421504);
+		g.fillRect(0, GameCanvas.h - 2, GameCanvas.w, 2);
+		int w = (int)(Char.myCharz().cLevelPercent * GameCanvas.w / 10000);
+		g.setColor(16777215);
+		g.fillRect(0, GameCanvas.h - 2, w, 2);
+		g.setColor(0);
+		w = GameCanvas.w / 10;
+		for (int i = 1; i < 10; i++)
+		{
+			g.fillRect(i * w, GameCanvas.h - 2, 1, 2);
+		}
 	}
 }

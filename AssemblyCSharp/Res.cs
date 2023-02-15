@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Res
 {
 	private static short[] sinz = new short[91]
@@ -17,6 +19,15 @@ public class Res
 	private static short[] cosz;
 
 	private static int[] tanz;
+
+	public static string[] LOG_CAT = new string[5]
+	{
+		"<color=#ff0000ff>[  LOG_CAT  ]</color>",
+		"<color=#ff0000ff>[LOG_SESSION]</color>",
+		"<color=#ffff00ff>[LOG_SESSION]</color>",
+		"<color=#ff0000ff>[LOG_MOBILE ]</color>",
+		string.Empty
+	};
 
 	public static int count;
 
@@ -154,6 +165,26 @@ public class Res
 
 	public static void outz(string s)
 	{
+		if (mSystem.isTest)
+		{
+			Debug.Log(s);
+		}
+	}
+
+	public static void outz(string s, int logIndex)
+	{
+		if (mSystem.isTest)
+		{
+			Debug.Log(LOG_CAT[logIndex] + s);
+		}
+	}
+
+	public static void err(string s)
+	{
+		if (mSystem.isTest)
+		{
+			Debug.LogError(s);
+		}
 	}
 
 	public static void outz2(string s)

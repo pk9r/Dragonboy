@@ -213,6 +213,15 @@ public class TileMap
 		}
 	}
 
+	public static bool isVoDaiMap()
+	{
+		if (mapID == 51 || mapID == 103 || mapID == 112 || mapID == 113 || mapID == 129 || mapID == 130)
+		{
+			return true;
+		}
+		return false;
+	}
+
 	public static bool isTrainingMap()
 	{
 		if (mapID == 39 || mapID == 40 || mapID == 41)
@@ -558,52 +567,45 @@ public class TileMap
 				if ((tileTypeAt(j, k) & 0x20) == 32)
 				{
 					g.drawRegion(imgWaterfall, 0, 24 * (GameCanvas.gameTick % 8 >> 1), 24, 24, 0, j * size, k * size, 0);
-					continue;
 				}
-				if ((tileTypeAt(j, k) & 0x80) == 128)
+				else if ((tileTypeAt(j, k) & 0x80) == 128)
 				{
 					g.drawRegion(imgTopWaterfall, 0, 24 * (GameCanvas.gameTick % 8 >> 1), 24, 24, 0, j * size, k * size, 0);
-					continue;
 				}
-				if (tileID == 13)
+				else
 				{
-					if (!GameCanvas.lowGraphic)
+					if (tileID == 13 && num != -1)
 					{
-						return;
+						continue;
 					}
-					if (num != -1)
-					{
-						paintTile(g, 0, j, k);
-					}
-					continue;
-				}
-				if (tileID == 2 && (tileTypeAt(j, k) & 0x200) == 512 && num != -1)
-				{
-					paintTile(g, num, j * size, k * size, 24, 1);
-					paintTile(g, num, j * size, k * size + 1, 24, 24);
-				}
-				if (tileID == 3)
-				{
-				}
-				if ((tileTypeAt(j, k) & 0x10) == 16)
-				{
-					bx = j * size - GameScr.cmx;
-					dbx = bx - GameScr.gW2;
-					dfx = (size - 2) * dbx / size;
-					fx = dfx + GameScr.gW2;
-					paintTile(g, num, fx + GameScr.cmx, k * size, 24, 24);
-				}
-				else if ((tileTypeAt(j, k) & 0x200) == 512)
-				{
-					if (num != -1)
+					if (tileID == 2 && (tileTypeAt(j, k) & 0x200) == 512 && num != -1)
 					{
 						paintTile(g, num, j * size, k * size, 24, 1);
 						paintTile(g, num, j * size, k * size + 1, 24, 24);
 					}
-				}
-				else if (num != -1)
-				{
-					paintTile(g, num, j, k);
+					if (tileID == 3)
+					{
+					}
+					if ((tileTypeAt(j, k) & 0x10) == 16)
+					{
+						bx = j * size - GameScr.cmx;
+						dbx = bx - GameScr.gW2;
+						dfx = (size - 2) * dbx / size;
+						fx = dfx + GameScr.gW2;
+						paintTile(g, num, fx + GameScr.cmx, k * size, 24, 24);
+					}
+					else if ((tileTypeAt(j, k) & 0x200) == 512)
+					{
+						if (num != -1)
+						{
+							paintTile(g, num, j * size, k * size, 24, 1);
+							paintTile(g, num, j * size, k * size + 1, 24, 24);
+						}
+					}
+					else if (num != -1)
+					{
+						paintTile(g, num, j, k);
+					}
 				}
 			}
 		}

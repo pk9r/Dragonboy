@@ -476,7 +476,11 @@ public class Panel : IActionListener, IChatable
 
 	private int keyTouchTab = -1;
 
-	public string[][] clansOption;
+	public string[][] clansOption = new string[2][]
+	{
+		mResources.findClan,
+		mResources.createClan
+	};
 
 	public string clanInfo = string.Empty;
 
@@ -503,6 +507,12 @@ public class Panel : IActionListener, IChatable
 	};
 
 	private int currentButtonPress;
+
+	public static long[] t_tiemnang = new long[14]
+	{
+		50000000L, 250000000L, 1250000000L, 5000000000L, 15000000000L, 30000000000L, 45000000000L, 60000000000L, 75000000000L, 90000000000L,
+		110000000000L, 130000000000L, 150000000000L, 170000000000L
+	};
 
 	private int[] zoneColor = new int[3] { 43520, 14743570, 14155776 };
 
@@ -899,6 +909,10 @@ public class Panel : IActionListener, IChatable
 			{
 				Hint.isViewMap = true;
 				GameScr.info1.addInfo(mResources.go_to_quest, 0);
+			}
+			if (Hint.isOnTask(3, 0))
+			{
+				Hint.isViewPotential = true;
 			}
 			type = 4;
 			currentTabName = tabName[type];
@@ -1666,7 +1680,7 @@ public class Panel : IActionListener, IChatable
 		text = text2 + "\n|4|" + mResources.clan_birthday + ": " + NinjaUtil.getDate(cl.date);
 		cp = new ChatPopup();
 		popUpDetailInit(cp, text);
-		idIcon = ClanImage.getClanImage((sbyte)cl.imgID).idImage[0];
+		idIcon = ClanImage.getClanImage((short)cl.imgID).idImage[0];
 		currItem = null;
 	}
 
@@ -2676,10 +2690,7 @@ public class Panel : IActionListener, IChatable
 			{
 				cmtoY = 0;
 			}
-			if (selected == currentListLength || selected == 0)
-			{
-				cmy = cmtoY;
-			}
+			cmy = cmtoY;
 		}
 		if (GameCanvas.isPointerDown)
 		{
@@ -2791,6 +2802,12 @@ public class Panel : IActionListener, IChatable
 				cmRun = -num3 * 100;
 			}
 		}
+		int num4 = 0;
+		if (isTabInven() && GameCanvas.py < yScroll + 21)
+		{
+			selected = 0;
+			updateKeyInvenTab();
+		}
 		pointerIsDowning = false;
 		pointerDownTime = 0;
 		GameCanvas.isPointerJustRelease = false;
@@ -2812,21 +2829,49 @@ public class Panel : IActionListener, IChatable
 		{
 			if (GameCanvas.keyPressed[(!Main.isPC) ? 6 : 24])
 			{
-				currentTabIndex++;
-				if (currentTabIndex >= currentTabName.Length)
+				if (isTabInven())
 				{
-					if (GameCanvas.panel2 != null)
+					if (selected >= 0)
 					{
-						currentTabIndex = currentTabName.Length - 1;
-						GameCanvas.isFocusPanel2 = true;
+						updateKeyInvenTab();
 					}
 					else
 					{
-						currentTabIndex = 0;
+						currentTabIndex++;
+						if (currentTabIndex >= currentTabName.Length)
+						{
+							if (GameCanvas.panel2 != null)
+							{
+								currentTabIndex = currentTabName.Length - 1;
+								GameCanvas.isFocusPanel2 = true;
+							}
+							else
+							{
+								currentTabIndex = 0;
+							}
+						}
+						selected = lastSelect[currentTabIndex];
+						lastTabIndex[type] = currentTabIndex;
 					}
 				}
-				selected = lastSelect[currentTabIndex];
-				lastTabIndex[type] = currentTabIndex;
+				else
+				{
+					currentTabIndex++;
+					if (currentTabIndex >= currentTabName.Length)
+					{
+						if (GameCanvas.panel2 != null)
+						{
+							currentTabIndex = currentTabName.Length - 1;
+							GameCanvas.isFocusPanel2 = true;
+						}
+						else
+						{
+							currentTabIndex = 0;
+						}
+					}
+					selected = lastSelect[currentTabIndex];
+					lastTabIndex[type] = currentTabIndex;
+				}
 			}
 			if (GameCanvas.keyPressed[(!Main.isPC) ? 4 : 23])
 			{
@@ -4026,7 +4071,7 @@ public class Panel : IActionListener, IChatable
 			{
 				g.setColor((i != selected) ? 15196114 : 16383818);
 				g.fillRect(x, num, num2, h);
-				mFont.tahoma_7b_dark.drawString(g, strStatus[i], xScroll + wScroll / 2, num + 6, mFont.CENTER);
+				mFont.tahoma_7b_dark.drawString(g, strStatus[i], xScroll + 25, num + 6, mFont.CENTER);
 			}
 		}
 		paintScrollArrow(g);
@@ -4333,13 +4378,15 @@ public class Panel : IActionListener, IChatable
 				SmallImage.drawSmallImage(g, 719, num5 + 4, num6 + 4, 0, 0);
 				string st5 = mResources.critical + " " + mResources.root + ": " + Char.myCharz().cCriticalGoc + "%";
 				long num9 = 50000000L;
-				for (int j = 0; j < Char.myCharz().cCriticalGoc; j++)
+				int num10 = Char.myCharz().cCriticalGoc;
+				if (num10 > t_tiemnang.Length - 1)
 				{
-					num9 *= 5;
+					num10 = t_tiemnang.Length - 1;
 				}
+				num9 = t_tiemnang[num10];
 				mFont.tahoma_7b_blue.drawString(g, st5, num2 + 5, num3 + 3, 0);
-				long m = num9;
-				mFont.tahoma_7_green2.drawString(g, NinjaUtil.getMoneys(m) + " " + mResources.potential + ": " + mResources.increase + " " + Char.myCharz().criticalFrom1000Tiemnang, num2 + 5, num3 + 15, 0);
+				long number = num9;
+				mFont.tahoma_7_green2.drawString(g, Res.formatNumber2(number) + " " + mResources.potential + ": " + mResources.increase + " " + Char.myCharz().criticalFrom1000Tiemnang, num2 + 5, num3 + 15, 0);
 			}
 			if (i == 5)
 			{
@@ -4347,9 +4394,9 @@ public class Panel : IActionListener, IChatable
 				{
 					SmallImage.drawSmallImage(g, spearcialImage, num5 + 4, num6 + 4, 0, 0);
 					string[] array = mFont.tahoma_7.splitFontArray(specialInfo, 120);
-					for (int k = 0; k < array.Length; k++)
+					for (int j = 0; j < array.Length; j++)
 					{
-						mFont.tahoma_7_green2.drawString(g, array[k], num2 + 5, num3 + 3 + k * 12, 0);
+						mFont.tahoma_7_green2.drawString(g, array[j], num2 + 5, num3 + 3 + j * 12, 0);
 					}
 				}
 				else
@@ -4361,8 +4408,8 @@ public class Panel : IActionListener, IChatable
 			{
 				continue;
 			}
-			int num10 = i - 6;
-			SkillTemplate skillTemplate = Char.myCharz().nClass.skillTemplates[num10];
+			int num11 = i - 6;
+			SkillTemplate skillTemplate = Char.myCharz().nClass.skillTemplates[num11];
 			SmallImage.drawSmallImage(g, skillTemplate.iconId, num5 + 4, num6 + 4, 0, 0);
 			Skill skill = Char.myCharz().getSkill(skillTemplate);
 			if (skill != null)
@@ -4984,9 +5031,9 @@ public class Panel : IActionListener, IChatable
 				g.fillRect(num2, num3, num4, num5);
 				if (ClanImage.isExistClanImage(clans[j - 2].imgID))
 				{
-					if (ClanImage.getClanImage((sbyte)clans[j - 2].imgID).idImage != null)
+					if (ClanImage.getClanImage((short)clans[j - 2].imgID).idImage != null)
 					{
-						SmallImage.drawSmallImage(g, ClanImage.getClanImage((sbyte)clans[j - 2].imgID).idImage[0], num2 + num4 / 2, num3 + num5 / 2, 0, StaticObj.VCENTER_HCENTER);
+						SmallImage.drawSmallImage(g, ClanImage.getClanImage((short)clans[j - 2].imgID).idImage[0], num2 + num4 / 2, num3 + num5 / 2, 0, StaticObj.VCENTER_HCENTER);
 					}
 				}
 				else
@@ -4998,7 +5045,8 @@ public class Panel : IActionListener, IChatable
 						ClanImage.addClanImage(clanImage);
 					}
 				}
-				mFont.tahoma_7b_green2.drawString(g, clans[j - 2].name, num6 + 5, num7, 0);
+				string st = ((clans[j - 2].name.Length <= 23) ? clans[j - 2].name : (clans[j - 2].name.Substring(0, 23) + "..."));
+				mFont.tahoma_7b_green2.drawString(g, st, num6 + 5, num7, 0);
 				g.setClip(num6, num7, num8 - 10, num9);
 				mFont.tahoma_7_blue.drawString(g, clans[j - 2].slogan, num6 + 5, num7 + 11, 0);
 				g.setClip(xScroll, yScroll + cmy, wScroll, hScroll);
@@ -5285,46 +5333,49 @@ public class Panel : IActionListener, IChatable
 	private void paintInventory(mGraphics g)
 	{
 		g.setColor(16711680);
-		g.setClip(xScroll, yScroll, wScroll, hScroll);
+		Item[] arrItemBody = Char.myCharz().arrItemBody;
+		Item[] arrItemBag = Char.myCharz().arrItemBag;
+		currentListLength = checkCurrentListLength(arrItemBody.Length + arrItemBag.Length);
+		int num = (arrItemBody.Length + arrItemBag.Length) / 20 + (((arrItemBody.Length + arrItemBag.Length) % 20 > 0) ? 1 : 0);
+		TAB_W_NEW = wScroll / num;
+		for (int i = 0; i < num; i++)
+		{
+			int num2 = ((i == newSelected && selected == 0) ? ((GameCanvas.gameTick % 10 < 7) ? (-1) : 0) : 0);
+			g.setColor((i != newSelected) ? 15723751 : 16383818);
+			g.fillRect(xScroll + i * TAB_W_NEW, 89 + num2 - 10, TAB_W_NEW - 1, 21);
+			if (i == newSelected)
+			{
+				g.setColor(13524492);
+				int x = xScroll + i * TAB_W_NEW;
+				int num3 = 89 + num2 - 10 + 21;
+				g.fillRect(x, num3 - 3, TAB_W_NEW - 1, 3);
+			}
+			mFont.tahoma_7_grey.drawString(g, string.Empty + (i + 1), xScroll + i * TAB_W_NEW + TAB_W_NEW / 2, 91 + num2 - 10, mFont.CENTER);
+		}
+		g.setClip(xScroll, yScroll + 21, wScroll, hScroll - 21);
 		g.translate(0, -cmy);
 		try
 		{
-			Item[] arrItemBody = Char.myCharz().arrItemBody;
-			Item[] arrItemBag = Char.myCharz().arrItemBag;
-			currentListLength = checkCurrentListLength(arrItemBody.Length + arrItemBag.Length);
-			int num = (arrItemBody.Length + arrItemBag.Length) / 20 + (((arrItemBody.Length + arrItemBag.Length) % 20 > 0) ? 1 : 0);
-			TAB_W_NEW = wScroll / num;
-			for (int i = 0; i < currentListLength; i++)
+			for (int j = 1; j < currentListLength; j++)
 			{
-				int num2 = xScroll + 36;
-				int num3 = yScroll + i * ITEM_HEIGHT;
-				int num4 = wScroll - 36;
+				int num4 = xScroll + 36;
+				int num5 = yScroll + j * ITEM_HEIGHT;
+				int num6 = wScroll - 36;
 				int h = ITEM_HEIGHT - 1;
-				int num5 = xScroll;
-				int num6 = yScroll + i * ITEM_HEIGHT;
-				int num7 = 34;
-				int num8 = ITEM_HEIGHT - 1;
-				if (num3 - cmy > yScroll + hScroll || num3 - cmy < yScroll - ITEM_HEIGHT)
+				int num7 = xScroll;
+				int num8 = yScroll + j * ITEM_HEIGHT;
+				int num9 = 34;
+				int num10 = ITEM_HEIGHT - 1;
+				if (num5 - cmy > yScroll + hScroll || num5 - cmy < yScroll - ITEM_HEIGHT)
 				{
 					continue;
 				}
-				if (i == 0)
-				{
-					for (int j = 0; j < num; j++)
-					{
-						int num9 = ((j == newSelected && selected == 0) ? ((GameCanvas.gameTick % 10 < 7) ? (-1) : 0) : 0);
-						g.setColor((j != newSelected) ? 15723751 : 16383818);
-						g.fillRect(xScroll + j * TAB_W_NEW, num3 + 9 + num9, TAB_W_NEW - 1, 14);
-						mFont.tahoma_7_grey.drawString(g, string.Empty + j, xScroll + j * TAB_W_NEW + TAB_W_NEW / 2, yScroll + 11 + num9, mFont.CENTER);
-					}
-					continue;
-				}
-				bool inventorySelect_isbody = GetInventorySelect_isbody(i, newSelected, Char.myCharz().arrItemBody);
-				int inventorySelect_body = GetInventorySelect_body(i, newSelected);
-				int inventorySelect_bag = GetInventorySelect_bag(i, newSelected, Char.myCharz().arrItemBody);
-				g.setColor((i == selected) ? 16383818 : ((!inventorySelect_isbody) ? 15723751 : 15196114));
-				g.fillRect(num2, num3, num4, h);
-				g.setColor((i == selected) ? 9541120 : ((!inventorySelect_isbody) ? 11837316 : 9993045));
+				bool inventorySelect_isbody = GetInventorySelect_isbody(j, newSelected, Char.myCharz().arrItemBody);
+				int inventorySelect_body = GetInventorySelect_body(j, newSelected);
+				int inventorySelect_bag = GetInventorySelect_bag(j, newSelected, Char.myCharz().arrItemBody);
+				g.setColor((j == selected) ? 16383818 : ((!inventorySelect_isbody) ? 15723751 : 15196114));
+				g.fillRect(num4, num5, num6, h);
+				g.setColor((j == selected) ? 9541120 : ((!inventorySelect_isbody) ? 11837316 : 9993045));
 				Item item = ((!inventorySelect_isbody) ? arrItemBag[inventorySelect_bag] : arrItemBody[inventorySelect_body]);
 				if (item != null)
 				{
@@ -5332,20 +5383,20 @@ public class Panel : IActionListener, IChatable
 					{
 						if (item.itemOption[k].optionTemplate.id == 72 && item.itemOption[k].param > 0)
 						{
-							sbyte color_Item_Upgrade = GetColor_Item_Upgrade(item.itemOption[k].param);
-							int color_ItemBg = GetColor_ItemBg(color_Item_Upgrade);
+							byte id = (byte)GetColor_Item_Upgrade(item.itemOption[k].param);
+							int color_ItemBg = GetColor_ItemBg(id);
 							if (color_ItemBg != -1)
 							{
-								g.setColor((i != selected) ? GetColor_ItemBg(color_Item_Upgrade) : GetColor_ItemBg(color_Item_Upgrade));
+								g.setColor((j != selected) ? GetColor_ItemBg(id) : GetColor_ItemBg(id));
 							}
 						}
 					}
 				}
-				g.fillRect(num5, num6, num7, num8);
+				g.fillRect(num7, num8, num9, num10);
 				if (item != null && item.isSelect && GameCanvas.panel.type == 12)
 				{
-					g.setColor((i != selected) ? 6047789 : 7040779);
-					g.fillRect(num5, num6, num7, num8);
+					g.setColor((j != selected) ? 6047789 : 7040779);
+					g.fillRect(num7, num8, num9, num10);
 				}
 				if (item == null)
 				{
@@ -5382,7 +5433,7 @@ public class Panel : IActionListener, IChatable
 						}
 					}
 				}
-				mFont2.drawString(g, item.template.name + text, num2 + 5, num3 + 1, 0);
+				mFont2.drawString(g, item.template.name + text, num4 + 5, num5 + 1, 0);
 				string text2 = string.Empty;
 				if (item.itemOption != null)
 				{
@@ -5405,23 +5456,23 @@ public class Panel : IActionListener, IChatable
 							}
 						}
 					}
-					mFont3.drawString(g, text2, num2 + 5, num3 + 11, mFont.LEFT);
+					mFont3.drawString(g, text2, num4 + 5, num5 + 11, mFont.LEFT);
 				}
-				SmallImage.drawSmallImage(g, item.template.iconID, num5 + num7 / 2, num6 + num8 / 2, 0, 3);
+				SmallImage.drawSmallImage(g, item.template.iconID, num7 + num9 / 2, num8 + num10 / 2, 0, 3);
 				if (item.itemOption != null)
 				{
 					for (int n = 0; n < item.itemOption.Length; n++)
 					{
-						paintOptItem(g, item.itemOption[n].optionTemplate.id, item.itemOption[n].param, num5, num6, num7, num8);
+						paintOptItem(g, item.itemOption[n].optionTemplate.id, item.itemOption[n].param, num7, num8, num9, num10);
 					}
-					for (int num10 = 0; num10 < item.itemOption.Length; num10++)
+					for (int num11 = 0; num11 < item.itemOption.Length; num11++)
 					{
-						paintOptSlotItem(g, item.itemOption[num10].optionTemplate.id, item.itemOption[num10].param, num5, num6, num7, num8);
+						paintOptSlotItem(g, item.itemOption[num11].optionTemplate.id, item.itemOption[num11].param, num7, num8, num9, num10);
 					}
 				}
 				if (item.quantity > 1)
 				{
-					mFont.tahoma_7_yellow.drawString(g, string.Empty + item.quantity, num5 + num7, num6 + num8 - mFont.tahoma_7_yellow.getHeight(), 1);
+					mFont.tahoma_7_yellow.drawString(g, string.Empty + item.quantity, num7 + num9, num8 + num10 - mFont.tahoma_7_yellow.getHeight(), 1);
 				}
 			}
 		}
@@ -6802,7 +6853,8 @@ public class Panel : IActionListener, IChatable
 				return;
 			}
 			MyVector myVector = new MyVector(string.Empty);
-			Item item = (currItem = Char.myPetz().arrItemBody[selected]);
+			Item item = Char.myPetz().arrItemBody[selected];
+			currItem = item;
 			if (currItem != null)
 			{
 				myVector.addElement(new Command(mResources.MOVEOUT, this, 2006, currItem));
@@ -7265,6 +7317,11 @@ public class Panel : IActionListener, IChatable
 	{
 		if (selected < 0)
 		{
+			return;
+		}
+		if (SoundMn.IsDelAcc && selected == strTool.Length - 1)
+		{
+			Service.gI().sendDelAcc();
 			return;
 		}
 		if (!Char.myCharz().havePet)
@@ -7993,7 +8050,7 @@ public class Panel : IActionListener, IChatable
 			{
 				if (cTiemNang < Char.myCharz().cHPGoc + num2)
 				{
-					GameCanvas.startOKDlg(mResources.not_enough_potential_point1 + Char.myCharz().cTiemNang + mResources.not_enough_potential_point2 + (Char.myCharz().cHPGoc + num2), isError: false);
+					GameCanvas.startOKDlg(mResources.not_enough_potential_point1 + Char.myCharz().cTiemNang + mResources.not_enough_potential_point2 + (Char.myCharz().cHPGoc + num2));
 					return;
 				}
 				if (cTiemNang > cHPGoc && cTiemNang < 10 * (2 * (cHPGoc + num2) + 180) / 2)
@@ -8003,18 +8060,18 @@ public class Panel : IActionListener, IChatable
 				}
 				if (cTiemNang >= 10 * (2 * (cHPGoc + num2) + 180) / 2 && cTiemNang < 100 * (2 * (cHPGoc + num2) + 1980) / 2)
 				{
-					MyVector myVector = new MyVector();
-					myVector.addElement(new Command(mResources.increase_upper + "\n" + Char.myCharz().hpFrom1000TiemNang + mResources.HP + "\n-" + (cHPGoc + num2), this, 9000, null));
-					myVector.addElement(new Command(mResources.increase_upper + "\n" + 10 * Char.myCharz().hpFrom1000TiemNang + mResources.HP + "\n-" + 10 * (2 * (cHPGoc + num2) + 180) / 2, this, 9006, null));
+					MyVector myVector = new MyVector(string.Empty);
+					myVector.addElement(new Command(mResources.increase_upper + "\n" + Char.myCharz().hpFrom1000TiemNang + mResources.HP + "\n-" + Res.formatNumber2(cHPGoc + num2), this, 9000, null));
+					myVector.addElement(new Command(mResources.increase_upper + "\n" + 10 * Char.myCharz().hpFrom1000TiemNang + mResources.HP + "\n-" + Res.formatNumber2(10 * (2 * (cHPGoc + num2) + 180) / 2), this, 9006, null));
 					GameCanvas.menu.startAt(myVector, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
 					addSkillDetail2(selected);
 				}
 				if (cTiemNang >= 100 * (2 * (cHPGoc + num2) + 1980) / 2)
 				{
-					MyVector myVector2 = new MyVector();
-					myVector2.addElement(new Command(mResources.increase_upper + "\n" + Char.myCharz().hpFrom1000TiemNang + mResources.HP + "\n-" + (cHPGoc + num2), this, 9000, null));
-					myVector2.addElement(new Command(mResources.increase_upper + "\n" + 10 * Char.myCharz().hpFrom1000TiemNang + mResources.HP + "\n-" + 10 * (2 * (cHPGoc + num2) + 180) / 2, this, 9006, null));
-					myVector2.addElement(new Command(mResources.increase_upper + "\n" + 100 * Char.myCharz().hpFrom1000TiemNang + mResources.HP + "\n-" + 100 * (2 * (cHPGoc + num2) + 1980) / 2, this, 9007, null));
+					MyVector myVector2 = new MyVector(string.Empty);
+					myVector2.addElement(new Command(mResources.increase_upper + "\n" + Char.myCharz().hpFrom1000TiemNang + mResources.HP + "\n-" + Res.formatNumber2(cHPGoc + num2), this, 9000, null));
+					myVector2.addElement(new Command(mResources.increase_upper + "\n" + 10 * Char.myCharz().hpFrom1000TiemNang + mResources.HP + "\n-" + Res.formatNumber2(10 * (2 * (cHPGoc + num2) + 180) / 2), this, 9006, null));
+					myVector2.addElement(new Command(mResources.increase_upper + "\n" + 100 * Char.myCharz().hpFrom1000TiemNang + mResources.HP + "\n-" + Res.formatNumber2(100 * (2 * (cHPGoc + num2) + 1980) / 2), this, 9007, null));
 					GameCanvas.menu.startAt(myVector2, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
 					addSkillDetail2(selected);
 				}
@@ -8023,7 +8080,7 @@ public class Panel : IActionListener, IChatable
 			{
 				if (Char.myCharz().cTiemNang < Char.myCharz().cMPGoc + num2)
 				{
-					GameCanvas.startOKDlg(mResources.not_enough_potential_point1 + Char.myCharz().cTiemNang + mResources.not_enough_potential_point2 + (Char.myCharz().cMPGoc + num2), isError: false);
+					GameCanvas.startOKDlg(mResources.not_enough_potential_point1 + Char.myCharz().cTiemNang + mResources.not_enough_potential_point2 + (Char.myCharz().cMPGoc + num2));
 					return;
 				}
 				if (cTiemNang > cMPGoc && cTiemNang < 10 * (2 * (cMPGoc + num2) + 180) / 2)
@@ -8033,18 +8090,18 @@ public class Panel : IActionListener, IChatable
 				}
 				if (cTiemNang >= 10 * (2 * (cMPGoc + num2) + 180) / 2 && cTiemNang < 100 * (2 * (cMPGoc + num2) + 1980) / 2)
 				{
-					MyVector myVector3 = new MyVector();
-					myVector3.addElement(new Command(mResources.increase_upper + "\n" + Char.myCharz().mpFrom1000TiemNang + mResources.KI + "\n-" + (cHPGoc + num2), this, 9000, null));
-					myVector3.addElement(new Command(mResources.increase_upper + "\n" + 10 * Char.myCharz().mpFrom1000TiemNang + mResources.KI + "\n-" + 10 * (2 * (cHPGoc + num2) + 180) / 2, this, 9006, null));
+					MyVector myVector3 = new MyVector(string.Empty);
+					myVector3.addElement(new Command(mResources.increase_upper + "\n" + Char.myCharz().mpFrom1000TiemNang + mResources.KI + "\n-" + Res.formatNumber2(cHPGoc + num2), this, 9000, null));
+					myVector3.addElement(new Command(mResources.increase_upper + "\n" + 10 * Char.myCharz().mpFrom1000TiemNang + mResources.KI + "\n-" + Res.formatNumber2(10 * (2 * (cHPGoc + num2) + 180) / 2), this, 9006, null));
 					GameCanvas.menu.startAt(myVector3, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
 					addSkillDetail2(selected);
 				}
 				if (cTiemNang >= 100 * (2 * (cMPGoc + num2) + 1980) / 2)
 				{
-					MyVector myVector4 = new MyVector();
-					myVector4.addElement(new Command(mResources.increase_upper + "\n" + Char.myCharz().mpFrom1000TiemNang + mResources.KI + "\n-" + (cMPGoc + num2), this, 9000, null));
-					myVector4.addElement(new Command(mResources.increase_upper + "\n" + 10 * Char.myCharz().mpFrom1000TiemNang + mResources.KI + "\n-" + 10 * (2 * (cMPGoc + num2) + 180) / 2, this, 9006, null));
-					myVector4.addElement(new Command(mResources.increase_upper + "\n" + 100 * Char.myCharz().mpFrom1000TiemNang + mResources.KI + "\n-" + 100 * (2 * (cMPGoc + num2) + 1980) / 2, this, 9007, null));
+					MyVector myVector4 = new MyVector(string.Empty);
+					myVector4.addElement(new Command(mResources.increase_upper + "\n" + Char.myCharz().mpFrom1000TiemNang + mResources.KI + "\n-" + Res.formatNumber2(cMPGoc + num2), this, 9000, null));
+					myVector4.addElement(new Command(mResources.increase_upper + "\n" + 10 * Char.myCharz().mpFrom1000TiemNang + mResources.KI + "\n-" + Res.formatNumber2(10 * (2 * (cMPGoc + num2) + 180) / 2), this, 9006, null));
+					myVector4.addElement(new Command(mResources.increase_upper + "\n" + 100 * Char.myCharz().mpFrom1000TiemNang + mResources.KI + "\n-" + Res.formatNumber2(100 * (2 * (cMPGoc + num2) + 1980) / 2), this, 9007, null));
 					GameCanvas.menu.startAt(myVector4, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
 					addSkillDetail2(selected);
 				}
@@ -8053,7 +8110,7 @@ public class Panel : IActionListener, IChatable
 			{
 				if (Char.myCharz().cTiemNang < Char.myCharz().cDamGoc * Char.myCharz().expForOneAdd)
 				{
-					GameCanvas.startOKDlg(mResources.not_enough_potential_point1 + Char.myCharz().cTiemNang + mResources.not_enough_potential_point2 + cDamGoc * 100, isError: false);
+					GameCanvas.startOKDlg(mResources.not_enough_potential_point1 + Char.myCharz().cTiemNang + mResources.not_enough_potential_point2 + cDamGoc * 100);
 					return;
 				}
 				if (cTiemNang > cDamGoc && cTiemNang < 10 * (2 * cDamGoc + 9) / 2 * Char.myCharz().expForOneAdd)
@@ -8063,18 +8120,18 @@ public class Panel : IActionListener, IChatable
 				}
 				if (cTiemNang >= 10 * (2 * cDamGoc + 9) / 2 * Char.myCharz().expForOneAdd && cTiemNang < 100 * (2 * cDamGoc + 99) / 2 * Char.myCharz().expForOneAdd)
 				{
-					MyVector myVector5 = new MyVector();
-					myVector5.addElement(new Command(mResources.increase_upper + "\n" + Char.myCharz().damFrom1000TiemNang + "\n" + mResources.hit_point + "\n-" + cDamGoc * 100, this, 9000, null));
-					myVector5.addElement(new Command(mResources.increase_upper + "\n" + 10 * Char.myCharz().damFrom1000TiemNang + "\n" + mResources.hit_point + "\n-" + 10 * (2 * cDamGoc + 9) / 2 * Char.myCharz().expForOneAdd, this, 9006, null));
+					MyVector myVector5 = new MyVector(string.Empty);
+					myVector5.addElement(new Command(mResources.increase_upper + "\n" + Char.myCharz().damFrom1000TiemNang + "\n" + mResources.hit_point + "\n-" + Res.formatNumber2(cDamGoc * 100), this, 9000, null));
+					myVector5.addElement(new Command(mResources.increase_upper + "\n" + 10 * Char.myCharz().damFrom1000TiemNang + "\n" + mResources.hit_point + "\n-" + Res.formatNumber2(10 * (2 * cDamGoc + 9) / 2 * Char.myCharz().expForOneAdd), this, 9006, null));
 					GameCanvas.menu.startAt(myVector5, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
 					addSkillDetail2(selected);
 				}
 				if (cTiemNang >= 100 * (2 * cDamGoc + 99) / 2 * Char.myCharz().expForOneAdd)
 				{
-					MyVector myVector6 = new MyVector();
-					myVector6.addElement(new Command(mResources.increase_upper + "\n" + Char.myCharz().damFrom1000TiemNang + "\n" + mResources.hit_point + "\n-" + cDamGoc * 100, this, 9000, null));
-					myVector6.addElement(new Command(mResources.increase_upper + "\n" + 10 * Char.myCharz().damFrom1000TiemNang + "\n" + mResources.hit_point + "\n-" + 10 * (2 * cDamGoc + 9) / 2 * Char.myCharz().expForOneAdd, this, 9006, null));
-					myVector6.addElement(new Command(mResources.increase_upper + "\n" + 100 * Char.myCharz().damFrom1000TiemNang + "\n" + mResources.hit_point + "\n-" + 100 * (2 * cDamGoc + 99) / 2 * Char.myCharz().expForOneAdd, this, 9007, null));
+					MyVector myVector6 = new MyVector(string.Empty);
+					myVector6.addElement(new Command(mResources.increase_upper + "\n" + Char.myCharz().damFrom1000TiemNang + "\n" + mResources.hit_point + "\n-" + Res.formatNumber2(cDamGoc * 100), this, 9000, null));
+					myVector6.addElement(new Command(mResources.increase_upper + "\n" + 10 * Char.myCharz().damFrom1000TiemNang + "\n" + mResources.hit_point + "\n-" + Res.formatNumber2(10 * (2 * cDamGoc + 9) / 2 * Char.myCharz().expForOneAdd), this, 9006, null));
+					myVector6.addElement(new Command(mResources.increase_upper + "\n" + 100 * Char.myCharz().damFrom1000TiemNang + "\n" + mResources.hit_point + "\n-" + Res.formatNumber2(100 * (2 * cDamGoc + 99) / 2 * Char.myCharz().expForOneAdd), this, 9007, null));
 					GameCanvas.menu.startAt(myVector6, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
 					addSkillDetail2(selected);
 				}
@@ -8083,25 +8140,35 @@ public class Panel : IActionListener, IChatable
 			{
 				if (Char.myCharz().cTiemNang < 50000 + Char.myCharz().cDefGoc * 1000)
 				{
-					GameCanvas.startOKDlg(mResources.not_enough_potential_point1 + NinjaUtil.getMoneys(Char.myCharz().cTiemNang) + mResources.not_enough_potential_point2 + NinjaUtil.getMoneys(50000 + Char.myCharz().cDefGoc * 1000), isError: false);
+					GameCanvas.startOKDlg(mResources.not_enough_potential_point1 + NinjaUtil.getMoneys(Char.myCharz().cTiemNang) + mResources.not_enough_potential_point2 + NinjaUtil.getMoneys(50000 + Char.myCharz().cDefGoc * 1000));
 					return;
 				}
-				int num3 = 2 * (cDefGoc + 5) / 2 * 100000;
-				GameCanvas.startYesNoDlg(mResources.use_potential_point_for1 + NinjaUtil.getMoneys(num3) + mResources.use_potential_point_for2 + Char.myCharz().defFrom1000TiemNang + mResources.for_armor, new Command(mResources.increase_upper, this, 9000, null), new Command(mResources.CANCEL, this, 4007, null));
+				long number = (long)(2 * (cDefGoc + 5)) / 2L * 100000;
+				long number2 = 10L * (long)(2 * (cDefGoc + 5) + 9) / 2 * 100000;
+				long number3 = 100L * (long)(2 * (cDefGoc + 5) + 99) / 2 * 100000;
+				mResources.use_potential_point_for1 = mResources.increase_upper;
+				MyVector myVector7 = new MyVector(string.Empty);
+				myVector7.addElement(new Command(mResources.use_potential_point_for1 + "\n1 " + mResources.armor + "\n" + Res.formatNumber2(number), this, 9000, null));
+				myVector7.addElement(new Command(mResources.use_potential_point_for1 + "\n10 " + mResources.armor + "\n" + Res.formatNumber2(number2), this, 9006, null));
+				myVector7.addElement(new Command(mResources.use_potential_point_for1 + "\n100 " + mResources.armor + "\n" + Res.formatNumber2(number3), this, 9007, null));
+				GameCanvas.menu.startAt(myVector7, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
+				addSkillDetail2(selected);
 			}
 			else if (selected == 4)
 			{
-				long num4 = 50000000L;
-				for (int i = 0; i < Char.myCharz().cCriticalGoc; i++)
+				long num3 = 50000000L;
+				int num4 = Char.myCharz().cCriticalGoc;
+				if (num4 > t_tiemnang.Length - 1)
 				{
-					num4 *= 5;
+					num4 = t_tiemnang.Length - 1;
 				}
-				if (Char.myCharz().cTiemNang < num4)
+				num3 = t_tiemnang[num4];
+				if (Char.myCharz().cTiemNang < num3)
 				{
-					GameCanvas.startOKDlg(mResources.not_enough_potential_point1 + NinjaUtil.getMoneys(Char.myCharz().cTiemNang) + mResources.not_enough_potential_point2 + NinjaUtil.getMoneys(num4), isError: false);
+					GameCanvas.startOKDlg(mResources.not_enough_potential_point1 + Res.formatNumber2(Char.myCharz().cTiemNang) + mResources.not_enough_potential_point2 + Res.formatNumber2(num3));
 					return;
 				}
-				GameCanvas.startYesNoDlg(mResources.use_potential_point_for1 + NinjaUtil.getMoneys(num4) + mResources.use_potential_point_for2 + Char.myCharz().criticalFrom1000Tiemnang + mResources.for_crit, new Command(mResources.increase_upper, this, 9000, null), new Command(mResources.CANCEL, this, 4007, null));
+				GameCanvas.startYesNoDlg(mResources.use_potential_point_for1 + Res.formatNumber(num3) + mResources.use_potential_point_for2 + Char.myCharz().criticalFrom1000Tiemnang + mResources.for_crit, new Command(mResources.increase_upper, this, 9000, null), new Command(mResources.CANCEL, this, 4007, null));
 			}
 			else if (selected == 5)
 			{
@@ -8113,27 +8180,27 @@ public class Panel : IActionListener, IChatable
 		SkillTemplate skillTemplate = Char.myCharz().nClass.skillTemplates[num5];
 		Skill skill = Char.myCharz().getSkill(skillTemplate);
 		Skill skill2 = null;
-		MyVector myVector7 = new MyVector();
+		MyVector myVector8 = new MyVector(string.Empty);
 		if (skill != null)
 		{
 			if (skill.point == skillTemplate.maxPoint)
 			{
-				myVector7.addElement(new Command(mResources.make_shortcut, this, 9003, skill.template));
-				myVector7.addElement(new Command(mResources.CLOSE, 2));
+				myVector8.addElement(new Command(mResources.make_shortcut, this, 9003, skill.template));
+				myVector8.addElement(new Command(mResources.CLOSE, 2));
 			}
 			else
 			{
 				skill2 = skillTemplate.skills[skill.point];
-				myVector7.addElement(new Command(mResources.UPGRADE, this, 9002, skill2));
-				myVector7.addElement(new Command(mResources.make_shortcut, this, 9003, skill.template));
+				myVector8.addElement(new Command(mResources.UPGRADE, this, 9002, skill2));
+				myVector8.addElement(new Command(mResources.make_shortcut, this, 9003, skill.template));
 			}
 		}
 		else
 		{
 			skill2 = skillTemplate.skills[0];
-			myVector7.addElement(new Command(mResources.learn, this, 9004, skill2));
+			myVector8.addElement(new Command(mResources.learn, this, 9004, skill2));
 		}
-		GameCanvas.menu.startAt(myVector7, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
+		GameCanvas.menu.startAt(myVector8, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
 		addSkillDetail(skillTemplate, skill, skill2);
 	}
 
@@ -8165,6 +8232,10 @@ public class Panel : IActionListener, IChatable
 		{
 			num = Char.myCharz().cDamGoc * Char.myCharz().expForOneAdd;
 		}
+		if (selected == 3)
+		{
+			num = 500000 + Char.myCharz().cDefGoc * 100000;
+		}
 		string text = empty;
 		empty = text + "|5|2|" + mResources.USE + " " + num + " " + mResources.potential;
 		if (type == 0)
@@ -8176,6 +8247,10 @@ public class Panel : IActionListener, IChatable
 			empty = empty + "\n|5|2|" + mResources.to_gain_20mp;
 		}
 		if (type == 2)
+		{
+			empty = empty + "\n|5|2|" + mResources.to_gain_1pow;
+		}
+		if (type == 3)
 		{
 			empty = empty + "\n|5|2|" + mResources.to_gain_1pow;
 		}
@@ -8240,14 +8315,14 @@ public class Panel : IActionListener, IChatable
 				Item item = Char.myCharz().arrItemBox[b];
 				if (item != null)
 				{
-					if (item.isTypeBody())
-					{
-						myVector.addElement(new Command(mResources.GETOUT, this, 1000, item));
-					}
-					else if (isBoxClan)
+					if (isBoxClan)
 					{
 						myVector.addElement(new Command(mResources.GETOUT, this, 1000, item));
 						myVector.addElement(new Command(mResources.USE, this, 2010, item));
+					}
+					else if (item.isTypeBody())
+					{
+						myVector.addElement(new Command(mResources.GETOUT, this, 1000, item));
 					}
 					else
 					{
@@ -8286,7 +8361,7 @@ public class Panel : IActionListener, IChatable
 				}
 				else
 				{
-					Item item3 = Char.myCharz().arrItemBody[GetInventorySelect_bag(selected, newSelected, Char.myCharz().arrItemBody)];
+					Item item3 = Char.myCharz().arrItemBody[GetInventorySelect_body(selected, newSelected)];
 					if (item3 != null)
 					{
 						myVector.addElement(new Command(mResources.move_to_chest2, this, 1002, item3));
@@ -9562,7 +9637,7 @@ public class Panel : IActionListener, IChatable
 			{
 				g.setColor((i != selected) ? 15196114 : 16383818);
 				g.fillRect(x, num, num2, h);
-				mFont.tahoma_7b_dark.drawString(g, strCauhinh[i], xScroll + wScroll / 2, num + 6, mFont.CENTER);
+				mFont.tahoma_7b_dark.drawString(g, strCauhinh[i], xScroll + 25, num + 6, mFont.LEFT);
 			}
 		}
 		paintScrollArrow(g);
@@ -9583,27 +9658,23 @@ public class Panel : IActionListener, IChatable
 			SoundMn.gI().AuraToolOption();
 			break;
 		case 2:
-			SoundMn.gI().soundToolOption();
+			SoundMn.gI().AuraToolOption2();
 			break;
 		case 3:
+			SoundMn.gI().soundToolOption();
+			break;
+		case 4:
 			if (Main.isPC)
 			{
 				GameCanvas.startYesNoDlg(mResources.changeSizeScreen, new Command(mResources.YES, this, 170391, null), new Command(mResources.NO, this, 4005, null));
-				break;
-			}
-			if (GameScr.isAnalog == 0)
-			{
-				GameScr.isAnalog = 1;
-				Rms.saveRMSInt("analog", GameScr.isAnalog);
-				GameScr.setSkillBarPosition();
 			}
 			else
 			{
-				GameScr.isAnalog = 0;
-				Rms.saveRMSInt("analog", GameScr.isAnalog);
-				GameScr.setSkillBarPosition();
+				SoundMn.gI().CaseSizeScr();
 			}
-			SoundMn.gI().getStrOption();
+			break;
+		case 5:
+			SoundMn.gI().CaseAnalog();
 			break;
 		}
 	}
@@ -10134,6 +10205,15 @@ public class Panel : IActionListener, IChatable
 		return num - arrItem.Length;
 	}
 
+	private bool isTabInven()
+	{
+		if ((type == 0 && currentTabIndex == 1) || (type == 7 && currentTabIndex == 0))
+		{
+			return true;
+		}
+		return false;
+	}
+
 	private void updateKeyInvenTab()
 	{
 		if (selected < 0)
@@ -10175,7 +10255,10 @@ public class Panel : IActionListener, IChatable
 	private void updateKeyInventory()
 	{
 		updateKeyScrollView();
-		updateKeyInvenTab();
+		if (selected == 0)
+		{
+			updateKeyInvenTab();
+		}
 	}
 
 	private bool IsTabOption()

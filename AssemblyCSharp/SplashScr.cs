@@ -29,6 +29,10 @@ public class SplashScr : mScreen
 		if (splashScrStat == 30 && !isCheckConnect)
 		{
 			isCheckConnect = true;
+			if (Rms.loadRMSInt("serverchat") != -1)
+			{
+				GameScr.isPaintChatVip = ((Rms.loadRMSInt("serverchat") == 0) ? true : false);
+			}
 			if (Rms.loadRMSInt("isPlaySound") != -1)
 			{
 				GameCanvas.isPlaySound = Rms.loadRMSInt("isPlaySound") == 1;

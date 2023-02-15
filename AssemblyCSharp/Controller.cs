@@ -132,67 +132,67 @@ public class Controller : IMessageHandler
 				break;
 			case 65:
 			{
-				sbyte b24 = msg.reader().readSByte();
-				string text2 = msg.reader().readUTF();
-				short num53 = msg.reader().readShort();
-				if (ItemTime.isExistMessage(b24))
+				sbyte b45 = msg.reader().readSByte();
+				string text4 = msg.reader().readUTF();
+				short num111 = msg.reader().readShort();
+				if (ItemTime.isExistMessage(b45))
 				{
-					if (num53 != 0)
+					if (num111 != 0)
 					{
-						ItemTime.getMessageById(b24).initTimeText(b24, text2, num53);
+						ItemTime.getMessageById(b45).initTimeText(b45, text4, num111);
 					}
 					else
 					{
-						GameScr.textTime.removeElement(ItemTime.getMessageById(b24));
+						GameScr.textTime.removeElement(ItemTime.getMessageById(b45));
 					}
 				}
 				else
 				{
 					ItemTime itemTime = new ItemTime();
-					itemTime.initTimeText(b24, text2, num53);
+					itemTime.initTimeText(b45, text4, num111);
 					GameScr.textTime.addElement(itemTime);
 				}
 				break;
 			}
 			case 112:
 			{
-				sbyte b46 = msg.reader().readByte();
-				Res.outz("spec type= " + b46);
-				if (b46 == 0)
+				sbyte b40 = msg.reader().readByte();
+				Res.outz("spec type= " + b40);
+				if (b40 == 0)
 				{
 					Panel.spearcialImage = msg.reader().readShort();
 					Panel.specialInfo = msg.reader().readUTF();
 				}
 				else
 				{
-					if (b46 != 1)
+					if (b40 != 1)
 					{
 						break;
 					}
-					sbyte b47 = msg.reader().readByte();
-					Char.myCharz().infoSpeacialSkill = new string[b47][];
-					Char.myCharz().imgSpeacialSkill = new short[b47][];
-					GameCanvas.panel.speacialTabName = new string[b47][];
-					for (int num104 = 0; num104 < b47; num104++)
+					sbyte b41 = msg.reader().readByte();
+					Char.myCharz().infoSpeacialSkill = new string[b41][];
+					Char.myCharz().imgSpeacialSkill = new short[b41][];
+					GameCanvas.panel.speacialTabName = new string[b41][];
+					for (int num101 = 0; num101 < b41; num101++)
 					{
-						GameCanvas.panel.speacialTabName[num104] = new string[2];
+						GameCanvas.panel.speacialTabName[num101] = new string[2];
 						string[] array8 = Res.split(msg.reader().readUTF(), "\n", 0);
 						if (array8.Length == 2)
 						{
-							GameCanvas.panel.speacialTabName[num104] = array8;
+							GameCanvas.panel.speacialTabName[num101] = array8;
 						}
 						if (array8.Length == 1)
 						{
-							GameCanvas.panel.speacialTabName[num104][0] = array8[0];
-							GameCanvas.panel.speacialTabName[num104][1] = string.Empty;
+							GameCanvas.panel.speacialTabName[num101][0] = array8[0];
+							GameCanvas.panel.speacialTabName[num101][1] = string.Empty;
 						}
-						int num105 = msg.reader().readByte();
-						Char.myCharz().infoSpeacialSkill[num104] = new string[num105];
-						Char.myCharz().imgSpeacialSkill[num104] = new short[num105];
-						for (int num106 = 0; num106 < num105; num106++)
+						int num102 = msg.reader().readByte();
+						Char.myCharz().infoSpeacialSkill[num101] = new string[num102];
+						Char.myCharz().imgSpeacialSkill[num101] = new short[num102];
+						for (int num103 = 0; num103 < num102; num103++)
 						{
-							Char.myCharz().imgSpeacialSkill[num104][num106] = msg.reader().readShort();
-							Char.myCharz().infoSpeacialSkill[num104][num106] = msg.reader().readUTF();
+							Char.myCharz().imgSpeacialSkill[num101][num103] = msg.reader().readShort();
+							Char.myCharz().infoSpeacialSkill[num101][num103] = msg.reader().readUTF();
 						}
 					}
 					GameCanvas.panel.tabName[25] = GameCanvas.panel.speacialTabName;
@@ -203,9 +203,9 @@ public class Controller : IMessageHandler
 			}
 			case -98:
 			{
-				sbyte b23 = msg.reader().readByte();
+				sbyte b35 = msg.reader().readByte();
 				GameCanvas.menu.showMenu = false;
-				if (b23 == 0)
+				if (b35 == 0)
 				{
 					GameCanvas.startYesNoDlg(msg.reader().readUTF(), new Command(mResources.YES, GameCanvas.instance, 888397, msg.reader().readUTF()), new Command(mResources.NO, GameCanvas.instance, 888396, null));
 				}
@@ -219,8 +219,8 @@ public class Controller : IMessageHandler
 				sbyte typeTop = msg.reader().readByte();
 				GameCanvas.panel.vTop.removeAllElements();
 				string topName = msg.reader().readUTF();
-				sbyte b33 = msg.reader().readByte();
-				for (int num82 = 0; num82 < b33; num82++)
+				sbyte b68 = msg.reader().readByte();
+				for (int num162 = 0; num162 < b68; num162++)
 				{
 					int rank = msg.reader().readInt();
 					int pId = msg.reader().readInt();
@@ -229,7 +229,7 @@ public class Controller : IMessageHandler
 					short body = msg.reader().readShort();
 					short leg = msg.reader().readShort();
 					string name = msg.reader().readUTF();
-					string info = msg.reader().readUTF();
+					string info2 = msg.reader().readUTF();
 					TopInfo topInfo = new TopInfo();
 					topInfo.rank = rank;
 					topInfo.headID = headID;
@@ -237,7 +237,7 @@ public class Controller : IMessageHandler
 					topInfo.body = body;
 					topInfo.leg = leg;
 					topInfo.name = name;
-					topInfo.info = info;
+					topInfo.info = info2;
 					topInfo.info2 = msg.reader().readUTF();
 					topInfo.pId = pId;
 					GameCanvas.panel.vTop.addElement(topInfo);
@@ -250,35 +250,35 @@ public class Controller : IMessageHandler
 			case -94:
 				while (msg.reader().available() > 0)
 				{
-					short num50 = msg.reader().readShort();
-					int num51 = msg.reader().readInt();
-					for (int num52 = 0; num52 < Char.myCharz().vSkill.size(); num52++)
+					short num14 = msg.reader().readShort();
+					int num15 = msg.reader().readInt();
+					for (int k = 0; k < Char.myCharz().vSkill.size(); k++)
 					{
-						Skill skill = (Skill)Char.myCharz().vSkill.elementAt(num52);
-						if (skill != null && skill.skillId == num50)
+						Skill skill = (Skill)Char.myCharz().vSkill.elementAt(k);
+						if (skill != null && skill.skillId == num14)
 						{
-							if (num51 < skill.coolDown)
+							if (num15 < skill.coolDown)
 							{
-								skill.lastTimeUseThisSkill = mSystem.currentTimeMillis() - (skill.coolDown - num51);
+								skill.lastTimeUseThisSkill = mSystem.currentTimeMillis() - (skill.coolDown - num15);
 							}
-							Res.outz("1 chieu id= " + skill.template.id + " cooldown= " + num51 + "curr cool down= " + skill.coolDown);
+							Res.outz("1 chieu id= " + skill.template.id + " cooldown= " + num15 + "curr cool down= " + skill.coolDown);
 						}
 					}
 				}
 				break;
 			case -95:
 			{
-				sbyte b27 = msg.reader().readByte();
-				Res.outz("type= " + b27);
-				if (b27 == 0)
+				sbyte b21 = msg.reader().readByte();
+				Res.outz("type= " + b21);
+				if (b21 == 0)
 				{
-					int num58 = msg.reader().readInt();
+					int num54 = msg.reader().readInt();
 					short templateId = msg.reader().readShort();
-					int num59 = msg.readInt3Byte();
+					int num55 = msg.readInt3Byte();
 					SoundMn.gI().explode_1();
-					if (num58 == Char.myCharz().charID)
+					if (num54 == Char.myCharz().charID)
 					{
-						Char.myCharz().mobMe = new Mob(num58, isDisable: false, isDontMove: false, isFire: false, isIce: false, isWind: false, templateId, 1, num59, 0, num59, (short)(Char.myCharz().cx + ((Char.myCharz().cdir != 1) ? (-40) : 40)), (short)Char.myCharz().cy, 4, 0);
+						Char.myCharz().mobMe = new Mob(num54, isDisable: false, isDontMove: false, isFire: false, isIce: false, isWind: false, templateId, 1, num55, 0, num55, (short)(Char.myCharz().cx + ((Char.myCharz().cdir != 1) ? (-40) : 40)), (short)Char.myCharz().cy, 4, 0);
 						Char.myCharz().mobMe.isMobMe = true;
 						EffecMn.addEff(new Effect(18, Char.myCharz().mobMe.x, Char.myCharz().mobMe.y, 2, 10, -1));
 						Char.myCharz().tMobMeBorn = 30;
@@ -286,32 +286,32 @@ public class Controller : IMessageHandler
 					}
 					else
 					{
-						@char = GameScr.findCharInMap(num58);
+						@char = GameScr.findCharInMap(num54);
 						if (@char != null)
 						{
-							Mob mob4 = new Mob(num58, isDisable: false, isDontMove: false, isFire: false, isIce: false, isWind: false, templateId, 1, num59, 0, num59, (short)@char.cx, (short)@char.cy, 4, 0);
-							mob4.isMobMe = true;
-							@char.mobMe = mob4;
+							Mob mob5 = new Mob(num54, isDisable: false, isDontMove: false, isFire: false, isIce: false, isWind: false, templateId, 1, num55, 0, num55, (short)@char.cx, (short)@char.cy, 4, 0);
+							mob5.isMobMe = true;
+							@char.mobMe = mob5;
 							GameScr.vMob.addElement(@char.mobMe);
 						}
 						else
 						{
-							Mob mob5 = GameScr.findMobInMap(num58);
-							if (mob5 == null)
+							Mob mob6 = GameScr.findMobInMap(num54);
+							if (mob6 == null)
 							{
-								mob5 = new Mob(num58, isDisable: false, isDontMove: false, isFire: false, isIce: false, isWind: false, templateId, 1, num59, 0, num59, -100, -100, 4, 0);
-								mob5.isMobMe = true;
-								GameScr.vMob.addElement(mob5);
+								mob6 = new Mob(num54, isDisable: false, isDontMove: false, isFire: false, isIce: false, isWind: false, templateId, 1, num55, 0, num55, -100, -100, 4, 0);
+								mob6.isMobMe = true;
+								GameScr.vMob.addElement(mob6);
 							}
 						}
 					}
 				}
-				if (b27 == 1)
+				if (b21 == 1)
 				{
-					int num60 = msg.reader().readInt();
+					int num56 = msg.reader().readInt();
 					int mobId = msg.reader().readByte();
-					Res.outz("mod attack id= " + num60);
-					if (num60 == Char.myCharz().charID)
+					Res.outz("mod attack id= " + num56);
+					if (num56 == Char.myCharz().charID)
 					{
 						if (GameScr.findMobInMap(mobId) != null)
 						{
@@ -320,68 +320,68 @@ public class Controller : IMessageHandler
 					}
 					else
 					{
-						@char = GameScr.findCharInMap(num60);
+						@char = GameScr.findCharInMap(num56);
 						if (@char != null && GameScr.findMobInMap(mobId) != null)
 						{
 							@char.mobMe.attackOtherMob(GameScr.findMobInMap(mobId));
 						}
 					}
 				}
-				if (b27 == 2)
+				if (b21 == 2)
 				{
-					int num61 = msg.reader().readInt();
-					int num62 = msg.reader().readInt();
-					int num63 = msg.readInt3Byte();
+					int num57 = msg.reader().readInt();
+					int num58 = msg.reader().readInt();
+					int num59 = msg.readInt3Byte();
 					int cHPNew = msg.readInt3Byte();
-					if (num61 == Char.myCharz().charID)
+					if (num57 == Char.myCharz().charID)
 					{
-						Res.outz("mob dame= " + num63);
-						@char = GameScr.findCharInMap(num62);
+						Res.outz("mob dame= " + num59);
+						@char = GameScr.findCharInMap(num58);
 						if (@char != null)
 						{
 							@char.cHPNew = cHPNew;
 							if (Char.myCharz().mobMe.isBusyAttackSomeOne)
 							{
-								@char.doInjure(num63, 0, isCrit: false, isMob: true);
+								@char.doInjure(num59, 0, isCrit: false, isMob: true);
 							}
 							else
 							{
-								Char.myCharz().mobMe.dame = num63;
+								Char.myCharz().mobMe.dame = num59;
 								Char.myCharz().mobMe.setAttack(@char);
 							}
 						}
 					}
 					else
 					{
-						mob = GameScr.findMobInMap(num61);
+						mob = GameScr.findMobInMap(num57);
 						if (mob != null)
 						{
-							if (num62 == Char.myCharz().charID)
+							if (num58 == Char.myCharz().charID)
 							{
 								Char.myCharz().cHPNew = cHPNew;
 								if (mob.isBusyAttackSomeOne)
 								{
-									Char.myCharz().doInjure(num63, 0, isCrit: false, isMob: true);
+									Char.myCharz().doInjure(num59, 0, isCrit: false, isMob: true);
 								}
 								else
 								{
-									mob.dame = num63;
+									mob.dame = num59;
 									mob.setAttack(Char.myCharz());
 								}
 							}
 							else
 							{
-								@char = GameScr.findCharInMap(num62);
+								@char = GameScr.findCharInMap(num58);
 								if (@char != null)
 								{
 									@char.cHPNew = cHPNew;
 									if (mob.isBusyAttackSomeOne)
 									{
-										@char.doInjure(num63, 0, isCrit: false, isMob: true);
+										@char.doInjure(num59, 0, isCrit: false, isMob: true);
 									}
 									else
 									{
-										mob.dame = num63;
+										mob.dame = num59;
 										mob.setAttack(@char);
 									}
 								}
@@ -389,14 +389,14 @@ public class Controller : IMessageHandler
 						}
 					}
 				}
-				if (b27 == 3)
+				if (b21 == 3)
 				{
-					int num64 = msg.reader().readInt();
+					int num60 = msg.reader().readInt();
 					int mobId2 = msg.reader().readInt();
 					int hp = msg.readInt3Byte();
-					int num65 = msg.readInt3Byte();
+					int num61 = msg.readInt3Byte();
 					@char = null;
-					@char = ((Char.myCharz().charID != num64) ? GameScr.findCharInMap(num64) : Char.myCharz());
+					@char = ((Char.myCharz().charID != num60) ? GameScr.findCharInMap(num60) : Char.myCharz());
 					if (@char != null)
 					{
 						mob = GameScr.findMobInMap(mobId2);
@@ -407,7 +407,8 @@ public class Controller : IMessageHandler
 						if (mob != null)
 						{
 							mob.hp = hp;
-							if (num65 == 0)
+							mob.updateHp_bar();
+							if (num61 == 0)
 							{
 								mob.x = mob.xFirst;
 								mob.y = mob.yFirst;
@@ -415,37 +416,37 @@ public class Controller : IMessageHandler
 							}
 							else
 							{
-								GameScr.startFlyText("-" + num65, mob.x, mob.y - mob.h, 0, -2, mFont.ORANGE);
+								GameScr.startFlyText("-" + num61, mob.x, mob.y - mob.h, 0, -2, mFont.ORANGE);
 							}
 						}
 					}
 				}
-				if (b27 == 4)
+				if (b21 == 4)
 				{
 				}
-				if (b27 == 5)
+				if (b21 == 5)
 				{
-					int num66 = msg.reader().readInt();
-					sbyte b28 = msg.reader().readByte();
+					int num62 = msg.reader().readInt();
+					sbyte b22 = msg.reader().readByte();
 					int mobId3 = msg.reader().readInt();
-					int num67 = msg.readInt3Byte();
+					int num63 = msg.readInt3Byte();
 					int hp2 = msg.readInt3Byte();
 					@char = null;
-					@char = ((num66 != Char.myCharz().charID) ? GameScr.findCharInMap(num66) : Char.myCharz());
+					@char = ((num62 != Char.myCharz().charID) ? GameScr.findCharInMap(num62) : Char.myCharz());
 					if (@char == null)
 					{
 						return;
 					}
 					if ((TileMap.tileTypeAtPixel(@char.cx, @char.cy) & 2) == 2)
 					{
-						@char.setSkillPaint(GameScr.sks[b28], 0);
+						@char.setSkillPaint(GameScr.sks[b22], 0);
 					}
 					else
 					{
-						@char.setSkillPaint(GameScr.sks[b28], 1);
+						@char.setSkillPaint(GameScr.sks[b22], 1);
 					}
-					Mob mob6 = GameScr.findMobInMap(mobId3);
-					if (@char.cx <= mob6.x)
+					Mob mob7 = GameScr.findMobInMap(mobId3);
+					if (@char.cx <= mob7.x)
 					{
 						@char.cdir = 1;
 					}
@@ -453,55 +454,57 @@ public class Controller : IMessageHandler
 					{
 						@char.cdir = -1;
 					}
-					@char.mobFocus = mob6;
-					mob6.hp = hp2;
+					@char.mobFocus = mob7;
+					mob7.hp = hp2;
+					mob7.updateHp_bar();
 					GameCanvas.debug("SA83v2", 2);
-					if (num67 == 0)
+					if (num63 == 0)
 					{
-						mob6.x = mob6.xFirst;
-						mob6.y = mob6.yFirst;
-						GameScr.startFlyText(mResources.miss, mob6.x, mob6.y - mob6.h, 0, -2, mFont.MISS);
+						mob7.x = mob7.xFirst;
+						mob7.y = mob7.yFirst;
+						GameScr.startFlyText(mResources.miss, mob7.x, mob7.y - mob7.h, 0, -2, mFont.MISS);
 					}
 					else
 					{
-						GameScr.startFlyText("-" + num67, mob6.x, mob6.y - mob6.h, 0, -2, mFont.ORANGE);
+						GameScr.startFlyText("-" + num63, mob7.x, mob7.y - mob7.h, 0, -2, mFont.ORANGE);
 					}
 				}
-				if (b27 == 6)
+				if (b21 == 6)
 				{
-					int num68 = msg.reader().readInt();
-					if (num68 == Char.myCharz().charID)
+					int num64 = msg.reader().readInt();
+					if (num64 == Char.myCharz().charID)
 					{
 						Char.myCharz().mobMe.startDie();
 					}
 					else
 					{
-						GameScr.findCharInMap(num68)?.mobMe.startDie();
+						@char = GameScr.findCharInMap(num64);
+						@char?.mobMe.startDie();
 					}
 				}
-				if (b27 != 7)
+				if (b21 != 7)
 				{
 					break;
 				}
-				int num69 = msg.reader().readInt();
-				if (num69 == Char.myCharz().charID)
+				int num65 = msg.reader().readInt();
+				if (num65 == Char.myCharz().charID)
 				{
 					Char.myCharz().mobMe = null;
-					for (int num70 = 0; num70 < GameScr.vMob.size(); num70++)
+					for (int num66 = 0; num66 < GameScr.vMob.size(); num66++)
 					{
-						if (((Mob)GameScr.vMob.elementAt(num70)).mobId == num69)
+						if (((Mob)GameScr.vMob.elementAt(num66)).mobId == num65)
 						{
-							GameScr.vMob.removeElementAt(num70);
+							GameScr.vMob.removeElementAt(num66);
 						}
 					}
 					break;
 				}
-				@char = GameScr.findCharInMap(num69);
-				for (int num71 = 0; num71 < GameScr.vMob.size(); num71++)
+				@char = GameScr.findCharInMap(num65);
+				for (int num67 = 0; num67 < GameScr.vMob.size(); num67++)
 				{
-					if (((Mob)GameScr.vMob.elementAt(num71)).mobId == num69)
+					if (((Mob)GameScr.vMob.elementAt(num67)).mobId == num65)
 					{
-						GameScr.vMob.removeElementAt(num71);
+						GameScr.vMob.removeElementAt(num67);
 					}
 				}
 				if (@char != null)
@@ -519,13 +522,13 @@ public class Controller : IMessageHandler
 				break;
 			case -91:
 			{
-				sbyte b14 = msg.reader().readByte();
-				GameCanvas.panel.mapNames = new string[b14];
-				GameCanvas.panel.planetNames = new string[b14];
-				for (int num36 = 0; num36 < b14; num36++)
+				sbyte b48 = msg.reader().readByte();
+				GameCanvas.panel.mapNames = new string[b48];
+				GameCanvas.panel.planetNames = new string[b48];
+				for (int num117 = 0; num117 < b48; num117++)
 				{
-					GameCanvas.panel.mapNames[num36] = msg.reader().readUTF();
-					GameCanvas.panel.planetNames[num36] = msg.reader().readUTF();
+					GameCanvas.panel.mapNames[num117] = msg.reader().readUTF();
+					GameCanvas.panel.planetNames[num117] = msg.reader().readUTF();
 				}
 				GameCanvas.panel.setTypeMapTrans();
 				GameCanvas.panel.show();
@@ -533,77 +536,55 @@ public class Controller : IMessageHandler
 			}
 			case -90:
 			{
-				sbyte b12 = msg.reader().readByte();
-				Res.outz("type = " + b12);
-				int num32 = msg.reader().readInt();
-				if (b12 != -1)
+				sbyte b33 = msg.reader().readByte();
+				int num94 = msg.reader().readInt();
+				Res.outz("===> UPDATE_BODY:    type = " + b33);
+				@char = ((Char.myCharz().charID != num94) ? GameScr.findCharInMap(num94) : Char.myCharz());
+				if (b33 != -1)
 				{
-					short num33 = msg.reader().readShort();
-					short num34 = msg.reader().readShort();
-					short num35 = msg.reader().readShort();
-					sbyte b13 = msg.reader().readByte();
-					Res.outz("is Monkey = " + b13);
-					if (Char.myCharz().charID == num32)
+					short num95 = msg.reader().readShort();
+					short num96 = msg.reader().readShort();
+					short num97 = msg.reader().readShort();
+					sbyte b34 = msg.reader().readByte();
+					Res.err("====> Cmd: -90 UPDATE_BODY   \n  isMonkey= " + b34 + " head=  " + num95 + " body= " + num96 + " legU= " + num97);
+					if (@char != null)
 					{
-						Char.myCharz().isMask = true;
-						Char.myCharz().isMonkey = b13;
-						if (Char.myCharz().isMonkey != 0)
+						if (@char.charID == num94)
 						{
-							Char.myCharz().isWaitMonkey = false;
-							Char.myCharz().isLockMove = false;
+							@char.isMask = true;
+							@char.isMonkey = b34;
+							if (@char.isMonkey != 0)
+							{
+								@char.isWaitMonkey = false;
+								@char.isLockMove = false;
+							}
 						}
-					}
-					else if (GameScr.findCharInMap(num32) != null)
-					{
-						GameScr.findCharInMap(num32).isMask = true;
-						GameScr.findCharInMap(num32).isMonkey = b13;
-					}
-					if (num33 != -1)
-					{
-						if (num32 == Char.myCharz().charID)
+						else if (@char != null)
 						{
-							Char.myCharz().head = num33;
+							@char.isMask = true;
+							@char.isMonkey = b34;
 						}
-						else if (GameScr.findCharInMap(num32) != null)
+						if (num95 != -1)
 						{
-							GameScr.findCharInMap(num32).head = num33;
+							@char.head = num95;
 						}
-					}
-					if (num34 != -1)
-					{
-						if (num32 == Char.myCharz().charID)
+						if (num96 != -1)
 						{
-							Char.myCharz().body = num34;
+							@char.body = num96;
 						}
-						else if (GameScr.findCharInMap(num32) != null)
+						if (num97 != -1)
 						{
-							GameScr.findCharInMap(num32).body = num34;
-						}
-					}
-					if (num35 != -1)
-					{
-						if (num32 == Char.myCharz().charID)
-						{
-							Char.myCharz().leg = num35;
-						}
-						else if (GameScr.findCharInMap(num32) != null)
-						{
-							GameScr.findCharInMap(num32).leg = num35;
+							@char.leg = num97;
 						}
 					}
 				}
-				if (b12 == -1)
+				if (b33 == -1 && @char != null)
 				{
-					if (Char.myCharz().charID == num32)
-					{
-						Char.myCharz().isMask = false;
-						Char.myCharz().isMonkey = 0;
-					}
-					else if (GameScr.findCharInMap(num32) != null)
-					{
-						GameScr.findCharInMap(num32).isMask = false;
-						GameScr.findCharInMap(num32).isMonkey = 0;
-					}
+					@char.isMask = false;
+					@char.isMonkey = 0;
+				}
+				if (@char == null)
+				{
 				}
 				break;
 			}
@@ -617,10 +598,10 @@ public class Controller : IMessageHandler
 				msg.reader().mark(100000);
 				createData(msg.reader(), isSaveRMS: true);
 				msg.reader().reset();
-				sbyte[] data4 = new sbyte[msg.reader().available()];
-				msg.reader().readFully(ref data4);
-				sbyte[] data5 = new sbyte[1] { GameScr.vcData };
-				Rms.saveRMS("NRdataVersion", data5);
+				sbyte[] data = new sbyte[msg.reader().available()];
+				msg.reader().readFully(ref data);
+				sbyte[] data2 = new sbyte[1] { GameScr.vcData };
+				Rms.saveRMS("NRdataVersion", data2);
 				LoginScr.isUpdateData = false;
 				if (GameScr.vsData == GameScr.vcData && GameScr.vsMap == GameScr.vcMap && GameScr.vsSkill == GameScr.vcSkill && GameScr.vsItem == GameScr.vcItem)
 				{
@@ -636,42 +617,42 @@ public class Controller : IMessageHandler
 			}
 			case -86:
 			{
-				sbyte b39 = msg.reader().readByte();
-				Res.outz("server gui ve giao dich action = " + b39);
-				if (b39 == 0)
+				sbyte b63 = msg.reader().readByte();
+				Res.outz("server gui ve giao dich action = " + b63);
+				if (b63 == 0)
 				{
 					int playerID = msg.reader().readInt();
 					GameScr.gI().giaodich(playerID);
 				}
-				if (b39 == 1)
+				if (b63 == 1)
 				{
-					int num94 = msg.reader().readInt();
-					Char char7 = GameScr.findCharInMap(num94);
-					if (char7 == null)
+					int num151 = msg.reader().readInt();
+					Char char9 = GameScr.findCharInMap(num151);
+					if (char9 == null)
 					{
 						return;
 					}
-					GameCanvas.panel.setTypeGiaoDich(char7);
+					GameCanvas.panel.setTypeGiaoDich(char9);
 					GameCanvas.panel.show();
-					Service.gI().getPlayerMenu(num94);
+					Service.gI().getPlayerMenu(num151);
 				}
-				if (b39 == 2)
+				if (b63 == 2)
 				{
-					sbyte b40 = msg.reader().readByte();
-					for (int num95 = 0; num95 < GameCanvas.panel.vMyGD.size(); num95++)
+					sbyte b64 = msg.reader().readByte();
+					for (int num152 = 0; num152 < GameCanvas.panel.vMyGD.size(); num152++)
 					{
-						Item item2 = (Item)GameCanvas.panel.vMyGD.elementAt(num95);
-						if (item2.indexUI == b40)
+						Item item2 = (Item)GameCanvas.panel.vMyGD.elementAt(num152);
+						if (item2.indexUI == b64)
 						{
 							GameCanvas.panel.vMyGD.removeElement(item2);
 							break;
 						}
 					}
 				}
-				if (b39 == 5)
+				if (b63 == 5)
 				{
 				}
-				if (b39 == 6)
+				if (b63 == 6)
 				{
 					GameCanvas.panel.isFriendLock = true;
 					if (GameCanvas.panel2 != null)
@@ -684,24 +665,24 @@ public class Controller : IMessageHandler
 						GameCanvas.panel2.vFriendGD.removeAllElements();
 					}
 					int friendMoneyGD = msg.reader().readInt();
-					sbyte b41 = msg.reader().readByte();
-					Res.outz("item size = " + b41);
-					for (int num96 = 0; num96 < b41; num96++)
+					sbyte b65 = msg.reader().readByte();
+					Res.outz("item size = " + b65);
+					for (int num153 = 0; num153 < b65; num153++)
 					{
 						Item item3 = new Item();
 						item3.template = ItemTemplates.get(msg.reader().readShort());
 						item3.quantity = msg.reader().readInt();
-						int num97 = msg.reader().readUnsignedByte();
-						if (num97 != 0)
+						int num154 = msg.reader().readUnsignedByte();
+						if (num154 != 0)
 						{
-							item3.itemOption = new ItemOption[num97];
-							for (int num98 = 0; num98 < item3.itemOption.Length; num98++)
+							item3.itemOption = new ItemOption[num154];
+							for (int num155 = 0; num155 < item3.itemOption.Length; num155++)
 							{
-								int num99 = msg.reader().readUnsignedByte();
-								int param3 = msg.reader().readUnsignedShort();
-								if (num99 != -1)
+								int num156 = msg.reader().readUnsignedByte();
+								int param5 = msg.reader().readUnsignedShort();
+								if (num156 != -1)
 								{
-									item3.itemOption[num98] = new ItemOption(num99, param3);
+									item3.itemOption[num155] = new ItemOption(num156, param5);
 									item3.compare = GameCanvas.panel.getCompare(item3);
 								}
 							}
@@ -729,7 +710,7 @@ public class Controller : IMessageHandler
 						}
 					}
 				}
-				if (b39 == 7)
+				if (b63 == 7)
 				{
 					InfoDlg.hide();
 					if (GameCanvas.panel.isShow)
@@ -742,25 +723,25 @@ public class Controller : IMessageHandler
 			case -85:
 			{
 				Res.outz("CAP CHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-				sbyte b42 = msg.reader().readByte();
-				if (b42 == 0)
+				sbyte b52 = msg.reader().readByte();
+				if (b52 == 0)
 				{
-					int num100 = msg.reader().readUnsignedShort();
-					Res.outz("lent =" + num100);
-					sbyte[] data = new sbyte[num100];
-					msg.reader().read(ref data, 0, num100);
-					GameScr.imgCapcha = Image.createImage(data, 0, num100);
+					int num131 = msg.reader().readUnsignedShort();
+					Res.outz("lent =" + num131);
+					sbyte[] data3 = new sbyte[num131];
+					msg.reader().read(ref data3, 0, num131);
+					GameScr.imgCapcha = Image.createImage(data3, 0, num131);
 					GameScr.gI().keyInput = "-----";
 					GameScr.gI().strCapcha = msg.reader().readUTF();
 					GameScr.gI().keyCapcha = new int[GameScr.gI().strCapcha.Length];
 					GameScr.gI().mobCapcha = new Mob();
 					GameScr.gI().right = null;
 				}
-				if (b42 == 1)
+				if (b52 == 1)
 				{
 					MobCapcha.isAttack = true;
 				}
-				if (b42 == 2)
+				if (b52 == 2)
 				{
 					MobCapcha.explode = true;
 					GameScr.gI().right = GameScr.gI().cmdFocus;
@@ -769,13 +750,13 @@ public class Controller : IMessageHandler
 			}
 			case -112:
 			{
-				sbyte b22 = msg.reader().readByte();
-				if (b22 == 0)
+				sbyte b36 = msg.reader().readByte();
+				if (b36 == 0)
 				{
 					sbyte mobIndex = msg.reader().readByte();
 					GameScr.findMobInMap(mobIndex).clearBody();
 				}
-				if (b22 == 1)
+				if (b36 == 1)
 				{
 					sbyte mobIndex2 = msg.reader().readByte();
 					GameScr.findMobInMap(mobIndex2).setBody(msg.reader().readShort());
@@ -784,35 +765,35 @@ public class Controller : IMessageHandler
 			}
 			case -84:
 			{
-				int index2 = msg.reader().readUnsignedByte();
-				Mob mob8 = null;
+				int index = msg.reader().readUnsignedByte();
+				Mob mob3 = null;
 				try
 				{
-					mob8 = (Mob)GameScr.vMob.elementAt(index2);
+					mob3 = (Mob)GameScr.vMob.elementAt(index);
 				}
 				catch (Exception)
 				{
 				}
-				if (mob8 != null)
+				if (mob3 != null)
 				{
-					mob8.maxHp = msg.reader().readInt();
+					mob3.maxHp = msg.reader().readInt();
 				}
 				break;
 			}
 			case -83:
 			{
-				sbyte b6 = msg.reader().readByte();
-				if (b6 == 0)
+				sbyte b26 = msg.reader().readByte();
+				if (b26 == 0)
 				{
-					int num10 = msg.reader().readShort();
+					int num73 = msg.reader().readShort();
 					int bgRID = msg.reader().readShort();
-					int num11 = msg.reader().readUnsignedByte();
-					int num12 = msg.reader().readInt();
-					string text = msg.reader().readUTF();
-					int num13 = msg.reader().readShort();
-					int num14 = msg.reader().readShort();
-					sbyte b7 = msg.reader().readByte();
-					if (b7 == 1)
+					int num74 = msg.reader().readUnsignedByte();
+					int num75 = msg.reader().readInt();
+					string text2 = msg.reader().readUTF();
+					int num76 = msg.reader().readShort();
+					int num77 = msg.reader().readShort();
+					sbyte b27 = msg.reader().readByte();
+					if (b27 == 1)
 					{
 						GameScr.gI().isRongNamek = true;
 					}
@@ -820,15 +801,15 @@ public class Controller : IMessageHandler
 					{
 						GameScr.gI().isRongNamek = false;
 					}
-					GameScr.gI().xR = num13;
-					GameScr.gI().yR = num14;
-					Res.outz("xR= " + num13 + " yR= " + num14 + " +++++++++++++++++++++++++++++++++++++++");
-					if (Char.myCharz().charID == num12)
+					GameScr.gI().xR = num76;
+					GameScr.gI().yR = num77;
+					Res.outz("xR= " + num76 + " yR= " + num77 + " +++++++++++++++++++++++++++++++++++++++");
+					if (Char.myCharz().charID == num75)
 					{
 						GameCanvas.panel.hideNow();
 						GameScr.gI().activeRongThanEff(isMe: true);
 					}
-					else if (TileMap.mapID == num10 && TileMap.zoneID == num11)
+					else if (TileMap.mapID == num73 && TileMap.zoneID == num74)
 					{
 						GameScr.gI().activeRongThanEff(isMe: false);
 					}
@@ -836,11 +817,11 @@ public class Controller : IMessageHandler
 					{
 						GameScr.gI().doiMauTroi();
 					}
-					GameScr.gI().mapRID = num10;
+					GameScr.gI().mapRID = num73;
 					GameScr.gI().bgRID = bgRID;
-					GameScr.gI().zoneRID = num11;
+					GameScr.gI().zoneRID = num74;
 				}
-				if (b6 == 1)
+				if (b26 == 1)
 				{
 					Res.outz("map RID = " + GameScr.gI().mapRID + " zone RID= " + GameScr.gI().zoneRID);
 					Res.outz("map ID = " + TileMap.mapID + " zone ID= " + TileMap.zoneID);
@@ -857,7 +838,7 @@ public class Controller : IMessageHandler
 						}
 					}
 				}
-				if (b6 != 2)
+				if (b26 != 2)
 				{
 				}
 				break;
@@ -867,19 +848,19 @@ public class Controller : IMessageHandler
 				sbyte b15 = msg.reader().readByte();
 				TileMap.tileIndex = new int[b15][][];
 				TileMap.tileType = new int[b15][];
-				for (int num37 = 0; num37 < b15; num37++)
+				for (int num39 = 0; num39 < b15; num39++)
 				{
 					sbyte b16 = msg.reader().readByte();
-					TileMap.tileType[num37] = new int[b16];
-					TileMap.tileIndex[num37] = new int[b16][];
-					for (int num38 = 0; num38 < b16; num38++)
+					TileMap.tileType[num39] = new int[b16];
+					TileMap.tileIndex[num39] = new int[b16][];
+					for (int num40 = 0; num40 < b16; num40++)
 					{
-						TileMap.tileType[num37][num38] = msg.reader().readInt();
+						TileMap.tileType[num39][num40] = msg.reader().readInt();
 						sbyte b17 = msg.reader().readByte();
-						TileMap.tileIndex[num37][num38] = new int[b17];
-						for (int num39 = 0; num39 < b17; num39++)
+						TileMap.tileIndex[num39][num40] = new int[b17];
+						for (int num41 = 0; num41 < b17; num41++)
 						{
-							TileMap.tileIndex[num37][num38][num39] = msg.reader().readByte();
+							TileMap.tileIndex[num39][num40][num41] = msg.reader().readByte();
 						}
 					}
 				}
@@ -887,8 +868,8 @@ public class Controller : IMessageHandler
 			}
 			case -81:
 			{
-				sbyte b34 = msg.reader().readByte();
-				if (b34 == 0)
+				sbyte b8 = msg.reader().readByte();
+				if (b8 == 0)
 				{
 					string src = msg.reader().readUTF();
 					string src2 = msg.reader().readUTF();
@@ -897,17 +878,17 @@ public class Controller : IMessageHandler
 					GameCanvas.panel.combineTopInfo = mFont.tahoma_7.splitFontArray(src2, Panel.WIDTH_PANEL);
 					GameCanvas.panel.show();
 				}
-				if (b34 == 1)
+				if (b8 == 1)
 				{
 					GameCanvas.panel.vItemCombine.removeAllElements();
-					sbyte b35 = msg.reader().readByte();
-					for (int num88 = 0; num88 < b35; num88++)
+					sbyte b9 = msg.reader().readByte();
+					for (int l = 0; l < b9; l++)
 					{
-						sbyte b36 = msg.reader().readByte();
-						for (int num89 = 0; num89 < Char.myCharz().arrItemBag.Length; num89++)
+						sbyte b10 = msg.reader().readByte();
+						for (int m = 0; m < Char.myCharz().arrItemBag.Length; m++)
 						{
-							Item item = Char.myCharz().arrItemBag[num89];
-							if (item != null && item.indexUI == b36)
+							Item item = Char.myCharz().arrItemBag[m];
+							if (item != null && item.indexUI == b10)
 							{
 								item.isSelect = true;
 								GameCanvas.panel.vItemCombine.addElement(item);
@@ -919,31 +900,31 @@ public class Controller : IMessageHandler
 						GameCanvas.panel.setTabCombine();
 					}
 				}
-				if (b34 == 2)
+				if (b8 == 2)
 				{
 					GameCanvas.panel.combineSuccess = 0;
 					GameCanvas.panel.setCombineEff(0);
 				}
-				if (b34 == 3)
+				if (b8 == 3)
 				{
 					GameCanvas.panel.combineSuccess = 1;
 					GameCanvas.panel.setCombineEff(0);
 				}
-				if (b34 == 4)
+				if (b8 == 4)
 				{
 					short iconID = msg.reader().readShort();
 					GameCanvas.panel.iconID3 = iconID;
 					GameCanvas.panel.combineSuccess = 0;
 					GameCanvas.panel.setCombineEff(1);
 				}
-				if (b34 == 5)
+				if (b8 == 5)
 				{
 					short iconID2 = msg.reader().readShort();
 					GameCanvas.panel.iconID3 = iconID2;
 					GameCanvas.panel.combineSuccess = 0;
 					GameCanvas.panel.setCombineEff(2);
 				}
-				if (b34 == 6)
+				if (b8 == 6)
 				{
 					short iconID3 = msg.reader().readShort();
 					short iconID4 = msg.reader().readShort();
@@ -952,35 +933,35 @@ public class Controller : IMessageHandler
 					GameCanvas.panel.iconID1 = iconID3;
 					GameCanvas.panel.iconID3 = iconID4;
 				}
-				if (b34 == 7)
+				if (b8 == 7)
 				{
 					short iconID5 = msg.reader().readShort();
 					GameCanvas.panel.iconID3 = iconID5;
 					GameCanvas.panel.combineSuccess = 0;
 					GameCanvas.panel.setCombineEff(4);
 				}
-				if (b34 == 8)
+				if (b8 == 8)
 				{
 					GameCanvas.panel.iconID3 = -1;
 					GameCanvas.panel.combineSuccess = 1;
 					GameCanvas.panel.setCombineEff(4);
 				}
-				short num90 = 21;
+				short num16 = 21;
 				try
 				{
-					num90 = msg.reader().readShort();
+					num16 = msg.reader().readShort();
 				}
 				catch (Exception)
 				{
 				}
-				for (int num91 = 0; num91 < GameScr.vNpc.size(); num91++)
+				for (int n = 0; n < GameScr.vNpc.size(); n++)
 				{
-					Npc npc3 = (Npc)GameScr.vNpc.elementAt(num91);
-					if (npc3.template.npcTemplateId == num90)
+					Npc npc = (Npc)GameScr.vNpc.elementAt(n);
+					if (npc.template.npcTemplateId == num16)
 					{
-						GameCanvas.panel.xS = npc3.cx - GameScr.cmx;
-						GameCanvas.panel.yS = npc3.cy - GameScr.cmy;
-						GameCanvas.panel.idNPC = num90;
+						GameCanvas.panel.xS = npc.cx - GameScr.cmx;
+						GameCanvas.panel.yS = npc.cy - GameScr.cmy;
+						GameCanvas.panel.idNPC = num16;
 						break;
 					}
 				}
@@ -988,40 +969,40 @@ public class Controller : IMessageHandler
 			}
 			case -80:
 			{
-				sbyte b8 = msg.reader().readByte();
+				sbyte b18 = msg.reader().readByte();
 				InfoDlg.hide();
-				if (b8 == 0)
+				if (b18 == 0)
 				{
 					GameCanvas.panel.vFriend.removeAllElements();
-					int num15 = msg.reader().readUnsignedByte();
-					for (int i = 0; i < num15; i++)
+					int num42 = msg.reader().readUnsignedByte();
+					for (int num43 = 0; num43 < num42; num43++)
 					{
-						Char char4 = new Char();
-						char4.charID = msg.reader().readInt();
-						char4.head = msg.reader().readShort();
-						char4.headICON = msg.reader().readShort();
-						char4.body = msg.reader().readShort();
-						char4.leg = msg.reader().readShort();
-						char4.bag = msg.reader().readUnsignedByte();
-						char4.cName = msg.reader().readUTF();
+						Char char5 = new Char();
+						char5.charID = msg.reader().readInt();
+						char5.head = msg.reader().readShort();
+						char5.headICON = msg.reader().readShort();
+						char5.body = msg.reader().readShort();
+						char5.leg = msg.reader().readShort();
+						char5.bag = msg.reader().readUnsignedByte();
+						char5.cName = msg.reader().readUTF();
 						bool isOnline = msg.reader().readBoolean();
 						InfoItem infoItem = new InfoItem(mResources.power + ": " + msg.reader().readUTF());
-						infoItem.charInfo = char4;
+						infoItem.charInfo = char5;
 						infoItem.isOnline = isOnline;
 						GameCanvas.panel.vFriend.addElement(infoItem);
 					}
 					GameCanvas.panel.setTypeFriend();
 					GameCanvas.panel.show();
 				}
-				if (b8 == 3)
+				if (b18 == 3)
 				{
 					MyVector vFriend = GameCanvas.panel.vFriend;
-					int num16 = msg.reader().readInt();
-					Res.outz("online offline id=" + num16);
-					for (int j = 0; j < vFriend.size(); j++)
+					int num44 = msg.reader().readInt();
+					Res.outz("online offline id=" + num44);
+					for (int num45 = 0; num45 < vFriend.size(); num45++)
 					{
-						InfoItem infoItem2 = (InfoItem)vFriend.elementAt(j);
-						if (infoItem2.charInfo != null && infoItem2.charInfo.charID == num16)
+						InfoItem infoItem2 = (InfoItem)vFriend.elementAt(num45);
+						if (infoItem2.charInfo != null && infoItem2.charInfo.charID == num44)
 						{
 							Res.outz("online= " + infoItem2.isOnline);
 							infoItem2.isOnline = msg.reader().readBoolean();
@@ -1029,16 +1010,16 @@ public class Controller : IMessageHandler
 						}
 					}
 				}
-				if (b8 != 2)
+				if (b18 != 2)
 				{
 					break;
 				}
 				MyVector vFriend2 = GameCanvas.panel.vFriend;
-				int num17 = msg.reader().readInt();
-				for (int k = 0; k < vFriend2.size(); k++)
+				int num46 = msg.reader().readInt();
+				for (int num47 = 0; num47 < vFriend2.size(); num47++)
 				{
-					InfoItem infoItem3 = (InfoItem)vFriend2.elementAt(k);
-					if (infoItem3.charInfo != null && infoItem3.charInfo.charID == num17)
+					InfoItem infoItem3 = (InfoItem)vFriend2.elementAt(num47);
+					if (infoItem3.charInfo != null && infoItem3.charInfo.charID == num46)
 					{
 						vFriend2.removeElement(infoItem3);
 						break;
@@ -1053,26 +1034,26 @@ public class Controller : IMessageHandler
 			case -99:
 			{
 				InfoDlg.hide();
-				sbyte b10 = msg.reader().readByte();
-				if (b10 == 0)
+				sbyte b29 = msg.reader().readByte();
+				if (b29 == 0)
 				{
 					GameCanvas.panel.vEnemy.removeAllElements();
-					int num22 = msg.reader().readUnsignedByte();
-					for (int n = 0; n < num22; n++)
+					int num78 = msg.reader().readUnsignedByte();
+					for (int num79 = 0; num79 < num78; num79++)
 					{
-						Char char5 = new Char();
-						char5.charID = msg.reader().readInt();
-						char5.head = msg.reader().readShort();
-						char5.headICON = msg.reader().readShort();
-						char5.body = msg.reader().readShort();
-						char5.leg = msg.reader().readShort();
-						char5.bag = msg.reader().readShort();
-						char5.cName = msg.reader().readUTF();
+						Char char7 = new Char();
+						char7.charID = msg.reader().readInt();
+						char7.head = msg.reader().readShort();
+						char7.headICON = msg.reader().readShort();
+						char7.body = msg.reader().readShort();
+						char7.leg = msg.reader().readShort();
+						char7.bag = msg.reader().readShort();
+						char7.cName = msg.reader().readUTF();
 						InfoItem infoItem4 = new InfoItem(msg.reader().readUTF());
-						bool flag3 = msg.reader().readBoolean();
-						infoItem4.charInfo = char5;
-						infoItem4.isOnline = flag3;
-						Res.outz("isonline = " + flag3);
+						bool flag7 = msg.reader().readBoolean();
+						infoItem4.charInfo = char7;
+						infoItem4.isOnline = flag7;
+						Res.outz("isonline = " + flag7);
 						GameCanvas.panel.vEnemy.addElement(infoItem4);
 					}
 					GameCanvas.panel.setTypeEnemy();
@@ -1083,7 +1064,7 @@ public class Controller : IMessageHandler
 			case -79:
 			{
 				InfoDlg.hide();
-				int num148 = msg.reader().readInt();
+				int num53 = msg.reader().readInt();
 				Char charMenu = GameCanvas.panel.charMenu;
 				if (charMenu == null)
 				{
@@ -1095,55 +1076,55 @@ public class Controller : IMessageHandler
 			}
 			case -93:
 			{
-				short num142 = msg.reader().readShort();
-				BgItem.newSmallVersion = new sbyte[num142];
-				for (int num143 = 0; num143 < num142; num143++)
+				short num32 = msg.reader().readShort();
+				BgItem.newSmallVersion = new sbyte[num32];
+				for (int num33 = 0; num33 < num32; num33++)
 				{
-					BgItem.newSmallVersion[num143] = msg.reader().readByte();
+					BgItem.newSmallVersion[num33] = msg.reader().readByte();
 				}
 				break;
 			}
 			case -77:
 			{
-				short num20 = msg.reader().readShort();
-				SmallImage.newSmallVersion = new sbyte[num20];
-				SmallImage.maxSmall = num20;
-				SmallImage.imgNew = new Small[num20];
-				for (int m = 0; m < num20; m++)
+				short num18 = msg.reader().readShort();
+				SmallImage.newSmallVersion = new sbyte[num18];
+				SmallImage.maxSmall = num18;
+				SmallImage.imgNew = new Small[num18];
+				for (int num19 = 0; num19 < num18; num19++)
 				{
-					SmallImage.newSmallVersion[m] = msg.reader().readByte();
+					SmallImage.newSmallVersion[num19] = msg.reader().readByte();
 				}
 				break;
 			}
 			case -76:
 			{
-				sbyte b37 = msg.reader().readByte();
-				if (b37 == 0)
+				sbyte b46 = msg.reader().readByte();
+				if (b46 == 0)
 				{
-					sbyte b38 = msg.reader().readByte();
-					if (b38 <= 0)
+					sbyte b47 = msg.reader().readByte();
+					if (b47 <= 0)
 					{
 						return;
 					}
-					Char.myCharz().arrArchive = new Archivement[b38];
-					for (int num92 = 0; num92 < b38; num92++)
+					Char.myCharz().arrArchive = new Archivement[b47];
+					for (int num114 = 0; num114 < b47; num114++)
 					{
-						Char.myCharz().arrArchive[num92] = new Archivement();
-						Char.myCharz().arrArchive[num92].info1 = num92 + 1 + ". " + msg.reader().readUTF();
-						Char.myCharz().arrArchive[num92].info2 = msg.reader().readUTF();
-						Char.myCharz().arrArchive[num92].money = msg.reader().readShort();
-						Char.myCharz().arrArchive[num92].isFinish = msg.reader().readBoolean();
-						Char.myCharz().arrArchive[num92].isRecieve = msg.reader().readBoolean();
+						Char.myCharz().arrArchive[num114] = new Archivement();
+						Char.myCharz().arrArchive[num114].info1 = num114 + 1 + ". " + msg.reader().readUTF();
+						Char.myCharz().arrArchive[num114].info2 = msg.reader().readUTF();
+						Char.myCharz().arrArchive[num114].money = msg.reader().readShort();
+						Char.myCharz().arrArchive[num114].isFinish = msg.reader().readBoolean();
+						Char.myCharz().arrArchive[num114].isRecieve = msg.reader().readBoolean();
 					}
 					GameCanvas.panel.setTypeArchivement();
 					GameCanvas.panel.show();
 				}
-				else if (b37 == 1)
+				else if (b46 == 1)
 				{
-					int num93 = msg.reader().readUnsignedByte();
-					if (Char.myCharz().arrArchive[num93] != null)
+					int num115 = msg.reader().readUnsignedByte();
+					if (Char.myCharz().arrArchive[num115] != null)
 					{
-						Char.myCharz().arrArchive[num93].isRecieve = true;
+						Char.myCharz().arrArchive[num115].isRecieve = true;
 					}
 				}
 				break;
@@ -1167,15 +1148,15 @@ public class Controller : IMessageHandler
 					GameCanvas.loginScr.switchToMe();
 					return;
 				}
-				bool flag10 = true;
-				sbyte b61 = msg.reader().readByte();
-				Res.outz("action = " + b61);
-				if (b61 == 0)
+				bool flag9 = true;
+				sbyte b62 = msg.reader().readByte();
+				Res.outz("action = " + b62);
+				if (b62 == 0)
 				{
-					int num135 = msg.reader().readInt();
+					int num147 = msg.reader().readInt();
 					string text6 = Rms.loadRMSString("ResVersion");
-					int num136 = ((text6 == null || !(text6 != string.Empty)) ? (-1) : int.Parse(text6));
-					if (num136 == -1 || num136 != num135)
+					int num148 = ((text6 == null || !(text6 != string.Empty)) ? (-1) : int.Parse(text6));
+					if (num148 == -1 || num148 != num147)
 					{
 						ServerListScreen.loadScreen = false;
 						GameCanvas.serverScreen.show2();
@@ -1192,13 +1173,14 @@ public class Controller : IMessageHandler
 						}
 					}
 				}
-				if (b61 == 1)
+				if (b62 == 1)
 				{
 					ServerListScreen.strWait = mResources.downloading_data;
-					short num137 = (short)(ServerListScreen.nBig = msg.reader().readShort());
+					short nBig = msg.reader().readShort();
+					ServerListScreen.nBig = nBig;
 					Service.gI().getResource(2, null);
 				}
-				if (b61 == 2)
+				if (b62 == 2)
 				{
 					try
 					{
@@ -1207,24 +1189,24 @@ public class Controller : IMessageHandler
 						ServerListScreen.demPercent++;
 						ServerListScreen.percent = ServerListScreen.demPercent * 100 / ServerListScreen.nBig;
 						string original = msg.reader().readUTF();
-						string[] array13 = Res.split(original, "/", 0);
-						string filename = "x" + mGraphics.zoomLevel + array13[array13.Length - 1];
-						int num138 = msg.reader().readInt();
-						sbyte[] data2 = new sbyte[num138];
-						msg.reader().read(ref data2, 0, num138);
-						Rms.saveRMS(filename, data2);
+						string[] array16 = Res.split(original, "/", 0);
+						string filename = "x" + mGraphics.zoomLevel + array16[array16.Length - 1];
+						int num149 = msg.reader().readInt();
+						sbyte[] data5 = new sbyte[num149];
+						msg.reader().read(ref data5, 0, num149);
+						Rms.saveRMS(filename, data5);
 					}
 					catch (Exception)
 					{
 						GameCanvas.startOK(mResources.pls_restart_game_error, 8885, null);
 					}
 				}
-				if (b61 == 3 && flag10)
+				if (b62 == 3 && flag9)
 				{
 					isLoadingData = false;
-					int num139 = msg.reader().readInt();
-					Res.outz("last version= " + num139);
-					Rms.saveRMSString("ResVersion", num139 + string.Empty);
+					int num150 = msg.reader().readInt();
+					Res.outz("last version= " + num150);
+					Rms.saveRMSString("ResVersion", num150 + string.Empty);
 					Service.gI().getResource(3, null);
 					GameCanvas.endDlg();
 					SplashScr.imgLogo = null;
@@ -1244,9 +1226,9 @@ public class Controller : IMessageHandler
 			{
 				sbyte itemAction = msg.reader().readByte();
 				sbyte where = msg.reader().readByte();
-				sbyte index = msg.reader().readByte();
-				string info3 = msg.reader().readUTF();
-				GameCanvas.panel.itemRequest(itemAction, info3, where, index);
+				sbyte index3 = msg.reader().readByte();
+				string info4 = msg.reader().readUTF();
+				GameCanvas.panel.itemRequest(itemAction, info4, where, index3);
 				break;
 			}
 			case -59:
@@ -1257,24 +1239,24 @@ public class Controller : IMessageHandler
 			}
 			case -62:
 			{
-				int num114 = msg.reader().readUnsignedByte();
+				int num124 = msg.reader().readUnsignedByte();
 				sbyte b51 = msg.reader().readByte();
 				if (b51 <= 0)
 				{
 					break;
 				}
-				ClanImage clanImage2 = ClanImage.getClanImage((sbyte)num114);
+				ClanImage clanImage2 = ClanImage.getClanImage((short)num124);
 				if (clanImage2 == null)
 				{
 					break;
 				}
 				clanImage2.idImage = new short[b51];
-				for (int num115 = 0; num115 < b51; num115++)
+				for (int num125 = 0; num125 < b51; num125++)
 				{
-					clanImage2.idImage[num115] = msg.reader().readShort();
-					if (clanImage2.idImage[num115] > 0)
+					clanImage2.idImage[num125] = msg.reader().readShort();
+					if (clanImage2.idImage[num125] > 0)
 					{
-						SmallImage.vKeys.addElement(clanImage2.idImage[num115] + string.Empty);
+						SmallImage.vKeys.addElement(clanImage2.idImage[num125] + string.Empty);
 					}
 				}
 				break;
@@ -1283,23 +1265,23 @@ public class Controller : IMessageHandler
 			{
 				Res.outz("TELEPORT ...................................................");
 				InfoDlg.hide();
-				int num144 = msg.reader().readInt();
-				sbyte b63 = msg.reader().readByte();
-				if (b63 == 0)
+				int num69 = msg.reader().readInt();
+				sbyte b24 = msg.reader().readByte();
+				if (b24 == 0)
 				{
 					break;
 				}
-				if (Char.myCharz().charID == num144)
+				if (Char.myCharz().charID == num69)
 				{
 					isStopReadMessage = true;
 					GameScr.lockTick = 500;
 					GameScr.gI().center = null;
-					if (b63 == 0 || b63 == 1 || b63 == 3)
+					if (b24 == 0 || b24 == 1 || b24 == 3)
 					{
-						Teleport p2 = new Teleport(Char.myCharz().cx, Char.myCharz().cy, Char.myCharz().head, Char.myCharz().cdir, 0, isMe: true, (b63 != 1) ? b63 : Char.myCharz().cgender);
-						Teleport.addTeleport(p2);
+						Teleport p = new Teleport(Char.myCharz().cx, Char.myCharz().cy, Char.myCharz().head, Char.myCharz().cdir, 0, isMe: true, (b24 != 1) ? b24 : Char.myCharz().cgender);
+						Teleport.addTeleport(p);
 					}
-					if (b63 == 2)
+					if (b24 == 2)
 					{
 						GameScr.lockTick = 50;
 						Char.myCharz().hide();
@@ -1307,51 +1289,60 @@ public class Controller : IMessageHandler
 				}
 				else
 				{
-					Char char9 = GameScr.findCharInMap(num144);
-					if ((b63 == 0 || b63 == 1 || b63 == 3) && char9 != null)
+					Char char6 = GameScr.findCharInMap(num69);
+					if ((b24 == 0 || b24 == 1 || b24 == 3) && char6 != null)
 					{
-						char9.isUsePlane = true;
-						Teleport teleport = new Teleport(char9.cx, char9.cy, char9.head, char9.cdir, 0, isMe: false, (b63 != 1) ? b63 : char9.cgender);
-						teleport.id = num144;
+						char6.isUsePlane = true;
+						Teleport teleport = new Teleport(char6.cx, char6.cy, char6.head, char6.cdir, 0, isMe: false, (b24 != 1) ? b24 : char6.cgender);
+						teleport.id = num69;
 						Teleport.addTeleport(teleport);
 					}
-					if (b63 == 2)
+					if (b24 == 2)
 					{
-						char9.hide();
+						char6.hide();
 					}
 				}
 				break;
 			}
 			case -64:
 			{
-				int num132 = msg.reader().readInt();
-				int bag = msg.reader().readUnsignedByte();
-				if (num132 == Char.myCharz().charID)
+				int num137 = msg.reader().readInt();
+				int num138 = msg.reader().readUnsignedByte();
+				@char = null;
+				@char = ((num137 != Char.myCharz().charID) ? GameScr.findCharInMap(num137) : Char.myCharz());
+				@char.bag = num138;
+				if (@char.bag >= 201 && @char.bag < 255)
 				{
-					Char.myCharz().bag = bag;
+					Effect effect = new Effect(@char.bag, @char, 2, -1, 10, 1);
+					effect.typeEff = 5;
+					@char.addEffChar(effect);
 				}
-				else if (GameScr.findCharInMap(num132) != null)
+				else
 				{
-					GameScr.findCharInMap(num132).bag = bag;
+					for (int num139 = 0; num139 < 54; num139++)
+					{
+						@char.removeEffChar(0, 201 + num139);
+					}
 				}
+				Res.outz("cmd:-64 UPDATE BAG PLAER = " + ((@char != null) ? @char.cName : string.Empty) + num137 + " BAG ID= " + num138);
 				break;
 			}
 			case -63:
 			{
 				Res.outz("GET BAG");
-				int num133 = msg.reader().readUnsignedByte();
-				sbyte b60 = msg.reader().readByte();
+				int num140 = msg.reader().readUnsignedByte();
+				sbyte b59 = msg.reader().readByte();
 				ClanImage clanImage3 = new ClanImage();
-				clanImage3.ID = num133;
-				if (b60 > 0)
+				clanImage3.ID = num140;
+				if (b59 > 0)
 				{
-					clanImage3.idImage = new short[b60];
-					for (int num134 = 0; num134 < b60; num134++)
+					clanImage3.idImage = new short[b59];
+					for (int num141 = 0; num141 < b59; num141++)
 					{
-						clanImage3.idImage[num134] = msg.reader().readShort();
-						Res.outz("ID=  " + num133 + " frame= " + clanImage3.idImage[num134]);
+						clanImage3.idImage[num141] = msg.reader().readShort();
+						Res.outz("ID=  " + num140 + " frame= " + clanImage3.idImage[num141]);
 					}
-					ClanImage.idImages.put(num133 + string.Empty, clanImage3);
+					ClanImage.idImages.put(num140 + string.Empty, clanImage3);
 				}
 				break;
 			}
@@ -1375,12 +1366,12 @@ public class Controller : IMessageHandler
 			{
 				Res.outz("MY CLAN INFO");
 				InfoDlg.hide();
-				bool flag6 = false;
-				int num46 = msg.reader().readInt();
-				Res.outz("clanId= " + num46);
-				if (num46 == -1)
+				bool flag5 = false;
+				int num49 = msg.reader().readInt();
+				Res.outz("clanId= " + num49);
+				if (num49 == -1)
 				{
-					flag6 = true;
+					flag5 = true;
 					Char.myCharz().clan = null;
 					ClanMessage.vMessage.removeAllElements();
 					if (GameCanvas.panel.member != null)
@@ -1402,7 +1393,7 @@ public class Controller : IMessageHandler
 				{
 					Char.myCharz().clan = new Clan();
 				}
-				Char.myCharz().clan.ID = num46;
+				Char.myCharz().clan.ID = num49;
 				Char.myCharz().clan.name = msg.reader().readUTF();
 				Char.myCharz().clan.slogan = msg.reader().readUTF();
 				Char.myCharz().clan.imgID = msg.reader().readUnsignedByte();
@@ -1414,7 +1405,7 @@ public class Controller : IMessageHandler
 				Char.myCharz().clan.clanPoint = msg.reader().readInt();
 				Char.myCharz().clan.level = msg.reader().readByte();
 				GameCanvas.panel.myMember = new MyVector();
-				for (int num47 = 0; num47 < Char.myCharz().clan.currMember; num47++)
+				for (int num50 = 0; num50 < Char.myCharz().clan.currMember; num50++)
 				{
 					Member member = new Member();
 					member.ID = msg.reader().readInt();
@@ -1432,8 +1423,8 @@ public class Controller : IMessageHandler
 					member.joinTime = NinjaUtil.getDate(msg.reader().readInt());
 					GameCanvas.panel.myMember.addElement(member);
 				}
-				int num48 = msg.reader().readUnsignedByte();
-				for (int num49 = 0; num49 < num48; num49++)
+				int num51 = msg.reader().readUnsignedByte();
+				for (int num52 = 0; num52 < num51; num52++)
 				{
 					readClanMsg(msg, -1);
 				}
@@ -1441,7 +1432,7 @@ public class Controller : IMessageHandler
 				{
 					GameCanvas.panel.setTabClans();
 				}
-				if (flag6)
+				if (flag5)
 				{
 					GameCanvas.panel.setTabClans();
 				}
@@ -1449,8 +1440,8 @@ public class Controller : IMessageHandler
 			}
 			case -52:
 			{
-				sbyte b62 = msg.reader().readByte();
-				if (b62 == 0)
+				sbyte b66 = msg.reader().readByte();
+				if (b66 == 0)
 				{
 					Member member2 = new Member();
 					member2.ID = msg.reader().readInt();
@@ -1472,13 +1463,13 @@ public class Controller : IMessageHandler
 					GameCanvas.panel.myMember.addElement(member2);
 					GameCanvas.panel.initTabClans();
 				}
-				if (b62 == 1)
+				if (b66 == 1)
 				{
 					GameCanvas.panel.myMember.removeElementAt(msg.reader().readByte());
 					GameCanvas.panel.currentListLength--;
 					GameCanvas.panel.initTabClans();
 				}
-				if (b62 != 2)
+				if (b66 != 2)
 				{
 					break;
 				}
@@ -1495,9 +1486,9 @@ public class Controller : IMessageHandler
 				member3.receive_donate = msg.reader().readInt();
 				member3.clanPoint = msg.reader().readInt();
 				member3.joinTime = NinjaUtil.getDate(msg.reader().readInt());
-				for (int num141 = 0; num141 < GameCanvas.panel.myMember.size(); num141++)
+				for (int num157 = 0; num157 < GameCanvas.panel.myMember.size(); num157++)
 				{
-					Member member4 = (Member)GameCanvas.panel.myMember.elementAt(num141);
+					Member member4 = (Member)GameCanvas.panel.myMember.elementAt(num157);
 					if (member4.ID == member3.ID)
 					{
 						if (Char.myCharz().charID == member3.ID)
@@ -1506,7 +1497,7 @@ public class Controller : IMessageHandler
 						}
 						Member o2 = member3;
 						GameCanvas.panel.myMember.removeElement(member4);
-						GameCanvas.panel.myMember.insertElementAt(o2, num141);
+						GameCanvas.panel.myMember.insertElementAt(o2, num157);
 						return;
 					}
 				}
@@ -1516,8 +1507,8 @@ public class Controller : IMessageHandler
 			{
 				InfoDlg.hide();
 				GameCanvas.panel.member = new MyVector();
-				sbyte b66 = msg.reader().readByte();
-				for (int num160 = 0; num160 < b66; num160++)
+				sbyte b67 = msg.reader().readByte();
+				for (int num161 = 0; num161 < b67; num161++)
 				{
 					Member member5 = new Member();
 					member5.ID = msg.reader().readInt();
@@ -1544,29 +1535,29 @@ public class Controller : IMessageHandler
 			case -47:
 			{
 				InfoDlg.hide();
-				sbyte b52 = msg.reader().readByte();
-				Res.outz("clan = " + b52);
-				if (b52 == 0)
+				sbyte b49 = msg.reader().readByte();
+				Res.outz("clan = " + b49);
+				if (b49 == 0)
 				{
 					GameCanvas.panel.clanReport = mResources.cannot_find_clan;
 					GameCanvas.panel.clans = null;
 				}
 				else
 				{
-					GameCanvas.panel.clans = new Clan[b52];
+					GameCanvas.panel.clans = new Clan[b49];
 					Res.outz("clan search lent= " + GameCanvas.panel.clans.Length);
-					for (int num120 = 0; num120 < GameCanvas.panel.clans.Length; num120++)
+					for (int num122 = 0; num122 < GameCanvas.panel.clans.Length; num122++)
 					{
-						GameCanvas.panel.clans[num120] = new Clan();
-						GameCanvas.panel.clans[num120].ID = msg.reader().readInt();
-						GameCanvas.panel.clans[num120].name = msg.reader().readUTF();
-						GameCanvas.panel.clans[num120].slogan = msg.reader().readUTF();
-						GameCanvas.panel.clans[num120].imgID = msg.reader().readUnsignedByte();
-						GameCanvas.panel.clans[num120].powerPoint = msg.reader().readUTF();
-						GameCanvas.panel.clans[num120].leaderName = msg.reader().readUTF();
-						GameCanvas.panel.clans[num120].currMember = msg.reader().readUnsignedByte();
-						GameCanvas.panel.clans[num120].maxMember = msg.reader().readUnsignedByte();
-						GameCanvas.panel.clans[num120].date = msg.reader().readInt();
+						GameCanvas.panel.clans[num122] = new Clan();
+						GameCanvas.panel.clans[num122].ID = msg.reader().readInt();
+						GameCanvas.panel.clans[num122].name = msg.reader().readUTF();
+						GameCanvas.panel.clans[num122].slogan = msg.reader().readUTF();
+						GameCanvas.panel.clans[num122].imgID = msg.reader().readUnsignedByte();
+						GameCanvas.panel.clans[num122].powerPoint = msg.reader().readUTF();
+						GameCanvas.panel.clans[num122].leaderName = msg.reader().readUTF();
+						GameCanvas.panel.clans[num122].currMember = msg.reader().readUnsignedByte();
+						GameCanvas.panel.clans[num122].maxMember = msg.reader().readUnsignedByte();
+						GameCanvas.panel.clans[num122].date = msg.reader().readInt();
 					}
 				}
 				GameCanvas.panel.isSearchClan = true;
@@ -1581,13 +1572,13 @@ public class Controller : IMessageHandler
 			case -46:
 			{
 				InfoDlg.hide();
-				sbyte b43 = msg.reader().readByte();
-				if (b43 == 1 || b43 == 3)
+				sbyte b38 = msg.reader().readByte();
+				if (b38 == 1 || b38 == 3)
 				{
 					GameCanvas.endDlg();
 					ClanImage.vClanImage.removeAllElements();
-					int num102 = msg.reader().readUnsignedByte();
-					for (int num103 = 0; num103 < num102; num103++)
+					int num99 = msg.reader().readUnsignedByte();
+					for (int num100 = 0; num100 < num99; num100++)
 					{
 						ClanImage clanImage = new ClanImage();
 						clanImage.ID = msg.reader().readUnsignedByte();
@@ -1599,16 +1590,16 @@ public class Controller : IMessageHandler
 							ClanImage.addClanImage(clanImage);
 							continue;
 						}
-						ClanImage.getClanImage((sbyte)clanImage.ID).name = clanImage.name;
-						ClanImage.getClanImage((sbyte)clanImage.ID).xu = clanImage.xu;
-						ClanImage.getClanImage((sbyte)clanImage.ID).luong = clanImage.luong;
+						ClanImage.getClanImage((short)clanImage.ID).name = clanImage.name;
+						ClanImage.getClanImage((short)clanImage.ID).xu = clanImage.xu;
+						ClanImage.getClanImage((short)clanImage.ID).luong = clanImage.luong;
 					}
 					if (Char.myCharz().clan != null)
 					{
 						GameCanvas.panel.changeIcon();
 					}
 				}
-				if (b43 == 4)
+				if (b38 == 4)
 				{
 					Char.myCharz().clan.imgID = msg.reader().readUnsignedByte();
 					Char.myCharz().clan.slogan = msg.reader().readUTF();
@@ -1617,15 +1608,15 @@ public class Controller : IMessageHandler
 			}
 			case -61:
 			{
-				int num81 = msg.reader().readInt();
-				if (num81 != Char.myCharz().charID)
+				int num93 = msg.reader().readInt();
+				if (num93 != Char.myCharz().charID)
 				{
-					if (GameScr.findCharInMap(num81) != null)
+					if (GameScr.findCharInMap(num93) != null)
 					{
-						GameScr.findCharInMap(num81).clanID = msg.reader().readInt();
-						if (GameScr.findCharInMap(num81).clanID == -2)
+						GameScr.findCharInMap(num93).clanID = msg.reader().readInt();
+						if (GameScr.findCharInMap(num93).clanID == -2)
 						{
-							GameScr.findCharInMap(num81).isCopy = true;
+							GameScr.findCharInMap(num93).isCopy = true;
 						}
 					}
 				}
@@ -1658,9 +1649,9 @@ public class Controller : IMessageHandler
 				break;
 			case 1:
 			{
-				bool flag7 = msg.reader().readBool();
-				Res.outz("isRes= " + flag7);
-				if (!flag7)
+				bool flag6 = msg.reader().readBool();
+				Res.outz("isRes= " + flag6);
+				if (!flag6)
 				{
 					GameCanvas.startOKDlg(msg.reader().readUTF());
 					break;
@@ -1685,16 +1676,16 @@ public class Controller : IMessageHandler
 				break;
 			case -107:
 			{
-				sbyte b11 = msg.reader().readByte();
-				if (b11 == 0)
+				sbyte b12 = msg.reader().readByte();
+				if (b12 == 0)
 				{
 					Char.myCharz().havePet = false;
 				}
-				if (b11 == 1)
+				if (b12 == 1)
 				{
 					Char.myCharz().havePet = true;
 				}
-				if (b11 != 2)
+				if (b12 != 2)
 				{
 					break;
 				}
@@ -1728,10 +1719,10 @@ public class Controller : IMessageHandler
 						for (int num28 = 0; num28 < Char.myPetz().arrItemBody[num24].itemOption.Length; num28++)
 						{
 							int num29 = msg.reader().readUnsignedByte();
-							int param = msg.reader().readUnsignedShort();
+							int param2 = msg.reader().readUnsignedShort();
 							if (num29 != -1)
 							{
-								Char.myPetz().arrItemBody[num24].itemOption[num28] = new ItemOption(num29, param);
+								Char.myPetz().arrItemBody[num24].itemOption[num28] = new ItemOption(num29, param2);
 							}
 						}
 					}
@@ -1792,51 +1783,51 @@ public class Controller : IMessageHandler
 			}
 			case -37:
 			{
-				sbyte b65 = msg.reader().readByte();
-				Res.outz("cAction= " + b65);
-				if (b65 != 0)
+				sbyte b69 = msg.reader().readByte();
+				Res.outz("cAction= " + b69);
+				if (b69 != 0)
 				{
 					break;
 				}
 				Char.myCharz().head = msg.reader().readShort();
 				Char.myCharz().setDefaultPart();
-				int num153 = msg.reader().readUnsignedByte();
-				Res.outz("num body = " + num153);
-				Char.myCharz().arrItemBody = new Item[num153];
-				for (int num154 = 0; num154 < num153; num154++)
+				int num167 = msg.reader().readUnsignedByte();
+				Res.outz("num body = " + num167);
+				Char.myCharz().arrItemBody = new Item[num167];
+				for (int num168 = 0; num168 < num167; num168++)
 				{
-					short num155 = msg.reader().readShort();
-					if (num155 == -1)
+					short num169 = msg.reader().readShort();
+					if (num169 == -1)
 					{
 						continue;
 					}
-					Char.myCharz().arrItemBody[num154] = new Item();
-					Char.myCharz().arrItemBody[num154].template = ItemTemplates.get(num155);
-					int num156 = Char.myCharz().arrItemBody[num154].template.type;
-					Char.myCharz().arrItemBody[num154].quantity = msg.reader().readInt();
-					Char.myCharz().arrItemBody[num154].info = msg.reader().readUTF();
-					Char.myCharz().arrItemBody[num154].content = msg.reader().readUTF();
-					int num157 = msg.reader().readUnsignedByte();
-					if (num157 != 0)
+					Char.myCharz().arrItemBody[num168] = new Item();
+					Char.myCharz().arrItemBody[num168].template = ItemTemplates.get(num169);
+					int num170 = Char.myCharz().arrItemBody[num168].template.type;
+					Char.myCharz().arrItemBody[num168].quantity = msg.reader().readInt();
+					Char.myCharz().arrItemBody[num168].info = msg.reader().readUTF();
+					Char.myCharz().arrItemBody[num168].content = msg.reader().readUTF();
+					int num171 = msg.reader().readUnsignedByte();
+					if (num171 != 0)
 					{
-						Char.myCharz().arrItemBody[num154].itemOption = new ItemOption[num157];
-						for (int num158 = 0; num158 < Char.myCharz().arrItemBody[num154].itemOption.Length; num158++)
+						Char.myCharz().arrItemBody[num168].itemOption = new ItemOption[num171];
+						for (int num172 = 0; num172 < Char.myCharz().arrItemBody[num168].itemOption.Length; num172++)
 						{
-							int num159 = msg.reader().readUnsignedByte();
-							int param5 = msg.reader().readUnsignedShort();
-							if (num159 != -1)
+							int num173 = msg.reader().readUnsignedByte();
+							int param6 = msg.reader().readUnsignedShort();
+							if (num173 != -1)
 							{
-								Char.myCharz().arrItemBody[num154].itemOption[num158] = new ItemOption(num159, param5);
+								Char.myCharz().arrItemBody[num168].itemOption[num172] = new ItemOption(num173, param6);
 							}
 						}
 					}
-					switch (num156)
+					switch (num170)
 					{
 					case 0:
-						Char.myCharz().body = Char.myCharz().arrItemBody[num154].template.part;
+						Char.myCharz().body = Char.myCharz().arrItemBody[num168].template.part;
 						break;
 					case 1:
-						Char.myCharz().leg = Char.myCharz().arrItemBody[num154].template.part;
+						Char.myCharz().leg = Char.myCharz().arrItemBody[num168].template.part;
 						break;
 					}
 				}
@@ -1844,113 +1835,113 @@ public class Controller : IMessageHandler
 			}
 			case -36:
 			{
-				sbyte b67 = msg.reader().readByte();
-				Res.outz("cAction= " + b67);
-				if (b67 == 0)
+				sbyte b6 = msg.reader().readByte();
+				Res.outz("cAction= " + b6);
+				if (b6 == 0)
 				{
-					int num161 = msg.reader().readUnsignedByte();
-					Char.myCharz().arrItemBag = new Item[num161];
+					int num9 = msg.reader().readUnsignedByte();
+					Char.myCharz().arrItemBag = new Item[num9];
 					GameScr.hpPotion = 0;
-					Res.outz("numC=" + num161);
-					for (int num162 = 0; num162 < num161; num162++)
+					Res.outz("numC=" + num9);
+					for (int i = 0; i < num9; i++)
 					{
-						short num163 = msg.reader().readShort();
-						if (num163 == -1)
+						short num10 = msg.reader().readShort();
+						if (num10 == -1)
 						{
 							continue;
 						}
-						Char.myCharz().arrItemBag[num162] = new Item();
-						Char.myCharz().arrItemBag[num162].template = ItemTemplates.get(num163);
-						Char.myCharz().arrItemBag[num162].quantity = msg.reader().readInt();
-						Char.myCharz().arrItemBag[num162].info = msg.reader().readUTF();
-						Char.myCharz().arrItemBag[num162].content = msg.reader().readUTF();
-						Char.myCharz().arrItemBag[num162].indexUI = num162;
-						int num164 = msg.reader().readUnsignedByte();
-						if (num164 != 0)
+						Char.myCharz().arrItemBag[i] = new Item();
+						Char.myCharz().arrItemBag[i].template = ItemTemplates.get(num10);
+						Char.myCharz().arrItemBag[i].quantity = msg.reader().readInt();
+						Char.myCharz().arrItemBag[i].info = msg.reader().readUTF();
+						Char.myCharz().arrItemBag[i].content = msg.reader().readUTF();
+						Char.myCharz().arrItemBag[i].indexUI = i;
+						int num11 = msg.reader().readUnsignedByte();
+						if (num11 != 0)
 						{
-							Char.myCharz().arrItemBag[num162].itemOption = new ItemOption[num164];
-							for (int num165 = 0; num165 < Char.myCharz().arrItemBag[num162].itemOption.Length; num165++)
+							Char.myCharz().arrItemBag[i].itemOption = new ItemOption[num11];
+							for (int j = 0; j < Char.myCharz().arrItemBag[i].itemOption.Length; j++)
 							{
-								int num166 = msg.reader().readUnsignedByte();
-								int param6 = msg.reader().readUnsignedShort();
-								if (num166 != -1)
+								int num12 = msg.reader().readUnsignedByte();
+								int param = msg.reader().readUnsignedShort();
+								if (num12 != -1)
 								{
-									Char.myCharz().arrItemBag[num162].itemOption[num165] = new ItemOption(num166, param6);
+									Char.myCharz().arrItemBag[i].itemOption[j] = new ItemOption(num12, param);
 								}
 							}
-							Char.myCharz().arrItemBag[num162].compare = GameCanvas.panel.getCompare(Char.myCharz().arrItemBag[num162]);
+							Char.myCharz().arrItemBag[i].compare = GameCanvas.panel.getCompare(Char.myCharz().arrItemBag[i]);
 						}
-						if (Char.myCharz().arrItemBag[num162].template.type == 11)
+						if (Char.myCharz().arrItemBag[i].template.type == 11)
 						{
 						}
-						if (Char.myCharz().arrItemBag[num162].template.type == 6)
+						if (Char.myCharz().arrItemBag[i].template.type == 6)
 						{
-							GameScr.hpPotion += Char.myCharz().arrItemBag[num162].quantity;
+							GameScr.hpPotion += Char.myCharz().arrItemBag[i].quantity;
 						}
 					}
 				}
-				if (b67 == 2)
+				if (b6 == 2)
 				{
-					sbyte b68 = msg.reader().readByte();
-					int quantity2 = msg.reader().readInt();
-					int quantity3 = Char.myCharz().arrItemBag[b68].quantity;
-					Char.myCharz().arrItemBag[b68].quantity = quantity2;
-					if (Char.myCharz().arrItemBag[b68].quantity < quantity3 && Char.myCharz().arrItemBag[b68].template.type == 6)
+					sbyte b7 = msg.reader().readByte();
+					int quantity = msg.reader().readInt();
+					int quantity2 = Char.myCharz().arrItemBag[b7].quantity;
+					Char.myCharz().arrItemBag[b7].quantity = quantity;
+					if (Char.myCharz().arrItemBag[b7].quantity < quantity2 && Char.myCharz().arrItemBag[b7].template.type == 6)
 					{
-						GameScr.hpPotion -= quantity3 - Char.myCharz().arrItemBag[b68].quantity;
+						GameScr.hpPotion -= quantity2 - Char.myCharz().arrItemBag[b7].quantity;
 					}
-					if (Char.myCharz().arrItemBag[b68].quantity == 0)
+					if (Char.myCharz().arrItemBag[b7].quantity == 0)
 					{
-						Char.myCharz().arrItemBag[b68] = null;
+						Char.myCharz().arrItemBag[b7] = null;
 					}
 				}
 				break;
 			}
 			case -35:
 			{
-				sbyte b48 = msg.reader().readByte();
-				Res.outz("cAction= " + b48);
-				if (b48 == 0)
+				sbyte b42 = msg.reader().readByte();
+				Res.outz("cAction= " + b42);
+				if (b42 == 0)
 				{
-					int num107 = msg.reader().readUnsignedByte();
-					Char.myCharz().arrItemBox = new Item[num107];
+					int num104 = msg.reader().readUnsignedByte();
+					Char.myCharz().arrItemBox = new Item[num104];
 					GameCanvas.panel.hasUse = 0;
-					for (int num108 = 0; num108 < num107; num108++)
+					for (int num105 = 0; num105 < num104; num105++)
 					{
-						short num109 = msg.reader().readShort();
-						if (num109 == -1)
+						short num106 = msg.reader().readShort();
+						if (num106 == -1)
 						{
 							continue;
 						}
-						Char.myCharz().arrItemBox[num108] = new Item();
-						Char.myCharz().arrItemBox[num108].template = ItemTemplates.get(num109);
-						Char.myCharz().arrItemBox[num108].quantity = msg.reader().readInt();
-						Char.myCharz().arrItemBox[num108].info = msg.reader().readUTF();
-						Char.myCharz().arrItemBox[num108].content = msg.reader().readUTF();
-						int num110 = msg.reader().readUnsignedByte();
-						if (num110 != 0)
+						Char.myCharz().arrItemBox[num105] = new Item();
+						Char.myCharz().arrItemBox[num105].template = ItemTemplates.get(num106);
+						Char.myCharz().arrItemBox[num105].quantity = msg.reader().readInt();
+						Char.myCharz().arrItemBox[num105].info = msg.reader().readUTF();
+						Char.myCharz().arrItemBox[num105].content = msg.reader().readUTF();
+						int num107 = msg.reader().readUnsignedByte();
+						if (num107 != 0)
 						{
-							Char.myCharz().arrItemBox[num108].itemOption = new ItemOption[num110];
-							for (int num111 = 0; num111 < Char.myCharz().arrItemBox[num108].itemOption.Length; num111++)
+							Char.myCharz().arrItemBox[num105].itemOption = new ItemOption[num107];
+							for (int num108 = 0; num108 < Char.myCharz().arrItemBox[num105].itemOption.Length; num108++)
 							{
-								int num112 = msg.reader().readUnsignedByte();
+								int num109 = msg.reader().readUnsignedByte();
 								int param4 = msg.reader().readUnsignedShort();
-								if (num112 != -1)
+								if (num109 != -1)
 								{
-									Char.myCharz().arrItemBox[num108].itemOption[num111] = new ItemOption(num112, param4);
+									Char.myCharz().arrItemBox[num105].itemOption[num108] = new ItemOption(num109, param4);
 								}
 							}
 						}
 						GameCanvas.panel.hasUse++;
 					}
 				}
-				if (b48 == 1)
+				if (b42 == 1)
 				{
 					bool isBoxClan = false;
 					try
 					{
-						sbyte b49 = msg.reader().readByte();
-						if (b49 == 1)
+						sbyte b43 = msg.reader().readByte();
+						if (b43 == 1)
 						{
 							isBoxClan = true;
 						}
@@ -1962,37 +1953,37 @@ public class Controller : IMessageHandler
 					GameCanvas.panel.isBoxClan = isBoxClan;
 					GameCanvas.panel.show();
 				}
-				if (b48 == 2)
+				if (b42 == 2)
 				{
-					sbyte b50 = msg.reader().readByte();
-					int quantity = msg.reader().readInt();
-					Char.myCharz().arrItemBox[b50].quantity = quantity;
-					if (Char.myCharz().arrItemBox[b50].quantity == 0)
+					sbyte b44 = msg.reader().readByte();
+					int quantity3 = msg.reader().readInt();
+					Char.myCharz().arrItemBox[b44].quantity = quantity3;
+					if (Char.myCharz().arrItemBox[b44].quantity == 0)
 					{
-						Char.myCharz().arrItemBox[b50] = null;
+						Char.myCharz().arrItemBox[b44] = null;
 					}
 				}
 				break;
 			}
 			case -45:
 			{
-				sbyte b54 = msg.reader().readByte();
-				int num127 = msg.reader().readInt();
-				short num128 = msg.reader().readShort();
-				Res.outz("skill type= " + b54 + "   player use= " + num127);
-				if (b54 == 0)
+				sbyte b53 = msg.reader().readByte();
+				int num132 = msg.reader().readInt();
+				short num133 = msg.reader().readShort();
+				Res.outz("skill type= " + b53 + "   player use= " + num132);
+				if (b53 == 0)
 				{
-					Res.outz("id use= " + num127);
-					if (Char.myCharz().charID != num127)
+					Res.outz("id use= " + num132);
+					if (Char.myCharz().charID != num132)
 					{
-						@char = GameScr.findCharInMap(num127);
+						@char = GameScr.findCharInMap(num132);
 						if ((TileMap.tileTypeAtPixel(@char.cx, @char.cy) & 2) == 2)
 						{
-							@char.setSkillPaint(GameScr.sks[num128], 0);
+							@char.setSkillPaint(GameScr.sks[num133], 0);
 						}
 						else
 						{
-							@char.setSkillPaint(GameScr.sks[num128], 1);
+							@char.setSkillPaint(GameScr.sks[num133], 1);
 							@char.delayFall = 20;
 						}
 					}
@@ -2001,61 +1992,61 @@ public class Controller : IMessageHandler
 						Char.myCharz().saveLoadPreviousSkill();
 						Res.outz("LOAD LAST SKILL");
 					}
-					sbyte b55 = msg.reader().readByte();
-					Res.outz("npc size= " + b55);
-					for (int num129 = 0; num129 < b55; num129++)
+					sbyte b54 = msg.reader().readByte();
+					Res.outz("npc size= " + b54);
+					for (int num134 = 0; num134 < b54; num134++)
 					{
+						sbyte b55 = msg.reader().readByte();
 						sbyte b56 = msg.reader().readByte();
-						sbyte b57 = msg.reader().readByte();
-						Res.outz("index= " + b56);
-						if (num128 >= 42 && num128 <= 48)
+						Res.outz("index= " + b55);
+						if (num133 >= 42 && num133 <= 48)
 						{
-							((Mob)GameScr.vMob.elementAt(b56)).isFreez = true;
-							((Mob)GameScr.vMob.elementAt(b56)).seconds = b57;
-							((Mob)GameScr.vMob.elementAt(b56)).last = (((Mob)GameScr.vMob.elementAt(b56)).cur = mSystem.currentTimeMillis());
+							((Mob)GameScr.vMob.elementAt(b55)).isFreez = true;
+							((Mob)GameScr.vMob.elementAt(b55)).seconds = b56;
+							((Mob)GameScr.vMob.elementAt(b55)).last = (((Mob)GameScr.vMob.elementAt(b55)).cur = mSystem.currentTimeMillis());
 						}
 					}
-					sbyte b58 = msg.reader().readByte();
-					for (int num130 = 0; num130 < b58; num130++)
+					sbyte b57 = msg.reader().readByte();
+					for (int num135 = 0; num135 < b57; num135++)
 					{
-						int num131 = msg.reader().readInt();
-						sbyte b59 = msg.reader().readByte();
-						Res.outz("player ID= " + num131 + " my ID= " + Char.myCharz().charID);
-						if (num128 < 42 || num128 > 48)
+						int num136 = msg.reader().readInt();
+						sbyte b58 = msg.reader().readByte();
+						Res.outz("player ID= " + num136 + " my ID= " + Char.myCharz().charID);
+						if (num133 < 42 || num133 > 48)
 						{
 							continue;
 						}
-						if (num131 == Char.myCharz().charID)
+						if (num136 == Char.myCharz().charID)
 						{
 							if (!Char.myCharz().isFlyAndCharge && !Char.myCharz().isStandAndCharge)
 							{
 								GameScr.gI().isFreez = true;
 								Char.myCharz().isFreez = true;
-								Char.myCharz().freezSeconds = b59;
+								Char.myCharz().freezSeconds = b58;
 								Char.myCharz().lastFreez = (Char.myCharz().currFreez = mSystem.currentTimeMillis());
 								Char.myCharz().isLockMove = true;
 							}
 						}
 						else
 						{
-							@char = GameScr.findCharInMap(num131);
+							@char = GameScr.findCharInMap(num136);
 							if (@char != null && !@char.isFlyAndCharge && !@char.isStandAndCharge)
 							{
 								@char.isFreez = true;
-								@char.seconds = b59;
-								@char.freezSeconds = b59;
-								@char.lastFreez = (GameScr.findCharInMap(num131).currFreez = mSystem.currentTimeMillis());
+								@char.seconds = b58;
+								@char.freezSeconds = b58;
+								@char.lastFreez = (GameScr.findCharInMap(num136).currFreez = mSystem.currentTimeMillis());
 							}
 						}
 					}
 				}
-				if (b54 == 1 && num127 != Char.myCharz().charID)
+				if (b53 == 1 && num132 != Char.myCharz().charID)
 				{
-					GameScr.findCharInMap(num127).isCharge = true;
+					GameScr.findCharInMap(num132).isCharge = true;
 				}
-				if (b54 == 3)
+				if (b53 == 3)
 				{
-					if (num127 == Char.myCharz().charID)
+					if (num132 == Char.myCharz().charID)
 					{
 						Char.myCharz().isCharge = false;
 						SoundMn.gI().taitaoPause();
@@ -2063,76 +2054,76 @@ public class Controller : IMessageHandler
 					}
 					else
 					{
-						GameScr.findCharInMap(num127).isCharge = false;
+						GameScr.findCharInMap(num132).isCharge = false;
 					}
 				}
-				if (b54 == 4)
+				if (b53 == 4)
 				{
-					if (num127 == Char.myCharz().charID)
+					if (num132 == Char.myCharz().charID)
 					{
 						Char.myCharz().seconds = msg.reader().readShort() - 1000;
 						Char.myCharz().last = mSystem.currentTimeMillis();
 						Res.outz("second= " + Char.myCharz().seconds + " last= " + Char.myCharz().last);
 					}
-					else if (GameScr.findCharInMap(num127) != null)
+					else if (GameScr.findCharInMap(num132) != null)
 					{
-						switch (GameScr.findCharInMap(num127).cgender)
+						switch (GameScr.findCharInMap(num132).cgender)
 						{
 						case 0:
-							GameScr.findCharInMap(num127).useChargeSkill(isGround: false);
+							GameScr.findCharInMap(num132).useChargeSkill(isGround: false);
 							break;
 						case 1:
-							GameScr.findCharInMap(num127).useChargeSkill(isGround: true);
+							GameScr.findCharInMap(num132).useChargeSkill(isGround: true);
 							break;
 						}
-						GameScr.findCharInMap(num127).skillTemplateId = num128;
-						GameScr.findCharInMap(num127).isUseSkillAfterCharge = true;
-						GameScr.findCharInMap(num127).seconds = msg.reader().readShort();
-						GameScr.findCharInMap(num127).last = mSystem.currentTimeMillis();
+						GameScr.findCharInMap(num132).skillTemplateId = num133;
+						GameScr.findCharInMap(num132).isUseSkillAfterCharge = true;
+						GameScr.findCharInMap(num132).seconds = msg.reader().readShort();
+						GameScr.findCharInMap(num132).last = mSystem.currentTimeMillis();
 					}
 				}
-				if (b54 == 5)
+				if (b53 == 5)
 				{
-					if (num127 == Char.myCharz().charID)
+					if (num132 == Char.myCharz().charID)
 					{
 						Char.myCharz().stopUseChargeSkill();
 					}
-					else if (GameScr.findCharInMap(num127) != null)
+					else if (GameScr.findCharInMap(num132) != null)
 					{
-						GameScr.findCharInMap(num127).stopUseChargeSkill();
+						GameScr.findCharInMap(num132).stopUseChargeSkill();
 					}
 				}
-				if (b54 == 6)
+				if (b53 == 6)
 				{
-					if (num127 == Char.myCharz().charID)
+					if (num132 == Char.myCharz().charID)
 					{
-						Char.myCharz().setAutoSkillPaint(GameScr.sks[num128], 0);
+						Char.myCharz().setAutoSkillPaint(GameScr.sks[num133], 0);
 					}
-					else if (GameScr.findCharInMap(num127) != null)
+					else if (GameScr.findCharInMap(num132) != null)
 					{
-						GameScr.findCharInMap(num127).setAutoSkillPaint(GameScr.sks[num128], 0);
+						GameScr.findCharInMap(num132).setAutoSkillPaint(GameScr.sks[num133], 0);
 						SoundMn.gI().gong();
 					}
 				}
-				if (b54 == 7)
+				if (b53 == 7)
 				{
-					if (num127 == Char.myCharz().charID)
+					if (num132 == Char.myCharz().charID)
 					{
 						Char.myCharz().seconds = msg.reader().readShort();
 						Res.outz("second = " + Char.myCharz().seconds);
 						Char.myCharz().last = mSystem.currentTimeMillis();
 					}
-					else if (GameScr.findCharInMap(num127) != null)
+					else if (GameScr.findCharInMap(num132) != null)
 					{
-						GameScr.findCharInMap(num127).useChargeSkill(isGround: true);
-						GameScr.findCharInMap(num127).seconds = msg.reader().readShort();
-						GameScr.findCharInMap(num127).last = mSystem.currentTimeMillis();
+						GameScr.findCharInMap(num132).useChargeSkill(isGround: true);
+						GameScr.findCharInMap(num132).seconds = msg.reader().readShort();
+						GameScr.findCharInMap(num132).last = mSystem.currentTimeMillis();
 						SoundMn.gI().gong();
 					}
 				}
-				if (b54 == 8 && num127 != Char.myCharz().charID && GameScr.findCharInMap(num127) != null)
+				if (b53 == 8 && num132 != Char.myCharz().charID && GameScr.findCharInMap(num132) != null)
 				{
-					GameScr.findCharInMap(num127).setAutoSkillPaint(GameScr.sks[num128], 0);
+					GameScr.findCharInMap(num132).setAutoSkillPaint(GameScr.sks[num133], 0);
 				}
 				break;
 			}
@@ -2143,121 +2134,121 @@ public class Controller : IMessageHandler
 				{
 					flag8 = true;
 				}
-				sbyte b29 = msg.reader().readByte();
-				int num72 = msg.reader().readUnsignedByte();
-				Char.myCharz().arrItemShop = new Item[num72][];
-				GameCanvas.panel.shopTabName = new string[num72 + ((!flag8) ? 1 : 0)][];
-				for (int num73 = 0; num73 < GameCanvas.panel.shopTabName.Length; num73++)
+				sbyte b30 = msg.reader().readByte();
+				int num80 = msg.reader().readUnsignedByte();
+				Char.myCharz().arrItemShop = new Item[num80][];
+				GameCanvas.panel.shopTabName = new string[num80 + ((!flag8) ? 1 : 0)][];
+				for (int num81 = 0; num81 < GameCanvas.panel.shopTabName.Length; num81++)
 				{
-					GameCanvas.panel.shopTabName[num73] = new string[2];
+					GameCanvas.panel.shopTabName[num81] = new string[2];
 				}
-				if (b29 == 2)
+				if (b30 == 2)
 				{
-					GameCanvas.panel.maxPageShop = new int[num72];
-					GameCanvas.panel.currPageShop = new int[num72];
+					GameCanvas.panel.maxPageShop = new int[num80];
+					GameCanvas.panel.currPageShop = new int[num80];
 				}
 				if (!flag8)
 				{
-					GameCanvas.panel.shopTabName[num72] = mResources.inventory;
+					GameCanvas.panel.shopTabName[num80] = mResources.inventory;
 				}
-				for (int num74 = 0; num74 < num72; num74++)
+				for (int num82 = 0; num82 < num80; num82++)
 				{
 					string[] array4 = Res.split(msg.reader().readUTF(), "\n", 0);
-					if (b29 == 2)
+					if (b30 == 2)
 					{
-						GameCanvas.panel.maxPageShop[num74] = msg.reader().readUnsignedByte();
+						GameCanvas.panel.maxPageShop[num82] = msg.reader().readUnsignedByte();
 					}
 					if (array4.Length == 2)
 					{
-						GameCanvas.panel.shopTabName[num74] = array4;
+						GameCanvas.panel.shopTabName[num82] = array4;
 					}
 					if (array4.Length == 1)
 					{
-						GameCanvas.panel.shopTabName[num74][0] = array4[0];
-						GameCanvas.panel.shopTabName[num74][1] = string.Empty;
+						GameCanvas.panel.shopTabName[num82][0] = array4[0];
+						GameCanvas.panel.shopTabName[num82][1] = string.Empty;
 					}
-					int num75 = msg.reader().readUnsignedByte();
-					Char.myCharz().arrItemShop[num74] = new Item[num75];
+					int num83 = msg.reader().readUnsignedByte();
+					Char.myCharz().arrItemShop[num82] = new Item[num83];
 					Panel.strWantToBuy = mResources.say_wat_do_u_want_to_buy;
-					if (b29 == 1)
+					if (b30 == 1)
 					{
 						Panel.strWantToBuy = mResources.say_wat_do_u_want_to_buy2;
 					}
-					for (int num76 = 0; num76 < num75; num76++)
+					for (int num84 = 0; num84 < num83; num84++)
 					{
-						short num77 = msg.reader().readShort();
-						if (num77 == -1)
+						short num85 = msg.reader().readShort();
+						if (num85 == -1)
 						{
 							continue;
 						}
-						Char.myCharz().arrItemShop[num74][num76] = new Item();
-						Char.myCharz().arrItemShop[num74][num76].template = ItemTemplates.get(num77);
-						Res.outz("name " + num74 + " = " + Char.myCharz().arrItemShop[num74][num76].template.name + " id templat= " + Char.myCharz().arrItemShop[num74][num76].template.id);
-						if (b29 == 8)
+						Char.myCharz().arrItemShop[num82][num84] = new Item();
+						Char.myCharz().arrItemShop[num82][num84].template = ItemTemplates.get(num85);
+						Res.outz("name " + num82 + " = " + Char.myCharz().arrItemShop[num82][num84].template.name + " id templat= " + Char.myCharz().arrItemShop[num82][num84].template.id);
+						if (b30 == 8)
 						{
-							Char.myCharz().arrItemShop[num74][num76].buyCoin = msg.reader().readInt();
-							Char.myCharz().arrItemShop[num74][num76].buyGold = msg.reader().readInt();
-							Char.myCharz().arrItemShop[num74][num76].quantity = msg.reader().readInt();
+							Char.myCharz().arrItemShop[num82][num84].buyCoin = msg.reader().readInt();
+							Char.myCharz().arrItemShop[num82][num84].buyGold = msg.reader().readInt();
+							Char.myCharz().arrItemShop[num82][num84].quantity = msg.reader().readInt();
 						}
-						else if (b29 == 4)
+						else if (b30 == 4)
 						{
-							Char.myCharz().arrItemShop[num74][num76].reason = msg.reader().readUTF();
+							Char.myCharz().arrItemShop[num82][num84].reason = msg.reader().readUTF();
 						}
-						else if (b29 == 0)
+						else if (b30 == 0)
 						{
-							Char.myCharz().arrItemShop[num74][num76].buyCoin = msg.reader().readInt();
-							Char.myCharz().arrItemShop[num74][num76].buyGold = msg.reader().readInt();
+							Char.myCharz().arrItemShop[num82][num84].buyCoin = msg.reader().readInt();
+							Char.myCharz().arrItemShop[num82][num84].buyGold = msg.reader().readInt();
 						}
-						else if (b29 == 1)
+						else if (b30 == 1)
 						{
-							Char.myCharz().arrItemShop[num74][num76].powerRequire = msg.reader().readLong();
+							Char.myCharz().arrItemShop[num82][num84].powerRequire = msg.reader().readLong();
 						}
-						else if (b29 == 2)
+						else if (b30 == 2)
 						{
-							Char.myCharz().arrItemShop[num74][num76].itemId = msg.reader().readShort();
-							Char.myCharz().arrItemShop[num74][num76].buyCoin = msg.reader().readInt();
-							Char.myCharz().arrItemShop[num74][num76].buyGold = msg.reader().readInt();
-							Char.myCharz().arrItemShop[num74][num76].buyType = msg.reader().readByte();
-							Char.myCharz().arrItemShop[num74][num76].quantity = msg.reader().readInt();
-							Char.myCharz().arrItemShop[num74][num76].isMe = msg.reader().readByte();
+							Char.myCharz().arrItemShop[num82][num84].itemId = msg.reader().readShort();
+							Char.myCharz().arrItemShop[num82][num84].buyCoin = msg.reader().readInt();
+							Char.myCharz().arrItemShop[num82][num84].buyGold = msg.reader().readInt();
+							Char.myCharz().arrItemShop[num82][num84].buyType = msg.reader().readByte();
+							Char.myCharz().arrItemShop[num82][num84].quantity = msg.reader().readInt();
+							Char.myCharz().arrItemShop[num82][num84].isMe = msg.reader().readByte();
 						}
-						else if (b29 == 3)
+						else if (b30 == 3)
 						{
-							Char.myCharz().arrItemShop[num74][num76].isBuySpec = true;
-							Char.myCharz().arrItemShop[num74][num76].iconSpec = msg.reader().readShort();
-							Char.myCharz().arrItemShop[num74][num76].buySpec = msg.reader().readInt();
+							Char.myCharz().arrItemShop[num82][num84].isBuySpec = true;
+							Char.myCharz().arrItemShop[num82][num84].iconSpec = msg.reader().readShort();
+							Char.myCharz().arrItemShop[num82][num84].buySpec = msg.reader().readInt();
 						}
-						int num78 = msg.reader().readUnsignedByte();
-						if (num78 != 0)
+						int num86 = msg.reader().readUnsignedByte();
+						if (num86 != 0)
 						{
-							Char.myCharz().arrItemShop[num74][num76].itemOption = new ItemOption[num78];
-							for (int num79 = 0; num79 < Char.myCharz().arrItemShop[num74][num76].itemOption.Length; num79++)
+							Char.myCharz().arrItemShop[num82][num84].itemOption = new ItemOption[num86];
+							for (int num87 = 0; num87 < Char.myCharz().arrItemShop[num82][num84].itemOption.Length; num87++)
 							{
-								int num80 = msg.reader().readUnsignedByte();
-								int param2 = msg.reader().readUnsignedShort();
-								if (num80 != -1)
+								int num88 = msg.reader().readUnsignedByte();
+								int param3 = msg.reader().readUnsignedShort();
+								if (num88 != -1)
 								{
-									Char.myCharz().arrItemShop[num74][num76].itemOption[num79] = new ItemOption(num80, param2);
-									Char.myCharz().arrItemShop[num74][num76].compare = GameCanvas.panel.getCompare(Char.myCharz().arrItemShop[num74][num76]);
+									Char.myCharz().arrItemShop[num82][num84].itemOption[num87] = new ItemOption(num88, param3);
+									Char.myCharz().arrItemShop[num82][num84].compare = GameCanvas.panel.getCompare(Char.myCharz().arrItemShop[num82][num84]);
 								}
 							}
 						}
-						sbyte b30 = msg.reader().readByte();
-						Char.myCharz().arrItemShop[num74][num76].newItem = ((b30 != 0) ? true : false);
 						sbyte b31 = msg.reader().readByte();
-						if (b31 == 1)
+						Char.myCharz().arrItemShop[num82][num84].newItem = ((b31 != 0) ? true : false);
+						sbyte b32 = msg.reader().readByte();
+						if (b32 == 1)
 						{
 							int headTemp = msg.reader().readShort();
 							int bodyTemp = msg.reader().readShort();
 							int legTemp = msg.reader().readShort();
 							int bagTemp = msg.reader().readShort();
-							Char.myCharz().arrItemShop[num74][num76].setPartTemp(headTemp, bodyTemp, legTemp, bagTemp);
+							Char.myCharz().arrItemShop[num82][num84].setPartTemp(headTemp, bodyTemp, legTemp, bagTemp);
 						}
 					}
 				}
 				if (flag8)
 				{
-					if (b29 != 2)
+					if (b30 != 2)
 					{
 						GameCanvas.panel2 = new Panel();
 						GameCanvas.panel2.tabName[7] = new string[1][] { new string[1] { string.Empty } };
@@ -2272,7 +2263,7 @@ public class Controller : IMessageHandler
 					}
 				}
 				GameCanvas.panel.tabName[1] = GameCanvas.panel.shopTabName;
-				if (b29 == 2)
+				if (b30 == 2)
 				{
 					string[][] array5 = GameCanvas.panel.tabName[1];
 					if (flag8)
@@ -2297,27 +2288,27 @@ public class Controller : IMessageHandler
 						};
 					}
 				}
-				GameCanvas.panel.setTypeShop(b29);
+				GameCanvas.panel.setTypeShop(b30);
 				GameCanvas.panel.show();
 				break;
 			}
 			case -41:
 			{
-				sbyte b25 = msg.reader().readByte();
-				Char.myCharz().strLevel = new string[b25];
-				for (int num54 = 0; num54 < b25; num54++)
+				sbyte b23 = msg.reader().readByte();
+				Char.myCharz().strLevel = new string[b23];
+				for (int num68 = 0; num68 < b23; num68++)
 				{
-					string text3 = msg.reader().readUTF();
-					Char.myCharz().strLevel[num54] = text3;
+					string text = msg.reader().readUTF();
+					Char.myCharz().strLevel[num68] = text;
 				}
 				Res.outz("---   xong  level caption cmd : " + msg.command);
 				break;
 			}
 			case -34:
 			{
-				sbyte b20 = msg.reader().readByte();
-				Res.outz("act= " + b20);
-				if (b20 == 0 && GameScr.gI().magicTree != null)
+				sbyte b19 = msg.reader().readByte();
+				Res.outz("act= " + b19);
+				if (b19 == 0 && GameScr.gI().magicTree != null)
 				{
 					Res.outz("toi duoc day");
 					MagicTree magicTree = GameScr.gI().magicTree;
@@ -2333,19 +2324,19 @@ public class Controller : IMessageHandler
 					magicTree.strInfo = msg.reader().readUTF();
 					magicTree.seconds = msg.reader().readInt();
 					magicTree.timeToRecieve = magicTree.seconds;
-					sbyte b21 = msg.reader().readByte();
-					magicTree.peaPostionX = new int[b21];
-					magicTree.peaPostionY = new int[b21];
-					for (int num44 = 0; num44 < b21; num44++)
+					sbyte b20 = msg.reader().readByte();
+					magicTree.peaPostionX = new int[b20];
+					magicTree.peaPostionY = new int[b20];
+					for (int num48 = 0; num48 < b20; num48++)
 					{
-						magicTree.peaPostionX[num44] = msg.reader().readByte();
-						magicTree.peaPostionY[num44] = msg.reader().readByte();
+						magicTree.peaPostionX[num48] = msg.reader().readByte();
+						magicTree.peaPostionY[num48] = msg.reader().readByte();
 					}
 					magicTree.isUpdate = msg.reader().readBool();
 					magicTree.last = (magicTree.cur = mSystem.currentTimeMillis());
 					GameScr.gI().magicTree.isUpdateTree = true;
 				}
-				if (b20 == 1)
+				if (b19 == 1)
 				{
 					myVector = new MyVector();
 					try
@@ -2356,13 +2347,13 @@ public class Controller : IMessageHandler
 							myVector.addElement(new Command(caption, GameCanvas.instance, 888392, null));
 						}
 					}
-					catch (Exception ex6)
+					catch (Exception ex9)
 					{
-						Cout.println("Loi MAGIC_TREE " + ex6.ToString());
+						Cout.println("Loi MAGIC_TREE " + ex9.ToString());
 					}
 					GameCanvas.menu.startAt(myVector, 3);
 				}
-				if (b20 == 2)
+				if (b19 == 2)
 				{
 					GameScr.gI().magicTree.remainPeas = msg.reader().readShort();
 					GameScr.gI().magicTree.seconds = msg.reader().readInt();
@@ -2375,33 +2366,33 @@ public class Controller : IMessageHandler
 			case 11:
 			{
 				GameCanvas.debug("SA9", 2);
-				int num18 = msg.reader().readByte();
-				sbyte b9 = msg.reader().readByte();
-				if (b9 != 0)
+				int num20 = msg.reader().readByte();
+				sbyte b11 = msg.reader().readByte();
+				if (b11 != 0)
 				{
-					Mob.arrMobTemplate[num18].data.readDataNewBoss(NinjaUtil.readByteArray(msg), b9);
+					Mob.arrMobTemplate[num20].data.readDataNewBoss(NinjaUtil.readByteArray(msg), b11);
 				}
 				else
 				{
-					Mob.arrMobTemplate[num18].data.readData(NinjaUtil.readByteArray(msg));
+					Mob.arrMobTemplate[num20].data.readData(NinjaUtil.readByteArray(msg));
 				}
-				for (int l = 0; l < GameScr.vMob.size(); l++)
+				for (int num21 = 0; num21 < GameScr.vMob.size(); num21++)
 				{
-					mob = (Mob)GameScr.vMob.elementAt(l);
-					if (mob.templateId == num18)
+					mob = (Mob)GameScr.vMob.elementAt(num21);
+					if (mob.templateId == num20)
 					{
-						mob.w = Mob.arrMobTemplate[num18].data.width;
-						mob.h = Mob.arrMobTemplate[num18].data.height;
+						mob.w = Mob.arrMobTemplate[num20].data.width;
+						mob.h = Mob.arrMobTemplate[num20].data.height;
 					}
 				}
-				sbyte[] array2 = NinjaUtil.readByteArray(msg);
-				Image img = Image.createImage(array2, 0, array2.Length);
-				Mob.arrMobTemplate[num18].data.img = img;
-				int num19 = msg.reader().readByte();
-				Mob.arrMobTemplate[num18].data.typeData = num19;
-				if (num19 == 1 || num19 == 2)
+				sbyte[] array3 = NinjaUtil.readByteArray(msg);
+				Image img = Image.createImage(array3, 0, array3.Length);
+				Mob.arrMobTemplate[num20].data.img = img;
+				int num22 = msg.reader().readByte();
+				Mob.arrMobTemplate[num20].data.typeData = num22;
+				if (num22 == 1 || num22 == 2)
 				{
-					readFrameBoss(msg, num18);
+					readFrameBoss(msg, num20);
 				}
 				break;
 			}
@@ -2415,79 +2406,92 @@ public class Controller : IMessageHandler
 			{
 				Res.outz("RECIEVE ICON");
 				demCount += 1f;
-				int num152 = msg.reader().readInt();
-				sbyte[] array16 = null;
+				int num166 = msg.reader().readInt();
+				sbyte[] array17 = null;
 				try
 				{
-					array16 = NinjaUtil.readByteArray(msg);
-					Res.outz("request hinh icon = " + num152);
-					if (num152 == 3896)
+					array17 = NinjaUtil.readByteArray(msg);
+					Res.outz("request hinh icon = " + num166);
+					if (num166 == 3896)
 					{
-						Res.outz("SIZE CHECK= " + array16.Length);
+						Res.outz("SIZE CHECK= " + array17.Length);
 					}
-					SmallImage.imgNew[num152].img = createImage(array16);
+					SmallImage.imgNew[num166].img = createImage(array17);
 				}
 				catch (Exception)
 				{
-					array16 = null;
-					SmallImage.imgNew[num152].img = Image.createRGBImage(new int[1], 1, 1, bl: true);
+					array17 = null;
+					SmallImage.imgNew[num166].img = Image.createRGBImage(new int[1], 1, 1, bl: true);
 				}
-				if (array16 != null && mGraphics.zoomLevel > 1)
+				if (array17 != null && mGraphics.zoomLevel > 1)
 				{
-					Rms.saveRMS(mGraphics.zoomLevel + "Small" + num152, array16);
+					Rms.saveRMS(mGraphics.zoomLevel + "Small" + num166, array17);
 				}
 				break;
 			}
 			case -66:
 			{
-				short id2 = msg.reader().readShort();
-				sbyte[] data3 = NinjaUtil.readByteArray(msg);
-				EffectData effDataById = Effect.getEffDataById(id2);
-				sbyte b64 = msg.reader().readSByte();
-				if (b64 == 0)
+				short num143 = msg.reader().readShort();
+				sbyte[] data4 = NinjaUtil.readByteArray(msg);
+				EffectData effDataById = Effect.getEffDataById(num143);
+				sbyte b60 = msg.reader().readSByte();
+				if (b60 == 0)
 				{
-					effDataById.readData(data3);
+					effDataById.readData(data4);
 				}
 				else
 				{
-					effDataById.readDataNewBoss(data3, b64);
+					effDataById.readDataNewBoss(data4, b60);
 				}
-				sbyte[] array15 = NinjaUtil.readByteArray(msg);
-				effDataById.img = Image.createImage(array15, 0, array15.Length);
+				sbyte[] array14 = NinjaUtil.readByteArray(msg);
+				effDataById.img = Image.createImage(array14, 0, array14.Length);
+				Res.outz("err5 ");
+				if (num143 != 78)
+				{
+					break;
+				}
+				sbyte b61 = msg.reader().readByte();
+				short[][] array15 = new short[b61][];
+				for (int num144 = 0; num144 < b61; num144++)
+				{
+					int num145 = msg.reader().readUnsignedByte();
+					array15[num144] = new short[num145];
+					for (int num146 = 0; num146 < num145; num146++)
+					{
+						array15[num144][num146] = msg.reader().readShort();
+					}
+				}
+				effDataById.anim_data = array15;
 				break;
 			}
 			case -32:
 			{
-				if (GameCanvas.lowGraphic && TileMap.mapID != 51 && TileMap.mapID != 103)
-				{
-					return;
-				}
-				short num124 = msg.reader().readShort();
-				int num125 = msg.reader().readInt();
+				short num128 = msg.reader().readShort();
+				int num129 = msg.reader().readInt();
 				sbyte[] array12 = null;
 				Image image = null;
 				try
 				{
-					array12 = new sbyte[num125];
-					for (int num126 = 0; num126 < num125; num126++)
+					array12 = new sbyte[num129];
+					for (int num130 = 0; num130 < num129; num130++)
 					{
-						array12[num126] = msg.reader().readByte();
+						array12[num130] = msg.reader().readByte();
 					}
-					image = Image.createImage(array12, 0, num125);
-					BgItem.imgNew.put(num124 + string.Empty, image);
+					image = Image.createImage(array12, 0, num129);
+					BgItem.imgNew.put(num128 + string.Empty, image);
 				}
 				catch (Exception)
 				{
 					array12 = null;
-					BgItem.imgNew.put(num124 + string.Empty, Image.createRGBImage(new int[1], 1, 1, bl: true));
+					BgItem.imgNew.put(num128 + string.Empty, Image.createRGBImage(new int[1], 1, 1, bl: true));
 				}
 				if (array12 != null)
 				{
 					if (mGraphics.zoomLevel > 1)
 					{
-						Rms.saveRMS(mGraphics.zoomLevel + "bgItem" + num124, array12);
+						Rms.saveRMS(mGraphics.zoomLevel + "bgItem" + num128, array12);
 					}
-					BgItemMn.blendcurrBg(num124, image);
+					BgItemMn.blendcurrBg(num128, image);
 				}
 				break;
 			}
@@ -2497,13 +2501,13 @@ public class Controller : IMessageHandler
 				{
 					GameCanvas.endDlg();
 				}
-				string text4 = msg.reader().readUTF();
+				string text3 = msg.reader().readUTF();
 				string str2 = msg.reader().readUTF();
 				str2 = Res.changeString(str2);
 				string empty = string.Empty;
 				Char char8 = null;
-				sbyte b44 = 0;
-				if (!text4.Equals(string.Empty))
+				sbyte b39 = 0;
+				if (!text3.Equals(string.Empty))
 				{
 					char8 = new Char();
 					char8.charID = msg.reader().readInt();
@@ -2512,17 +2516,17 @@ public class Controller : IMessageHandler
 					char8.body = msg.reader().readShort();
 					char8.bag = msg.reader().readShort();
 					char8.leg = msg.reader().readShort();
-					b44 = msg.reader().readByte();
-					char8.cName = text4;
+					b39 = msg.reader().readByte();
+					char8.cName = text3;
 				}
 				empty += str2;
 				InfoDlg.hide();
-				if (text4.Equals(string.Empty))
+				if (text3.Equals(string.Empty))
 				{
 					GameScr.info1.addInfo(empty, 0);
 					break;
 				}
-				GameScr.info2.addInfoWithChar(empty, char8, (b44 == 0) ? true : false);
+				GameScr.info2.addInfoWithChar(empty, char8, (b39 == 0) ? true : false);
 				if (GameCanvas.panel.isShow && GameCanvas.panel.type == 8)
 				{
 					GameCanvas.panel.initLogMessage();
@@ -2556,122 +2560,122 @@ public class Controller : IMessageHandler
 			case 81:
 			{
 				GameCanvas.debug("SXX4", 2);
-				Mob mob7 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
-				mob7.isDisable = msg.reader().readBool();
+				Mob mob8 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
+				mob8.isDisable = msg.reader().readBool();
 				break;
 			}
 			case 82:
 			{
 				GameCanvas.debug("SXX5", 2);
-				Mob mob7 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
-				mob7.isDontMove = msg.reader().readBool();
+				Mob mob8 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
+				mob8.isDontMove = msg.reader().readBool();
 				break;
 			}
 			case 85:
 			{
 				GameCanvas.debug("SXX5", 2);
-				Mob mob7 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
-				mob7.isFire = msg.reader().readBool();
+				Mob mob8 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
+				mob8.isFire = msg.reader().readBool();
 				break;
 			}
 			case 86:
 			{
 				GameCanvas.debug("SXX5", 2);
-				Mob mob7 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
-				mob7.isIce = msg.reader().readBool();
-				if (!mob7.isIce)
+				Mob mob8 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
+				mob8.isIce = msg.reader().readBool();
+				if (!mob8.isIce)
 				{
-					ServerEffect.addServerEffect(77, mob7.x, mob7.y - 9, 1);
+					ServerEffect.addServerEffect(77, mob8.x, mob8.y - 9, 1);
 				}
 				break;
 			}
 			case 87:
 			{
 				GameCanvas.debug("SXX5", 2);
-				Mob mob7 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
-				mob7.isWind = msg.reader().readBool();
+				Mob mob8 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
+				mob8.isWind = msg.reader().readBool();
 				break;
 			}
 			case 56:
 			{
 				GameCanvas.debug("SXX6", 2);
 				@char = null;
-				int num9 = msg.reader().readInt();
-				if (num9 == Char.myCharz().charID)
+				int num13 = msg.reader().readInt();
+				if (num13 == Char.myCharz().charID)
 				{
-					bool flag4 = false;
+					bool flag3 = false;
 					@char = Char.myCharz();
 					@char.cHP = msg.readInt3Byte();
-					int num40 = msg.readInt3Byte();
-					Res.outz("dame hit = " + num40);
-					if (num40 != 0)
+					int num35 = msg.readInt3Byte();
+					Res.outz("dame hit = " + num35);
+					if (num35 != 0)
 					{
 						@char.doInjure();
 					}
-					int num41 = 0;
+					int num36 = 0;
 					try
 					{
-						flag4 = msg.reader().readBoolean();
-						sbyte b18 = msg.reader().readByte();
-						if (b18 != -1)
+						flag3 = msg.reader().readBoolean();
+						sbyte b13 = msg.reader().readByte();
+						if (b13 != -1)
 						{
-							Res.outz("hit eff= " + b18);
-							EffecMn.addEff(new Effect(b18, @char.cx, @char.cy, 3, 1, -1));
+							Res.outz("hit eff= " + b13);
+							EffecMn.addEff(new Effect(b13, @char.cx, @char.cy, 3, 1, -1));
 						}
 					}
 					catch (Exception)
 					{
 					}
-					num40 += num41;
+					num35 += num36;
 					if (Char.myCharz().cTypePk != 4)
 					{
-						if (num40 == 0)
+						if (num35 == 0)
 						{
 							GameScr.startFlyText(mResources.miss, @char.cx, @char.cy - @char.ch, 0, -3, mFont.MISS_ME);
 						}
 						else
 						{
-							GameScr.startFlyText("-" + num40, @char.cx, @char.cy - @char.ch, 0, -3, flag4 ? mFont.FATAL : mFont.RED);
+							GameScr.startFlyText("-" + num35, @char.cx, @char.cy - @char.ch, 0, -3, flag3 ? mFont.FATAL : mFont.RED);
 						}
 					}
 					break;
 				}
-				@char = GameScr.findCharInMap(num9);
+				@char = GameScr.findCharInMap(num13);
 				if (@char == null)
 				{
 					return;
 				}
 				@char.cHP = msg.readInt3Byte();
-				bool flag5 = false;
-				int num42 = msg.readInt3Byte();
-				if (num42 != 0)
+				bool flag4 = false;
+				int num37 = msg.readInt3Byte();
+				if (num37 != 0)
 				{
 					@char.doInjure();
 				}
-				int num43 = 0;
+				int num38 = 0;
 				try
 				{
-					flag5 = msg.reader().readBoolean();
-					sbyte b19 = msg.reader().readByte();
-					if (b19 != -1)
+					flag4 = msg.reader().readBoolean();
+					sbyte b14 = msg.reader().readByte();
+					if (b14 != -1)
 					{
-						Res.outz("hit eff= " + b19);
-						EffecMn.addEff(new Effect(b19, @char.cx, @char.cy, 3, 1, -1));
+						Res.outz("hit eff= " + b14);
+						EffecMn.addEff(new Effect(b14, @char.cx, @char.cy, 3, 1, -1));
 					}
 				}
 				catch (Exception)
 				{
 				}
-				num42 += num43;
+				num37 += num38;
 				if (@char.cTypePk != 4)
 				{
-					if (num42 == 0)
+					if (num37 == 0)
 					{
 						GameScr.startFlyText(mResources.miss, @char.cx, @char.cy - @char.ch, 0, -3, mFont.MISS);
 					}
 					else
 					{
-						GameScr.startFlyText("-" + num42, @char.cx, @char.cy - @char.ch, 0, -3, flag5 ? mFont.FATAL : mFont.ORANGE);
+						GameScr.startFlyText("-" + num37, @char.cx, @char.cy - @char.ch, 0, -3, flag4 ? mFont.FATAL : mFont.ORANGE);
 					}
 				}
 				break;
@@ -2679,8 +2683,8 @@ public class Controller : IMessageHandler
 			case 83:
 			{
 				GameCanvas.debug("SXX8", 2);
-				int num9 = msg.reader().readInt();
-				@char = ((num9 != Char.myCharz().charID) ? GameScr.findCharInMap(num9) : Char.myCharz());
+				int num13 = msg.reader().readInt();
+				@char = ((num13 != Char.myCharz().charID) ? GameScr.findCharInMap(num13) : Char.myCharz());
 				if (@char == null)
 				{
 					return;
@@ -2694,14 +2698,14 @@ public class Controller : IMessageHandler
 			}
 			case 84:
 			{
-				int num9 = msg.reader().readInt();
-				if (num9 == Char.myCharz().charID)
+				int num13 = msg.reader().readInt();
+				if (num13 == Char.myCharz().charID)
 				{
 					@char = Char.myCharz();
 				}
 				else
 				{
-					@char = GameScr.findCharInMap(num9);
+					@char = GameScr.findCharInMap(num13);
 					if (@char == null)
 					{
 						return;
@@ -2784,44 +2788,44 @@ public class Controller : IMessageHandler
 			case 58:
 			{
 				GameCanvas.debug("SZ7", 2);
-				int num9 = msg.reader().readInt();
-				Char char10 = ((num9 != Char.myCharz().charID) ? GameScr.findCharInMap(num9) : Char.myCharz());
+				int num13 = msg.reader().readInt();
+				Char char10 = ((num13 != Char.myCharz().charID) ? GameScr.findCharInMap(num13) : Char.myCharz());
 				char10.moveFast = new short[3];
 				char10.moveFast[0] = 0;
-				short num150 = msg.reader().readShort();
-				short num151 = msg.reader().readShort();
-				char10.moveFast[1] = num150;
-				char10.moveFast[2] = num151;
+				short num164 = msg.reader().readShort();
+				short num165 = msg.reader().readShort();
+				char10.moveFast[1] = num164;
+				char10.moveFast[2] = num165;
 				try
 				{
-					num9 = msg.reader().readInt();
-					Char char11 = ((num9 != Char.myCharz().charID) ? GameScr.findCharInMap(num9) : Char.myCharz());
-					char11.cx = num150;
-					char11.cy = num151;
+					num13 = msg.reader().readInt();
+					Char char11 = ((num13 != Char.myCharz().charID) ? GameScr.findCharInMap(num13) : Char.myCharz());
+					char11.cx = num164;
+					char11.cy = num165;
 				}
-				catch (Exception ex20)
+				catch (Exception ex21)
 				{
-					Cout.println("Loi MOVE_FAST " + ex20.ToString());
+					Cout.println("Loi MOVE_FAST " + ex21.ToString());
 				}
 				break;
 			}
 			case 88:
 			{
-				string info4 = msg.reader().readUTF();
-				short num149 = msg.reader().readShort();
-				GameCanvas.inputDlg.show(info4, new Command(mResources.ACCEPT, GameCanvas.instance, 88818, num149), TField.INPUT_TYPE_ANY);
+				string info3 = msg.reader().readUTF();
+				short num163 = msg.reader().readShort();
+				GameCanvas.inputDlg.show(info3, new Command(mResources.ACCEPT, GameCanvas.instance, 88818, num163), TField.INPUT_TYPE_ANY);
 				break;
 			}
 			case 27:
 			{
 				myVector = new MyVector();
 				string text7 = msg.reader().readUTF();
-				int num145 = msg.reader().readByte();
-				for (int num146 = 0; num146 < num145; num146++)
+				int num158 = msg.reader().readByte();
+				for (int num159 = 0; num159 < num158; num159++)
 				{
 					string caption4 = msg.reader().readUTF();
-					short num147 = msg.reader().readShort();
-					myVector.addElement(new Command(caption4, GameCanvas.instance, 88819, num147));
+					short num160 = msg.reader().readShort();
+					myVector.addElement(new Command(caption4, GameCanvas.instance, 88819, num160));
 				}
 				GameCanvas.menu.startWithoutCloseButton(myVector, 3);
 				break;
@@ -2849,10 +2853,10 @@ public class Controller : IMessageHandler
 				{
 					return;
 				}
-				for (int num140 = 0; num140 < Char.myCharz().npcFocus.template.menu.Length; num140++)
+				for (int num142 = 0; num142 < Char.myCharz().npcFocus.template.menu.Length; num142++)
 				{
-					string[] array14 = Char.myCharz().npcFocus.template.menu[num140];
-					myVector.addElement(new Command(array14[0], GameCanvas.instance, 88820, array14));
+					string[] array13 = Char.myCharz().npcFocus.template.menu[num142];
+					myVector.addElement(new Command(array13[0], GameCanvas.instance, 88820, array13));
 				}
 				GameCanvas.menu.startAt(myVector, 3);
 				break;
@@ -2862,7 +2866,7 @@ public class Controller : IMessageHandler
 				GameCanvas.debug("SA52", 2);
 				GameCanvas.taskTick = 150;
 				short taskId = msg.reader().readShort();
-				sbyte index3 = msg.reader().readByte();
+				sbyte index2 = msg.reader().readByte();
 				string str3 = msg.reader().readUTF();
 				str3 = Res.changeString(str3);
 				string str4 = msg.reader().readUTF();
@@ -2873,34 +2877,34 @@ public class Controller : IMessageHandler
 				GameScr.mapTasks = new int[array9.Length];
 				short[] array11 = new short[array9.Length];
 				short count = -1;
-				for (int num122 = 0; num122 < array9.Length; num122++)
+				for (int num126 = 0; num126 < array9.Length; num126++)
 				{
 					string str5 = msg.reader().readUTF();
 					str5 = Res.changeString(str5);
-					GameScr.tasks[num122] = msg.reader().readByte();
-					GameScr.mapTasks[num122] = msg.reader().readShort();
+					GameScr.tasks[num126] = msg.reader().readByte();
+					GameScr.mapTasks[num126] = msg.reader().readShort();
 					string str6 = msg.reader().readUTF();
 					str6 = Res.changeString(str6);
-					array11[num122] = -1;
+					array11[num126] = -1;
 					if (!str5.Equals(string.Empty))
 					{
-						array9[num122] = str5;
-						array10[num122] = str6;
+						array9[num126] = str5;
+						array10[num126] = str6;
 					}
 				}
 				try
 				{
 					count = msg.reader().readShort();
-					for (int num123 = 0; num123 < array9.Length; num123++)
+					for (int num127 = 0; num127 < array9.Length; num127++)
 					{
-						array11[num123] = msg.reader().readShort();
+						array11[num127] = msg.reader().readShort();
 					}
 				}
-				catch (Exception ex16)
+				catch (Exception ex17)
 				{
-					Cout.println("Loi TASK_GET " + ex16.ToString());
+					Cout.println("Loi TASK_GET " + ex17.ToString());
 				}
-				Char.myCharz().taskMaint = new Task(taskId, index3, str3, str4, array9, array11, count, array10);
+				Char.myCharz().taskMaint = new Task(taskId, index2, str3, str4, array9, array11, count, array10);
 				if (Char.myCharz().npcFocus != null)
 				{
 					Npc.clearEffTask();
@@ -2919,16 +2923,17 @@ public class Controller : IMessageHandler
 				break;
 			case 50:
 			{
-				sbyte b53 = msg.reader().readByte();
+				sbyte b50 = msg.reader().readByte();
 				Panel.vGameInfo.removeAllElements();
-				for (int num121 = 0; num121 < b53; num121++)
+				for (int num123 = 0; num123 < b50; num123++)
 				{
 					GameInfo gameInfo = new GameInfo();
 					gameInfo.id = msg.reader().readShort();
 					gameInfo.main = msg.reader().readUTF();
 					gameInfo.content = msg.reader().readUTF();
 					Panel.vGameInfo.addElement(gameInfo);
-					bool flag9 = (gameInfo.hasRead = Rms.loadRMSInt(gameInfo.id + string.Empty) != -1);
+					bool hasRead = Rms.loadRMSInt(gameInfo.id + string.Empty) != -1;
+					gameInfo.hasRead = hasRead;
 				}
 				break;
 			}
@@ -2939,6 +2944,21 @@ public class Controller : IMessageHandler
 				if (Char.myCharz().npcFocus != null)
 				{
 					Npc.clearEffTask();
+				}
+				try
+				{
+					short num119 = msg.reader().readShort();
+					short num120 = msg.reader().readShort();
+					Char.myCharz().x_hint = num119;
+					Char.myCharz().y_hint = num120;
+					Res.outz("CMD   TASK_UPDATE:43_mapID =    x|y " + num119 + "|" + num120);
+					for (int num121 = 0; num121 < TileMap.vGo.size(); num121++)
+					{
+						Res.outz("===> " + TileMap.vGo.elementAt(num121));
+					}
+				}
+				catch (Exception)
+				{
 				}
 				break;
 			case 90:
@@ -2953,11 +2973,11 @@ public class Controller : IMessageHandler
 			{
 				GameCanvas.debug("SA60", 2);
 				short itemMapID = msg.reader().readShort();
-				for (int num119 = 0; num119 < GameScr.vItemMap.size(); num119++)
+				for (int num118 = 0; num118 < GameScr.vItemMap.size(); num118++)
 				{
-					if (((ItemMap)GameScr.vItemMap.elementAt(num119)).itemMapID == itemMapID)
+					if (((ItemMap)GameScr.vItemMap.elementAt(num118)).itemMapID == itemMapID)
 					{
-						GameScr.vItemMap.removeElementAt(num119);
+						GameScr.vItemMap.removeElementAt(num118);
 						break;
 					}
 				}
@@ -2968,9 +2988,9 @@ public class Controller : IMessageHandler
 				GameCanvas.debug("SA61", 2);
 				Char.myCharz().itemFocus = null;
 				short itemMapID = msg.reader().readShort();
-				for (int num118 = 0; num118 < GameScr.vItemMap.size(); num118++)
+				for (int num116 = 0; num116 < GameScr.vItemMap.size(); num116++)
 				{
-					ItemMap itemMap2 = (ItemMap)GameScr.vItemMap.elementAt(num118);
+					ItemMap itemMap2 = (ItemMap)GameScr.vItemMap.elementAt(num116);
 					if (itemMap2.itemMapID != itemMapID)
 					{
 						continue;
@@ -3048,9 +3068,9 @@ public class Controller : IMessageHandler
 				GameCanvas.debug("SA62", 2);
 				short itemMapID = msg.reader().readShort();
 				@char = GameScr.findCharInMap(msg.reader().readInt());
-				for (int num117 = 0; num117 < GameScr.vItemMap.size(); num117++)
+				for (int num113 = 0; num113 < GameScr.vItemMap.size(); num113++)
 				{
-					ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(num117);
+					ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(num113);
 					if (itemMap.itemMapID != itemMapID)
 					{
 						continue;
@@ -3075,9 +3095,9 @@ public class Controller : IMessageHandler
 			case -18:
 			{
 				GameCanvas.debug("SA63", 2);
-				int num116 = msg.reader().readByte();
-				GameScr.vItemMap.addElement(new ItemMap(msg.reader().readShort(), Char.myCharz().arrItemBag[num116].template.id, Char.myCharz().cx, Char.myCharz().cy, msg.reader().readShort(), msg.reader().readShort()));
-				Char.myCharz().arrItemBag[num116] = null;
+				int num112 = msg.reader().readByte();
+				GameScr.vItemMap.addElement(new ItemMap(msg.reader().readShort(), Char.myCharz().arrItemBag[num112].template.id, Char.myCharz().cx, Char.myCharz().cy, msg.reader().readShort(), msg.reader().readShort()));
+				Char.myCharz().arrItemBag[num112] = null;
 				break;
 			}
 			case 68:
@@ -3088,16 +3108,19 @@ public class Controller : IMessageHandler
 				short itemTemplateID = msg.reader().readShort();
 				int x = msg.reader().readShort();
 				int y = msg.reader().readShort();
-				int num113 = msg.reader().readInt();
+				int num110 = msg.reader().readInt();
 				short r = 0;
-				if (num113 == -2)
+				if (num110 == -2)
 				{
 					r = msg.reader().readShort();
 				}
-				ItemMap o = new ItemMap(num113, itemMapID, itemTemplateID, x, y, r);
+				ItemMap o = new ItemMap(num110, itemMapID, itemTemplateID, x, y, r);
 				GameScr.vItemMap.addElement(o);
 				break;
 			}
+			case 69:
+				SoundMn.IsDelAcc = ((msg.reader().readByte() != 0) ? true : false);
+				break;
 			case -14:
 				GameCanvas.debug("SA64", 2);
 				@char = GameScr.findCharInMap(msg.reader().readInt());
@@ -3128,23 +3151,23 @@ public class Controller : IMessageHandler
 			{
 				Res.outz("BIG MESSAGE .......................................");
 				GameCanvas.endDlg();
-				int avatar = msg.reader().readShort();
+				int avatar2 = msg.reader().readShort();
 				string chat3 = msg.reader().readUTF();
 				Npc npc6 = new Npc(-1, 0, 0, 0, 0, 0);
-				npc6.avatar = avatar;
+				npc6.avatar = avatar2;
 				ChatPopup.addBigMessage(chat3, 100000, npc6);
-				sbyte b45 = msg.reader().readByte();
-				if (b45 == 0)
+				sbyte b37 = msg.reader().readByte();
+				if (b37 == 0)
 				{
 					ChatPopup.serverChatPopUp.cmdMsg1 = new Command(mResources.CLOSE, ChatPopup.serverChatPopUp, 1001, null);
 					ChatPopup.serverChatPopUp.cmdMsg1.x = GameCanvas.w / 2 - 35;
 					ChatPopup.serverChatPopUp.cmdMsg1.y = GameCanvas.h - 35;
 				}
-				if (b45 == 1)
+				if (b37 == 1)
 				{
-					string p = msg.reader().readUTF();
+					string p2 = msg.reader().readUTF();
 					string caption2 = msg.reader().readUTF();
-					ChatPopup.serverChatPopUp.cmdMsg1 = new Command(caption2, ChatPopup.serverChatPopUp, 1000, p);
+					ChatPopup.serverChatPopUp.cmdMsg1 = new Command(caption2, ChatPopup.serverChatPopUp, 1000, p2);
 					ChatPopup.serverChatPopUp.cmdMsg1.x = GameCanvas.w / 2 - 75;
 					ChatPopup.serverChatPopUp.cmdMsg1.y = GameCanvas.h - 35;
 					ChatPopup.serverChatPopUp.cmdMsg2 = new Command(mResources.CLOSE, ChatPopup.serverChatPopUp, 1001, null);
@@ -3157,22 +3180,22 @@ public class Controller : IMessageHandler
 			{
 				GameCanvas.debug("SA67", 2);
 				InfoDlg.hide();
-				int num83 = msg.reader().readShort();
-				Res.outz("OPEN_UI_SAY ID= " + num83);
+				int num89 = msg.reader().readShort();
+				Res.outz("OPEN_UI_SAY ID= " + num89);
 				string str = msg.reader().readUTF();
 				str = Res.changeString(str);
-				for (int num101 = 0; num101 < GameScr.vNpc.size(); num101++)
+				for (int num98 = 0; num98 < GameScr.vNpc.size(); num98++)
 				{
-					Npc npc4 = (Npc)GameScr.vNpc.elementAt(num101);
+					Npc npc4 = (Npc)GameScr.vNpc.elementAt(num98);
 					Res.outz("npc id= " + npc4.template.npcTemplateId);
-					if (npc4.template.npcTemplateId == num83)
+					if (npc4.template.npcTemplateId == num89)
 					{
 						ChatPopup.addChatPopupMultiLine(str, 100000, npc4);
 						GameCanvas.panel.hideNow();
 						return;
 					}
 				}
-				Npc npc5 = new Npc(num83, 0, 0, 0, num83, GameScr.info1.charId[Char.myCharz().cgender][2]);
+				Npc npc5 = new Npc(num89, 0, 0, 0, num89, GameScr.info1.charId[Char.myCharz().cgender][2]);
 				if (npc5.template.npcTemplateId == 5)
 				{
 					npc5.charID = 5;
@@ -3191,49 +3214,50 @@ public class Controller : IMessageHandler
 			case 32:
 			{
 				GameCanvas.debug("SA68", 2);
-				int num83 = msg.reader().readShort();
-				for (int num84 = 0; num84 < GameScr.vNpc.size(); num84++)
+				int num89 = msg.reader().readShort();
+				for (int num90 = 0; num90 < GameScr.vNpc.size(); num90++)
 				{
-					Npc npc = (Npc)GameScr.vNpc.elementAt(num84);
-					if (npc.template.npcTemplateId == num83 && npc.Equals(Char.myCharz().npcFocus))
+					Npc npc2 = (Npc)GameScr.vNpc.elementAt(num90);
+					if (npc2.template.npcTemplateId == num89 && npc2.Equals(Char.myCharz().npcFocus))
 					{
 						string chat = msg.reader().readUTF();
 						string[] array6 = new string[msg.reader().readByte()];
-						for (int num85 = 0; num85 < array6.Length; num85++)
+						for (int num91 = 0; num91 < array6.Length; num91++)
 						{
-							array6[num85] = msg.reader().readUTF();
+							array6[num91] = msg.reader().readUTF();
 						}
-						GameScr.gI().createMenu(array6, npc);
-						ChatPopup.addChatPopup(chat, 100000, npc);
+						GameScr.gI().createMenu(array6, npc2);
+						ChatPopup.addChatPopup(chat, 100000, npc2);
 						return;
 					}
 				}
-				Npc npc2 = new Npc(num83, 0, -100, 100, num83, GameScr.info1.charId[Char.myCharz().cgender][2]);
+				Npc npc3 = new Npc(num89, 0, -100, 100, num89, GameScr.info1.charId[Char.myCharz().cgender][2]);
 				Res.outz((Char.myCharz().npcFocus == null) ? "null" : "!null");
 				string chat2 = msg.reader().readUTF();
 				string[] array7 = new string[msg.reader().readByte()];
-				for (int num86 = 0; num86 < array7.Length; num86++)
+				for (int num92 = 0; num92 < array7.Length; num92++)
 				{
-					array7[num86] = msg.reader().readUTF();
+					array7[num92] = msg.reader().readUTF();
 				}
 				try
 				{
-					short num87 = (short)(npc2.avatar = msg.reader().readShort());
+					short avatar = msg.reader().readShort();
+					npc3.avatar = avatar;
 				}
 				catch (Exception)
 				{
 				}
 				Res.outz((Char.myCharz().npcFocus == null) ? "null" : "!null");
-				GameScr.gI().createMenu(array7, npc2);
-				ChatPopup.addChatPopup(chat2, 100000, npc2);
+				GameScr.gI().createMenu(array7, npc3);
+				ChatPopup.addChatPopup(chat2, 100000, npc3);
 				break;
 			}
 			case 7:
 			{
 				sbyte type = msg.reader().readByte();
 				short id = msg.reader().readShort();
-				string info2 = msg.reader().readUTF();
-				GameCanvas.panel.saleRequest(type, info2, id);
+				string info = msg.reader().readUTF();
+				GameCanvas.panel.saleRequest(type, info, id);
 				break;
 			}
 			case 6:
@@ -3279,8 +3303,8 @@ public class Controller : IMessageHandler
 				loadInfoMap(msg);
 				try
 				{
-					sbyte b32 = msg.reader().readByte();
-					TileMap.isMapDouble = ((b32 != 0) ? true : false);
+					sbyte b28 = msg.reader().readByte();
+					TileMap.isMapDouble = ((b28 != 0) ? true : false);
 				}
 				catch (Exception)
 				{
@@ -3290,28 +3314,24 @@ public class Controller : IMessageHandler
 				break;
 			case -31:
 			{
-				if (GameCanvas.lowGraphic && TileMap.mapID != 51)
-				{
-					return;
-				}
 				TileMap.vItemBg.removeAllElements();
-				short num55 = msg.reader().readShort();
-				Cout.LogError2("nItem= " + num55);
-				for (int num56 = 0; num56 < num55; num56++)
+				short num70 = msg.reader().readShort();
+				Cout.LogError2("nItem= " + num70);
+				for (int num71 = 0; num71 < num70; num71++)
 				{
 					BgItem bgItem = new BgItem();
-					bgItem.id = num56;
+					bgItem.id = num71;
 					bgItem.idImage = msg.reader().readShort();
 					bgItem.layer = msg.reader().readByte();
 					bgItem.dx = msg.reader().readShort();
 					bgItem.dy = msg.reader().readShort();
-					sbyte b26 = msg.reader().readByte();
-					bgItem.tileX = new int[b26];
-					bgItem.tileY = new int[b26];
-					for (int num57 = 0; num57 < b26; num57++)
+					sbyte b25 = msg.reader().readByte();
+					bgItem.tileX = new int[b25];
+					bgItem.tileY = new int[b25];
+					for (int num72 = 0; num72 < b25; num72++)
 					{
-						bgItem.tileX[num56] = msg.reader().readByte();
-						bgItem.tileY[num56] = msg.reader().readByte();
+						bgItem.tileX[num71] = msg.reader().readByte();
+						bgItem.tileY[num71] = msg.reader().readByte();
 					}
 					TileMap.vItemBg.addElement(bgItem);
 				}
@@ -3336,13 +3356,13 @@ public class Controller : IMessageHandler
 				}
 				GameCanvas.debug("SA76v2", 2);
 				@char.attMobs = new Mob[msg.reader().readByte()];
-				for (int num45 = 0; num45 < @char.attMobs.Length; num45++)
+				for (int num34 = 0; num34 < @char.attMobs.Length; num34++)
 				{
-					Mob mob3 = (Mob)GameScr.vMob.elementAt(msg.reader().readByte());
-					@char.attMobs[num45] = mob3;
-					if (num45 == 0)
+					Mob mob4 = (Mob)GameScr.vMob.elementAt(msg.reader().readByte());
+					@char.attMobs[num34] = mob4;
+					if (num34 == 0)
 					{
-						if (@char.cx <= mob3.x)
+						if (@char.cx <= mob4.x)
 						{
 							@char.cdir = 1;
 						}
@@ -3361,11 +3381,11 @@ public class Controller : IMessageHandler
 				{
 					for (num = 0; num < array.Length; num++)
 					{
-						int num9 = msg.reader().readInt();
-						Char char6 = (array[num] = ((num9 != Char.myCharz().charID) ? GameScr.findCharInMap(num9) : Char.myCharz()));
+						int num13 = msg.reader().readInt();
+						Char char4 = (array[num] = ((num13 != Char.myCharz().charID) ? GameScr.findCharInMap(num13) : Char.myCharz()));
 						if (num == 0)
 						{
-							if (@char.cx <= char6.cx)
+							if (@char.cx <= char4.cx)
 							{
 								@char.cdir = 1;
 							}
@@ -3376,9 +3396,9 @@ public class Controller : IMessageHandler
 						}
 					}
 				}
-				catch (Exception ex7)
+				catch (Exception ex6)
 				{
-					Cout.println("Loi PLAYER_ATTACK_N_P " + ex7.ToString());
+					Cout.println("Loi PLAYER_ATTACK_N_P " + ex6.ToString());
 				}
 				GameCanvas.debug("SA76v4", 2);
 				if (num > 0)
@@ -3401,25 +3421,25 @@ public class Controller : IMessageHandler
 				{
 					return;
 				}
-				int num21 = msg.reader().readUnsignedByte();
+				int num17 = msg.reader().readUnsignedByte();
 				if ((TileMap.tileTypeAtPixel(@char.cx, @char.cy) & 2) == 2)
 				{
-					@char.setSkillPaint(GameScr.sks[num21], 0);
+					@char.setSkillPaint(GameScr.sks[num17], 0);
 				}
 				else
 				{
-					@char.setSkillPaint(GameScr.sks[num21], 1);
+					@char.setSkillPaint(GameScr.sks[num17], 1);
 				}
 				GameCanvas.debug("SA769991v2", 2);
-				Mob[] array3 = new Mob[10];
+				Mob[] array2 = new Mob[10];
 				num = 0;
 				try
 				{
 					GameCanvas.debug("SA769991v3", 2);
-					for (num = 0; num < array3.Length; num++)
+					for (num = 0; num < array2.Length; num++)
 					{
 						GameCanvas.debug("SA769991v4-num" + num, 2);
-						Mob mob2 = (array3[num] = (Mob)GameScr.vMob.elementAt(msg.reader().readByte()));
+						Mob mob2 = (array2[num] = (Mob)GameScr.vMob.elementAt(msg.reader().readByte()));
 						if (num == 0)
 						{
 							if (@char.cx <= mob2.x)
@@ -3434,9 +3454,9 @@ public class Controller : IMessageHandler
 						GameCanvas.debug("SA769991v5-num" + num, 2);
 					}
 				}
-				catch (Exception ex3)
+				catch (Exception ex4)
 				{
-					Cout.println("Loi PLAYER_ATTACK_NPC " + ex3.ToString());
+					Cout.println("Loi PLAYER_ATTACK_NPC " + ex4.ToString());
 				}
 				GameCanvas.debug("SA769992", 2);
 				if (num > 0)
@@ -3444,7 +3464,7 @@ public class Controller : IMessageHandler
 					@char.attMobs = new Mob[num];
 					for (num = 0; num < @char.attMobs.Length; num++)
 					{
-						@char.attMobs[num] = array3[num];
+						@char.attMobs[num] = array2[num];
 					}
 					@char.charFocus = null;
 					@char.mobFocus = @char.attMobs[0];
@@ -3593,18 +3613,18 @@ public class Controller : IMessageHandler
 			case -2:
 			{
 				GameCanvas.debug("SA77", 22);
-				int num183 = msg.reader().readInt();
-				Char.myCharz().yen += num183;
-				GameScr.startFlyText((num183 <= 0) ? (string.Empty + num183) : ("+" + num183), Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch - 10, 0, -2, mFont.YELLOW);
+				int num191 = msg.reader().readInt();
+				Char.myCharz().yen += num191;
+				GameScr.startFlyText((num191 <= 0) ? (string.Empty + num191) : ("+" + num191), Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch - 10, 0, -2, mFont.YELLOW);
 				break;
 			}
 			case 95:
 			{
 				GameCanvas.debug("SA77", 22);
-				int num174 = msg.reader().readInt();
-				Char.myCharz().xu += num174;
+				int num181 = msg.reader().readInt();
+				Char.myCharz().xu += num181;
 				Char.myCharz().xuStr = mSystem.numberTostring(Char.myCharz().xu);
-				GameScr.startFlyText((num174 <= 0) ? (string.Empty + num174) : ("+" + num174), Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch - 10, 0, -2, mFont.YELLOW);
+				GameScr.startFlyText((num181 <= 0) ? (string.Empty + num181) : ("+" + num181), Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch - 10, 0, -2, mFont.YELLOW);
 				break;
 			}
 			case 96:
@@ -3613,11 +3633,11 @@ public class Controller : IMessageHandler
 				break;
 			case 97:
 			{
-				sbyte b70 = msg.reader().readByte();
-				for (int num171 = 0; num171 < Char.myCharz().taskOrders.size(); num171++)
+				sbyte b71 = msg.reader().readByte();
+				for (int num178 = 0; num178 < Char.myCharz().taskOrders.size(); num178++)
 				{
-					TaskOrder taskOrder = (TaskOrder)Char.myCharz().taskOrders.elementAt(num171);
-					if (taskOrder.taskId == b70)
+					TaskOrder taskOrder = (TaskOrder)Char.myCharz().taskOrders.elementAt(num178);
+					if (taskOrder.taskId == b71)
 					{
 						taskOrder.count = msg.reader().readShort();
 						break;
@@ -3628,36 +3648,36 @@ public class Controller : IMessageHandler
 			case -1:
 			{
 				GameCanvas.debug("SA77", 222);
-				int num182 = msg.reader().readInt();
-				Char.myCharz().xu += num182;
+				int num190 = msg.reader().readInt();
+				Char.myCharz().xu += num190;
 				Char.myCharz().xuStr = mSystem.numberTostring(Char.myCharz().xu);
-				Char.myCharz().yen -= num182;
-				GameScr.startFlyText("+" + num182, Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch - 10, 0, -2, mFont.YELLOW);
+				Char.myCharz().yen -= num190;
+				GameScr.startFlyText("+" + num190, Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch - 10, 0, -2, mFont.YELLOW);
 				break;
 			}
 			case -3:
 			{
 				GameCanvas.debug("SA78", 2);
-				sbyte b77 = msg.reader().readByte();
-				int num188 = msg.reader().readInt();
-				if (b77 == 0)
+				sbyte b78 = msg.reader().readByte();
+				int num196 = msg.reader().readInt();
+				if (b78 == 0)
 				{
-					Char.myCharz().cPower += num188;
+					Char.myCharz().cPower += num196;
 				}
-				if (b77 == 1)
+				if (b78 == 1)
 				{
-					Char.myCharz().cTiemNang += num188;
+					Char.myCharz().cTiemNang += num196;
 				}
-				if (b77 == 2)
+				if (b78 == 2)
 				{
-					Char.myCharz().cPower += num188;
-					Char.myCharz().cTiemNang += num188;
+					Char.myCharz().cPower += num196;
+					Char.myCharz().cTiemNang += num196;
 				}
 				Char.myCharz().applyCharLevelPercent();
 				if (Char.myCharz().cTypePk != 3)
 				{
-					GameScr.startFlyText(((num188 <= 0) ? string.Empty : "+") + num188, Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch, 0, -4, mFont.GREEN);
-					if (num188 > 0 && Char.myCharz().petFollow != null && Char.myCharz().petFollow.smallID == 5002)
+					GameScr.startFlyText(((num196 <= 0) ? string.Empty : "+") + num196, Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch, 0, -4, mFont.GREEN);
+					if (num196 > 0 && Char.myCharz().petFollow != null && Char.myCharz().petFollow.smallID == 5002)
 					{
 						ServerEffect.addServerEffect(55, Char.myCharz().petFollow.cmx, Char.myCharz().petFollow.cmy, 1);
 						ServerEffect.addServerEffect(55, Char.myCharz().cx, Char.myCharz().cy, 1);
@@ -3667,14 +3687,14 @@ public class Controller : IMessageHandler
 			}
 			case -73:
 			{
-				sbyte b74 = msg.reader().readByte();
-				for (int num181 = 0; num181 < GameScr.vNpc.size(); num181++)
+				sbyte b75 = msg.reader().readByte();
+				for (int num189 = 0; num189 < GameScr.vNpc.size(); num189++)
 				{
-					Npc npc7 = (Npc)GameScr.vNpc.elementAt(num181);
-					if (npc7.template.npcTemplateId == b74)
+					Npc npc7 = (Npc)GameScr.vNpc.elementAt(num189);
+					if (npc7.template.npcTemplateId == b75)
 					{
-						sbyte b75 = msg.reader().readByte();
-						if (b75 == 0)
+						sbyte b76 = msg.reader().readByte();
+						if (b76 == 0)
 						{
 							npc7.isHide = true;
 						}
@@ -3691,19 +3711,19 @@ public class Controller : IMessageHandler
 			{
 				GameCanvas.debug("SA79", 2);
 				int charID = msg.reader().readInt();
-				int num176 = msg.reader().readInt();
+				int num183 = msg.reader().readInt();
 				Char char14;
-				if (num176 != -100)
+				if (num183 != -100)
 				{
 					char14 = new Char();
 					char14.charID = charID;
-					char14.clanID = num176;
+					char14.clanID = num183;
 				}
 				else
 				{
 					char14 = new Mabu();
 					char14.charID = charID;
-					char14.clanID = num176;
+					char14.clanID = num183;
 				}
 				if (char14.clanID == -2)
 				{
@@ -3711,22 +3731,22 @@ public class Controller : IMessageHandler
 				}
 				if (readCharInfo(char14, msg))
 				{
-					sbyte b72 = msg.reader().readByte();
-					if (char14.cy <= 10 && b72 != 0 && b72 != 2)
+					sbyte b73 = msg.reader().readByte();
+					if (char14.cy <= 10 && b73 != 0 && b73 != 2)
 					{
 						Res.outz("nhân vật bay trên trời xuống x= " + char14.cx + " y= " + char14.cy);
-						Teleport teleport2 = new Teleport(char14.cx, char14.cy, char14.head, char14.cdir, 1, isMe: false, (b72 != 1) ? b72 : char14.cgender);
+						Teleport teleport2 = new Teleport(char14.cx, char14.cy, char14.head, char14.cdir, 1, isMe: false, (b73 != 1) ? b73 : char14.cgender);
 						teleport2.id = char14.charID;
 						char14.isTeleport = true;
 						Teleport.addTeleport(teleport2);
 					}
-					if (b72 == 2)
+					if (b73 == 2)
 					{
 						char14.show();
 					}
-					for (int num177 = 0; num177 < GameScr.vMob.size(); num177++)
+					for (int num184 = 0; num184 < GameScr.vMob.size(); num184++)
 					{
-						Mob mob10 = (Mob)GameScr.vMob.elementAt(num177);
+						Mob mob10 = (Mob)GameScr.vMob.elementAt(num184);
 						if (mob10 != null && mob10.isMobMe && mob10.mobId == char14.charID)
 						{
 							Res.outz("co 1 con quai");
@@ -3741,12 +3761,12 @@ public class Controller : IMessageHandler
 						GameScr.vCharInMap.addElement(char14);
 					}
 					char14.isMonkey = msg.reader().readByte();
-					short num178 = msg.reader().readShort();
-					Res.outz("mount id= " + num178 + "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-					if (num178 != -1)
+					short num185 = msg.reader().readShort();
+					Res.outz("mount id= " + num185 + "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+					if (num185 != -1)
 					{
 						char14.isHaveMount = true;
-						switch (num178)
+						switch (num185)
 						{
 						case 346:
 						case 347:
@@ -3765,9 +3785,9 @@ public class Controller : IMessageHandler
 							char14.isSpeacialMount = true;
 							break;
 						default:
-							if (num178 >= Char.ID_NEW_MOUNT)
+							if (num185 >= Char.ID_NEW_MOUNT)
 							{
-								char14.idMount = num178;
+								char14.idMount = num185;
 							}
 							break;
 						}
@@ -3777,45 +3797,60 @@ public class Controller : IMessageHandler
 						char14.isHaveMount = false;
 					}
 				}
-				sbyte b73 = msg.reader().readByte();
-				Res.outz("addplayer:   " + b73);
-				char14.cFlag = b73;
+				sbyte b74 = msg.reader().readByte();
+				Res.outz("addplayer:   " + b74);
+				char14.cFlag = b74;
 				char14.isNhapThe = msg.reader().readByte() == 1;
 				try
 				{
 					char14.idAuraEff = msg.reader().readShort();
 					char14.idEff_Set_Item = msg.reader().readSByte();
 					char14.idHat = msg.reader().readShort();
+					if (char14.bag >= 201 && char14.bag < 255)
+					{
+						Effect effect2 = new Effect(char14.bag, char14, 2, -1, 10, 1);
+						effect2.typeEff = 5;
+						char14.addEffChar(effect2);
+					}
+					else
+					{
+						for (int num186 = 0; num186 < 54; num186++)
+						{
+							char14.removeEffChar(0, 201 + num186);
+						}
+					}
 				}
-				catch (Exception)
+				catch (Exception ex31)
 				{
+					Res.outz("cmd: -5 err: " + ex31.StackTrace);
 				}
 				GameScr.gI().getFlagImage(char14.charID, char14.cFlag);
+				Res.outz("Cmd: -5 PLAYER_ADD: cID| cName| cFlag| cBag|    " + @char.charID + " | " + @char.cName + " | " + @char.cFlag + " | " + @char.bag);
 				break;
 			}
 			case -7:
 			{
 				GameCanvas.debug("SA80", 2);
-				int num172 = msg.reader().readInt();
-				Cout.println("RECEVED MOVE OF " + num172);
-				for (int num173 = 0; num173 < GameScr.vCharInMap.size(); num173++)
+				int num179 = msg.reader().readInt();
+				Cout.println("RECEVED MOVE OF " + num179);
+				for (int num180 = 0; num180 < GameScr.vCharInMap.size(); num180++)
 				{
 					Char char13 = null;
 					try
 					{
-						char13 = (Char)GameScr.vCharInMap.elementAt(num173);
+						char13 = (Char)GameScr.vCharInMap.elementAt(num180);
 					}
-					catch (Exception ex25)
+					catch (Exception ex26)
 					{
-						Cout.println("Loi PLAYER_MOVE " + ex25.ToString());
+						Cout.println("Loi PLAYER_MOVE " + ex26.ToString());
 					}
 					if (char13 == null)
 					{
 						break;
 					}
-					if (char13.charID == num172)
+					if (char13.charID == num179)
 					{
-						GameCanvas.debug("SA8x2y" + num173, 2);
+						GameCanvas.debug("SA8x2y" + num180, 2);
 						char13.moveTo(msg.reader().readShort(), msg.reader().readShort(), 0);
 						char13.lastUpdateTime = mSystem.currentTimeMillis();
 						break;
@@ -3827,11 +3862,11 @@ public class Controller : IMessageHandler
 			case -6:
 			{
 				GameCanvas.debug("SA81", 2);
-				int num172 = msg.reader().readInt();
-				for (int num187 = 0; num187 < GameScr.vCharInMap.size(); num187++)
+				int num179 = msg.reader().readInt();
+				for (int num195 = 0; num195 < GameScr.vCharInMap.size(); num195++)
 				{
-					Char char15 = (Char)GameScr.vCharInMap.elementAt(num187);
-					if (char15 != null && char15.charID == num172)
+					Char char15 = (Char)GameScr.vCharInMap.elementAt(num195);
+					if (char15 != null && char15.charID == num179)
 					{
 						if (!char15.isInvisiblez && !char15.isUsePlane)
 						{
@@ -3839,7 +3874,7 @@ public class Controller : IMessageHandler
 						}
 						if (!char15.isUsePlane)
 						{
-							GameScr.vCharInMap.removeElementAt(num187);
+							GameScr.vCharInMap.removeElementAt(num195);
 						}
 						return;
 					}
@@ -3849,12 +3884,12 @@ public class Controller : IMessageHandler
 			case -13:
 			{
 				GameCanvas.debug("SA82", 2);
-				int num179 = msg.reader().readUnsignedByte();
-				if (num179 > GameScr.vMob.size() - 1 || num179 < 0)
+				int num187 = msg.reader().readUnsignedByte();
+				if (num187 > GameScr.vMob.size() - 1 || num187 < 0)
 				{
 					return;
 				}
-				Mob mob9 = (Mob)GameScr.vMob.elementAt(num179);
+				Mob mob9 = (Mob)GameScr.vMob.elementAt(num187);
 				mob9.sys = msg.reader().readByte();
 				mob9.levelBoss = msg.reader().readByte();
 				if (mob9.levelBoss != 0)
@@ -3867,6 +3902,7 @@ public class Controller : IMessageHandler
 				mob9.injureThenDie = false;
 				mob9.hp = msg.reader().readInt();
 				mob9.maxHp = mob9.hp;
+				mob9.updateHp_bar();
 				ServerEffect.addServerEffect(60, mob9.x, mob9.y, 1);
 				break;
 			}
@@ -3905,30 +3941,31 @@ public class Controller : IMessageHandler
 				if (mob9 != null)
 				{
 					mob9.hp = msg.readInt3Byte();
-					int num175 = msg.readInt3Byte();
-					if (num175 == 1)
+					mob9.updateHp_bar();
+					int num182 = msg.readInt3Byte();
+					if (num182 == 1)
 					{
 						return;
 					}
-					bool flag11 = false;
+					bool flag10 = false;
 					try
 					{
-						flag11 = msg.reader().readBoolean();
+						flag10 = msg.reader().readBoolean();
 					}
 					catch (Exception)
 					{
 					}
-					sbyte b71 = msg.reader().readByte();
-					if (b71 != -1)
+					sbyte b72 = msg.reader().readByte();
+					if (b72 != -1)
 					{
-						EffecMn.addEff(new Effect(b71, mob9.x, mob9.getY(), 3, 1, -1));
+						EffecMn.addEff(new Effect(b72, mob9.x, mob9.getY(), 3, 1, -1));
 					}
 					GameCanvas.debug("SA83v2", 2);
-					if (flag11)
+					if (flag10)
 					{
-						GameScr.startFlyText("-" + num175, mob9.x, mob9.getY() - mob9.getH(), 0, -2, mFont.FATAL);
+						GameScr.startFlyText("-" + num182, mob9.x, mob9.getY() - mob9.getH(), 0, -2, mFont.FATAL);
 					}
-					else if (num175 == 0)
+					else if (num182 == 0)
 					{
 						mob9.x = mob9.xFirst;
 						mob9.y = mob9.yFirst;
@@ -3936,7 +3973,7 @@ public class Controller : IMessageHandler
 					}
 					else
 					{
-						GameScr.startFlyText("-" + num175, mob9.x, mob9.getY() - mob9.getH(), 0, -2, mFont.ORANGE);
+						GameScr.startFlyText("-" + num182, mob9.x, mob9.getY() - mob9.getH(), 0, -2, mFont.ORANGE);
 					}
 				}
 				GameCanvas.debug("SA83v3", 2);
@@ -3950,13 +3987,14 @@ public class Controller : IMessageHandler
 				{
 					mob9 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
 				}
-				catch (Exception ex24)
+				catch (Exception ex25)
 				{
-					Cout.println("Loi tai NPC_MISS  " + ex24.ToString());
+					Cout.println("Loi tai NPC_MISS  " + ex25.ToString());
 				}
 				if (mob9 != null)
 				{
 					mob9.hp = msg.reader().readInt();
+					mob9.updateHp_bar();
 					GameScr.startFlyText(mResources.miss, mob9.x, mob9.y - mob9.h, 0, -2, mFont.MISS);
 				}
 				break;
@@ -3981,21 +4019,21 @@ public class Controller : IMessageHandler
 				mob9.startDie();
 				try
 				{
-					int num184 = msg.readInt3Byte();
+					int num192 = msg.readInt3Byte();
 					if (msg.reader().readBool())
 					{
-						GameScr.startFlyText("-" + num184, mob9.x, mob9.y - mob9.h, 0, -2, mFont.FATAL);
+						GameScr.startFlyText("-" + num192, mob9.x, mob9.y - mob9.h, 0, -2, mFont.FATAL);
 					}
 					else
 					{
-						GameScr.startFlyText("-" + num184, mob9.x, mob9.y - mob9.h, 0, -2, mFont.ORANGE);
+						GameScr.startFlyText("-" + num192, mob9.x, mob9.y - mob9.h, 0, -2, mFont.ORANGE);
 					}
-					sbyte b76 = msg.reader().readByte();
-					for (int num185 = 0; num185 < b76; num185++)
+					sbyte b77 = msg.reader().readByte();
+					for (int num193 = 0; num193 < b77; num193++)
 					{
 						ItemMap itemMap4 = new ItemMap(msg.reader().readShort(), msg.reader().readShort(), mob9.x, mob9.y, msg.reader().readShort(), msg.reader().readShort());
-						int num186 = (itemMap4.playerId = msg.reader().readInt());
-						Res.outz("playerid= " + num186 + " my id= " + Char.myCharz().charID);
+						int num194 = (itemMap4.playerId = msg.reader().readInt());
+						Res.outz("playerid= " + num194 + " my id= " + Char.myCharz().charID);
 						GameScr.vItemMap.addElement(itemMap4);
 						if (Res.abs(itemMap4.y - Char.myCharz().cy) < 24 && Res.abs(itemMap4.x - Char.myCharz().cx) < 24)
 						{
@@ -4003,9 +4041,9 @@ public class Controller : IMessageHandler
 						}
 					}
 				}
-				catch (Exception ex35)
+				catch (Exception ex36)
 				{
-					Cout.println("LOi tai NPC_DIE " + ex35.ToString() + " cmd " + msg.command);
+					Cout.println("LOi tai NPC_DIE " + ex36.ToString() + " cmd " + msg.command);
 				}
 				break;
 			}
@@ -4043,31 +4081,31 @@ public class Controller : IMessageHandler
 					int index4 = msg.reader().readUnsignedByte();
 					mob9 = (Mob)GameScr.vMob.elementAt(index4);
 				}
-				catch (Exception)
+				catch (Exception ex23)
 				{
-					Cout.println("Loi tai NPC_ATTACK_ME " + msg.command);
+					Res.outz("Loi tai NPC_ATTACK_ME " + msg.command + " err= " + ex23.StackTrace);
 				}
 				if (mob9 != null)
 				{
 					Char.myCharz().isDie = false;
 					Char.isLockKey = false;
-					int num168 = msg.readInt3Byte();
-					int num169;
+					int num175 = msg.readInt3Byte();
+					int num176;
 					try
 					{
-						num169 = msg.readInt3Byte();
+						num176 = msg.readInt3Byte();
 					}
 					catch (Exception)
 					{
-						num169 = 0;
+						num176 = 0;
 					}
 					if (mob9.isBusyAttackSomeOne)
 					{
-						Char.myCharz().doInjure(num168, num169, isCrit: false, isMob: true);
+						Char.myCharz().doInjure(num175, num176, isCrit: false, isMob: true);
 						break;
 					}
-					mob9.dame = num168;
-					mob9.dameMp = num169;
+					mob9.dame = num175;
+					mob9.dameMp = num176;
 					mob9.setAttack(Char.myCharz());
 				}
 				break;
@@ -4093,9 +4131,9 @@ public class Controller : IMessageHandler
 						return;
 					}
 					GameCanvas.debug("SA87x3", 2);
-					int num180 = msg.readInt3Byte();
-					mob9.dame = @char.cHP - num180;
-					@char.cHPNew = num180;
+					int num188 = msg.readInt3Byte();
+					mob9.dame = @char.cHP - num188;
+					@char.cHPNew = num188;
 					GameCanvas.debug("SA87x4", 2);
 					try
 					{
@@ -4161,10 +4199,10 @@ public class Controller : IMessageHandler
 			case 44:
 			{
 				GameCanvas.debug("SA91", 2);
-				int num170 = msg.reader().readInt();
+				int num177 = msg.reader().readInt();
 				string text8 = msg.reader().readUTF();
-				Res.outz("user id= " + num170 + " text= " + text8);
-				@char = ((Char.myCharz().charID != num170) ? GameScr.findCharInMap(num170) : Char.myCharz());
+				Res.outz("user id= " + num177 + " text= " + text8);
+				@char = ((Char.myCharz().charID != num177) ? GameScr.findCharInMap(num177) : Char.myCharz());
 				if (@char == null)
 				{
 					return;
@@ -4174,8 +4212,8 @@ public class Controller : IMessageHandler
 			}
 			case 18:
 			{
-				sbyte b69 = msg.reader().readByte();
-				for (int num167 = 0; num167 < b69; num167++)
+				sbyte b70 = msg.reader().readByte();
+				for (int num174 = 0; num174 < b70; num174++)
 				{
 					int charId = msg.reader().readInt();
 					int cx = msg.reader().readShort();
@@ -4199,8 +4237,9 @@ public class Controller : IMessageHandler
 			}
 			GameCanvas.debug("SA92", 2);
 		}
-		catch (Exception)
+		catch (Exception ex37)
 		{
+			Res.outz("Controller = " + ex37.StackTrace);
 		}
 		finally
 		{
@@ -4708,15 +4747,15 @@ public class Controller : IMessageHandler
 					GameScr.vItemMap.addElement(itemMap);
 				}
 			}
-			if (!GameCanvas.lowGraphic || (GameCanvas.lowGraphic && (TileMap.mapID == 51 || TileMap.mapID == 103)))
+			TileMap.vCurrItem.removeAllElements();
+			if (mGraphics.zoomLevel == 1)
+			{
+				BgItem.clearHashTable();
+			}
+			BgItem.vKeysNew.removeAllElements();
+			if (!GameCanvas.lowGraphic || (GameCanvas.lowGraphic && TileMap.isVoDaiMap()) || TileMap.mapID == 45 || TileMap.mapID == 46 || TileMap.mapID == 47 || TileMap.mapID == 48)
 			{
 				short num5 = msg.reader().readShort();
-				TileMap.vCurrItem.removeAllElements();
-				if (mGraphics.zoomLevel == 1)
-				{
-					BgItem.clearHashTable();
-				}
-				BgItem.vKeysNew.removeAllElements();
 				Res.outz("nItem= " + num5);
 				for (int n = 0; n < num5; n++)
 				{
@@ -4876,7 +4915,7 @@ public class Controller : IMessageHandler
 		}
 		catch (Exception ex)
 		{
-			Cout.LogError("LOI TAI LOADMAP INFO " + ex.ToString());
+			Res.err("LOI TAI LOADMAP INFO " + ex.StackTrace);
 		}
 	}
 
@@ -5580,27 +5619,37 @@ public class Controller : IMessageHandler
 			case 7:
 			{
 				Char @char = GameScr.findCharInMap(msg.reader().readInt());
-				if (@char != null)
+				if (@char == null)
 				{
-					@char.clanID = msg.reader().readInt();
-					if (@char.clanID == -2)
-					{
-						@char.isCopy = true;
-					}
-					readCharInfo(@char, msg);
-					try
-					{
-						@char.idAuraEff = msg.reader().readShort();
-						@char.idEff_Set_Item = msg.reader().readSByte();
-						@char.idHat = msg.reader().readShort();
-						break;
-					}
-					catch (Exception)
-					{
-						break;
-					}
+					break;
 				}
-				break;
+				@char.clanID = msg.reader().readInt();
+				if (@char.clanID == -2)
+				{
+					@char.isCopy = true;
+				}
+				readCharInfo(@char, msg);
+				try
+				{
+					@char.idAuraEff = msg.reader().readShort();
+					@char.idEff_Set_Item = msg.reader().readSByte();
+					@char.idHat = msg.reader().readShort();
+					if (@char.bag >= 201)
+					{
+						Effect effect = new Effect(@char.bag, @char, 2, -1, 10, 1);
+						effect.typeEff = 5;
+						@char.addEffChar(effect);
+					}
+					else
+					{
+						@char.removeEffChar(0, 201);
+					}
+					break;
+				}
+				catch (Exception)
+				{
+					break;
+				}
 			}
 			case 8:
 			{
@@ -5970,18 +6019,20 @@ public class Controller : IMessageHandler
 		try
 		{
 			string text = msg.reader().readUTF();
-			sbyte nFrame = msg.reader().readByte();
+			sbyte b = msg.reader().readByte();
+			Res.outz("<<<readGetImgByName = " + text + "  " + b);
 			sbyte[] array = null;
 			array = NinjaUtil.readByteArray(msg);
 			Image img = createImage(array);
-			ImgByName.SetImage(text, img, nFrame);
+			ImgByName.SetImage(text, img, b);
 			if (array != null)
 			{
-				ImgByName.saveRMS(text, nFrame, array);
+				ImgByName.saveRMS(text, b, array);
 			}
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
+			Res.outz("<<<readGetImgByName ex = " + ex.StackTrace);
 		}
 	}
 

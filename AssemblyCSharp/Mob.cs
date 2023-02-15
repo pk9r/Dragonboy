@@ -193,6 +193,22 @@ public class Mob : IMapObject
 
 	public int[] hurt = new int[1];
 
+	private int color = 8421504;
+
+	public int len = 24;
+
+	public int w_hp_bar = 24;
+
+	public int per = 100;
+
+	public int per_tem = 100;
+
+	public byte h_hp_bar = 4;
+
+	public Image imgHPtem;
+
+	private int offset;
+
 	private sbyte[] cou = new sbyte[2] { -1, 1 };
 
 	public Char injureBy;
@@ -249,6 +265,7 @@ public class Mob : IMapObject
 		}
 		maxHp = maxp;
 		this.levelBoss = levelBoss;
+		updateHp_bar();
 		isDie = false;
 		xSd = pointx;
 		ySd = pointy;
@@ -889,18 +906,14 @@ public class Mob : IMapObject
 		return false;
 	}
 
+	private bool isNewModStand()
+	{
+		return templateId == 76;
+	}
+
 	private bool isNewMod()
 	{
 		if (templateId >= 73 && !isNewModStand())
-		{
-			return true;
-		}
-		return false;
-	}
-
-	private bool isNewModStand()
-	{
-		if (templateId == 76)
 		{
 			return true;
 		}
@@ -1362,6 +1375,32 @@ public class Mob : IMapObject
 		return false;
 	}
 
+	public void updateHp_bar()
+	{
+		len = (int)((long)hp * 100L / maxHp * w_hp_bar) / 100;
+		per = (int)((long)hp * 100L / maxHp);
+		if (per >= 100)
+		{
+			per_tem = per;
+		}
+		offset = 0;
+		if (per < 30)
+		{
+			color = 15473700;
+			imgHPtem = GameScr.imgHP_tm_do;
+		}
+		else if (per < 60)
+		{
+			color = 16744448;
+			imgHPtem = GameScr.imgHP_tm_vang;
+		}
+		else
+		{
+			color = 11992374;
+			imgHPtem = GameScr.imgHP_tm_xanh;
+		}
+	}
+
 	public virtual void paint(mGraphics g)
 	{
 		if (isShadown && status != 0)
@@ -1382,19 +1421,34 @@ public class Mob : IMapObject
 			SmallImage.drawSmallImage(g, smallBody, x, y + fy - 14, 0, 3);
 		}
 		g.translate(0, -GameCanvas.transY);
-		if (Char.myCharz().mobFocus != null && Char.myCharz().mobFocus.Equals(this) && status != 1)
+		if (Char.myCharz().mobFocus == null || !Char.myCharz().mobFocus.Equals(this) || status == 1 || hp <= 0 || imgHPtem == null)
 		{
-			int num = (int)((long)hp * 100L / maxHp) / 10 - 1;
-			if (num < 0)
-			{
-				num = 0;
-			}
-			if (num > 9)
-			{
-				num = 9;
-			}
-			g.drawRegion(imgHP, 0, 6 * (9 - num), 9, 6, 0, x, y - h - 10, 3);
+			return;
 		}
+		int imageWidth = mGraphics.getImageWidth(imgHPtem);
+		int imageHeight = mGraphics.getImageHeight(imgHPtem);
+		int num = imageWidth * per / 100;
+		int num2 = num;
+		if (per_tem >= per)
+		{
+			num2 = imageWidth * (per_tem -= ((GameCanvas.gameTick % 6 <= 3) ? offset : offset++)) / 100;
+			if (per_tem <= 0)
+			{
+				per_tem = 0;
+			}
+			if (per_tem < per)
+			{
+				per_tem = per;
+			}
+			if (offset >= 3)
+			{
+				offset = 3;
+			}
+		}
+		g.drawImage(GameScr.imgHP_tm_xam, x - (imageWidth >> 1), y - h - 5, mGraphics.TOP | mGraphics.LEFT);
+		g.setColor(16777215);
+		g.fillRect(x - (imageWidth >> 1), y - h - 5, num2, 2);
+		g.drawRegion(imgHPtem, 0, 0, num, imageHeight, 0, x - (imageWidth >> 1), y - h - 5, mGraphics.TOP | mGraphics.LEFT);
 	}
 
 	public int getHPColor()

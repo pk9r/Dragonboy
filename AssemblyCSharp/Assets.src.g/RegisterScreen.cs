@@ -156,7 +156,7 @@ public class RegisterScreen : mScreen, IActionListener
 			defYL = GameCanvas.hh - 65;
 		}
 		resetLogo();
-		int num = (wC = ((GameCanvas.w < 200) ? 140 : 160));
+		wC = ((GameCanvas.w < 200) ? 140 : 160);
 		yt = GameCanvas.hh - mScreen.ITEM_HEIGHT - 5;
 		if (GameCanvas.h <= 160)
 		{
@@ -270,14 +270,14 @@ public class RegisterScreen : mScreen, IActionListener
 		hP = ((!isRes) ? 100 : 110);
 		xP = GameCanvas.hw - wP / 2;
 		yP = tfUser.y - 15;
-		int num2 = 4;
-		int num3 = num2 * 32 + 23 + 33;
-		if (num3 >= GameCanvas.w)
+		int num = 4;
+		int num2 = num * 32 + 23 + 33;
+		if (num2 >= GameCanvas.w)
 		{
-			num2--;
-			num3 = num2 * 32 + 23 + 33;
+			num--;
+			num2 = num * 32 + 23 + 33;
 		}
-		xLog = GameCanvas.w / 2 - num3 / 2;
+		xLog = GameCanvas.w / 2 - num2 / 2;
 		yLog = 5;
 		lY = ((GameCanvas.w < 200) ? (tfUser.y - 30) : (yLog - 30));
 		tfUser.x = xLog + 10;

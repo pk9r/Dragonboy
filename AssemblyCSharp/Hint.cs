@@ -22,6 +22,8 @@ public class Hint
 
 	public static bool isCloseMap;
 
+	public static bool isViewPotential;
+
 	public static bool isPaint;
 
 	public static bool isCamera;
@@ -472,6 +474,69 @@ public class Hint
 					}
 				}
 				if (index == 1)
+				{
+					isPaint = false;
+					isPaintArrow = false;
+				}
+				return;
+			case 3:
+				if (ChatPopup.currChatPopup != null || Char.myCharz().statusMe == 14)
+				{
+					x = GameCanvas.w / 2;
+					y = GameCanvas.h - 15;
+				}
+				else if (index == 0)
+				{
+					if (!GameCanvas.panel.isShow)
+					{
+						if (!isViewPotential)
+						{
+							x = GameScr.gI().cmdMenu.x;
+							y = GameScr.gI().cmdMenu.y + 13;
+							trans = 1;
+						}
+						else
+						{
+							if (GameScr.getTaskMapId() == TileMap.mapID)
+							{
+								if (!isHaveItem())
+								{
+									clickMob();
+								}
+							}
+							else
+							{
+								nextMap(0);
+							}
+							if (isViewMap)
+							{
+								isCloseMap = true;
+							}
+						}
+					}
+					else if (!isViewPotential)
+					{
+						int num2 = ((GameCanvas.h <= 300) ? 10 : 15);
+						x = GameCanvas.panel.xScroll + 10 + 108 - 18;
+						y = 65;
+					}
+					else if (!isCloseMap)
+					{
+						x = GameCanvas.panel.cmdClose.x + 5;
+						y = GameCanvas.panel.cmdClose.y + 5;
+					}
+					else
+					{
+						isPaint = false;
+					}
+					if (Char.myCharz().cMP <= 0)
+					{
+						x = GameScr.xHP + 5;
+						y = GameScr.yHP + 13;
+						isCamera = false;
+					}
+				}
+				else
 				{
 					isPaint = false;
 					isPaintArrow = false;

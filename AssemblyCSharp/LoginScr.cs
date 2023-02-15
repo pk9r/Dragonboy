@@ -149,7 +149,7 @@ public class LoginScr : mScreen, IActionListener
 			defYL = GameCanvas.hh - 65;
 		}
 		resetLogo();
-		int num = (wC = ((GameCanvas.w < 200) ? 140 : 160));
+		wC = ((GameCanvas.w < 200) ? 140 : 160);
 		yt = GameCanvas.hh - mScreen.ITEM_HEIGHT - 5;
 		if (GameCanvas.h <= 160)
 		{
@@ -190,8 +190,8 @@ public class LoginScr : mScreen, IActionListener
 			}
 			else
 			{
-				int num2 = 2;
-				cmdCallHotline.y = num2 + 6;
+				int num = 2;
+				cmdCallHotline.y = num + 6;
 			}
 		}
 		focus = 0;
@@ -219,14 +219,14 @@ public class LoginScr : mScreen, IActionListener
 		hP = ((!isRes) ? 100 : 110);
 		xP = GameCanvas.hw - wP / 2;
 		yP = tfUser.y - 15;
-		int num3 = 4;
-		int num4 = num3 * 32 + 23 + 33;
-		if (num4 >= GameCanvas.w)
+		int num2 = 4;
+		int num3 = num2 * 32 + 23 + 33;
+		if (num3 >= GameCanvas.w)
 		{
-			num3--;
-			num4 = num3 * 32 + 23 + 33;
+			num2--;
+			num3 = num2 * 32 + 23 + 33;
 		}
-		xLog = GameCanvas.w / 2 - num4 / 2;
+		xLog = GameCanvas.w / 2 - num3 / 2;
 		yLog = GameCanvas.hh - 30;
 		lY = ((GameCanvas.w < 200) ? (tfUser.y - 30) : (yLog - 30));
 		tfUser.x = xLog + 10;
@@ -250,7 +250,7 @@ public class LoginScr : mScreen, IActionListener
 				return;
 			}
 			Command command = new Command();
-			ActionChat actionChat = (command.actionChat = delegate(string str)
+			ActionChat actionChat = delegate(string str)
 			{
 				try
 				{
@@ -272,7 +272,8 @@ public class LoginScr : mScreen, IActionListener
 				catch (Exception)
 				{
 				}
-			});
+			};
+			command.actionChat = actionChat;
 			Net.connectHTTP(ServerListScreen.linkGetHost, command);
 		}
 		catch (Exception)

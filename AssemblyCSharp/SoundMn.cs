@@ -14,6 +14,8 @@ public class SoundMn
 	{
 	}
 
+	public static bool IsDelAcc;
+
 	public static SoundMn gIz;
 
 	public static bool isSound = true;
@@ -193,30 +195,48 @@ public class SoundMn
 				};
 			}
 		}
+		if (IsDelAcc)
+		{
+			string[] array = new string[Panel.strTool.Length + 1];
+			for (int i = 0; i < Panel.strTool.Length; i++)
+			{
+				array[i] = Panel.strTool[i];
+			}
+			array[Panel.strTool.Length] = mResources.delacc;
+			Panel.strTool = array;
+		}
 	}
 
 	public void getStrOption()
 	{
+		string text = "[x]   ";
+		string text2 = "[  ]   ";
 		if (Main.isPC)
 		{
-			Panel.strCauhinh = new string[4]
+			Panel.strCauhinh = new string[5]
 			{
-				(Char.myCharz().idHat == -1) ? mResources.hat_on : mResources.hat_off,
-				(!Char.isPaintAura) ? mResources.aura_on : mResources.aura_off,
-				(!GameCanvas.isPlaySound) ? mResources.turnOnSound : mResources.turnOffSound,
+				(Char.myCharz().idHat == -1) ? (text + mResources.hat_off.Trim()) : (text2 + mResources.hat_off.Trim()),
+				(!Char.isPaintAura) ? (text + mResources.aura_off.Trim()) : (text2 + mResources.aura_off.Trim()),
+				(!Char.isPaintAura2) ? (text + mResources.aura_off_2.Trim()) : (text2 + mResources.aura_off_2.Trim()),
+				(!GameCanvas.isPlaySound) ? (text + mResources.turnOffSound.Trim()) : (text2 + mResources.turnOffSound.Trim()),
 				(mGraphics.zoomLevel <= 1) ? mResources.x2Screen : mResources.x1Screen
 			};
+			return;
 		}
-		else
+		string text3 = ((GameScr.isAnalog != 0) ? (text + mResources.turnOffAnalog) : (text2 + mResources.turnOnAnalog));
+		if (!GameCanvas.isTouch)
 		{
-			Panel.strCauhinh = new string[4]
-			{
-				(Char.myCharz().idHat == -1) ? mResources.hat_on : mResources.hat_off,
-				(!Char.isPaintAura) ? mResources.aura_on : mResources.aura_off,
-				(!GameCanvas.isPlaySound) ? mResources.turnOnSound : mResources.turnOffSound,
-				(GameScr.isAnalog != 0) ? mResources.turnOffAnalog : mResources.turnOnAnalog
-			};
+			text3 = (GameScr.isPaintChatVip ? (text + mResources.serverchat_off) : (text2 + mResources.serverchat_off));
 		}
+		Panel.strCauhinh = new string[6]
+		{
+			(Char.myCharz().idHat == -1) ? (text + mResources.hat_off.Trim()) : (text2 + mResources.hat_off.Trim()),
+			(!Char.isPaintAura) ? (text + mResources.aura_off.Trim()) : (text2 + mResources.aura_off.Trim()),
+			(!Char.isPaintAura2) ? (text + mResources.aura_off_2.Trim()) : (text2 + mResources.aura_off_2.Trim()),
+			(!GameCanvas.isPlaySound) ? (text + mResources.turnOffSound.Trim()) : (text2 + mResources.turnOffSound.Trim()),
+			(!GameCanvas.lowGraphic) ? (text + mResources.cauhinhthap.Trim()) : (text2 + mResources.cauhinhthap.Trim()),
+			text3
+		};
 	}
 
 	public void HP_MPup()
@@ -291,6 +311,67 @@ public class SoundMn
 		getStrOption();
 	}
 
+	public void chatVipToolOption()
+	{
+		GameScr.isPaintChatVip = !GameScr.isPaintChatVip;
+		if (GameScr.isPaintChatVip)
+		{
+			Rms.saveRMSInt("serverchat", 0);
+		}
+		else
+		{
+			Rms.saveRMSInt("serverchat", 1);
+		}
+		getStrOption();
+	}
+
+	public void analogToolOption()
+	{
+		if (GameScr.isAnalog == 0)
+		{
+			GameScr.isAnalog = 1;
+			Rms.saveRMSInt("analog", GameScr.isAnalog);
+			GameScr.setSkillBarPosition();
+		}
+		else
+		{
+			GameScr.isAnalog = 0;
+			Rms.saveRMSInt("analog", GameScr.isAnalog);
+			GameScr.setSkillBarPosition();
+		}
+		getStrOption();
+	}
+
+	public void CaseAnalog()
+	{
+		if (!Main.isPC)
+		{
+			if (!GameCanvas.isTouch)
+			{
+				chatVipToolOption();
+			}
+			else
+			{
+				analogToolOption();
+			}
+		}
+	}
+
+	public void CaseSizeScr()
+	{
+		if (GameCanvas.lowGraphic)
+		{
+			Rms.saveRMSInt("lowGraphic", 0);
+			GameCanvas.startOK(mResources.plsRestartGame, 8885, null);
+		}
+		else
+		{
+			Rms.saveRMSInt("lowGraphic", 1);
+			GameCanvas.startOK(mResources.plsRestartGame, 8885, null);
+		}
+		getStrOption();
+	}
+
 	public void AuraToolOption()
 	{
 		if (Char.isPaintAura)
@@ -302,6 +383,21 @@ public class SoundMn
 		{
 			Rms.saveRMSInt("isPaintAura", 1);
 			Char.isPaintAura = true;
+		}
+		getStrOption();
+	}
+
+	public void AuraToolOption2()
+	{
+		if (Char.isPaintAura2)
+		{
+			Rms.saveRMSInt("isPaintAura2", 0);
+			Char.isPaintAura2 = false;
+		}
+		else
+		{
+			Rms.saveRMSInt("isPaintAura2", 1);
+			Char.isPaintAura2 = true;
 		}
 		getStrOption();
 	}

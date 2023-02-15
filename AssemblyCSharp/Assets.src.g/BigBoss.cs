@@ -148,6 +148,10 @@ public class BigBoss : Mob, IMapObject
 		base.hp = hp;
 		maxHp = maxhp;
 		templateId = templateID;
+		w_hp_bar = 100;
+		h_hp_bar = 6;
+		len = w_hp_bar;
+		updateHp_bar();
 		if (s == 0)
 		{
 			getDataB();
@@ -594,16 +598,30 @@ public class BigBoss : Mob, IMapObject
 		g.translate(0, GameCanvas.transY);
 		data.paintFrame(g, frame, x, y + fy, (dir != 1) ? 1 : 0, 2);
 		g.translate(0, -GameCanvas.transY);
-		int num = (int)((long)hp * 50L / maxHp);
-		if (num != 0)
+		int imageWidth = mGraphics.getImageWidth(imgHPtem);
+		int imageHeight = mGraphics.getImageHeight(imgHPtem);
+		int num = imageWidth;
+		int num2 = imageWidth;
+		int num3 = x - imageWidth;
+		int num4 = y - h - 5;
+		int num5 = imageWidth * 2 * per / 100;
+		if (num5 > num)
 		{
-			g.setColor(0);
-			g.fillRect(x - 27, y - 112, 54, 8);
-			g.setColor(16711680);
-			g.setClip(x - 25, y - 110, num, 4);
-			g.fillRect(x - 25, y - 110, 50, 4);
-			g.setClip(0, 0, 3000, 3000);
+			num2 = num5 - num;
+			if (num2 <= 0)
+			{
+				num2 = 0;
+			}
 		}
+		else
+		{
+			num = num5;
+			num2 = 0;
+		}
+		g.drawImage(GameScr.imgHP_tm_xam, num3, num4, mGraphics.TOP | mGraphics.LEFT);
+		g.drawImage(GameScr.imgHP_tm_xam, num3 + imageWidth, num4, mGraphics.TOP | mGraphics.LEFT);
+		g.drawRegion(imgHPtem, 0, 0, num, imageHeight, 0, num3, num4, mGraphics.TOP | mGraphics.LEFT);
+		g.drawRegion(imgHPtem, 0, 0, num2, imageHeight, 0, num3 + imageWidth, num4, mGraphics.TOP | mGraphics.LEFT);
 		if (shock)
 		{
 			Res.outz("type= " + type);

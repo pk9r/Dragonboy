@@ -1,5 +1,7 @@
 public class mResources
 {
+	public static string delacc = string.Empty;
+
 	public static string notiINAPP = string.Empty;
 
 	public static string notiRuby = string.Empty;
@@ -538,6 +540,10 @@ public class mResources
 	public static string aura_off = string.Empty;
 
 	public static string aura_on = string.Empty;
+
+	public static string aura_off_2 = string.Empty;
+
+	public static string aura_on_2 = string.Empty;
 
 	public static string hat_off = string.Empty;
 

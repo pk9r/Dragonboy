@@ -16,6 +16,14 @@ public class ItemTime
 
 	private string text;
 
+	private bool isPaint_coolDownBar;
+
+	public int time;
+
+	public int coutTime;
+
+	private int per = 100;
+
 	public ItemTime()
 	{
 	}
@@ -25,7 +33,10 @@ public class ItemTime
 		this.idIcon = idIcon;
 		minute = s / 60;
 		second = s % 60;
+		time = s;
+		coutTime = s;
 		curr = (last = mSystem.currentTimeMillis());
+		isPaint_coolDownBar = idIcon == 14;
 	}
 
 	public void initTimeText(sbyte id, string text, int time)
@@ -42,16 +53,21 @@ public class ItemTime
 		minute = time / 60;
 		second = time % 60;
 		idIcon = id;
-		curr = (last = mSystem.currentTimeMillis());
+		this.time = time;
+		coutTime = time;
 		this.text = text;
+		curr = (last = mSystem.currentTimeMillis());
+		isPaint_coolDownBar = idIcon == 14;
 	}
 
 	public void initTime(int time, bool isText)
 	{
 		minute = time / 60;
 		second = time % 60;
-		curr = (last = mSystem.currentTimeMillis());
+		this.time = time;
+		coutTime = time;
 		this.isText = isText;
+		curr = (last = mSystem.currentTimeMillis());
 	}
 
 	public static bool isExistItem(int id)
@@ -110,6 +126,7 @@ public class ItemTime
 	{
 		minute = time / 60;
 		second = time % 60;
+		coutTime = time;
 		curr = (last = mSystem.currentTimeMillis());
 	}
 
@@ -127,6 +144,20 @@ public class ItemTime
 
 	public void paintText(mGraphics g, int x, int y)
 	{
+		if (isPaint_coolDownBar)
+		{
+			if (Char.myCharz() != null)
+			{
+				int num = 80;
+				int x2 = GameCanvas.w / 2 - num / 2;
+				int y2 = GameCanvas.h - 80;
+				g.setColor(8421504);
+				g.fillRect(x2, y2, num, 2);
+				g.setColor(16777215);
+				g.fillRect(x2, y2, num * per / 100, 2);
+			}
+			return;
+		}
 		string empty = string.Empty;
 		empty = minute + "'";
 		if (minute < 1)
@@ -141,7 +172,7 @@ public class ItemTime
 		{
 			empty = string.Empty;
 		}
-		mFont.tahoma_7b_white.drawString(g, text + " " + empty, x, y, mFont.LEFT, mFont.tahoma_7b_dark);
+		mFont.tahoma_7b_white.drawString(g, text + " " + empty, x, y, 0, mFont.tahoma_7b_dark);
 	}
 
 	public void update()
@@ -151,11 +182,13 @@ public class ItemTime
 		{
 			last = mSystem.currentTimeMillis();
 			second--;
+			coutTime--;
 			if (second <= 0)
 			{
 				second = 60;
 				minute--;
 			}
+			per = coutTime * 100 / time;
 		}
 		if (minute < 0 && !isText)
 		{

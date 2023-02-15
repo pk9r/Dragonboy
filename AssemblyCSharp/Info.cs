@@ -219,7 +219,8 @@ public class Info : IActionListener
 			infoWaitToShow.removeElementAt(0);
 			if (infoWaitToShow.size() != 0)
 			{
-				InfoItem infoItem = (info = (InfoItem)infoWaitToShow.firstElement());
+				InfoItem infoItem = (InfoItem)infoWaitToShow.firstElement();
+				info = infoItem;
 				getInfo();
 			}
 		}
@@ -269,10 +270,8 @@ public class Info : IActionListener
 		{
 			infoWaitToShow.removeElementAt(0);
 		}
-		if (infoWaitToShow.size() > 0 && s.Equals(((InfoItem)infoWaitToShow.lastElement()).s))
+		if (infoWaitToShow.size() <= 0 || s.Equals(((InfoItem)infoWaitToShow.lastElement()).s))
 		{
-			Res.outz("return");
-			return;
 		}
 		InfoItem infoItem = new InfoItem(s);
 		if (type == 0)
@@ -291,10 +290,14 @@ public class Info : IActionListener
 		{
 			infoItem.speed = 300;
 			infoItem.last = mSystem.currentTimeMillis();
-			infoItem.timeCount = s.Length * 10 / 4;
-			if (infoItem.timeCount < 150)
+			infoItem.timeCount = s.Length;
+			if (infoItem.timeCount < 15)
 			{
-				infoItem.timeCount = 150;
+				infoItem.timeCount = 15;
+			}
+			if (infoItem.timeCount > 100)
+			{
+				infoItem.timeCount = 100;
 			}
 			infoItem.maxTime = infoItem.timeCount;
 		}

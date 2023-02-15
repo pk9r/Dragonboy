@@ -2,6 +2,7 @@ public class T3 : mResources
 {
 	public static void load()
 	{
+		mResources.delacc = "Delete account";
 		mResources.notiINAPP = "Anda membeli banyak permata hari ini. Mari kita coba lagi besok!";
 		mResources.notiRuby = "Saat menjual dengan sukses, Anda akan menerima Ruby non Gem. Apakah Anda ingin melanjutkan menyerahkan?";
 		mResources.equip = "Mengalati";
@@ -30,8 +31,8 @@ public class T3 : mResources
 		mResources.follow = "Ikut";
 		mResources.pet = "Murid";
 		mResources.maychutathoacmatsong = "Koneksi gagal, harap coba kembali";
-		mResources.cauhinhthap = "Grafik\nrendah";
-		mResources.cauhinhcao = "Grafik\ntinggi";
+		mResources.cauhinhthap = "Grafis kurang";
+		mResources.cauhinhcao = "Grafik tinggi";
 		mResources.taidulieu = "Download";
 		mResources.xoadulieu = "Hapus data";
 		mResources.deletaDataNote = "Kamu harus manghapus data ketika data game error. Setelah selesai manghapus, kamu harus download data lagi untuk bermain.";
@@ -71,8 +72,8 @@ public class T3 : mResources
 		mResources.daban = "Terjual";
 		mResources.dangban = "Menjual";
 		mResources.kigui = "Serahkan";
-		mResources.turnOffSound = "Suara mati";
-		mResources.turnOnSound = "Suara nyala";
+		mResources.turnOffSound = "Swara";
+		mResources.turnOnSound = "Swara";
 		mResources.no_enemy = "Tidak ada musuh";
 		mResources.selectServer2 = "Pilih server";
 		mResources.rank = "Peringkat";
@@ -299,10 +300,12 @@ public class T3 : mResources
 		mResources.low = "Rendah";
 		mResources.increase_vga = "Naikkan resolusi (device kuat)";
 		mResources.decrease_vga = "Turunkan resolusi (device lemah)";
-		mResources.serverchat_off = "Matikan pemberitahuan Server";
-		mResources.serverchat_on = "Hidupkan pemberitahuan Server";
-		mResources.aura_on = "Nyalakan aura khusus";
-		mResources.aura_off = "Matikan aura khusus";
+		mResources.serverchat_off = "Kabar Server";
+		mResources.serverchat_on = "Kabar Server";
+		mResources.aura_on = "Aura khusus";
+		mResources.aura_off = "Aura khusus";
+		mResources.aura_on_2 = "Aura daya";
+		mResources.aura_off_2 = "Aura daya";
 		mResources.hat_on = "Tampilkan aksesoris";
 		mResources.hat_off = "Sembunyikan aksesoris";
 		mResources.x1Screen = "Layar kecil";
