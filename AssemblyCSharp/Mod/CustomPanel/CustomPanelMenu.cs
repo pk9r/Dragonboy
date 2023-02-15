@@ -11,12 +11,12 @@ namespace Mod.CustomPanel
     {
         public static readonly int TYPE_CUSTOM_PANEL_MENU = 26;
 
-        Panel panel;
+        public Panel panel;
 
-        Action<Panel> setTab;
-        Action<Panel> doFireItem;
-        Action<Panel, mGraphics> paintTab;
-        Action<Panel, mGraphics> paintPanel;
+        public Action<Panel> setTab;
+        public Action<Panel> doFireItem;
+        public Action<Panel, mGraphics> paintTab;
+        public Action<Panel, mGraphics> paintPanel;
 
         public static CustomPanelMenu customPanel = new() { panel = GameCanvas.panel };
         public static CustomPanelMenu customPanel2 = new() { panel = GameCanvas.panel2 };

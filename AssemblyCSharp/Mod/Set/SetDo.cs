@@ -91,7 +91,9 @@ namespace Mod.Set
                     return false;
                 if (!currentTabName[0][0].Contains("Set") && !currentTabName[0][1].Contains("Set"))
                     return false;
-                Action action = (Action)typeof(CustomPanelMenu).GetField("setTab", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+
+                var action = CustomPanelMenu.customPanel.setTab;
+
                 return action != null && action.Method == typeof(SetDo).GetMethod("setTabSetPanel");
             }
         }
