@@ -33,7 +33,7 @@ namespace Mod.Graphics
                 .addItem(ifCondition: customCursors.Count > 0,
                     "Mở danh sách con trỏ đã lưu", new(() =>
                     {
-                        CustomPanelMenu.CreateCustomPanelMenu(setTabCustomCursorPanel, doFireCustomCursorListPanel, paintTabHeader, paintCustomCursorPanel);
+                        CustomPanelMenu.show(setTabCustomCursorPanel, doFireCustomCursorListPanel, paintTabHeader, paintCustomCursorPanel);
                     }))
                 .addItem("Thêm con trỏ vào danh sách", new(SelectBackgrounds))
                 .addItem(ifCondition: customCursors.Count > 0,
@@ -77,28 +77,19 @@ namespace Mod.Graphics
             //}), "Loại con trỏ chuột được hỗ trợ: ảnh (*.png), ảnh động (*.gif).");
         }
 
-        private static void paintTabHeader(mGraphics g)
+        private static void paintTabHeader(Panel panel, mGraphics g)
         {
-            g.setColor(13524492);
-            g.fillRect(GameCanvas.panel.X + 1, 78, GameCanvas.panel.W - 2, 1);
-            mFont.tahoma_7b_dark.drawString(g, "Danh sách con trỏ chuột tùy chỉnh", GameCanvas.panel.xScroll + GameCanvas.panel.wScroll / 2, 59, mFont.CENTER);
+            PaintPanelTemplates.paintTabHeaderTemplate(panel, g, "Danh sách con trỏ chuột tùy chỉnh");
         }
 
-        public static void setTabCustomCursorPanel()
+        public static void setTabCustomCursorPanel(Panel panel)
         {
-            GameCanvas.panel.ITEM_HEIGHT = 24;
-            GameCanvas.panel.currentListLength = customCursors.Count;
-            GameCanvas.panel.selected = (GameCanvas.isTouch ? (-1) : 0);
-            GameCanvas.panel.cmyLim = GameCanvas.panel.currentListLength * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.hScroll;
-            if (GameCanvas.panel.cmyLim < 0) GameCanvas.panel.cmyLim = 0;
-            GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = GameCanvas.panel.cmyLast[GameCanvas.panel.currentTabIndex];
-            if (GameCanvas.panel.cmy < 0) GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = 0;
-            if (GameCanvas.panel.cmy > GameCanvas.panel.cmyLim) GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = GameCanvas.panel.cmyLim;
+            SetTabPanelTemplates.setTabListTemplate(panel, customCursors);
         }
 
-        public static void doFireCustomCursorListPanel()
+        public static void doFireCustomCursorListPanel(Panel panel)
         {
-            int selected = GameCanvas.panel.selected;
+            int selected = panel.selected;
             if (selected < 0) return;
             string fileName = Path.GetFileName(customCursors.ElementAt(selected).Key);
 
@@ -114,10 +105,10 @@ namespace Mod.Graphics
                 {
                     customCursors.Remove(customCursors.ElementAt(selected).Key);
                     GameScr.info1.addInfo("Đã xóa con trỏ " + selected + "!", 0);
-                    setTabCustomCursorPanel();
+                    setTabCustomCursorPanel(panel);
                     SaveData();
                 }))
-                .setPos(GameCanvas.panel.X, (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll)
+                .setPos(panel.X, (selected + 1) * panel.ITEM_HEIGHT - panel.cmy + panel.yScroll)
                 .start();
 
             //OpenMenu.start(
@@ -138,37 +129,37 @@ namespace Mod.Graphics
             //                    Cursor.SetCursor(customCursors.ElementAt(cursorIndex).Value.Textures[0], Vector2.zero, CursorMode.Auto);
             //            })));
             //    }),
-            //    x: GameCanvas.panel.X,
-            //    y: (selected + 1) * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.cmy + GameCanvas.panel.yScroll);
+            //    x: panel.X,
+            //    y: (selected + 1) * panel.ITEM_HEIGHT - panel.cmy + panel.yScroll);
 
-            GameCanvas.panel.cp = new ChatPopup();
-            GameCanvas.panel.cp.isClip = false;
-            GameCanvas.panel.cp.sayWidth = 180;
-            GameCanvas.panel.cp.cx = 3 + GameCanvas.panel.X - ((GameCanvas.panel.X != 0) ? (Res.abs(GameCanvas.panel.cp.sayWidth - GameCanvas.panel.W) + 8) : 0);
-            GameCanvas.panel.cp.says = mFont.tahoma_7_red.splitFontArray("|0|2|" + fileName + "\n--\n|6|Đường dẫn đầy đủ: " + customCursors.ElementAt(selected).Key, GameCanvas.panel.cp.sayWidth - 10);
-            GameCanvas.panel.cp.delay = 10000000;
-            GameCanvas.panel.cp.c = null;
-            GameCanvas.panel.cp.sayRun = 7;
-            GameCanvas.panel.cp.ch = 15 - GameCanvas.panel.cp.sayRun + GameCanvas.panel.cp.says.Length * 12 + 10;
-            if (GameCanvas.panel.cp.ch > GameCanvas.h - 80)
+            panel.cp = new ChatPopup();
+            panel.cp.isClip = false;
+            panel.cp.sayWidth = 180;
+            panel.cp.cx = 3 + panel.X - ((panel.X != 0) ? (Res.abs(panel.cp.sayWidth - panel.W) + 8) : 0);
+            panel.cp.says = mFont.tahoma_7_red.splitFontArray("|0|2|" + fileName + "\n--\n|6|Đường dẫn đầy đủ: " + customCursors.ElementAt(selected).Key, panel.cp.sayWidth - 10);
+            panel.cp.delay = 10000000;
+            panel.cp.c = null;
+            panel.cp.sayRun = 7;
+            panel.cp.ch = 15 - panel.cp.sayRun + panel.cp.says.Length * 12 + 10;
+            if (panel.cp.ch > GameCanvas.h - 80)
             {
-                GameCanvas.panel.cp.ch = GameCanvas.h - 80;
-                GameCanvas.panel.cp.lim = GameCanvas.panel.cp.says.Length * 12 - GameCanvas.panel.cp.ch + 17;
-                if (GameCanvas.panel.cp.lim < 0)
+                panel.cp.ch = GameCanvas.h - 80;
+                panel.cp.lim = panel.cp.says.Length * 12 - panel.cp.ch + 17;
+                if (panel.cp.lim < 0)
                 {
-                    GameCanvas.panel.cp.lim = 0;
+                    panel.cp.lim = 0;
                 }
                 ChatPopup.cmyText = 0;
-                GameCanvas.panel.cp.isClip = true;
+                panel.cp.isClip = true;
             }
-            GameCanvas.panel.cp.cy = GameCanvas.menu.menuY - GameCanvas.panel.cp.ch;
-            while (GameCanvas.panel.cp.cy < 10)
+            panel.cp.cy = GameCanvas.menu.menuY - panel.cp.ch;
+            while (panel.cp.cy < 10)
             {
-                GameCanvas.panel.cp.cy++;
+                panel.cp.cy++;
                 GameCanvas.menu.menuY++;
             }
-            GameCanvas.panel.cp.mH = 0;
-            GameCanvas.panel.cp.strY = 10;
+            panel.cp.mH = 0;
+            panel.cp.strY = 10;
         }
 
         public static void SelectBackgrounds()
@@ -249,26 +240,10 @@ namespace Mod.Graphics
                 updateGifCursorIndex++;
         }
 
-        public static void paintCustomCursorPanel(mGraphics g)
+        public static void paintCustomCursorPanel(Panel panel, mGraphics g)
         {
-            g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
-            g.translate(0, -GameCanvas.panel.cmy);
-            g.setColor(0);
-            if (customCursors.Count != GameCanvas.panel.currentListLength) return;
-            for (int i = 0; i < GameCanvas.panel.currentListLength; i++)
-            {
-                int num = GameCanvas.panel.xScroll;
-                int num2 = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
-                int num3 = GameCanvas.panel.wScroll;
-                int num4 = GameCanvas.panel.ITEM_HEIGHT - 1;
-                g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
-                if (cursorIndex == i)
-                    g.setColor((i != GameCanvas.panel.selected) ? new Color(.5f, 1, 0) : new Color(.375f, .75f, 0));
-                g.fillRect(num, num2, num3, num4);
-                mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + Path.GetFileName(customCursors.ElementAt(i).Key), num + 5, num2, 0);
-                mFont.tahoma_7_blue.drawString(g, $"Đường dẫn đầy đủ: {customCursors.ElementAt(i).Key}", num + 5, num2 + 11, 0);
-            }
-            GameCanvas.panel.paintScrollArrow(g);
+            PaintPanelTemplates.paintCollectionCaptionAndDescriptionTemplate(panel, g, customCursors,
+                w => Path.GetFileName(w.Key), w => $"Đường dẫn đầy đủ: {w.Key}");
         }
 
         public static void LoadData()

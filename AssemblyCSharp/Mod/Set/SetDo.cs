@@ -399,7 +399,7 @@ namespace Mod.Set
                             tabName[i - offset] = new string[] { "Set đồ", string.IsNullOrEmpty(setDos[i].Name) ? (i + 1).ToString() : setDos[i].Name };
                     }
                     GameCanvas.panel.tabName[CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU] = tabName;
-                    CustomPanelMenu.CreateCustomPanelMenu(setTabSetPanel, doFireSetPanel, null, paintSetPanel);
+                    CustomPanelMenu.show(setTabSetPanel, doFireSetPanel, null, paintSetPanel);
                 }))
                 .addItem(ifCondition: setDos.Count > 0,
                 "Xoá hết\nset đồ\nđã lưu", new(() =>
@@ -477,19 +477,21 @@ namespace Mod.Set
                 .start();
         }
 
-        public static void setTabSetPanel()
+        public static void setTabSetPanel(Panel panel)
         {
-            GameCanvas.panel.ITEM_HEIGHT = 24;
-            GameCanvas.panel.currentListLength = Char.myCharz().arrItemBody.Where(i => i != null && (i.template.type == TYPE_ITEM_8 || i.isTypeBody())).Count() + Char.myCharz().arrItemBag.Where(i => i != null && (i.template.type == TYPE_ITEM_8 || i.isTypeBody())).Count() + Char.myPetz().arrItemBody.Where(i => i != null && (i.template.type == TYPE_ITEM_8 || i.isTypeBody())).Count();
-            GameCanvas.panel.selected = (GameCanvas.isTouch ? (-1) : 0);
-            GameCanvas.panel.cmyLim = GameCanvas.panel.currentListLength * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.hScroll;
-            if (GameCanvas.panel.cmyLim < 0) GameCanvas.panel.cmyLim = 0;
-            GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = GameCanvas.panel.cmyLast[GameCanvas.panel.currentTabIndex];
-            if (GameCanvas.panel.cmy < 0) GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = 0;
-            if (GameCanvas.panel.cmy > GameCanvas.panel.cmyLim) GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = GameCanvas.panel.cmyLim;
+            SetTabPanelTemplates.setTabListTemplate(panel, getItemCount());
+
+            //GameCanvas.panel.ITEM_HEIGHT = 24;
+            //GameCanvas.panel.currentListLength = Char.myCharz().arrItemBody.Where(i => i != null && (i.template.type == TYPE_ITEM_8 || i.isTypeBody())).Count() + Char.myCharz().arrItemBag.Where(i => i != null && (i.template.type == TYPE_ITEM_8 || i.isTypeBody())).Count() + Char.myPetz().arrItemBody.Where(i => i != null && (i.template.type == TYPE_ITEM_8 || i.isTypeBody())).Count();
+            //GameCanvas.panel.selected = (GameCanvas.isTouch ? (-1) : 0);
+            //GameCanvas.panel.cmyLim = GameCanvas.panel.currentListLength * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.hScroll;
+            //if (GameCanvas.panel.cmyLim < 0) GameCanvas.panel.cmyLim = 0;
+            //GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = GameCanvas.panel.cmyLast[GameCanvas.panel.currentTabIndex];
+            //if (GameCanvas.panel.cmy < 0) GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = 0;
+            //if (GameCanvas.panel.cmy > GameCanvas.panel.cmyLim) GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = GameCanvas.panel.cmyLim;
         }
 
-        public static void paintSetPanel(mGraphics g)
+        public static void paintSetPanel(Panel panel, mGraphics g)
         {
             g.setColor(16711680);
             if (offset > 0)
@@ -594,7 +596,7 @@ namespace Mod.Set
             GameCanvas.panel.paintScrollArrow(g);
         }
 
-        public static void doFireSetPanel()
+        public static void doFireSetPanel(Panel panel)
         {
             if (!IsCurrentPanelIsSetDoPanel)
                 return;
@@ -974,6 +976,22 @@ namespace Mod.Set
                 SaveData();
             }
             GameCanvas.panel.chatTField.ResetTF();
+        }
+
+        private static int getItemCount()
+        {
+            // Khởi tạo biến đếm
+            int count = 0;
+
+            // Thêm số lượng mục của nhân vật
+            count += Char.myCharz().arrItemBody.Where(i => i != null && (i.template.type == TYPE_ITEM_8 || i.isTypeBody())).Count();
+            count += Char.myCharz().arrItemBag.Where(i => i != null && (i.template.type == TYPE_ITEM_8 || i.isTypeBody())).Count();
+
+            // Thêm số lượng mục của đệ tử
+            count += Char.myPetz().arrItemBody.Where(i => i != null && (i.template.type == TYPE_ITEM_8 || i.isTypeBody())).Count();
+
+            // Trả về biến đếm
+            return count;
         }
 
         public void onCancelChat()
