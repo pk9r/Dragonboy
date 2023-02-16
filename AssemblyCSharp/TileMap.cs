@@ -1,6 +1,8 @@
 using Mod;
+using Mod.Graphics;
 using Mod.ModMenu;
 using System;
+using UnityEngine;
 
 public class TileMap
 {
@@ -507,6 +509,7 @@ public class TileMap
                     }
                 }
             }
+            CustomGraphics.PaintTileMap(g);
             return;
         }
 		GameScr.gI().paintBgItem(g, 1);

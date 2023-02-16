@@ -1985,8 +1985,8 @@ public class Panel : IActionListener, IChatable
 							mFont2 = GetFont(7);
 						}
 					}
-					CustomGraphics.PaintItemEffectInPanel(g, num5 + 18, num6 + 12, item.itemOption[k].param);
 				}
+				CustomGraphics.PaintItemEffectInPanel(g, num5 + 17, num6 + 11, num7, num8, item);
 			}
 			mFont2.drawString(g, item.template.name + text, num + 5, num2 + 1, 0);
 			string text2 = string.Empty;
@@ -3541,7 +3541,8 @@ public class Panel : IActionListener, IChatable
 								mFont2 = GetFont(7);
 							}
 						}
-					}
+                    }
+                    CustomGraphics.PaintItemEffectInPanel(g, num6 + 17, num7 + 14, num8, num9, item);
 				}
 				mFont2.drawString(g, item.template.name + text, num3 + 5, num4 + 1, 0);
 				string text2 = string.Empty;
@@ -3966,8 +3967,8 @@ public class Panel : IActionListener, IChatable
 								mFont2 = GetFont(7);
 							}
 						}
-						CustomGraphics.PaintItemEffectInPanel(g, num5 + 18, num6 + 12, item.itemOption[l].param);
 					}
+					CustomGraphics.PaintItemEffectInPanel(g, num5 + 17, num6 + 11, num7, num8, item);
 				}
 				mFont2.drawString(g, item.template.name + text, num2 + 5, num3 + 1, 0);
 				string text2 = string.Empty;
@@ -4527,8 +4528,8 @@ public class Panel : IActionListener, IChatable
 							mFont2 = GetFont(7);
 						}
 					}
-					CustomGraphics.PaintItemEffectInPanel(g, num5 + 18, num6 + 12, item.itemOption[j].param);
 				}
+				CustomGraphics.PaintItemEffectInPanel(g, num5 + 17, num6 + 11, num7, num8, item);
 			}
 			mFont2.drawString(g, item.template.name + text, num + 5, num2 + 1, 0);
 			string text2 = string.Empty;
@@ -4642,7 +4643,6 @@ public class Panel : IActionListener, IChatable
 						if (item.itemOption[l].optionTemplate.id == 72)
 						{
 							text = " [+" + item.itemOption[l].param + "]";
-							CustomGraphics.PaintItemEffectInPanel(g, num6 + 18, num7 + 12, item.itemOption[l].param);
 						}
 						if (item.itemOption[l].optionTemplate.id == 41)
 						{
@@ -4661,8 +4661,9 @@ public class Panel : IActionListener, IChatable
 								mFont2 = GetFont(7);
 							}
 						}
-					}
-				}
+                    }
+                    CustomGraphics.PaintItemEffectInPanel(g, num6 + 17, num7 + 11, num8, num9, item);
+                }
 				mFont2.drawString(g, item.template.name + text, num3 + 5, num4 + 1, 0);
 				string text2 = string.Empty;
 				if (item.itemOption != null)
