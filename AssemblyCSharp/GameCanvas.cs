@@ -365,8 +365,10 @@ public class GameCanvas : IActionListener
 
 	public static string getPlatformName()
 	{
+		if (FakeIPhoneClient.isEnabled)
+			return "AndroidDevice";
 		return "Pc platform xxx";
-	}
+    }
 
 	public void initGame()
 	{
@@ -397,15 +399,20 @@ public class GameCanvas : IActionListener
 		loadWaterSplash();
 		panel = new Panel();
 		imgShuriken = loadImage("/mainImage/myTexture2df.png");
-		int num = Rms.loadRMSInt("clienttype");
-		if (num != -1)
+		if (FakeIPhoneClient.isEnabled)
+			mSystem.clientType = 7;
+		else
 		{
-			if (num > 7)
-				Rms.saveRMSInt("clienttype", mSystem.clientType);
-			else
-				mSystem.clientType = num;
+			int num = Rms.loadRMSInt("clienttype");
+			if (num != -1)
+			{
+				if (num > 7)
+					Rms.saveRMSInt("clienttype", mSystem.clientType);
+				else
+					mSystem.clientType = num;
+			}
 		}
-		if (mSystem.clientType == 7 && (Rms.loadRMSString("fake") == null || Rms.loadRMSString("fake") == string.Empty))
+        if (mSystem.clientType == 7 && (Rms.loadRMSString("fake") == null || Rms.loadRMSString("fake") == string.Empty))
 			imgShuriken = loadImage("/mainImage/wait.png");
 		imgClear = loadImage("/mainImage/myTexture2der.png");
 		img12 = loadImage("/mainImage/12+.png");

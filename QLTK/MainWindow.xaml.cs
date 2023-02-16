@@ -295,7 +295,7 @@ namespace QLTK
                 AsynchronousSocketListener.waitingAccounts.Add(account);
 
                 account.process = Process.Start(Settings.Default.PathGame,
-                    $"-port {Settings.Default.PortListener} -screen-width {width} -screen-height {height}");
+                    $"-port {Settings.Default.PortListener} -screen-width {width} -screen-height {height} -screen-fullscreen {FullScreenCheckBox.IsChecked}");
 
                 while (account.process.MainWindowHandle == IntPtr.Zero)
                 {

@@ -87,7 +87,6 @@ public class Main : MonoBehaviour
 
     private void Start()
 	{
-		//BackgroundVideo.Start();
 		Time.timeScale = 1.5f;
 		if (started)
 			return;
@@ -173,14 +172,19 @@ public class Main : MonoBehaviour
 			else
 				IMEI = GetMacAddress();
 			isPC = true;
-			if (isPC)
-				Screen.fullScreen = false;
-			if (isWindowsPhone)
-				typeClient = 6;
-			if (isPC)
-				typeClient = 4;
-			if (IphoneVersionApp)
-				typeClient = 5;
+			//if (isPC)
+			//Screen.fullScreen = false;
+			if (FakeIPhoneClient.isEnabled)
+				typeClient = 7;
+			else
+			{
+				if (isWindowsPhone)
+					typeClient = 6;
+				if (isPC)
+					typeClient = 4;
+				if (IphoneVersionApp)
+					typeClient = 5;
+			}
 			if (iPhoneSettings.generation == iPhoneGeneration.iPodTouch4Gen)
 				isIpod = true;
 			if (iPhoneSettings.generation == iPhoneGeneration.iPhone4)

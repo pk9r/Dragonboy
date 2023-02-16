@@ -59,6 +59,7 @@ namespace Mod
             CustomLogo.LoadData();
             CustomCursor.LoadData();
             SetDo.LoadData();
+            FakeIPhoneClient.onGameStart();
             VietKeyHandler.SmartMark = true;
             ExtensionManager.LoadExtensions();
             System.Windows.Forms.Application.EnableVisualStyles();
@@ -80,6 +81,7 @@ namespace Mod
             CustomCursor.SaveData();
             SetDo.SaveData();
             CSharpInteractiveForm.CloseForm();
+            FakeIPhoneClient.onExitGame();
             ExtensionManager.Invoke();
             return false;
         }
@@ -116,7 +118,6 @@ namespace Mod
                     Screen.SetResolution(width, height, fullScreen);
                 new Thread(delegate ()
                 {
-                    Thread.Sleep(500);
                     while (Screen.fullScreen != fullScreen)
                     {
                         Screen.fullScreen = fullScreen;
