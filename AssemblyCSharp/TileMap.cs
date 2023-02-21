@@ -493,22 +493,6 @@ public class TileMap
 		}
 		else if (ModMenuMain.getStatusInt("levelreducegraphics") >= 1)
 		{
-            g.setColor(15615232);
-            for (int i = GameScr.gssx; i < GameScr.gssxe; i++)
-            {
-                for (int j = GameScr.gssy; j < GameScr.gssye; j++)
-                {
-                    if (maps[j * tmw + i] != 0)
-                    {
-						if ((!tileTypeAt(i * 24, (j + 1) * 24, 2) && !tileTypeAt(i * 24, (j + 2) * 24, 2) && !tileTypeAt(i * 24, j * 24, 2)) || tileTypeAt(i * 24, j * 24, 2))
-						{
-							if (ModMenuMain.getStatusInt("levelreducegraphics") == 2 && i > 0) g.drawRect(i * size, j * size + 8, 24, 24);
-							else g.fillRect(i * size, j * size + 8, 24, 24);
-							//performance issue
-                        }
-                    }
-                }
-            }
             CustomGraphics.PaintTileMap(g);
             return;
         }

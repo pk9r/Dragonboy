@@ -60,6 +60,7 @@ namespace Mod
             CustomCursor.LoadData();
             SetDo.LoadData();
             FakeIPhoneClient.onGameStart();
+            CustomGraphics.InitializeTileMap(true);
             VietKeyHandler.SmartMark = true;
             ExtensionManager.LoadExtensions();
             System.Windows.Forms.Application.EnableVisualStyles();

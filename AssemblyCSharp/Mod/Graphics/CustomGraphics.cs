@@ -21,9 +21,9 @@ namespace Mod.Graphics
             { 13500671, 12058853, 10682572, 9371827, 7995545, 6684800 },
             { 16711705, 15007767, 13369364, 11730962, 10027023, 8388621 }
         };
-        static Texture2D mapTexture = new Texture2D(GameCanvas.w * mGraphics.zoomLevel, GameCanvas.h * mGraphics.zoomLevel);
-
+        static Image mapTile = new Image();
         static Color colorMap = new Color(0.93f, 0.27f, 0f);
+        static bool lastIsFill;
 
         public static void DrawLine(Vector2 pointA, Vector2 pointB, Color color, float width, bool antiAlias)
         {
@@ -426,40 +426,47 @@ namespace Mod.Graphics
 
         public static void PaintTileMap(mGraphics g)
         {
-            //if (mapTexture.width != GameCanvas.w * mGraphics.zoomLevel || mapTexture.height != GameCanvas.h * mGraphics.zoomLevel)
-            //    mapTexture = new Texture2D(GameCanvas.w * mGraphics.zoomLevel, GameCanvas.h * mGraphics.zoomLevel);
-            //for (int x = 0; x < mapTexture.width; x++)
-            //    for (int y = 0; y < mapTexture.height; y++)
-            //        mapTexture.SetPixel(x, y, colorMap);
-            ////g.setColor(15615232);
-            //for (int i = GameScr.gssx; i < GameScr.gssxe; i++)
-            //{
-            //    for (int j = GameScr.gssy; j < GameScr.gssye; j++)
-            //    {
-            //        if (TileMap.maps[j * TileMap.tmw + i] != 0)
-            //        {
-            //            if ((!TileMap.tileTypeAt(i * 24, (j + 1) * 24, 2) && !TileMap.tileTypeAt(i * 24, (j + 2) * 24, 2) && !TileMap.tileTypeAt(i * 24, j * 24, 2)) || TileMap.tileTypeAt(i * 24, j * 24, 2))
-            //            {
-            //                for (int x = 0; x < 24 * mGraphics.zoomLevel; x++)
-            //                {
-            //                    for (int y = 0; y < 24 * mGraphics.zoomLevel; y++)
-            //                    {
-            //                        if (ModMenuMain.getStatusInt("levelreducegraphics") == 2 && i > 0)
-            //                        {
-            //                            if ((x + 1) / mGraphics.zoomLevel == 0 || (x + 1) / mGraphics.zoomLevel == 24 || (y + 1) / mGraphics.zoomLevel == 0 || (y + 1) / mGraphics.zoomLevel == 24)
-            //                                mapTexture.SetPixel(x, y, colorMap);
-            //                        }
-            //                        else
-            //                            mapTexture.SetPixel(x, y, colorMap);
-
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-            //mapTexture.Apply();
-            //UnityEngine.Graphics.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), mapTexture);
+            for (int i = GameScr.gssx; i < GameScr.gssxe; i++)
+            {
+                for (int j = GameScr.gssy; j < GameScr.gssye; j++)
+                {
+                    if (TileMap.maps[j * TileMap.tmw + i] != 0)
+                    {
+                        if ((!TileMap.tileTypeAt(i * 24, (j + 1) * 24, 2) && !TileMap.tileTypeAt(i * 24, (j + 2) * 24, 2) && !TileMap.tileTypeAt(i * 24, j * 24, 2)) || TileMap.tileTypeAt(i * 24, j * 24, 2))
+                        {
+                            InitializeTileMap(ModMenuMain.getStatusInt("levelreducegraphics") != 2);
+                            g.drawImage(mapTile, i * TileMap.size, j * TileMap.size + 8);
+                        }
+                    }
+                }
+            }
         }
+
+        public static void InitializeTileMap(bool isFill)
+        {
+            if (isFill == lastIsFill)
+                return;
+            lastIsFill = isFill;
+            mapTile.w = mapTile.h = 24 * mGraphics.zoomLevel;
+            mapTile.texture = new Texture2D(24 * mGraphics.zoomLevel, 24 * mGraphics.zoomLevel);
+            for (int i = 0; i < mapTile.texture.width; i++) 
+                for (int j = 0; j < mapTile.texture.height; j++)
+                    mapTile.texture.SetPixel(i, j, isFill ? colorMap : Color.clear);
+            if (!isFill)
+            {
+                for (int i = 0; i < mapTile.texture.width; i++)
+                {
+                    for (int j = 0; j < mGraphics.zoomLevel; j++)
+                    {
+                        mapTile.texture.SetPixel(i, j, colorMap);    
+                        mapTile.texture.SetPixel(j, i, colorMap);
+                        mapTile.texture.SetPixel(mapTile.texture.width - j, i, colorMap);    
+                        mapTile.texture.SetPixel(i, mapTile.texture.height - j, colorMap);    
+                    }
+                }
+            }
+            mapTile.texture.Apply();
+        }
+            
     }
 }
