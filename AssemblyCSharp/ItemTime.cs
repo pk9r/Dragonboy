@@ -154,7 +154,10 @@ public class ItemTime
 				g.setColor(8421504);
 				g.fillRect(x2, y2, num, 2);
 				g.setColor(16777215);
-				g.fillRect(x2, y2, num * per / 100, 2);
+				if (per > 0)
+				{
+					g.fillRect(x2, y2, num * per / 100, 2);
+				}
 			}
 			return;
 		}
@@ -188,7 +191,10 @@ public class ItemTime
 				second = 60;
 				minute--;
 			}
-			per = coutTime * 100 / time;
+			if (time > 0)
+			{
+				per = coutTime * 100 / time;
+			}
 		}
 		if (minute < 0 && !isText)
 		{

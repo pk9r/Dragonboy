@@ -868,7 +868,7 @@ public class BackgroudEffect
 		num = ((typeEff != 15) ? 4 : 4);
 		for (int i = 0; i < sum; i++)
 		{
-			if (i % 3 == 0 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy && PIXEL * frame[i] < img.getHeight())
+			if (i % 3 == 0 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy && PIXEL <= mGraphics.getImageHeight(img) && PIXEL * frame[i] < img.getHeight())
 			{
 				g.drawRegion(img, 0, PIXEL * frame[i], img.getWidth(), PIXEL, 0, x[i], y[i], 0);
 			}
@@ -881,7 +881,7 @@ public class BackgroudEffect
 		num = ((typeEff != 15) ? 4 : 4);
 		for (int i = 0; i < sum; i++)
 		{
-			if (i % 3 != 0 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy && PIXEL * frame[i] < img.getHeight())
+			if (i % 3 != 0 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy && PIXEL <= mGraphics.getImageHeight(img) && PIXEL * frame[i] < img.getHeight())
 			{
 				g.drawRegion(img, 0, PIXEL * frame[i], img.getWidth(), PIXEL, 0, x[i], y[i], 0);
 			}

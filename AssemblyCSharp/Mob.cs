@@ -266,6 +266,7 @@ public class Mob : IMapObject
 		maxHp = maxp;
 		this.levelBoss = levelBoss;
 		updateHp_bar();
+		per_tem = (int)((long)hp * 100L / maxHp);
 		isDie = false;
 		xSd = pointx;
 		ySd = pointy;
@@ -1379,6 +1380,10 @@ public class Mob : IMapObject
 	{
 		len = (int)((long)hp * 100L / maxHp * w_hp_bar) / 100;
 		per = (int)((long)hp * 100L / maxHp);
+		if (per == 100)
+		{
+			per_tem = per;
+		}
 		if (per >= 100)
 		{
 			per_tem = per;

@@ -1,23 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>Assembl-CSharp</AssemblyName>
+    <AssemblyName>Assembly-CSharp</AssemblyName>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <TargetFramework>net35</TargetFramework>
   </PropertyGroup>
   <PropertyGroup>
-    <LangVersion>Preview</LangVersion>
+    <LangVersion>11.0</LangVersion>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup>
-    <RootNamespace />
-    <BaseOutputPath>bin\</BaseOutputPath>
-  </PropertyGroup>
+  <PropertyGroup />
+  <ItemGroup />
   <ItemGroup>
     <Reference Include="UnityEngine">
-      <HintPath>..\Game\Game_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\Compressed\Dragonboy_vn_v230\Dragonboy_vn_v230_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(TargetDir)\Assembl-CSharp.dll&quot; &quot;$(SolutionDir)\Game\Game_Data\Managed\&quot;" />
-  </Target>
 </Project>
