@@ -78,7 +78,7 @@ namespace QLTK
                 Utilities.CheckUpdateAndNotification();
                 Dispatcher.Invoke(() => Title = Utilities.GetWindowTitle());
                 Utilities.SetPresence();
-            }) 
+            })
             {
                 IsBackground = true,
                 Name = "CheckUpdateAndNotification"
@@ -585,7 +585,7 @@ namespace QLTK
             {
                 canSetRichPresence = true;
                 this.MainGrid.IsEnabled = false;
-                
+
                 if (ExistedWindow(account, out IntPtr hWnd))
                 {
                     if (!FullScreenCheckBox.IsChecked.Value)
@@ -604,7 +604,7 @@ namespace QLTK
                 if (account.Equals(SaveSettings.accountConnectToDiscordRPC))
                     IsDisplayInDiscordRichPresence_Checked(sender, null);
                 await this.OpenGameAsync(account);
-                
+
                 this.MainGrid.IsEnabled = true;
             }
         }
@@ -717,6 +717,12 @@ namespace QLTK
             SaveSettings.Instance.indexConnectToDiscordRPC = -1;
             SaveSettings.accountConnectToDiscordRPC = null;
             Utilities.SetPresence();
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            var settingsWindow = new SettingsWindow();
+            settingsWindow.ShowDialog();
         }
 
         private void AccountsDataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)

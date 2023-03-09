@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Mod.ModHelper.Menu
 {
@@ -27,25 +26,6 @@ namespace Mod.ModHelper.Menu
                 }))
                 .addItem("Test 2", new(() => GameScr.info1.addInfo("gau gau", 0))) // inline
                 .start(); // call start to open menu
-
-            //OpenMenu.start(new(menuItems =>
-            //{
-            //    // selected: vị trí menu được chọn
-            //    // caption: chuỗi được chọn, vd: selected là 1 thì giá trị biến này là "test b"
-            //    // captions: mảng tạo menu, ["test a", "test b", "test c"]
-            //    // thay đổi tên biến tùy ý hoặc thay bằng _ nếu không sử dụng
-            //    menuItems.Add(new("test", new((selected, caption, captions) =>
-            //    {
-            //        GameScr.info1.addInfo($"selected {selected}, {caption}", 0);
-            //    })));
-            //    // without name params
-            //    menuItems.Add(new("Test 1", new(() =>
-            //    {
-            //        GameScr.info1.addInfo("meow meow", 0);
-            //    })));
-            //    // inline
-            //    menuItems.Add(new("Test 2", new(() => GameScr.info1.addInfo("gau gau", 0))));
-            //}));
         }
         #endregion
 
@@ -95,7 +75,7 @@ namespace Mod.ModHelper.Menu
             return this;
         }
 
-        public MenuBuilder map<T>(MyVector myVector, Func<T ,MenuItem> func)
+        public MenuBuilder map<T>(MyVector myVector, Func<T, MenuItem> func)
         {
             for (int i = 0; i < myVector.size(); i++)
             {

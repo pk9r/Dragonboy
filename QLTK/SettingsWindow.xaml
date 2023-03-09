@@ -1,0 +1,109 @@
+﻿<Window 
+  x:Class="QLTK.SettingsWindow"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+  xmlns:local="clr-namespace:QLTK"
+  mc:Ignorable="d"
+  Title="Cài đặt"
+  Width="800"
+  Height="600"
+  Background="{DynamicResource MaterialDesignPaper}"
+  FontFamily="{materialDesign:MaterialDesignFont}"
+  Left="0"
+  TextElement.FontSize="14"
+  TextElement.FontWeight="Medium"
+  TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+  Top="0"
+  Topmost="False"
+  WindowStartupLocation="Manual">
+
+  <Grid>
+    <TabControl
+      TabStripPlacement="Left">
+      <TabItem Header="Lệnh chat">
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition />
+          </Grid.RowDefinitions>
+
+          <TextBlock TextAlignment="Center"
+            Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+            Text="Cài đặt lệnh chat" />
+
+          <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            
+            <ListView 
+              d:ItemsSource="{d:SampleData ItemCount=5}" >
+              <ListView.View>
+                <GridView>
+                  <GridViewColumn Header="Lệnh" DisplayMemberBinding="{Binding command}" />
+                  <GridViewColumn Header="Lệnh đầy đủ" DisplayMemberBinding="{Binding fulllCommand}"/>
+                  <GridViewColumn Header="Dấu ngăn cách" DisplayMemberBinding="{Binding delimiter}"/>
+                </GridView>
+              </ListView.View>
+            </ListView>
+
+            <StackPanel 
+              Margin="5" 
+              Grid.Column="1">
+              
+              <TextBox
+                x:Name="ChatCommandTextBox"
+                Margin="5"
+                materialDesign:HintAssist.Hint="Lệnh" />
+
+              <TextBox
+                x:Name="ChatFullCommandTextBox"
+                Margin="5"
+                materialDesign:HintAssist.Hint="Lệnh đầy đủ" />
+
+              <TextBox
+                x:Name="DelimiterTextBox"
+                Margin="5"
+                materialDesign:HintAssist.Hint="Dấu ngăn cách" />
+
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition />
+                  <ColumnDefinition />
+                  <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Button
+                  x:Name="ButtonAddChatCommand"
+                  Margin="5"
+                  Click=""
+                  Content="Thêm" />
+                <Button
+                  x:Name="ButtonEditChatCommand"
+                  Grid.Column="1"
+                  Margin="5"
+                  Click=""
+                  Content="Sửa" />
+                <Button
+                  x:Name="ButtonDeleteChatCommand"
+                  Grid.Column="2"
+                  Margin="5"
+                  Click=""
+                  Content="Xoá" />
+              </Grid>
+
+            </StackPanel>
+            
+          </Grid>
+        </Grid>
+      </TabItem>
+      <TabItem Header="Phím tắt">
+
+      </TabItem>
+    </TabControl>
+  </Grid>
+</Window>
