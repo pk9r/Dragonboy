@@ -12,7 +12,10 @@
   <ItemGroup />
   <ItemGroup>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\Compressed\Dragonboy_vn_v230\Dragonboy_vn_v230_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\Game\Game_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy &quot;$(TargetDir)\Assembl-CSharp.dll&quot; &quot;$(SolutionDir)\Game\Game_Data\Managed\&quot;" />
+  </Target>
 </Project>
