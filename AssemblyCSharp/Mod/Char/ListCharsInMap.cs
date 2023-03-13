@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mod.CustomGroupBox;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,7 +27,9 @@ namespace Mod
 
         static int distanceBetweenLines = 8;
 
-        static int offset = 0; 
+        static int offset = 0;
+
+        static GroupBox backgroundGroupBox;
 
         public static void update()
         {
@@ -76,6 +79,10 @@ namespace Mod
         {
             if (!isEnabled)
                 return;
+            if (backgroundGroupBox == null)
+                InitializeGroupBox();
+            UpdateGroupBox();
+            backgroundGroupBox.Paint(g);
             g.reset();
             if (offset >= listChars.Count - MAX_CHAR)
             {
@@ -163,9 +170,9 @@ namespace Mod
             if (listChars.Count > MAX_CHAR)
             {
                 if (offset < listChars.Count - MAX_CHAR)
-                    g.drawRegion(Mob.imgHP, 0, 24, 9, 6, 1, GameCanvas.w - x - 9, y - 7, 0);
+                    g.drawRegion(Mob.imgHP, 0, 24, 9, 6, 1, GameCanvas.w - x - maxLength - 9, y + 2, 0);
                 if (offset > 0)
-                    g.drawRegion(Mob.imgHP, 0, 24, 9, 6, 0, GameCanvas.w - x - 9, y + 2 + distanceBetweenLines * MAX_CHAR, 0);
+                    g.drawRegion(Mob.imgHP, 0, 24, 9, 6, 0, GameCanvas.w - x - maxLength - 9, y + 1 + distanceBetweenLines * (MAX_CHAR - 1), 0);
             }
         }
 
@@ -202,7 +209,7 @@ namespace Mod
                 }
                 if (listChars.Count > MAX_CHAR)
                 {
-                    if (GameCanvas.isPointerHoldIn(GameCanvas.w - x - 9, y - 7, 9, 6))
+                    if (GameCanvas.isPointerHoldIn(GameCanvas.w - x - maxLength - 9, y + 2, 9, 6))
                     {
                         GameCanvas.isPointerJustDown = false;
                         GameScr.gI().isPointerDowning = false;
@@ -214,7 +221,7 @@ namespace Mod
                         GameCanvas.clearAllPointerEvent();
                         return;
                     }
-                    if (GameCanvas.isPointerHoldIn(GameCanvas.w - x - 9, y + 2 + distanceBetweenLines * MAX_CHAR, 9, 6))
+                    if (GameCanvas.isPointerHoldIn(GameCanvas.w - x - maxLength - 9, y + 1 + distanceBetweenLines * (MAX_CHAR - 1), 9, 6))
                     {
                         GameCanvas.isPointerJustDown = false;
                         GameScr.gI().isPointerDowning = false;
@@ -229,6 +236,37 @@ namespace Mod
                 }
             }
             catch (Exception) { }
+        }
+
+        static void InitializeGroupBox()
+        {
+            backgroundGroupBox = new GroupBox("Nhân vật trong map", GameCanvas.w - x - (maxLength == 0 ? 100 : maxLength), y - 10, 150, 10)
+            {
+                BackColor = new Color(0, 0, 0, .1f),
+                HasBorder = true,
+                BorderColor = Color.yellow,
+                TitleAnchor = TextAnchor.UpperRight,
+                TitleStyle = new GUIStyle(GUI.skin.label)
+            };
+            backgroundGroupBox.TitleStyle.fontSize = 6 * mGraphics.zoomLevel;
+            backgroundGroupBox.TitleStyle.normal.textColor = Color.white;
+        }
+
+        static void UpdateGroupBox()
+        {
+            backgroundGroupBox.X = GameCanvas.w - x - (maxLength == 0 ? 100 : maxLength) - 2;
+            backgroundGroupBox.Y = y - 10;
+            backgroundGroupBox.Width = (maxLength == 0 ? 100 : maxLength) + 13;
+
+            if (listChars.Count > MAX_CHAR)
+            {
+                backgroundGroupBox.X -= 10;
+                backgroundGroupBox.Width += 10;
+            }
+
+            backgroundGroupBox.Height = Math.min(MAX_CHAR, listChars.Count) * distanceBetweenLines + 12;
+            if (backgroundGroupBox.Height < 20)
+                backgroundGroupBox.Height = 20;
         }
 
         public static void setState(bool value) => isEnabled = value;

@@ -468,5 +468,23 @@ namespace Mod.Graphics
             mapTile.texture.Apply();
         }
             
+        public static void DrawAPartOfImage(Image image, int x, int y, int w, int h, int imageX, int imageY, float degAngle)
+        {
+            x *= mGraphics.zoomLevel;
+            y *= mGraphics.zoomLevel;
+            w *= mGraphics.zoomLevel;
+            h *= mGraphics.zoomLevel;
+            imageX *= mGraphics.zoomLevel;
+            imageY *= mGraphics.zoomLevel;
+            int imageW = image.w;
+            int imageH = image.h;
+            Vector2 pivot = new Vector2(imageX + w / 2 + x, imageY + h / 2 + y);
+            GUIUtility.RotateAroundPivot(degAngle, pivot);
+            GUI.BeginGroup(new Rect(x - imageX, y - imageY, w, h));
+            GUI.DrawTexture(new Rect(0, 0, imageW, imageH), image.texture);
+            //GUI.DrawTexture(new Rect(x - imageX, y - imageY, imageW, imageH), image.texture);
+            GUI.EndGroup();
+            GUIUtility.RotateAroundPivot(-degAngle, pivot);
+        }
     }
 }
