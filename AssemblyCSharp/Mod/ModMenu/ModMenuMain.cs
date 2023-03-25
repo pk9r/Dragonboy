@@ -51,7 +51,7 @@ namespace Mod.ModMenu
                 if (value > 5 && value <= 60) Application.targetFrameRate = value;
                 else throw new ArgumentException();
             }, "targetfps", false, "Bạn chưa tắt Vsync!"),
-            new ModMenuItemInt("Giảm đồ họa", new string[]{"Đang tắt", "Đang bật mức 1", "Đang bật mức 2", "Đang bật mức 3"}, "", 0, null, "levelreducegraphics"),
+            new ModMenuItemInt("Giảm đồ họa", new string[]{"Đang tắt", "Đang bật mức 1", "Đang bật mức 2", "Đang bật mức 3"}, "", 0, CustomBackground.StopAllBackgroundVideo, "levelreducegraphics"),
             new ModMenuItemInt("Goback", new string[]{"Đang tắt", "Đang bật (goback tới chỗ cũ khi chết)", "Đang bật (goback tới map cố định)" }, "", 0, AutoGoback.setState),
             new ModMenuItemInt("Gõ tiếng Việt", new string[]{"Đang tắt", "Đang bật kiểu gõ TELEX", "Đang bật kiểu gõ VIQR", "Đang bật kiểu gõ VNI"}, "", 0, delegate(int value)
             {
@@ -75,7 +75,7 @@ namespace Mod.ModMenu
         public static ModMenuItemFunction[] modMenuItemFunctions = new ModMenuItemFunction[]
         {
             new ModMenuItemFunction("Menu Xmap", "Mở menu Xmap (lệnh \"xmp\" hoặc bấm nút x)", Pk9rXmap.showXmapMenu),
-            new ModMenuItemFunction("Menu PickMob", "Mở menu PickMob (lệnhj \"pickmob\")", Pk9rPickMob.ShowMenu),
+            new ModMenuItemFunction("Menu PickMob", "Mở menu PickMob (lệnh \"pickmob\")", Pk9rPickMob.ShowMenu),
             new ModMenuItemFunction("Menu Teleport", "Mở menu dịch chuyển (lệnh \"tele\" hoặc bấm nút z)", TeleportMenu.TeleportMenu.ShowMenu),
             new ModMenuItemFunction("Menu Custom Background", "Mở menu nền tùy chỉnh", CustomBackground.ShowMenu),
             new ModMenuItemFunction("Menu Custom Logo", "Mở menu logo tùy chỉnh", CustomLogo.ShowMenu),

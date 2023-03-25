@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace Mod.CustomGroupBox
 {
+    [Obsolete("Cần fix thêm")]
     public class GroupBox
     {
         #region Properties

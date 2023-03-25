@@ -371,7 +371,6 @@ Game/ModData/log_socket_client.txt
 Game/asset/
 Game/ModData/hotkeyCommands.json
 Game/ModData/settings.json
-/Game/Data/*
+/Game/Data/
 /Game/ModData/log.txt
 Game/ModData/Servers.txt
-Game/Data/vietmode
