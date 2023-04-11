@@ -466,6 +466,10 @@ public class Char : IMapObject
 
 	public int flagImage;
 
+	public short x_hint;
+
+	public short y_hint;
+
 	public static int[][][] CharInfo = new int[33][][]
 	{
 		new int[4][]
@@ -951,8 +955,6 @@ public class Char : IMapObject
 
 	private bool IsAddDust2;
 
-	private int color = 8421504;
-
 	public int len = 24;
 
 	public int w_hp_bar = 24;
@@ -960,6 +962,8 @@ public class Char : IMapObject
 	private int per = 100;
 
 	public byte h_hp_bar = 4;
+	
+	private int per_tem = 100;
 
 	private Image imgHPtem;
 
@@ -974,6 +978,14 @@ public class Char : IMapObject
 	private bool isOutMap;
 
 	private int fBag;
+
+	private Part ph;
+
+	private Part pl;
+
+	private Part pb;
+
+	public int cH_new = 32;
 
 	private int statusBeforeNothing;
 
@@ -2215,11 +2227,34 @@ public class Char : IMapObject
 							{
 								if (currentMovePoint.yEnd > cy)
 								{
-									currentMovePoint = null;
-									GameScr.instance.clickMoving = false;
-									statusMe = 1;
-									cvx = (cvy = 0);
-									checkPerformEndMovePointAction();
+									bool flag3 = false;
+									sbyte b = 1;
+									b = (sbyte)((cdir == 1) ? 1 : (-1));
+									for (int j = 0; j < 2; j++)
+									{
+										if (TileMap.tileTypeAt(currentMovePoint.xEnd + chw * b, cy + chh * j, 2))
+										{
+											flag3 = true;
+											break;
+										}
+									}
+									if (flag3)
+									{
+										currentMovePoint = null;
+										GameScr.instance.clickMoving = false;
+										statusMe = 1;
+										cvx = (cvy = 0);
+										checkPerformEndMovePointAction();
+									}
+									else
+									{
+										SoundMn.gI().charJump();
+										cx = currentMovePoint.xEnd;
+										statusMe = 10;
+										cvy = -5;
+										cvx = 0;
+										Res.outz("Jum lun");
+									}
 								}
 								else
 								{
@@ -2308,7 +2343,7 @@ public class Char : IMapObject
 				checkHideCharName();
 				if (statusMe == 1 || statusMe == 6)
 				{
-					bool flag3 = false;
+					bool flag4 = false;
 					if (currentMovePoint != null)
 					{
 						if (abs(currentMovePoint.xEnd - cx) < 17 && abs(currentMovePoint.yEnd - cy) < 25)
@@ -2329,11 +2364,11 @@ public class Char : IMapObject
 								cvy = 0;
 								cp1 = 0;
 							}
-							flag3 = true;
+							flag4 = true;
 						}
 						else if ((statusBeforeNothing == 10 || cf == 8) && vMovePoints.size() > 0)
 						{
-							flag3 = true;
+							flag4 = true;
 						}
 						else if (cy == currentMovePoint.yEnd)
 						{
@@ -2367,8 +2402,8 @@ public class Char : IMapObject
 						}
 					}
 					else
-						flag3 = true;
-					if (flag3 && vMovePoints.size() > 0)
+						flag4 = true;
+					if (flag4 && vMovePoints.size() > 0)
 					{
 						currentMovePoint = (MovePoint)vMovePoints.firstElement();
 						vMovePoints.removeElementAt(0);
@@ -4702,12 +4737,65 @@ public class Char : IMapObject
 				if (ModMenuMain.getStatusInt("levelreducegraphics") <= 1)
 				{
 					paintMount2(g);
+					paintEff_Pet(g);
 					paintEff_Lvup_front(g);
 					paintSuperEffFront(g);
 					paintAuraFront(g);
 					paintEffFront(g);
+					paint_map_line(g);
 				}
 			}
+		}
+	}
+
+	private void paint_map_line(mGraphics g)
+	{
+		if (x_hint == 0 || y_hint == 0 || statusMe == 14)
+			return;
+		int arg = 0;
+		int x = cx - 30;
+		int y = cy - 15;
+		int num = -30;
+		int num2 = 5;
+		if (Res.abs(cy - y_hint) > 150)
+		{
+			if (cy > y_hint)
+			{
+				arg = 7;
+				x = cx;
+				y = cy - 15 - 60;
+			}
+			else
+			{
+				arg = 5;
+				x = cx;
+				y = cy - 15 + 60;
+			}
+		}
+		else if (cx > x_hint)
+		{
+			arg = 2;
+		}
+		else if (cx <= x_hint)
+		{
+			x = cx + 30;
+		}
+		if (GameCanvas.gameTick % 10 >= 5)
+		{
+			if (Res.abs(cx - x_hint) > 100)
+				g.drawRegion(GameScr.arrow, 0, 0, 13, 16, arg, x, y, StaticObj.VCENTER_HCENTER);
+			else
+				g.drawImage(Panel.imgBantay, x_hint + num, y_hint - 60 + num2, 0);
+		}
+	}
+
+	private void paintEff_Pet(mGraphics g)
+	{
+		for (int i = 0; i < vEffChar.size(); i++)
+		{
+			Effect effect = (Effect)vEffChar.elementAt(i);
+			if (effect.effId >= 201)
+				effect.paint(g);
 		}
 	}
 
@@ -4715,14 +4803,14 @@ public class Char : IMapObject
 	{
 		if (me)
 		{
-			if (isPaintAura && idAuraEff > -1)
+			if (!isPaintAura && idAuraEff > -1)
 				return;
 		}
 		else if (idAuraEff > -1)
 		{
 			return;
 		}
-		if (isPaintAura2 || (statusMe != 1 && statusMe != 6) || GameCanvas.panel.isShow || mSystem.currentTimeMillis() - timeBlue <= 0 || isCopy || clevel < 16)
+		if (!isPaintAura2 || (statusMe != 1 && statusMe != 6) || GameCanvas.panel.isShow || mSystem.currentTimeMillis() - timeBlue <= 0 || isCopy || clevel < 16)
 			return;
 		int num = 7598;
 		int num2 = 4;
@@ -4746,14 +4834,14 @@ public class Char : IMapObject
 	{
 		if (me)
 		{
-			if (isPaintAura && idAuraEff > -1)
+			if (!isPaintAura && idAuraEff > -1)
 				return;
 		}
 		else if (idAuraEff > -1)
 		{
 			return;
 		}
-		if (isPaintAura2)
+		if (!isPaintAura2)
 			return;
 		if (statusMe == 1 || statusMe == 6)
 		{
@@ -4870,13 +4958,19 @@ public class Char : IMapObject
 
 	public void paintHp(mGraphics g, int x, int y)
 	{
+		int num = cHP * 100 / cHPFull / 10 - 1;
+		if (num < 0)
+			num = 0;
+		if (num > 9)
+			num = 9;
+		g.drawRegion(Mob.imgHP, 0, 6 * (9 - num), 9, 6, 0, x, y, 3);
 		if (cTypePk == 0 && (myCharz().cFlag == 0 || cFlag == 0 || (cFlag != 8 && myCharz().cFlag != 8 && cFlag == myCharz().cFlag)))
 			return;
 		len = (int)((long)cHP * 100L / cHPFull * w_hp_bar) / 100;
-		per = (int)((long)cHP * 100L / cHPFull);
-		if (per < 30)
+		num = (int)((long)cHP * 100L / cHPFull);
+		if (num < 30)
 			imgHPtem = GameScr.imgHP_tm_do;
-		else if (per < 60)
+		else if (num < 60)
 		{
 			imgHPtem = GameScr.imgHP_tm_vang;
 		}
@@ -4884,17 +4978,17 @@ public class Char : IMapObject
 		{
 			imgHPtem = GameScr.imgHP_tm_xanh;
 		}
-		int width = GameScr.imgHP_tm_xam.getWidth();
-		int height = GameScr.imgHP_tm_xam.getHeight();
-		int w = width * per / 100;
-		g.drawImage(GameScr.imgHP_tm_xam, x - (width >> 1), y - 1, mGraphics.TOP | mGraphics.LEFT);
+		int imageWidth = mGraphics.getImageWidth(GameScr.imgHP_tm_do);
+		int imageHeight = mGraphics.getImageHeight(GameScr.imgHP_tm_do);
+		int w = imageWidth * num / 100;
+		g.drawImage(GameScr.imgHP_tm_xam, x - (imageWidth >> 1), y - 1, mGraphics.TOP | mGraphics.LEFT);
 		if (len < 5)
 		{
 			if (GameCanvas.gameTick % 6 < 3)
-				g.drawRegion(imgHPtem, 0, 0, w, height, 0, x - (width >> 1), y - 1, mGraphics.TOP | mGraphics.LEFT);
+				g.drawRegion(imgHPtem, 0, 0, w, imageHeight, 0, x - (imageWidth >> 1), y - 1, mGraphics.TOP | mGraphics.LEFT);
 		}
 		else
-			g.drawRegion(imgHPtem, 0, 0, w, height, 0, x - (width >> 1), y - 1, mGraphics.TOP | mGraphics.LEFT);
+			g.drawRegion(imgHPtem, 0, 0, w, imageHeight, 0, x - (imageWidth >> 1), y - 1, mGraphics.TOP | mGraphics.LEFT);
 	}
 
 	public int getClassColor()
@@ -6633,7 +6727,7 @@ public class Char : IMapObject
 
 	public void paintAuraBehind(mGraphics g)
 	{
-		if ((!me || isPaintAura) && idAuraEff > -1 && (statusMe == 1 || statusMe == 6) && !GameCanvas.panel.isShow && mSystem.currentTimeMillis() - timeBlue > 0)
+		if ((!me || !isPaintAura) && idAuraEff > -1 && (statusMe == 1 || statusMe == 6) && !GameCanvas.panel.isShow && mSystem.currentTimeMillis() - timeBlue > 0)
 		{
 			FrameImage fraImage = mSystem.getFraImage(strEffAura + idAuraEff + "_0");
 			fraImage?.drawFrame(GameCanvas.gameTick / 4 % fraImage.nFrame, cx, cy, (cdir != 1) ? 2 : 0, mGraphics.BOTTOM | mGraphics.HCENTER, g);

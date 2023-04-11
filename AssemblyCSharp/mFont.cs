@@ -155,7 +155,7 @@ public class mFont
 
 	public string st1 = "áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴĐ";
 
-	public string st2 = "\u00b8µ¶·¹\u00a8¾»¼½Æ©ÊÇÈÉËÐÌÎÏÑªÕÒÓÔÖÝ×ØÜÞãßáâä«èåæçé¬íêëìîóïñòô­øõö÷ùýúûüþ®\u00b8µ¶·¹¡¾»¼½Æ¢ÊÇÈÉËÐÌÎÏÑ£ÕÒÓÔÖÝ×ØÜÞãßáâä¤èåæçé¥íêëìîóïñòô¦øõö÷ùýúûüþ§";
+	public string st2 = "\u00b8µ¶·¹\u00a8¾»¼½Æ©ÊÇÈÉËÐÌÎÏÑªÕÒÓÔÖÝ×ØÜÞãßáâä«èåæçé¬íêëìîóïñòô\u00adøõö÷ùýúûüþ®\u00b8µ¶·¹¡¾»¼½Æ¢ÊÇÈÉËÐÌÎÏÑ£ÕÒÓÔÖÝ×ØÜÞãßáâä¤èåæçé¥íêëìîóïñòô¦øõö÷ùýúûüþ§";
 
 	public const string str = " 0123456789+-*='_?.,<>/[]{}!@#$%^&*():aáàảãạâấầẩẫậăắằẳẵặbcdđeéèẻẽẹêếềểễệfghiíìỉĩịjklmnoóòỏõọôốồổỗộơớờởỡợpqrstuúùủũụưứừửữựvxyýỳỷỹỵzwAÁÀẢÃẠĂẰẮẲẴẶÂẤẦẨẪẬBCDĐEÉÈẺẼẸÊẾỀỂỄỆFGHIÍÌỈĨỊJKLMNOÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢPQRSTUÚÙỦŨỤƯỨỪỬỮỰVXYÝỲỶỸỴZW";
 
@@ -224,39 +224,6 @@ public class mFont
 		}
 		this.id = id;
 		myFont = (Font)Resources.Load("FontSys/x" + mGraphics.zoomLevel + "/" + text);
-		if (id < 25)
-		{
-			color1 = setColorFont(id);
-			color2 = setColorFont(id);
-		}
-		else
-		{
-			color1 = bigColor(id);
-			color2 = bigColor(id);
-		}
-		wO = getWidthExactOf("o");
-	}
-
-	public mFont(sbyte id, int zoomLevel)
-	{
-		string text = "chelthm";
-		if ((id > 0 && id < 10) || id == 19)
-		{
-			yAdd = 1;
-			text = "barmeneb";
-		}
-		else if (id >= 10 && id <= 18)
-		{
-			text = "chelthm";
-			yAdd = 2;
-		}
-		else if (id > 24)
-		{
-			text = "staccato";
-		}
-		this.id = id;
-		text = "FontSys/x" + zoomLevel + "/" + text;
-		myFont = (Font)Resources.Load(text);
 		if (id < 25)
 		{
 			color1 = setColorFont(id);

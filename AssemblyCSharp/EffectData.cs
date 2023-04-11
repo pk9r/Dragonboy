@@ -10,6 +10,8 @@ public class EffectData
 
 	public short[] arrFrame;
 
+	public short[][] anim_data = new short[16][];
+
 	public int ID;
 
 	public int typeData;
@@ -26,6 +28,20 @@ public class EffectData
 				return imgInfo[i];
 		}
 		return null;
+	}
+
+	public short[] get()
+	{
+		return arrFrame;
+	}
+
+	public short[] get(int index)
+	{
+		if (index >= anim_data.Length)
+			index = 0;
+		if (anim_data[index] == null)
+			return new short[1];
+		return anim_data[index];
 	}
 
 	public void readData(string patch)
@@ -165,11 +181,44 @@ public class EffectData
 					}
 				}
 			}
-			short num6 = iss.readShort();
+			short num6 = 0;
+			num6 = iss.readShort();
 			arrFrame = new short[num6];
-			for (int l = 0; l < num6; l++)
+			if (ID >= 201)
 			{
-				arrFrame[l] = iss.readShort();
+				short num7 = 0;
+				short[] array = new short[num6];
+				int num8 = 0;
+				string text = string.Empty;
+				bool flag = false;
+				for (int l = 0; l < num6; l++)
+				{
+					short num9 = iss.readShort();
+					text = text + num9 + ",";
+					arrFrame[l] = num9;
+					if (num9 + 500 >= 500)
+					{
+						array[num8++] = num9;
+						flag = true;
+						continue;
+					}
+					num7 = (short)Res.abs(num9 + 500);
+					anim_data[num7] = new short[num8];
+					Array.Copy(array, 0, anim_data[num7], 0, num8);
+					num8 = 0;
+				}
+				if (!flag)
+				{
+					anim_data[0] = new short[num8];
+					Array.Copy(array, 0, anim_data[num7], 0, num8);
+				}
+			}
+			else
+			{
+				for (int m = 0; m < num6; m++)
+				{
+					arrFrame[m] = iss.readShort();
+				}
 			}
 		}
 		catch (Exception ex)

@@ -20,7 +20,7 @@ public class ClanImage
 		vClanImage.addElement(cm);
 	}
 
-	public static ClanImage getClanImage(sbyte ID)
+	public static ClanImage getClanImage(short ID)
 	{
 		for (int i = 0; i < vClanImage.size(); i++)
 		{

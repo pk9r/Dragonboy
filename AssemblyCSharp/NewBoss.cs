@@ -405,19 +405,35 @@ public class NewBoss : Mob, IMapObject
 
 	public override void paint(mGraphics g)
 	{
-		if (Mob.arrMobTemplate[templateId].data != null)
+		if (Mob.arrMobTemplate[templateId].data == null)
+			return;
+		if (isShadown)
+			paintShadow(g);
+		g.translate(0, GameCanvas.transY);
+		Mob.arrMobTemplate[templateId].data.paintFrame(g, frame, x, y + fy, (dir != 1) ? 1 : 0, 2);
+		g.translate(0, -GameCanvas.transY);
+		int imageWidth = mGraphics.getImageWidth(imgHPtem);
+		int imageHeight = mGraphics.getImageHeight(imgHPtem);
+		int num = imageWidth;
+		int num2 = imageWidth;
+		int num3 = x - imageWidth;
+		int num4 = y - h - 5;
+		int num5 = imageWidth * 2 * per / 100;
+		if (num5 > num)
 		{
-			if (isShadown)
-				paintShadow(g);
-			g.translate(0, GameCanvas.transY);
-			Mob.arrMobTemplate[templateId].data.paintFrame(g, frame, x, y + fy, (dir != 1) ? 1 : 0, 2);
-			g.translate(0, -GameCanvas.transY);
-			int width = GameScr.imgHP_tm_do.getWidth();
-			int height = GameScr.imgHP_tm_do.getHeight();
-			int w = width * per / 100;
-			g.drawImage(GameScr.imgHP_tm_xam, x - (width >> 1), y - h - 5, mGraphics.TOP | mGraphics.LEFT);
-			g.drawRegion(imgHPtem, 0, 0, w, height, 0, x - (width >> 1), y - h - 5, mGraphics.TOP | mGraphics.LEFT);
+			num2 = num5 - num;
+			if (num2 <= 0)
+				num2 = 0;
 		}
+		else
+		{
+			num = num5;
+			num2 = 0;
+		}
+		g.drawImage(GameScr.imgHP_tm_xam, num3, num4, mGraphics.TOP | mGraphics.LEFT);
+		g.drawImage(GameScr.imgHP_tm_xam, num3 + imageWidth, num4, mGraphics.TOP | mGraphics.LEFT);
+		g.drawRegion(imgHPtem, 0, 0, num, imageHeight, 0, num3, num4, mGraphics.TOP | mGraphics.LEFT);
+		g.drawRegion(imgHPtem, 0, 0, num2, imageHeight, 0, num3 + imageWidth, num4, mGraphics.TOP | mGraphics.LEFT);
 	}
 
 	public new int getHPColor()

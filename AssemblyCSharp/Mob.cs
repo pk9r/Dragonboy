@@ -208,9 +208,13 @@ public class Mob : IMapObject
 
 	public int per = 100;
 
+	public int per_tem = 100;
+
 	public byte h_hp_bar = 4;
 
 	public Image imgHPtem;
+
+	private int offset;
 
 	private sbyte[] cou = new sbyte[2] { -1, 1 };
 
@@ -267,6 +271,7 @@ public class Mob : IMapObject
 		maxHp = maxp;
 		this.levelBoss = levelBoss;
 		updateHp_bar();
+		per_tem = (int)((long)hp * 100L / maxHp);
 		isDie = false;
 		xSd = pointx;
 		ySd = pointy;
@@ -814,16 +819,14 @@ public class Mob : IMapObject
 		return false;
 	}
 
+	private bool isNewModStand()
+	{
+		return templateId == 76;
+	}
+
 	private bool isNewMod()
 	{
 		if (templateId >= 73 && !isNewModStand())
-			return true;
-		return false;
-	}
-
-	private bool isNewModStand()
-	{
-		if (templateId == 76)
 			return true;
 		return false;
 	}
@@ -1199,6 +1202,11 @@ public class Mob : IMapObject
 	{
 		len = (int)((long)hp * 100L / maxHp * w_hp_bar) / 100;
 		per = (int)((long)hp * 100L / maxHp);
+		if (per == 100)
+			per_tem = per;
+		if (per >= 100)
+			per_tem = per;
+		offset = 0;
 		if (per < 30)
 		{
 			color = 15473700;
@@ -1220,33 +1228,46 @@ public class Mob : IMapObject
 	{
 		if (isShadown && status != 0)
 			paintShadow(g);
-		if (isPaint() && (status != 1 || p3 <= 0 || GameCanvas.gameTick % 3 != 0))
+		if (!isPaint() || (status == 1 && p3 > 0 && GameCanvas.gameTick % 3 == 0))
+			return;
+		g.translate(0, GameCanvas.transY);
+		if (ModMenuMain.getStatusInt("levelreducegraphics") == 2)
 		{
-			g.translate(0, GameCanvas.transY);
-			if (ModMenuMain.getStatusInt("levelreducegraphics") == 2)
-			{
-				g.setColor(Color.yellow);
-				if (levelBoss != 0) g.setColor(Color.red);
-				g.drawRect(Mathf.RoundToInt((x - w / 2)), y - h - 15, w, h);
-			}
-			else if (ModMenuMain.getStatusInt("levelreducegraphics") < 3)
-			{
-				if (!changBody)
-					arrMobTemplate[templateId].data.paintFrame(g, frame, x, y + fy, (dir != 1) ? 1 : 0, 2);
-				else
-					SmallImage.drawSmallImage(g, smallBody, x, y + fy - 14, 0, 3);
-				g.translate(0, -GameCanvas.transY);
-				if (Char.myCharz().mobFocus != null && Char.myCharz().mobFocus.Equals(this) && status != 1 && hp > 0)
-				{
-					int width = GameScr.imgHP_tm_do.getWidth();
-					int height = GameScr.imgHP_tm_do.getHeight();
-					int w = width * per / 100;
-					g.drawImage(GameScr.imgHP_tm_xam, x - (width >> 1), y - h - 5, mGraphics.TOP | mGraphics.LEFT);
-					g.drawRegion(imgHPtem, 0, 0, w, height, 0, x - (width >> 1), y - h - 5, mGraphics.TOP | mGraphics.LEFT);
-				}
-			}
+			g.setColor(Color.yellow);
+			if (levelBoss != 0) g.setColor(Color.red);
+			g.drawRect(Mathf.RoundToInt((x - w / 2)), y - h - 15, w, h);
 		}
-	}
+		else if (ModMenuMain.getStatusInt("levelreducegraphics") < 3)
+		{
+			if (!changBody)
+				arrMobTemplate[templateId].data.paintFrame(g, frame, x, y + fy, (dir != 1) ? 1 : 0, 2);
+			else
+				SmallImage.drawSmallImage(g, smallBody, x, y + fy - 14, 0, 3);
+		}
+		if (ModMenuMain.getStatusInt("levelreducegraphics") >= 3)
+			return;
+		g.translate(0, -GameCanvas.transY);
+		if (Char.myCharz().mobFocus == null || !Char.myCharz().mobFocus.Equals(this) || status == 1 || hp <= 0 || imgHPtem == null)
+			return;
+		int imageWidth = mGraphics.getImageWidth(imgHPtem);
+		int imageHeight = mGraphics.getImageHeight(imgHPtem);
+		int num = imageWidth * per / 100;
+		int num2 = num;
+		if (per_tem >= per)
+		{
+			num2 = imageWidth * (per_tem -= ((GameCanvas.gameTick % 6 <= 3) ? offset : offset++)) / 100;
+			if (per_tem <= 0)
+				per_tem = 0;
+			if (per_tem < per)
+				per_tem = per;
+			if (offset >= 3)
+				offset = 3;
+		}
+		g.drawImage(GameScr.imgHP_tm_xam, x - (imageWidth >> 1), y - h - 5, mGraphics.TOP | mGraphics.LEFT);
+		g.setColor(16777215);
+		g.fillRect(x - (imageWidth >> 1), y - h - 5, num2, 2);
+		g.drawRegion(imgHPtem, 0, 0, num, imageHeight, 0, x - (imageWidth >> 1), y - h - 5, mGraphics.TOP | mGraphics.LEFT);
+}
 
 	public int getHPColor()
 	{

@@ -74,7 +74,8 @@ public class MagicTree : Npc, IActionListener
             g.setColor(Color.green);
             g.drawRect(cx - 12, cy - SmallImage.smallImg[id][4], 24, SmallImage.smallImg[id][4]);
         }
-		if (ModMenuMain.getStatusInt("levelreducegraphics") < 2) SmallImage.drawSmallImage(g, id, cx, cy, 0, StaticObj.BOTTOM_HCENTER);
+		if (ModMenuMain.getStatusInt("levelreducegraphics") < 2) 
+			SmallImage.drawSmallImage(g, id, cx, cy, 0, StaticObj.BOTTOM_HCENTER);
 		if (Char.myCharz().npcFocus != null && Char.myCharz().npcFocus.Equals(this))
 		{
 			g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx, cy - SmallImage.smallImg[id][4] - 1, mGraphics.BOTTOM | mGraphics.HCENTER);
