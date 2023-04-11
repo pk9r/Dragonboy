@@ -88,8 +88,8 @@ public class ImgByName
 		IDictionaryEnumerator enumerator = hash.GetEnumerator();
 		while (enumerator.MoveNext())
 		{
-			MainImage obj = (MainImage)enumerator.Value;
-			if (GameCanvas.timeNow / 1000 - obj.count > minute * 60)
+			MainImage mainImage = (MainImage)enumerator.Value;
+			if (GameCanvas.timeNow / 1000 - mainImage.count > minute * 60)
 				myVector.addElement((string)enumerator.Key);
 		}
 		for (int i = 0; i < myVector.size(); i++)

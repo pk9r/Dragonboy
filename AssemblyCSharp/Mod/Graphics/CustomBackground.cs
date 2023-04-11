@@ -120,8 +120,7 @@ namespace Mod.Graphics
                 .addItem(ifCondition: backgroundIndex != selected,
                     "Chuyển tới nền này", new(() =>
                     {
-                        if (backgroundWallpapers.ElementAt(backgroundIndex).Value is BackgroundVideo videoBackground && videoBackground.isPlaying)
-                            videoBackground.Stop();
+                        StopAllBackgroundVideo();
                         backgroundIndex = selected;
                         lastTimeChangedWallpaper = mSystem.currentTimeMillis();
                     }))
@@ -211,6 +210,18 @@ namespace Mod.Graphics
             panel.cp.strY = 10;
         }
 
+        static void StopAllBackgroundVideo()
+        {
+            foreach (BackgroundVideo backgroundVideo in backgroundWallpapers.Values.OfType<BackgroundVideo>().Where(v => v.isPlaying))
+                backgroundVideo.Stop();
+        }
+
+        public static void StopAllBackgroundVideo(int graphicsLevel)
+        {
+            if (graphicsLevel != 0)
+                StopAllBackgroundVideo();
+        }
+
         public static void SelectBackgrounds()
         {
             new Thread(delegate ()
@@ -218,9 +229,9 @@ namespace Mod.Graphics
                 string[] paths = FileDialog.OpenSelectFileDialog("Chọn tệp để làm nền", "Tệp ảnh (*.png)|*.png|Tệp ảnh động (*.gif)|*.gif|Tệp Video (*.mp4)|*.mp4|Tất cả|*.*", "");
                 if (paths != null)
                 {
-                    foreach (string path in paths)
-                        backgroundWallpapers.Add(path, null);
-                    isAllWallpaperLoaded = false;
+                foreach (string path in paths)
+                    backgroundWallpapers.Add(path, null);
+                isAllWallpaperLoaded = false;
                 }
             })
             {

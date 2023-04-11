@@ -133,8 +133,8 @@ public class Session_ME2 : ISession
 		private Message readMessage2(sbyte cmd)
 		{
 			int num = readKey(dis.ReadSByte()) + 128;
-			sbyte num2 = readKey(dis.ReadSByte());
-			int num3 = ((readKey(dis.ReadSByte()) + 128) * 256 + (num2 + 128)) * 256 + num;
+			int num2 = readKey(dis.ReadSByte()) + 128;
+			int num3 = ((readKey(dis.ReadSByte()) + 128) * 256 + num2) * 256 + num;
 			Cout.LogError("SIZE = " + num3);
 			sbyte[] array = new sbyte[num3];
 			int num4 = 0;

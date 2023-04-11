@@ -72,10 +72,17 @@ namespace Mod.CSharpInteractive
                 Evaluator.Compile(code, out CompiledMethod compiledMethod);
                 MainThreadDispatcher.dispatcher(() =>
                 {
-                    object obj = null;
-                    compiledMethod(ref obj);
-                    if (obj != null)
-                        CSharpInteractiveForm.Log("Giá trị trả về: " + obj.ToString());
+                    try
+                    {
+                        object obj = null;
+                        compiledMethod(ref obj);
+                        if (obj != null)
+                            CSharpInteractiveForm.Log("Giá trị trả về: " + obj.ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        CSharpInteractiveForm.Log(ex);
+                    }
                 });
             }
             catch (Exception ex) 

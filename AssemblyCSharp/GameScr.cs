@@ -624,9 +624,9 @@ public class GameScr : mScreen, IChatable
 
 	public static int shock_scr;
 
-	private static int[] shock_x = new int[4] { 3, -3, 3, -3 };
+	private static int[] shock_x = new int[4] { 1, -1, 1, -1 };
 
-	private static int[] shock_y = new int[4] { 3, -3, -3, 3 };
+	private static int[] shock_y = new int[4] { 1, -1, -1, 1 };
 
 	private int tDoubleDelay;
 
@@ -5887,24 +5887,24 @@ public class GameScr : mScreen, IChatable
 		{
 		case 11112:
 		{
-			Char obj = (Char)p;
-			Service.gI().friend(1, obj.charID);
+			Char @char = (Char)p;
+			Service.gI().friend(1, @char.charID);
 			return;
 		}
 		case 11113:
 		{
-			Char @char = (Char)p;
-			if (@char != null)
-				Service.gI().giaodich(0, @char.charID, -1, -1);
+			Char char2 = (Char)p;
+			if (char2 != null)
+				Service.gI().giaodich(0, char2.charID, -1, -1);
 			return;
 		}
 		case 11114:
 		{
 			popUpYesNo = null;
 			GameCanvas.endDlg();
-			Char char2 = (Char)p;
-			if (char2 != null)
-				Service.gI().giaodich(1, char2.charID, -1, -1);
+			Char char3 = (Char)p;
+			if (char3 != null)
+				Service.gI().giaodich(1, char3.charID, -1, -1);
 			return;
 		}
 		case 11111:
@@ -6158,12 +6158,18 @@ public class GameScr : mScreen, IChatable
 		tMove = new int[num.Length];
 		moveCount = new int[num.Length];
 		delayMove = new int[num.Length];
-		for (int i = 0; i < num.Length; i++)
+		try
 		{
-			winnumber[i] = (short)num[i];
-			randomNumber[i] = Res.random(0, 11);
-			tMove[i] = 1;
-			delayMove[i] = 0;
+			for (int i = 0; i < num.Length; i++)
+			{
+				winnumber[i] = short.Parse(num[i].ToString());
+				randomNumber[i] = Res.random(0, 11);
+				tMove[i] = 1;
+				delayMove[i] = 0;
+			}
+		}
+		catch (Exception)
+		{
 		}
 		tShow = 100;
 		moveIndex = 0;
@@ -6267,7 +6273,7 @@ public class GameScr : mScreen, IChatable
 		if (x < mGraphics.getImageWidth(imgKhung) + w / 2 + 10)
 			x = mGraphics.getImageWidth(imgKhung) + w / 2 + 10;
 		int frameHeight = fra_PVE_Bar_0.frameHeight;
-		int num = y + frameHeight + imgBall.getHeight() / 2 + 2;
+		int num = y + frameHeight + mGraphics.getImageHeight(imgBall) / 2 + 2;
 		int frameWidth = fra_PVE_Bar_1.frameWidth;
 		int num2 = w / 2 - frameWidth / 2;
 		int num3 = x - w / 2;
@@ -6360,20 +6366,20 @@ public class GameScr : mScreen, IChatable
 	{
 		if (imgBall == null)
 			return;
-		int num = imgBall.getHeight() / 2;
+		int num = mGraphics.getImageHeight(imgBall) / 2;
 		for (int i = 0; i < maxLife; i++)
 		{
 			int num2 = 0;
 			if (i < lifeTeam1)
 				num2 = 1;
-			g.drawRegion(imgBall, 0, num2 * num, imgBall.getWidth(), num, 0, x1 - i * (num + 1), y, mGraphics.VCENTER | mGraphics.HCENTER);
+			g.drawRegion(imgBall, 0, num2 * num, mGraphics.getImageWidth(imgBall), num, 0, x1 - i * (num + 1), y, mGraphics.VCENTER | mGraphics.HCENTER);
 		}
 		for (int j = 0; j < maxLife; j++)
 		{
 			int num3 = 0;
 			if (j < lifeTeam2)
 				num3 = 1;
-			g.drawRegion(imgBall, 0, num3 * num, imgBall.getWidth(), num, 0, x2 + j * (num + 1), y, mGraphics.VCENTER | mGraphics.HCENTER);
+			g.drawRegion(imgBall, 0, num3 * num, mGraphics.getImageWidth(imgBall), num, 0, x2 + j * (num + 1), y, mGraphics.VCENTER | mGraphics.HCENTER);
 		}
 	}
 
@@ -6456,16 +6462,15 @@ public class GameScr : mScreen, IChatable
 	private void paint_xp_bar(mGraphics g)
 	{
 		g.setColor(8421504);
-		g.fillRect(0, GameCanvas.h - 8 + 2 + 1 - 3, GameCanvas.w, 8);
+		g.fillRect(0, GameCanvas.h - 2, GameCanvas.w, 2);
+		int w = (int)(Char.myCharz().cLevelPercent * GameCanvas.w / 10000);
 		g.setColor(16777215);
-		g.fillRect(w: (int)(Char.myCharz().cLevelPercent * GameCanvas.w / 10000), x: 0, y: GameCanvas.h - 8 + 2 + 1 - 3, h: 8);
+		g.fillRect(0, GameCanvas.h - 2, w, 2);
 		g.setColor(0);
-		int num = GameCanvas.w / 10;
+		w = GameCanvas.w / 10;
 		for (int i = 1; i < 10; i++)
 		{
-			g.fillRect(i * num, GameCanvas.h - 8 + 2 + 1 - 3, 1, 8);
+			g.fillRect(i * w, GameCanvas.h - 2, 1, 2);
 		}
-		string st = Char.myCharz().cLevelPercent / 100 + "." + Char.myCharz().cLevelPercent % 100 + "%";
-		mFont.tahoma_7_greySmall.drawString(g, st, GameCanvas.w - 5, GameCanvas.h - mFont.tahoma_7.getHeight() + 1, mFont.RIGHT);
 	}
 }

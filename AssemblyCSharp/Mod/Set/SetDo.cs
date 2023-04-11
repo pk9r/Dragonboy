@@ -568,11 +568,11 @@ namespace Mod.Set
                         string text = string.Empty;
                         if (item.itemOption != null)
                             for (int j = 0; j < item.itemOption.Length; j++)
+                            {
                                 if (item.itemOption[j].optionTemplate.id == 72)
-                                {
                                     text = " [+" + item.itemOption[j].param + "]";
-                                    CustomGraphics.PaintItemEffectInPanel(g, x2 + 18, y2 + 12, item.itemOption[j].param);
-                                }
+                            }
+                        CustomGraphics.PaintItemEffectInPanel(g, x2 + 18, y2 + 12, w2, itemHeight, item);
                         mFont.tahoma_7_green2.drawString(g, item.template.name + text, x1 + 5, y1 + 1, 0);
                         string text2 = string.Empty;
                         if (item.itemOption != null)

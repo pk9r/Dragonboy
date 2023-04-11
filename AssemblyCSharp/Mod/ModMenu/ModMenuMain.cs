@@ -31,6 +31,7 @@ namespace Mod.ModMenu
             new ModMenuItemBoolean("Logo tùy chỉnh", "Bật/tắt hiển thị logo tùy chỉnh trên màn hình game", CustomLogo.setState, false, "isshowlogo"),
             new ModMenuItemBoolean("Thông báo Boss", "Bật/tắt hiển thị thông báo boss", Boss.setState, false, "sanboss"),
             new ModMenuItemBoolean("Con trỏ tùy chỉnh", "Thay con trỏ chuột mặc định thành con trỏ chuột tùy chỉnh", CustomCursor.setState, false, "customcusor"),
+            new ModMenuItemBoolean("Fake iPhone Client", "Thay đổi client thành client của iPhone", FakeIPhoneClient.setState, false, "fakeclient"),
 
             new ModMenuItemBoolean("Tàn sát", "Bật/tắt tự động đánh quái", value => Pk9rPickMob.IsTanSat = value, false, "", false, "Bạn đang bật auto T77 hoặc auto up SS!"),
             new ModMenuItemBoolean("Né siêu quái khi tàn sát", "Tự động né siêu quái khi tàn sát", value => Pk9rPickMob.IsNeSieuQuai = value, true, "isnesieuquaits"),
@@ -50,7 +51,7 @@ namespace Mod.ModMenu
                 if (value > 5 && value <= 60) Application.targetFrameRate = value;
                 else throw new ArgumentException();
             }, "targetfps", false, "Bạn chưa tắt Vsync!"),
-            new ModMenuItemInt("Giảm đồ họa", new string[]{"Đang tắt", "Đang bật mức 1", "Đang bật mức 2", "Đang bật mức 3"}, "", 0, null, "levelreducegraphics"),
+            new ModMenuItemInt("Giảm đồ họa", new string[]{"Đang tắt", "Đang bật mức 1", "Đang bật mức 2", "Đang bật mức 3"}, "", 0, CustomBackground.StopAllBackgroundVideo, "levelreducegraphics"),
             new ModMenuItemInt("Goback", new string[]{"Đang tắt", "Đang bật (goback tới chỗ cũ khi chết)", "Đang bật (goback tới map cố định)" }, "", 0, AutoGoback.setState),
             new ModMenuItemInt("Gõ tiếng Việt", new string[]{"Đang tắt", "Đang bật kiểu gõ TELEX", "Đang bật kiểu gõ VIQR", "Đang bật kiểu gõ VNI"}, "", 0, delegate(int value)
             {
@@ -74,7 +75,7 @@ namespace Mod.ModMenu
         public static ModMenuItemFunction[] modMenuItemFunctions = new ModMenuItemFunction[]
         {
             new ModMenuItemFunction("Menu Xmap", "Mở menu Xmap (lệnh \"xmp\" hoặc bấm nút x)", Pk9rXmap.showXmapMenu),
-            new ModMenuItemFunction("Menu PickMob", "Mở menu PickMob (lệnhj \"pickmob\")", Pk9rPickMob.ShowMenu),
+            new ModMenuItemFunction("Menu PickMob", "Mở menu PickMob (lệnh \"pickmob\")", Pk9rPickMob.ShowMenu),
             new ModMenuItemFunction("Menu Teleport", "Mở menu dịch chuyển (lệnh \"tele\" hoặc bấm nút z)", TeleportMenu.TeleportMenu.ShowMenu),
             new ModMenuItemFunction("Menu Custom Background", "Mở menu nền tùy chỉnh", CustomBackground.ShowMenu),
             new ModMenuItemFunction("Menu Custom Logo", "Mở menu logo tùy chỉnh", CustomLogo.ShowMenu),

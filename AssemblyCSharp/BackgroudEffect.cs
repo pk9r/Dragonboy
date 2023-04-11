@@ -107,6 +107,8 @@ public class BackgroudEffect
 
 	public const int TYPE_LUNAR_YEAR = 15;
 
+	public static int PIXEL = 16;
+
 	public static Image water1 = GameCanvas.loadImage("/mainImage/myTexture2dwater1.png");
 
 	public static Image water2 = GameCanvas.loadImage("/mainImage/myTexture2dwater2.png");
@@ -152,21 +154,21 @@ public class BackgroudEffect
 			wP = new int[this.num];
 			vx = new int[this.num];
 			int num = 0;
-			for (int k = 0; k < this.num; k++)
+			for (int l = 0; l < this.num; l++)
 			{
-				x[k] = Res.abs(Res.random(0, GameCanvas.w)) + GameScr.cmx;
+				x[l] = Res.abs(Res.random(0, GameCanvas.w)) + GameScr.cmx;
 				num++;
 				if (num > this.num / 2)
 				{
-					y[k] = Res.abs(Res.random(20, 60));
-					wP[k] = 10;
+					y[l] = Res.abs(Res.random(20, 60));
+					wP[l] = 10;
 				}
 				else
 				{
-					y[k] = Res.abs(Res.random(0, 20));
-					wP[k] = 7;
+					y[l] = Res.abs(Res.random(0, 20));
+					wP[l] = 7;
 				}
-				vx[k] = wP[k] / 2 - 2;
+				vx[l] = wP[l] / 2 - 2;
 			}
 			break;
 		}
@@ -209,19 +211,19 @@ public class BackgroudEffect
 			frame = new int[sum];
 			isRainEffect = new bool[sum];
 			activeEff = new bool[sum];
-			for (int l = 0; l < sum; l++)
+			for (int k = 0; k < sum; k++)
 			{
-				y[l] = Res.random(-10, GameCanvas.h + 100) + GameScr.cmy;
-				x[l] = Res.random(-10, GameCanvas.w + 300) + GameScr.cmx;
-				t[l] = Res.random(0, 1);
-				vx[l] = -12;
-				vy[l] = 12;
-				type[l] = Res.random(1, 3);
-				isRainEffect[l] = false;
-				if (type[l] == 2 && l % 2 == 0)
-					isRainEffect[l] = true;
-				activeEff[l] = false;
-				frame[l] = Res.random(1, 2);
+				y[k] = Res.random(-10, GameCanvas.h + 100) + GameScr.cmy;
+				x[k] = Res.random(-10, GameCanvas.w + 300) + GameScr.cmx;
+				t[k] = Res.random(0, 1);
+				vx[k] = -12;
+				vy[k] = 12;
+				type[k] = Res.random(1, 3);
+				isRainEffect[k] = false;
+				if (type[k] == 2 && k % 2 == 0)
+					isRainEffect[k] = true;
+				activeEff[k] = false;
+				frame[k] = Res.random(1, 2);
 			}
 			break;
 		}
@@ -234,23 +236,40 @@ public class BackgroudEffect
 		case 15:
 		{
 			if (typeEff == 1)
+			{ 	
 				imgLacay = GameCanvas.loadImageRMS("/bg/lacay.png");
+				PIXEL = 10;
+			}
 			if (typeEff == 2)
+			{ 
 				imgLacay = GameCanvas.loadImageRMS("/bg/lacay2.png");
+				PIXEL = 18;
+			}
 			if (typeEff == 5)
+			{ 
 				imgLacay = GameCanvas.loadImageRMS("/bg/lacay3.png");
+				PIXEL = 14;
+			}
 			if (typeEff == 6)
+			{ 
 				imgLacay = GameCanvas.loadImageRMS("/bg/lacay4.png");
+				PIXEL = 14;
+			}
 			if (typeEff == 7)
+			{ 
 				imgLacay = GameCanvas.loadImageRMS("/bg/lacay5.png");
+				PIXEL = 12;
+			}
 			if (typeEff == 11)
 				imgLacay = GameCanvas.loadImageRMS("/bg/tuyet.png");
 			if (typeEff == 15)
-				imgLacay = GameCanvas.loadImageRMS("/bg/lacay6.png");
+			{
+				if (SmallImage.imgNew[11120] == null)
+					SmallImage.createImage(11120);
+				PIXEL = 16;
+			}
 			sum = Res.random(15, 25);
 			if (typeEff == 11)
-				sum = 100;
-			if (typeEff == 15)
 				sum = 100;
 			x = new int[sum];
 			y = new int[sum];
@@ -724,6 +743,13 @@ public class BackgroudEffect
 		case 7:
 		case 11:
 		case 15:
+			if (typeEff == 15)
+			{
+				if (SmallImage.imgNew[11120] != null && SmallImage.imgNew[11120].img != null)
+					imgLacay = SmallImage.imgNew[11120].img;
+				if (imgLacay == null)
+					break;
+			}
 			paintLacay1(g, imgLacay);
 			break;
 		case 13:
@@ -745,8 +771,8 @@ public class BackgroudEffect
 		num = ((typeEff != 15) ? 4 : 4);
 		for (int i = 0; i < sum; i++)
 		{
-			if (i % 3 == 0 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy)
-				g.drawRegion(img, 0, mGraphics.getImageHeight(img) / num * frame[i], mGraphics.getImageWidth(img), mGraphics.getImageHeight(img) / num, 0, x[i], y[i], 0);
+			if (i % 3 == 0 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy && PIXEL <= mGraphics.getImageHeight(img) && PIXEL * frame[i] < img.getHeight())
+				g.drawRegion(img, 0, PIXEL * frame[i], img.getWidth(), PIXEL, 0, x[i], y[i], 0);
 		}
 	}
 
@@ -756,8 +782,8 @@ public class BackgroudEffect
 		num = ((typeEff != 15) ? 4 : 4);
 		for (int i = 0; i < sum; i++)
 		{
-			if (i % 3 != 0 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy)
-				g.drawRegion(img, 0, mGraphics.getImageHeight(img) / num * frame[i], mGraphics.getImageWidth(img), mGraphics.getImageHeight(img) / num, 0, x[i], y[i], 0);
+			if (i % 3 != 0 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy && PIXEL <= mGraphics.getImageHeight(img) && PIXEL * frame[i] < img.getHeight())
+				g.drawRegion(img, 0, PIXEL * frame[i], img.getWidth(), PIXEL, 0, x[i], y[i], 0);
 		}
 	}
 
@@ -808,6 +834,13 @@ public class BackgroudEffect
 		case 7:
 		case 11:
 		case 15:
+			if (typeEff == 15)
+			{
+				if (SmallImage.imgNew[11120] != null && SmallImage.imgNew[11120].img != null)
+					imgLacay = SmallImage.imgNew[11120].img;
+				if (imgLacay == null)
+					break;
+			}
 			paintLacay2(g, imgLacay);
 			break;
 		case 4:

@@ -3,7 +3,9 @@
 Hướng dẫn xây dựng thêm tính năng cho bản mod: https://youtu.be/9sCof2eQH3Q
 
 Discord hỏi đáp: https://discord.gg/zdvBdVxRh6
-## Các tính năng trong game
+
+## Game đang được update, các tính năng sẽ được thêm hướng dẫn chi tiết sau.
+<!-- ## Các tính năng trong game
 ### Lệnh chat
 ***Các lệnh chat phải bắt đầu bằng dấu gạch chéo (/)***
 - ak: bật/tắt tự đánh
@@ -51,6 +53,6 @@ Chứa các chức năng khác
 ![image](https://user-images.githubusercontent.com/98677996/196203774-9ffe6e15-c290-4d82-b4da-27013191a1b6.png)
 #### Phần mở rộng
 Chứa chức năng của các phần mở rộng, chỉ hiện khi có ít nhất 1 phần mở rộng
-![image](https://user-images.githubusercontent.com/98677996/196202880-37927897-5137-4a94-9079-6a46460f98f7.png)
+![image](https://user-images.githubusercontent.com/98677996/196202880-37927897-5137-4a94-9079-6a46460f98f7.png) -->
 
 

@@ -365,8 +365,10 @@ public class GameCanvas : IActionListener
 
 	public static string getPlatformName()
 	{
+		if (FakeIPhoneClient.isEnabled)
+			return "AndroidDevice";
 		return "Pc platform xxx";
-	}
+    }
 
 	public void initGame()
 	{
@@ -397,8 +399,10 @@ public class GameCanvas : IActionListener
 		loadWaterSplash();
 		panel = new Panel();
 		imgShuriken = loadImage("/mainImage/myTexture2df.png");
-		int num = Rms.loadRMSInt("clienttype");
-		if (num != -1)
+        int num = Rms.loadRMSInt("clienttype");
+        if (FakeIPhoneClient.isEnabled)
+			mSystem.clientType = 7;
+		else
 		{
 			if (num > 7)
 				Rms.saveRMSInt("clienttype", mSystem.clientType);
@@ -998,7 +1002,7 @@ public class GameCanvas : IActionListener
 
 	public static void paintBGGameScr(mGraphics g)
 	{
-		if (!isLoadBGok || ModMenuMain.getStatusInt("levelreducegraphics") > 0 || GameEvents.onPaintBgGameScr(g))
+		if (!isLoadBGok || ModMenuMain.getStatusInt("levelreducegraphics") > 0)
 		{
 			g.setColor(0);
 			g.fillRect(0, 0, w, h);
@@ -1748,52 +1752,55 @@ public class GameCanvas : IActionListener
 				keyPressed[5] = true;
 			}
 			return;
-            default:
-                if (keyCode == -39)
-                    goto case -2;
-                if (keyCode == -38)
-                    goto case -1;
-                if (keyCode == -22)
-                {
-                    goto case -7;
-                }
-                if (keyCode == -21)
-                {
-                    goto case -6;
-                }
-                if (keyCode == -26)
-                {
-                    keyHold[16] = true;
-                    keyPressed[16] = true;
-                    break;
-                }
-                if (keyCode == 10)
-                {
-                    goto case -5;
-                }
-                if (keyCode == 35)
-                {
-                    keyHold[11] = true;
-                    keyPressed[11] = true;
-                }
-                else
-                {
-                    if (keyCode == 42)
-                    {
-                        keyHold[10] = true;
-                        keyPressed[10] = true;
-                    }
-                    else
-                    {
-                        if (keyCode == 113)
-                        {
-                            keyHold[17] = true;
-                            keyPressed[17] = true;
-                        }
-                    }
-                }
-                break;
-            case -1:
+		}
+		switch (keyCode)
+		{
+		default:
+			if (keyCode == -39)
+				goto case -2;
+			if (keyCode == -38)
+				goto case -1;
+			if (keyCode != -22)
+			{
+				if (keyCode != -21)
+				{
+					if (keyCode != -26)
+					{
+						if (keyCode != 10)
+						{
+							if (keyCode != 35)
+							{
+								if (keyCode != 42)
+								{
+									if (keyCode == 113)
+									{
+										keyHold[17] = true;
+										keyPressed[17] = true;
+									}
+								}
+								else
+								{
+									keyHold[10] = true;
+									keyPressed[10] = true;
+								}
+							}
+							else
+							{
+								keyHold[11] = true;
+								keyPressed[11] = true;
+							}
+							break;
+						}
+						goto case -5;
+					}
+					keyHold[16] = true;
+					keyPressed[16] = true;
+					break;
+				}
+				goto case -6;
+			}
+			goto case -7;
+		case -1:
 			if ((currentScreen is GameScr || currentScreen is CrackBallScr) && Char.myCharz().isAttack)
 			{
 				clearKeyHold();
@@ -2654,6 +2661,72 @@ public class GameCanvas : IActionListener
 				startOKDlg(mResources.ALERT_PRIVATE_PASS_2);
 				return;
 			}
+		}
+		}
+		switch (idAction)
+		{
+		case 8881:
+		{
+			string url = (string)p;
+			try
+			{
+				GameMidlet.instance.platformRequest(url);
+			}
+			catch (Exception)
+			{
+			}
+			currentDialog = null;
+			return;
+		}
+		case 8882:
+			InfoDlg.hide();
+			currentDialog = null;
+			return;
+		case 8884:
+			endDlg();
+			loginScr.switchToMe();
+			return;
+		case 8885:
+			GameMidlet.instance.exit();
+			return;
+		case 8886:
+		{
+			endDlg();
+			string name = (string)p;
+			Service.gI().addFriend(name);
+			return;
+		}
+		case 8887:
+		{
+			endDlg();
+			int charId2 = (int)p;
+			Service.gI().addPartyAccept(charId2);
+			return;
+		}
+		case 8888:
+		{
+			int charId = (int)p;
+			Service.gI().addPartyCancel(charId);
+			endDlg();
+			return;
+		}
+		case 8889:
+		{
+			string str = (string)p;
+			endDlg();
+			Service.gI().acceptPleaseParty(str);
+			return;
+		}
+		}
+		switch (idAction)
+		{
+		case 888396:
+			endDlg();
+			return;
+		case 888397:
+		{
+			string text4 = (string)p;
+			return;
 		}
 		}
 		switch (idAction)

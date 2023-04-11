@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Mod.ModMenu;
+using System;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Mod.Graphics
 {
@@ -9,25 +11,20 @@ namespace Mod.Graphics
         private static Texture2D aaLineTex = null;
         private static Texture2D lineTex = null;
         private static Rect lineRect = new Rect(0, 0, 1, 1);
-        static int[] array = new int[] { 0, 0, 1, 1, 2, 3, 4 };
         static int[] array2 = new int[] { 0, 0, 0, 0, 600841, 3346944, 3932211, 6684682 };
-        static int[] array3 = new int[4]
-        {
-            0,
-            68,
-            68,
-            0
-        };
-        static int[] array4 = new int[] { 0, 48, 0, 48 };
         static int[] size = new int[6] { 2, 1, 1, 1, 1, 1 };
-        static int[][] colorBorder = new int[5][]
+        static int[,] colorBorder = new int[5,6]
         {
-            new int[6] { 18687, 16869, 15052, 13235, 11161, 9344 },
-            new int[6] { 45824, 39168, 32768, 26112, 19712, 13056 },
-            new int[6] { 16744192, 15037184, 13395456, 11753728, 10046464, 8404992 },
-            new int[6] { 13500671, 12058853, 10682572, 9371827, 7995545, 6684800 },
-            new int[6] { 16711705, 15007767, 13369364, 11730962, 10027023, 8388621 }
+            { 18687, 16869, 15052, 13235, 11161, 9344 },
+            { 45824, 39168, 32768, 26112, 19712, 13056 },
+            { 16744192, 15037184, 13395456, 11753728, 10046464, 8404992 },
+            { 13500671, 12058853, 10682572, 9371827, 7995545, 6684800 },
+            { 16711705, 15007767, 13369364, 11730962, 10027023, 8388621 }
         };
+        static Image mapTile = new Image();
+        static Color colorMap = new Color(0.93f, 0.27f, 0f);
+        static bool lastIsFill;
+
         public static void DrawLine(Vector2 pointA, Vector2 pointB, Color color, float width, bool antiAlias)
         {
             float dx = pointB.x - pointA.x;
@@ -322,106 +319,172 @@ namespace Mod.Graphics
             }
         }
 
-        static int unknown_method_0(int int_0)
+        static int upgradeEffectX(int tick, int w)
         {
-            int num = 32;
-            int num2 = int_0 % 128;
-            if (0 <= num2 && num2 < num)
-            {
-                return num2 % num;
-            }
-            if (num <= num2 && num2 < num * 2)
-            {
-                return num;
-            }
-            if (num * 2 <= num2 && num2 < num * 3)
-            {
-                return num - num2 % num;
-            }
-            return 0;
-        }
-
-        static int unknown_method_1(int int_1)
-        {
-            int num = 22;
-            int num2 = int_1 % 88;
-            if (0 <= num2 && num2 < num)
-            {
+            int n = tick % (4 * w);
+            if (0 <= n && n < w)
+                return n % w;
+            else if (w <= n && n < 2 * w)
+                return w;
+            else if (2 * w <= n && n < 3 * w)
+                return w - n % w;
+            else 
                 return 0;
-            }
-            if (num <= num2 && num2 < num * 2)
-            {
-                return num2 % num;
-            }
-            if (num * 2 <= num2 && num2 < num * 3)
-            {
-                return num;
-            }
-            return num - num2 % num;
         }
 
-        public static void PaintItemEffectInPanel(mGraphics g, int x, int y, int param)
+        static int upgradeEffectY(int tick, int h)
         {
+            int n = tick % (4 * h);
+            if (0 <= n && n < h)
+                return 0;
+            else if (h <= n && n < 2 * h)
+                return n % h;
+            else if (2 * h <= n && n < 3 * h)
+                return h;
+            else 
+                return h - n % h;
+        }
+
+        public static void PaintItemEffectInPanel(mGraphics g, int x, int y, int w, int h, Item item)
+        {
+            if (item.itemOption == null)
+                return;
+            ItemOption itemOption = null;
+            for (int i = 0; i < item.itemOption.Length; i++)
+            {
+                ItemOption iOption = item.itemOption[i];
+                if (iOption.optionTemplate == null)
+                    continue;
+                if (iOption.optionTemplate.id >= 127 && iOption.optionTemplate.id <= 135)   //Set kích hoạt
+                {
+                    itemOption = iOption;
+                    break;
+                }
+                else if (iOption.optionTemplate.id <= 36 && iOption.optionTemplate.id >= 34)    //tinh ấn/nguyệt ấn/nhật ấn
+                    itemOption = iOption;
+                else if (itemOption == null || itemOption.optionTemplate == null || itemOption.optionTemplate.id > 36 || itemOption.optionTemplate.id < 34)
+                {
+                    if (iOption.optionTemplate.id == 72)   //cấp #
+                        itemOption = iOption;
+                    else if ((itemOption == null || itemOption.optionTemplate == null || (itemOption != null && itemOption.optionTemplate != null && itemOption.optionTemplate.id == 72 && itemOption.param < (int)System.Math.Ceiling((double)iOption.param / 2))) && iOption.optionTemplate.id == 107) //đồ sao
+                        itemOption = iOption;
+                }
+            }
+            if (itemOption == null)
+                return;
+            int id = itemOption.optionTemplate.id;
+            if ((id > 36 || id < 34) && id != 72 && (id < 127 || id > 135) && id != 107)
+                return;
+            int param = itemOption.param;
             if (param > 7)
                 param = 7;
-            if (param < 0)
-                param = 0;
-            if (param >= 4)
+            if (id >= 127 && id <= 135)
+                param = 7;
+            if (id == 107) 
+            {
+                if (param > 1)
+                    param = (int)System.Math.Ceiling((double)param / 2);
+                else if (param == 1)
+                    return;
+            }
+            if (param <= 0)
+                return;
+            if (param >= 4 && param <= 7 && (id > 36 || id < 34))
             {
                 g.setColor(array2[param]);
-                g.fillRect(x - 18, y - 12, 34, 23);
+                g.fillRect(x - w / 2, y - h / 2, w, h);
             }
-            if (param < 4)
+            for (int j = 0; j < size.Length; j++)
             {
-                if (param == 1)
-                {
-                    for (int i = 0; i < 2; i++)
-                    {
-                        for (int j = 0; j < size.Length; j++)
-                        {
-                            int num = x - 17 + unknown_method_0(GameCanvas.gameTick + array3[i] - j * 4);
-                            int num2 = y - 12 + unknown_method_1(GameCanvas.gameTick + array4[i] - j * 4);
-                            g.setColor(colorBorder[array[param - 1]][j]);
-                            g.fillRect(num - size[j] / 2, num2 - size[j] / 2, size[j], size[j]);
-                        }
-                    }
-                    return;
-                }
-                if (param != 2)
-                {
-                    for (int k = 0; k < 2; k++)
-                    {
-                        for (int l = 0; l < size.Length; l++)
-                        {
-                            int num3 = x - 17 + unknown_method_0(GameCanvas.gameTick + array3[k] - l * 4);
-                            int num4 = y - 12 + unknown_method_1(GameCanvas.gameTick + array4[k] - l * 4);
-                            g.setColor(colorBorder[0][l]);
-                            g.fillRect(num3 - size[l] / 2, num4 - size[l] / 2, size[l], size[l]);
-                        }
-                    }
-                    for (int m = 2; m < 4; m++)
-                    {
-                        for (int n = 0; n < size.Length; n++)
-                        {
-                            int num5 = x - 17 + unknown_method_0(GameCanvas.gameTick + array3[m] - n * 4);
-                            int num6 = y - 12 + unknown_method_1(GameCanvas.gameTick + array4[m] - n * 4);
-                            g.setColor(colorBorder[1][n]);
-                            g.fillRect(num5 - size[n] / 2, num6 - size[n] / 2, size[n], size[n]);
-                        }
-                    }
-                    return;
-                }
+                int fx = x - w / 2 + 1 + upgradeEffectX(GameCanvas.gameTick - j * 4, w - 2);
+                int fy = y - h / 2 + 1 + upgradeEffectY(GameCanvas.gameTick - j * 4, h - 2);
+                g.setColor(colorBorder[0, j]);
+                g.fillRect(fx - size[j] / 2, fy - size[j] / 2, size[j], size[j]);
+                if (param <= 1)
+                    continue;
+                if (param > 2)
+                    g.setColor(colorBorder[1, j]);
+                fx = x - w / 2 + 1 + upgradeEffectX(GameCanvas.gameTick + 68 - j * 4, w - 2);
+                fy = y - h / 2 + 1 + upgradeEffectY(GameCanvas.gameTick + 48 - j * 4, h - 2);
+                g.fillRect(fx - size[j] / 2, fy - size[j] / 2, size[j], size[j]);
+                if (param <= 3)
+                    continue;
+                if (param > 4)
+                    g.setColor(colorBorder[2, j]);
+                fx = x - w / 2 + 1 + upgradeEffectX(GameCanvas.gameTick + 68 - j * 4, w - 2);
+                fy = y - h / 2 + 1 + upgradeEffectY(GameCanvas.gameTick - j * 4, h - 2);
+                g.fillRect(fx - size[j] / 2, fy - size[j] / 2, size[j], size[j]);
+                if (param <= 5)
+                    continue;
+                if (param > 6)
+                    g.setColor(colorBorder[3, j]);
+                fx = x - w / 2 + 1 + upgradeEffectX(GameCanvas.gameTick - j * 4, w - 2);
+                fy = y - h / 2 + 1 + upgradeEffectY(GameCanvas.gameTick + 48 - j * 4, h - 2);
+                g.fillRect(fx - size[j] / 2, fy - size[j] / 2, size[j], size[j]);
             }
-            for (int num7 = 0; num7 < 4; num7++)
+        }
+
+        public static void PaintTileMap(mGraphics g)
+        {
+            for (int i = GameScr.gssx; i < GameScr.gssxe; i++)
             {
-                for (int num8 = 0; num8 < size.Length; num8++)
+                for (int j = GameScr.gssy; j < GameScr.gssye; j++)
                 {
-                    int num9 = x - 17 + unknown_method_0(GameCanvas.gameTick + array3[num7] - num8 * 4);
-                    int num10 = y - 12 + unknown_method_1(GameCanvas.gameTick + array4[num7] - num8 * 4);
-                    g.setColor(colorBorder[array[param - 1]][num8]);
-                    g.fillRect(num9 - size[num8] / 2, num10 - size[num8] / 2, size[num8], size[num8]);
+                    if (TileMap.maps[j * TileMap.tmw + i] != 0)
+                    {
+                        if ((!TileMap.tileTypeAt(i * 24, (j + 1) * 24, 2) && !TileMap.tileTypeAt(i * 24, (j + 2) * 24, 2) && !TileMap.tileTypeAt(i * 24, j * 24, 2)) || TileMap.tileTypeAt(i * 24, j * 24, 2))
+                        {
+                            InitializeTileMap(ModMenuMain.getStatusInt("levelreducegraphics") != 2);
+                            g.drawImage(mapTile, i * TileMap.size, j * TileMap.size + 8);
+                        }
+                    }
                 }
             }
+        }
+
+        public static void InitializeTileMap(bool isFill)
+        {
+            if (isFill == lastIsFill)
+                return;
+            lastIsFill = isFill;
+            mapTile.w = mapTile.h = 24 * mGraphics.zoomLevel;
+            mapTile.texture = new Texture2D(24 * mGraphics.zoomLevel, 24 * mGraphics.zoomLevel);
+            for (int i = 0; i < mapTile.texture.width; i++) 
+                for (int j = 0; j < mapTile.texture.height; j++)
+                    mapTile.texture.SetPixel(i, j, isFill ? colorMap : Color.clear);
+            if (!isFill)
+            {
+                for (int i = 0; i < mapTile.texture.width; i++)
+                {
+                    for (int j = 0; j < mGraphics.zoomLevel; j++)
+                    {
+                        mapTile.texture.SetPixel(i, j, colorMap);    
+                        mapTile.texture.SetPixel(j, i, colorMap);
+                        mapTile.texture.SetPixel(mapTile.texture.width - j, i, colorMap);    
+                        mapTile.texture.SetPixel(i, mapTile.texture.height - j, colorMap);    
+                    }
+                }
+            }
+            mapTile.texture.Apply();
+        }
+            
+        public static void DrawAPartOfImage(Image image, int x, int y, int w, int h, int imageX, int imageY, float degAngle)
+        {
+            x *= mGraphics.zoomLevel;
+            y *= mGraphics.zoomLevel;
+            w *= mGraphics.zoomLevel;
+            h *= mGraphics.zoomLevel;
+            imageX *= mGraphics.zoomLevel;
+            imageY *= mGraphics.zoomLevel;
+            int imageW = image.w;
+            int imageH = image.h;
+            Vector2 pivot = new Vector2(imageX + w / 2 + x, imageY + h / 2 + y);
+            GUIUtility.RotateAroundPivot(degAngle, pivot);
+            GUI.BeginGroup(new Rect(x - imageX, y - imageY, w, h));
+            GUI.DrawTexture(new Rect(0, 0, imageW, imageH), image.texture);
+            //GUI.DrawTexture(new Rect(x - imageX, y - imageY, imageW, imageH), image.texture);
+            GUI.EndGroup();
+            GUIUtility.RotateAroundPivot(-degAngle, pivot);
         }
     }
 }

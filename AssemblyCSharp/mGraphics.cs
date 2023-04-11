@@ -1029,8 +1029,8 @@ public class mGraphics
 	public static int getIntByColor(Color cl)
 	{
 		float num = cl.r * 255f;
-		float num2 = cl.b;
-		return (((int)num & 0xFF) << 16) | (((int)(cl.g * 255f) & 0xFF) << 8) | ((int)(num2 * 255f) & 0xFF);
+		float num2 = cl.b * 255f;
+		return (((int)num & 0xFF) << 16) | (((int)(cl.g * 255f) & 0xFF) << 8) | ((int)num2 & 0xFF);
 	}
 
 	public static int getRealImageWidth(Image img)

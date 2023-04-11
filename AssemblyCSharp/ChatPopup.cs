@@ -117,8 +117,8 @@ public class ChatPopup : Effect2, IActionListener
 		serverChatPopUp.currentLine = 0;
 		serverChatPopUp.lines = array;
 		scr = new Scroll();
-		IntPtr intPtr = (IntPtr)(void*)serverChatPopUp.says.LongLength;
-		scr.setStyle((int)(long)intPtr, 12, serverChatPopUp.cx, serverChatPopUp.cy - serverChatPopUp.strY + 12, serverChatPopUp.sayWidth + 2, serverChatPopUp.ch - 25, true, 1);
+		int nItem = serverChatPopUp.says.Length;
+		scr.setStyle(nItem, 12, serverChatPopUp.cx, serverChatPopUp.cy - serverChatPopUp.strY + 12, serverChatPopUp.sayWidth + 2, serverChatPopUp.ch - 25, true, 1);
 		SoundMn.gI().openDialog();
 	}
 

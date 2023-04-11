@@ -59,6 +59,8 @@ namespace Mod
             CustomLogo.LoadData();
             CustomCursor.LoadData();
             SetDo.LoadData();
+            FakeIPhoneClient.onGameStart();
+            CustomGraphics.InitializeTileMap(true);
             VietKeyHandler.SmartMark = true;
             ExtensionManager.LoadExtensions();
             System.Windows.Forms.Application.EnableVisualStyles();
@@ -80,6 +82,7 @@ namespace Mod
             CustomCursor.SaveData();
             SetDo.SaveData();
             CSharpInteractiveForm.CloseForm();
+            FakeIPhoneClient.onExitGame();
             ExtensionManager.Invoke();
             return false;
         }
@@ -116,7 +119,6 @@ namespace Mod
                     Screen.SetResolution(width, height, fullScreen);
                 new Thread(delegate ()
                 {
-                    Thread.Sleep(500);
                     while (Screen.fullScreen != fullScreen)
                     {
                         Screen.fullScreen = fullScreen;
@@ -430,6 +432,7 @@ namespace Mod
             CustomLogo.update();
             ExtensionManager.Invoke();
         }
+
         public static void onUpdateMain()
         {
             CustomCursor.Update();

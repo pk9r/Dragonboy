@@ -49,7 +49,8 @@ namespace Assets.src.g
 				ex.StackTrace.ToString();
 			}
 			Res.outz("vS size= " + vSource.size() + " vRMS size= " + vRms.size());
-			if (false)
+            bool flag = false;
+            if (flag)
 			{
 				for (int j = 0; j < vSource.size(); j++)
 				{
