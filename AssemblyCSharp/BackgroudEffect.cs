@@ -236,22 +236,27 @@ public class BackgroudEffect
 		case 15:
 		{
 			if (typeEff == 1)
+			{ 	
 				imgLacay = GameCanvas.loadImageRMS("/bg/lacay.png");
 				PIXEL = 10;
 			}
 			if (typeEff == 2)
+			{ 
 				imgLacay = GameCanvas.loadImageRMS("/bg/lacay2.png");
 				PIXEL = 18;
 			}
 			if (typeEff == 5)
+			{ 
 				imgLacay = GameCanvas.loadImageRMS("/bg/lacay3.png");
 				PIXEL = 14;
 			}
 			if (typeEff == 6)
+			{ 
 				imgLacay = GameCanvas.loadImageRMS("/bg/lacay4.png");
 				PIXEL = 14;
 			}
 			if (typeEff == 7)
+			{ 
 				imgLacay = GameCanvas.loadImageRMS("/bg/lacay5.png");
 				PIXEL = 12;
 			}

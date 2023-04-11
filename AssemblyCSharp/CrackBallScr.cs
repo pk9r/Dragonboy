@@ -530,7 +530,7 @@ public class CrackBallScr : mScreen
 				g.setColor(11837316);
 				g.fillRect(num6, num4, num5, 15);
 				if (typePrice == 0)
-					g.drawImage(Panel.imgXu, num7 + 21, num5 + 8, 3);
+					g.drawImage(Panel.imgXu, num6 + 21, num4 + 8, 3);
 				else
 				{
 					g.drawImage(Panel.imgLuongKhoa, num6 + 21, num4 + 7, 3);

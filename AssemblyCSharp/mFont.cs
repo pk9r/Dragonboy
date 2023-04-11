@@ -237,7 +237,40 @@ public class mFont
 		wO = getWidthExactOf("o");
 	}
 
-	public static void init()
+	public mFont(sbyte id, int zoomLevel)
+	{
+		string text = "chelthm";
+		if ((id > 0 && id < 10) || id == 19)
+		{
+			yAdd = 1;
+			text = "barmeneb";
+		}
+		else if (id >= 10 && id <= 18)
+		{
+			text = "chelthm";
+			yAdd = 2;
+		}
+		else if (id > 24)
+		{
+			text = "staccato";
+		}
+		this.id = id;
+		text = "FontSys/x" + zoomLevel.ToString() + "/" + text;
+		myFont = (Font)Resources.Load(text);
+		if (id < 25)
+		{
+			color1 = setColorFont(id);
+			color2 = setColorFont(id);
+		}
+		else
+		{
+			color1 = bigColor(id);
+			color2 = bigColor(id);
+		}
+		wO = getWidthExactOf("o");
+	}
+
+    public static void init()
 	{
 		if (mGraphics.zoomLevel == 1)
 		{

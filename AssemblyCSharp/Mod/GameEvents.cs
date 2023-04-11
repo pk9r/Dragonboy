@@ -432,6 +432,7 @@ namespace Mod
             CustomLogo.update();
             ExtensionManager.Invoke();
         }
+
         public static void onUpdateMain()
         {
             CustomCursor.Update();

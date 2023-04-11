@@ -689,7 +689,7 @@ public class Controller : IMessageHandler
 						Item item2 = (Item)GameCanvas.panel.vMyGD.elementAt(num78);
 						if (item2.indexUI == b32)
 						{
-							GameCanvas.panel.vMyGD.removeElement(item);
+							GameCanvas.panel.vMyGD.removeElement(item2);
 							break;
 						}
 					}
@@ -893,8 +893,8 @@ public class Controller : IMessageHandler
 							Item item = Char.myCharz().arrItemBag[k];
 							if (item != null && item.indexUI == b8)
 							{
-								item3.isSelect = true;
-								GameCanvas.panel.vItemCombine.addElement(item3);
+								item.isSelect = true;
+								GameCanvas.panel.vItemCombine.addElement(item);
 							}
 						}
 					}
@@ -1916,11 +1916,11 @@ public class Controller : IMessageHandler
 			{
 				bool flag6 = false;
 				if (GameCanvas.w > 2 * Panel.WIDTH_PANEL)
-					flag8 = true;
+					flag6 = true;
 				sbyte b28 = msg.reader().readByte();
 				int num67 = msg.reader().readUnsignedByte();
 				Char.myCharz().arrItemShop = new Item[num67][];
-				GameCanvas.panel.shopTabName = new string[num67 + ((!flag8) ? 1 : 0)][];
+				GameCanvas.panel.shopTabName = new string[num67 + ((!flag6) ? 1 : 0)][];
 				for (int num68 = 0; num68 < GameCanvas.panel.shopTabName.Length; num68++)
 				{
 					GameCanvas.panel.shopTabName[num68] = new string[2];
@@ -1930,7 +1930,7 @@ public class Controller : IMessageHandler
 					GameCanvas.panel.maxPageShop = new int[num67];
 					GameCanvas.panel.currPageShop = new int[num67];
 				}
-				if (!flag8)
+				if (!flag6)
 					GameCanvas.panel.shopTabName[num67] = mResources.inventory;
 				for (int num69 = 0; num69 < num67; num69++)
 				{
@@ -2038,7 +2038,7 @@ public class Controller : IMessageHandler
 				if (b28 == 2)
 				{
 					string[][] array8 = GameCanvas.panel.tabName[1];
-					if (flag8)
+					if (flag6)
 						GameCanvas.panel.tabName[1] = new string[4][]
 						{
 							array8[0],
@@ -2236,7 +2236,7 @@ public class Controller : IMessageHandler
 					array12 = null;
 					BgItem.imgNew.put(num114 + string.Empty, Image.createRGBImage(new int[1], 1, 1, true));
 				}
-				if (array13 != null)
+				if (array12 != null)
 				{
 					if (mGraphics.zoomLevel > 1)
 						Rms.saveRMS(mGraphics.zoomLevel + "bgItem" + num114, array12);
@@ -3418,13 +3418,6 @@ public class Controller : IMessageHandler
 				Char.myCharz().yen += num186;
 				GameScr.startFlyText((num186 <= 0) ? (string.Empty + num186) : ("+" + num186), Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch - 10, 0, -2, mFont.YELLOW);
 				break;
-			case -2:
-			{
-				GameCanvas.debug("SA77", 22);
-				int num177 = msg.reader().readInt();
-				Char.myCharz().yen += num177;
-				GameScr.startFlyText((num177 <= 0) ? (string.Empty + num177) : ("+" + num177), Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch - 10, 0, -2, mFont.YELLOW);
-				break;
 			}
 			case -1:
 			{
@@ -3719,7 +3712,7 @@ public class Controller : IMessageHandler
 				}
 				catch (Exception ex34)
 				{
-					Cout.println("LOi tai NPC_DIE " + ex35.ToString() + " cmd " + msg.command);
+					Cout.println("LOi tai NPC_DIE " + ex34.ToString() + " cmd " + msg.command);
 				}
 				break;
 			}
@@ -4444,8 +4437,10 @@ public class Controller : IMessageHandler
 		catch (Exception ex)
 		{
 			Res.err("LOI TAI LOADMAP INFO " + ex.StackTrace);
-		}
-	}
+            Pk9rXmap.fixBlackScreen();
+        }
+        GameEvents.onInfoMapLoaded();
+    }
 
 	public void keyValueAction(string key, string value)
 	{

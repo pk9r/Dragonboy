@@ -7474,7 +7474,7 @@ public class Panel : IActionListener, IChatable
 		}
 		if (idAction == 2000)
 		{
-			int num = GetInventorySelect_bag(Char.myCharz().arrItemBody, selected, newSelected);
+			int num = GetInventorySelect_bag(selected, newSelected, Char.myCharz().arrItemBody);
 			Service.gI().getItem(BAG_BODY, (sbyte)num);
 		}
 		if (idAction == 2001)
@@ -8432,18 +8432,18 @@ public class Panel : IActionListener, IChatable
 			SoundMn.gI().AuraToolOption2();
 			break;
 		case 2:
-			SoundMn.gI().AuraToolOption2();
-			break;
-		case 3:
 			SoundMn.gI().soundToolOption();
 			break;
-		case 4:
-			if (Main.isPC)
-				GameCanvas.startYesNoDlg(mResources.changeSizeScreen, new Command(mResources.YES, this, 170391, null), new Command(mResources.NO, this, 4005, null));
-			else
-				SoundMn.gI().CaseSizeScr();
+		case 3:
+			SoundMn.gI().CaseSizeScr();
 			break;
-		case 5:
+		//case 4:
+		//	if (Main.isPC)
+		//		GameCanvas.startYesNoDlg(mResources.changeSizeScreen, new Command(mResources.YES, this, 170391, null), new Command(mResources.NO, this, 4005, null));
+		//	else
+		//		SoundMn.gI().CaseSizeScr();
+		//	break;
+		case 4:
 			SoundMn.gI().CaseAnalog();
 			break;
 		}

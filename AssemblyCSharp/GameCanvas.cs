@@ -399,7 +399,8 @@ public class GameCanvas : IActionListener
 		loadWaterSplash();
 		panel = new Panel();
 		imgShuriken = loadImage("/mainImage/myTexture2df.png");
-		if (FakeIPhoneClient.isEnabled)
+        int num = Rms.loadRMSInt("clienttype");
+        if (FakeIPhoneClient.isEnabled)
 			mSystem.clientType = 7;
 		else
 		{
@@ -1001,7 +1002,7 @@ public class GameCanvas : IActionListener
 
 	public static void paintBGGameScr(mGraphics g)
 	{
-		if (!isLoadBGok || ModMenuMain.getStatusInt("levelreducegraphics") > 0 || GameEvents.onPaintBgGameScr(g))
+		if (!isLoadBGok || ModMenuMain.getStatusInt("levelreducegraphics") > 0)
 		{
 			g.setColor(0);
 			g.fillRect(0, 0, w, h);

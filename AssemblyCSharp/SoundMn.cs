@@ -162,6 +162,7 @@ public class SoundMn
 					mResources.change_account,
 					mResources.REGISTOPROTECT
 				};
+			}
 		}
 		else
 		{
@@ -182,18 +183,19 @@ public class SoundMn
 			{
 				Panel.strTool = new string[11]
 				{
-					"Menu Mod",
-					mResources.radaCard,
-					mResources.quayso,
-					mResources.gameInfo,
-					mResources.pet,
-					mResources.change_flag,
-					mResources.change_zone,
-					mResources.chat_world,
-					mResources.account,
-					mResources.option,
-					mResources.change_account
+				"Menu Mod",
+				mResources.radaCard,
+				mResources.quayso,
+				mResources.gameInfo,
+				mResources.pet,
+				mResources.change_flag,
+				mResources.change_zone,
+				mResources.chat_world,
+				mResources.account,
+				mResources.option,
+				mResources.change_account
 				};
+			}
 		}
 		if (IsDelAcc)
 		{
@@ -211,28 +213,29 @@ public class SoundMn
 	{
 		string text = "[x]   ";
 		string text2 = "[  ]   ";
-		if (Main.isPC)
-		{
-			Panel.strCauhinh = new string[5]
-			{
-				(!Char.isPaintAura) ? (text2 + mResources.aura_off.Trim()) : (text + mResources.aura_off.Trim()),
-				(!Char.isPaintAura2) ? (text2 + mResources.aura_off_2.Trim()) : (text + mResources.aura_off_2.Trim()),
-				(!GameCanvas.isPlaySound) ? (text2 + mResources.turnOffSound.Trim()) : (text + mResources.turnOffSound.Trim()),
-				(mGraphics.zoomLevel <= 1) ? (text2 + mResources.x2Screen) : (text + mResources.x1Screen)
-			};
-			return;
-		}
-		string text3 = ((GameScr.isAnalog != 0) ? (text + mResources.turnOffAnalog) : (text2 + mResources.turnOnAnalog));
-		if (!GameCanvas.isTouch)
-			text3 = (GameScr.isPaintChatVip ? (text + mResources.serverchat_off) : (text2 + mResources.serverchat_off));
+		//if (Main.isPC)
+		//{
+		//	Panel.strCauhinh = new string[4]
+		//	{
+		//		(!Char.isPaintAura) ? (text2 + mResources.aura_off.Trim()) : (text + mResources.aura_off.Trim()),
+		//		(!Char.isPaintAura2) ? (text2 + mResources.aura_off_2.Trim()) : (text + mResources.aura_off_2.Trim()),
+		//		(!GameCanvas.isPlaySound) ? (text2 + mResources.turnOffSound.Trim()) : (text + mResources.turnOffSound.Trim()),
+		//		(mGraphics.zoomLevel <= 1) ? (text2 + mResources.x2Screen) : (text + mResources.x1Screen)
+		//	};
+		//	return;
+		//}
+		//string text3 = ((GameScr.isAnalog != 0) ? (text + mResources.turnOffAnalog) : (text2 + mResources.turnOnAnalog));
+		//if (!GameCanvas.isTouch)
+			//text3 = (GameScr.isPaintChatVip ? (text + mResources.serverchat_off) : (text2 + mResources.serverchat_off));
 		Panel.strCauhinh = new string[5]
 		{
-			(!Char.isPaintAura) ? (text2 + mResources.aura_off.Trim()) : (text + mResources.aura_off.Trim()),
-			(!Char.isPaintAura2) ? (text2 + mResources.aura_off_2.Trim()) : (text + mResources.aura_off_2.Trim()),
-			(!GameCanvas.isPlaySound) ? (text2 + mResources.turnOffSound.Trim()) : (text + mResources.turnOffSound.Trim()),
-			(!GameCanvas.lowGraphic) ? (text2 + mResources.cauhinhthap.Trim()) : (text + mResources.cauhinhthap.Trim()),
-			text3
-		};
+			((Char.isPaintAura ? text : text2) + mResources.aura_off).Trim(),
+            ((Char.isPaintAura2 ? text : text2) + mResources.aura_off_2).Trim(),
+            ((GameCanvas.isPlaySound ? text : text2) + mResources.turnOffSound).Trim(),
+            ((GameCanvas.lowGraphic ? text : text2) + mResources.cauhinhthap).Trim(),
+			//text3
+			(GameScr.isAnalog != 0) ? (text + mResources.turnOffAnalog) : (text2 + mResources.turnOnAnalog)
+        };
 	}
 
 	public void HP_MPup()
