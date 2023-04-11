@@ -35,9 +35,7 @@ public class EffectPanel : Effect2
 	public override void paint(mGraphics g)
 	{
 		if (mGraphics.zoomLevel == 1)
-		{
 			GameScr.countEff++;
-		}
 		if (GameScr.countEff < 8)
 		{
 			if (c != null)
@@ -50,9 +48,7 @@ public class EffectPanel : Effect2
 				x = m.x;
 				y = m.y + GameCanvas.transY;
 			}
-			int num = x + dx0 + eff.arrEfInfo[i0].dx;
-			int num2 = y + dy0 + eff.arrEfInfo[i0].dy;
-			SmallImage.drawSmallImage(g, eff.arrEfInfo[i0].idImg, num, num2, trans, mGraphics.VCENTER | mGraphics.HCENTER);
+			SmallImage.drawSmallImage(x: x + dx0 + eff.arrEfInfo[i0].dx, y: y + dy0 + eff.arrEfInfo[i0].dy, g: g, id: eff.arrEfInfo[i0].idImg, transform: trans, anchor: mGraphics.VCENTER | mGraphics.HCENTER);
 		}
 	}
 
@@ -62,13 +58,9 @@ public class EffectPanel : Effect2
 		{
 			i0++;
 			if (i0 >= eff.arrEfInfo.Length)
-			{
 				i0 = 0;
-			}
 			if (mSystem.currentTimeMillis() - endTime > 0)
-			{
 				Effect2.vEffect3.removeElement(this);
-			}
 		}
 		else
 		{
@@ -77,18 +69,12 @@ public class EffectPanel : Effect2
 			{
 				loopCount--;
 				if (loopCount <= 0)
-				{
 					Effect2.vEffect3.removeElement(this);
-				}
 				else
-				{
 					i0 = 0;
-				}
 			}
 		}
 		if (GameCanvas.gameTick % 11 == 0 && c != null && c != Char.myCharz() && !GameScr.vCharInMap.contains(c))
-		{
 			Effect2.vEffect3.removeElement(this);
-		}
 	}
 }

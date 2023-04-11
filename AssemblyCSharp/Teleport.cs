@@ -65,9 +65,7 @@ public class Teleport
 			if (TileMap.tileTypeAt(x, y2, 2))
 			{
 				if (y2 % 24 != 0)
-				{
 					y2 -= y2 % 24;
-				}
 				break;
 			}
 		}
@@ -76,17 +74,11 @@ public class Teleport
 		{
 			y2 += 4;
 			if (maybay[3] == null)
-			{
 				maybay[3] = GameCanvas.loadImage("/mainImage/myTexture2dmaybay4a.png");
-			}
 			if (maybay[4] == null)
-			{
 				maybay[4] = GameCanvas.loadImage("/mainImage/myTexture2dmaybay4b.png");
-			}
 			if (hole == null)
-			{
 				hole = GameCanvas.loadImage("/mainImage/hole.png");
-			}
 		}
 		else if (maybay[planet] == null)
 		{
@@ -107,17 +99,13 @@ public class Teleport
 	public void paintHole(mGraphics g)
 	{
 		if (planet > 2 && tHole)
-		{
 			g.drawImage(hole, x, y2 + 20, StaticObj.BOTTOM_HCENTER);
-		}
 	}
 
 	public void paint(mGraphics g)
 	{
 		if (Char.isLoadingMap || x < GameScr.cmx || x > GameScr.cmx + GameCanvas.w)
-		{
 			return;
-		}
 		Part part = GameScr.parts[headId];
 		int num = 0;
 		int num2 = 0;
@@ -141,23 +129,15 @@ public class Teleport
 			num3 = 10;
 		}
 		if (painHead && planet < 3)
-		{
 			SmallImage.drawSmallImage(g, part.pi[Char.CharInfo[0][0][0]].id, x + ((dir != 1) ? (-num) : num), y - num2, (dir != 1) ? 2 : 0, StaticObj.TOP_CENTER);
-		}
 		if (planet < 3)
-		{
 			g.drawRegion(maybay[planet], 0, 0, mGraphics.getImageWidth(maybay[planet]), mGraphics.getImageHeight(maybay[planet]), (dir == 1) ? 2 : 0, x, y, StaticObj.BOTTOM_HCENTER);
-		}
 		else if (isDown)
 		{
 			if (tPrepare > 10)
-			{
 				g.drawRegion(maybay[4], 0, 0, mGraphics.getImageWidth(maybay[4]), mGraphics.getImageHeight(maybay[4]), (dir == 1) ? 2 : 0, (dir != 1) ? (x + 11) : (x - 11), y + 2, StaticObj.BOTTOM_HCENTER);
-			}
 			else
-			{
 				g.drawRegion(maybay[3], 0, 0, mGraphics.getImageWidth(maybay[3]), mGraphics.getImageHeight(maybay[3]), (dir == 1) ? 2 : 0, x, y, StaticObj.BOTTOM_HCENTER);
-			}
 		}
 		else if (tPrepare < 20)
 		{
@@ -176,9 +156,7 @@ public class Teleport
 			if (isDown && tPrepare == 0)
 			{
 				if (GameCanvas.gameTick % 3 == 0)
-				{
 					ServerEffect.addServerEffect(1, x, y, 1, 0);
-				}
 			}
 			else if (isUp && GameCanvas.gameTick % 3 == 0)
 			{
@@ -187,9 +165,7 @@ public class Teleport
 		}
 		tFire++;
 		if (tFire > 3)
-		{
 			tFire = 0;
-		}
 		if (isDown)
 		{
 			paintFire = true;
@@ -207,18 +183,14 @@ public class Teleport
 			else
 			{
 				if (GameCanvas.gameTick % 2 == 0)
-				{
 					vy++;
-				}
 				if (y2 - y < vy)
 				{
 					y = y2;
 					paintFire = false;
 				}
 				else
-				{
 					y += vy;
-				}
 			}
 			if (isMe && type == 1 && Char.myCharz().isTeleport)
 			{
@@ -242,9 +214,7 @@ public class Teleport
 				{
 					SoundMn.gI().pauseAirShip();
 					if (y % 24 != 0)
-					{
 						y -= y % 24;
-					}
 					tPrepare++;
 					if (tPrepare > 10)
 					{
@@ -256,9 +226,7 @@ public class Teleport
 					if (type == 1)
 					{
 						if (isMe)
-						{
 							Char.myCharz().isTeleport = false;
-						}
 						else if (GameScr.findCharInMap(id) != null)
 						{
 							GameScr.findCharInMap(id).isTeleport = false;
@@ -286,9 +254,7 @@ public class Teleport
 					if (type == 1)
 					{
 						if (isMe)
-						{
 							Char.myCharz().isTeleport = false;
-						}
 						else if (GameScr.findCharInMap(id) != null)
 						{
 							GameScr.findCharInMap(id).isTeleport = false;
@@ -305,36 +271,28 @@ public class Teleport
 			{
 				int num2 = y2 + 24 - y >> 3;
 				if (num2 > 30)
-				{
 					num2 = 30;
-				}
 				y -= num2;
 				paintFire = true;
 			}
 			else
 			{
 				if (tPrepare == 14 && createShip)
-				{
 					SoundMn.gI().resumeAirShip();
-				}
 				if (tPrepare > 0 && type == 0)
 				{
 					if (isMe)
 					{
 						Char.myCharz().isTeleport = false;
 						if (Char.myCharz().statusMe != 14)
-						{
 							Char.myCharz().statusMe = 3;
-						}
 						Char.myCharz().cvy = -3;
 					}
 					else if (GameScr.findCharInMap(id) != null)
 					{
 						GameScr.findCharInMap(id).isTeleport = false;
 						if (GameScr.findCharInMap(id).statusMe != 14)
-						{
 							GameScr.findCharInMap(id).statusMe = 3;
-						}
 						GameScr.findCharInMap(id).cvy = -3;
 					}
 					painHead = false;
@@ -342,9 +300,7 @@ public class Teleport
 				if (tPrepare > 12 && type == 0)
 				{
 					if (isMe)
-					{
 						Char.myCharz().isTeleport = true;
-					}
 					else if (GameScr.findCharInMap(id) != null)
 					{
 						GameScr.findCharInMap(id).cx = x;
@@ -362,9 +318,7 @@ public class Teleport
 					GameScr.cmtoY = y - GameScr.gH23;
 				}
 				if (type == 1)
-				{
 					GameScr.info1.isUpdate = true;
-				}
 			}
 			if (y <= -80)
 			{
@@ -374,13 +328,9 @@ public class Teleport
 					Char.ischangingMap = true;
 				}
 				if (!isMe && GameScr.findCharInMap(id) != null && type == 0)
-				{
 					GameScr.vCharInMap.removeElement(GameScr.findCharInMap(id));
-				}
 				if (planet < 3)
-				{
 					vTeleport.removeElement(this);
-				}
 				else
 				{
 					y = -80;
@@ -394,9 +344,6 @@ public class Teleport
 			}
 		}
 		if (paintFire && planet < 3 && Res.abs(y - y2) <= 50 && GameCanvas.gameTick % 5 == 0)
-		{
-			Effect me = new Effect(19, x, y2 + 20, 2, 1, -1);
-			EffecMn.addEff(me);
-		}
+			EffecMn.addEff(new Effect(19, x, y2 + 20, 2, 1, -1));
 	}
 }

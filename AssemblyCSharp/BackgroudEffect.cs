@@ -1,5 +1,3 @@
-using Assets.src.e;
-
 public class BackgroudEffect
 {
 	public static MyVector vBgEffect = new MyVector();
@@ -174,13 +172,9 @@ public class BackgroudEffect
 		case 9:
 		{
 			if (imgChamTron1 == null)
-			{
 				imgChamTron1 = GameCanvas.loadImageRMS("/bg/cham-tron1.png");
-			}
 			if (imgChamTron2 == null)
-			{
 				imgChamTron2 = GameCanvas.loadImageRMS("/bg/cham-tron2.png");
-			}
 			this.num = 20;
 			x = new int[this.num];
 			y = new int[this.num];
@@ -199,17 +193,11 @@ public class BackgroudEffect
 		case 12:
 		{
 			if (imgHatMua == null)
-			{
 				imgHatMua = GameCanvas.loadImageRMS("/bg/mua.png");
-			}
 			if (imgMua1 == null)
-			{
 				imgMua1 = GameCanvas.loadImageRMS("/bg/mua1.png");
-			}
 			if (imgMua2 == null)
-			{
 				imgMua2 = GameCanvas.loadImageRMS("/bg/mua2.png");
-			}
 			sum = Res.random(GameCanvas.w / 3, GameCanvas.w / 2);
 			x = new int[sum];
 			y = new int[sum];
@@ -230,9 +218,7 @@ public class BackgroudEffect
 				type[k] = Res.random(1, 3);
 				isRainEffect[k] = false;
 				if (type[k] == 2 && k % 2 == 0)
-				{
 					isRainEffect[k] = true;
-				}
 				activeEff[k] = false;
 				frame[k] = Res.random(1, 2);
 			}
@@ -272,23 +258,16 @@ public class BackgroudEffect
 				PIXEL = 12;
 			}
 			if (typeEff == 11)
-			{
 				imgLacay = GameCanvas.loadImageRMS("/bg/tuyet.png");
-			}
 			if (typeEff == 15)
 			{
-				Small small = SmallImage.imgNew[11120];
-				if (small == null)
-				{
+				if (SmallImage.imgNew[11120] == null)
 					SmallImage.createImage(11120);
-				}
 				PIXEL = 16;
 			}
 			sum = Res.random(15, 25);
 			if (typeEff == 11)
-			{
 				sum = 100;
-			}
 			x = new int[sum];
 			y = new int[sum];
 			vx = new int[sum];
@@ -323,9 +302,7 @@ public class BackgroudEffect
 		{
 			sum = Res.random(5, 10);
 			if (imgSao == null)
-			{
 				imgSao = GameCanvas.loadImageRMS("/bg/sao.png");
-			}
 			x = new int[sum];
 			y = new int[sum];
 			frame = new int[sum];
@@ -336,9 +313,7 @@ public class BackgroudEffect
 				x[m] = Res.random(0, GameCanvas.w);
 				y[m] = Res.random(0, 50);
 				if (m % 2 == 0)
-				{
 					tick[m] = 0;
-				}
 				else if (m % 3 == 0)
 				{
 					tick[m] = 1;
@@ -361,17 +336,11 @@ public class BackgroudEffect
 		case 8:
 			tStart = Res.random(100, 300);
 			if (imgShip == null)
-			{
 				imgShip = GameCanvas.loadImageRMS("/bg/ship.png");
-			}
 			if (imgFire1 == null)
-			{
 				imgFire1 = GameCanvas.loadImageRMS("/bg/fire1.png");
-			}
 			if (imgFire2 == null)
-			{
 				imgFire2 = GameCanvas.loadImageRMS("/bg/fire2.png");
-			}
 			isFly = false;
 			reloadShip();
 			break;
@@ -379,13 +348,9 @@ public class BackgroudEffect
 			if (Res.abs(Res.random(0, 2)) == 0)
 			{
 				if (Res.abs(Res.random(0, 2)) == 0)
-				{
 					isPaintFar = true;
-				}
 				else
-				{
 					isPaintFar = false;
-				}
 				nCloud = Res.abs(Res.random(2, 5));
 				initCloud();
 			}
@@ -411,9 +376,7 @@ public class BackgroudEffect
 		{
 			BackgroudEffect backgroudEffect = (BackgroudEffect)vBgEffect.elementAt(i);
 			if (backgroudEffect.typeEff == 0 || backgroudEffect.typeEff == 12)
-			{
 				return true;
-			}
 		}
 		return false;
 	}
@@ -441,36 +404,27 @@ public class BackgroudEffect
 			}
 		}
 		else
-		{
 			imgCloud1 = null;
-		}
 		if (!isFog)
 		{
 			imgFog = null;
 			return;
 		}
 		if (imgFog == null)
-		{
 			imgFog = GameCanvas.loadImage("/bg/fog0.png");
-		}
 		fogw = 287;
 	}
 
 	public static void updateCloud2()
 	{
 		if (mSystem.clientType == 1 || GameCanvas.lowGraphic || nCloud <= 0)
-		{
 			return;
-		}
 		int num = ((GameCanvas.currentScreen != GameScr.gI()) ? (GameScr.cmx + GameCanvas.w) : TileMap.pxw);
 		for (int i = 0; i < nCloud; i++)
 		{
-			int num2 = i + 1;
-			GameCanvas.cloudX[i] -= num2;
+			GameCanvas.cloudX[i] -= i + 1;
 			if (GameCanvas.cloudX[i] < -cloudw)
-			{
 				GameCanvas.cloudX[i] = num + 100;
-			}
 		}
 	}
 
@@ -480,29 +434,21 @@ public class BackgroudEffect
 		{
 			xfog--;
 			if (xfog < -fogw)
-			{
 				xfog = 0;
-			}
 		}
 	}
 
 	public static void paintCloud2(mGraphics g)
 	{
 		if (mSystem.clientType == 1 || GameCanvas.lowGraphic || nCloud == 0 || imgCloud1 == null)
-		{
 			return;
-		}
 		for (int i = 0; i < nCloud; i++)
 		{
 			int num = i;
 			if (num > 3)
-			{
 				num = 3;
-			}
 			if (num == 0)
-			{
 				num = 1;
-			}
 			g.drawImage(imgCloud1, GameCanvas.cloudX[i], GameCanvas.cloudY[i], 3);
 		}
 	}
@@ -510,15 +456,11 @@ public class BackgroudEffect
 	public static void paintFog(mGraphics g)
 	{
 		if (mSystem.clientType == 1 || GameCanvas.lowGraphic || !isFog || imgFog == null)
-		{
 			return;
-		}
 		for (int i = xfog; i < TileMap.pxw; i += fogw)
 		{
 			if (i >= GameScr.cmx - fogw)
-			{
 				g.drawImageFog(imgFog, i, yfog, 0);
-			}
 		}
 	}
 
@@ -545,15 +487,13 @@ public class BackgroudEffect
 		{
 			xShip = Res.random(50 + cmx, GameCanvas.w - 50 + cmx);
 			yShip = -50;
-			int num = Res.random(0, 2);
-			trans = ((num != 0) ? 2 : 0);
+			trans = ((Res.random(0, 2) != 0) ? 2 : 0);
 		}
 		else if (way == 4)
 		{
 			xShip = Res.random(50 + cmx, GameCanvas.w - 50 + cmx);
 			yShip = TileMap.pxh + 50;
-			int num2 = Res.random(0, 2);
-			trans = ((num2 != 0) ? 2 : 0);
+			trans = ((Res.random(0, 2) != 0) ? 2 : 0);
 		}
 	}
 
@@ -599,9 +539,7 @@ public class BackgroudEffect
 			{
 				x[m] -= vx[m];
 				if (x[m] < -vx[m] + GameScr.cmx)
-				{
 					x[m] = GameCanvas.w + vx[m] + GameScr.cmx;
-				}
 			}
 			break;
 		}
@@ -627,9 +565,7 @@ public class BackgroudEffect
 			for (int l = 0; l < sum; l++)
 			{
 				if (l % 3 != 0 && typeEff != 12 && TileMap.tileTypeAt(x[l], y[l] - GameCanvas.transY, 2))
-				{
 					activeEff[l] = true;
-				}
 				if (l % 3 == 0 && y[l] > GameCanvas.h + GameScr.cmy)
 				{
 					x[l] = Res.random(-10, GameCanvas.w + 300) + GameScr.cmx;
@@ -641,9 +577,7 @@ public class BackgroudEffect
 					x[l] += vx[l];
 				}
 				if (!activeEff[l])
-				{
 					continue;
-				}
 				t[l]++;
 				if (t[l] > 2)
 				{
@@ -671,9 +605,7 @@ public class BackgroudEffect
 			for (int j = 0; j < sum; j++)
 			{
 				if (j % 3 != 0 && TileMap.tileTypeAt(x[j], y[j] + ((TileMap.tileID == 15) ? 10 : 0), 2))
-				{
 					activeEff[j] = true;
-				}
 				if (j % 3 == 0 && y[j] > TileMap.pxh)
 				{
 					x[j] = Res.random(-10, TileMap.pxw + 50);
@@ -685,9 +617,7 @@ public class BackgroudEffect
 					{
 						Teleport teleport = (Teleport)Teleport.vTeleport.elementAt(k);
 						if (teleport != null && teleport.paintFire && x[j] < teleport.x + 80 && x[j] > teleport.x - 80 && y[j] < teleport.y + 80 && y[j] > teleport.y - 80)
-						{
 							x[j] += ((x[j] >= teleport.x) ? 10 : (-10));
-						}
 					}
 					y[j] += vy[j];
 					x[j] += vx[j];
@@ -697,14 +627,10 @@ public class BackgroudEffect
 					if (t[j] > ((typeEff == 2) ? 4 : 2))
 					{
 						if (typeEff != 11 && typeEff != 15)
-						{
 							frame[j]++;
-						}
 						t[j] = 0;
 						if (frame[j] > num - 1)
-						{
 							frame[j] = 0;
-						}
 					}
 				}
 				else
@@ -731,9 +657,7 @@ public class BackgroudEffect
 					tick[n]++;
 					t[n] = 0;
 					if (tick[n] > 5)
-					{
 						tick[n] = 0;
-					}
 					frame[n] = dem[tick[n]];
 				}
 			}
@@ -746,49 +670,35 @@ public class BackgroudEffect
 				tFire = 0;
 				frameFire++;
 				if (frameFire > 1)
-				{
 					frameFire = 0;
-				}
 			}
 			if (GameCanvas.gameTick % tStart == 0)
-			{
 				isFly = true;
-			}
 			if (!isFly)
-			{
 				break;
-			}
 			if (way == 1)
 			{
 				xShip += speed;
 				if (xShip > TileMap.pxw + 50)
-				{
 					reloadShip();
-				}
 			}
 			else if (way == 2)
 			{
 				xShip -= speed;
 				if (xShip < -50)
-				{
 					reloadShip();
-				}
 			}
 			else if (way == 3)
 			{
 				yShip += speed;
 				if (yShip > TileMap.pxh + 50)
-				{
 					reloadShip();
-				}
 			}
 			else if (way == 4)
 			{
 				yShip -= speed;
 				if (yShip < -50)
-				{
 					reloadShip();
-				}
 			}
 			break;
 		case 13:
@@ -816,13 +726,9 @@ public class BackgroudEffect
 				if (type[i] == 2 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy)
 				{
 					if (activeEff[i])
-					{
 						g.drawRegion(imgHatMua, 0, 10 * frame[i], 13, 10, 0, x[i], y[i] - 10, 0);
-					}
 					else
-					{
 						g.drawImage(imgMua1, x[i], y[i], 0);
-					}
 				}
 			}
 			break;
@@ -837,21 +743,15 @@ public class BackgroudEffect
 			if (typeEff == 15)
 			{
 				if (SmallImage.imgNew[11120] != null && SmallImage.imgNew[11120].img != null)
-				{
 					imgLacay = SmallImage.imgNew[11120].img;
-				}
 				if (imgLacay == null)
-				{
 					break;
-				}
 			}
 			paintLacay1(g, imgLacay);
 			break;
 		case 13:
 			if (!isPaintFar)
-			{
 				paintCloud2(g);
-			}
 			break;
 		case 4:
 		case 8:
@@ -869,9 +769,7 @@ public class BackgroudEffect
 		for (int i = 0; i < sum; i++)
 		{
 			if (i % 3 == 0 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy && PIXEL <= mGraphics.getImageHeight(img) && PIXEL * frame[i] < img.getHeight())
-			{
 				g.drawRegion(img, 0, PIXEL * frame[i], img.getWidth(), PIXEL, 0, x[i], y[i], 0);
-			}
 		}
 	}
 
@@ -882,35 +780,29 @@ public class BackgroudEffect
 		for (int i = 0; i < sum; i++)
 		{
 			if (i % 3 != 0 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy && PIXEL <= mGraphics.getImageHeight(img) && PIXEL * frame[i] < img.getHeight())
-			{
 				g.drawRegion(img, 0, PIXEL * frame[i], img.getWidth(), PIXEL, 0, x[i], y[i], 0);
-			}
 		}
 	}
 
 	public void paintBehindTile(mGraphics g)
 	{
-		switch (typeEff)
+		int num = typeEff;
+		if (num != 8)
 		{
-		case 8:
-			g.drawRegion(imgShip, 0, 0, imgShip.getWidth(), imgShip.getHeight(), trans, xShip, yShip, 3);
-			if (way == 1 || way == 2)
-			{
-				int num = ((trans != 0) ? 25 : (-25));
-				g.drawRegion(imgFire1, 0, frameFire * 8, 20, 8, trans, xShip + num, yShip + 5, 3);
-			}
-			else
-			{
-				int num2 = ((trans != 0) ? (-11) : 11);
-				g.drawRegion(imgFire2, 0, frameFire * 18, 8, 18, trans, xShip + num2, yShip + 22, 3);
-			}
-			break;
-		case 13:
-			if (isPaintFar)
-			{
+			if (num == 13 && isPaintFar)
 				paintCloud2(g);
-			}
-			break;
+			return;
+		}
+		g.drawRegion(imgShip, 0, 0, imgShip.getWidth(), imgShip.getHeight(), trans, xShip, yShip, 3);
+		if (way == 1 || way == 2)
+		{
+			int num2 = ((trans != 0) ? 25 : (-25));
+			g.drawRegion(imgFire1, 0, frameFire * 8, 20, 8, trans, xShip + num2, yShip + 5, 3);
+		}
+		else
+		{
+			int num3 = ((trans != 0) ? (-11) : 11);
+			g.drawRegion(imgFire2, 0, frameFire * 18, 8, 18, trans, xShip + num3, yShip + 22, 3);
 		}
 	}
 
@@ -928,9 +820,7 @@ public class BackgroudEffect
 			for (int i = 0; i < sum; i++)
 			{
 				if (type[i] != 2 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy)
-				{
 					g.drawImage(imgMua2, x[i], y[i], 0);
-				}
 			}
 			break;
 		}
@@ -944,13 +834,9 @@ public class BackgroudEffect
 			if (typeEff == 15)
 			{
 				if (SmallImage.imgNew[11120] != null && SmallImage.imgNew[11120].img != null)
-				{
 					imgLacay = SmallImage.imgNew[11120].img;
-				}
 				if (imgLacay == null)
-				{
 					break;
-				}
 			}
 			paintLacay2(g, imgLacay);
 			break;

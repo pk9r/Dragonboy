@@ -14,16 +14,14 @@ public class NinjaUtil
 
 	public static int randomNumber(int max)
 	{
-		MyRandom myRandom = new MyRandom();
-		return myRandom.nextInt(max);
+		return new MyRandom().nextInt(max);
 	}
 
 	public static sbyte[] readByteArray(Message msg)
 	{
 		try
 		{
-			int num = msg.reader().readInt();
-			sbyte[] data = new sbyte[num];
+			sbyte[] data = new sbyte[msg.reader().readInt()];
 			msg.reader().read(ref data);
 			return data;
 		}
@@ -38,8 +36,7 @@ public class NinjaUtil
 	{
 		try
 		{
-			int num = dos.readInt();
-			sbyte[] data = new sbyte[num];
+			sbyte[] data = new sbyte[dos.readInt()];
 			dos.read(ref data);
 			return data;
 		}
@@ -60,9 +57,7 @@ public class NinjaUtil
 		string text = string.Empty;
 		string text2 = string.Empty;
 		if (number.Equals(string.Empty))
-		{
 			return text;
-		}
 		if (number[0] == '-')
 		{
 			text2 = "-";
@@ -77,8 +72,7 @@ public class NinjaUtil
 
 	public static string getDate(int second)
 	{
-		long num = (long)second * 1000L;
-		DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Add(new TimeSpan(num * 10000)).ToUniversalTime();
+		DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Add(new TimeSpan((long)second * 1000L * 10000)).ToUniversalTime();
 		int hour = dateTime.Hour;
 		int minute = dateTime.Minute;
 		int day = dateTime.Day;
@@ -89,8 +83,7 @@ public class NinjaUtil
 
 	public static string getDate2(long second)
 	{
-		long num = second + 25200000;
-		DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Add(new TimeSpan(num * 10000)).ToUniversalTime();
+		DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Add(new TimeSpan((second + 25200000) * 10000)).ToUniversalTime();
 		int hour = dateTime.Hour;
 		int minute = dateTime.Minute;
 		return hour + "h" + minute + "m";
@@ -118,23 +111,12 @@ public class NinjaUtil
 		}
 		string empty = string.Empty;
 		if (num3 > 0)
-		{
-			empty += num3;
-			empty += "d";
-			return empty + num2 + "h";
-		}
+			return string.Concat(string.Concat(empty + num3, "d"), num2, "h");
 		if (num2 > 0)
-		{
-			empty += num2;
-			empty += "h";
-			return empty + num + "'";
-		}
-		empty = ((num <= 9) ? (empty + "0" + num) : (empty + num));
-		empty += ":";
+			return string.Concat(string.Concat(empty + num2, "h"), num, "'");
+		empty = ((num <= 9) ? (empty + "0" + num) : (empty + num)) + ":";
 		if (timeRemainS > 9)
-		{
 			return empty + timeRemainS;
-		}
 		return empty + "0" + timeRemainS;
 	}
 
@@ -179,23 +161,12 @@ public class NinjaUtil
 		}
 		string empty = string.Empty;
 		if (num3 > 0)
-		{
-			empty += num3;
-			empty += "d";
-			return empty + num2 + "h";
-		}
+			return string.Concat(string.Concat(empty + num3, "d"), num2, "h");
 		if (num2 > 0)
-		{
-			empty += num2;
-			empty += "h";
-			return empty + num + "'";
-		}
+			return string.Concat(string.Concat(empty + num2, "h"), num, "'");
 		if (num == 0)
-		{
 			num = 1;
-		}
-		empty += num;
-		return empty + "ph";
+		return string.Concat(empty + num, "ph");
 	}
 
 	public static string[] split(string original, string separator)

@@ -55,9 +55,7 @@ public class Position
 	public int translate()
 	{
 		if (x == xTo && y == yTo)
-		{
 			return -1;
-		}
 		if (Math.abs((xTo - x) / 2) <= 1 && Math.abs((yTo - y) / 2) <= 1)
 		{
 			x = xTo;
@@ -65,17 +63,11 @@ public class Position
 			return 0;
 		}
 		if (x != xTo)
-		{
 			x += (xTo - x) / 2;
-		}
 		if (y != yTo)
-		{
 			y += (yTo - y) / 2;
-		}
 		if (Res.distance(x, y, xTo, yTo) <= distant / 5)
-		{
 			return 2;
-		}
 		return 1;
 	}
 

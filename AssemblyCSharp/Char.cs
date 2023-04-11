@@ -1219,18 +1219,14 @@ public class Char : IMapObject
 	public int getdxSkill()
 	{
 		if (myskill != null)
-		{
 			return myskill.dx;
-		}
 		return 0;
 	}
 
 	public int getdySkill()
 	{
 		if (myskill != null)
-		{
 			return myskill.dy;
-		}
 		return 0;
 	}
 
@@ -1238,9 +1234,7 @@ public class Char : IMapObject
 	{
 		Task task = myCharz().taskMaint;
 		if (task.index > task.contentInfo.Length - 1)
-		{
 			task.index = task.contentInfo.Length - 1;
-		}
 		string text = task.contentInfo[task.index];
 		if (text != null && !text.Equals(string.Empty))
 		{
@@ -1252,9 +1246,7 @@ public class Char : IMapObject
 				npc.avatar = GameScr.info1.charId[myCharz().cgender][2];
 				npc.charID = 5;
 				if (GameCanvas.currentScreen == GameScr.instance)
-				{
 					ChatPopup.addNextPopUpMultiLine(text, npc);
-				}
 			}
 			else if (isNextStep)
 			{
@@ -1264,13 +1256,9 @@ public class Char : IMapObject
 		GameScr.isHaveSelectSkill = true;
 		Cout.println("TASKx " + myCharz().taskMaint.taskId);
 		if (myCharz().taskMaint.taskId <= 2)
-		{
 			myCharz().canFly = false;
-		}
 		else
-		{
 			myCharz().canFly = true;
-		}
 		GameScr.gI().left = null;
 		if (task.taskId == 0)
 		{
@@ -1290,40 +1278,26 @@ public class Char : IMapObject
 				MagicTree.isPaint = true;
 			}
 			if (task.index >= 5)
-			{
 				GameScr.gI().right = GameScr.gI().cmdFocus;
-			}
 		}
 		if (task.taskId == 1)
-		{
 			GameScr.isHaveSelectSkill = true;
-		}
 		if (task.taskId >= 1)
 		{
 			GameScr.gI().right = GameScr.gI().cmdFocus;
 			GameScr.gI().left = GameScr.gI().cmdMenu;
 		}
 		if (task.taskId >= 0)
-		{
 			Panel.isPaintMap = true;
-		}
 		else
-		{
 			Panel.isPaintMap = false;
-		}
 		if (task.taskId < 12)
-		{
 			GameCanvas.panel.mainTabName = mResources.mainTab1;
-		}
 		else
-		{
 			GameCanvas.panel.mainTabName = mResources.mainTab2;
-		}
 		GameCanvas.panel.tabName[0] = GameCanvas.panel.mainTabName;
 		if (myChar.taskMaint.taskId > 10)
-		{
 			Rms.saveRMSString("fake", "aa");
-		}
 	}
 
 	public string getStrLevel()
@@ -1341,9 +1315,7 @@ public class Char : IMapObject
 		for (int i = 0; i < idHead.Length; i++)
 		{
 			if (headId == idHead[i])
-			{
 				return idAvatar[i];
-			}
 		}
 		return -1;
 	}
@@ -1360,27 +1332,18 @@ public class Char : IMapObject
 	public void addInfo(string info)
 	{
 		if (chatInfo == null)
-		{
 			chatInfo = new Info();
-		}
-		Char cInfo = null;
-		chatInfo.addInfo(info, 0, cInfo, isChatServer: false);
+		chatInfo.addInfo(info, 0, null, false);
 	}
 
 	public int getSys()
 	{
 		if (nClass.classId == 1 || nClass.classId == 2)
-		{
 			return 1;
-		}
 		if (nClass.classId == 3 || nClass.classId == 4)
-		{
 			return 2;
-		}
 		if (nClass.classId == 5 || nClass.classId == 6)
-		{
 			return 3;
-		}
 		return 0;
 	}
 
@@ -1419,17 +1382,13 @@ public class Char : IMapObject
 			{
 				Item item = arrItemBag[i];
 				if (item != null && item.template.isUpToUp && !item.isExpires)
-				{
 					myVector.addElement(item);
-				}
 			}
 			for (int j = 0; j < myVector.size(); j++)
 			{
 				Item item2 = (Item)myVector.elementAt(j);
 				if (item2 == null)
-				{
 					continue;
-				}
 				for (int k = j + 1; k < myVector.size(); k++)
 				{
 					Item item3 = (Item)myVector.elementAt(k);
@@ -1444,9 +1403,7 @@ public class Char : IMapObject
 			for (int l = 0; l < arrItemBag.Length; l++)
 			{
 				if (arrItemBag[l] == null)
-				{
 					continue;
-				}
 				for (int m = 0; m <= l; m++)
 				{
 					if (arrItemBag[m] == null)
@@ -1474,17 +1431,13 @@ public class Char : IMapObject
 			{
 				Item item = arrItemBox[i];
 				if (item != null && item.template.isUpToUp && !item.isExpires)
-				{
 					myVector.addElement(item);
-				}
 			}
 			for (int j = 0; j < myVector.size(); j++)
 			{
 				Item item2 = (Item)myVector.elementAt(j);
 				if (item2 == null)
-				{
 					continue;
-				}
 				for (int k = j + 1; k < myVector.size(); k++)
 				{
 					Item item3 = (Item)myVector.elementAt(k);
@@ -1499,9 +1452,7 @@ public class Char : IMapObject
 			for (int l = 0; l < arrItemBox.Length; l++)
 			{
 				if (arrItemBox[l] == null)
-				{
 					continue;
-				}
 				for (int m = 0; m <= l; m++)
 				{
 					if (arrItemBox[m] == null)
@@ -1524,9 +1475,7 @@ public class Char : IMapObject
 	{
 		Item item = arrItemBag[indexUI];
 		if (!item.isTypeBody())
-		{
 			return;
-		}
 		item.isLock = true;
 		item.typeUI = 5;
 		Item item2 = arrItemBody[item.template.type];
@@ -1546,9 +1495,7 @@ public class Char : IMapObject
 			if (item3 != null)
 			{
 				if (item3.template.type == 0)
-				{
 					body = item3.template.part;
-				}
 				else if (item3.template.type == 1)
 				{
 					leg = item3.template.part;
@@ -1562,9 +1509,7 @@ public class Char : IMapObject
 		for (int i = 0; i < vSkill.size(); i++)
 		{
 			if (((Skill)vSkill.elementAt(i)).template.id == skillTemplate.id)
-			{
 				return (Skill)vSkill.elementAt(i);
-			}
 		}
 		return null;
 	}
@@ -1573,25 +1518,15 @@ public class Char : IMapObject
 	{
 		Task task = myChar.taskMaint;
 		if (task != null && task.taskId == 0 && task.index < 6)
-		{
 			return null;
-		}
 		int num = TileMap.vGo.size();
 		for (sbyte b = 0; b < num; b = (sbyte)(b + 1))
 		{
 			Waypoint waypoint = (Waypoint)TileMap.vGo.elementAt(b);
-			if (PopUp.vPopups.size() >= num)
-			{
-				PopUp popUp = (PopUp)PopUp.vPopups.elementAt(b);
-				if (!popUp.isPaint)
-				{
-					return null;
-				}
-			}
+			if (PopUp.vPopups.size() >= num && !((PopUp)PopUp.vPopups.elementAt(b)).isPaint)
+				return null;
 			if (cx >= waypoint.minX && cx <= waypoint.maxX && cy >= waypoint.minY && cy <= waypoint.maxY && waypoint.isEnter && waypoint.isOffline)
-			{
 				return waypoint;
-			}
 		}
 		return null;
 	}
@@ -1600,25 +1535,15 @@ public class Char : IMapObject
 	{
 		Task task = myChar.taskMaint;
 		if (task != null && task.taskId == 0 && task.index < 6)
-		{
 			return null;
-		}
 		int num = TileMap.vGo.size();
 		for (sbyte b = 0; b < num; b = (sbyte)(b + 1))
 		{
 			Waypoint waypoint = (Waypoint)TileMap.vGo.elementAt(b);
-			if (PopUp.vPopups.size() >= num)
-			{
-				PopUp popUp = (PopUp)PopUp.vPopups.elementAt(b);
-				if (!popUp.isPaint)
-				{
-					return null;
-				}
-			}
+			if (PopUp.vPopups.size() >= num && !((PopUp)PopUp.vPopups.elementAt(b)).isPaint)
+				return null;
 			if (cx >= waypoint.minX && cx <= waypoint.maxX && cy >= waypoint.minY && cy <= waypoint.maxY && waypoint.isEnter && !waypoint.isOffline)
-			{
 				return waypoint;
-			}
 		}
 		return null;
 	}
@@ -1626,13 +1551,9 @@ public class Char : IMapObject
 	public bool isInWaypoint()
 	{
 		if (TileMap.isInAirMap() && cy >= TileMap.pxh - 48)
-		{
 			return true;
-		}
 		if (isTeleport || isUsePlane)
-		{
 			return false;
-		}
 		int num = TileMap.vGo.size();
 		for (sbyte b = 0; b < num; b = (sbyte)(b + 1))
 		{
@@ -1640,15 +1561,11 @@ public class Char : IMapObject
 			if ((TileMap.mapID == 47 || TileMap.isInAirMap()) && cy <= waypoint.minY + waypoint.maxY && cx > waypoint.minX && cx < waypoint.maxX)
 			{
 				if (TileMap.isInAirMap() && cTypePk != 0)
-				{
 					return false;
-				}
 				return true;
 			}
 			if (cx >= waypoint.minX && cx <= waypoint.maxX && cy >= waypoint.minY && cy <= waypoint.maxY && !waypoint.isEnter)
-			{
 				return true;
-			}
 		}
 		return false;
 	}
@@ -1656,44 +1573,28 @@ public class Char : IMapObject
 	public bool isPunchKickSkill()
 	{
 		if (skillPaint == null)
-		{
 			return false;
-		}
 		if (skillPaint.id >= 0 && skillPaint.id <= 6)
-		{
 			return true;
-		}
 		if (skillPaint.id >= 14 && skillPaint.id <= 20)
-		{
 			return true;
-		}
 		if (skillPaint.id >= 28 && skillPaint.id <= 34)
-		{
 			return true;
-		}
 		if (skillPaint.id >= 63 && skillPaint.id <= 69)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public void soundUpdate()
 	{
 		if (me && statusMe == 10 && cf == 8 && ty > 20 && GameCanvas.gameTick % 20 == 0)
-		{
 			SoundMn.gI().charFly();
-		}
 		if (skillPaint != null && skillInfoPaint() != null && indexSkill < skillInfoPaint().Length && isPunchKickSkill() && (me || (!me && cx >= GameScr.cmx && cx <= GameScr.cmx + GameCanvas.w)) && GameCanvas.gameTick % 5 == 0)
 		{
 			if (cf == 9 || cf == 10 || cf == 11)
-			{
-				SoundMn.gI().charPunch(isKick: true, (!me) ? 0.05f : 0.1f);
-			}
+				SoundMn.gI().charPunch(true, (!me) ? 0.05f : 0.1f);
 			else
-			{
-				SoundMn.gI().charPunch(isKick: false, (!me) ? 0.05f : 0.1f);
-			}
+				SoundMn.gI().charPunch(false, (!me) ? 0.05f : 0.1f);
 		}
 	}
 
@@ -1704,48 +1605,31 @@ public class Char : IMapObject
 	public virtual void update()
 	{
 		if (isHide || isMabuHold)
-		{
 			return;
-		}
 		if ((!isCopy && clevel < 14) || statusMe == 1 || statusMe == 6)
-		{
-		}
+			;
 		if (petFollow != null)
 		{
 			if (GameCanvas.gameTick % 3 == 0)
 			{
 				if (myCharz().cdir == 1)
-				{
 					petFollow.cmtoX = cx - 20;
-				}
 				if (myCharz().cdir == -1)
-				{
 					petFollow.cmtoX = cx + 20;
-				}
 				petFollow.cmtoY = cy - 40;
 				if (petFollow.cmx > cx)
-				{
 					petFollow.dir = -1;
-				}
 				else
-				{
 					petFollow.dir = 1;
-				}
 				if (petFollow.cmtoX < 100)
-				{
 					petFollow.cmtoX = 100;
-				}
 				if (petFollow.cmtoX > TileMap.pxw - 100)
-				{
 					petFollow.cmtoX = TileMap.pxw - 100;
-				}
 			}
 			petFollow.update();
 		}
 		if (!me && cHP <= 0 && clanID != -100 && statusMe != 14 && statusMe != 5)
-		{
 			startDie((short)cx, (short)cy);
-		}
 		if (isInjureHp)
 		{
 			twHp++;
@@ -1759,9 +1643,7 @@ public class Char : IMapObject
 		{
 			int num = dHP - cHP >> 1;
 			if (num < 1)
-			{
 				num = 1;
-			}
 			dHP -= num;
 		}
 		else
@@ -1778,29 +1660,21 @@ public class Char : IMapObject
 			}
 		}
 		if (!me && GameScr.notPaint)
-		{
 			return;
-		}
 		if (sleepEff && GameCanvas.gameTick % 10 == 0)
-		{
 			EffecMn.addEff(new Effect(41, cx, cy, 3, 1, 1));
-		}
 		if (huytSao)
 		{
 			huytSao = false;
 			EffecMn.addEff(new Effect(39, cx, cy, 3, 3, 1));
 		}
 		if (blindEff && GameCanvas.gameTick % 5 == 0)
-		{
 			ServerEffect.addServerEffect(113, this, 1);
-		}
 		if (protectEff)
 		{
 			int y = cH_new + 73;
 			if (GameCanvas.gameTick % 5 == 0)
-			{
 				eProtect = new Effect(33, cx, y, 3, 3, 1);
-			}
 			if (eProtect != null)
 			{
 				eProtect.update();
@@ -1809,29 +1683,20 @@ public class Char : IMapObject
 			}
 		}
 		if (charFocus != null && charFocus.cy < 0)
-		{
 			charFocus = null;
-		}
 		if (isFusion)
-		{
 			tFusion++;
-		}
 		if (isNhapThe)
 		{
 			int num2 = 0;
 			if (GameCanvas.gameTick % 25 == 0)
-			{
-				num2 = 114;
-				ServerEffect.addServerEffect(num2, this, 1);
-			}
+				ServerEffect.addServerEffect(114, this, 1);
 		}
 		if (isSetPos)
 		{
 			tpos++;
 			if (tpos != 1)
-			{
 				return;
-			}
 			tpos = 0;
 			isSetPos = false;
 			cx = xPos;
@@ -1849,30 +1714,20 @@ public class Char : IMapObject
 				ServerEffect.addServerEffect(173, cx, cy, 1);
 			}
 			else
-			{
 				ServerEffect.addServerEffect(60, cx, cy, 1);
-			}
 			if ((TileMap.tileTypeAtPixel(cx, cy) & 2) == 2)
-			{
 				statusMe = 1;
-			}
 			else
-			{
 				statusMe = 4;
-			}
 			return;
 		}
 		soundUpdate();
 		if (stone)
-		{
 			return;
-		}
 		if (isFreez)
 		{
 			if (GameCanvas.gameTick % 5 == 0)
-			{
 				ServerEffect.addServerEffect(113, cx, cy, 1);
-			}
 			cf = 23;
 			long num3 = mSystem.currentTimeMillis();
 			if (num3 - lastFreez >= 1000)
@@ -1909,13 +1764,9 @@ public class Char : IMapObject
 			isLockMove = true;
 			cf = 17;
 			if (GameCanvas.gameTick % 5 == 0)
-			{
 				ServerEffect.addServerEffect(154, cx, cy - 10, 2);
-			}
 			if (GameCanvas.gameTick % 5 == 0)
-			{
 				ServerEffect.addServerEffect(1, cx, cy + 10, 1);
-			}
 			chargeCount++;
 			if (chargeCount == 500)
 			{
@@ -1934,25 +1785,18 @@ public class Char : IMapObject
 			currentMovePoint = null;
 			cf = 17;
 			if (flag && cgender != 2)
-			{
 				cf = 12;
-			}
 			if (cgender == 2)
 			{
 				if (GameCanvas.gameTick % 3 == 0)
-				{
 					ServerEffect.addServerEffect(154, cx, cy - ch / 2 + 10, 1);
-				}
 				if (GameCanvas.gameTick % 5 == 0)
-				{
 					ServerEffect.addServerEffect(114, cx + Res.random(-20, 20), cy + Res.random(-20, 20), 1);
-				}
 			}
 			if (cgender == 1)
 			{
 				if (GameCanvas.gameTick % 4 == 0)
-				{
-				}
+					;
 				if (GameCanvas.gameTick % 2 == 0)
 				{
 					if (cdir == 1)
@@ -1991,15 +1835,11 @@ public class Char : IMapObject
 					setAutoSkillPaint(GameScr.sks[skillTemplateId], flag ? 1 : 0);
 				}
 				if (cgender == 2 && statusMe != 14 && statusMe != 5)
-				{
 					GameScr.gI().activeSuperPower(cx, cy);
-				}
 			}
 			chargeCount++;
 			if (chargeCount == 500)
-			{
 				stopUseChargeSkill();
-			}
 			return;
 		}
 		if (isFlyAndCharge)
@@ -2015,9 +1855,7 @@ public class Char : IMapObject
 				return;
 			}
 			if (posDisY == 20)
-			{
 				last = mSystem.currentTimeMillis();
-			}
 			if (posDisY > 20)
 			{
 				cur = mSystem.currentTimeMillis();
@@ -2035,21 +1873,15 @@ public class Char : IMapObject
 				}
 				cf = 32;
 				if (cgender == 0 && GameCanvas.gameTick % 3 == 0)
-				{
 					ServerEffect.addServerEffect(153, cx, cy - ch, 2);
-				}
 				chargeCount++;
 				if (chargeCount == 500)
-				{
 					stopUseChargeSkill();
-				}
 			}
 			else
 			{
 				if (statusMe != 14)
-				{
 					statusMe = 3;
-				}
 				cvy = -3;
 				cy += cvy;
 				cf = 7;
@@ -2073,76 +1905,48 @@ public class Char : IMapObject
 					cmdMenu.y = charFocus.cy - charFocus.ch - 30 - GameScr.cmy;
 				}
 				else
-				{
 					cmdMenu = null;
-				}
 			}
 			else
-			{
 				cmdMenu = null;
-			}
 		}
 		if (isShadown)
-		{
 			updateShadown();
-		}
 		if (isTeleport)
-		{
 			return;
-		}
 		if (chatInfo != null)
-		{
 			chatInfo.update();
-		}
 		if (shadowLife > 0)
-		{
 			shadowLife--;
-		}
 		if (resultTest > 0 && GameCanvas.gameTick % 2 == 0)
 		{
 			resultTest = (sbyte)(resultTest - 1);
 			if (resultTest == 30 || resultTest == 60)
-			{
 				resultTest = 0;
-			}
 		}
 		updateSkillPaint();
 		if (mobMe != null)
-		{
 			updateMobMe();
-		}
 		if (arr != null)
-		{
 			arr.update();
-		}
 		if (dart != null)
-		{
 			dart.update();
-		}
 		updateEffect();
 		if (holdEffID != 0)
 		{
 			if (GameCanvas.gameTick % 5 == 0)
-			{
 				EffecMn.addEff(new Effect(32, cx, cy + 24, 3, 5, 1));
-			}
 		}
 		else
 		{
 			if (blindEff || sleepEff)
-			{
 				return;
-			}
 			if (holder)
 			{
 				if (charHold != null && (charHold.statusMe == 14 || charHold.statusMe == 5))
-				{
 					removeHoleEff();
-				}
 				if (mobHold != null && mobHold.status == 1)
-				{
 					removeHoleEff();
-				}
 				if (me && statusMe == 2 && currentMovePoint != null)
 				{
 					holder = false;
@@ -2150,13 +1954,9 @@ public class Char : IMapObject
 					mobHold = null;
 				}
 				if (TileMap.tileTypeAt(cx, cy, 2))
-				{
 					cf = 16;
-				}
 				else
-				{
 					cf = 31;
-				}
 				return;
 			}
 			if (cHP > 0)
@@ -2175,52 +1975,36 @@ public class Char : IMapObject
 					else if (effectChar.template.type == 4 || effectChar.template.type == 17)
 					{
 						if (GameCanvas.isEff1)
-						{
 							cHP += effectChar.param;
-						}
 					}
 					else if (effectChar.template.type == 13 && GameCanvas.isEff1)
 					{
 						cHP -= cHPFull * 3 / 100;
 						if (cHP < 1)
-						{
 							cHP = 1;
-						}
 					}
 				}
 				if (eff5BuffHp > 0 && GameCanvas.isEff2)
-				{
 					cHP += eff5BuffHp;
-				}
 				if (eff5BuffMp > 0 && GameCanvas.isEff2)
-				{
 					cMP += eff5BuffMp;
-				}
 				if (cHP > cHPFull)
-				{
 					cHP = cHPFull;
-				}
 				if (cMP > cMPFull)
-				{
 					cMP = cMPFull;
-				}
 			}
 			if (cmtoChar)
 			{
 				GameScr.cmtoX = cx - GameScr.gW2;
 				GameScr.cmtoY = cy - GameScr.gH23;
 				if (!GameCanvas.isTouchControl)
-				{
 					GameScr.cmtoX += GameScr.gW6 * cdir;
-				}
 			}
 			tick = (tick + 1) % 100;
 			if (me)
 			{
 				if (charFocus != null && !GameScr.vCharInMap.contains(charFocus))
-				{
 					charFocus = null;
-				}
 				if (cx < 10)
 				{
 					cvx = 0;
@@ -2240,9 +2024,7 @@ public class Char : IMapObject
 						ischangingMap = true;
 					}
 					else
-					{
 						Service.gI().requestChangeMap();
-					}
 					isLockKey = true;
 					ischangingMap = true;
 					GameCanvas.clearKeyHold();
@@ -2251,13 +2033,9 @@ public class Char : IMapObject
 					return;
 				}
 				if (statusMe != 4 && Res.abs(cx - cxSend) + Res.abs(cy - cySend) >= 70 && cy - cySend <= 0 && me)
-				{
 					Service.gI().charMove();
-				}
 				if (isLockMove)
-				{
 					currentMovePoint = null;
-				}
 				if (currentMovePoint != null)
 				{
 					if (abs(cx - currentMovePoint.xEnd) <= 16 && abs(cy - currentMovePoint.yEnd) <= 16)
@@ -2269,13 +2047,9 @@ public class Char : IMapObject
 						checkPerformEndMovePointAction();
 						cvx = (cvy = 0);
 						if ((TileMap.tileTypeAtPixel(cx, cy) & 2) == 2)
-						{
 							statusMe = 1;
-						}
 						else
-						{
 							setCharFallFromJump();
-						}
 						Service.gI().charMove();
 					}
 					else
@@ -2359,13 +2133,9 @@ public class Char : IMapObject
 									cvy = 0;
 								}
 								if (abs(cx - currentMovePoint.xEnd) <= 10)
-								{
 									cvx = 0;
-								}
 								else
-								{
 									cvx = cspeed * cdir;
-								}
 							}
 							else if (TileMap.tileTypeAt(cx, cy, 2))
 							{
@@ -2378,9 +2148,7 @@ public class Char : IMapObject
 							else
 							{
 								if (statusMe == 10 || statusMe == 2)
-								{
 									cvy = 0;
-								}
 								statusMe = 4;
 							}
 							if (currentMovePoint.yEnd > cy)
@@ -2455,9 +2223,7 @@ public class Char : IMapObject
 							cf = 12;
 							cx = (cx + currentMovePoint.xEnd) / 2;
 							if (cvy < 0)
-							{
 								cvy = 0;
-							}
 							cy += cvy;
 							if ((TileMap.tileTypeAtPixel(cx, cy) & 2) == 2)
 							{
@@ -2466,9 +2232,7 @@ public class Char : IMapObject
 							}
 							cvy++;
 							if (cvy > 16)
-							{
 								cy = (cy + currentMovePoint.yEnd) / 2;
-							}
 						}
 						else
 						{
@@ -2478,9 +2242,7 @@ public class Char : IMapObject
 						}
 					}
 					else
-					{
 						flag4 = true;
-					}
 					if (flag4 && vMovePoints.size() > 0)
 					{
 						currentMovePoint = (MovePoint)vMovePoints.firstElement();
@@ -2495,9 +2257,7 @@ public class Char : IMapObject
 								cvx = -(cx - currentMovePoint.xEnd) / 10;
 								cvy = -(cy - currentMovePoint.yEnd) / 10;
 								if (cx - currentMovePoint.xEnd > 0)
-								{
 									cdir = -1;
-								}
 								else if (cx - currentMovePoint.xEnd < 0)
 								{
 									cdir = 1;
@@ -2507,9 +2267,7 @@ public class Char : IMapObject
 							{
 								statusMe = 2;
 								if (cx - currentMovePoint.xEnd > 0)
-								{
 									cdir = -1;
-								}
 								else if (cx - currentMovePoint.xEnd < 0)
 								{
 									cdir = 1;
@@ -2528,9 +2286,7 @@ public class Char : IMapObject
 								cvx = -(cx - currentMovePoint.xEnd) / 10;
 								cvy = -(cy - currentMovePoint.yEnd) / 10;
 								if (cx - currentMovePoint.xEnd > 0)
-								{
 									cdir = -1;
-								}
 								else if (cx - currentMovePoint.xEnd < 0)
 								{
 									cdir = 1;
@@ -2542,9 +2298,7 @@ public class Char : IMapObject
 								GameCanvas.gI().startDust(-1, cx - -8, cy);
 								GameCanvas.gI().startDust(1, cx - 8, cy);
 								if (cx - currentMovePoint.xEnd > 0)
-								{
 									cdir = -1;
-								}
 								else if (cx - currentMovePoint.xEnd < 0)
 								{
 									cdir = 1;
@@ -2557,9 +2311,7 @@ public class Char : IMapObject
 						{
 							statusMe = 4;
 							if (cx - currentMovePoint.xEnd > 0)
-							{
 								cdir = -1;
-							}
 							else if (cx - currentMovePoint.xEnd < 0)
 							{
 								cdir = 1;
@@ -2611,23 +2363,15 @@ public class Char : IMapObject
 			case 14:
 				cp1++;
 				if (cp1 > 30)
-				{
 					cp1 = 0;
-				}
 				if (cp1 % 15 < 5)
-				{
 					cf = 0;
-				}
 				else
-				{
 					cf = 1;
-				}
 				break;
 			case 6:
 				if (isInjure <= 0)
-				{
 					cf = 0;
-				}
 				else if (statusBeforeNothing == 10)
 				{
 					cx += cvx;
@@ -2636,17 +2380,11 @@ public class Char : IMapObject
 				{
 					cp1++;
 					if (cp1 > 6)
-					{
 						cf = 0;
-					}
 					else
-					{
 						cf = 1;
-					}
 					if (cp1 > 10)
-					{
 						cp1 = 0;
-					}
 				}
 				if (cf != 7 && cf != 12 && (TileMap.tileTypeAtPixel(cx, cy + 1) & 2) != 2)
 				{
@@ -2656,20 +2394,14 @@ public class Char : IMapObject
 					cf = 7;
 				}
 				if (me)
-				{
 					break;
-				}
 				cp3++;
 				if (cp3 > 10)
 				{
 					if ((TileMap.tileTypeAtPixel(cx, cy + 1) & 2) != 2)
-					{
 						cy += 5;
-					}
 					else
-					{
 						cf = 0;
-					}
 				}
 				if (cp3 > 50)
 				{
@@ -2722,16 +2454,12 @@ public class Char : IMapObject
 				}
 			}
 			if (statusMe != 10)
-			{
 				fy = 0;
-			}
 			if (isCharge)
 			{
 				cf = 17;
 				if (GameCanvas.gameTick % 4 == 0)
-				{
 					ServerEffect.addServerEffect(1, cx, cy + GameCanvas.transY, 1);
-				}
 				if (me)
 				{
 					long num6 = mSystem.currentTimeMillis();
@@ -2742,13 +2470,9 @@ public class Char : IMapObject
 						cHP += cHPFull * myskill.damage / 100;
 						cMP += cMPFull * myskill.damage / 100;
 						if (cHP < cHPFull)
-						{
 							GameScr.startFlyText("+" + cHPFull * myskill.damage / 100 + " " + mResources.HP, cx, cy - ch - 20, 0, -1, mFont.HP);
-						}
 						if (cMP < cMPFull)
-						{
 							GameScr.startFlyText("+" + cMPFull * myskill.damage / 100 + " " + mResources.KI, cx, cy - ch - 20, 0, -2, mFont.MP);
-						}
 						Service.gI().skill_not_focus(2);
 					}
 				}
@@ -2794,9 +2518,7 @@ public class Char : IMapObject
 			for (int i = 0; i < effPaints.Length; i++)
 			{
 				if (effPaints[i] == null)
-				{
 					continue;
-				}
 				if (effPaints[i].eMob != null)
 				{
 					if (!effPaints[i].isFly)
@@ -2804,14 +2526,10 @@ public class Char : IMapObject
 						effPaints[i].eMob.setInjure();
 						effPaints[i].eMob.injureBy = this;
 						if (me)
-						{
 							effPaints[i].eMob.hpInjure = myCharz().cDamFull / 2 - myCharz().cDamFull * NinjaUtil.randomNumber(11) / 100;
-						}
 						int num = effPaints[i].eMob.h >> 1;
 						if (effPaints[i].eMob.isBigBoss())
-						{
 							num = effPaints[i].eMob.getY() + 20;
-						}
 						GameScr.startSplash(effPaints[i].eMob.x, effPaints[i].eMob.y - num, cdir);
 						effPaints[i].isFly = true;
 					}
@@ -2819,17 +2537,13 @@ public class Char : IMapObject
 				else if (effPaints[i].eChar != null && !effPaints[i].isFly)
 				{
 					if (effPaints[i].eChar.charID >= 0)
-					{
 						effPaints[i].eChar.doInjure();
-					}
 					GameScr.startSplash(effPaints[i].eChar.cx, effPaints[i].eChar.cy - (effPaints[i].eChar.ch >> 1), cdir);
 					effPaints[i].isFly = true;
 				}
 				effPaints[i].index++;
 				if (effPaints[i].index >= effPaints[i].effCharPaint.arrEfInfo.Length)
-				{
 					effPaints[i] = null;
-				}
 			}
 		}
 		if (indexEff >= 0 && eff != null && GameCanvas.gameTick % 2 == 0)
@@ -2865,9 +2579,7 @@ public class Char : IMapObject
 	private void checkHideCharName()
 	{
 		if (GameCanvas.gameTick % 20 != 0 || charID < 0)
-		{
 			return;
-		}
 		paintName = true;
 		for (int i = 0; i < GameScr.vCharInMap.size(); i++)
 		{
@@ -2880,9 +2592,7 @@ public class Char : IMapObject
 			{
 			}
 			if (@char != null && !@char.Equals(this) && ((@char.cy == cy && Res.abs(@char.cx - cx) < 35) || (cy - @char.cy < 32 && cy - @char.cy > 0 && Res.abs(@char.cx - cx) < 24)))
-			{
 				paintName = false;
-			}
 		}
 		for (int j = 0; j < GameScr.vNpc.size(); j++)
 		{
@@ -2895,18 +2605,14 @@ public class Char : IMapObject
 			{
 			}
 			if (npc != null && npc.cy == cy && Res.abs(npc.cx - cx) < 24)
-			{
 				paintName = false;
-			}
 		}
 	}
 
 	private void updateMobMe()
 	{
 		if (tMobMeBorn != 0)
-		{
 			tMobMeBorn--;
-		}
 		if (tMobMeBorn == 0)
 		{
 			mobMe.xFirst = ((cdir != 1) ? (cx + 30) : (cx - 30));
@@ -2922,21 +2628,15 @@ public class Char : IMapObject
 	private void updateSkillPaint()
 	{
 		if (statusMe == 14 || statusMe == 5)
-		{
 			return;
-		}
 		if (skillPaint != null && ((charFocus != null && isMeCanAttackOtherPlayer(charFocus) && charFocus.statusMe == 14) || (mobFocus != null && mobFocus.status == 0)))
 		{
 			if (!me)
 			{
 				if ((TileMap.tileTypeAtPixel(cx, cy) & 2) == 2)
-				{
 					statusMe = 1;
-				}
 				else
-				{
 					statusMe = 6;
-				}
 				cp3 = 0;
 			}
 			indexSkill = 0;
@@ -2950,22 +2650,16 @@ public class Char : IMapObject
 			currentMovePoint = null;
 			arr = null;
 			if ((TileMap.tileTypeAtPixel(cx, cy) & 2) != 2)
-			{
 				delayFall = 5;
-			}
 		}
 		if (skillPaint != null && arr == null && skillInfoPaint() != null && indexSkill >= skillInfoPaint().Length)
 		{
 			if (!me)
 			{
 				if ((TileMap.tileTypeAtPixel(cx, cy) & 2) == 2)
-				{
 					statusMe = 1;
-				}
 				else
-				{
 					statusMe = 6;
-				}
 				cp3 = 0;
 			}
 			indexSkill = 0;
@@ -2976,15 +2670,11 @@ public class Char : IMapObject
 			i0 = (i1 = (i2 = 0));
 			arr = null;
 			if ((TileMap.tileTypeAtPixel(cx, cy) & 2) != 2)
-			{
 				delayFall = 5;
-			}
 		}
 		SkillInfoPaint[] array = skillInfoPaint();
 		if (array == null || indexSkill < 0 || indexSkill > array.Length - 1)
-		{
 			return;
-		}
 		if (array[indexSkill].effS0Id != 0)
 		{
 			eff0 = GameScr.efs[array[indexSkill].effS0Id - 1];
@@ -3007,45 +2697,23 @@ public class Char : IMapObject
 			int arrowId = array2[num].arrowId;
 			if (arrowId >= 100)
 			{
-				object obj;
-				if (mobFocus == null)
-				{
-					IMapObject mapObject = charFocus;
-					obj = mapObject;
-				}
-				else
-				{
-					obj = mobFocus;
-				}
-				IMapObject mapObject2 = (IMapObject)obj;
-				if (mapObject2 != null)
+				IMapObject mapObject = ((mobFocus != null) ? ((IMapObject)mobFocus) : ((IMapObject)charFocus));
+				if (mapObject != null)
 				{
 					int num2 = 0;
-					int num3 = Res.abs(mapObject2.getX() - cx);
-					int num4 = Res.abs(mapObject2.getY() - cy);
-					if (num3 > 4 * num4)
-					{
+					if (Res.abs(mapObject.getX() - cx) > 4 * Res.abs(mapObject.getY() - cy))
 						num2 = 0;
-					}
 					else
 					{
-						num2 = ((mapObject2.getY() >= cy) ? 3 : (-3));
-						if (mapObject2 is BigBoss)
-						{
-							BigBoss bigBoss = (BigBoss)mapObject2;
-							if (bigBoss.haftBody)
-							{
-								num2 = -20;
-							}
-						}
+						num2 = ((mapObject.getY() >= cy) ? 3 : (-3));
+						if (mapObject is BigBoss && ((BigBoss)mapObject).haftBody)
+							num2 = -20;
 					}
 					dart = new PlayerDart(this, arrowId - 100, skillPaintRandomPaint, cx + (array2[num].adx - 10) * cdir, cy + array2[num].ady + num2);
 					if (myskill != null)
 					{
 						if (myskill.template.id == 1)
-						{
 							SoundMn.gI().traidatKame();
-						}
 						else if (myskill.template.id == 3)
 						{
 							SoundMn.gI().namekKame();
@@ -3078,46 +2746,30 @@ public class Char : IMapObject
 		{
 			setAttack();
 			if (me && myskill.template.isAttackSkill())
-			{
 				saveLoadPreviousSkill();
-			}
 		}
 		if (me)
-		{
 			return;
-		}
-		IMapObject mapObject3 = null;
+		IMapObject mapObject2 = null;
 		if (mobFocus != null)
-		{
-			mapObject3 = mobFocus;
-		}
+			mapObject2 = mobFocus;
 		else if (charFocus != null)
 		{
-			mapObject3 = charFocus;
+			mapObject2 = charFocus;
 		}
-		if (mapObject3 == null)
-		{
+		if (mapObject2 == null)
 			return;
-		}
-		if (Res.abs(mapObject3.getX() - cx) < 10)
+		if (Res.abs(mapObject2.getX() - cx) < 10)
 		{
-			if (mapObject3.getX() > cx)
-			{
+			if (mapObject2.getX() > cx)
 				cx -= 10;
-			}
 			else
-			{
 				cx += 10;
-			}
 		}
-		if (mapObject3.getX() > cx)
-		{
+		if (mapObject2.getX() > cx)
 			cdir = 1;
-		}
 		else
-		{
 			cdir = -1;
-		}
 	}
 
 	public void saveLoadPreviousSkill()
@@ -3156,13 +2808,9 @@ public class Char : IMapObject
 		cp1++;
 		cx += (cp2 - cx) / 4;
 		if (cp1 > 7)
-		{
 			cy += (cp3 - cy) / 4;
-		}
 		else
-		{
 			cy += cp1 - 10;
-		}
 		if (Res.abs(cp2 - cx) < 4 && Res.abs(cp3 - cy) < 10)
 		{
 			cx = cp2;
@@ -3185,13 +2833,9 @@ public class Char : IMapObject
 		cp1++;
 		cx += (cp2 - cx) / 4;
 		if (cp1 > 7)
-		{
 			cy += (cp3 - cy) / 4;
-		}
 		else
-		{
 			cy += cp1 - 10;
-		}
 		if (Res.abs(cp2 - cx) < 4 && Res.abs(cp3 - cy) < 10)
 		{
 			cx = cp2;
@@ -3215,9 +2859,7 @@ public class Char : IMapObject
 		if (cdir == 1)
 		{
 			if ((TileMap.tileTypeAtPixel(cx + chw, cy - chh) & 4) == 4)
-			{
 				cvx = 0;
-			}
 		}
 		else if ((TileMap.tileTypeAtPixel(cx - chw, cy - chh) & 8) == 8)
 		{
@@ -3233,16 +2875,12 @@ public class Char : IMapObject
 				cvy = 1;
 			}
 			else
-			{
 				cy = TileMap.tileYofPixel(cy);
-			}
 		}
 		cx += cvx;
 		cy += cvy;
 		if (cy < 0)
-		{
 			cy = (cvy = 0);
-		}
 		if (cvy == 0)
 		{
 			if ((TileMap.tileTypeAtPixel(cx, cy) & 2) != 2)
@@ -3256,20 +2894,14 @@ public class Char : IMapObject
 		{
 			cvy++;
 			if (cvy == 0)
-			{
 				cvy = 1;
-			}
 		}
 		else
 		{
 			if (cvy < 20 && cp1 % 5 == 0)
-			{
 				cvy++;
-			}
 			if (cvy > 3)
-			{
 				cvy = 3;
-			}
 			if ((TileMap.tileTypeAtPixel(cx, cy + 3) & 2) == 2 && cy <= TileMap.tileXofPixel(cy + 3))
 			{
 				cvx = (cvy = 0);
@@ -3277,9 +2909,7 @@ public class Char : IMapObject
 			}
 		}
 		if (cvx > 0)
-		{
 			cvx--;
-		}
 		else if (cvx < 0)
 		{
 			cvx++;
@@ -3299,17 +2929,11 @@ public class Char : IMapObject
 		cy += cvyJump;
 		cvyJump++;
 		if (cp1 == 0)
-		{
 			cf = 7;
-		}
 		else
-		{
 			cf = 23;
-		}
 		if (cvyJump == -3)
-		{
 			cf = 8;
-		}
 		else if (cvyJump == -2)
 		{
 			cf = 9;
@@ -3338,38 +2962,22 @@ public class Char : IMapObject
 		if (dy > 0 && !TileMap.tileTypeAt(cx, cy, 2))
 		{
 			if (dx - dy <= 10)
-			{
 				return 5;
-			}
 			if (dx - dy <= 30)
-			{
 				return 6;
-			}
 			if (dx - dy <= 50)
-			{
 				return 7;
-			}
 			if (dx - dy <= 70)
-			{
 				return 8;
-			}
 		}
 		if (dx <= 30)
-		{
 			return 4;
-		}
 		if (dx <= 160)
-		{
 			return 5;
-		}
 		if (dx <= 270)
-		{
 			return 6;
-		}
 		if (dx <= 320)
-		{
 			return 7;
-		}
 		return 8;
 	}
 
@@ -3388,25 +2996,15 @@ public class Char : IMapObject
 	public int getVy(int size, int dx, int dy)
 	{
 		if (dy <= 10)
-		{
 			return 5;
-		}
 		if (dy <= 20)
-		{
 			return 6;
-		}
 		if (dy <= 30)
-		{
 			return 7;
-		}
 		if (dy <= 40)
-		{
 			return 8;
-		}
 		if (dy <= 50)
-		{
 			return 9;
-		}
 		return 10;
 	}
 
@@ -3415,24 +3013,16 @@ public class Char : IMapObject
 		int num = xEnd - xFirst;
 		int num2 = yEnd - yFirst;
 		if (num == 0 && num2 == 0)
-		{
 			return 1;
-		}
 		if (num2 == 0 && yFirst % 24 == 0 && TileMap.tileTypeAt(xFirst, yFirst, 2))
-		{
 			return 2;
-		}
 		if (num2 > 0 && (yFirst % 24 != 0 || !TileMap.tileTypeAt(xFirst, yFirst, 2)))
-		{
 			return 4;
-		}
 		cvy = -10;
 		cp1 = 0;
 		cdir = ((num > 0) ? 1 : (-1));
 		if (num <= 5)
-		{
 			cvx = 0;
-		}
 		else if (num <= 10)
 		{
 			cvx = 3;
@@ -3451,9 +3041,7 @@ public class Char : IMapObject
 		cp1 = 0;
 		cdir = ((num > 0) ? 1 : (-1));
 		if (num <= 6)
-		{
 			cvx = 0;
-		}
 		else if (num <= 20)
 		{
 			cvx = 3;
@@ -3473,17 +3061,11 @@ public class Char : IMapObject
 		cvy = 0;
 		cp1++;
 		if (cp1 > 30)
-		{
 			cp1 = 0;
-		}
 		if (cp1 % 15 < 5)
-		{
 			cf = 0;
-		}
 		else
-		{
 			cf = 1;
-		}
 		updateCharInBridge();
 		if (!me)
 		{
@@ -3496,52 +3078,36 @@ public class Char : IMapObject
 		}
 		updateSuperEff();
 		if (!me || GameScr.vCharInMap.size() == 0 || TileMap.mapID != 50)
-		{
 			return;
-		}
 		Char @char = (Char)GameScr.vCharInMap.elementAt(0);
 		if (!@char.changePos)
 		{
 			if (@char.statusMe != 2)
-			{
 				@char.moveTo(cx - 45, cy, 0);
-			}
 			@char.lastUpdateTime = mSystem.currentTimeMillis();
 			if (Res.abs(cx - 45 - @char.cx) <= 10)
-			{
 				@char.changePos = true;
-			}
 		}
 		else
 		{
 			if (@char.statusMe != 2)
-			{
 				@char.moveTo(cx + 45, cy, 0);
-			}
 			@char.lastUpdateTime = mSystem.currentTimeMillis();
 			if (Res.abs(cx + 45 - @char.cx) <= 10)
-			{
 				@char.changePos = false;
-			}
 		}
 		if (GameCanvas.gameTick % 100 == 0)
-		{
 			@char.addInfo("Cắc cùm cum");
-		}
 	}
 
 	public void updateSuperEff()
 	{
 		if (GameCanvas.panel.isShow || isCopy || isFusion || isSetPos || isPet || isMiniPet || isMonkey == 1)
-		{
 			return;
-		}
 		if (me)
 		{
 			if (!isPaintAura && idAuraEff > -1)
-			{
 				return;
-			}
 		}
 		else if (idAuraEff > -1)
 		{
@@ -3549,9 +3115,7 @@ public class Char : IMapObject
 		}
 		ty++;
 		if (clevel >= 14)
-		{
 			return;
-		}
 		if (clevel >= 9 && !GameCanvas.lowGraphic && (ty == 40 || ty == 50))
 		{
 			GameCanvas.gI().startDust(-1, cx - -8, cy);
@@ -3559,62 +3123,38 @@ public class Char : IMapObject
 			addDustEff(1);
 		}
 		if (ty <= 50 || clevel < 9)
-		{
 			return;
-		}
 		int num = 0;
 		if (cgender == 0)
 		{
 			if (GameCanvas.gameTick % 25 == 0)
-			{
-				num = 114;
-				ServerEffect.addServerEffect(num, this, 1);
-			}
+				ServerEffect.addServerEffect(114, this, 1);
 			if (clevel >= 13 && GameCanvas.gameTick % 4 == 0)
-			{
-				num = 132;
-				ServerEffect.addServerEffect(num, this, 1);
-			}
+				ServerEffect.addServerEffect(132, this, 1);
 		}
 		if (cgender == 1)
 		{
 			if (GameCanvas.gameTick % 4 == 0)
-			{
-				num = 132;
-				ServerEffect.addServerEffect(num, this, 1);
-			}
+				ServerEffect.addServerEffect(132, this, 1);
 			if (clevel >= 13 && GameCanvas.gameTick % 7 == 0)
-			{
-				num = 131;
-				ServerEffect.addServerEffect(num, this, 1);
-			}
+				ServerEffect.addServerEffect(131, this, 1);
 		}
 		if (cgender == 2)
 		{
 			if (GameCanvas.gameTick % 7 == 0)
-			{
-				num = 131;
-				ServerEffect.addServerEffect(num, this, 1);
-			}
+				ServerEffect.addServerEffect(131, this, 1);
 			if (clevel >= 13 && GameCanvas.gameTick % 25 == 0)
-			{
-				num = 114;
-				ServerEffect.addServerEffect(num, this, 1);
-			}
+				ServerEffect.addServerEffect(114, this, 1);
 		}
 	}
 
 	public float getSoundVolumn()
 	{
 		if (me)
-		{
 			return 0.1f;
-		}
 		int num = Res.abs(myChar.cx - cx);
 		if (num >= 0 && num <= 50)
-		{
 			return 0.1f;
-		}
 		return 0.05f;
 	}
 
@@ -3624,13 +3164,9 @@ public class Char : IMapObject
 		if (cx >= GameScr.cmx && cx <= GameScr.cmx + GameCanvas.w)
 		{
 			if (isMonkey == 0)
-			{
 				SoundMn.gI().charRun(getSoundVolumn());
-			}
 			else
-			{
 				SoundMn.gI().monkeyRun(getSoundVolumn());
-			}
 		}
 		ty = 0;
 		isFreez = false;
@@ -3642,9 +3178,7 @@ public class Char : IMapObject
 		}
 		int num2 = 0;
 		if (!me && currentMovePoint != null)
-		{
 			num2 = abs(cx - currentMovePoint.xEnd);
-		}
 		cp1++;
 		if (cp1 >= 10)
 		{
@@ -3653,13 +3187,9 @@ public class Char : IMapObject
 		}
 		cf = (cp1 >> 1) + 2;
 		if ((TileMap.tileTypeAtPixel(cx, cy - 1) & 0x40) == 64)
-		{
 			cx += cvx * num >> 1;
-		}
 		else
-		{
 			cx += cvx * num;
-		}
 		if (cdir == 1)
 		{
 			if (TileMap.tileTypeAt(cx + chw, cy - chh, 4))
@@ -3670,9 +3200,7 @@ public class Char : IMapObject
 					cx = TileMap.tileXofPixel(cx + chw) - chw;
 				}
 				else
-				{
 					stop();
-				}
 			}
 		}
 		else if (TileMap.tileTypeAt(cx - chw - 1, cy - chh, 8))
@@ -3683,16 +3211,12 @@ public class Char : IMapObject
 				cx = TileMap.tileXofPixel(cx - chw - 1) + TileMap.size + chw;
 			}
 			else
-			{
 				stop();
-			}
 		}
 		if (me)
 		{
 			if (cvx > 0)
-			{
 				cvx--;
-			}
 			else if (cvx < 0)
 			{
 				cvx++;
@@ -3700,9 +3224,7 @@ public class Char : IMapObject
 			else
 			{
 				if (cx - cxSend != 0 && me)
-				{
 					Service.gI().charMove();
-				}
 				statusMe = 1;
 				cBonusSpeed = 0;
 			}
@@ -3712,9 +3234,7 @@ public class Char : IMapObject
 			if (me)
 			{
 				if (cx - cxSend != 0 || cy - cySend != 0)
-				{
 					Service.gI().charMove();
-				}
 				cf = 7;
 				statusMe = 4;
 				delayFall = 0;
@@ -3722,18 +3242,10 @@ public class Char : IMapObject
 				cp2 = 0;
 			}
 			else
-			{
 				stop();
-			}
 		}
-		if (!me && currentMovePoint != null)
-		{
-			int num3 = abs(cx - currentMovePoint.xEnd);
-			if (num3 > num2)
-			{
-				stop();
-			}
-		}
+		if (!me && currentMovePoint != null && abs(cx - currentMovePoint.xEnd) > num2)
+			stop();
 		GameCanvas.gI().startDust(cdir, cx - (cdir << 3), cy);
 		updateCharInBridge();
 		addDustEff(2);
@@ -3774,33 +3286,23 @@ public class Char : IMapObject
 		}
 		cvy++;
 		if (cvy > 0)
-		{
 			cvy = 0;
-		}
 		if (!me && currentMovePoint != null)
 		{
 			int num = currentMovePoint.xEnd - cx;
 			if (num > 0)
 			{
 				if (cvx > num)
-				{
 					cvx = num;
-				}
 				if (cvx < 0)
-				{
 					cvx = num;
-				}
 			}
 			else if (num < 0)
 			{
 				if (cvx < num)
-				{
 					cvx = num;
-				}
 				if (cvx > 0)
-				{
 					cvx = num;
-				}
 			}
 			else
 			{
@@ -3825,18 +3327,12 @@ public class Char : IMapObject
 			if (!isAttFly)
 			{
 				if (me)
-				{
 					setCharFallFromJump();
-				}
 				else
-				{
 					stop();
-				}
 			}
 			else
-			{
 				setCharFallFromJump();
-			}
 		}
 		if (me && !ischangingMap && isInWaypoint())
 		{
@@ -3847,9 +3343,7 @@ public class Char : IMapObject
 				Service.gI().getMapOffline();
 			}
 			else
-			{
 				Service.gI().requestChangeMap();
-			}
 			isLockKey = true;
 			ischangingMap = true;
 			GameCanvas.clearKeyHold();
@@ -3865,29 +3359,21 @@ public class Char : IMapObject
 			cvy = 1;
 			delayFall = 0;
 			if (cy < 0)
-			{
 				cy = 0;
-			}
 			cy = TileMap.tileYofPixel(cy + 25);
 			GameCanvas.clearKeyHold();
 		}
 		if (cp3 < 0)
-		{
 			cp3++;
-		}
 		cf = 7;
 		if (!me && currentMovePoint != null && cy < currentMovePoint.yEnd)
-		{
 			stop();
-		}
 	}
 
 	public bool checkInRangeJump(int x1, int xw1, int xmob, int y1, int yh1, int ymob)
 	{
 		if (xmob > xw1 || xmob < x1 || ymob > y1 || ymob < yh1)
-		{
 			return false;
-		}
 		return true;
 	}
 
@@ -3901,25 +3387,19 @@ public class Char : IMapObject
 		cvy = 0;
 		cy = TileMap.tileYofPixel(cy) + 12;
 		if (me && (cx - cxSend != 0 || cy - cySend != 0) && (Res.abs(myCharz().cx - myCharz().cxSend) > 96 || Res.abs(myCharz().cy - myCharz().cySend) > 24))
-		{
 			Service.gI().charMove();
-		}
 	}
 
 	public void updateCharFall()
 	{
 		if (holder)
-		{
 			return;
-		}
 		ty = 0;
 		if (cy + 4 >= TileMap.pxh)
 		{
 			statusMe = 1;
 			if (me)
-			{
 				SoundMn.gI().charFall();
-			}
 			cvx = (cvy = 0);
 			cp3 = 0;
 			return;
@@ -3930,9 +3410,7 @@ public class Char : IMapObject
 			if (me)
 			{
 				if (cy - cySend > 0)
-				{
 					Service.gI().charMove();
-				}
 				else if (cx - cxSend != 0 || cy - cySend < 0)
 				{
 					Service.gI().charMove();
@@ -3953,23 +3431,15 @@ public class Char : IMapObject
 		{
 			delayFall--;
 			if (delayFall % 10 > 5)
-			{
 				cy++;
-			}
 			else
-			{
 				cy--;
-			}
 			return;
 		}
 		if (cvy < -4)
-		{
 			cf = 7;
-		}
 		else
-		{
 			cf = 12;
-		}
 		cx += cvx;
 		if (!me && currentMovePoint != null)
 		{
@@ -3977,24 +3447,16 @@ public class Char : IMapObject
 			if (num > 0)
 			{
 				if (cvx > num)
-				{
 					cvx = num;
-				}
 				if (cvx < 0)
-				{
 					cvx = num;
-				}
 			}
 			else if (num < 0)
 			{
 				if (cvx < num)
-				{
 					cvx = num;
-				}
 				if (cvx > 0)
-				{
 					cvx = num;
-				}
 			}
 			else
 			{
@@ -4003,13 +3465,9 @@ public class Char : IMapObject
 		}
 		cvy++;
 		if (cvy > 8)
-		{
 			cvy = 8;
-		}
 		if (skillPaintRandomPaint == null)
-		{
 			cy += cvy;
-		}
 		if (cdir == 1)
 		{
 			if ((TileMap.tileTypeAtPixel(cx + chw, cy - 1) & 4) == 4 && cx <= TileMap.tileXofPixel(cx + chw) + 12)
@@ -4033,9 +3491,7 @@ public class Char : IMapObject
 				cy = TileMap.tileXofPixel(cy + 3);
 				statusMe = 1;
 				if (me)
-				{
 					SoundMn.gI().charFall();
-				}
 				cp3 = 0;
 				GameCanvas.gI().startDust(-1, cx - -8, cy);
 				GameCanvas.gI().startDust(1, cx - 8, cy);
@@ -4043,9 +3499,7 @@ public class Char : IMapObject
 				if (cy - cySend > 0)
 				{
 					if (me)
-					{
 						Service.gI().charMove();
-					}
 				}
 				else if ((cx - cxSend != 0 || cy - cySend < 0) && me)
 				{
@@ -4067,18 +3521,13 @@ public class Char : IMapObject
 		if (me)
 		{
 			if (!isAttack)
-			{
-			}
+				;
 			return;
 		}
 		if ((TileMap.tileTypeAtPixel(cx, cy + 1) & 2) == 2)
-		{
 			cf = 0;
-		}
 		if (currentMovePoint != null && cy > currentMovePoint.yEnd)
-		{
 			stop();
-		}
 	}
 
 	public void updateCharFly()
@@ -4088,9 +3537,7 @@ public class Char : IMapObject
 		if (statusMe != 16 && (TileMap.tileTypeAt(cx, cy - ch + 24, 8192) || cy < 0))
 		{
 			if (cy - ch < 0)
-			{
 				cy = ch;
-			}
 			cf = 7;
 			statusMe = 4;
 			cvx = 0;
@@ -4104,9 +3551,7 @@ public class Char : IMapObject
 		{
 			cp1 = 0;
 			if (!me)
-			{
 				cvx = (cvy = 0);
-			}
 			cBonusSpeed = 0;
 		}
 		cf = 8;
@@ -4117,9 +3562,7 @@ public class Char : IMapObject
 				int num3 = abs(cx - currentMovePoint.xEnd);
 				int num4 = abs(cy - currentMovePoint.yEnd);
 				if (num3 > num4 * 10)
-				{
 					cf = 8;
-				}
 				else if (num3 > num4 && num3 > 48 && num4 > 32)
 				{
 					cf = 8;
@@ -4132,26 +3575,18 @@ public class Char : IMapObject
 			else
 			{
 				if (cvy < 0)
-				{
 					cvy = 0;
-				}
 				if (cvy > 16)
-				{
 					cvy = 16;
-				}
 				cf = 7;
 			}
 		}
 		if (!me)
 		{
 			if (abs(cvx) < 2)
-			{
 				cvx = (cdir << 1) * num;
-			}
 			if (cvy != 0)
-			{
 				cf = 7;
-			}
 			if (abs(cvx) <= 2)
 			{
 				cp2++;
@@ -4170,9 +3605,7 @@ public class Char : IMapObject
 				cvx = 0;
 				cx = TileMap.tileXofPixel(cx + chw) - chw;
 				if (cvy == 0)
-				{
 					currentMovePoint = null;
-				}
 			}
 		}
 		else if (TileMap.tileTypeAt(cx - chw - 1, cy - 1, 8))
@@ -4180,9 +3613,7 @@ public class Char : IMapObject
 			cvx = 0;
 			cx = TileMap.tileXofPixel(cx - chw - 1) + TileMap.size + chw;
 			if (cvy == 0)
-			{
 				currentMovePoint = null;
-			}
 		}
 		cx += cvx * num;
 		cy += cvy * num;
@@ -4200,19 +3631,13 @@ public class Char : IMapObject
 			{
 				delayFall = 10;
 				if (GameCanvas.gameTick % 3 == 0)
-				{
 					ServerEffect.addServerEffect(111, cx + ((cdir != 1) ? 27 : (-17)), cy + fy + 13, 1, (cdir != 1) ? 2 : 0);
-				}
 			}
 		}
 		if (!me)
-		{
 			return;
-		}
 		if (cvx > 0)
-		{
 			cvx--;
-		}
 		else if (cvx < 0)
 		{
 			cvx++;
@@ -4226,9 +3651,7 @@ public class Char : IMapObject
 		if ((TileMap.tileTypeAtPixel(cx, cy + 20) & 2) == 2 || (TileMap.tileTypeAtPixel(cx, cy + 40) & 2) == 2)
 		{
 			if (cvy == 0)
-			{
 				delayFall = 0;
-			}
 			cyStartFall = 0;
 			cvx = (cvy = 0);
 			cp1 = (cp2 = 0);
@@ -4236,9 +3659,7 @@ public class Char : IMapObject
 			addDustEff(3);
 		}
 		if (abs(cx - cxSend) > 96 || abs(cy - cySend) > 24)
-		{
 			Service.gI().charMove();
-		}
 	}
 
 	public void setMount(int cid, int ctrans, int cgender)
@@ -4271,14 +3692,10 @@ public class Char : IMapObject
 	{
 		frameMount++;
 		if (frameMount > FrameMount.Length - 1)
-		{
 			frameMount = 0;
-		}
 		frameNewMount++;
 		if (frameNewMount > 1000)
-		{
 			frameNewMount = 0;
-		}
 		if (isStartMount && !isMount)
 		{
 			yMount = cy;
@@ -4308,17 +3725,11 @@ public class Char : IMapObject
 		else if (isMount)
 		{
 			if (statusMe == 14 || ySd - cy < 24)
-			{
 				setMountIsEnd();
-			}
 			if (cp1 % 15 < 5)
-			{
 				cf = 0;
-			}
 			else
-			{
 				cf = 1;
-			}
 			transMount = cdir;
 			updateSuperEff();
 			if (transMount < 0)
@@ -4331,18 +3742,12 @@ public class Char : IMapObject
 				transMount = 2;
 				dxMount = -31;
 				if (isEventMount)
-				{
 					dxMount = -38;
-				}
 			}
 			if (skillInfoPaint() != null)
-			{
 				dyMount = -15;
-			}
 			else
-			{
 				dyMount = -17;
-			}
 			yMount = cy;
 			xMount = cx;
 		}
@@ -4385,16 +3790,13 @@ public class Char : IMapObject
 			Mob.arrMobTemplate[50].data = new EffectData();
 			string text = "/Mob/" + 50;
 			DataInputStream dataInputStream = null;
-			dataInputStream = MyStream.readFile(text);
-			if (dataInputStream != null)
+			if (MyStream.readFile(text) != null)
 			{
 				Mob.arrMobTemplate[50].data.readData(text + "/data");
 				Mob.arrMobTemplate[50].data.img = GameCanvas.loadImage(text + "/img.png");
 			}
 			else
-			{
 				Service.gI().requestModTemplate(50);
-			}
 			Mob.lastMob.addElement(50 + string.Empty);
 		}
 	}
@@ -4403,113 +3805,77 @@ public class Char : IMapObject
 	{
 		t++;
 		if (t > array.Length - 1)
-		{
 			t = 0;
-		}
 		fM = array[t];
 	}
 
 	public void paintMount1(mGraphics g)
 	{
 		if (xMount <= GameScr.cmx || xMount >= GameScr.cmx + GameCanvas.w)
-		{
 			return;
-		}
 		if (me)
 		{
 			if (!isEndMount && !isStartMount && !isMount)
-			{
 				return;
-			}
 			if (idMount >= ID_NEW_MOUNT)
 			{
-				string nameImg = strMount + (idMount - ID_NEW_MOUNT) + "_0";
-				FrameImage fraImage = mSystem.getFraImage(nameImg);
+				FrameImage fraImage = mSystem.getFraImage(strMount + (idMount - ID_NEW_MOUNT) + "_0");
 				fraImage?.drawFrame(frameNewMount / 2 % fraImage.nFrame, xMount, yMount + fy, transMount, 3, g);
 			}
 			else
 			{
 				if (isSpeacialMount)
-				{
 					return;
-				}
 				if (isEventMount)
-				{
 					g.drawRegion(imgEventMountWing, 0, FrameMount[frameMount] * 60, 60, 60, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-				}
 				else if (genderMount == 2)
 				{
 					if (!isMountVip)
-					{
 						g.drawRegion(imgMount_XD, 0, FrameMount[frameMount] * 40, 50, 40, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-					}
 					else
-					{
 						g.drawRegion(imgMount_XD_VIP, 0, FrameMount[frameMount] * 40, 50, 40, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-					}
 				}
 				else if (genderMount == 1)
 				{
 					if (!isMountVip)
-					{
 						g.drawRegion(imgMount_NM, 0, FrameMount[frameMount] * 40, 50, 40, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-					}
 					else
-					{
 						g.drawRegion(imgMount_NM_VIP, 0, FrameMount[frameMount] * 40, 50, 40, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-					}
 				}
 			}
 		}
 		else
 		{
 			if (me)
-			{
 				return;
-			}
 			if (idMount >= ID_NEW_MOUNT)
 			{
-				string nameImg2 = strMount + (idMount - ID_NEW_MOUNT) + "_0";
-				FrameImage fraImage2 = mSystem.getFraImage(nameImg2);
+				FrameImage fraImage2 = mSystem.getFraImage(strMount + (idMount - ID_NEW_MOUNT) + "_0");
 				fraImage2?.drawFrame(frameNewMount / 2 % fraImage2.nFrame, xMount, yMount + fy, transMount, 3, g);
 			}
 			else
 			{
 				if (isSpeacialMount)
-				{
 					return;
-				}
 				if (isEventMount)
-				{
 					g.drawRegion(imgEventMountWing, 0, FrameMount[frameMount] * 60, 60, 60, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-				}
 				else
 				{
 					if (!isMount)
-					{
 						return;
-					}
 					if (genderMount == 2)
 					{
 						if (!isMountVip)
-						{
 							g.drawRegion(imgMount_XD, 0, FrameMount[frameMount] * 40, 50, 40, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-						}
 						else
-						{
 							g.drawRegion(imgMount_XD_VIP, 0, FrameMount[frameMount] * 40, 50, 40, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-						}
 					}
 					else if (genderMount == 1)
 					{
 						if (!isMountVip)
-						{
 							g.drawRegion(imgMount_NM, 0, FrameMount[frameMount] * 40, 50, 40, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-						}
 						else
-						{
 							g.drawRegion(imgMount_NM_VIP, 0, FrameMount[frameMount] * 40, 50, 40, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-						}
 					}
 				}
 			}
@@ -4519,32 +3885,23 @@ public class Char : IMapObject
 	public void paintMount2(mGraphics g)
 	{
 		if (xMount <= GameScr.cmx || xMount >= GameScr.cmx + GameCanvas.w)
-		{
 			return;
-		}
 		if (me)
 		{
 			if (!isEndMount && !isStartMount && !isMount)
-			{
 				return;
-			}
 			if (idMount >= ID_NEW_MOUNT)
 			{
-				string nameImg = strMount + (idMount - ID_NEW_MOUNT) + "_1";
-				FrameImage fraImage = mSystem.getFraImage(nameImg);
+				FrameImage fraImage = mSystem.getFraImage(strMount + (idMount - ID_NEW_MOUNT) + "_1");
 				fraImage?.drawFrame(frameNewMount / 2 % fraImage.nFrame, xMount, yMount + fy, transMount, 3, g);
 			}
 			else if (isSpeacialMount)
 			{
 				checkFrameTick(move);
 				if (Mob.arrMobTemplate[50] != null && Mob.arrMobTemplate[50].data != null)
-				{
 					Mob.arrMobTemplate[50].data.paintFrame(g, fM, xMount + ((cdir != 1) ? 8 : (-8)), yMount + 35, (cdir != 1) ? 1 : 0, 0);
-				}
 				else
-				{
 					getMountData();
-				}
 			}
 			else if (isEventMount)
 			{
@@ -4553,36 +3910,25 @@ public class Char : IMapObject
 			else if (genderMount == 0)
 			{
 				if (!isMountVip)
-				{
 					g.drawRegion(imgMount_TD, 0, FrameMount[frameMount] * 40, 50, 40, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-				}
 				else
-				{
 					g.drawRegion(imgMount_TD_VIP, 0, FrameMount[frameMount] * 40, 50, 40, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-				}
 			}
 			else if (genderMount == 1)
 			{
 				if (!isMountVip)
-				{
 					g.drawRegion(imgMount_NM_1, 0, FrameMount[frameMount] * 40, 50, 40, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-				}
 				else
-				{
 					g.drawRegion(imgMount_NM_1_VIP, 0, FrameMount[frameMount] * 40, 50, 40, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-				}
 			}
 		}
 		else
 		{
 			if (me)
-			{
 				return;
-			}
 			if (idMount >= ID_NEW_MOUNT)
 			{
-				string nameImg2 = strMount + (idMount - ID_NEW_MOUNT) + "_1";
-				FrameImage fraImage2 = mSystem.getFraImage(nameImg2);
+				FrameImage fraImage2 = mSystem.getFraImage(strMount + (idMount - ID_NEW_MOUNT) + "_1");
 				fraImage2?.drawFrame(frameNewMount / 2 % fraImage2.nFrame, xMount, yMount + fy, transMount, 3, g);
 				return;
 			}
@@ -4590,44 +3936,28 @@ public class Char : IMapObject
 			{
 				checkFrameTick(move);
 				if (Mob.arrMobTemplate[50] != null && Mob.arrMobTemplate[50].data != null)
-				{
 					Mob.arrMobTemplate[50].data.paintFrame(g, fM, xMount + ((cdir != 1) ? 8 : (-8)), yMount + 35, (cdir != 1) ? 1 : 0, 0);
-				}
 				else
-				{
 					getMountData();
-				}
 				return;
 			}
 			if (isEventMount)
-			{
 				g.drawRegion(imgEventMount, 0, FrameMount[frameMount] * 60, 60, 60, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-			}
 			if (!isMount)
-			{
 				return;
-			}
 			if (genderMount == 0)
 			{
 				if (!isMountVip)
-				{
 					g.drawRegion(imgMount_TD, 0, FrameMount[frameMount] * 40, 50, 40, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-				}
 				else
-				{
 					g.drawRegion(imgMount_TD_VIP, 0, FrameMount[frameMount] * 40, 50, 40, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-				}
 			}
 			else if (genderMount == 1)
 			{
 				if (!isMountVip)
-				{
 					g.drawRegion(imgMount_NM_1, 0, FrameMount[frameMount] * 40, 50, 40, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-				}
 				else
-				{
 					g.drawRegion(imgMount_NM_1_VIP, 0, FrameMount[frameMount] * 40, 50, 40, transMount, xMount + dxMount, yMount + dyMount + fy, 0);
-				}
 			}
 		}
 	}
@@ -4638,20 +3968,14 @@ public class Char : IMapObject
 		{
 			isHaveMount = checkHaveMount();
 			if (TileMap.isVoDaiMap())
-			{
 				isHaveMount = false;
-			}
 		}
 		if (isHaveMount)
 		{
 			if (ySd - cy <= 20)
-			{
 				xChar = cx;
-			}
 			if (xdis < 100)
-			{
 				xdis = Res.abs(xChar - cx);
-			}
 			if (xdis >= 70 && ySd - cy > 30 && !isStartMount && !isEndMount)
 			{
 				setMount(charID, cdir, cgender);
@@ -4689,25 +4013,19 @@ public class Char : IMapObject
 		isSpeacialMount = false;
 		isEventMount = false;
 		idMount = -1;
-		switch (num)
-		{
-		case 349:
-		case 350:
-		case 351:
+		if (num == 349 || num == 350 || num == 351)
 			isMountVip = true;
-			break;
-		case 396:
+		else if (num == 396)
+		{
 			isEventMount = true;
-			break;
-		case 532:
+		}
+		else if (num == 532)
+		{
 			isSpeacialMount = true;
-			break;
-		default:
-			if (num >= ID_NEW_MOUNT)
-			{
-				idMount = num;
-			}
-			break;
+		}
+		else if (num >= ID_NEW_MOUNT)
+		{
+			idMount = num;
 		}
 		return result;
 	}
@@ -4724,9 +4042,7 @@ public class Char : IMapObject
 			}
 		}
 		if (flag)
-		{
 			delayFall = 40;
-		}
 	}
 
 	public void setDefaultPart()
@@ -4739,17 +4055,13 @@ public class Char : IMapObject
 	public void setDefaultWeapon()
 	{
 		if (cgender == 0)
-		{
 			wp = 0;
-		}
 	}
 
 	public void setDefaultBody()
 	{
 		if (cgender == 0)
-		{
 			body = 57;
-		}
 		else if (cgender == 1)
 		{
 			body = 59;
@@ -4763,9 +4075,7 @@ public class Char : IMapObject
 	public void setDefaultLeg()
 	{
 		if (cgender == 0)
-		{
 			leg = 58;
-		}
 		else if (cgender == 1)
 		{
 			leg = 60;
@@ -4795,40 +4105,26 @@ public class Char : IMapObject
 	{
 		hasSendAttack = false;
 		if (stone || (me && myskill.template.id == 9 && cHP <= cHPFull / 10))
-		{
 			return;
-		}
 		if (me)
 		{
 			if (mobFocus == null && charFocus == null)
-			{
 				stopUseChargeSkill();
-			}
 			if (mobFocus != null && (mobFocus.status == 1 || mobFocus.status == 0))
-			{
 				stopUseChargeSkill();
-			}
 			if (charFocus != null && (charFocus.statusMe == 14 || charFocus.statusMe == 5))
-			{
 				stopUseChargeSkill();
-			}
 			if ((myskill.template.id == 23 && ((charFocus != null && charFocus.holdEffID != 0) || (mobFocus != null && mobFocus.holdEffID != 0) || holdEffID != 0)) || sleepEff || blindEff)
-			{
 				return;
-			}
 		}
 		Res.outz("skill id= " + skillPaint.id);
 		if ((me && dart != null) || TileMap.isOfflineMap())
-		{
 			return;
-		}
 		long num = mSystem.currentTimeMillis();
 		if (me)
 		{
 			if (isSelectingSkillBuffToPlayer() && charFocus == null)
-			{
 				return;
-			}
 			if (num - myskill.lastTimeUseThisSkill < myskill.coolDown)
 			{
 				myskill.paintCanNotUseSkill = true;
@@ -4836,9 +4132,7 @@ public class Char : IMapObject
 			}
 			myskill.lastTimeUseThisSkill = num;
 			if (myskill.template.manaUseType == 2)
-			{
 				cMP = 1;
-			}
 			else if (myskill.template.manaUseType != 1)
 			{
 				cMP -= myskill.manaUse;
@@ -4851,16 +4145,12 @@ public class Char : IMapObject
 			GameScr.gI().isInjureMp = true;
 			GameScr.gI().twMp = 0;
 			if (cMP < 0)
-			{
 				cMP = 0;
-			}
 		}
 		if (me)
 		{
 			if (myskill.template.id == 7)
-			{
 				SoundMn.gI().hoisinh();
-			}
 			if (myskill.template.id == 6)
 			{
 				Service.gI().skill_not_focus(0);
@@ -4886,9 +4176,7 @@ public class Char : IMapObject
 			if (myskill.template.id == 13)
 			{
 				if (isMonkey != 0)
-				{
 					GameScr.gI().auto = 0;
-				}
 				else if (!isCreateDark)
 				{
 					SoundMn.gI().gong();
@@ -4902,7 +4190,7 @@ public class Char : IMapObject
 			{
 				SoundMn.gI().gong();
 				Service.gI().skill_not_focus(7);
-				useChargeSkill(isGround: true);
+				useChargeSkill(true);
 			}
 			if (myskill.template.id == 21)
 			{
@@ -4910,9 +4198,7 @@ public class Char : IMapObject
 				return;
 			}
 			if (myskill.template.id == 12)
-			{
 				Service.gI().skill_not_focus(8);
-			}
 			if (myskill.template.id == 19)
 			{
 				Service.gI().skill_not_focus(9);
@@ -4920,9 +4206,7 @@ public class Char : IMapObject
 			}
 		}
 		if (isMonkey == 1 && skillPaint.id >= 35 && skillPaint.id <= 41)
-		{
 			skillPaint = GameScr.sks[106];
-		}
 		if (skillPaint.id >= 128 && skillPaint.id <= 134)
 		{
 			skillPaint = GameScr.sks[skillPaint.id - 65];
@@ -4969,13 +4253,9 @@ public class Char : IMapObject
 			return;
 		}
 		if (myskill.template.id == 10)
-		{
-			useChargeSkill(isGround: false);
-		}
+			useChargeSkill(false);
 		if (myskill.template.id == 11)
-		{
-			useChargeSkill(isGround: true);
-		}
+			useChargeSkill(true);
 	}
 
 	public void stopUseChargeSkill()
@@ -4985,25 +4265,19 @@ public class Char : IMapObject
 		isUseSkillAfterCharge = false;
 		isCreateDark = false;
 		if (me && statusMe != 14 && statusMe != 5)
-		{
 			isLockMove = false;
-		}
 		GameScr.gI().auto = 0;
 	}
 
 	public void useChargeSkill(bool isGround)
 	{
 		if (isCreateDark)
-		{
 			return;
-		}
 		GameScr.gI().auto = 0;
 		if (isGround)
 		{
 			if (isStandAndCharge)
-			{
 				return;
-			}
 			chargeCount = 0;
 			seconds = 50000;
 			posDisY = 0;
@@ -5012,14 +4286,10 @@ public class Char : IMapObject
 			{
 				isLockMove = true;
 				if (cgender == 1)
-				{
 					Service.gI().skill_not_focus(4);
-				}
 			}
 			if (cgender == 1)
-			{
 				SoundMn.gI().gongName();
-			}
 			isStandAndCharge = true;
 		}
 		else if (!isFlyAndCharge)
@@ -5047,69 +4317,47 @@ public class Char : IMapObject
 		{
 			int num = Res.random(0, skillPaint.id + 4) - 1;
 			if (num < 0)
-			{
 				num = 0;
-			}
 			if (num > 6)
-			{
 				num = 6;
-			}
 			skillPaintRandomPaint = GameScr.sks[num];
 		}
 		else if (skillPaint.id >= 14 && skillPaint.id <= 20)
 		{
 			int num2 = Res.random(0, skillPaint.id - 14 + 4) - 1;
 			if (num2 < 0)
-			{
 				num2 = 0;
-			}
 			if (num2 > 6)
-			{
 				num2 = 6;
-			}
 			skillPaintRandomPaint = GameScr.sks[num2 + 14];
 		}
 		else if (skillPaint.id >= 28 && skillPaint.id <= 34)
 		{
 			int num3 = Res.random(0, ((isMonkey != 1) ? skillPaint.id : 105) - ((isMonkey != 1) ? 28 : 105) + 4) - 1;
 			if (num3 < 0)
-			{
 				num3 = 0;
-			}
 			if (num3 > 6)
-			{
 				num3 = 6;
-			}
 			if (isMonkey == 1)
-			{
 				num3 = 0;
-			}
 			skillPaintRandomPaint = GameScr.sks[num3 + ((isMonkey != 1) ? 28 : 105)];
 		}
 		else if (skillPaint.id >= 63 && skillPaint.id <= 69)
 		{
 			int num4 = Res.random(0, skillPaint.id - 63 + 4) - 1;
 			if (num4 < 0)
-			{
 				num4 = 0;
-			}
 			if (num4 > 6)
-			{
 				num4 = 6;
-			}
 			skillPaintRandomPaint = GameScr.sks[num4 + 63];
 		}
 		else if (skillPaint.id >= 107 && skillPaint.id <= 109)
 		{
 			int num5 = Res.random(0, skillPaint.id - 107 + 4) - 1;
 			if (num5 < 0)
-			{
 				num5 = 0;
-			}
 			if (num5 > 6)
-			{
 				num5 = 6;
-			}
 			skillPaintRandomPaint = GameScr.sks[num5 + 107];
 		}
 		else
@@ -5128,17 +4376,11 @@ public class Char : IMapObject
 	public SkillInfoPaint[] skillInfoPaint()
 	{
 		if (skillPaint == null)
-		{
 			return null;
-		}
 		if (skillPaintRandomPaint == null)
-		{
 			return null;
-		}
 		if (sType == 0)
-		{
 			return skillPaintRandomPaint.skillStand;
-		}
 		return skillPaintRandomPaint.skillfly;
 	}
 
@@ -5148,19 +4390,13 @@ public class Char : IMapObject
 		{
 			SkillPaint skillPaint = skillPaintRandomPaint;
 			if (dart != null)
-			{
 				skillPaint = dart.skillPaint;
-			}
 			if (skillPaint == null)
-			{
 				return;
-			}
 			MyVector myVector = new MyVector();
 			MyVector myVector2 = new MyVector();
 			if (charFocus != null)
-			{
 				myVector2.addElement(charFocus);
-			}
 			else if (mobFocus != null)
 			{
 				myVector.addElement(mobFocus);
@@ -5171,9 +4407,7 @@ public class Char : IMapObject
 				effPaints[i] = new EffectPaint();
 				effPaints[i].effCharPaint = GameScr.efs[skillPaint.effectHappenOnMob - 1];
 				if (!isSelectingSkillUseAlone())
-				{
 					effPaints[i].eMob = (Mob)myVector.elementAt(i);
-				}
 			}
 			for (int j = 0; j < myVector2.size(); j++)
 			{
@@ -5183,17 +4417,13 @@ public class Char : IMapObject
 			}
 			int type = 0;
 			if (mobFocus != null)
-			{
 				type = 1;
-			}
 			else if (charFocus != null)
 			{
 				type = 2;
 			}
 			if (myVector.size() == 0 && myVector2.size() == 0)
-			{
 				stopUseChargeSkill();
-			}
 			if (me && !isSelectingSkillUseAlone() && !hasSendAttack)
 			{
 				Service.gI().sendPlayerAttack(myVector, myVector2, type);
@@ -5203,13 +4433,9 @@ public class Char : IMapObject
 		}
 		SkillPaint skillPaint2 = skillPaintRandomPaint;
 		if (dart != null)
-		{
 			skillPaint2 = dart.skillPaint;
-		}
 		if (skillPaint2 == null)
-		{
 			return;
-		}
 		if (attMobs != null)
 		{
 			effPaints = new EffectPaint[attMobs.Length];
@@ -5237,38 +4463,24 @@ public class Char : IMapObject
 	public bool isOutX()
 	{
 		if (cx < GameScr.cmx)
-		{
 			return true;
-		}
 		if (cx > GameScr.cmx + GameScr.gW)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public bool isPaint()
 	{
 		if (cy < GameScr.cmy)
-		{
 			return false;
-		}
 		if (cy > GameScr.cmy + GameScr.gH + 30)
-		{
 			return false;
-		}
 		if (isOutX())
-		{
 			return false;
-		}
 		if (isSetPos)
-		{
 			return false;
-		}
 		if (isFusion)
-		{
 			return false;
-		}
 		return true;
 	}
 
@@ -5287,9 +4499,7 @@ public class Char : IMapObject
 	public virtual void paint(mGraphics g)
 	{
 		if (isHide)
-		{
 			return;
-		}
 		if (isMabuHold)
 		{
 			if (cmtoChar)
@@ -5297,37 +4507,25 @@ public class Char : IMapObject
 				GameScr.cmtoX = cx - GameScr.gW2;
 				GameScr.cmtoY = cy - GameScr.gH23;
 				if (!GameCanvas.isTouchControl)
-				{
 					GameScr.cmtoX += GameScr.gW6 * cdir;
-				}
 			}
 		}
 		else
 		{
 			if (!isPaint() || (!me && GameScr.notPaint))
-			{
 				return;
-			}
 			if (petFollow != null)
-			{
 				petFollow.paint(g);
-			}
 			paintMount1(g);
 			if ((TileMap.isInAirMap() && cy >= TileMap.pxh - 48) || isTeleport)
-			{
 				return;
-			}
 			if (holder && GameCanvas.gameTick % 2 == 0)
 			{
 				g.setColor(16185600);
 				if (charHold != null)
-				{
 					g.drawLine(cx, cy - ch / 2, charHold.cx, charHold.cy - charHold.ch / 2);
-				}
 				if (mobHold != null)
-				{
 					g.drawLine(cx, cy - ch / 2, mobHold.x, mobHold.y - mobHold.h / 2);
-				}
 			}
 			paintSuperEffBehind(g);
 			paintAuraBehind(g);
@@ -5336,12 +4534,10 @@ public class Char : IMapObject
 			if (shadowLife > 0)
 			{
 				if (GameCanvas.gameTick % 2 == 0)
-				{
-					paintCharBody(g, shadowX, shadowY, cdir, 25, isPaintBag: true);
-				}
+					paintCharBody(g, shadowX, shadowY, cdir, 25, true);
 				else if (shadowLife > 5)
 				{
-					paintCharBody(g, shadowX, shadowY, cdir, 7, isPaintBag: true);
+					paintCharBody(g, shadowX, shadowY, cdir, 7, true);
 				}
 			}
 			if (!isPaint() && skillPaint != null && (skillPaint.id < 70 || skillPaint.id > 76) && (skillPaint.id < 77 || skillPaint.id > 83))
@@ -5361,21 +4557,14 @@ public class Char : IMapObject
 			{
 				paintCharName_HP_MP_Overhead(g);
 				if (skillPaint == null || skillInfoPaint() == null || indexSkill >= skillInfoPaint().Length)
-				{
 					paintCharWithoutSkill(g);
-				}
 				if (arr != null)
-				{
 					arr.paint(g);
-				}
 				if (dart != null)
-				{
 					dart.paint(g);
-				}
 				paintEffect(g);
 				if (mobMe != null)
-				{
-				}
+					;
 				paintMount2(g);
 				paintEff_Pet(g);
 				paintEff_Lvup_front(g);
@@ -5390,9 +4579,7 @@ public class Char : IMapObject
 	private void paint_map_line(mGraphics g)
 	{
 		if (x_hint == 0 || y_hint == 0 || statusMe == 14)
-		{
 			return;
-		}
 		int arg = 0;
 		int x = cx - 30;
 		int y = cy - 15;
@@ -5424,13 +4611,9 @@ public class Char : IMapObject
 		if (GameCanvas.gameTick % 10 >= 5)
 		{
 			if (Res.abs(cx - x_hint) > 100)
-			{
 				g.drawRegion(GameScr.arrow, 0, 0, 13, 16, arg, x, y, StaticObj.VCENTER_HCENTER);
-			}
 			else
-			{
 				g.drawImage(Panel.imgBantay, x_hint + num, y_hint - 60 + num2, 0);
-			}
 		}
 	}
 
@@ -5440,9 +4623,7 @@ public class Char : IMapObject
 		{
 			Effect effect = (Effect)vEffChar.elementAt(i);
 			if (effect.effId >= 201)
-			{
 				effect.paint(g);
-			}
 		}
 	}
 
@@ -5451,42 +4632,29 @@ public class Char : IMapObject
 		if (me)
 		{
 			if (!isPaintAura && idAuraEff > -1)
-			{
 				return;
-			}
 		}
 		else if (idAuraEff > -1)
 		{
 			return;
 		}
 		if (!isPaintAura2 || (statusMe != 1 && statusMe != 6) || GameCanvas.panel.isShow || mSystem.currentTimeMillis() - timeBlue <= 0 || isCopy || clevel < 16)
-		{
 			return;
-		}
 		int num = 7598;
 		int num2 = 4;
 		if (clevel >= 19)
-		{
 			num = 7676;
-		}
 		if (clevel >= 22)
-		{
 			num = 7677;
-		}
 		if (clevel >= 25)
-		{
 			num = 7678;
-		}
 		if (num != -1)
 		{
 			Small small = SmallImage.imgNew[num];
 			if (small == null)
-			{
 				SmallImage.createImage(num);
-				return;
-			}
-			int y = GameCanvas.gameTick / 4 % num2 * (mGraphics.getImageHeight(small.img) / num2);
-			g.drawRegion(small.img, 0, y, mGraphics.getImageWidth(small.img), mGraphics.getImageHeight(small.img) / num2, 0, cx, cy + 2, mGraphics.BOTTOM | mGraphics.HCENTER);
+			else
+				g.drawRegion(y0: GameCanvas.gameTick / 4 % num2 * (mGraphics.getImageHeight(small.img) / num2), arg0: small.img, x0: 0, w0: mGraphics.getImageWidth(small.img), h0: mGraphics.getImageHeight(small.img) / num2, arg5: 0, x: cx, y: cy + 2, arg8: mGraphics.BOTTOM | mGraphics.HCENTER);
 		}
 	}
 
@@ -5495,34 +4663,24 @@ public class Char : IMapObject
 		if (me)
 		{
 			if (!isPaintAura && idAuraEff > -1)
-			{
 				return;
-			}
 		}
 		else if (idAuraEff > -1)
 		{
 			return;
 		}
 		if (!isPaintAura2)
-		{
 			return;
-		}
 		if (statusMe == 1 || statusMe == 6)
 		{
 			if (GameCanvas.panel.isShow || mSystem.currentTimeMillis() - timeBlue <= 0)
-			{
 				return;
-			}
 			if (isCopy)
 			{
 				if (GameCanvas.gameTick % 2 == 0)
-				{
 					tBlue++;
-				}
 				if (tBlue > 6)
-				{
 					tBlue = 0;
-				}
 				g.drawImage(GameCanvas.imgViolet[tBlue], cx, cy + 9, mGraphics.BOTTOM | mGraphics.HCENTER);
 				return;
 			}
@@ -5549,33 +4707,23 @@ public class Char : IMapObject
 			if (clevel == 14)
 			{
 				if (GameCanvas.gameTick % 2 == 0)
-				{
 					tBlue++;
-				}
 				if (tBlue > 6)
-				{
 					tBlue = 0;
-				}
 				g.drawImage(GameCanvas.imgBlue[tBlue], cx, cy + 9, mGraphics.BOTTOM | mGraphics.HCENTER);
 			}
 			else if (clevel == 15)
 			{
 				if (GameCanvas.gameTick % 2 == 0)
-				{
 					tBlue++;
-				}
 				if (tBlue > 6)
-				{
 					tBlue = 0;
-				}
 				g.drawImage(GameCanvas.imgViolet[tBlue], cx, cy + 9, mGraphics.BOTTOM | mGraphics.HCENTER);
 			}
 			else
 			{
 				if (clevel < 16)
-				{
 					return;
-				}
 				int num = -1;
 				int num2 = 4;
 				if (clevel >= 16 && clevel < 22)
@@ -5587,12 +4735,9 @@ public class Char : IMapObject
 				{
 					Small small = SmallImage.imgNew[num];
 					if (small == null)
-					{
 						SmallImage.createImage(num);
-						return;
-					}
-					int y = GameCanvas.gameTick / 4 % num2 * (mGraphics.getImageHeight(small.img) / num2);
-					g.drawRegion(small.img, 0, y, mGraphics.getImageWidth(small.img), mGraphics.getImageHeight(small.img) / num2, 0, cx, cy + 2, mGraphics.BOTTOM | mGraphics.HCENTER);
+					else
+						g.drawRegion(y0: GameCanvas.gameTick / 4 % num2 * (mGraphics.getImageHeight(small.img) / num2), arg0: small.img, x0: 0, w0: mGraphics.getImageWidth(small.img), h0: mGraphics.getImageHeight(small.img) / num2, arg5: 0, x: cx, y: cy + 2, arg8: mGraphics.BOTTOM | mGraphics.HCENTER);
 				}
 			}
 		}
@@ -5611,24 +4756,16 @@ public class Char : IMapObject
 			for (int i = 0; i < effPaints.Length; i++)
 			{
 				if (effPaints[i] == null)
-				{
 					continue;
-				}
 				if (effPaints[i].eMob != null)
 				{
 					int y = effPaints[i].eMob.y;
 					if (effPaints[i].eMob is BigBoss)
-					{
 						y = effPaints[i].eMob.y - 60;
-					}
 					if (effPaints[i].eMob is BigBoss2)
-					{
 						y = effPaints[i].eMob.y - 50;
-					}
 					if (effPaints[i].eMob is BachTuoc)
-					{
 						y = effPaints[i].eMob.y - 40;
-					}
 					SmallImage.drawSmallImage(g, effPaints[i].getImgId(), effPaints[i].eMob.x, y, 0, mGraphics.BOTTOM | mGraphics.HCENTER);
 				}
 				else if (effPaints[i].eChar != null)
@@ -5638,13 +4775,9 @@ public class Char : IMapObject
 			}
 		}
 		if (indexEff >= 0 && eff != null)
-		{
 			SmallImage.drawSmallImage(g, eff.arrEfInfo[indexEff].idImg, cx + eff.arrEfInfo[indexEff].dx, cy + eff.arrEfInfo[indexEff].dy, 0, mGraphics.VCENTER | mGraphics.HCENTER);
-		}
 		if (indexEffTask >= 0 && effTask != null)
-		{
 			SmallImage.drawSmallImage(g, effTask.arrEfInfo[indexEffTask].idImg, cx + effTask.arrEfInfo[indexEffTask].dx, cy + effTask.arrEfInfo[indexEffTask].dy, 0, mGraphics.VCENTER | mGraphics.HCENTER);
-		}
 	}
 
 	private void paintArrowAttack(mGraphics g)
@@ -5655,24 +4788,16 @@ public class Char : IMapObject
 	{
 		int num = cHP * 100 / cHPFull / 10 - 1;
 		if (num < 0)
-		{
 			num = 0;
-		}
 		if (num > 9)
-		{
 			num = 9;
-		}
 		g.drawRegion(Mob.imgHP, 0, 6 * (9 - num), 9, 6, 0, x, y, 3);
 		if (cTypePk == 0 && (myCharz().cFlag == 0 || cFlag == 0 || (cFlag != 8 && myCharz().cFlag != 8 && cFlag == myCharz().cFlag)))
-		{
 			return;
-		}
 		len = (int)((long)cHP * 100L / cHPFull * w_hp_bar) / 100;
 		num = (int)((long)cHP * 100L / cHPFull);
 		if (num < 30)
-		{
 			imgHPtem = GameScr.imgHP_tm_do;
-		}
 		else if (num < 60)
 		{
 			imgHPtem = GameScr.imgHP_tm_vang;
@@ -5688,23 +4813,17 @@ public class Char : IMapObject
 		if (len < 5)
 		{
 			if (GameCanvas.gameTick % 6 < 3)
-			{
 				g.drawRegion(imgHPtem, 0, 0, w, imageHeight, 0, x - (imageWidth >> 1), y - 1, mGraphics.TOP | mGraphics.LEFT);
-			}
 		}
 		else
-		{
 			g.drawRegion(imgHPtem, 0, 0, w, imageHeight, 0, x - (imageWidth >> 1), y - 1, mGraphics.TOP | mGraphics.LEFT);
-		}
 	}
 
 	public int getClassColor()
 	{
 		int result = 9145227;
 		if (nClass.classId == 1 || nClass.classId == 2)
-		{
 			result = 16711680;
-		}
 		else if (nClass.classId == 3 || nClass.classId == 4)
 		{
 			result = 33023;
@@ -5721,9 +4840,7 @@ public class Char : IMapObject
 		if (cTypePk != 3 && cTypePk != 5 && isPaint())
 		{
 			if (myCharz().charFocus == null || !myCharz().charFocus.Equals(this))
-			{
 				mFont.tahoma_7_yellow.drawString(g, cName, cx, cy - ch - mFont.tahoma_7_green.getHeight() - 5, mFont.CENTER, mFont.tahoma_7_grey);
-			}
 			else if (myCharz().charFocus != null && myCharz().charFocus.Equals(this))
 			{
 				mFont.tahoma_7_yellow.drawString(g, cName, cx, cy - ch - mFont.tahoma_7_green.getHeight() - 10, mFont.CENTER, mFont.tahoma_7_grey);
@@ -5736,9 +4853,7 @@ public class Char : IMapObject
 		Part part = GameScr.parts[getFHead(head)];
 		int num = CharInfo[cf][0][2] - part.pi[CharInfo[cf][0][0]].dy + 5;
 		if ((isInvisiblez && !me) || (!me && TileMap.mapID == 113 && cy >= 360) || me)
-		{
 			return;
-		}
 		bool flag = myChar.clan != null && clanID == myChar.clan.ID;
 		bool flag2 = cTypePk == 3 || cTypePk == 5;
 		bool flag3 = cTypePk == 4;
@@ -5760,9 +4875,7 @@ public class Char : IMapObject
 		num += mFont.tahoma_7_white.getHeight();
 		mFont mFont2 = mFont.tahoma_7_whiteSmall;
 		if (isPet || isMiniPet)
-		{
 			mFont2 = mFont.tahoma_7_blue1Small;
-		}
 		else if (flag2)
 		{
 			mFont2 = mFont.nameFontRed;
@@ -5778,21 +4891,15 @@ public class Char : IMapObject
 		if ((paintName || flag2 || flag3) && !flag)
 		{
 			if (mSystem.clientType == 1)
-			{
 				mFont2.drawString(g, cName, cx, cy - num, mFont.CENTER, mFont.tahoma_7_greySmall);
-			}
 			else
-			{
 				mFont2.drawString(g, cName, cx, cy - num, mFont.CENTER);
-			}
 			num += mFont.tahoma_7.getHeight();
 		}
 		if (flag)
 		{
 			if (myCharz().charFocus != null && myCharz().charFocus.Equals(this))
-			{
 				mFont2.drawString(g, cName, cx, cy - num, mFont.CENTER, mFont.tahoma_7_greySmall);
-			}
 			else if (charFocus == null)
 			{
 				mFont2.drawString(g, cName, cx - 10, cy - num + 3, mFont.LEFT, mFont.tahoma_7_grey);
@@ -5804,16 +4911,12 @@ public class Char : IMapObject
 	public void paintShadow(mGraphics g)
 	{
 		if (isMabuHold || head == 377 || leg == 471 || isTeleport || isFlyUp)
-		{
 			return;
-		}
 		int num = TileMap.size;
 		if ((TileMap.mapID < 114 || TileMap.mapID > 120) && TileMap.mapID != 127 && TileMap.mapID != 128)
 		{
 			if (TileMap.tileTypeAt(xSd + num / 2, ySd + 1, 4))
-			{
 				g.setClip(xSd / num * num, (ySd - 30) / num * num, num, 100);
-			}
 			else if (TileMap.tileTypeAt((xSd - num / 2) / num, (ySd + 1) / num) == 0)
 			{
 				g.setClip(xSd / num * num, (ySd - 30) / num * num, 100, 100);
@@ -5848,9 +4951,7 @@ public class Char : IMapObject
 			if (TileMap.tileTypeAt(xSd, ySd, 2))
 			{
 				if (ySd % 24 != 0)
-				{
 					ySd -= ySd % 24;
-				}
 				break;
 			}
 		}
@@ -5865,23 +4966,15 @@ public class Char : IMapObject
 				if (me)
 				{
 					if (GameCanvas.gameTick % 50 == 48 || GameCanvas.gameTick % 50 == 90)
-					{
 						SmallImage.drawSmallImage(g, 1196, cx, cy - 18, 0, mGraphics.VCENTER | mGraphics.HCENTER);
-					}
 					else
-					{
 						SmallImage.drawSmallImage(g, 1195, cx, cy - 18, 0, mGraphics.VCENTER | mGraphics.HCENTER);
-					}
 				}
 			}
 			else
-			{
-				paintCharBody(g, cx, cy + fy, cdir, cf, isPaintBag: true);
-			}
+				paintCharBody(g, cx, cy + fy, cdir, cf, true);
 			if (isLockAttack)
-			{
 				SmallImage.drawSmallImage(g, 290, cx, cy, 0, mGraphics.BOTTOM | mGraphics.HCENTER);
-			}
 		}
 		catch (Exception ex)
 		{
@@ -5968,30 +5061,22 @@ public class Char : IMapObject
 		}
 		fBag++;
 		if (fBag > 10000)
-		{
 			fBag = 0;
-		}
 		sbyte b = (sbyte)(fBag / 4 % id.Length);
 		if (!isPaintChar)
 		{
 			if (id.Length == 2)
-			{
 				b = 1;
-			}
 			if (id.Length == 3)
 			{
 				if (id[2] >= 0)
 				{
 					b = 2;
 					if (GameCanvas.gameTick % 10 > 5)
-					{
 						b = 1;
-					}
 				}
 				else
-				{
 					b = 1;
-				}
 			}
 		}
 		else if (id.Length > 1 && (b == 0 || b == 1) && statusMe != 1 && statusMe != 6)
@@ -5999,9 +5084,7 @@ public class Char : IMapObject
 			fBag = 0;
 			b = 0;
 			if (GameCanvas.gameTick % 10 > 5)
-			{
 				b = 1;
-			}
 		}
 		SmallImage.drawSmallImage(g, id[b], x + ((dir != 1) ? num : (-num)), y - num2, (dir != 1) ? 2 : 0, StaticObj.VCENTER_HCENTER);
 	}
@@ -6014,25 +5097,18 @@ public class Char : IMapObject
 		for (int i = 0; i < CharInfo.Length; i++)
 		{
 			if (id == part.pi[CharInfo[i][0][0]].id)
-			{
 				return true;
-			}
 			if (id == part2.pi[CharInfo[i][1][0]].id)
-			{
 				return true;
-			}
 			if (id == part3.pi[CharInfo[i][2][0]].id)
-			{
 				return true;
-			}
 		}
 		return false;
 	}
 
 	public void paintHead(mGraphics g, int cx, int cy, int look)
 	{
-		Part part = GameScr.parts[head];
-		SmallImage.drawSmallImage(g, part.pi[CharInfo[0][0][0]].id, cx, cy, (look != 0) ? 2 : 0, mGraphics.RIGHT | mGraphics.VCENTER);
+		SmallImage.drawSmallImage(g, GameScr.parts[head].pi[CharInfo[0][0][0]].id, cx, cy, (look != 0) ? 2 : 0, mGraphics.RIGHT | mGraphics.VCENTER);
 	}
 
 	public void paintHeadWithXY(mGraphics g, int x, int y, int look)
@@ -6057,9 +5133,7 @@ public class Char : IMapObject
 			{
 				ClanImage clanImage = (ClanImage)ClanImage.idImages.get(bag + string.Empty);
 				if (clanImage.idImage != null && isPaintBag)
-				{
-					paintBag(g, clanImage.idImage, cx, cy, cdir, isPaintChar: true);
-				}
+					paintBag(g, clanImage.idImage, cx, cy, cdir, true);
 			}
 		}
 		int num = 2;
@@ -6076,14 +5150,10 @@ public class Char : IMapObject
 		if (statusMe == 14)
 		{
 			if (GameCanvas.gameTick % 4 > 0)
-			{
 				g.drawImage(ItemMap.imageFlare, cx, cy - ch - 11, mGraphics.HCENTER | mGraphics.VCENTER);
-			}
 			int num3 = 0;
 			if (head == 89 || head == 457 || head == 460 || head == 461 || head == 462 || head == 463 || head == 464 || head == 465 || head == 466)
-			{
 				num3 = 15;
-			}
 			SmallImage.drawSmallImage(g, 834, cx, cy - CharInfo[cf][2][2] + pb.pi[CharInfo[cf][2][0]].dy - 2 + num3, num, StaticObj.TOP_CENTER);
 			SmallImage.drawSmallImage(g, 79, cx, cy - ch - 8, 0, mGraphics.HCENTER | mGraphics.BOTTOM);
 			SmallImage.drawSmallImage(g, ph.pi[CharInfo[cf][0][0]].id, cx + (CharInfo[cf][0][1] + ph.pi[CharInfo[cf][0][0]].dx) * num2, cy - CharInfo[cf][0][2] + ph.pi[CharInfo[cf][0][0]].dy, num, anchor);
@@ -6094,9 +5164,7 @@ public class Char : IMapObject
 				SmallImage.drawSmallImage(g, part.pi[CharInfo[cf][0][0]].id, cx + (CharInfo[cf][0][1] + part.pi[CharInfo[cf][0][0]].dx) * num2, cy - CharInfo[cf][0][2] + part.pi[CharInfo[cf][0][0]].dy, num, anchor);
 			}
 			else
-			{
 				SmallImage.drawSmallImage(g, ph.pi[CharInfo[cf][0][0]].id, cx + (CharInfo[cf][0][1] + ph.pi[CharInfo[cf][0][0]].dx) * num2, cy - CharInfo[cf][0][2] + ph.pi[CharInfo[cf][0][0]].dy, num, anchor);
-			}
 			paintHat_front(g, cf, cy - CharInfo[cf][2][2] + pb.pi[CharInfo[cf][2][0]].dy);
 			paintRedEye(g, cx + (CharInfo[cf][0][1] + ph.pi[CharInfo[cf][0][0]].dx) * num2, cy - CharInfo[cf][0][2] + ph.pi[CharInfo[cf][0][0]].dy, num, anchor);
 		}
@@ -6109,9 +5177,7 @@ public class Char : IMapObject
 				SmallImage.drawSmallImage(g, part2.pi[CharInfo[cf][0][0]].id, cx + (CharInfo[cf][0][1] + part2.pi[CharInfo[cf][0][0]].dx) * num2, cy - CharInfo[cf][0][2] + part2.pi[CharInfo[cf][0][0]].dy, num, anchor);
 			}
 			else
-			{
 				SmallImage.drawSmallImage(g, ph.pi[CharInfo[cf][0][0]].id, cx + (CharInfo[cf][0][1] + ph.pi[CharInfo[cf][0][0]].dx) * num2, cy - CharInfo[cf][0][2] + ph.pi[CharInfo[cf][0][0]].dy, num, anchor);
-			}
 			SmallImage.drawSmallImage(g, pl.pi[CharInfo[cf][1][0]].id, cx + (CharInfo[cf][1][1] + pl.pi[CharInfo[cf][1][0]].dx) * num2, cy - CharInfo[cf][1][2] + pl.pi[CharInfo[cf][1][0]].dy, num, anchor);
 			SmallImage.drawSmallImage(g, pb.pi[CharInfo[cf][2][0]].id, cx + (CharInfo[cf][2][1] + pb.pi[CharInfo[cf][2][0]].dx) * num2, cy - CharInfo[cf][2][2] + pb.pi[CharInfo[cf][2][0]].dy, num, anchor);
 			paintRedEye(g, cx + (CharInfo[cf][0][1] + ph.pi[CharInfo[cf][0][0]].dx) * num2, cy - CharInfo[cf][0][2] + ph.pi[CharInfo[cf][0][0]].dy, num, anchor);
@@ -6120,13 +5186,9 @@ public class Char : IMapObject
 		int num4 = ((Res.abs(ph.pi[CharInfo[cf][0][0]].dy) < 22) ? ph.pi[CharInfo[cf][0][0]].dy : ((ph.pi[CharInfo[cf][0][0]].dy >= 0) ? (ph.pi[CharInfo[cf][0][0]].dy - 5) : (ph.pi[CharInfo[cf][0][0]].dy + 5)));
 		cH_new = cy - CharInfo[cf][0][2] + num4;
 		if (statusMe == 1 && charID > 0 && !isMask && !isUseChargeSkill() && !isWaitMonkey && skillPaint == null && cf != 23 && bag < 0 && ((GameCanvas.gameTick + charID) % 30 == 0 || isFreez))
-		{
 			g.drawImage((cgender != 1) ? eyeTraiDat : eyeNamek, cx + -((cgender != 1) ? 2 : 2) * num2, cy - 32 + ((cgender != 1) ? 11 : 10) - cf, anchor2);
-		}
 		if (eProtect != null)
-		{
 			eProtect.paint(g);
-		}
 		paintPKFlag(g);
 	}
 
@@ -6141,13 +5203,9 @@ public class Char : IMapObject
 			if (eff0 != null)
 			{
 				if (dx0 == 0)
-				{
 					dx0 = array[indexSkill].e0dx;
-				}
 				if (dy0 == 0)
-				{
 					dy0 = array[indexSkill].e0dy;
-				}
 				SmallImage.drawSmallImage(g, eff0.arrEfInfo[i0].idImg, cx + dx0 + eff0.arrEfInfo[i0].dx, cy + dy0 + eff0.arrEfInfo[i0].dy, 0, mGraphics.VCENTER | mGraphics.HCENTER);
 				i0++;
 				if (i0 >= eff0.arrEfInfo.Length)
@@ -6159,13 +5217,9 @@ public class Char : IMapObject
 			if (eff1 != null)
 			{
 				if (dx1 == 0)
-				{
 					dx1 = array[indexSkill].e1dx;
-				}
 				if (dy1 == 0)
-				{
 					dy1 = array[indexSkill].e1dy;
-				}
 				SmallImage.drawSmallImage(g, eff1.arrEfInfo[i1].idImg, cx + dx1 + eff1.arrEfInfo[i1].dx, cy + dy1 + eff1.arrEfInfo[i1].dy, 0, mGraphics.VCENTER | mGraphics.HCENTER);
 				i1++;
 				if (i1 >= eff1.arrEfInfo.Length)
@@ -6177,13 +5231,9 @@ public class Char : IMapObject
 			if (eff2 != null)
 			{
 				if (dx2 == 0)
-				{
 					dx2 = array[indexSkill].e2dx;
-				}
 				if (dy2 == 0)
-				{
 					dy2 = array[indexSkill].e2dy;
-				}
 				SmallImage.drawSmallImage(g, eff2.arrEfInfo[i2].idImg, cx + dx2 + eff2.arrEfInfo[i2].dx, cy + dy2 + eff2.arrEfInfo[i2].dy, 0, mGraphics.VCENTER | mGraphics.HCENTER);
 				i2++;
 				if (i2 >= eff2.arrEfInfo.Length)
@@ -6198,13 +5248,9 @@ public class Char : IMapObject
 			if (eff0 != null)
 			{
 				if (dx0 == 0)
-				{
 					dx0 = array[indexSkill].e0dx;
-				}
 				if (dy0 == 0)
-				{
 					dy0 = array[indexSkill].e0dy;
-				}
 				SmallImage.drawSmallImage(g, eff0.arrEfInfo[i0].idImg, cx - dx0 - eff0.arrEfInfo[i0].dx, cy + dy0 + eff0.arrEfInfo[i0].dy, 2, mGraphics.VCENTER | mGraphics.HCENTER);
 				i0++;
 				if (i0 >= eff0.arrEfInfo.Length)
@@ -6218,13 +5264,9 @@ public class Char : IMapObject
 			if (eff1 != null)
 			{
 				if (dx1 == 0)
-				{
 					dx1 = array[indexSkill].e1dx;
-				}
 				if (dy1 == 0)
-				{
 					dy1 = array[indexSkill].e1dy;
-				}
 				SmallImage.drawSmallImage(g, eff1.arrEfInfo[i1].idImg, cx - dx1 - eff1.arrEfInfo[i1].dx, cy + dy1 + eff1.arrEfInfo[i1].dy, 2, mGraphics.VCENTER | mGraphics.HCENTER);
 				i1++;
 				if (i1 >= eff1.arrEfInfo.Length)
@@ -6238,13 +5280,9 @@ public class Char : IMapObject
 			if (eff2 != null)
 			{
 				if (dx2 == 0)
-				{
 					dx2 = array[indexSkill].e2dx;
-				}
 				if (dy2 == 0)
-				{
 					dy2 = array[indexSkill].e2dy;
-				}
 				SmallImage.drawSmallImage(g, eff2.arrEfInfo[i2].idImg, cx - dx2 - eff2.arrEfInfo[i2].dx, cy + dy2 + eff2.arrEfInfo[i2].dy, 2, mGraphics.VCENTER | mGraphics.HCENTER);
 				i2++;
 				if (i2 >= eff2.arrEfInfo.Length)
@@ -6263,11 +5301,8 @@ public class Char : IMapObject
 	{
 		for (int i = 0; i < GameScr.vCharInMap.size(); i++)
 		{
-			Char @char = (Char)GameScr.vCharInMap.elementAt(i);
-			if (@char.charID == ID)
-			{
+			if (((Char)GameScr.vCharInMap.elementAt(i)).charID == ID)
 				return i;
-			}
 		}
 		return -1;
 	}
@@ -6299,38 +5334,24 @@ public class Char : IMapObject
 		{
 			act = 2;
 			if (num > 0)
-			{
 				dir = 1;
-			}
 			if (num < 0)
-			{
 				dir = -1;
-			}
 		}
 		else if (num2 != 0)
 		{
 			if (num2 < 0)
-			{
 				act = 3;
-			}
 			if (num2 > 0)
-			{
 				act = 4;
-			}
 			if (num < 0)
-			{
 				dir = -1;
-			}
 			if (num > 0)
-			{
 				dir = 1;
-			}
 		}
 		vMovePoints.addElement(new MovePoint(toX, toY, act, dir));
 		if (statusMe != 6)
-		{
 			statusBeforeNothing = statusMe;
-		}
 		statusMe = 6;
 		cp3 = 0;
 	}
@@ -6346,9 +5367,7 @@ public class Char : IMapObject
 			Char char2 = (Char)GameScr.vCharInMap.elementAt(cID);
 			char2.cHP -= HP;
 			if (char2.cHP < 0)
-			{
 				char2.cHP = 0;
-			}
 			char2.cHPShow = ((Char)GameScr.vCharInMap.elementAt(cID)).cHP - HP;
 			char2.statusMe = 6;
 			char2.cp3 = 0;
@@ -6363,9 +5382,7 @@ public class Char : IMapObject
 			int x = GameScr.gI().magicTree.x;
 			int y = GameScr.gI().magicTree.y;
 			if (cx > x - 30 && cx < x + 30 && cy > y - 30 && cy < y + 30)
-			{
 				return true;
-			}
 			return false;
 		}
 		return false;
@@ -6375,9 +5392,7 @@ public class Char : IMapObject
 	{
 		int[] array = new int[4] { -1, -1, -1, -1 };
 		if (itemFocus != null)
-		{
 			return;
-		}
 		for (int i = 0; i < GameScr.vItemMap.size(); i++)
 		{
 			ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(i);
@@ -6385,9 +5400,7 @@ public class Char : IMapObject
 			int num2 = Math.abs(myCharz().cy - itemMap.y);
 			int num3 = ((num <= num2) ? num2 : num);
 			if (num > 48 || num2 > 48 || (itemFocus != null && num3 >= array[3]))
-			{
 				continue;
-			}
 			if (GameScr.gI().auto != 0 && GameScr.gI().isBagFull())
 			{
 				if (itemMap.template.type == 9)
@@ -6417,18 +5430,12 @@ public class Char : IMapObject
 			return;
 		}
 		if (isManualFocus && charFocus != null && (charFocus.statusMe == 15 || charFocus.isInvisiblez))
-		{
 			charFocus = null;
-		}
 		if (GameCanvas.gameTick % 2 == 0 || isMeCanAttackOtherPlayer(charFocus))
-		{
 			return;
-		}
 		int num = 0;
 		if (nClass.classId == 0 || nClass.classId == 1 || nClass.classId == 3 || nClass.classId == 5)
-		{
 			num = 40;
-		}
 		int[] array = new int[4] { -1, -1, -1, -1 };
 		int num2 = GameScr.cmx - 10;
 		int num3 = GameScr.cmx + GameCanvas.w + 10;
@@ -6437,9 +5444,7 @@ public class Char : IMapObject
 		if (isManualFocus)
 		{
 			if ((mobFocus != null && mobFocus.status != 1 && mobFocus.status != 0 && num2 <= mobFocus.x && mobFocus.x <= num3 && cmy <= mobFocus.y && mobFocus.y <= num4) || (npcFocus != null && num2 <= npcFocus.cx && npcFocus.cx <= num3 && cmy <= npcFocus.cy && npcFocus.cy <= num4) || (charFocus != null && num2 <= charFocus.cx && charFocus.cx <= num3 && cmy <= charFocus.cy && charFocus.cy <= num4) || (itemFocus != null && num2 <= itemFocus.x && itemFocus.x <= num3 && cmy <= itemFocus.y && itemFocus.y <= num4))
-			{
 				return;
-			}
 			isManualFocus = false;
 		}
 		num2 = myCharz().cx - 80;
@@ -6526,9 +5531,7 @@ public class Char : IMapObject
 				int num12 = Math.abs(myCharz().cy - itemMap.y);
 				int num13 = ((num11 <= num12) ? num12 : num11);
 				if (num11 > 48 || num12 > 48 || (itemFocus != null && num13 >= array[3]))
-				{
 					continue;
-				}
 				if (GameScr.gI().auto != 0 && GameScr.gI().isBagFull())
 				{
 					if (itemMap.template.type == 9)
@@ -6559,9 +5562,7 @@ public class Char : IMapObject
 				int num15 = Math.abs(myCharz().cy - itemMap2.y);
 				int num16 = ((num14 <= num15) ? num15 : num14);
 				if (num2 > itemMap2.x || itemMap2.x > num3 || cmy > itemMap2.y || itemMap2.y > num4 || (itemFocus != null && num16 >= array[3]))
-				{
 					continue;
-				}
 				if (GameScr.gI().auto != 0 && GameScr.gI().isBagFull())
 				{
 					if (itemMap2.template.type == 9)
@@ -6582,9 +5583,7 @@ public class Char : IMapObject
 		cmy = myCharz().cy - myCharz().getdySkill() - num - 20;
 		num4 = myCharz().cy + myCharz().getdySkill() + 20;
 		if (num4 > myCharz().cy + 30)
-		{
 			num4 = myCharz().cy + 30;
-		}
 		if (mobFocus == null)
 		{
 			for (int m = 0; m < GameScr.vMob.size(); m++)
@@ -6669,9 +5668,7 @@ public class Char : IMapObject
 			if (num31 == -1)
 			{
 				if (array[num32] != -1)
-				{
 					num31 = num32;
-				}
 			}
 			else if (array[num32] < array[num31] && array[num32] != -1)
 			{
@@ -6682,9 +5679,7 @@ public class Char : IMapObject
 		if (me && isAttacPlayerStatus())
 		{
 			if (mobFocus != null && !mobFocus.isMobMe)
-			{
 				mobFocus = null;
-			}
 			npcFocus = null;
 			itemFocus = null;
 		}
@@ -6692,28 +5687,29 @@ public class Char : IMapObject
 
 	public void clearFocus(int index)
 	{
-		switch (index)
+		if (index == 0)
 		{
-		case 0:
 			deFocusNPC();
 			charFocus = null;
 			itemFocus = null;
-			break;
-		case 1:
+		}
+		else if (index == 1)
+		{
 			mobFocus = null;
 			charFocus = null;
 			itemFocus = null;
-			break;
-		case 2:
+		}
+		else if (index == 2)
+		{
 			mobFocus = null;
 			deFocusNPC();
 			itemFocus = null;
-			break;
-		case 3:
+		}
+		else if (index == 3)
+		{
 			mobFocus = null;
 			deFocusNPC();
 			charFocus = null;
-			break;
 		}
 	}
 
@@ -6724,9 +5720,7 @@ public class Char : IMapObject
 		int num2 = GameScr.cmy + 10;
 		int num3 = GameScr.cmy + GameScr.gH;
 		if (c.statusMe != 15 && !c.isInvisiblez && cmx <= c.cx && c.cx <= num && num2 <= c.cy && c.cy <= num3)
-		{
 			return true;
-		}
 		return false;
 	}
 
@@ -6738,13 +5732,9 @@ public class Char : IMapObject
 	public void setHoldChar(Char r)
 	{
 		if (cx < r.cx)
-		{
 			cdir = 1;
-		}
 		else
-		{
 			cdir = -1;
-		}
 		charHold = r;
 		holder = true;
 	}
@@ -6752,13 +5742,9 @@ public class Char : IMapObject
 	public void setHoldMob(Mob r)
 	{
 		if (cx < r.x)
-		{
 			cdir = 1;
-		}
 		else
-		{
 			cdir = -1;
-		}
 		mobHold = r;
 		holder = true;
 	}
@@ -6767,9 +5753,7 @@ public class Char : IMapObject
 	{
 		Res.outz("focus size= " + focus.size());
 		if ((myCharz().skillPaint != null || myCharz().arr != null || myCharz().dart != null || myCharz().skillInfoPaint() != null) && focus.size() == 0)
-		{
 			return;
-		}
 		focus.removeAllElements();
 		int num = 0;
 		int num2 = GameScr.cmx + 10;
@@ -6783,9 +5767,7 @@ public class Char : IMapObject
 			{
 				focus.addElement(@char);
 				if (charFocus != null && @char.Equals(charFocus))
-				{
 					num = focus.size();
-				}
 			}
 		}
 		if (me && isAttacPlayerStatus())
@@ -6803,18 +5785,14 @@ public class Char : IMapObject
 				Res.outz("co the tan ong quai");
 				focus.addElement(mob);
 				if (mobFocus != null)
-				{
 					num = focus.size();
-				}
 			}
 			npcFocus = null;
 			itemFocus = null;
 			if (focus.size() > 0)
 			{
 				if (num >= focus.size())
-				{
 					num = 0;
-				}
 				focusManualTo(focus.elementAt(num));
 			}
 			else
@@ -6834,9 +5812,7 @@ public class Char : IMapObject
 			{
 				focus.addElement(itemMap);
 				if (itemFocus != null && itemMap.Equals(itemFocus))
-				{
 					num = focus.size();
-				}
 			}
 		}
 		for (int l = 0; l < GameScr.vMob.size(); l++)
@@ -6846,9 +5822,7 @@ public class Char : IMapObject
 			{
 				focus.addElement(mob2);
 				if (mobFocus != null && mob2.Equals(mobFocus))
-				{
 					num = focus.size();
-				}
 			}
 		}
 		for (int m = 0; m < GameScr.vNpc.size(); m++)
@@ -6858,17 +5832,13 @@ public class Char : IMapObject
 			{
 				focus.addElement(npc);
 				if (npcFocus != null && npc.Equals(npcFocus))
-				{
 					num = focus.size();
-				}
 			}
 		}
 		if (focus.size() > 0)
 		{
 			if (num >= focus.size())
-			{
 				num = 0;
-			}
 			focusManualTo(focus.elementAt(num));
 		}
 		else
@@ -6886,9 +5856,7 @@ public class Char : IMapObject
 		if (me && npcFocus != null)
 		{
 			if (!GameCanvas.menu.showMenu)
-			{
 				chatPopup = null;
-			}
 			npcFocus = null;
 		}
 	}
@@ -6935,9 +5903,7 @@ public class Char : IMapObject
 	public static bool setInsc(int cmX, int cmWx, int x, int cmy, int cmyH, int y)
 	{
 		if (x > cmWx || x < cmX || y > cmyH || y < cmy)
-		{
 			return false;
-		}
 		return true;
 	}
 
@@ -6945,9 +5911,7 @@ public class Char : IMapObject
 	{
 		int num = 0;
 		if (item == null || item.options == null)
-		{
 			return;
-		}
 		for (int i = 0; i < item.options.size(); i++)
 		{
 			ItemOption itemOption = (ItemOption)item.options.elementAt(i);
@@ -6995,35 +5959,23 @@ public class Char : IMapObject
 		GameScr.gI().isInjureMp = true;
 		GameScr.gI().twMp = 0;
 		if (cHP < 0)
-		{
 			cHP = 0;
-		}
 		if (cMP < 0)
-		{
 			cMP = 0;
-		}
 		if (isMob || (!isMob && cTypePk != 4 && damMP != -100))
 		{
 			if (HPShow <= 0)
 			{
 				if (me)
-				{
 					GameScr.startFlyText(mResources.miss, cx, cy - ch, 0, -2, mFont.MISS_ME);
-				}
 				else
-				{
 					GameScr.startFlyText(mResources.miss, cx, cy - ch, 0, -2, mFont.MISS);
-				}
 			}
 			else
-			{
 				GameScr.startFlyText("-" + HPShow, cx, cy - ch, 0, -2, isCrit ? mFont.FATAL : mFont.RED);
-			}
 		}
 		if (HPShow > 0)
-		{
 			isInjure = 6;
-		}
 		ServerEffect.addServerEffect(80, this, 1);
 		if (isDie)
 		{
@@ -7050,25 +6002,18 @@ public class Char : IMapObject
 		isMonkey = 0;
 		isWaitMonkey = false;
 		if (me && isDie)
-		{
 			return;
-		}
 		if (me)
 		{
 			isLockMove = true;
 			for (int i = 0; i < GameScr.vCharInMap.size(); i++)
 			{
-				Char @char = (Char)GameScr.vCharInMap.elementAt(i);
-				@char.killCharId = -9999;
+				((Char)GameScr.vCharInMap.elementAt(i)).killCharId = -9999;
 			}
 			if (GameCanvas.panel != null && GameCanvas.panel.cp != null)
-			{
 				GameCanvas.panel.cp = null;
-			}
 			if (GameCanvas.panel2 != null && GameCanvas.panel2.cp != null)
-			{
 				GameCanvas.panel2.cp = null;
-			}
 		}
 		statusMe = 5;
 		cp2 = toX;
@@ -7078,9 +6023,7 @@ public class Char : IMapObject
 		testCharId = -9999;
 		killCharId = -9999;
 		if (me && myskill != null && myskill.template.id != 14)
-		{
 			stopUseChargeSkill();
-		}
 		cTypePk = 0;
 	}
 
@@ -7104,9 +6047,7 @@ public class Char : IMapObject
 	public bool doUsePotion()
 	{
 		if (arrItemBag == null)
-		{
 			return false;
-		}
 		for (int i = 0; i < arrItemBag.Length; i++)
 		{
 			if (arrItemBag[i] != null && arrItemBag[i].template.type == 6)
@@ -7121,18 +6062,14 @@ public class Char : IMapObject
 	public bool isLang()
 	{
 		if (TileMap.mapID == 1 || TileMap.mapID == 27 || TileMap.mapID == 72 || TileMap.mapID == 10 || TileMap.mapID == 17 || TileMap.mapID == 22 || TileMap.mapID == 32 || TileMap.mapID == 38 || TileMap.mapID == 43 || TileMap.mapID == 48)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public bool isMeCanAttackOtherPlayer(Char cAtt)
 	{
 		if (cAtt == null || myCharz().myskill == null || myCharz().myskill.template.type == 2 || (myCharz().myskill.template.type == 4 && cAtt.statusMe != 14 && cAtt.statusMe != 5))
-		{
 			return false;
-		}
 		return ((cAtt.cTypePk == 3 && myCharz().cTypePk == 3) || myCharz().cTypePk == 5 || cAtt.cTypePk == 5 || (myCharz().cTypePk == 1 && cAtt.cTypePk == 1) || (myCharz().cTypePk == 4 && cAtt.cTypePk == 4) || (myCharz().testCharId >= 0 && myCharz().testCharId == cAtt.charID) || (myCharz().killCharId >= 0 && myCharz().killCharId == cAtt.charID && !isLang()) || (cAtt.killCharId >= 0 && cAtt.killCharId == myCharz().charID && !isLang()) || (myCharz().cFlag == 8 && cAtt.cFlag != 0) || (myCharz().cFlag != 0 && cAtt.cFlag == 8) || (myCharz().cFlag != cAtt.cFlag && myCharz().cFlag != 0 && cAtt.cFlag != 0)) && cAtt.statusMe != 14 && cAtt.statusMe != 5;
 	}
 
@@ -7142,9 +6079,7 @@ public class Char : IMapObject
 		for (int i = 0; i < myCharz().arrItemBag.Length; i++)
 		{
 			if (myCharz().arrItemBag[i] != null && myCharz().arrItemBag[i].template.type == 8)
-			{
 				myCharz().arrItemBag[i] = null;
-			}
 		}
 		Npc.clearEffTask();
 	}
@@ -7224,32 +6159,20 @@ public class Char : IMapObject
 	public void addDustEff(int type)
 	{
 		if (GameCanvas.lowGraphic)
-		{
 			return;
-		}
-		switch (type)
+		if (type == 1)
 		{
-		case 1:
 			if (clevel >= 9)
-			{
-				Effect effect3 = new Effect(19, cx - 5, cy + 20, 2, 1, -1);
-				EffecMn.addEff(effect3);
-			}
-			break;
-		case 2:
+				EffecMn.addEff(new Effect(19, cx - 5, cy + 20, 2, 1, -1));
+		}
+		else if (type == 2)
+		{
 			if ((!me || isMonkey != 1) && isNhapThe && GameCanvas.gameTick % 5 == 0)
-			{
-				Effect effect2 = new Effect(22, cx - 5, cy + 35, 2, 1, -1);
-				EffecMn.addEff(effect2);
-			}
-			break;
-		case 3:
-			if (clevel >= 9 && ySd - cy <= 5)
-			{
-				Effect effect = new Effect(19, cx - 5, ySd + 20, 2, 1, -1);
-				EffecMn.addEff(effect);
-			}
-			break;
+				EffecMn.addEff(new Effect(22, cx - 5, cy + 35, 2, 1, -1));
+		}
+		else if (type == 3 && clevel >= 9 && ySd - cy <= 5)
+		{
+			EffecMn.addEff(new Effect(19, cx - 5, ySd + 20, 2, 1, -1));
 		}
 	}
 
@@ -7262,9 +6185,7 @@ public class Char : IMapObject
 			if (pKFlag != null)
 			{
 				if (pKFlag.cflag == getFlag)
-				{
 					return true;
-				}
 				result = false;
 			}
 		}
@@ -7276,9 +6197,7 @@ public class Char : IMapObject
 		if (cdir == 1)
 		{
 			if (cFlag != 0 && cFlag != -1)
-			{
 				SmallImage.drawSmallImage(g, flagImage, cx - 10, cy - ch - ((!me) ? 30 : 30) + ((GameCanvas.gameTick % 20 > 10) ? (GameCanvas.gameTick % 4 / 2) : 0), 2, 0);
-			}
 		}
 		else if (cFlag != 0 && cFlag != -1)
 		{
@@ -7316,17 +6235,11 @@ public class Char : IMapObject
 	public void removeEffect()
 	{
 		if (holdEffID != 0)
-		{
 			holdEffID = 0;
-		}
 		if (holder)
-		{
 			holder = false;
-		}
 		if (protectEff)
-		{
 			protectEff = false;
-		}
 		eProtect = null;
 		charHold = null;
 		mobHold = null;
@@ -7344,13 +6257,9 @@ public class Char : IMapObject
 		if (me)
 		{
 			if (GameCanvas.panel != null)
-			{
 				GameCanvas.panel.hide();
-			}
 			if (GameCanvas.panel2 != null)
-			{
 				GameCanvas.panel2.hide();
-			}
 		}
 	}
 
@@ -7372,15 +6281,11 @@ public class Char : IMapObject
 		if (fusion == 4 || fusion == 5)
 		{
 			if (me)
-			{
 				Service.gI().funsion(fusion);
-			}
 			EffecMn.addEff(new Effect(34, cx, cy + 12, 2, 1, -1));
 		}
 		if (fusion == 6)
-		{
 			EffecMn.addEff(new Effect(38, cx, cy + 12, 2, 1, -1));
-		}
 		if (me)
 		{
 			GameCanvas.panel.hideNow();
@@ -7388,13 +6293,9 @@ public class Char : IMapObject
 		}
 		isFusion = true;
 		if (fusion == 1)
-		{
 			isNhapThe = false;
-		}
 		else
-		{
 			isNhapThe = true;
-		}
 	}
 
 	public void removeSleepEff()
@@ -7413,21 +6314,13 @@ public class Char : IMapObject
 	public void setPartTemp(int head, int body, int leg, int bag)
 	{
 		if (head != -1)
-		{
 			this.head = head;
-		}
 		if (body != -1)
-		{
 			this.body = body;
-		}
 		if (leg != -1)
-		{
 			this.leg = leg;
-		}
 		if (bag != -1)
-		{
 			this.bag = bag;
-		}
 	}
 
 	public void resetPartTemp()
@@ -7460,9 +6353,7 @@ public class Char : IMapObject
 		{
 			Effect effect = (Effect)vEffChar.elementAt(i);
 			if (effect.effId == id)
-			{
 				return effect;
-			}
 		}
 		return null;
 	}
@@ -7476,9 +6367,7 @@ public class Char : IMapObject
 	public void removeEffChar(int type, int id)
 	{
 		if (type == -1)
-		{
 			vEffChar.removeAllElements();
-		}
 		else if (getEffById(id) != null)
 		{
 			vEffChar.removeElement(getEffById(id));
@@ -7494,13 +6383,9 @@ public class Char : IMapObject
 			{
 				bool flag = true;
 				if (effect.isStand == 0)
-				{
 					flag = ((statusMe == 1 || statusMe == 6) ? true : false);
-				}
 				if (flag)
-				{
 					effect.paint(g);
-				}
 			}
 		}
 	}
@@ -7514,13 +6399,9 @@ public class Char : IMapObject
 			{
 				bool flag = true;
 				if (effect.isStand == 0)
-				{
 					flag = ((statusMe == 1 || statusMe == 6) ? true : false);
-				}
 				if (flag)
-				{
 					effect.paint(g);
-				}
 			}
 		}
 	}
@@ -7541,9 +6422,7 @@ public class Char : IMapObject
 	public void updateEye()
 	{
 		if (head != 934)
-		{
 			return;
-		}
 		if (GameCanvas.timeNow - timeAddChopmat > 0)
 		{
 			fChopmat++;
@@ -7553,36 +6432,25 @@ public class Char : IMapObject
 				timeAddChopmat = GameCanvas.timeNow + Res.random(2000, 3500);
 				frEye = frChopCham;
 				if (Res.random(2) == 0)
-				{
 					frEye = frChopNhanh;
-				}
 			}
 		}
 		else
-		{
 			fChopmat = 0;
-		}
 	}
 
 	private void paintRedEye(mGraphics g, int xx, int yy, int trans, int anchor)
 	{
 		if (head != 934 || (statusMe != 1 && statusMe != 6))
-		{
 			return;
-		}
 		if (fraRedEye == null || fraRedEye.imgFrame == null)
-		{
-			Image img = mSystem.loadImage("/redeye.png");
-			fraRedEye = new FrameImage(img, 14, 10);
-		}
+			fraRedEye = new FrameImage(mSystem.loadImage("/redeye.png"), 14, 10);
 		else if (frEye[fChopmat] != -1)
 		{
 			int num = 8;
 			int num2 = 15;
 			if (trans == 2)
-			{
 				num = -8;
-			}
 			fraRedEye.drawFrame(frEye[fChopmat], xx + num, yy + num2, trans, anchor, g);
 		}
 	}
@@ -7592,9 +6460,7 @@ public class Char : IMapObject
 		for (int i = 0; i < Arr_Head_2Fr.Length; i++)
 		{
 			if (Arr_Head_2Fr[i][0] == idHead)
-			{
 				return true;
-			}
 		}
 		return false;
 	}
@@ -7605,14 +6471,10 @@ public class Char : IMapObject
 		{
 			fHead++;
 			if (fHead > 10000)
-			{
 				fHead = 0;
-			}
 		}
 		else
-		{
 			fHead = 0;
-		}
 	}
 
 	private int getFHead(int idHead)
@@ -7620,9 +6482,7 @@ public class Char : IMapObject
 		for (int i = 0; i < Arr_Head_2Fr.Length; i++)
 		{
 			if (Arr_Head_2Fr[i][0] == idHead)
-			{
 				return Arr_Head_2Fr[i][fHead / 4 % Arr_Head_2Fr[i].Length];
-			}
 		}
 		return idHead;
 	}
@@ -7631,8 +6491,7 @@ public class Char : IMapObject
 	{
 		if ((!me || !isPaintAura) && idAuraEff > -1 && (statusMe == 1 || statusMe == 6) && !GameCanvas.panel.isShow && mSystem.currentTimeMillis() - timeBlue > 0)
 		{
-			string nameImg = strEffAura + idAuraEff + "_0";
-			FrameImage fraImage = mSystem.getFraImage(nameImg);
+			FrameImage fraImage = mSystem.getFraImage(strEffAura + idAuraEff + "_0");
 			fraImage?.drawFrame(GameCanvas.gameTick / 4 % fraImage.nFrame, cx, cy, (cdir != 1) ? 2 : 0, mGraphics.BOTTOM | mGraphics.HCENTER, g);
 		}
 	}
@@ -7640,9 +6499,7 @@ public class Char : IMapObject
 	public void paintAuraFront(mGraphics g)
 	{
 		if ((me && !isPaintAura) || idAuraEff <= -1)
-		{
 			return;
-		}
 		if (statusMe == 1 || statusMe == 6)
 		{
 			if (!GameCanvas.panel.isShow && !GameCanvas.lowGraphic)
@@ -7666,8 +6523,7 @@ public class Char : IMapObject
 				}
 				if (mSystem.currentTimeMillis() - timeBlue > 0)
 				{
-					string nameImg = strEffAura + idAuraEff + "_1";
-					FrameImage fraImage = mSystem.getFraImage(nameImg);
+					FrameImage fraImage = mSystem.getFraImage(strEffAura + idAuraEff + "_1");
 					fraImage?.drawFrame(GameCanvas.gameTick / 4 % fraImage.nFrame, cx, cy + 2, (cdir != 1) ? 2 : 0, mGraphics.BOTTOM | mGraphics.HCENTER, g);
 				}
 			}
@@ -7685,13 +6541,9 @@ public class Char : IMapObject
 		if (idEff_Set_Item != -1)
 		{
 			if (fraEff != null)
-			{
 				fraEff.drawFrame(GameCanvas.gameTick / 4 % fraEff.nFrame, cx, cy + 3, (cdir != 1) ? 2 : 0, mGraphics.BOTTOM | mGraphics.HCENTER, g);
-			}
 			else
-			{
 				fraEff = mSystem.getFraImage(strEff_Set_Item + idEff_Set_Item + "_0");
-			}
 		}
 	}
 
@@ -7700,13 +6552,9 @@ public class Char : IMapObject
 		if (idEff_Set_Item != -1)
 		{
 			if (fraEffSub != null)
-			{
 				fraEffSub.drawFrame(GameCanvas.gameTick / 4 % fraEffSub.nFrame, cx, cy + 8, (cdir != 1) ? 2 : 0, mGraphics.BOTTOM | mGraphics.HCENTER, g);
-			}
 			else
-			{
 				fraEffSub = mSystem.getFraImage(strEff_Set_Item + idEff_Set_Item + "_1");
-			}
 		}
 	}
 
@@ -7715,19 +6563,13 @@ public class Char : IMapObject
 		try
 		{
 			if (idHat == -1)
-			{
 				return;
-			}
 			if (isFrNgang(cf))
 			{
 				if (fraHat_behind_2 != null)
-				{
 					fraHat_behind_2.drawFrame(GameCanvas.gameTick / 4 % fraHat_behind_2.nFrame, cx + hatInfo[cf][0] * ((cdir == 1) ? 1 : (-1)), yh + hatInfo[cf][1], (cdir != 1) ? 2 : 0, mGraphics.BOTTOM | mGraphics.HCENTER, g);
-				}
 				else
-				{
 					fraHat_behind_2 = mSystem.getFraImage(strHat_behind + strNgang + idHat);
-				}
 			}
 			else if (fraHat_behind != null)
 			{
@@ -7748,19 +6590,13 @@ public class Char : IMapObject
 		try
 		{
 			if (idHat == -1)
-			{
 				return;
-			}
 			if (isFrNgang(cf))
 			{
 				if (fraHat_font_2 != null)
-				{
 					fraHat_font_2.drawFrame(GameCanvas.gameTick / 4 % fraHat_font_2.nFrame, cx + hatInfo[cf][0] * ((cdir == 1) ? 1 : (-1)), yh + hatInfo[cf][1], (cdir != 1) ? 2 : 0, mGraphics.BOTTOM | mGraphics.HCENTER, g);
-				}
 				else
-				{
 					fraHat_font_2 = mSystem.getFraImage(strHat_font + strNgang + idHat);
-				}
 			}
 			else if (fraHat_font != null)
 			{
@@ -7779,9 +6615,7 @@ public class Char : IMapObject
 	public bool isFrNgang(int fr)
 	{
 		if (fr == 2 || fr == 3 || fr == 4 || fr == 5 || fr == 6 || fr == 9 || fr == 10 || fr == 13 || fr == 14 || fr == 15 || fr == 16 || fr == 26 || fr == 27 || fr == 28 || fr == 29)
-		{
 			return true;
-		}
 		return false;
 	}
 }

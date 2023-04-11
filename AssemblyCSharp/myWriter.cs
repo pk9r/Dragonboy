@@ -130,15 +130,12 @@ public class myWriter
 	public void writeUTF(string value)
 	{
 		Encoding unicode = Encoding.Unicode;
-		Encoding encoding = Encoding.GetEncoding(65001);
-		byte[] bytes = unicode.GetBytes(value);
-		byte[] array = Encoding.Convert(unicode, encoding, bytes);
+		byte[] array = Encoding.Convert(unicode, Encoding.GetEncoding(65001), unicode.GetBytes(value));
 		writeShort((short)array.Length);
 		checkLenght(array.Length);
 		for (int i = 0; i < array.Length; i++)
 		{
-			sbyte value2 = (sbyte)array[i];
-			writeSByteUncheck(value2);
+			writeSByteUncheck((sbyte)array[i]);
 		}
 	}
 
@@ -150,16 +147,12 @@ public class myWriter
 	public void write(ref sbyte[] data, int arg1, int arg2)
 	{
 		if (data == null)
-		{
 			return;
-		}
 		for (int i = 0; i < arg2; i++)
 		{
 			writeSByte(data[i + arg1]);
 			if (posWrite > buffer.Length)
-			{
 				break;
-			}
 		}
 	}
 
@@ -171,9 +164,7 @@ public class myWriter
 	public sbyte[] getData()
 	{
 		if (posWrite <= 0)
-		{
 			return null;
-		}
 		sbyte[] array = new sbyte[posWrite];
 		for (int i = 0; i < posWrite; i++)
 		{
@@ -201,9 +192,9 @@ public class myWriter
 	{
 		string path = args[0];
 		string path2 = args[1];
-		using StreamReader input = new StreamReader(path, Encoding.Unicode);
-		using StreamWriter output = new StreamWriter(path2, append: false, Encoding.UTF8);
-		CopyContents(input, output);
+		using (StreamReader input = new StreamReader(path, Encoding.Unicode))
+			using (StreamWriter output = new StreamWriter(path2, false, Encoding.UTF8))
+				CopyContents(input, output);
 	}
 
 	private static void CopyContents(TextReader input, TextWriter output)
@@ -215,16 +206,13 @@ public class myWriter
 			output.Write(array, 0, count);
 		}
 		output.Flush();
-		string message = output.ToString();
-		Debug.Log(message);
+		Debug.Log(output.ToString());
 	}
 
 	public byte convertSbyteToByte(sbyte var)
 	{
 		if (var > 0)
-		{
 			return (byte)var;
-		}
 		return (byte)(var + 256);
 	}
 
@@ -234,13 +222,9 @@ public class myWriter
 		for (int i = 0; i < var.Length; i++)
 		{
 			if (var[i] > 0)
-			{
 				array[i] = (byte)var[i];
-			}
 			else
-			{
 				array[i] = (byte)(var[i] + 256);
-			}
 		}
 		return array;
 	}

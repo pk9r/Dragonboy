@@ -72,9 +72,7 @@ public class Image
 	public static Image createImage(sbyte[] imageData, int offset, int lenght)
 	{
 		if (offset + lenght > imageData.Length)
-		{
 			return null;
-		}
 		byte[] array = new byte[lenght];
 		for (int i = 0; i < lenght; i++)
 		{
@@ -86,9 +84,7 @@ public class Image
 	public static byte convertSbyteToByte(sbyte var)
 	{
 		if (var > 0)
-		{
 			return (byte)var;
-		}
 		return (byte)(var + 256);
 	}
 
@@ -98,13 +94,9 @@ public class Image
 		for (int i = 0; i < var.Length; i++)
 		{
 			if (var[i] > 0)
-			{
 				array[i] = (byte)var[i];
-			}
 			else
-			{
 				array[i] = (byte)(var[i] + 256);
-			}
 		}
 		return array;
 	}
@@ -128,10 +120,7 @@ public class Image
 		int num = rgb & 0xFF;
 		int num2 = (rgb >> 8) & 0xFF;
 		int num3 = (rgb >> 16) & 0xFF;
-		float b = (float)num / 256f;
-		float g = (float)num2 / 256f;
-		float r = (float)num3 / 256f;
-		return new Color(r, g, b);
+		return new Color(b: (float)num / 256f, g: (float)num2 / 256f, r: (float)num3 / 256f);
 	}
 
 	public static void update()
@@ -182,9 +171,7 @@ public class Image
 		{
 			Thread.Sleep(5);
 			if (status == 0)
-			{
 				break;
-			}
 		}
 		if (i == 500)
 		{
@@ -209,9 +196,7 @@ public class Image
 		{
 			Thread.Sleep(5);
 			if (status == 0)
-			{
 				break;
-			}
 		}
 		if (i == 500)
 		{
@@ -236,9 +221,7 @@ public class Image
 		{
 			Thread.Sleep(5);
 			if (status == 0)
-			{
 				break;
-			}
 		}
 		if (i == 500)
 		{
@@ -268,9 +251,7 @@ public class Image
 		{
 			Thread.Sleep(5);
 			if (status == 0)
-			{
 				break;
-			}
 		}
 		if (i == 500)
 		{
@@ -296,9 +277,7 @@ public class Image
 		{
 			Thread.Sleep(5);
 			if (status == 0)
-			{
 				break;
-			}
 		}
 		if (i == 500)
 		{
@@ -313,11 +292,8 @@ public class Image
 		Image image = new Image();
 		TextAsset textAsset = (TextAsset)Resources.Load(filename, typeof(TextAsset));
 		if (textAsset == null || textAsset.bytes == null || textAsset.bytes.Length == 0)
-		{
 			throw new Exception("NULL POINTER EXCEPTION AT Image __createImage " + filename);
-		}
-		sbyte[] array = ArrayCast.cast(textAsset.bytes);
-		Debug.LogError("CHIEU DAI MANG BYTE IMAGE CREAT = " + array.Length);
+		Debug.LogError("CHIEU DAI MANG BYTE IMAGE CREAT = " + ArrayCast.cast(textAsset.bytes).Length);
 		return textAsset.bytes;
 	}
 
@@ -326,9 +302,7 @@ public class Image
 		Image image = new Image();
 		Texture2D texture2D = Resources.Load(filename) as Texture2D;
 		if (texture2D == null)
-		{
 			throw new Exception("NULL POINTER EXCEPTION AT Image __createImage " + filename);
-		}
 		image.texture = texture2D;
 		image.w = image.texture.width;
 		image.h = image.texture.height;
@@ -370,11 +344,8 @@ public class Image
 			{
 				int num = i;
 				if (transform == 2)
-				{
 					num = w - i;
-				}
-				int num2 = j;
-				image.texture.SetPixel(i, j, src.texture.GetPixel(x + num, y + num2));
+				image.texture.SetPixel(i, j, src.texture.GetPixel(x + num, y + j));
 			}
 		}
 		image.texture.Apply();
@@ -392,7 +363,7 @@ public class Image
 	public static Image __createImage(int w, int h)
 	{
 		Image image = new Image();
-		image.texture = new Texture2D(w, h, TextureFormat.RGBA32, mipmap: false);
+		image.texture = new Texture2D(w, h, TextureFormat.RGBA32, false);
 		setTextureQuality(image);
 		image.w = w;
 		image.h = h;

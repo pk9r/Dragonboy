@@ -32,9 +32,7 @@ public class FireWorkMn
 		{
 			Firework firework = (Firework)fw.elementAt(i);
 			if (firework.y < -200)
-			{
 				fw.removeElementAt(i);
-			}
 			firework.paint(g);
 		}
 	}

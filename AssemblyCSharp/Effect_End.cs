@@ -99,9 +99,7 @@ public class Effect_End
 	public static Image getImage(int id)
 	{
 		if (id < 0)
-		{
 			return null;
-		}
 		string path = "/e/e_" + id + ".png";
 		Image result = null;
 		try
@@ -122,9 +120,7 @@ public class Effect_End
 			int num = -1;
 			int num2 = Res.random(3);
 			if (num >= 0)
-			{
 				SoundMn.playSound(x, y, num, SoundMn.volume);
-			}
 		}
 		catch (Exception)
 		{
@@ -194,18 +190,18 @@ public class Effect_End
 
 	private void set_End_String(int typeEffect)
 	{
-		switch (typeEffect)
+		if (typeEffect != 0)
 		{
-		case 0:
-			fraImgEff = new FrameImage(4);
-			break;
-		case 1:
-			fraImgEff = new FrameImage(5);
-			break;
-		case 2:
-			fraImgEff = new FrameImage(6);
-			break;
+			if (typeEffect != 1)
+			{
+				if (typeEffect == 2)
+					fraImgEff = new FrameImage(6);
+			}
+			else
+				fraImgEff = new FrameImage(5);
 		}
+		else
+			fraImgEff = new FrameImage(4);
 		fRemove = 100;
 		dy_throw = GameCanvas.h / 3 + 10;
 		vy = 10;
@@ -218,14 +214,10 @@ public class Effect_End
 		x = GameCanvas.hw;
 		y = y1000;
 		if (f > fRemove)
-		{
 			removeEff();
-		}
 		vy++;
 		if (vy > 15)
-		{
 			vy = 15;
-		}
 		if (y1000 + vy < dy_throw)
 		{
 			y1000 += vy;
@@ -236,18 +228,14 @@ public class Effect_End
 		{
 			isAddSub = true;
 			if (typeSub != -1)
-			{
 				GameScr.addEffectEnd(typeSub, 0, x, y, levelPaint, 0);
-			}
 		}
 	}
 
 	private void pnt_End_String(mGraphics g)
 	{
 		if (fraImgEff != null)
-		{
 			fraImgEff.drawFrame(f / 5 % fraImgEff.nFrame, x, y, 0, 33, g);
-		}
 	}
 
 	private void set_FireWork()
@@ -265,9 +253,7 @@ public class Effect_End
 				point.fRe = Res.random(10);
 				int num2 = 1;
 				if (i % 2 == 0)
-				{
 					num2 = -1;
-				}
 				point.x = x + Res.random(arrInfoEff[5][0] / 2) * num2;
 				point.y = y - Res.random(arrInfoEff[5][1] / 2);
 				point.fraImgEff = new FrameImage(7);
@@ -283,30 +269,22 @@ public class Effect_End
 			Point point = (Point)VecEffEnd.elementAt(i);
 			point.update();
 			if (point.f == point.fRe)
-			{
 				SoundMn.playSound(point.x, point.y, SoundMn.FIREWORK, SoundMn.volume);
-			}
 			if (point.f - point.fRe <= point.fraImgEff.nFrame * 3 - 1)
-			{
 				continue;
-			}
 			point.f = 0;
 			if (typeSub == 0)
 			{
 				point.fRe = Res.random(10);
 				int num = 1;
 				if (i % 2 == 0)
-				{
 					num = -1;
-				}
 				point.x = x + Res.random(arrInfoEff[5][0] / 2) * num;
 				point.y = y - Res.random(arrInfoEff[5][1] / 2);
 			}
 		}
 		if (f >= fRemove)
-		{
 			removeEff();
-		}
 	}
 
 	private void pnt_FireWork(mGraphics g)
@@ -315,9 +293,7 @@ public class Effect_End
 		{
 			Point point = (Point)VecEffEnd.elementAt(i);
 			if (point.f - point.fRe > -1 && point.fraImgEff != null)
-			{
 				point.fraImgEff.drawFrame((point.f - point.fRe) / 3 % point.fraImgEff.nFrame, point.x, point.y, 0, 3, g);
-			}
 		}
 	}
 }

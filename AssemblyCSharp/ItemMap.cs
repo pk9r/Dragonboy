@@ -103,36 +103,26 @@ public class ItemMap : IMapObject
 		{
 			GameScr.vItemMap.removeElement(this);
 			if (Char.myCharz().itemFocus != null && Char.myCharz().itemFocus.Equals(this))
-			{
 				Char.myCharz().itemFocus = null;
-			}
 			return;
 		}
 		if (status > 0)
 		{
 			if (vx == 0)
-			{
 				x = xEnd;
-			}
 			if (vy == 0)
-			{
 				y = yEnd;
-			}
 			if (x != xEnd)
 			{
 				x += vx;
 				if ((vx > 0 && x > xEnd) || (vx < 0 && x < xEnd))
-				{
 					x = xEnd;
-				}
 			}
 			if (y != yEnd)
 			{
 				y += vy;
 				if ((vy > 0 && y > yEnd) || (vy < 0 && y < yEnd))
-				{
 					y = yEnd;
-				}
 			}
 		}
 		else
@@ -145,9 +135,7 @@ public class ItemMap : IMapObject
 			}
 		}
 		if (isAuraItem())
-		{
 			updateAuraItemEff();
-		}
 	}
 
 	public void paint(mGraphics g)
@@ -158,13 +146,9 @@ public class ItemMap : IMapObject
 			if (status <= 0)
 			{
 				if (countAura < 10)
-				{
 					g.drawImage(imageAuraItem1, x, y + status + 3, mGraphics.BOTTOM | mGraphics.HCENTER);
-				}
 				else
-				{
 					g.drawImage(imageAuraItem2, x, y + status + 3, mGraphics.BOTTOM | mGraphics.HCENTER);
-				}
 			}
 			else if (countAura < 10)
 			{
@@ -178,21 +162,13 @@ public class ItemMap : IMapObject
 		else if (!isAuraItem())
 		{
 			if (GameCanvas.gameTick % 4 == 0)
-			{
 				g.drawImage(imageFlare, x, y + status + 13, mGraphics.BOTTOM | mGraphics.HCENTER);
-			}
 			if (status <= 0)
-			{
 				SmallImage.drawSmallImage(g, template.iconID, x, y + status + 3, 0, mGraphics.BOTTOM | mGraphics.HCENTER);
-			}
 			else
-			{
 				SmallImage.drawSmallImage(g, template.iconID, x, y + 3, 0, mGraphics.BOTTOM | mGraphics.HCENTER);
-			}
 			if (Char.myCharz().itemFocus != null && Char.myCharz().itemFocus.Equals(this) && status != 2)
-			{
 				g.drawRegion(Mob.imgHP, 0, 24, 9, 6, 0, x, y - 17, 3);
-			}
 		}
 	}
 
@@ -200,9 +176,7 @@ public class ItemMap : IMapObject
 	{
 		bool flag = false;
 		if (template.type == 22)
-		{
 			return true;
-		}
 		return false;
 	}
 
@@ -228,37 +202,25 @@ public class ItemMap : IMapObject
 		count++;
 		countAura++;
 		if (countAura >= 40)
-		{
 			countAura = 0;
-		}
 		if (count >= iDot)
-		{
 			count = 0;
-		}
 		if (count % 10 == 0 && !GameCanvas.lowGraphic)
-		{
 			ServerEffect.addServerEffect(114, x - 5, y - 30, 1);
-		}
 	}
 
 	public void paintAuraItemEff(mGraphics g)
 	{
 		if (GameCanvas.lowGraphic || !isAuraItem())
-		{
 			return;
-		}
 		for (int i = 0; i < yArg.Length; i++)
 		{
 			if (count == i)
 			{
 				if (countAura <= 20)
-				{
 					g.drawImage(imageAuraItem3, xDot[i], yDot[i] + 3, mGraphics.BOTTOM | mGraphics.HCENTER);
-				}
 				else
-				{
 					SmallImage.drawSmallImage(g, template.iconID, xDot[i], yDot[i] + 3, 0, mGraphics.BOTTOM | mGraphics.HCENTER);
-				}
 			}
 		}
 	}
@@ -266,9 +228,7 @@ public class ItemMap : IMapObject
 	private void setDotPosition()
 	{
 		if (GameCanvas.lowGraphic)
-		{
 			return;
-		}
 		for (int i = 0; i < yArg.Length; i++)
 		{
 			yArg[i] = Res.abs(rO * Res.sin(angle) / 1024);

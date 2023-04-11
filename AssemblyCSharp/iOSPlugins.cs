@@ -28,85 +28,64 @@ public class iOSPlugins
 	public static int Check()
 	{
 		if (Application.platform == RuntimePlatform.IPhonePlayer)
-		{
 			return checkCanSendSMS();
-		}
 		devide = iPhoneSettings.generation.ToString();
-		string text = string.Empty + devide[2];
-		if (text == "h" && devide.Length > 6)
+		if (string.Empty + devide[2] == "h" && devide.Length > 6)
 		{
 			Myname = SystemInfo.operatingSystem.ToString();
-			string text2 = string.Empty + Myname[10];
-			if (text2 != "2" && text2 != "3")
-			{
+			string text = string.Empty + Myname[10];
+			if (text != "2" && text != "3")
 				return 0;
-			}
 			return 1;
 		}
 		Cout.println(devide + "  loai");
 		if (devide == "Unknown" && ScaleGUI.WIDTH * ScaleGUI.HEIGHT < 786432f)
-		{
 			return 0;
-		}
 		return -1;
 	}
 
 	public static int checkCanSendSMS()
 	{
 		if (iPhoneSettings.generation == iPhoneGeneration.iPhone3GS || iPhoneSettings.generation == iPhoneGeneration.iPhone4 || iPhoneSettings.generation == iPhoneGeneration.iPhone4S || iPhoneSettings.generation == iPhoneGeneration.iPhone5)
-		{
 			return 0;
-		}
 		return -1;
 	}
 
 	public static void SMSsend(string phonenumber, string bodytext, int n)
 	{
 		if (Application.platform != 0)
-		{
 			_SMSsend(phonenumber, bodytext, n);
-		}
 	}
 
 	public static void back()
 	{
 		if (Application.platform != 0)
-		{
 			_back();
-		}
 	}
 
 	public static void Send()
 	{
 		if (Application.platform != 0)
-		{
 			_Send();
-		}
 	}
 
 	public static int unpause()
 	{
 		if (Application.platform != 0)
-		{
 			return _unpause();
-		}
 		return 0;
 	}
 
 	public static int checkRotation()
 	{
 		if (Application.platform != 0)
-		{
 			return _checkRotation();
-		}
 		return 0;
 	}
 
 	public static void purchaseItem(string itemID, string userName, string gameID)
 	{
 		if (Application.platform != 0)
-		{
 			_purchaseItem(itemID, userName, gameID);
-		}
 	}
 }

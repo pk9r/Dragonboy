@@ -57,9 +57,7 @@ public class InfoMe
 	public static InfoMe gI()
 	{
 		if (me == null)
-		{
 			me = new InfoMe();
-		}
 		return me;
 	}
 
@@ -74,25 +72,19 @@ public class InfoMe
 	public void paint(mGraphics g)
 	{
 		if ((Equals(GameScr.info2) && GameScr.gI().isVS()) || (Equals(GameScr.info2) && GameScr.gI().popUpYesNo != null) || !GameScr.isPaint || (GameCanvas.currentScreen != GameScr.gI() && GameCanvas.currentScreen != CrackBallScr.gI()) || ChatPopup.serverChatPopUp != null || !isUpdate || Char.ischangingMap || (GameCanvas.panel.isShow && Equals(GameScr.info2)))
-		{
 			return;
-		}
 		g.translate(-g.getTranslateX(), -g.getTranslateY());
 		g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
 		if (info != null)
 		{
 			info.paint(g, cmx, cmy, dir);
 			if (info.info == null || info.info.charInfo == null || cmdChat != null || !GameCanvas.isTouch)
-			{
-			}
+				;
 			if (info.info != null && info.info.charInfo != null && cmdChat == null)
-			{
-			}
+				;
 		}
 		if (info.info != null && info.info.charInfo == null && charId != null)
-		{
 			SmallImage.drawSmallImage(g, charId[Char.myCharz().cgender][f], cmx, cmy + 3 + ((GameCanvas.gameTick % 10 > 5) ? 1 : 0), (dir != 1) ? 2 : 0, StaticObj.VCENTER_HCENTER);
-		}
 		g.translate(-g.getTranslateX(), -g.getTranslateY());
 	}
 
@@ -122,13 +114,9 @@ public class InfoMe
 		{
 			tF = 0;
 			if (f == 0)
-			{
 				f = 1;
-			}
 			else
-			{
 				f = 0;
-			}
 		}
 	}
 
@@ -152,14 +140,10 @@ public class InfoMe
 			}
 		}
 		if ((Equals(GameScr.info2) && GameScr.gI().popUpYesNo != null) || !isUpdate)
-		{
 			return;
-		}
 		moveCamera();
 		if (info == null || (info != null && info.info == null))
-		{
 			return;
-		}
 		if (!isDone)
 		{
 			if (timeDelay > 0)
@@ -174,26 +158,16 @@ public class InfoMe
 			if (GameCanvas.gameTick % 3 == 0)
 			{
 				if (Char.myCharz().cdir == 1)
-				{
 					cmtoX = Char.myCharz().cx - 20 - GameScr.cmx;
-				}
 				if (Char.myCharz().cdir == -1)
-				{
 					cmtoX = Char.myCharz().cx + 20 - GameScr.cmx;
-				}
 				if (cmtoX <= 24)
-				{
 					cmtoX += info.sayWidth / 2;
-				}
 				if (cmtoX >= GameCanvas.w - 24)
-				{
 					cmtoX -= info.sayWidth / 2;
-				}
 				cmtoY = Char.myCharz().cy - 40 - GameScr.cmy;
 				if (info.says != null && cmtoY < (info.says.Length + 1) * 12 + 10)
-				{
 					cmtoY = (info.says.Length + 1) * 12 + 10;
-				}
 				if (info.info.charInfo != null)
 				{
 					if (GameCanvas.w - 50 > 155 + info.W)
@@ -214,18 +188,12 @@ public class InfoMe
 				}
 			}
 			if (cmx > Char.myCharz().cx - GameScr.cmx)
-			{
 				dir = -1;
-			}
 			else
-			{
 				dir = 1;
-			}
 		}
 		if (info.info == null)
-		{
 			return;
-		}
 		if (info.infoWaitToShow.size() > 1)
 		{
 			if (info.info.timeCount == 0)
@@ -261,16 +229,12 @@ public class InfoMe
 		else
 		{
 			if (info.infoWaitToShow.size() != 1)
-			{
 				return;
-			}
 			if (info.info.timeCount == 0)
 			{
 				info.time++;
 				if (info.time >= info.info.speed)
-				{
 					isDone = true;
-				}
 				if (info.time == info.info.speed)
 				{
 					cmtoY = -40;
@@ -317,9 +281,7 @@ public class InfoMe
 	{
 		s = Res.changeString(s);
 		if (info.infoWaitToShow.size() > 0 && s.Equals(((InfoItem)info.infoWaitToShow.lastElement()).s))
-		{
 			return;
-		}
 		if (info.infoWaitToShow.size() > 10)
 		{
 			for (int i = 0; i < 5; i++)
@@ -327,8 +289,7 @@ public class InfoMe
 				info.infoWaitToShow.removeElementAt(0);
 			}
 		}
-		Char cInfo = null;
-		info.addInfo(s, Type, cInfo, isChatServer: false);
+		info.addInfo(s, Type, null, false);
 		if (info.infoWaitToShow.size() == 1)
 		{
 			cmy = 0;

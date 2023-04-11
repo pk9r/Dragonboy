@@ -25,9 +25,7 @@ public class EffectData
 		for (int i = 0; i < imgInfo.Length; i++)
 		{
 			if (imgInfo[i].ID == id)
-			{
 				return imgInfo[i];
-			}
 		}
 		return null;
 	}
@@ -40,13 +38,9 @@ public class EffectData
 	public short[] get(int index)
 	{
 		if (index >= anim_data.Length)
-		{
 			index = 0;
-		}
 		if (anim_data[index] == null)
-		{
 			return new short[1];
-		}
 		return anim_data[index];
 	}
 
@@ -98,8 +92,7 @@ public class EffectData
 				imgInfo[i].w = msg.readUnsignedByte();
 				imgInfo[i].h = msg.readUnsignedByte();
 			}
-			short num5 = msg.readShort();
-			frame = new Frame[num5];
+			frame = new Frame[msg.readShort()];
 			for (int j = 0; j < frame.Length; j++)
 			{
 				frame[j] = new Frame();
@@ -115,21 +108,13 @@ public class EffectData
 					if (j == 0)
 					{
 						if (num > frame[j].dx[k])
-						{
 							num = frame[j].dx[k];
-						}
 						if (num2 > frame[j].dy[k])
-						{
 							num2 = frame[j].dy[k];
-						}
 						if (num3 < frame[j].dx[k] + imgInfo[frame[j].idImg[k]].w)
-						{
 							num3 = frame[j].dx[k] + imgInfo[frame[j].idImg[k]].w;
-						}
 						if (num4 < frame[j].dy[k] + imgInfo[frame[j].idImg[k]].h)
-						{
 							num4 = frame[j].dy[k] + imgInfo[frame[j].idImg[k]].h;
-						}
 						width = num3 - num;
 						height = num4 - num2;
 					}
@@ -184,21 +169,13 @@ public class EffectData
 					if (j == 0)
 					{
 						if (num > frame[j].dx[k])
-						{
 							num = frame[j].dx[k];
-						}
 						if (num2 > frame[j].dy[k])
-						{
 							num2 = frame[j].dy[k];
-						}
 						if (num3 < frame[j].dx[k] + imgInfo[frame[j].idImg[k]].w)
-						{
 							num3 = frame[j].dx[k] + imgInfo[frame[j].idImg[k]].w;
-						}
 						if (num4 < frame[j].dy[k] + imgInfo[frame[j].idImg[k]].h)
-						{
 							num4 = frame[j].dy[k] + imgInfo[frame[j].idImg[k]].h;
-						}
 						width = num3 - num;
 						height = num4 - num2;
 					}
@@ -252,22 +229,18 @@ public class EffectData
 
 	public void readData(sbyte[] data)
 	{
-		myReader iss = new myReader(data);
-		readData(iss);
+		readData(new myReader(data));
 	}
 
 	public void readDataNewBoss(sbyte[] data, sbyte typeread)
 	{
-		myReader msg = new myReader(data);
-		readMobNew(msg, typeread);
+		readMobNew(new myReader(data), typeread);
 	}
 
 	public void paintFrame(mGraphics g, int f, int x, int y, int trans, int layer)
 	{
 		if (this.frame == null || this.frame.Length == 0)
-		{
 			return;
-		}
 		Frame frame = this.frame[f];
 		for (int i = 0; i < frame.dx.Length; i++)
 		{
@@ -275,21 +248,13 @@ public class EffectData
 			try
 			{
 				if (trans == -1)
-				{
 					g.drawRegion(img, imageInfo.x0, imageInfo.y0, imageInfo.w, imageInfo.h, 0, x + frame.dx[i], y + frame.dy[i], 0);
-				}
 				if (trans == 0)
-				{
 					g.drawRegion(img, imageInfo.x0, imageInfo.y0, imageInfo.w, imageInfo.h, 0, x + frame.dx[i], y + frame.dy[i] - ((layer < 4 && layer > 0) ? GameCanvas.transY : 0), 0);
-				}
 				if (trans == 1)
-				{
 					g.drawRegion(img, imageInfo.x0, imageInfo.y0, imageInfo.w, imageInfo.h, 2, x - frame.dx[i], y + frame.dy[i] - ((layer < 4 && layer > 0) ? GameCanvas.transY : 0), StaticObj.TOP_RIGHT);
-				}
 				if (trans == 2)
-				{
 					g.drawRegion(img, imageInfo.x0, imageInfo.y0, imageInfo.w, imageInfo.h, 7, x - frame.dx[i], y + frame.dy[i] - ((layer < 4 && layer > 0) ? GameCanvas.transY : 0), StaticObj.VCENTER_HCENTER);
-				}
 			}
 			catch (Exception)
 			{
@@ -324,8 +289,7 @@ public class EffectData
 				imgInfo[i].w = msg.readUnsignedByte();
 				imgInfo[i].h = msg.readUnsignedByte();
 			}
-			short num5 = msg.readShort();
-			frame = new Frame[num5];
+			frame = new Frame[msg.readShort()];
 			for (int j = 0; j < frame.Length; j++)
 			{
 				frame[j] = new Frame();
@@ -341,21 +305,13 @@ public class EffectData
 					if (j == 0)
 					{
 						if (num > frame[j].dx[k])
-						{
 							num = frame[j].dx[k];
-						}
 						if (num2 > frame[j].dy[k])
-						{
 							num2 = frame[j].dy[k];
-						}
 						if (num3 < frame[j].dx[k] + imgInfo[frame[j].idImg[k]].w)
-						{
 							num3 = frame[j].dx[k] + imgInfo[frame[j].idImg[k]].w;
-						}
 						if (num4 < frame[j].dy[k] + imgInfo[frame[j].idImg[k]].h)
-						{
 							num4 = frame[j].dy[k] + imgInfo[frame[j].idImg[k]].h;
-						}
 						width = num3 - num;
 						height = num4 - num2;
 					}

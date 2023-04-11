@@ -40,17 +40,7 @@ public class PlayerDart
 		va = info.va;
 		this.x = x;
 		this.y = y;
-		object obj;
-		if (charBelong.mobFocus == null)
-		{
-			IMapObject charFocus = charBelong.charFocus;
-			obj = charFocus;
-		}
-		else
-		{
-			obj = charBelong.mobFocus;
-		}
-		IMapObject mapObject = (IMapObject)obj;
+		IMapObject mapObject = ((charBelong.mobFocus != null) ? ((IMapObject)charBelong.mobFocus) : ((IMapObject)charBelong.charFocus));
 		setAngle(Res.angle(mapObject.getX() - x, mapObject.getY() - y));
 	}
 
@@ -64,31 +54,17 @@ public class PlayerDart
 	public void update()
 	{
 		if (!isActive)
-		{
 			return;
-		}
 		if (charBelong.mobFocus == null && charBelong.charFocus == null)
 		{
 			endMe();
 			return;
 		}
-		object obj;
-		if (charBelong.mobFocus == null)
-		{
-			IMapObject charFocus = charBelong.charFocus;
-			obj = charFocus;
-		}
-		else
-		{
-			obj = charBelong.mobFocus;
-		}
-		IMapObject mapObject = (IMapObject)obj;
+		IMapObject mapObject = ((charBelong.mobFocus != null) ? ((IMapObject)charBelong.mobFocus) : ((IMapObject)charBelong.charFocus));
 		for (int i = 0; i < info.nUpdate; i++)
 		{
 			if (info.tail.Length > 0)
-			{
 				darts.addElement(new SmallDart(x, y));
-			}
 			int num = ((charBelong.getX() <= mapObject.getX()) ? (-10) : 10);
 			dx = mapObject.getX() + num - x;
 			dy = mapObject.getY() - mapObject.getH() / 2 - y;
@@ -96,9 +72,7 @@ public class PlayerDart
 			if (Res.abs(dx) < 20 && Res.abs(dy) < 20)
 			{
 				if (charBelong.charFocus != null && charBelong.charFocus.me)
-				{
 					charBelong.charFocus.doInjure(charBelong.charFocus.damHP, 0, charBelong.charFocus.isCrit, charBelong.charFocus.isMob);
-				}
 				endMe();
 				return;
 			}
@@ -106,9 +80,7 @@ public class PlayerDart
 			if (Math.abs(num2 - angle) < 90 || dx * dx + dy * dy > 4096)
 			{
 				if (Math.abs(num2 - angle) < 15)
-				{
 					angle = num2;
-				}
 				else if ((num2 - angle >= 0 && num2 - angle < 180) || num2 - angle < -180)
 				{
 					angle = Res.fixangle(angle + 15);
@@ -119,18 +91,14 @@ public class PlayerDart
 				}
 			}
 			if (!isSpeedUp && va < 8192)
-			{
 				va += 1024;
-			}
 			vx = va * Res.cos(angle) >> 10;
 			vy = va * Res.sin(angle) >> 10;
 			dx += vx;
-			int num3 = dx >> 10;
-			x += num3;
+			x += dx >> 10;
 			dx &= 1023;
 			dy += vy;
-			int num4 = dy >> 10;
-			y += num4;
+			y += dy >> 10;
 			dy &= 1023;
 		}
 		for (int j = 0; j < darts.size(); j++)
@@ -138,30 +106,22 @@ public class PlayerDart
 			SmallDart smallDart = (SmallDart)darts.elementAt(j);
 			smallDart.index++;
 			if (smallDart.index >= info.tail.Length)
-			{
 				darts.removeElementAt(j);
-			}
 		}
 	}
 
 	private void endMe()
 	{
 		if (!charBelong.isUseSkillAfterCharge && x >= GameScr.cmx && x <= GameScr.cmx + GameCanvas.w)
-		{
 			SoundMn.gI().explode_1();
-		}
 		charBelong.setAttack();
 		if (charBelong.me)
-		{
 			charBelong.saveLoadPreviousSkill();
-		}
 		if (charBelong.isUseSkillAfterCharge)
 		{
 			charBelong.isUseSkillAfterCharge = false;
 			if (charBelong.isLockMove && charBelong.me && charBelong.statusMe != 14 && charBelong.statusMe != 5)
-			{
 				charBelong.isLockMove = false;
-			}
 			GameScr.gI().activeSuperPower(x, y);
 		}
 		charBelong.dart = null;
@@ -173,9 +133,7 @@ public class PlayerDart
 	public void paint(mGraphics g)
 	{
 		if (!isActive)
-		{
 			return;
-		}
 		int num = MonsterDart.findDirIndexFromAngle(360 - angle);
 		int num2 = MonsterDart.FRAME[num];
 		int transform = MonsterDart.TRANSFORM[num];
@@ -196,9 +154,7 @@ public class PlayerDart
 		{
 			SmallDart smallDart3 = (SmallDart)darts.elementAt(k);
 			if (Res.abs(MonsterDart.r.nextInt(100)) < info.xdPercent)
-			{
 				SmallImage.drawSmallImage(g, (GameCanvas.gameTick % 2 != 0) ? info.xd2[smallDart3.index] : info.xd1[smallDart3.index], smallDart3.x, smallDart3.y, 0, 3);
-			}
 		}
 		g.setColor(16711680);
 	}

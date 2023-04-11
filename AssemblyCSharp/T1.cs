@@ -152,9 +152,7 @@ public class T1 : mResources
 		};
 		mResources.MENUGENDER = new string[3] { "Trái đất", "Namếc", "Xayda" };
 		if (mSystem.clientType == 7)
-		{
 			mResources.MENUGENDER = new string[3] { "Rồng đất", "Rồng xanh", "Rồng đỏ" };
-		}
 		mResources.CHAR_ORDER = new string[10] { "Thách đấu", "Luyện tập", "Cừu sát", "Kết bạn", "Mời vào bang", "Phục hồi", "Xem thông tin", "Chat riêng", "Mời vào tộc", "Chặn xin vào tộc" };
 		mResources.mainTab1 = new string[4][]
 		{
@@ -482,14 +480,12 @@ public class T1 : mResources
 			new string[3] { "Cađic", "Rađic", "Kakalot" }
 		};
 		if (mSystem.clientType == 7)
-		{
 			mResources.hairStyleName = new string[3][]
 			{
 				new string[3] { "Hango", "Linkhi", "Chayam" },
 				new string[3] { "Deden", "Cololo", "Mika" },
 				new string[3] { "Tageve", "Ditra", "Rotkaka" }
 			};
-		}
 		mResources.hp_ki_full = "HP và KI đã đầy, không cần dùng đậu thần";
 		mResources.quest_place = "Địa điểm nhiệm vụ";
 		mResources.no_mission = "Không có nhiệm vụ";
