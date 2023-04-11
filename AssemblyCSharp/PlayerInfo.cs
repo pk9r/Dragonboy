@@ -43,13 +43,9 @@ public class PlayerInfo
 	{
 		this.name = name;
 		if (name.Length > 9)
-		{
 			showName = name.Substring(0, 8);
-		}
 		else
-		{
 			showName = name;
-		}
 	}
 
 	public void paint(mGraphics g, int x, int y)

@@ -29,7 +29,6 @@ public class SmallImage
 	public static void loadBigRMS()
 	{
 		if (imgbig == null)
-		{
 			imgbig = new Image[5]
 			{
 				GameCanvas.loadImageRMS("/img/Big0.png"),
@@ -38,7 +37,6 @@ public class SmallImage
 				GameCanvas.loadImageRMS("/img/Big3.png"),
 				GameCanvas.loadImageRMS("/img/Big4.png")
 			};
-		}
 	}
 
 	public static void freeBig()
@@ -49,7 +47,7 @@ public class SmallImage
 
 	public static void loadBigImage()
 	{
-		imgEmpty = Image.createRGBImage(new int[1], 1, 1, bl: true);
+		imgEmpty = Image.createRGBImage(new int[1], 1, 1, true);
 	}
 
 	public static void init()
@@ -120,26 +118,18 @@ public class SmallImage
 		if (array != null)
 		{
 			if (newSmallVersion != null && array.Length % 127 != newSmallVersion[id])
-			{
 				flag = true;
-			}
 			if (!flag)
 			{
 				Image image3 = Image.createImage(array, 0, array.Length);
 				if (image3 != null)
-				{
 					imgNew[id] = new Small(image3, id);
-				}
 				else
-				{
 					flag = true;
-				}
 			}
 		}
 		else
-		{
 			flag = true;
-		}
 		if (flag)
 		{
 			imgNew[id] = new Small(imgEmpty, id);
@@ -153,13 +143,9 @@ public class SmallImage
 		{
 			Small small = imgNew[id];
 			if (small == null)
-			{
 				createImage(id);
-			}
 			else
-			{
 				g.drawRegion(small, 0, 0, mGraphics.getImageWidth(small.img), mGraphics.getImageHeight(small.img), transform, x, y, anchor);
-			}
 		}
 		else if (smallImg != null)
 		{
@@ -167,13 +153,9 @@ public class SmallImage
 			{
 				Small small2 = imgNew[id];
 				if (small2 == null)
-				{
 					createImage(id);
-				}
 				else
-				{
 					small2.paint(g, transform, x, y, anchor);
-				}
 			}
 			else if (imgbig[smallImg[id][0]] != null)
 			{
@@ -184,13 +166,9 @@ public class SmallImage
 		{
 			Small small3 = imgNew[id];
 			if (small3 == null)
-			{
 				createImage(id);
-			}
 			else
-			{
 				small3.paint(g, transform, x, y, anchor);
-			}
 		}
 	}
 
@@ -200,13 +178,9 @@ public class SmallImage
 		{
 			Small small = imgNew[id];
 			if (small == null)
-			{
 				createImage(id);
-			}
 			else
-			{
 				g.drawRegion(small.img, 0, f * w, w, h, transform, x, y, anchor);
-			}
 		}
 		else if (smallImg != null)
 		{
@@ -214,13 +188,9 @@ public class SmallImage
 			{
 				Small small2 = imgNew[id];
 				if (small2 == null)
-				{
 					createImage(id);
-				}
 				else
-				{
 					small2.paint(g, transform, f, x, y, w, h, anchor);
-				}
 			}
 			else if (smallImg[id][0] != 4 && imgbig[smallImg[id][0]] != null)
 			{
@@ -230,26 +200,18 @@ public class SmallImage
 			{
 				Small small3 = imgNew[id];
 				if (small3 == null)
-				{
 					createImage(id);
-				}
 				else
-				{
 					small3.paint(g, transform, f, x, y, w, h, anchor);
-				}
 			}
 		}
 		else if (GameCanvas.currentScreen != GameScr.gI())
 		{
 			Small small4 = imgNew[id];
 			if (small4 == null)
-			{
 				createImage(id);
-			}
 			else
-			{
 				small4.paint(g, transform, f, x, y, w, h, anchor);
-			}
 		}
 	}
 
@@ -257,9 +219,7 @@ public class SmallImage
 	{
 		int num = 0;
 		if (GameCanvas.gameTick % 1000 != 0)
-		{
 			return;
-		}
 		for (int i = 0; i < imgNew.Length; i++)
 		{
 			if (imgNew[i] != null)
@@ -270,8 +230,6 @@ public class SmallImage
 			}
 		}
 		if (num > 200 && GameCanvas.lowGraphic)
-		{
 			imgNew = new Small[maxSmall];
-		}
 	}
 }

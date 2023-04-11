@@ -222,13 +222,9 @@ public class Item
 	{
 		string result = string.Empty;
 		if (buyCoin <= 0 && buyGold <= 0)
-		{
 			return null;
-		}
 		if (buyCoin > 0 && buyGold <= 0)
-		{
 			result = buyCoin + mResources.XU;
-		}
 		else if (buyGold > 0 && buyCoin <= 0)
 		{
 			result = buyGold + mResources.LUONG;
@@ -299,17 +295,11 @@ public class Item
 		int num = GameScr.indexSize - 2;
 		int num2 = tick % (4 * num);
 		if (0 <= num2 && num2 < num)
-		{
 			return 0;
-		}
 		if (num <= num2 && num2 < num * 2)
-		{
 			return num2 % num;
-		}
 		if (num * 2 <= num2 && num2 < num * 3)
-		{
 			return num;
-		}
 		return num - num2 % num;
 	}
 
@@ -318,17 +308,11 @@ public class Item
 		int num = GameScr.indexSize - 2;
 		int num2 = tick % (4 * num);
 		if (0 <= num2 && num2 < num)
-		{
 			return num2 % num;
-		}
 		if (num <= num2 && num2 < num * 2)
-		{
 			return num;
-		}
 		if (num * 2 <= num2 && num2 < num * 3)
-		{
 			return num - num2 % num;
-		}
 		return 0;
 	}
 
@@ -338,9 +322,7 @@ public class Item
 		{
 			ItemOption itemOption = this.itemOption[i];
 			if (itemOption != null && itemOption.optionTemplate.id == id)
-			{
 				return true;
-			}
 		}
 		return false;
 	}
@@ -380,9 +362,7 @@ public class Item
 	public bool isTypeBody()
 	{
 		if ((0 <= template.type && template.type < 6) || template.type == 32 || template.type == 35 || template.type == 11 || template.type == 23)
-		{
 			return true;
-		}
 		return false;
 	}
 
@@ -394,110 +374,80 @@ public class Item
 	public string getUpgradestring()
 	{
 		if (template.level < 10 || template.type >= 10)
-		{
 			return mResources.NOTUPGRADE;
-		}
 		if (upgrade == 0)
-		{
 			return mResources.NOUPGRADE;
-		}
 		return null;
 	}
 
 	public bool isTypeUIMe()
 	{
 		if (typeUI == 5 || typeUI == 3 || typeUI == 4)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public bool isTypeUIShopView()
 	{
 		if (isTypeUIShop())
-		{
 			return true;
-		}
 		if (isTypeUIStore() || isTypeUIBook() || isTypeUIFashion())
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public bool isTypeUIShop()
 	{
 		if (typeUI == 20 || typeUI == 21 || typeUI == 22 || typeUI == 23 || typeUI == 24 || typeUI == 25 || typeUI == 26 || typeUI == 27 || typeUI == 28 || typeUI == 29 || typeUI == 16 || typeUI == 17 || typeUI == 18 || typeUI == 19 || typeUI == 2 || typeUI == 6 || typeUI == 8)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public bool isTypeUIShopLock()
 	{
 		if (typeUI == 7 || typeUI == 9)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public bool isTypeUIStore()
 	{
 		if (typeUI == 14)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public bool isTypeUIBook()
 	{
 		if (typeUI == 15)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public bool isTypeUIFashion()
 	{
 		if (typeUI == 32)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public bool isUpMax()
 	{
 		if (getUpMax() == upgrade)
-		{
 			return true;
-		}
 		return false;
 	}
 
 	public int getUpMax()
 	{
 		if (template.level >= 1 && template.level < 20)
-		{
 			return 4;
-		}
 		if (template.level >= 20 && template.level < 40)
-		{
 			return 8;
-		}
 		if (template.level >= 40 && template.level < 50)
-		{
 			return 12;
-		}
 		if (template.level >= 50 && template.level < 60)
-		{
 			return 14;
-		}
 		return 16;
 	}
 

@@ -29,9 +29,7 @@ public class MotherCanvas
 		{
 			mGraphics.zoomLevel = 2;
 			if (w * h >= 2073600)
-			{
 				mGraphics.zoomLevel = 4;
-			}
 			else if (w * h > 384000)
 			{
 				mGraphics.zoomLevel = 3;
@@ -40,9 +38,7 @@ public class MotherCanvas
 		else if (!Main.isPC)
 		{
 			if (Main.isIpod)
-			{
 				mGraphics.zoomLevel = 2;
-			}
 			else if (w * h >= 2073600)
 			{
 				mGraphics.zoomLevel = 4;
@@ -60,9 +56,7 @@ public class MotherCanvas
 		{
 			mGraphics.zoomLevel = 2;
 			if (w * h < 480000)
-			{
 				mGraphics.zoomLevel = 1;
-			}
 		}
 	}
 

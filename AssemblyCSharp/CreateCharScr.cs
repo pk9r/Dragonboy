@@ -52,9 +52,7 @@ public class CreateCharScr : mScreen, IActionListener
 		try
 		{
 			if (!GameCanvas.lowGraphic)
-			{
 				loadMapFromResource(new sbyte[3] { 39, 40, 41 });
-			}
 			loadMapTableFromResource(new sbyte[3] { 39, 40, 41 });
 		}
 		catch (Exception ex)
@@ -73,9 +71,7 @@ public class CreateCharScr : mScreen, IActionListener
 		tAddName = new TField();
 		tAddName.width = GameCanvas.loginScr.tfUser.width;
 		if (GameCanvas.w < 200)
-		{
 			tAddName.width = 60;
-		}
 		tAddName.height = mScreen.ITEM_HEIGHT + 2;
 		if (GameCanvas.w < 200)
 		{
@@ -88,34 +84,26 @@ public class CreateCharScr : mScreen, IActionListener
 			tAddName.y = 35;
 		}
 		if (!GameCanvas.isTouch)
-		{
 			tAddName.isFocus = true;
-		}
 		tAddName.setIputType(TField.INPUT_TYPE_ANY);
 		tAddName.showSubTextField = false;
 		tAddName.strInfo = mResources.char_name;
 		if (tAddName.getText().Equals("@"))
-		{
 			tAddName.setText(GameCanvas.loginScr.tfUser.getText().Substring(0, GameCanvas.loginScr.tfUser.getText().IndexOf("@")));
-		}
 		tAddName.name = mResources.char_name;
 		indexGender = 1;
 		indexHair = 0;
 		center = new Command(mResources.NEWCHAR, this, 8000, null);
 		left = new Command(mResources.BACK, this, 8001, null);
 		if (!GameCanvas.isTouch)
-		{
 			right = tAddName.cmdClear;
-		}
 		yBegin = tAddName.y;
 	}
 
 	public static CreateCharScr gI()
 	{
 		if (instance == null)
-		{
 			instance = new CreateCharScr();
-		}
 		return instance;
 	}
 
@@ -146,9 +134,7 @@ public class CreateCharScr : mScreen, IActionListener
 	public void loadMapTableFromResource(sbyte[] mapID)
 	{
 		if (GameCanvas.lowGraphic)
-		{
 			return;
-		}
 		DataInputStream dataInputStream = null;
 		try
 		{
@@ -183,20 +169,18 @@ public class CreateCharScr : mScreen, IActionListener
 								Image image = GameCanvas.loadImage("/mapBackGround/" + bgItem.idImage + ".png");
 								if (image == null)
 								{
-									BgItem.imgNew.put(bgItem.idImage + string.Empty, Image.createRGBImage(new int[1], 1, 1, bl: true));
+									BgItem.imgNew.put(bgItem.idImage + string.Empty, Image.createRGBImage(new int[1], 1, 1, true));
 									Service.gI().getBgTemplate(bgItem.idImage);
 								}
 								else
-								{
 									BgItem.imgNew.put(bgItem.idImage + string.Empty, image);
-								}
 							}
 							catch (Exception)
 							{
 								Image image2 = GameCanvas.loadImage("/mapBackGround/" + bgItem.idImage + ".png");
 								if (image2 == null)
 								{
-									image2 = Image.createRGBImage(new int[1], 1, 1, bl: true);
+									image2 = Image.createRGBImage(new int[1], 1, 1, true);
 									Service.gI().getBgTemplate(bgItem.idImage);
 								}
 								BgItem.imgNew.put(bgItem.idImage + string.Empty, image2);
@@ -204,15 +188,11 @@ public class CreateCharScr : mScreen, IActionListener
 							BgItem.vKeysLast.addElement(bgItem.idImage + string.Empty);
 						}
 						if (!BgItem.isExistKeyNews(bgItem.idImage + string.Empty))
-						{
 							BgItem.vKeysNew.addElement(bgItem.idImage + string.Empty);
-						}
 						bgItem.changeColor();
 					}
 					else
-					{
 						Res.outz("item null");
-					}
 				}
 			}
 		}
@@ -232,7 +212,7 @@ public class CreateCharScr : mScreen, IActionListener
 		indexHair = Res.random(0, 3);
 		doChangeMap();
 		Char.isLoadingMap = false;
-		tAddName.setFocusWithKb(isFocus: true);
+		tAddName.setFocusWithKb(true);
 	}
 
 	public void doChangeMap()
@@ -252,7 +232,7 @@ public class CreateCharScr : mScreen, IActionListener
 		TileMap.loadMainTile();
 		TileMap.loadTileCreatChar();
 		GameCanvas.loadBG(bgID[indexGender]);
-		GameScr.loadCamera(fullmScreen: false, cx, cy);
+		GameScr.loadCamera(false, cx, cy);
 	}
 
 	public override void keyPress(int keyCode)
@@ -264,22 +244,14 @@ public class CreateCharScr : mScreen, IActionListener
 	{
 		cp1++;
 		if (cp1 > 30)
-		{
 			cp1 = 0;
-		}
 		if (cp1 % 15 < 5)
-		{
 			cf = 0;
-		}
 		else
-		{
 			cf = 1;
-		}
 		tAddName.update();
 		if (selected != 0)
-		{
 			tAddName.isFocus = false;
-		}
 	}
 
 	public override void updateKey()
@@ -288,24 +260,18 @@ public class CreateCharScr : mScreen, IActionListener
 		{
 			selected--;
 			if (selected < 0)
-			{
 				selected = mResources.MENUNEWCHAR.Length - 1;
-			}
 		}
 		if (GameCanvas.keyPressed[(!Main.isPC) ? 8 : 22])
 		{
 			selected++;
 			if (selected >= mResources.MENUNEWCHAR.Length)
-			{
 				selected = 0;
-			}
 		}
 		if (selected == 0)
 		{
 			if (!GameCanvas.isTouch)
-			{
 				right = tAddName.cmdClear;
-			}
 			tAddName.update();
 		}
 		if (selected == 1)
@@ -314,18 +280,14 @@ public class CreateCharScr : mScreen, IActionListener
 			{
 				indexGender--;
 				if (indexGender < 0)
-				{
 					indexGender = mResources.MENUGENDER.Length - 1;
-				}
 				doChangeMap();
 			}
 			if (GameCanvas.keyPressed[(!Main.isPC) ? 6 : 24])
 			{
 				indexGender++;
 				if (indexGender > mResources.MENUGENDER.Length - 1)
-				{
 					indexGender = 0;
-				}
 				doChangeMap();
 			}
 			right = null;
@@ -336,17 +298,13 @@ public class CreateCharScr : mScreen, IActionListener
 			{
 				indexHair--;
 				if (indexHair < 0)
-				{
 					indexHair = mResources.hairStyleName[0].Length - 1;
-				}
 			}
 			if (GameCanvas.keyPressed[(!Main.isPC) ? 6 : 24])
 			{
 				indexHair++;
 				if (indexHair > mResources.hairStyleName[0].Length - 1)
-				{
 					indexHair = 0;
-				}
 			}
 			right = null;
 		}
@@ -371,17 +329,11 @@ public class CreateCharScr : mScreen, IActionListener
 				int num4 = indexGender;
 				indexGender = (GameCanvas.px - (GameCanvas.w / 2 - 3 * num3 / 2)) / num3;
 				if (indexGender < 0)
-				{
 					indexGender = 0;
-				}
 				if (indexGender > mResources.MENUGENDER.Length - 1)
-				{
 					indexGender = mResources.MENUGENDER.Length - 1;
-				}
 				if (num4 != indexGender)
-				{
 					doChangeMap();
-				}
 			}
 			if (GameCanvas.isPointerHoldIn(GameCanvas.w / 2 - 3 * num3 / 2, num - 30 + num2 + 5, num3 * 3, 65))
 			{
@@ -389,23 +341,15 @@ public class CreateCharScr : mScreen, IActionListener
 				int num5 = indexHair;
 				indexHair = (GameCanvas.px - (GameCanvas.w / 2 - 3 * num3 / 2)) / num3;
 				if (indexHair < 0)
-				{
 					indexHair = 0;
-				}
 				if (indexHair > mResources.hairStyleName[0].Length - 1)
-				{
 					indexHair = mResources.hairStyleName[0].Length - 1;
-				}
 				if (num5 != selected)
-				{
 					doChangeMap();
-				}
 			}
 		}
 		if (!TouchScreenKeyboard.visible)
-		{
 			base.updateKey();
-		}
 		GameCanvas.clearKeyHold();
 		GameCanvas.clearKeyPressed();
 	}
@@ -413,9 +357,7 @@ public class CreateCharScr : mScreen, IActionListener
 	public override void paint(mGraphics g)
 	{
 		if (Char.isLoadingMap)
-		{
 			return;
-		}
 		GameCanvas.paintBGGameScr(g);
 		g.translate(-GameScr.cmx, -GameScr.cmy);
 		if (!GameCanvas.lowGraphic)
@@ -424,17 +366,13 @@ public class CreateCharScr : mScreen, IActionListener
 			{
 				BgItem bgItem = (BgItem)MapTemplate.vCurrItem[indexGender].elementAt(i);
 				if (bgItem.idImage != -1 && bgItem.layer == 1)
-				{
 					bgItem.paint(g);
-				}
 			}
 		}
 		TileMap.paintTilemap(g);
 		int num = 30;
 		if (GameCanvas.w == 128)
-		{
 			num = 20;
-		}
 		int num2 = hairID[indexGender][indexHair];
 		int num3 = defaultLeg[indexGender];
 		int num4 = defaultBody[indexGender];
@@ -451,9 +389,7 @@ public class CreateCharScr : mScreen, IActionListener
 			{
 				BgItem bgItem2 = (BgItem)MapTemplate.vCurrItem[indexGender].elementAt(j);
 				if (bgItem2.idImage != -1 && bgItem2.layer == 3)
-				{
 					bgItem2.paint(g);
-				}
 			}
 		}
 		g.translate(-g.getTranslateX(), -g.getTranslateY());
@@ -517,15 +453,11 @@ public class CreateCharScr : mScreen, IActionListener
 			{
 				int num5 = 78;
 				if (l != indexGender)
-				{
 					g.drawImage(GameScr.imgLbtn, GameCanvas.w / 2 - num5 + l * num5, yButton, 3);
-				}
 				else
 				{
 					if (selected == 1)
-					{
 						g.drawRegion(GameScr.arrow, 0, 0, 13, 16, 4, GameCanvas.w / 2 - num5 + l * num5, yButton - 20 + ((GameCanvas.gameTick % 7 > 3) ? 1 : 0), StaticObj.VCENTER_HCENTER);
-					}
 					g.drawImage(GameScr.imgLbtnFocus, GameCanvas.w / 2 - num5 + l * num5, yButton, 3);
 				}
 				mFont.tahoma_7b_dark.drawString(g, mResources.MENUGENDER[l], GameCanvas.w / 2 - num5 + l * num5, yButton - 5, mFont.CENTER);
@@ -534,15 +466,11 @@ public class CreateCharScr : mScreen, IActionListener
 			{
 				int num6 = 78;
 				if (m != indexHair)
-				{
 					g.drawImage(GameScr.imgLbtn, GameCanvas.w / 2 - num6 + m * num6, yButton + disY, 3);
-				}
 				else
 				{
 					if (selected == 2)
-					{
 						g.drawRegion(GameScr.arrow, 0, 0, 13, 16, 4, GameCanvas.w / 2 - num6 + m * num6, yButton + disY - 20 + ((GameCanvas.gameTick % 7 > 3) ? 1 : 0), StaticObj.VCENTER_HCENTER);
-					}
 					g.drawImage(GameScr.imgLbtnFocus, GameCanvas.w / 2 - num6 + m * num6, yButton + disY, 3);
 				}
 				mFont.tahoma_7b_dark.drawString(g, mResources.hairStyleName[indexGender][m], GameCanvas.w / 2 - num6 + m * num6, yButton + disY - 5, mFont.CENTER);
@@ -552,55 +480,55 @@ public class CreateCharScr : mScreen, IActionListener
 		g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
 		mFont.tahoma_7b_white.drawString(g, mResources.server + " " + LoginScr.serverName, 5, 5, 0, mFont.tahoma_7b_dark);
 		if (!TouchScreenKeyboard.visible)
-		{
 			base.paint(g);
-		}
 	}
 
 	public void perform(int idAction, object p)
 	{
-		switch (idAction)
+		if (idAction != 8000)
 		{
-		case 8000:
-			if (tAddName.getText().Equals(string.Empty))
+			if (idAction != 8001)
 			{
-				GameCanvas.startOKDlg(mResources.char_name_blank);
-				break;
+				if (idAction != 10019)
+				{
+					if (idAction == 10020)
+						GameCanvas.endDlg();
+				}
+				else
+				{
+					Session_ME.gI().close();
+					GameCanvas.endDlg();
+					GameCanvas.serverScreen.switchToMe();
+				}
 			}
-			if (tAddName.getText().Length < 5)
-			{
-				GameCanvas.startOKDlg(mResources.char_name_short);
-				break;
-			}
-			if (tAddName.getText().Length > 15)
-			{
-				GameCanvas.startOKDlg(mResources.char_name_long);
-				break;
-			}
-			InfoDlg.showWait();
-			Service.gI().createChar(tAddName.getText(), indexGender, hairID[indexGender][indexHair]);
-			break;
-		case 8001:
-			if (GameCanvas.loginScr.isLogin2)
+			else if (GameCanvas.loginScr.isLogin2)
 			{
 				GameCanvas.startYesNoDlg(mResources.note, new Command(mResources.YES, this, 10019, null), new Command(mResources.NO, this, 10020, null));
-				break;
 			}
-			if (Main.isWindowsPhone)
+			else
 			{
-				GameMidlet.isBackWindowsPhone = true;
+				if (Main.isWindowsPhone)
+					GameMidlet.isBackWindowsPhone = true;
+				Session_ME.gI().close();
+				GameCanvas.serverScreen.switchToMe();
 			}
-			Session_ME.gI().close();
-			GameCanvas.serverScreen.switchToMe();
-			break;
-		case 10020:
-			GameCanvas.endDlg();
-			break;
-		case 10019:
-			Session_ME.gI().close();
-			GameCanvas.endDlg();
-			GameCanvas.serverScreen.switchToMe();
-			break;
+		}
+		else if (tAddName.getText().Equals(string.Empty))
+		{
+			GameCanvas.startOKDlg(mResources.char_name_blank);
+		}
+		else if (tAddName.getText().Length < 5)
+		{
+			GameCanvas.startOKDlg(mResources.char_name_short);
+		}
+		else if (tAddName.getText().Length > 15)
+		{
+			GameCanvas.startOKDlg(mResources.char_name_long);
+		}
+		else
+		{
+			InfoDlg.showWait();
+			Service.gI().createChar(tAddName.getText(), indexGender, hairID[indexGender][indexHair]);
 		}
 	}
 }

@@ -142,9 +142,7 @@ public class Point
 		{
 			int num = 0;
 			if (isSmall && f >= fSmall)
-			{
 				num = 1;
-			}
 			FraEffInMap[color].drawFrame(frame / 2 + num, x, y, dis, 3, g);
 		}
 	}
@@ -156,13 +154,9 @@ public class Point
 		{
 			frame++;
 			if (frame / 2 >= maxframe)
-			{
 				frame = 0;
-			}
 		}
 		if (f >= fRe)
-		{
 			isRemove = true;
-		}
 	}
 }

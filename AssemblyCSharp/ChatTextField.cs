@@ -44,23 +44,15 @@ public class ChatTextField : IActionListener
 	{
 		tfChat = new TField();
 		if (Main.isWindowsPhone)
-		{
 			tfChat.showSubTextField = false;
-		}
 		if (Main.isIPhone)
-		{
 			tfChat.isPaintMouse = false;
-		}
 		tfChat.name = "chat";
 		if (Main.isWindowsPhone)
-		{
 			tfChat.strInfo = tfChat.name;
-		}
 		tfChat.width = GameCanvas.w - 6;
 		if (Main.isPC && tfChat.width > 250)
-		{
 			tfChat.width = 250;
-		}
 		tfChat.height = mScreen.ITEM_HEIGHT + 2;
 		tfChat.x = GameCanvas.w / 2 - tfChat.width / 2;
 		tfChat.isFocus = true;
@@ -77,9 +69,7 @@ public class ChatTextField : IActionListener
 		x = GameCanvas.w / 2 - w / 2;
 		y = tfChat.y - 18;
 		if (Main.isPC && w > 320)
-		{
 			w = 320;
-		}
 		left.x = x;
 		right.x = x + w - 68;
 		if (GameCanvas.isTouch)
@@ -113,22 +103,16 @@ public class ChatTextField : IActionListener
 				tfChat.setText(string.Empty);
 				tfChat.clearKb();
 				if (right != null)
-				{
 					right.performAction();
-				}
 			}
 			isShow = false;
 		};
 		yBegin = tfChat.y;
 		yUp = GameCanvas.h / 2 - 2 * tfChat.height;
 		if (Main.isWindowsPhone)
-		{
 			tfChat.showSubTextField = false;
-		}
 		if (Main.isIPhone)
-		{
 			tfChat.isPaintMouse = false;
-		}
 	}
 
 	public void updateWhenKeyBoardVisible()
@@ -138,17 +122,11 @@ public class ChatTextField : IActionListener
 	public void keyPressed(int keyCode)
 	{
 		if (isShow)
-		{
 			tfChat.keyPressed(keyCode);
-		}
 		if (tfChat.getText().Equals(string.Empty))
-		{
 			right.caption = mResources.CLOSE;
-		}
 		else
-		{
 			right.caption = mResources.DELETE;
-		}
 	}
 
 	public static ChatTextField gI()
@@ -161,13 +139,9 @@ public class ChatTextField : IActionListener
 		right.caption = mResources.CLOSE;
 		this.to = to;
 		if (Main.isWindowsPhone)
-		{
 			tfChat.showSubTextField = false;
-		}
 		if (Main.isIPhone)
-		{
 			tfChat.isPaintMouse = false;
-		}
 		tfChat.keyPressed(firstCharacter);
 		if (!tfChat.getText().Equals(string.Empty) && GameCanvas.currentDialog == null)
 		{
@@ -181,13 +155,9 @@ public class ChatTextField : IActionListener
 		right.caption = mResources.CLOSE;
 		this.to = to;
 		if (Main.isWindowsPhone)
-		{
 			tfChat.showSubTextField = false;
-		}
 		if (Main.isIPhone)
-		{
 			tfChat.isPaintMouse = false;
-		}
 		if (GameCanvas.currentDialog == null)
 		{
 			isShow = true;
@@ -195,7 +165,7 @@ public class ChatTextField : IActionListener
 			if (!Main.isPC)
 			{
 				ipKeyboard.openKeyBoard(strChat, ipKeyboard.TEXT, string.Empty, cmdChat);
-				tfChat.setFocusWithKb(isFocus: true);
+				tfChat.setFocusWithKb(true);
 			}
 		}
 		tfChat.setText(string.Empty);
@@ -205,24 +175,20 @@ public class ChatTextField : IActionListener
 
 	public void startChat2(IChatable parentScreen, string to)
 	{
-		tfChat.setFocusWithKb(isFocus: true);
+		tfChat.setFocusWithKb(true);
 		this.to = to;
 		this.parentScreen = parentScreen;
 		if (Main.isWindowsPhone)
-		{
 			tfChat.showSubTextField = false;
-		}
 		if (Main.isIPhone)
-		{
 			tfChat.isPaintMouse = false;
-		}
 		if (GameCanvas.currentDialog == null)
 		{
 			isShow = true;
 			if (!Main.isPC)
 			{
 				ipKeyboard.openKeyBoard(strChat, ipKeyboard.TEXT, string.Empty, cmdChat2);
-				tfChat.setFocusWithKb(isFocus: true);
+				tfChat.setFocusWithKb(true);
 			}
 		}
 		tfChat.setText(string.Empty);
@@ -237,14 +203,10 @@ public class ChatTextField : IActionListener
 	public void update()
 	{
 		if (!isShow)
-		{
 			return;
-		}
 		tfChat.update();
 		if (Main.isWindowsPhone)
-		{
 			updateWhenKeyBoardVisible();
-		}
 		if (tfChat.justReturnFromTextBox)
 		{
 			tfChat.justReturnFromTextBox = false;
@@ -253,24 +215,18 @@ public class ChatTextField : IActionListener
 			right.caption = mResources.CLOSE;
 		}
 		if (!Main.isPC)
-		{
 			return;
-		}
 		if (GameCanvas.keyPressed[15])
 		{
 			if (left != null && tfChat.getText() != string.Empty)
-			{
 				left.performAction();
-			}
 			GameCanvas.keyPressed[15] = false;
 			GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
 		}
 		if (GameCanvas.keyPressed[14])
 		{
 			if (right != null)
-			{
 				right.performAction();
-			}
 			GameCanvas.keyPressed[14] = false;
 		}
 	}
@@ -285,10 +241,7 @@ public class ChatTextField : IActionListener
 	{
 		if (isShow && !Main.isIPhone)
 		{
-			int num = ((!Main.isWindowsPhone) ? (y - KC) : (tfChat.y - 5));
-			int num2 = ((!Main.isWindowsPhone) ? x : 0);
-			int num3 = ((!Main.isWindowsPhone) ? w : GameCanvas.w);
-			PopUp.paintPopUp(g, num2, num, num3, h, -1, isButton: true);
+			PopUp.paintPopUp(y: (!Main.isWindowsPhone) ? (y - KC) : (tfChat.y - 5), g: g, x: (!Main.isWindowsPhone) ? x : 0, w: (!Main.isWindowsPhone) ? w : GameCanvas.w, h: h, color: -1, isButton: true);
 			if (Main.isPC)
 			{
 				mFont.tahoma_7b_green2.drawString(g, strChat + to, tfChat.x, tfChat.y - ((!GameCanvas.isTouch) ? 12 : 17), 0);

@@ -218,8 +218,7 @@ public class mFont
 			text = "staccato";
 		}
 		this.id = id;
-		text = "FontSys/x" + mGraphics.zoomLevel + "/" + text;
-		myFont = (Font)Resources.Load(text);
+		myFont = (Font)Resources.Load("FontSys/x" + mGraphics.zoomLevel + "/" + text);
 		if (id < 25)
 		{
 			color1 = setColorFont(id);
@@ -323,9 +322,7 @@ public class mFont
 		tahoma_7b_greenSmall = tahoma_7b_green;
 		yAddFont = 1;
 		if (mGraphics.zoomLevel == 1)
-		{
 			yAddFont = -3;
-		}
 	}
 
 	public void setHeight(int height)
@@ -338,15 +335,12 @@ public class mFont
 		int num = rgb & 0xFF;
 		int num2 = (rgb >> 8) & 0xFF;
 		int num3 = (rgb >> 16) & 0xFF;
-		float b = (float)num / 256f;
-		float g = (float)num2 / 256f;
-		float r = (float)num3 / 256f;
-		return new Color(r, g, b);
+		return new Color(b: (float)num / 256f, g: (float)num2 / 256f, r: (float)num3 / 256f);
 	}
 
 	public Color bigColor(int id)
 	{
-		Color[] array = new Color[7]
+		return (new Color[7]
 		{
 			Color.red,
 			Color.yellow,
@@ -355,8 +349,7 @@ public class mFont
 			setColor(40404),
 			Color.red,
 			Color.black
-		};
-		return array[id - 25];
+		})[id - 25];
 	}
 
 	public void setColorByID(int ID)
@@ -369,9 +362,7 @@ public class mFont
 	{
 		sbyte b = id;
 		if (idFont > 0)
-		{
 			b = idFont;
-		}
 		x--;
 		if (id > 24)
 		{
@@ -398,9 +389,7 @@ public class mFont
 			color2 = bigColor(id);
 		}
 		else
-		{
 			setColorByID(b);
-		}
 		_drawString(g, st, x, y - yAdd, align);
 	}
 
@@ -414,19 +403,12 @@ public class mFont
 		if (mGraphics.zoomLevel == 1)
 		{
 			int length = st.Length;
-			int num = align switch
-			{
-				0 => x, 
-				1 => x - getWidth(st), 
-				_ => x - (getWidth(st) >> 1), 
-			};
+			int num = ((align == 0) ? x : ((align != 1) ? (x - (getWidth(st) >> 1)) : (x - getWidth(st))));
 			for (int i = 0; i < length; i++)
 			{
 				int num2 = strFont.IndexOf(st[i] + string.Empty);
 				if (num2 == -1)
-				{
 					num2 = 0;
-				}
 				if (num2 > -1)
 				{
 					int x2 = fImages[num2][0];
@@ -444,33 +426,23 @@ public class mFont
 			}
 		}
 		else
-		{
 			setTypePaint(g, st, x, y, align, 0);
-		}
 	}
 
 	public void drawStringBorder(mGraphics g, string st, int x, int y, int align)
 	{
 		if (mGraphics.zoomLevel == 1)
-		{
 			drawString(g, st, x, y, align);
-		}
 		else
-		{
 			setTypePaint(g, st, x, y, align, 0);
-		}
 	}
 
 	public void drawStringBorder(mGraphics g, string st, int x, int y, int align, mFont font2)
 	{
 		if (mGraphics.zoomLevel == 1)
-		{
 			drawString(g, st, x, y, align, font2);
-		}
 		else
-		{
 			drawStringBd(g, st, x, y, align, font2);
-		}
 	}
 
 	public void drawStringBd(mGraphics g, string st, int x, int y, int align, mFont font)
@@ -491,19 +463,12 @@ public class mFont
 		if (mGraphics.zoomLevel == 1)
 		{
 			int length = st.Length;
-			int num = align switch
-			{
-				0 => x, 
-				1 => x - getWidth(st), 
-				_ => x - (getWidth(st) >> 1), 
-			};
+			int num = ((align == 0) ? x : ((align != 1) ? (x - (getWidth(st) >> 1)) : (x - getWidth(st))));
 			for (int i = 0; i < length; i++)
 			{
 				int num2 = strFont.IndexOf(st[i]);
 				if (num2 == -1)
-				{
 					num2 = 0;
-				}
 				if (num2 > -1)
 				{
 					int x2 = fImages[num2][0];
@@ -554,17 +519,13 @@ public class mFont
 					num--;
 				}
 				if (num < 0)
-				{
 					num = text.Length - 1;
-				}
 				myVector.addElement(text.Substring(0, num));
 				i = i - (text.Length - num) + 1;
 				text = string.Empty;
 			}
 			if (i == src.Length - 1 && !text.Trim().Equals(string.Empty))
-			{
 				myVector.addElement(text);
-			}
 		}
 		return myVector;
 	}
@@ -623,9 +584,7 @@ public class mFont
 					if (src[num] != '\n')
 					{
 						if (num < length - 1)
-						{
 							continue;
-						}
 						num = length - 1;
 					}
 				}
@@ -637,19 +596,13 @@ public class mFont
 						num--;
 					}
 					if (num == i)
-					{
 						num = num2;
-					}
 				}
 				string text2 = src.Substring(i, num + 1 - i);
 				if (text2[0] == '\n')
-				{
 					text2 = text2.Substring(1, text2.Length - 1);
-				}
 				if (text2[text2.Length - 1] == '\n')
-				{
 					text2 = text2.Substring(0, text2.Length - 1);
-				}
 				arrayList.Add(text2);
 				if (num != length - 1)
 				{
@@ -657,9 +610,7 @@ public class mFont
 					{
 					}
 					if (i == length - 1)
-					{
 						break;
-					}
 					num = i;
 					text = string.Empty;
 					continue;
@@ -692,9 +643,7 @@ public class mFont
 		for (int i = 0; i < strSource.Length; i++)
 		{
 			if ((string.Empty + strSource[i]).Equals(str))
-			{
 				return true;
-			}
 		}
 		return false;
 	}
@@ -708,9 +657,7 @@ public class mFont
 			{
 				int num2 = strFont.IndexOf(s[i]);
 				if (num2 == -1)
-				{
 					num2 = 0;
-				}
 				num += fImages[num2][2] + space;
 			}
 			return num;
@@ -741,13 +688,9 @@ public class mFont
 	public int getHeight()
 	{
 		if (mGraphics.zoomLevel == 1)
-		{
 			return height;
-		}
 		if (height > 0)
-		{
 			return height / mGraphics.zoomLevel;
-		}
 		GUIStyle gUIStyle = new GUIStyle();
 		gUIStyle.font = myFont;
 		try
@@ -800,8 +743,7 @@ public class mFont
 		int num2 = _text.IndexOf(_searchStr, startIndex);
 		while (num2 != -1)
 		{
-			startIndex = num2 + length;
-			num2 = _text.IndexOf(_searchStr, startIndex);
+			num2 = _text.IndexOf(_searchStr, num2 + length);
 			num++;
 		}
 		string[] array = new string[num + 1];
@@ -822,9 +764,7 @@ public class mFont
 	public void reloadImage()
 	{
 		if (mGraphics.zoomLevel == 1)
-		{
 			imgFont = GameCanvas.loadImage(pathImage);
-		}
 	}
 
 	public void freeImage()

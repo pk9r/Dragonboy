@@ -156,9 +156,7 @@ public class T2 : mResources
 		};
 		mResources.MENUGENDER = new string[3] { "Earth", "Namekian", "Saiyan" };
 		if (mSystem.clientType == 7)
-		{
 			mResources.MENUGENDER = new string[3] { "Earth dragon", "Green dragon", "Red dragon" };
-		}
 		mResources.CHAR_ORDER = new string[10] { "Challenge", "Practice", "PK", "Add friend", "Invite clan", "Recover", "Information", "Private chat", "Invite to clan", "Block invite to clan" };
 		mResources.mainTab1 = new string[4][]
 		{
@@ -534,14 +532,12 @@ public class T2 : mResources
 			new string[3] { "Vegeta", "Raditz", "Kakarot" }
 		};
 		if (mSystem.clientType == 7)
-		{
 			mResources.hairStyleName = new string[3][]
 			{
 				new string[3] { "Hango", "Linkhi", "Chayam" },
 				new string[3] { "Deden", "Cololo", "Mika" },
 				new string[3] { "Tageve", "Ditra", "Rotkaka" }
 			};
-		}
 		mResources.hp_ki_full = "HP and KI are full, no need to use bean";
 		mResources.quest_place = "Quest place";
 		mResources.no_mission = "You don't have quest";

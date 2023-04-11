@@ -71,9 +71,7 @@ public class MonsterDart : Effect2
 		va = info.va;
 		setAngle(Res.angle(c.cx - x, c.cy - y));
 		if (x >= GameScr.cmx && x <= GameScr.cmx + GameCanvas.w)
-		{
 			SoundMn.gI().mobKame(dartType);
-		}
 	}
 
 	public MonsterDart(int x, int y, bool isBoss, int dame, int dameMp, int xTo, int yTo, int dartType)
@@ -89,9 +87,7 @@ public class MonsterDart : Effect2
 		va = info.va;
 		setAngle(Res.angle(xTo - x, yTo - y));
 		if (x >= GameScr.cmx && x <= GameScr.cmx + GameCanvas.w)
-		{
 			SoundMn.gI().mobKame(dartType);
-		}
 		c = null;
 	}
 
@@ -117,16 +113,12 @@ public class MonsterDart : Effect2
 		for (int i = 0; i < info.nUpdate; i++)
 		{
 			if (info.tail.Length > 0)
-			{
 				darts.addElement(new SmallDart(x, y));
-			}
 			dx = ((c == null) ? xTo : c.cx) - x;
 			dy = ((c == null) ? yTo : c.cy) - 10 - y;
 			int num = 60;
 			if (TileMap.mapID == 0)
-			{
 				num = 600;
-			}
 			life++;
 			if ((c != null && (c.statusMe == 5 || c.statusMe == 14)) || c == null)
 			{
@@ -138,31 +130,23 @@ public class MonsterDart : Effect2
 				if (c != null && c.charID >= 0 && dameMp != -1)
 				{
 					if (dameMp != -100)
-					{
-						c.doInjure(dame, dameMp, isCrit: false, isMob: true);
-					}
+						c.doInjure(dame, dameMp, false, true);
 					else
-					{
 						ServerEffect.addServerEffect(80, c, 1);
-					}
 				}
 				Effect2.vEffect2.removeElement(this);
 				if (dameMp != -100)
 				{
 					ServerEffect.addServerEffect(81, c, 1);
 					if (x >= GameScr.cmx && x <= GameScr.cmx + GameCanvas.w)
-					{
 						SoundMn.gI().explode_2();
-					}
 				}
 			}
 			int num2 = Res.angle(dx, dy);
 			if (Math.abs(num2 - angle) < 90 || dx * dx + dy * dy > 4096)
 			{
 				if (Math.abs(num2 - angle) < 15)
-				{
 					angle = num2;
-				}
 				else if ((num2 - angle >= 0 && num2 - angle < 180) || num2 - angle < -180)
 				{
 					angle = Res.fixangle(angle + 15);
@@ -173,18 +157,14 @@ public class MonsterDart : Effect2
 				}
 			}
 			if (!isSpeedUp && va < 8192)
-			{
 				va += 1024;
-			}
 			vx = va * Res.cos(angle) >> 10;
 			vy = va * Res.sin(angle) >> 10;
 			dx += vx;
-			int num3 = dx >> 10;
-			x += num3;
+			x += dx >> 10;
 			dx &= 1023;
 			dy += vy;
-			int num4 = dy >> 10;
-			y += num4;
+			y += dy >> 10;
 			dy &= 1023;
 		}
 		for (int j = 0; j < darts.size(); j++)
@@ -192,9 +172,7 @@ public class MonsterDart : Effect2
 			SmallDart smallDart = (SmallDart)darts.elementAt(j);
 			smallDart.index++;
 			if (smallDart.index >= info.tail.Length)
-			{
 				darts.removeElementAt(j);
-			}
 		}
 	}
 
@@ -205,9 +183,7 @@ public class MonsterDart : Effect2
 			if (angle >= ARROWINDEX[i] && angle <= ARROWINDEX[i + 1])
 			{
 				if (i >= 16)
-				{
 					return 0;
-				}
 				return i;
 			}
 		}
@@ -236,9 +212,7 @@ public class MonsterDart : Effect2
 		{
 			SmallDart smallDart3 = (SmallDart)darts.elementAt(k);
 			if (Res.abs(r.nextInt(100)) < info.xdPercent)
-			{
 				SmallImage.drawSmallImage(g, (GameCanvas.gameTick % 2 != 0) ? info.xd2[smallDart3.index] : info.xd1[smallDart3.index], smallDart3.x, smallDart3.y, 0, 3);
-			}
 		}
 	}
 

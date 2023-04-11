@@ -26,9 +26,7 @@ public class ClanImage
 		{
 			ClanImage clanImage = (ClanImage)vClanImage.elementAt(i);
 			if (clanImage.ID == ID)
-			{
 				return clanImage;
-			}
 		}
 		return null;
 	}
@@ -37,11 +35,8 @@ public class ClanImage
 	{
 		for (int i = 0; i < vClanImage.size(); i++)
 		{
-			ClanImage clanImage = (ClanImage)vClanImage.elementAt(i);
-			if (clanImage.ID == ID)
-			{
+			if (((ClanImage)vClanImage.elementAt(i)).ID == ID)
 				return true;
-			}
 		}
 		return false;
 	}

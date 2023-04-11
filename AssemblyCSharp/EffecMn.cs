@@ -10,9 +10,7 @@ public class EffecMn
 	public static void removeEff(int id)
 	{
 		if (getEffById(id) != null)
-		{
 			vEff.removeElement(getEffById(id));
-		}
 	}
 
 	public static Effect getEffById(int id)
@@ -21,9 +19,7 @@ public class EffecMn
 		{
 			Effect effect = (Effect)vEff.elementAt(i);
 			if (effect.effId == id)
-			{
 				return effect;
-			}
 		}
 		return null;
 	}
@@ -33,9 +29,7 @@ public class EffecMn
 		for (int i = 0; i < vEff.size(); i++)
 		{
 			if (((Effect)vEff.elementAt(i)).layer == -layer)
-			{
 				((Effect)vEff.elementAt(i)).paintUnderBackground(g, x, y);
-			}
 		}
 	}
 
@@ -44,9 +38,7 @@ public class EffecMn
 		for (int i = 0; i < vEff.size(); i++)
 		{
 			if (((Effect)vEff.elementAt(i)).layer == 1)
-			{
 				((Effect)vEff.elementAt(i)).paint(g);
-			}
 		}
 	}
 
@@ -55,9 +47,7 @@ public class EffecMn
 		for (int i = 0; i < vEff.size(); i++)
 		{
 			if (((Effect)vEff.elementAt(i)).layer == 2)
-			{
 				((Effect)vEff.elementAt(i)).paint(g);
-			}
 		}
 	}
 
@@ -66,9 +56,7 @@ public class EffecMn
 		for (int i = 0; i < vEff.size(); i++)
 		{
 			if (((Effect)vEff.elementAt(i)).layer == 3)
-			{
 				((Effect)vEff.elementAt(i)).paint(g);
-			}
 		}
 	}
 
@@ -77,9 +65,7 @@ public class EffecMn
 		for (int i = 0; i < vEff.size(); i++)
 		{
 			if (((Effect)vEff.elementAt(i)).layer == 4)
-			{
 				((Effect)vEff.elementAt(i)).paint(g);
-			}
 		}
 	}
 

@@ -65,9 +65,7 @@ public class MyKeyMap
 	{
 		object obj = h[k];
 		if (obj == null)
-		{
 			return 0;
-		}
 		return (int)obj;
 	}
 }

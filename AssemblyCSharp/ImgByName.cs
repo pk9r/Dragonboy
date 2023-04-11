@@ -44,9 +44,7 @@ public class ImgByName
 		sbyte[] array = null;
 		array = Rms.loadRMS(filename);
 		if (array == null)
-		{
 			return result;
-		}
 		try
 		{
 			result = new MainImage();
@@ -92,10 +90,7 @@ public class ImgByName
 		{
 			MainImage mainImage = (MainImage)enumerator.Value;
 			if (GameCanvas.timeNow / 1000 - mainImage.count > minute * 60)
-			{
-				string o = (string)enumerator.Key;
-				myVector.addElement(o);
-			}
+				myVector.addElement((string)enumerator.Key);
 		}
 		for (int i = 0; i < myVector.size(); i++)
 		{

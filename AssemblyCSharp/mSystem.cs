@@ -46,18 +46,14 @@ public class mSystem
 	public static int getWidth(Image img)
 	{
 		if (clientType == 5)
-		{
 			return img.getWidth();
-		}
 		return img.getWidth();
 	}
 
 	public static int getHeight(Image img)
 	{
 		if (clientType == 5)
-		{
 			return img.getHeight();
-		}
 		return img.getWidth();
 	}
 
@@ -70,17 +66,13 @@ public class mSystem
 		string result = string.Empty;
 		long num = (timeStart + secondCount * 1000 - currentTimeMillis()) / 1000;
 		if (num <= 0)
-		{
 			return string.Empty;
-		}
 		long num2 = 0L;
 		long num3 = 0L;
 		long num4 = num / 60;
 		long num5 = num;
 		if (isOnlySecond)
-		{
 			return num5 + string.Empty;
-		}
 		if (num >= 86400)
 		{
 			num2 = num / 86400;
@@ -103,28 +95,18 @@ public class mSystem
 		if (isShortText)
 		{
 			if (num2 > 0)
-			{
 				return num2 + "d";
-			}
 			if (num3 > 0)
-			{
 				return num3 + "h";
-			}
 			if (num4 > 0)
-			{
 				return num4 + "m";
-			}
 			if (num5 > 0)
-			{
 				return num5 + "s";
-			}
 		}
 		if (num2 > 0)
 		{
 			if (num2 >= 10)
-			{
 				result = ((num3 < 1) ? (num2 + "d") : ((num3 >= 10) ? (num2 + "d" + num3 + "h") : (num2 + "d0" + num3 + "h")));
-			}
 			else if (num2 < 10)
 			{
 				result = ((num3 < 1) ? (num2 + "d") : ((num3 >= 10) ? (num2 + "d" + num3 + "h") : (num2 + "d0" + num3 + "h")));
@@ -133,9 +115,7 @@ public class mSystem
 		else if (num3 > 0)
 		{
 			if (num3 >= 10)
-			{
 				result = ((num4 < 1) ? (num3 + "h") : ((num4 >= 10) ? (num3 + "h" + num4 + "m") : (num3 + "h0" + num4 + "m")));
-			}
 			else if (num3 < 10)
 			{
 				result = ((num4 < 1) ? (num3 + "h") : ((num4 >= 10) ? (num3 + "h" + num4 + "m") : (num3 + "h0" + num4 + "m")));
@@ -146,9 +126,7 @@ public class mSystem
 			if (num4 >= 10)
 			{
 				if (num5 >= 10)
-				{
 					result = num4 + "m" + num5 + string.Empty;
-				}
 				else if (num5 < 10)
 				{
 					result = num4 + "m0" + num5 + string.Empty;
@@ -157,9 +135,7 @@ public class mSystem
 			else if (num4 < 10)
 			{
 				if (num5 >= 10)
-				{
 					result = num4 + "m" + num5 + string.Empty;
-				}
 				else if (num5 < 10)
 				{
 					result = num4 + "m0" + num5 + string.Empty;
@@ -181,9 +157,7 @@ public class mSystem
 			string text2 = string.Empty;
 			string text3 = aa + string.Empty;
 			if (text3.Equals(string.Empty))
-			{
 				return text;
-			}
 			if (text3[0] == '-')
 			{
 				text2 = "-";
@@ -232,9 +206,7 @@ public class mSystem
 				if (number < 1000)
 				{
 					if (flag)
-					{
 						return "-" + text;
-					}
 					return text;
 				}
 				empty = "k";
@@ -248,9 +220,7 @@ public class mSystem
 		{
 		}
 		if (flag)
-		{
 			return "-" + text;
-		}
 		return text;
 	}
 
@@ -341,9 +311,7 @@ public class mSystem
 
 	public static sbyte[] convertToSbyte(string scr)
 	{
-		ASCIIEncoding aSCIIEncoding = new ASCIIEncoding();
-		byte[] bytes = aSCIIEncoding.GetBytes(scr);
-		return convertToSbyte(bytes);
+		return convertToSbyte(new ASCIIEncoding().GetBytes(scr));
 	}
 
 	public static byte[] convetToByte(sbyte[] scr)
@@ -352,13 +320,9 @@ public class mSystem
 		for (int i = 0; i < scr.Length; i++)
 		{
 			if (scr[i] > 0)
-			{
 				array[i] = (byte)scr[i];
-			}
 			else
-			{
 				array[i] = (byte)(scr[i] + 256);
-			}
 		}
 		return array;
 	}
@@ -392,9 +356,7 @@ public class mSystem
 	public static mSystem gI()
 	{
 		if (instance == null)
-		{
 			instance = new mSystem();
-		}
 		return instance;
 	}
 
@@ -424,9 +386,7 @@ public class mSystem
 			if (GameScr.flyTextState[i] != -1 && GameCanvas.isPaint(GameScr.flyTextX[i], GameScr.flyTextY[i]))
 			{
 				if (GameScr.flyTextColor[i] == mFont.RED)
-				{
 					mFont.bigNumber_red.drawStringBorder(g, GameScr.flyTextString[i], GameScr.flyTextX[i], GameScr.flyTextY[i], mFont.CENTER);
-				}
 				else if (GameScr.flyTextColor[i] == mFont.YELLOW)
 				{
 					mFont.bigNumber_yellow.drawStringBorder(g, GameScr.flyTextString[i], GameScr.flyTextX[i], GameScr.flyTextY[i], mFont.CENTER);
@@ -480,16 +440,12 @@ public class mSystem
 		FrameImage result = null;
 		MainImage mainImage = null;
 		if (mainImage == null)
-		{
 			mainImage = ImgByName.getImagePath(nameImg, ImgByName.hashImagePath);
-		}
 		if (mainImage.img != null)
 		{
 			int num = mainImage.img.getHeight() / mainImage.nFrame;
 			if (num < 1)
-			{
 				num = 1;
-			}
 			result = new FrameImage(mainImage.img, mainImage.img.getWidth(), num);
 		}
 		return result;
