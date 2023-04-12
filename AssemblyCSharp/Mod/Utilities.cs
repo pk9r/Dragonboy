@@ -27,7 +27,7 @@ namespace Mod
 
         public static readonly sbyte ID_SKILL_BUFF = 7;
         public static readonly short ID_ICON_ITEM_TDLT = 4387;
-        public static readonly short ID_NPC_MOD_FACE = 7333;// Doraemon, TODO: custom npc avatar
+        public static readonly short ID_NPC_MOD_FACE = 7333;    // Doraemon
 
         public static readonly short ID_ITEM_CAPSULE_VIP = 194;
         public static readonly short ID_ITEM_CAPSULE_NORMAL = 193;
@@ -353,7 +353,7 @@ namespace Mod
         [ChatCommand("test")]
         public static void test()
         {
-
+            
         }
 
         [ChatCommand("skey")]

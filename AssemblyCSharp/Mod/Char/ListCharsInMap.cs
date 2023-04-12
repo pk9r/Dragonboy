@@ -33,8 +33,8 @@ namespace Mod
         {
             if (Boss.isEnabled)
             {
-                if (y != 55 + 6 + 8 * Mathf.Clamp(Boss.bosses.Count, 0, 5) + 3)
-                    y = 55 + 6 + 8 * Mathf.Clamp(Boss.bosses.Count, 0, 5) + 3;
+                if (y != 55 + 6 + 8 * Mathf.Clamp(Boss.listBosses.Count, 0, 5) + 3)
+                    y = 55 + 6 + 8 * Mathf.Clamp(Boss.listBosses.Count, 0, 5) + 3;
             }
             else if (y != 50)
                 y = 50;
@@ -44,7 +44,7 @@ namespace Mod
             for (int i = 0; i < GameScr.vCharInMap.size(); i++)
             {
                 Char ch = (Char)GameScr.vCharInMap.elementAt(i);
-                if (CharExtensions.isNormalChar(ch, true, false))
+                if (ch.isNormalChar(true))
                 {
                     listChars.Add(ch);
                     if (isShowPet && ch.charID > 0)
@@ -179,17 +179,17 @@ namespace Mod
         {
             if (listChars.Count > MAX_CHAR)
             {
-                int heightScrollBar = MAX_CHAR * distanceBetweenLines - 1;
+                int heightScrollBar = MAX_CHAR * distanceBetweenLines - 1 - 6 * 2;
                 getButtonUp(out int buttonUpX, out int buttonUpY);
                 getButtonDown(out int buttonDownX, out int buttonDownY);
                 g.setColor(new Color(0, 0, 0, .25f));
-                g.fillRect(buttonUpX, buttonUpY, 9, heightScrollBar);
-                heightScrollBar -= 6 * 2;
-                int heightScrollBarThumb = Mathf.RoundToInt((float)MAX_CHAR / listChars.Count * heightScrollBar);
+                g.fillRect(buttonUpX, buttonUpY, 9, heightScrollBar + 6 * 2);
+                g.drawRegion(Mob.imgHP, 0, (offset < listChars.Count - MAX_CHAR ? 18 : 54), 9, 6, 1, buttonUpX, buttonUpY, 0);
+                g.drawRegion(Mob.imgHP, 0, (offset > 0 ? 18 : 54), 9, 6, 0, buttonDownX, buttonDownY, 0);
+                //draw thumb
+                int heightScrollBarThumb = Mathf.CeilToInt((float)MAX_CHAR / listChars.Count * heightScrollBar);
                 g.setColor(new Color(0, 0, 0, .4f));
-                g.fillRect(buttonUpX, buttonUpY + 5 + Mathf.RoundToInt((float)(heightScrollBar - heightScrollBarThumb) / (listChars.Count - 5) * (listChars.Count - offset - 5)), 9, heightScrollBarThumb);
-                g.drawRegion(Mob.imgHP, 0, (offset < listChars.Count - MAX_CHAR ? 24 : 54), 9, 6, 1, buttonUpX, buttonUpY, 0);
-                g.drawRegion(Mob.imgHP, 0, (offset > 0 ? 24 : 54), 9, 6, 0, buttonDownX, buttonDownY, 0);
+                g.fillRect(buttonUpX, buttonUpY + 6 + Mathf.CeilToInt((float)heightScrollBar / listChars.Count * (listChars.Count - offset - MAX_CHAR)), 9, heightScrollBarThumb);
             }
         }
 

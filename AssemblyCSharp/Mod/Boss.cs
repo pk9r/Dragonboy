@@ -19,7 +19,7 @@ namespace Mod
 
         public DateTime AppearTime;
 
-        public static List<Boss> bosses = new List<Boss>();
+        public static List<Boss> listBosses = new List<Boss>();
 
         public static bool isEnabled;
 
@@ -34,6 +34,10 @@ namespace Mod
         static int maxLength = 0;
 
         static int lastBoss = -1;
+
+        static readonly int MAX_BOSS_DISPLAY = 5;
+
+        static readonly int MAX_BOSS = 100;
 
         Boss(string name, string map) 
         {
@@ -56,11 +60,11 @@ namespace Mod
                 return;
             chatVip = chatVip.Replace("BOSS ", "").Replace(" vừa xuất hiện tại ", "|").Replace(" appear at ", "|").Replace(" khu vực ", "|").Replace(" zone ", "|");
             string[] array = chatVip.Split('|');
-            bosses.Add(new Boss(array[0].Trim(), array[1].Trim()));
+            listBosses.Add(new Boss(array[0].Trim(), array[1].Trim()));
             if (array.Length == 3)
-                bosses.Last().zoneId = int.Parse(array[2].Trim());
-            if (bosses.Count > 50)
-                bosses.RemoveAt(0);
+                listBosses.Last().zoneId = int.Parse(array[2].Trim());
+            if (listBosses.Count > MAX_BOSS)
+                listBosses.RemoveAt(0);
         }
 
         public override string ToString()
@@ -82,11 +86,17 @@ namespace Mod
         {
             if (!isEnabled)
                 return;
+            PaintListBosses(g);
+            PaintScroll(g);
+        }
+
+        private static void PaintListBosses(mGraphics g)
+        {
             int start = 0;
-            if (bosses.Count > 5)
-                start = bosses.Count - 5;
-            GUIStyle[] styles = new GUIStyle[5];
-            for (int i = start - offset; i < bosses.Count - offset; i++)
+            if (listBosses.Count > MAX_BOSS_DISPLAY)
+                start = listBosses.Count - MAX_BOSS_DISPLAY;
+            GUIStyle[] styles = new GUIStyle[MAX_BOSS_DISPLAY];
+            for (int i = start - offset; i < listBosses.Count - offset; i++)
             {
                 styles[i - start + offset] = new GUIStyle(GUI.skin.label)
                 {
@@ -94,7 +104,7 @@ namespace Mod
                     fontSize = 6 * mGraphics.zoomLevel,
                     fontStyle = FontStyle.Bold,
                 };
-                Boss boss = bosses[i];
+                Boss boss = listBosses[i];
                 styles[i - start + offset].normal.textColor = Color.yellow;
                 if (TileMap.mapID == boss.mapId)
                 {
@@ -110,22 +120,33 @@ namespace Mod
                 maxLength = Math.max(length, maxLength);
             }
             int xDraw = GameCanvas.w - x - maxLength;
-            for (int i = start - offset; i < bosses.Count - offset; i++)
+            for (int i = start - offset; i < listBosses.Count - offset; i++)
             {
                 int yDraw = y + distanceBetweenLines * (i - start + offset);
-                Boss boss = bosses[i];
+                Boss boss = listBosses[i];
                 g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.4f));
                 if (GameCanvas.isMouseFocus(xDraw, yDraw, maxLength, 7))
                     g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.7f));
                 g.fillRect(xDraw, yDraw + 1, maxLength, 7);
                 g.drawString($"{i + 1}. {boss}", -x, mGraphics.zoomLevel - 3 + yDraw, styles[i - start + offset]);
             }
-            if (bosses.Count > 5)
+        }
+
+        static void PaintScroll(mGraphics g)
+        {
+            if (listBosses.Count > MAX_BOSS_DISPLAY)
             {
-                if (offset < bosses.Count - 5)
-                    g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 1, GameCanvas.w - x - 9, y - 7, 0);
-                if (offset > 0)
-                    g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, GameCanvas.w - x - 9, y + 2 + distanceBetweenLines * 5, 0);
+                int heightScrollBar = MAX_BOSS_DISPLAY * distanceBetweenLines - 1 - 6 * 2;
+                getButtonUp(out int buttonUpX, out int buttonUpY);
+                getButtonDown(out int buttonDownX, out int buttonDownY);
+                g.setColor(new Color(0, 0, 0, .25f));
+                g.fillRect(buttonUpX, buttonUpY, 9, heightScrollBar + 6 * 2);
+                g.drawRegion(Mob.imgHP, 0, (offset < listBosses.Count - MAX_BOSS_DISPLAY ? 24 : 54), 9, 6, 1, buttonUpX, buttonUpY, 0);
+                g.drawRegion(Mob.imgHP, 0, (offset > 0 ? 24 : 54), 9, 6, 0, buttonDownX, buttonDownY, 0);
+                //draw thumb
+                int heightScrollBarThumb = Mathf.CeilToInt((float)MAX_BOSS_DISPLAY / listBosses.Count * heightScrollBar);
+                g.setColor(new Color(0, 0, 0, .4f));
+                g.fillRect(buttonUpX, buttonUpY + 6 + Mathf.CeilToInt((float)heightScrollBar / listBosses.Count * (listBosses.Count - offset - MAX_BOSS_DISPLAY)), 9, heightScrollBarThumb);
             }
         }
 
@@ -148,9 +169,9 @@ namespace Mod
             if (!GameCanvas.isTouch || ChatTextField.gI().isShow || GameCanvas.menu.showMenu)
                 return;
             int start = 0;
-            if (bosses.Count > 5)
-                start = bosses.Count - 5;
-            for (int i = start - offset; i < bosses.Count - offset; i++)
+            if (listBosses.Count > MAX_BOSS_DISPLAY)
+                start = listBosses.Count - MAX_BOSS_DISPLAY;
+            for (int i = start - offset; i < listBosses.Count - offset; i++)
             {
                 if (GameCanvas.isPointerHoldIn(GameCanvas.w - x - maxLength, y + 1 + distanceBetweenLines * (i - start + offset), maxLength, 7))
                 {
@@ -160,29 +181,29 @@ namespace Mod
                     {
                         if (lastBoss == i && mSystem.currentTimeMillis() - Utilities.GetLastTimePress() <= 200)
                         {
-                            if (TileMap.mapID != bosses[i].mapId)
+                            if (TileMap.mapID != listBosses[i].mapId)
                             {
                                 if (XmapController.gI.IsActing)
                                     XmapController.finishXmap();
-                                XmapController.start(bosses[i].mapId);
+                                XmapController.start(listBosses[i].mapId);
                                 lastBoss = -1;
                                 return;
                             }
-                            if (bosses[i].zoneId != -1 && TileMap.zoneID != bosses[i].zoneId)
+                            if (listBosses[i].zoneId != -1 && TileMap.zoneID != listBosses[i].zoneId)
                             {
-                                Service.gI().requestChangeZone(bosses[i].zoneId, 0);
+                                Service.gI().requestChangeZone(listBosses[i].zoneId, 0);
                                 return;
                             }
                         }
                         else
                             lastBoss = i;
-                        if (TileMap.mapID == bosses[i].mapId)
+                        if (TileMap.mapID == listBosses[i].mapId)
                         {
                             int j = 0;
                             for (; j < GameScr.vCharInMap.size(); j++)
                             {
                                 Char ch = GameScr.vCharInMap.elementAt(j) as Char;
-                                if (ch.cName == bosses[i].name)
+                                if (ch.cName == listBosses[i].name)
                                 {
                                     Char.myCharz().deFocusNPC();
                                     Char.myCharz().itemFocus = null;
@@ -202,21 +223,23 @@ namespace Mod
                     return;
                 }
             }
-            if (bosses.Count > 5)
+            if (listBosses.Count > MAX_BOSS_DISPLAY)
             {
-                if (GameCanvas.isPointerHoldIn(GameCanvas.w - x - 9, y - 7, 9, 6))
+                getButtonUp(out int buttonUpX, out int buttonUpY);
+                if (GameCanvas.isPointerHoldIn(buttonUpX, buttonUpY, 9, 6))
                 {
                     GameCanvas.isPointerJustDown = false;
                     GameScr.gI().isPointerDowning = false;
                     if (GameCanvas.isPointerClick)
                     {
-                        if (offset < bosses.Count - 5)
+                        if (offset < listBosses.Count - MAX_BOSS_DISPLAY)
                             offset++;
                     }
                     GameCanvas.clearAllPointerEvent();
                     return;
                 }
-                if (GameCanvas.isPointerHoldIn(GameCanvas.w - x - 9, y + 2 + distanceBetweenLines * 5, 9, 6))
+                getButtonDown(out int buttonDownX, out int buttonDownY);
+                if (GameCanvas.isPointerHoldIn(buttonDownX, buttonDownY, 9, 6))
                 {
                     GameCanvas.isPointerJustDown = false;
                     GameScr.gI().isPointerDowning = false;
@@ -233,7 +256,7 @@ namespace Mod
 
         public static void Update()
         {
-            foreach (Boss boss in bosses)
+            foreach (Boss boss in listBosses)
             {
                 if (boss.zoneId != -1)
                     continue;
@@ -249,15 +272,34 @@ namespace Mod
                 if (boss.zoneId == TileMap.zoneID)
                     break;
             }
-            if (isEnabled && GameCanvas.isMouseFocus(GameCanvas.w - x - maxLength, y + 1, maxLength, 8 * 5))
+            if (isEnabled && GameCanvas.isMouseFocus(GameCanvas.w - x - maxLength, y + 1, maxLength, 8 * MAX_BOSS_DISPLAY))
             {
                 if (GameCanvas.pXYScrollMouse > 0)
-                    if (offset < bosses.Count - 5)
+                    if (offset < listBosses.Count - MAX_BOSS_DISPLAY)
                         offset++;
                 if (GameCanvas.pXYScrollMouse < 0)
                     if (offset > 0)
                         offset--;
             }
+        }
+
+        static void getButtonUp(out int buttonUpX, out int buttonUpY)
+        {
+            //if (bosses.Count > 5)
+            //{
+            //    if (offset < bosses.Count - 5)
+            //        g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 1, GameCanvas.w - x - 9, y - 7, 0);
+            //    if (offset > 0)
+            //        g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, GameCanvas.w - x - 9, y + 2 + distanceBetweenLines * 5, 0);
+            //}
+            buttonUpX = GameCanvas.w - x + 2;
+            buttonUpY = y + 1;
+        }
+
+        static void getButtonDown(out int buttonDownX, out int buttonDownY)
+        {
+            buttonDownX = GameCanvas.w - x + 2;
+            buttonDownY = y + 2 + distanceBetweenLines * (MAX_BOSS_DISPLAY - 1);
         }
 
         public static void setState(bool value) => isEnabled = value;
