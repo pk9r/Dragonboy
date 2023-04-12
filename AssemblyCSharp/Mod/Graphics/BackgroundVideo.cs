@@ -23,6 +23,7 @@ namespace Mod.Graphics
             videoPlayer.audioOutputMode = VideoAudioOutputMode.None;
             videoPlayer.skipOnDrop = true;
             videoPlayer.prepareCompleted += (source) => isPreparing = false;
+            Stop();
             //videoPlayer.SetTargetAudioSource(0, audioSource);
             //audioSource.volume = 0.5f;
             //videoPlayer.Play();
@@ -31,7 +32,8 @@ namespace Mod.Graphics
 
         public void Paint(mGraphics g, int x, int y)
         {
-            UnityEngine.Graphics.DrawTexture(new Rect(x, y, Screen.width, Screen.height), videoPlayer.texture);
+            if (videoPlayer.texture != null)
+                UnityEngine.Graphics.DrawTexture(new Rect(x, y, Screen.width, Screen.height), videoPlayer.texture);
         }
 
         public void Stop() =>

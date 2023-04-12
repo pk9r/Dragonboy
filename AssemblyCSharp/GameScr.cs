@@ -1,6 +1,7 @@
 using System;
 using Assets.src.g;
 using Mod;
+using Mod.Graphics;
 using Mod.ModMenu;
 using UnityEngine;
 
@@ -4193,7 +4194,9 @@ public class GameScr : mScreen, IChatable
 
 	public void paintBlackSky(mGraphics g)
 	{
-		if (!GameCanvas.lowGraphic)
+        if (CustomBackground.isEnabled && CustomBackground.backgroundWallpapers.Count > 0 && !ModMenuMain.modMenuItemBools[8].isDisabled)
+			return;
+        if (!GameCanvas.lowGraphic)
 			g.fillTrans(imgTrans, 0, 0, GameCanvas.w, GameCanvas.h);
 	}
 
