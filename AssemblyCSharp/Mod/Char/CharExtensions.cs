@@ -5,7 +5,7 @@ namespace Mod
 {
     public static class CharExtensions
     {
-        public static int getTimeHold(Char @char)
+        public static int getTimeHold(this Char @char)
         {
 
             int num = 35;
@@ -25,7 +25,7 @@ namespace Mod
             return num;
         }
 
-        public static int getTimeMonkey(Char @char)
+        public static int getTimeMonkey(this Char @char)
         {
             int num = 60;
             try
@@ -69,7 +69,7 @@ namespace Mod
             return num;
         }
 
-        public static int getTimeShield(Char @char)
+        public static int getTimeShield(this Char @char)
         {
             int num;
             try
@@ -90,7 +90,7 @@ namespace Mod
             return num;
         }
 
-        public static int getTimeMobMe(Char @char)
+        public static int getTimeMobMe(this Char @char)
         {
             int num = 60;
             try
@@ -134,7 +134,7 @@ namespace Mod
             return num;
         }
 
-        public static int getTimeHypnotize(Char @char)
+        public static int getTimeHypnotize(this Char @char)
         {
             int num = 12;
             try
@@ -153,24 +153,39 @@ namespace Mod
             return num;
         }
 
-        public static int getTimeStone(Char @char)
+        public static int getTimeStone(this Char @char)
         {
             return 5;
         }
 
-        public static int getTimeHuytSao(Char @char)
+        public static int getTimeHuytSao(this Char @char)
         {
             return 31;
         }
 
-        public static int getTimeChocolate(Char @char)
+        public static int getTimeChocolate(this Char @char)
         {
             return 31;
         }
 
-        public static string getNameWithoutClanTag(Char @char)
+        public static string getNameWithoutClanTag(this Char @char, bool enableRichText = false)
         {
-            return @char.cName.Remove(0, @char.cName.IndexOf(']') + 1).Replace(" ", "");
+            string name = @char.cName.Remove(0, @char.cName.IndexOf(']') + 1).TrimStart(' ', '#', '$');
+            if (enableRichText)
+            {
+                if (@char.isPet())
+                    name = $"<color=cyan>{name}</color>";
+                else if (@char.isBoss())
+                    name = $"<color=red><size={7 * mGraphics.zoomLevel}>{name}</size></color>";
+                else 
+                    name = $"<color=yellow>{name}</color>";
+            }
+            return name;
+        }
+
+        public static string getClanTag(this Char @char)
+        {
+            return @char.cName.Substring(0, @char.cName.IndexOf(']') + 1) + ' ';
         }
 
         public static bool isNormalChar(this Char @char, bool isIncludeBoss = false, bool isIncludePet = false)
@@ -178,26 +193,20 @@ namespace Mod
             bool result = !string.IsNullOrEmpty(@char.cName) && @char.cName != "Trọng tài";
             if (!string.IsNullOrEmpty(@char.cName))
             {
-                bool isPet = (bool)typeof(Char).GetField("isPet", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(@char);
-                bool isMiniPet = (bool)typeof(Char).GetField("isMiniPet", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(@char);
                 if (!isIncludeBoss) result = result && !char.IsUpper(getNameWithoutClanTag(@char)[0]);
-                if (!isIncludePet) result = result && !isPet && !isMiniPet && !@char.cName.StartsWith("#") && !@char.cName.StartsWith("$");
+                if (!isIncludePet) result = result && !@char.isPet();
             }
             return result;
         }
 
-        public static bool isBoss(Char @char)
+        public static bool isBoss(this Char @char)
         {
-            bool isPet = (bool)typeof(Char).GetField("isPet", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(@char);
-            bool isMiniPet = (bool)typeof(Char).GetField("isMiniPet", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(@char);
-            return !isPet && !isMiniPet && @char.cName != "Trọng tài" && char.IsUpper(getNameWithoutClanTag(@char)[0]);
+            return !@char.isPet() && @char.cName != "Trọng tài" && char.IsUpper(getNameWithoutClanTag(@char)[0]);
         }
 
-        public static bool isPet(Char @char)
+        public static bool isPet(this Char @char)
         {
-            bool isPet = (bool)typeof(Char).GetField("isPet", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(@char);
-            bool isMiniPet = (bool)typeof(Char).GetField("isMiniPet", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(@char);
-            return isPet || isMiniPet || @char.cName.StartsWith("#") || @char.cName.StartsWith("$");
+            return @char.IsPet() || @char.IsMiniPet() || @char.cName.StartsWith("#") || @char.cName.StartsWith("$"); 
         }
 
         public static Char ClosestChar(int maxDistance, bool isNormalCharOnly)
@@ -220,15 +229,22 @@ namespace Mod
             return result;
         }
 
-        public static string getGender(Char @char)
+        public static string getGender(this Char @char, bool enableRichText = false)
         {
+            if (enableRichText)
+            {
+                if (@char.cgender == 0) return "<color=#0080ffff>TĐ</color>";
+                else if (@char.cgender == 1) return "<color=#00c000ff>NM</color>";
+                else if (@char.cgender == 2) return "<color=#ffff80ff>XD</color>";
+                else return "<color=red>B</color><color=purple>Đ</color>";
+            }
             if (@char.cgender == 0) return "TĐ";
             else if (@char.cgender == 1) return "NM";
             else if (@char.cgender == 2) return "XD";
             else return "BĐ";
         }
 
-        public static Color getFlagColor(Char @char)
+        public static Color getFlagColor(this Char @char)
         {
             switch (@char.cFlag)
             {
@@ -249,7 +265,7 @@ namespace Mod
             }
         }
 
-        public static int getSuicideRange(Char @char)
+        public static int getSuicideRange(this Char @char)
         {
             int result = 880;
             if (@char.me && @char.cgender == 2)
@@ -262,5 +278,15 @@ namespace Mod
             return result;
         }
 
+        public static Char findCharInMap(string name)
+        {
+            for (int i = 0; i < GameScr.vCharInMap.size(); i++)
+            {
+                Char @char = (Char)GameScr.vCharInMap.elementAt(i);
+                if (@char.getNameWithoutClanTag() == name)
+                    return @char;
+            }
+            return null;
+        }
     }
 }

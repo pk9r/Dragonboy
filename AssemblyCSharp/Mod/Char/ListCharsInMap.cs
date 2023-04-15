@@ -1,4 +1,5 @@
 ﻿using Mod.CustomGroupBox;
+using Mod.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,14 +28,21 @@ namespace Mod
 
         static int offset = 0;
 
+        static bool isCollapsed;
+
         //static GroupBox backgroundGroupBox;
 
         public static void update()
         {
-            if (Boss.isEnabled)
+            if (Boss.isEnabled && Boss.listBosses.Count > 0)
             {
-                if (y != 55 + 6 + 8 * Mathf.Clamp(Boss.listBosses.Count, 0, 5) + 3)
-                    y = 55 + 6 + 8 * Mathf.Clamp(Boss.listBosses.Count, 0, 5) + 3;
+                if (Boss.isCollapsed)
+                {
+                    if (y != Boss.y + 5 + Boss.distanceBetweenLines + 3)
+                        y = Boss.y + 5 + Boss.distanceBetweenLines + 3;
+                }
+                else if (y != Boss.y + 5 + Boss.distanceBetweenLines * Mathf.Clamp(Boss.listBosses.Count, 0, Boss.MAX_BOSS_DISPLAY) + 3)
+                    y = Boss.y + 5 + Boss.distanceBetweenLines * Mathf.Clamp(Boss.listBosses.Count, 0, Boss.MAX_BOSS_DISPLAY) + 3;
             }
             else if (y != 50)
                 y = 50;
@@ -55,6 +63,13 @@ namespace Mod
                     }
                 }
             }
+            if (isShowPet)
+                for (int i = 0; i < GameScr.vCharInMap.size(); i++)
+                {
+                    Char ch = (Char)GameScr.vCharInMap.elementAt(i);
+                    if (ch.isNormalChar(false, true) && !listChars.Contains(ch))
+                        listChars.Add(ch);
+                }
             if (offset >= listChars.Count - MAX_CHAR)
             {
                 if (listChars.Count - MAX_CHAR > 0)
@@ -94,6 +109,18 @@ namespace Mod
             PaintScroll(g);
         }
 
+        static string formatHP(Char ch)
+        {
+            int hp = ch.cHP;
+            int hpFull = ch.cHPFull;
+            float ratio = hp / (float)hpFull;
+            Color color = new Color(Mathf.Clamp(2 - ratio * 2, 0, 1), Mathf.Clamp(ratio * 2, 0, 1), 0);
+            string hexColor = $"#{(int)(color.r * 255):x2}{(int)(color.g * 255):x2}{(int)(color.b * 255):x2}{(int)(color.a * 255):x2}";
+            if (hp == 0)
+                hexColor = "black";
+            return $"<color=white>[<color={hexColor}>{NinjaUtil.getMoneys(ch.cHP)}</color>/<color=lime>{NinjaUtil.getMoneys(ch.cHPFull)}</color>]</color>";
+        }
+
         static void PaintListChars(mGraphics g)
         {
             int skippedCharCount = 0;
@@ -107,31 +134,42 @@ namespace Mod
                 {
                     fontSize = 6 * mGraphics.zoomLevel,
                     fontStyle = FontStyle.Bold,
-                    alignment = TextAnchor.UpperRight
+                    alignment = TextAnchor.UpperRight,
+                    richText = true
                 };
                 #region Format
                 Char ch = listChars[i];
-                if (ch.charEffectTime.hasNRD || CharExtensions.isBoss(ch))
-                    style.normal.textColor = Color.red;
-                if (ch.cHP <= 0)
-                    style.normal.textColor = Color.black;
-                string charDesc = ch.cName + " [" + NinjaUtil.getMoneys(ch.cHP) + "/" + NinjaUtil.getMoneys(ch.cHPFull) + "]";
-                if (CharExtensions.isNormalChar(ch, false, false))
-                    charDesc = ch.cName + " [" + NinjaUtil.getMoneys(ch.cHP) + "/" + NinjaUtil.getMoneys(ch.cHPFull) + "] - " + CharExtensions.getGender(ch) + " [" + ch.charID + "]";
-                if (CharExtensions.isPet(ch))
+                string charDesc = $"<color=orange>{ch.getClanTag()}</color>{ch.getNameWithoutClanTag(true)} {formatHP(ch)}";
+                if (ch.isNormalChar())
+                    charDesc += $" - {ch.getGender(true)} [{ch.charID}]";
+                if (ch.isPet())
                 {
-                    style.normal.textColor = Color.blue;
-                    if (ch.cHP <= 0)
-                        style.normal.textColor = Color.black;
-                    charDesc = ch.cName.Replace("$", "").Replace("#", "") + " [" + NinjaUtil.getMoneys(ch.cHP) + "/" + NinjaUtil.getMoneys(ch.cHPFull) + " - " + CharExtensions.getGender(ch) + "]";
+                    charDesc += $" - {ch.getGender(true)}";
+                    Char chMaster = GameScr.findCharInMap(-ch.charID);
+                    if (chMaster != null)
+                        charDesc += $" [<color=cyan>Đệ tử</color> của {chMaster.getNameWithoutClanTag(true)}]";
+                    else
+                        charDesc += " [<color=cyan>Đệ tử</color> bị lạc sư phụ]";
                     skippedCharCount++;
                 }
-                else if (!CharExtensions.isBoss(ch))
+                else if (!ch.isBoss())
                     charDesc = i + 1 - skippedCharCount + ". " + charDesc;
                 else
                     skippedCharCount++;
                 if ((Char.myCharz().isStandAndCharge || (!Char.myCharz().isDie && Char.myCharz().cgender == 2 && Char.myCharz().myskill == Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[4]))) && SuicideRange.mapObjsInMyRange.Contains(ch))
-                    charDesc += " - Trong tầm";
+                {
+                    if (GameCanvas.gameTick % 40 > 20)
+                        charDesc += " - <color=red>Trong tầm</color>";
+                    else
+                        charDesc += " - <color=yellow>Trong tầm</color>";
+                }
+                if (ch.charEffectTime.hasNRD || ch.isBoss())
+                    charDesc = $"<color=red>{charDesc}</color>";
+                //else if (ch.isPet())
+                //    charDesc = $"<color=cyan>{charDesc}</color>"; 
+                if (ch.cHP <= 0)
+                    charDesc = $"<color=black>{charDesc}</color>";
+
                 charDescriptions.Add(new KeyValuePair<string, GUIStyle>(charDesc, /*mfont*/style));
                 maxLength = Math.max(maxLength, Utilities.getWidth(charDescriptions[i - start + offset].Value, charDesc) + (ch.cFlag != 0 ? (distanceBetweenLines + 1) : 0));
                 #endregion
@@ -156,7 +194,7 @@ namespace Mod
                         if (ch.cFlag == 10)
                             g.drawString("M", -x, mGraphics.zoomLevel - 3 + y + distanceBetweenLines * (i - start + offset), flagStyle);
                     }
-                    g.setColor(CharExtensions.getFlagColor(ch));
+                    g.setColor(ch.getFlagColor());
                     g.fillRect(GameCanvas.w - x - distanceBetweenLines + 1, y + 1 + distanceBetweenLines * (i - start + offset), distanceBetweenLines - 1, distanceBetweenLines - 1);
                 }
                 g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.4f));
@@ -171,7 +209,15 @@ namespace Mod
                         g.setColor(new Color(1f, 0f, 0f, 1f));
                 }
                 g.fillRect(GameCanvas.w - x - maxLength, y + 1 + distanceBetweenLines * (i - start + offset), maxLength - offsetPaint, distanceBetweenLines - 1);
-                g.drawString(charDescriptions[i - start + offset].Key, -x - offsetPaint, mGraphics.zoomLevel - 3 + y + distanceBetweenLines * (i - start + offset), charDescriptions[i - start + offset].Value);
+                if (GameCanvas.isMouseFocus(GameCanvas.w - x - maxLength - offsetPaint, y + 1 + distanceBetweenLines * (i - start + offset), maxLength, distanceBetweenLines - 1))
+                {
+                    int length = Utilities.getWidth(charDescriptions[i - start + offset].Value, charDescriptions[i - start + offset].Key);
+                    CustomGraphics.fillRect(GameCanvas.w - x - length - offsetPaint + 1, y + distanceBetweenLines * (i - start + offset) + 7, (length - 2) * mGraphics.zoomLevel + 1, 1, Color.white);
+                }
+                int offset2 = 0;
+                if (ch.isBoss())
+                    offset2 = -1;
+                g.drawString(charDescriptions[i - start + offset].Key, -x - offsetPaint, mGraphics.zoomLevel - 3 + y + distanceBetweenLines * (i - start + offset) + offset2, charDescriptions[i - start + offset].Value);
             }
         }
 
@@ -179,17 +225,18 @@ namespace Mod
         {
             if (listChars.Count > MAX_CHAR)
             {
-                int heightScrollBar = MAX_CHAR * distanceBetweenLines - 1 - 6 * 2;
                 getButtonUp(out int buttonUpX, out int buttonUpY);
                 getButtonDown(out int buttonDownX, out int buttonDownY);
-                g.setColor(new Color(0, 0, 0, .25f));
-                g.fillRect(buttonUpX, buttonUpY, 9, heightScrollBar + 6 * 2);
+                getScrollBar(out int scrollBarWidth, out int scrollBarHeight, out int scrollBarThumbHeight);
+                g.setColor(new Color(.2f, .2f, .2f, .4f));
+                g.fillRect(buttonUpX, buttonUpY, 9, scrollBarHeight + 6 * 2);
                 g.drawRegion(Mob.imgHP, 0, (offset < listChars.Count - MAX_CHAR ? 18 : 54), 9, 6, 1, buttonUpX, buttonUpY, 0);
                 g.drawRegion(Mob.imgHP, 0, (offset > 0 ? 18 : 54), 9, 6, 0, buttonDownX, buttonDownY, 0);
                 //draw thumb
-                int heightScrollBarThumb = Mathf.CeilToInt((float)MAX_CHAR / listChars.Count * heightScrollBar);
-                g.setColor(new Color(0, 0, 0, .4f));
-                g.fillRect(buttonUpX, buttonUpY + 6 + Mathf.CeilToInt((float)heightScrollBar / listChars.Count * (listChars.Count - offset - MAX_CHAR)), 9, heightScrollBarThumb);
+                g.setColor(new Color(.2f, .2f, .2f, .7f));
+                g.fillRect(buttonUpX, buttonUpY + 6 + Mathf.CeilToInt((float)scrollBarHeight / listChars.Count * (listChars.Count - offset - MAX_CHAR)), scrollBarWidth, scrollBarThumbHeight);
+                g.setColor(new Color(.7f, .7f, 0f, 1f));
+                g.drawRect(buttonUpX, buttonUpY + 6 + Mathf.CeilToInt((float)scrollBarHeight / listChars.Count * (listChars.Count - offset - MAX_CHAR)), scrollBarWidth - 1, scrollBarThumbHeight - 1);
             }
         }
 
@@ -227,6 +274,16 @@ namespace Mod
                 if (listChars.Count > MAX_CHAR)
                 {
                     getButtonUp(out int buttonUpX, out int buttonUpY);
+                    getScrollBar(out int scrollBarWidth, out int scrollBarHeight, out int scrollBarThumbHeight);
+                    if (GameCanvas.isPointerMove && GameCanvas.isPointerDown && GameCanvas.isPointerHoldIn(buttonUpX, buttonUpY, scrollBarWidth, scrollBarHeight))
+                    {
+                        float increment = scrollBarHeight / (float)listChars.Count;
+                        float newOffset = (GameCanvas.pyMouse - buttonUpY) / increment;
+                        if (float.IsNaN(newOffset))
+                            return;
+                        offset = Mathf.Clamp(listChars.Count - Mathf.RoundToInt(newOffset), 0, listChars.Count - MAX_CHAR);
+                        return;
+                    }
                     if (GameCanvas.isPointerHoldIn(buttonUpX, buttonUpY, 9, 6))
                     {
                         GameCanvas.isPointerJustDown = false;
@@ -298,6 +355,13 @@ namespace Mod
         {
             buttonDownX = GameCanvas.w - x + 2;
             buttonDownY = y + 2 + distanceBetweenLines * (MAX_CHAR - 1);
+        }
+
+        static void getScrollBar(out int scrollBarWidth, out int scrollBarHeight, out int scrollBarThumbHeight)
+        {
+            scrollBarWidth = 9;
+            scrollBarHeight = MAX_CHAR * distanceBetweenLines - 1 - 6 * 2;
+            scrollBarThumbHeight = Mathf.CeilToInt((float)MAX_CHAR / listChars.Count * scrollBarHeight);
         }
 
         public static void setState(bool value) => isEnabled = value;

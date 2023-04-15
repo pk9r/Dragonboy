@@ -6856,4 +6856,7 @@ public class Char : IMapObject
 			return true;
 		return false;
 	}
+
+	public bool IsPet() => isPet;
+	public bool IsMiniPet() => isMiniPet;
 }

@@ -3,6 +3,7 @@ using System;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
 
 namespace Mod.Graphics
 {
@@ -485,6 +486,18 @@ namespace Mod.Graphics
             //GUI.DrawTexture(new Rect(x - imageX, y - imageY, imageW, imageH), image.texture);
             GUI.EndGroup();
             GUIUtility.RotateAroundPivot(-degAngle, pivot);
+        }
+
+        public static void fillRect(int x, int y, int w, int h, Color color)
+        {
+            x *= mGraphics.zoomLevel;
+            y *= mGraphics.zoomLevel;
+            if (w < 0 || h < 0)
+                return;
+            Texture2D texture2D = new Texture2D(1, 1);
+            texture2D.SetPixel(0, 0, color);
+            texture2D.Apply();
+            GUI.DrawTexture(new Rect(x, y, w, h), texture2D);
         }
     }
 }

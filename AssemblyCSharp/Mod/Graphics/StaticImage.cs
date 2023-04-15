@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Mod.Graphics
 {
-    internal class StaticImage : IImage
+    public class StaticImage : IImage
     {
         public Image image;
         public StaticImage(string path, int width, int height)
