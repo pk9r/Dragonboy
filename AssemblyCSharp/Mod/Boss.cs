@@ -401,13 +401,13 @@ namespace Mod
 
         public static void setState(bool value) => isEnabled = value;
 
-        [ChatCommand("testboss")]
-        public static void Test()
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                GameEvents.onChatVip("BOSS Vũ Đăng vừa xuất hiện tại Đảo Kamê khu vực 10");
-            }
-        }
+        //[ChatCommand("testboss")]
+        //public static void Test()
+        //{
+        //    for (int i = 0; i < 10; i++)
+        //    {
+        //        GameEvents.onChatVip("BOSS Vũ Đăng vừa xuất hiện tại Đảo Kamê khu vực 10");
+        //    }
+        //}
     }
 }
