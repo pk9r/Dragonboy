@@ -236,7 +236,7 @@ namespace Mod
                 if (@char.cgender == 0) return "<color=#0080ffff>TĐ</color>";
                 else if (@char.cgender == 1) return "<color=#00c000ff>NM</color>";
                 else if (@char.cgender == 2) return "<color=#ffff80ff>XD</color>";
-                else return "<color=red>B</color><color=purple>Đ</color>";
+                else return "<color=magenta>BĐ</color>";
             }
             if (@char.cgender == 0) return "TĐ";
             else if (@char.cgender == 1) return "NM";

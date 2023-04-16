@@ -37,7 +37,7 @@ namespace Mod
 
         static int lastBoss = -1;
 
-        public static bool isCollapsed = true;
+        public static bool isCollapsed;
 
         public static readonly int MAX_BOSS_DISPLAY = 5;
 

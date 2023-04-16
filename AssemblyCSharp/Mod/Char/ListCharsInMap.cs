@@ -20,7 +20,7 @@ namespace Mod
 
         static int x = 15;
 
-        static int y = 50;
+        static int y = 60;
 
         static readonly int MAX_CHAR = 6;
 
@@ -30,6 +30,8 @@ namespace Mod
 
         static bool isCollapsed;
 
+        static int titleWidth;
+
         //static GroupBox backgroundGroupBox;
 
         public static void update()
@@ -38,14 +40,14 @@ namespace Mod
             {
                 if (Boss.isCollapsed)
                 {
-                    if (y != Boss.y + 5 + Boss.distanceBetweenLines + 3)
-                        y = Boss.y + 5 + Boss.distanceBetweenLines + 3;
+                    if (y != Boss.y + 5 + Boss.distanceBetweenLines + 10)
+                        y = Boss.y + 5 + Boss.distanceBetweenLines + 10;
                 }
-                else if (y != Boss.y + 5 + Boss.distanceBetweenLines * Mathf.Clamp(Boss.listBosses.Count, 0, Boss.MAX_BOSS_DISPLAY) + 3)
-                    y = Boss.y + 5 + Boss.distanceBetweenLines * Mathf.Clamp(Boss.listBosses.Count, 0, Boss.MAX_BOSS_DISPLAY) + 3;
+                else if (y != Boss.y + 5 + Boss.distanceBetweenLines * Mathf.Clamp(Boss.listBosses.Count, 0, Boss.MAX_BOSS_DISPLAY) + 10)
+                    y = Boss.y + 5 + Boss.distanceBetweenLines * Mathf.Clamp(Boss.listBosses.Count, 0, Boss.MAX_BOSS_DISPLAY) + 10;
             }
-            else if (y != 50)
-                y = 50;
+            else if (y != 60)
+                y = 60;
             if (!isEnabled)
                 return;
             listChars.Clear();
@@ -105,8 +107,12 @@ namespace Mod
                     offset = 0;
             }
             maxLength = 0;
-            PaintListChars(g);
-            PaintScroll(g);
+            if (!isCollapsed)
+            {
+                PaintListChars(g);
+                PaintScroll(g);
+            }
+            PaintRect(g);
         }
 
         static string formatHP(Char ch)
@@ -212,7 +218,12 @@ namespace Mod
                 if (GameCanvas.isMouseFocus(GameCanvas.w - x - maxLength - offsetPaint, y + 1 + distanceBetweenLines * (i - start + offset), maxLength, distanceBetweenLines - 1))
                 {
                     int length = Utilities.getWidth(charDescriptions[i - start + offset].Value, charDescriptions[i - start + offset].Key);
-                    CustomGraphics.fillRect(GameCanvas.w - x - length - offsetPaint + 1, y + distanceBetweenLines * (i - start + offset) + 7, (length - 2) * mGraphics.zoomLevel + 1, 1, Color.white);
+                    CustomGraphics.fillRect(GameCanvas.w - x - length - offsetPaint + 1, y + distanceBetweenLines * (i - start + offset) + 7, (length - 2) * mGraphics.zoomLevel + 1, 1, new Color(.7f, .7f, .7f));
+                    int hp = ch.cHP;
+                    int hpFull = ch.cHPFull;
+                    float ratio = hp / (float)hpFull;
+                    Color color = new Color(Mathf.Clamp(2 - ratio * 2, 0, 1), Mathf.Clamp(ratio * 2, 0, 1), 0);
+                    CustomGraphics.fillRect(GameCanvas.w - x - length - offsetPaint + 1, y + distanceBetweenLines * (i - start + offset) + 7, (int)(ratio * (length - 2) * mGraphics.zoomLevel), 1, color);
                 }
                 int offset2 = 0;
                 if (ch.isBoss())
@@ -240,6 +251,45 @@ namespace Mod
             }
         }
 
+        static void PaintRect(mGraphics g)
+        {
+            getScrollBar(out int scrollBarWidth, out _, out _);
+            if (listChars.Count <= MAX_CHAR)
+                scrollBarWidth = 0;
+            int w = maxLength + 5 + (scrollBarWidth > 0 ? (scrollBarWidth + 2) : 0);
+            int h = distanceBetweenLines * Math.min(MAX_CHAR, listChars.Count) + 7;
+            float ratio = listChars.Where(c => c.isNormalChar()).Count() / (float)GameScr.gI().maxPlayer[TileMap.zoneID];
+            Color color = new Color(Mathf.Clamp(ratio * 2, 0, 1), Mathf.Clamp(2 - ratio * 2, 0, 1), 0);
+            string hexColor = $"#{(int)(color.r * 255):x2}{(int)(color.g * 255):x2}{(int)(color.b * 255):x2}{(int)(color.a * 255):x2}";
+            string str = $"<color=yellow>{TileMap.mapName}</color> khu <color=yellow>{TileMap.zoneID}</color> [<color={hexColor}>{listChars.Where(c => c.isNormalChar()).Count()}</color>/<color=red>{GameScr.gI().maxPlayer[TileMap.zoneID]}</color>]";
+            GUIStyle style = new GUIStyle(GUI.skin.label)
+            {
+                fontSize = 7 * mGraphics.zoomLevel,
+                fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.UpperRight,
+                richText = true
+            };
+            style.normal.textColor = Color.white;
+            titleWidth = Utilities.getWidth(style, str);
+            g.setColor(new Color(.2f, .2f, .2f, .7f));
+            g.fillRect(GameCanvas.w - x - titleWidth + scrollBarWidth, y - distanceBetweenLines, titleWidth, 8);
+            if (GameCanvas.isMouseFocus(GameCanvas.w - x - titleWidth + scrollBarWidth, y - distanceBetweenLines, titleWidth, 8))
+                CustomGraphics.fillRect(GameCanvas.w - x - titleWidth + scrollBarWidth, y - 1, titleWidth * mGraphics.zoomLevel, 1, style.normal.textColor);
+            g.drawString(str, -x + scrollBarWidth, y - distanceBetweenLines - 2, style);
+            getCollapseButton(out int collapseButtonX, out int collapseButtonY);
+            g.drawRegion(Mob.imgHP, 0, 18, 9, 6, (isCollapsed ? 5 : 4), collapseButtonX, collapseButtonY, 0);
+            if (isCollapsed || listChars.Count <= 0)
+                return;
+            g.setColor(new Color(0, 0, 0, .075f));
+            g.fillRect(GameCanvas.w - x - maxLength - 3, y - 5, w, h);
+            g.setColor(Color.yellow);
+            g.fillRect(GameCanvas.w - x - maxLength - 3, y - 5, w - titleWidth - 9 - (scrollBarWidth > 0 ? 2 : 0), 1);
+            g.fillRect(GameCanvas.w - x + scrollBarWidth, y - 5, 3 + (scrollBarWidth > 0 ? 1 : 0), 1);
+            g.fillRect(GameCanvas.w - x - maxLength - 3, y - 5, 1, h);
+            g.fillRect(GameCanvas.w - x - maxLength - 3 + w, y - 5, 1, h + 1);
+            g.fillRect(GameCanvas.w - x - maxLength - 3, y - 5 + h, w + 1, 1);
+        }
+
         public static void updateTouch()
         {
             if (!isEnabled)
@@ -248,6 +298,17 @@ namespace Mod
             {
                 if (!GameCanvas.isTouch || ChatTextField.gI().isShow || GameCanvas.menu.showMenu)
                     return;
+                getScrollBar(out int scrollBarWidth, out int scrollBarHeight, out int scrollBarThumbHeight);
+                getCollapseButton(out int collapseButtonX, out int collapseButtonY);
+                if (GameCanvas.isPointerHoldIn(collapseButtonX, collapseButtonY, 9, 6) || GameCanvas.isPointerHoldIn(GameCanvas.w - x - titleWidth + scrollBarWidth, y - distanceBetweenLines, titleWidth, 8))
+                {
+                    GameCanvas.isPointerJustDown = false;
+                    GameScr.gI().isPointerDowning = false;
+                    if (GameCanvas.isPointerClick)
+                        isCollapsed = !isCollapsed;
+                    GameCanvas.clearAllPointerEvent();
+                    return;
+                }
                 int start = 0;
                 if (listChars.Count > MAX_CHAR)
                     start = listChars.Count - MAX_CHAR;
@@ -274,7 +335,6 @@ namespace Mod
                 if (listChars.Count > MAX_CHAR)
                 {
                     getButtonUp(out int buttonUpX, out int buttonUpY);
-                    getScrollBar(out int scrollBarWidth, out int scrollBarHeight, out int scrollBarThumbHeight);
                     if (GameCanvas.isPointerMove && GameCanvas.isPointerDown && GameCanvas.isPointerHoldIn(buttonUpX, buttonUpY, scrollBarWidth, scrollBarHeight))
                     {
                         float increment = scrollBarHeight / (float)listChars.Count;
@@ -314,6 +374,38 @@ namespace Mod
             catch (Exception) { }
         }
 
+        static void getButtonUp(out int buttonUpX, out int buttonUpY)
+        {
+            buttonUpX = GameCanvas.w - x + 2;
+            buttonUpY = y + 1;
+        }
+        
+        static void getButtonDown(out int buttonDownX, out int buttonDownY)
+        {
+            buttonDownX = GameCanvas.w - x + 2;
+            buttonDownY = y + 2 + distanceBetweenLines * (MAX_CHAR - 1);
+        }
+
+        static void getScrollBar(out int scrollBarWidth, out int scrollBarHeight, out int scrollBarThumbHeight)
+        {
+            scrollBarWidth = 9;
+            scrollBarHeight = MAX_CHAR * distanceBetweenLines - 1 - 6 * 2;
+            scrollBarThumbHeight = Mathf.CeilToInt((float)MAX_CHAR / listChars.Count * scrollBarHeight);
+        }
+
+        static void getCollapseButton(out int collapseButtonX, out int collapseButtonY)
+        {
+            getScrollBar(out int scrollBarWidth, out _, out _);
+            if (listChars.Count <= MAX_CHAR)
+            scrollBarWidth = 0;
+            collapseButtonX = GameCanvas.w - x - titleWidth + scrollBarWidth - 8;
+            collapseButtonY = y - distanceBetweenLines + 1;
+        }
+
+        public static void setState(bool value) => isEnabled = value;
+
+        public static void setStatePet(bool value) => isShowPet = value;
+
         //static void InitializeGroupBox()
         //{
         //    backgroundGroupBox = new GroupBox("Nhân vật trong map", GameCanvas.w - x - (maxLength == 0 ? 100 : maxLength), y - 10, 150, 10)
@@ -344,28 +436,5 @@ namespace Mod
         //    if (backgroundGroupBox.Height < 20)
         //        backgroundGroupBox.Height = 20;
         //}
-
-        static void getButtonUp(out int buttonUpX, out int buttonUpY)
-        {
-            buttonUpX = GameCanvas.w - x + 2;
-            buttonUpY = y + 1;
-        }
-        
-        static void getButtonDown(out int buttonDownX, out int buttonDownY)
-        {
-            buttonDownX = GameCanvas.w - x + 2;
-            buttonDownY = y + 2 + distanceBetweenLines * (MAX_CHAR - 1);
-        }
-
-        static void getScrollBar(out int scrollBarWidth, out int scrollBarHeight, out int scrollBarThumbHeight)
-        {
-            scrollBarWidth = 9;
-            scrollBarHeight = MAX_CHAR * distanceBetweenLines - 1 - 6 * 2;
-            scrollBarThumbHeight = Mathf.CeilToInt((float)MAX_CHAR / listChars.Count * scrollBarHeight);
-        }
-
-        public static void setState(bool value) => isEnabled = value;
-
-        public static void setStatePet(bool value) => isShowPet = value;
     }
 }
