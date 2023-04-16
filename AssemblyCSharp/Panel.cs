@@ -6386,11 +6386,14 @@ public class Panel : IActionListener, IChatable
 				InfoDlg.showWait();
 				break;
 			case 5:
-				if (Char.myCharz().statusMe == 14)
-					GameCanvas.startOKDlg(mResources.can_not_do_when_die);
-				else
-					Service.gI().openUIZone();
-				break;
+                //if (Char.myCharz().statusMe == 14)
+                //	GameCanvas.startOKDlg(mResources.can_not_do_when_die);
+                //else
+                //	Service.gI().openUIZone();
+                Service.gI().openUIZone();
+                setTypeZone();
+                show();
+                break;
 			case 6:
 				GameCanvas.endDlg();
 				if (Char.myCharz().checkLuong() < 5)
@@ -6459,11 +6462,14 @@ public class Panel : IActionListener, IChatable
 			InfoDlg.showWait();
 			break;
 		case 6:
-			if (Char.myCharz().statusMe == 14)
-				GameCanvas.startOKDlg(mResources.can_not_do_when_die);
-			else
-				Service.gI().openUIZone();
-			break;
+            //if (Char.myCharz().statusMe == 14)
+            //	GameCanvas.startOKDlg(mResources.can_not_do_when_die);
+            //else
+            //	Service.gI().openUIZone();
+            Service.gI().openUIZone();
+            setTypeZone();
+            show();
+            break;
 		case 7:
 			GameCanvas.endDlg();
 			if (Char.myCharz().checkLuong() < 5)

@@ -256,6 +256,8 @@ namespace Mod
         /// </summary>
         public static void onUpdateGameScr()
         {
+            if (GameCanvas.gameTick % (int)(10 * Time.timeScale) == 0)
+                Service.gI().openUIZone();
             Char.myCharz().cspeed = Utilities.speedRun;
             CharEffect.Update();
             TeleportMenu.TeleportMenu.Update();
