@@ -232,6 +232,8 @@ namespace QLTK
 
         internal static void SetPresence(string state = "Chưa đăng nhập", string details = "", Timestamps timeStamps = null)
         {
+            if (Program.isDiscordRichPresenceDisabled)
+                return;
             string name = "Mod Cộng Đồng";
             RichPresence richPresence = new RichPresence()
             {
