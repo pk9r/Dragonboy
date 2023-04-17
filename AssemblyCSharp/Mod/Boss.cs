@@ -29,7 +29,7 @@ namespace Mod
 
         static int offset = 0;
 
-        public static int x = 15;
+        public static int x = 15 - 9;
 
         public static int y = 50;
 
@@ -48,6 +48,10 @@ namespace Mod
         static GUIStyle collapsedStyle;
 
         static int listBossWidth = 0;
+
+        static int titleWidth;
+
+        static bool isOffsetX;
 
         Boss(string name, string map) 
         {
@@ -75,6 +79,12 @@ namespace Mod
                 listBosses.Last().zoneId = int.Parse(array[2].Trim());
             if (listBosses.Count > MAX_BOSS)
                 listBosses.RemoveAt(0);
+            getScrollBar(out int scrollBarWidth, out _, out _);
+            if (listBosses.Count > MAX_BOSS_DISPLAY && !isOffsetX)
+            {
+                isOffsetX = true;
+                x += scrollBarWidth;
+            }
         }
 
         public override string ToString()
@@ -109,10 +119,15 @@ namespace Mod
             string result = $"<color={colorName}>{name}</color> - <color={colorMap}>{map}</color> [<color={colorMap}>{mapId}</color>] - ";
             if (zoneId > -1)
             {
-                if (TileMap.mapID == mapId && TileMap.zoneID == zoneId)
-                    result += $"<color=yellow>khu</color> <color=red>{zoneId}</color> - ";
+                if (TileMap.mapID == mapId) 
+                {
+                    if (TileMap.zoneID == zoneId)
+                        result += $"<color=yellow>khu</color> <color=red>{zoneId}</color> - ";
+                    else 
+                        result += $"<color=yellow>khu {zoneId}</color> - ";
+                }
                 else
-                    result += $"khu {zoneId} - ";
+                    result += $"khu <color=yellow>{zoneId}</color> - ";
             }
             int hours = (int)System.Math.Floor((decimal)timeSpan.TotalHours);
             if (hours > 0)
@@ -129,31 +144,36 @@ namespace Mod
                 return;
             if (listBosses.Count <= 0)
                 return;
-            getCollapseButton(out int collapseButtonX, out int collapseButtonY);
-            g.drawRegion(Mob.imgHP, 0, 24, 9, 6, (isCollapsed ? 5 : 4), collapseButtonX, collapseButtonY, 0);
-            if (isCollapsed)
-            {
-                if (collapsedStyle == null)
-                {
-                    collapsedStyle = new GUIStyle(GUI.skin.label)
-                    {
-                        alignment = TextAnchor.UpperRight,
-                        fontSize = 6 * mGraphics.zoomLevel,
-                        fontStyle = FontStyle.Bold,
-                    };
-                    collapsedStyle.normal.textColor = Color.white;
-                    listBossWidth = Utilities.getWidth(collapsedStyle, LIST_BOSS);
-                }
-                if (GameCanvas.isMouseFocus(GameCanvas.w - x - listBossWidth, y, listBossWidth, 7))
-                    CustomGraphics.fillRect(GameCanvas.w - x - listBossWidth, y + 7, (listBossWidth - 1) * mGraphics.zoomLevel, 1, collapsedStyle.normal.textColor);    
-                g.setColor(new Color(.2f, .2f, .2f, .7f));
-                g.fillRect(GameCanvas.w - x - listBossWidth, y, listBossWidth, 7);
-                g.drawString(LIST_BOSS, GameCanvas.w - x - listBossWidth - 1, y + 1, collapsedStyle, listBossWidth * mGraphics.zoomLevel);
-                return;
-            }
+            //getCollapseButton(out int collapseButtonX, out int collapseButtonY);
+            //g.drawRegion(Mob.imgHP, 0, 24, 9, 6, (isCollapsed ? 5 : 4), collapseButtonX, collapseButtonY, 0);
+            //if (isCollapsed)
+            //{
+            //    if (collapsedStyle == null)
+            //    {
+            //        collapsedStyle = new GUIStyle(GUI.skin.label)
+            //        {
+            //            alignment = TextAnchor.UpperRight,
+            //            fontSize = 6 * mGraphics.zoomLevel,
+            //            fontStyle = FontStyle.Bold,
+            //        };
+            //        collapsedStyle.normal.textColor = Color.white;
+            //        listBossWidth = Utilities.getWidth(collapsedStyle, LIST_BOSS);
+            //    }
+            //    if (GameCanvas.isMouseFocus(GameCanvas.w - x - listBossWidth, y, listBossWidth, 7))
+            //        CustomGraphics.fillRect(GameCanvas.w - x - listBossWidth, y + 7, (listBossWidth - 1) * mGraphics.zoomLevel, 1, collapsedStyle.normal.textColor);    
+            //    g.setColor(new Color(.2f, .2f, .2f, .7f));
+            //    g.fillRect(GameCanvas.w - x - listBossWidth, y, listBossWidth, 7);
+            //    g.drawString(LIST_BOSS, GameCanvas.w - x - listBossWidth - 1, y + 1, collapsedStyle, listBossWidth * mGraphics.zoomLevel);
+            //    return;
+            //}
+
             maxLength = 0;
-            PaintListBosses(g);
-            PaintScroll(g);
+            if (!isCollapsed)
+            {
+                PaintListBosses(g);
+                PaintScroll(g);
+            }
+            PaintRect(g);
         }
 
         static void PaintListBosses(mGraphics g)
@@ -175,6 +195,7 @@ namespace Mod
                 int length = Utilities.getWidth(styles[i - start + offset], $"{i + 1}. {boss}");
                 maxLength = Math.max(length, maxLength);
             }
+            FillBackground(g);
             int xDraw = GameCanvas.w - x - maxLength;
             for (int i = start - offset; i < listBosses.Count - offset; i++)
             {
@@ -209,6 +230,56 @@ namespace Mod
             }
         }
 
+        static void PaintRect(mGraphics g)
+        {
+            getScrollBar(out int scrollBarWidth, out _, out _);
+            if (listBosses.Count <= MAX_BOSS_DISPLAY)
+                scrollBarWidth = 0;
+            int w = maxLength + 5 + (scrollBarWidth > 0 ? (scrollBarWidth + 2) : 0);
+            int h = distanceBetweenLines * Math.min(MAX_BOSS_DISPLAY, listBosses.Count) + 7;
+            GUIStyle style = new GUIStyle(GUI.skin.label)
+            {
+                fontSize = 7 * mGraphics.zoomLevel,
+                fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.UpperRight,
+                richText = true
+            };
+            style.normal.textColor = Color.white;
+            titleWidth = Utilities.getWidth(style, LIST_BOSS);
+            g.setColor(new Color(.2f, .2f, .2f, .7f));
+            g.fillRect(GameCanvas.w - x - titleWidth + scrollBarWidth, y - distanceBetweenLines, titleWidth, 8);
+            if (GameCanvas.isMouseFocus(GameCanvas.w - x - titleWidth + scrollBarWidth, y - distanceBetweenLines, titleWidth, 8))
+            {
+                g.setColor(style.normal.textColor);
+                g.fillRect(GameCanvas.w - x - titleWidth + scrollBarWidth, y - 1, titleWidth - 1, 1);
+            }
+            g.drawString(LIST_BOSS, -x + scrollBarWidth, y - distanceBetweenLines - 2, style);
+            getCollapseButton(out int collapseButtonX, out int collapseButtonY);
+            g.drawRegion(Mob.imgHP, 0, 18, 9, 6, (isCollapsed ? 5 : 4), collapseButtonX, collapseButtonY, 0);
+            if (isCollapsed || listBosses.Count <= 0)
+                return;
+            g.setColor(Color.yellow);
+            g.fillRect(GameCanvas.w - x - maxLength - 3, y - 5, w - titleWidth - 9 - (scrollBarWidth > 0 ? 2 : 0), 1);
+            g.fillRect(GameCanvas.w - x + scrollBarWidth, y - 5, 3 + (scrollBarWidth > 0 ? 1 : 0), 1);
+            g.fillRect(GameCanvas.w - x - maxLength - 3, y - 5, 1, h);
+            g.fillRect(GameCanvas.w - x - maxLength - 3 + w, y - 5, 1, h + 1);
+            g.fillRect(GameCanvas.w - x - maxLength - 3, y - 5 + h, w + 1, 1);
+        }
+
+        private static void FillBackground(mGraphics g)
+        {
+            if (!isCollapsed && listBosses.Count > 0)
+            {
+                g.setColor(new Color(0, 0, 0, .075f));
+                getScrollBar(out int scrollBarWidth, out _, out _);
+                if (listBosses.Count <= MAX_BOSS_DISPLAY)
+                    scrollBarWidth = 0;
+                int w = maxLength + 5 + (scrollBarWidth > 0 ? (scrollBarWidth + 2) : 0);
+                int h = distanceBetweenLines * Math.min(MAX_BOSS_DISPLAY, listBosses.Count) + 7;
+                g.fillRect(GameCanvas.w - x - maxLength - 3, y - 5, w, h);
+            }
+        }
+
         static int GetMapID(string mapName)
         {
             for (int i = 0; i < TileMap.mapNames.Length; i++)
@@ -228,7 +299,8 @@ namespace Mod
             if (!GameCanvas.isTouch || ChatTextField.gI().isShow || GameCanvas.menu.showMenu)
                 return;
             getCollapseButton(out int collapseButtonX, out int collapseButtonY);
-            if (GameCanvas.isPointerHoldIn(collapseButtonX, collapseButtonY, 6, 9) || GameCanvas.isPointerHoldIn(GameCanvas.w - x - listBossWidth, y, listBossWidth, 7))
+            getScrollBar(out int scrollBarWidth, out int scrollBarHeight, out _);
+            if (GameCanvas.isPointerHoldIn(collapseButtonX, collapseButtonY, 6, 9) || GameCanvas.isMouseFocus(GameCanvas.w - x - titleWidth + scrollBarWidth, y - distanceBetweenLines, titleWidth, 8))
             {
                 GameCanvas.isPointerJustDown = false;
                 GameScr.gI().isPointerDowning = false;
@@ -297,7 +369,6 @@ namespace Mod
             if (listBosses.Count > MAX_BOSS_DISPLAY)
             {
                 getButtonUp(out int buttonUpX, out int buttonUpY);
-                getScrollBar(out int scrollBarWidth, out int scrollBarHeight, out int scrollBarThumbHeight);
                 if (GameCanvas.isPointerMove && GameCanvas.isPointerDown && GameCanvas.isPointerHoldIn(buttonUpX, buttonUpY, scrollBarWidth, scrollBarHeight))
                 {
                     float increment = scrollBarHeight / (float)listBosses.Count;
@@ -389,25 +460,22 @@ namespace Mod
 
         static void getCollapseButton(out int collapseButtonX, out int collapseButtonY)
         {
-            if (isCollapsed)
-            {
-                collapseButtonX = GameCanvas.w - x - listBossWidth - 8;
-                collapseButtonY = y;
-                return;
-            }
-            collapseButtonX = GameCanvas.w - x - maxLength - 8;
-            collapseButtonY = y + 2 + (distanceBetweenLines * (Math.min(listBosses.Count, MAX_BOSS_DISPLAY) - 1)) / 2;
+            getScrollBar(out int scrollBarWidth, out _, out _);
+            if (listBosses.Count <= MAX_BOSS_DISPLAY)
+                scrollBarWidth = 0;
+            collapseButtonX = GameCanvas.w - x - titleWidth + scrollBarWidth - 8;
+            collapseButtonY = y - distanceBetweenLines + 1;
         }
 
         public static void setState(bool value) => isEnabled = value;
 
-        //[ChatCommand("testboss")]
-        //public static void Test()
-        //{
-        //    for (int i = 0; i < 10; i++)
-        //    {
-        //        GameEvents.onChatVip("BOSS Vũ Đăng vừa xuất hiện tại Đảo Kamê khu vực 10");
-        //    }
-        //}
+        [ChatCommand("testboss")]
+        public static void Test()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                GameEvents.onChatVip("BOSS Vũ Đăng vừa xuất hiện tại Đảo Kamê khu vực 10");
+            }
+        }
     }
 }

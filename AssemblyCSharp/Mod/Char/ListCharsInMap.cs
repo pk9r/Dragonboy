@@ -18,11 +18,13 @@ namespace Mod
 
         static int maxLength = 0;
 
-        static int x = 15;
+        static int x = 15 - 9;
 
         static int y = 60;
 
         static readonly int MAX_CHAR = 6;
+
+        static readonly int ORIGINAL_X = 6;
 
         static int distanceBetweenLines = 8;
 
@@ -36,12 +38,13 @@ namespace Mod
 
         public static void update()
         {
+            x = ORIGINAL_X;
             if (Boss.isEnabled && Boss.listBosses.Count > 0)
             {
                 if (Boss.isCollapsed)
                 {
-                    if (y != Boss.y + 5 + Boss.distanceBetweenLines + 10)
-                        y = Boss.y + 5 + Boss.distanceBetweenLines + 10;
+                    if (y != Boss.y + Boss.distanceBetweenLines + 3)
+                        y = Boss.y + Boss.distanceBetweenLines + 3;
                 }
                 else if (y != Boss.y + 5 + Boss.distanceBetweenLines * Mathf.Clamp(Boss.listBosses.Count, 0, Boss.MAX_BOSS_DISPLAY) + 10)
                     y = Boss.y + 5 + Boss.distanceBetweenLines * Mathf.Clamp(Boss.listBosses.Count, 0, Boss.MAX_BOSS_DISPLAY) + 10;
@@ -88,6 +91,9 @@ namespace Mod
                     if (offset > 0)
                         offset--;
             }
+            getScrollBar(out int scrollBarWidth, out _, out _);
+            if (listChars.Count > MAX_CHAR)
+                x += scrollBarWidth;
         }
 
         public static void paint(mGraphics g)
@@ -180,6 +186,7 @@ namespace Mod
                 maxLength = Math.max(maxLength, Utilities.getWidth(charDescriptions[i - start + offset].Value, charDesc) + (ch.cFlag != 0 ? (distanceBetweenLines + 1) : 0));
                 #endregion
             }
+            FillBackground(g);
             for (int i = start - offset; i < listChars.Count - offset; i++)
             {
                 int offsetPaint = 0;
@@ -218,17 +225,33 @@ namespace Mod
                 if (GameCanvas.isMouseFocus(GameCanvas.w - x - maxLength - offsetPaint, y + 1 + distanceBetweenLines * (i - start + offset), maxLength, distanceBetweenLines - 1))
                 {
                     int length = Utilities.getWidth(charDescriptions[i - start + offset].Value, charDescriptions[i - start + offset].Key);
-                    CustomGraphics.fillRect(GameCanvas.w - x - length - offsetPaint + 1, y + distanceBetweenLines * (i - start + offset) + 7, (length - 2) * mGraphics.zoomLevel + 1, 1, new Color(.7f, .7f, .7f));
+                    g.setColor(Color.white);
+                    g.fillRect(GameCanvas.w - x - length - offsetPaint + 1, y + distanceBetweenLines * (i - start + offset) + 7, length - 2, 1);
                     int hp = ch.cHP;
                     int hpFull = ch.cHPFull;
                     float ratio = hp / (float)hpFull;
                     Color color = new Color(Mathf.Clamp(2 - ratio * 2, 0, 1), Mathf.Clamp(ratio * 2, 0, 1), 0);
-                    CustomGraphics.fillRect(GameCanvas.w - x - length - offsetPaint + 1, y + distanceBetweenLines * (i - start + offset) + 7, (int)(ratio * (length - 2) * mGraphics.zoomLevel), 1, color);
+                    g.setColor(color);
+                    g.fillRect(GameCanvas.w - x - length - offsetPaint + 1, y + distanceBetweenLines * (i - start + offset) + 7, (int)(ratio * (length - 2)), 1);
                 }
                 int offset2 = 0;
                 if (ch.isBoss())
                     offset2 = -1;
                 g.drawString(charDescriptions[i - start + offset].Key, -x - offsetPaint, mGraphics.zoomLevel - 3 + y + distanceBetweenLines * (i - start + offset) + offset2, charDescriptions[i - start + offset].Value);
+            }
+        }
+
+        private static void FillBackground(mGraphics g)
+        {
+            if (!isCollapsed && listChars.Count > 0)
+            {
+                g.setColor(new Color(0, 0, 0, .075f));
+                getScrollBar(out int scrollBarWidth, out _, out _);
+                if (listChars.Count <= MAX_CHAR)
+                    scrollBarWidth = 0;
+                int w = maxLength + 5 + (scrollBarWidth > 0 ? (scrollBarWidth + 2) : 0);
+                int h = distanceBetweenLines * Math.min(MAX_CHAR, listChars.Count) + 7;
+                g.fillRect(GameCanvas.w - x - maxLength - 3, y - 5, w, h);
             }
         }
 
@@ -274,14 +297,15 @@ namespace Mod
             g.setColor(new Color(.2f, .2f, .2f, .7f));
             g.fillRect(GameCanvas.w - x - titleWidth + scrollBarWidth, y - distanceBetweenLines, titleWidth, 8);
             if (GameCanvas.isMouseFocus(GameCanvas.w - x - titleWidth + scrollBarWidth, y - distanceBetweenLines, titleWidth, 8))
-                CustomGraphics.fillRect(GameCanvas.w - x - titleWidth + scrollBarWidth, y - 1, titleWidth * mGraphics.zoomLevel, 1, style.normal.textColor);
+            {
+                g.setColor(style.normal.textColor);
+                g.fillRect(GameCanvas.w - x - titleWidth + scrollBarWidth, y - 1, titleWidth - 1, 1);
+            }
             g.drawString(str, -x + scrollBarWidth, y - distanceBetweenLines - 2, style);
             getCollapseButton(out int collapseButtonX, out int collapseButtonY);
             g.drawRegion(Mob.imgHP, 0, 18, 9, 6, (isCollapsed ? 5 : 4), collapseButtonX, collapseButtonY, 0);
             if (isCollapsed || listChars.Count <= 0)
                 return;
-            g.setColor(new Color(0, 0, 0, .075f));
-            g.fillRect(GameCanvas.w - x - maxLength - 3, y - 5, w, h);
             g.setColor(Color.yellow);
             g.fillRect(GameCanvas.w - x - maxLength - 3, y - 5, w - titleWidth - 9 - (scrollBarWidth > 0 ? 2 : 0), 1);
             g.fillRect(GameCanvas.w - x + scrollBarWidth, y - 5, 3 + (scrollBarWidth > 0 ? 1 : 0), 1);
