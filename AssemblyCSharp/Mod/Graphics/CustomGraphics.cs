@@ -487,6 +487,21 @@ namespace Mod.Graphics
             GUI.EndGroup();
             GUIUtility.RotateAroundPivot(-degAngle, pivot);
         }
+        
+        public static void DrawImage(Image image, int x, int y, float degAngle)
+        {
+            x *= mGraphics.zoomLevel;
+            y *= mGraphics.zoomLevel;
+            int imageW = image.texture.width;
+            int imageH = image.texture.height;
+            Vector2 pivot = new Vector2(x + imageW / 2, y + imageW / 2);
+            GUIUtility.RotateAroundPivot(degAngle, pivot);
+            GUI.BeginGroup(new Rect(x, y, imageW, imageH));
+            GUI.DrawTexture(new Rect(0, 0, imageW, imageH), image.texture);
+            //GUI.DrawTexture(new Rect(x - imageX, y - imageY, imageW, imageH), image.texture);
+            GUI.EndGroup();
+            GUIUtility.RotateAroundPivot(-degAngle, pivot);
+        }
 
         public static void fillRect(int x, int y, int w, int h, Color color)
         {
