@@ -559,12 +559,12 @@ namespace Mod
             teleportMyChar(x, getYGround(x));
         }
 
-        internal static int getWidth(GUIStyle gUIStyle, string s)
+        public static int getWidth(GUIStyle gUIStyle, string s)
         {
             return (int)(gUIStyle.CalcSize(new GUIContent(s)).x * 1.025f / mGraphics.zoomLevel);
         }
 
-        internal static int getHeight(GUIStyle gUIStyle, string content)
+        public static int getHeight(GUIStyle gUIStyle, string content)
         {
             return (int)gUIStyle.CalcSize(new GUIContent(content)).y / mGraphics.zoomLevel;
         }

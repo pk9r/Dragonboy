@@ -570,5 +570,15 @@ namespace Mod
             SetDo.UpdateScrollMouse(ref pXYScrollMouse);
             ExtensionManager.Invoke(instance, pXYScrollMouse);
         }
+
+        public static void onPanelHide(Panel instance)
+        {
+            ExtensionManager.Invoke(instance);
+        }
+
+        public static void onUpdateKeyPanel(Panel instance)
+        {
+            ExtensionManager.Invoke(instance);
+        }
     }
 }

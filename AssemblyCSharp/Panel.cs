@@ -1609,6 +1609,7 @@ public class Panel : IActionListener, IChatable
 	{
 		if ((chatTField != null && chatTField.isShow) || !GameCanvas.panel.isDoneCombine || InfoDlg.isShow)
 			return;
+		GameEvents.onUpdateKeyPanel(this);
 		if (tabIcon != null && tabIcon.isShow)
 			tabIcon.updateKey();
 		else
@@ -5701,7 +5702,8 @@ public class Panel : IActionListener, IChatable
 			isClose = false;
 			return;
 		}
-		if (isTypeShop())
+        GameEvents.onPanelHide(this);
+        if (isTypeShop())
 			Char.myCharz().resetPartTemp();
 		if (chatTField != null && type == 13 && chatTField.isShow)
 			chatTField = null;
@@ -5738,6 +5740,7 @@ public class Panel : IActionListener, IChatable
 			isClose = false;
 			return;
 		}
+		GameEvents.onPanelHide(this);
 		if (isTypeShop())
 			Char.myCharz().resetPartTemp();
 		if (chatTField != null && type == 13 && chatTField.isShow)

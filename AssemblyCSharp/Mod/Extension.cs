@@ -219,5 +219,15 @@ namespace Mod
         {
             throw new NotImplementedException();
         }
+
+        public virtual void onPanelHide(Panel instance)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void onUpdateKeyPanel(Panel instance)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
