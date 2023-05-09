@@ -83,6 +83,7 @@ namespace Mod
             SetDo.SaveData();
             CSharpInteractiveForm.CloseForm();
             FakeIPhoneClient.onExitGame();
+            HistoryChat.clearStringTrash();
             ExtensionManager.Invoke();
             return false;
         }
