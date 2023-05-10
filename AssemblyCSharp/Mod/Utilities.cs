@@ -20,6 +20,7 @@ namespace Mod
 {
     public static class Utilities
     {
+        public static readonly string PathAutoChat = @"ModData\autochat.txt";
         public static readonly string PathChatCommand = @"ModData\chatCommands.json";
         public static readonly string PathChatHistory = @"ModData\chat.txt";
         public static readonly string PathHotkeyCommand = @"ModData\hotkeyCommands.json";
@@ -881,5 +882,10 @@ namespace Mod
                 return GameScr.nClasss[2].classId;
             return 3;
         }
+        //[HotkeyCommand('m')]
+        //public static void openUIZone()
+        //{
+        //    Service.gI().openUIZone();
+        //}
     }
 }

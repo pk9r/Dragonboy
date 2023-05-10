@@ -1,4 +1,5 @@
 ﻿using Mod.Auto;
+using Mod.Auto.AutoChat;
 using Mod.CSharpInteractive;
 using Mod.Graphics;
 using Mod.ModHelper;
@@ -51,6 +52,7 @@ namespace Mod
         /// </summary>
         public static void onGameStarted()
         {
+            Setup.loadFile();
             ChatCommandHandler.loadDefault();
             HotkeyCommandHandler.loadDefalut();
             SocketClient.gI.initSender();
@@ -74,6 +76,7 @@ namespace Mod
         /// <returns></returns>
         public static bool onGameClosing()
         {
+            Setup.clearStringTrash();
             SocketClient.gI.close();
             ModMenuMain.SaveData();
             TeleportMenu.TeleportMenu.SaveData();
