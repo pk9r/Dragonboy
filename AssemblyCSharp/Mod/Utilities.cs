@@ -20,7 +20,6 @@ namespace Mod
 {
     public static class Utilities
     {
-        public static readonly string PathAutoChat = @"ModData\autochat.txt";
         public static readonly string PathChatCommand = @"ModData\chatCommands.json";
         public static readonly string PathChatHistory = @"ModData\chat.txt";
         public static readonly string PathHotkeyCommand = @"ModData\hotkeyCommands.json";

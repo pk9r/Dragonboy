@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 
 namespace Mod
 {
@@ -299,28 +298,6 @@ namespace Mod
                 endStr = endStr.Substring(indexLastCommandChat);
 
             hints = histories.FindAll(x => x.StartsWith(endStr));
-        }
-
-
-        /// <summary>
-        /// <param name="pattern"> sử dụng biểu thức chính quy để tìm và loại bỏ các chuỗi auto chat </param>
-        /// <param name=",\s* ">tìm dấu phẩy và khoảng trắng trước chuỗi gaXX</param>
-        /// <param name="\[\d{2}\]">tìm số XX trong dấu ngoặc vuông []</param>
-        /// <param name=":\s*"> tìm dấu hai chấm và khoảng trắng sau chuỗi gaXX</param>
-        /// <param name="[^""]*">  tìm bất kỳ ký tự nào không phải dấu ngoặc kép "</param>
-        /// <param name="""[^""]*"""> tìm chuỗi kí tự trong dấu ngoặc kép ""</param>
-        /// </summary>
-        public static void clearStringTrash()
-        {
-            // Đọc nội dung file text
-            string content = File.ReadAllText(Utilities.PathChatHistory);
-
-            string pattern = @",?\s*\ga\d{2}\:\s*[^""]*""[^""]*""";
-
-            string output = Regex.Replace(content, pattern, "");
-
-            // Ghi nội dung vào file output
-            File.WriteAllText(Utilities.PathChatHistory, output);
         }
     }
 }
