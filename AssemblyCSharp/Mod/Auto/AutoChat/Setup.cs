@@ -8,7 +8,8 @@ namespace Mod.Auto.AutoChat
         public static Setup gI { get; } = new Setup();
         public void onCancelChat()
         {
-            throw new System.NotImplementedException();
+            //ChatTextField.gI().isShow = false;
+            //ChatTextField.gI().ResetTF();
         }
 
         public void onChatFromMe(string text, string to)
@@ -25,6 +26,7 @@ namespace Mod.Auto.AutoChat
                     using (StreamWriter write = new StreamWriter(Utilities.PathAutoChat))
                     {
                         write.WriteLine(textChat);
+                        GameCanvas.startOKDlg("Nội dung được thay đổi thành:\n" + textChat);
 
                         write.Close();
                     }    

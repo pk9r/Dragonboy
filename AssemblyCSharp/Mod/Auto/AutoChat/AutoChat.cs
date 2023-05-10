@@ -42,7 +42,7 @@ namespace Mod.Auto.AutoChat
                 {
                     using (StreamReader reader = new StreamReader(Utilities.PathAutoChat))
                     {
-                        // Đọc toàn bộ nội dung tệp tin và bắt đầu chat
+                        // Đọc toàn bộ nội dung tệp tin và show
                         string content = reader.ReadToEnd();
                         GameCanvas.startOKDlg("Nội dung tự động chat:\n" + content);
                     }
