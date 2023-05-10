@@ -88,15 +88,13 @@ namespace Mod.Graphics
             byte[] bytes;
             byte[] copyToBytes;
             BitmapData bitmapData;
-            IntPtr Iptr = IntPtr.Zero;
-
             bytes = new byte[bmp.Width * bmp.Height * 4];
             copyToBytes = new byte[bmp.Width * bmp.Height * 4];
 
             bmp.RotateFlip(RotateFlipType.RotateNoneFlipX);
             Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
             bitmapData = bmp.LockBits(rect, ImageLockMode.ReadOnly, bmp.PixelFormat);
-            Iptr = bitmapData.Scan0;
+            IntPtr Iptr = bitmapData.Scan0;
             Marshal.Copy(Iptr, bytes, 0, bytes.Length);
 
             for (int i = 0; i < bytes.Length; i++)

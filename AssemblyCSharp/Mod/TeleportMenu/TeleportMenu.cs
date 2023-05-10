@@ -283,17 +283,29 @@ namespace Mod.TeleportMenu
             {
                 TeleportChar teleportChar = listTeleportChars.ElementAt(i);
                 i++;
-                if (status == TeleportStatus.Delete && teleportChar == charAutoTeleportTo)
+                if (status == TeleportStatus.Delete)
                 {
-                    count--;
-                    continue;
+                    if (teleportChar == charAutoTeleportTo)
+                    {
+                        count--;
+                        continue;
+                    }
+                    menuBuilder.addItem(teleportChar.cName + "\n[" + teleportChar.charID + "]", new(() =>
+                    {
+                        listTeleportChars.Remove(teleportChar);
+                        SaveData();
+                        GameScr.info1.addInfo($"Đã xóa nhân vật {teleportChar.cName}!", 0);
+                    }));
                 }
-                menuBuilder.addItem(teleportChar.cName + "\n[" + teleportChar.charID + "]", new(() =>
+                else
                 {
-                    GameScr.info1.addInfo($"Dịch chuyển đến nhân vật {teleportChar.cName}!", 0);
-                    TeleportToPlayer(teleportChar.charID);
-                    listTeleportChars[listTeleportChars.FindIndex(tC => tC == teleportChar)].lastTimeTeleportTo = mSystem.currentTimeMillis();
-                }));
+                    menuBuilder.addItem(teleportChar.cName + "\n[" + teleportChar.charID + "]", new(() =>
+                    {
+                        GameScr.info1.addInfo($"Dịch chuyển đến nhân vật {teleportChar.cName}!", 0);
+                        TeleportToPlayer(teleportChar.charID);
+                        listTeleportChars[listTeleportChars.FindIndex(tC => tC == teleportChar)].lastTimeTeleportTo = mSystem.currentTimeMillis();
+                    }));
+                }
             }
             menuBuilder.addItem(ifCondition: listTeleportChars.Count > 5,
                 "Thêm nữa", new(() =>

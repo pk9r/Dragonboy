@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Mod.CustomPanel
 {
-    internal static class SetTabPanelTemplates
+    public static class SetTabPanelTemplates
     {
         public static void setTabListTemplate(Panel panel, params int[] lengths)
         {

@@ -1,6 +1,7 @@
 using System;
 using Assets.src.g;
 using Mod;
+using Mod.Graphics;
 using Mod.ModMenu;
 using UnityEngine;
 
@@ -290,21 +291,21 @@ public class GameScr : mScreen, IChatable
 
 	public int zoneCol = 6;
 
-	public int[] zones;
+	public int[] zones = new int[15];
 
-	public int[] pts;
+	public int[] pts = new int[15];
 
-	public int[] numPlayer;
+	public int[] numPlayer = new int[15];
 
-	public int[] maxPlayer;
+	public int[] maxPlayer = new int[15];
 
-	public int[] rank1;
+	public int[] rank1 = new int[15];
 
-	public int[] rank2;
+	public int[] rank2 = new int[15];
 
-	public string[] rankName1;
+	public string[] rankName1 = new string[15];
 
-	public string[] rankName2;
+	public string[] rankName2 = new string[15];
 
 	public int typeTrade;
 
@@ -4193,7 +4194,9 @@ public class GameScr : mScreen, IChatable
 
 	public void paintBlackSky(mGraphics g)
 	{
-		if (!GameCanvas.lowGraphic)
+        if (CustomBackground.isEnabled && CustomBackground.backgroundWallpapers.Count > 0 && !ModMenuMain.modMenuItemBools[8].isDisabled)
+			return;
+        if (!GameCanvas.lowGraphic)
 			g.fillTrans(imgTrans, 0, 0, GameCanvas.w, GameCanvas.h);
 	}
 
@@ -5736,8 +5739,8 @@ public class GameScr : mScreen, IChatable
 		{
 			Cout.LogError("Loi ham OPEN UIZONE " + ex.ToString());
 		}
-		GameCanvas.panel.setTypeZone();
-		GameCanvas.panel.show();
+		//GameCanvas.panel.setTypeZone();
+		//GameCanvas.panel.show();
 	}
 
 	public void showViewInfo()

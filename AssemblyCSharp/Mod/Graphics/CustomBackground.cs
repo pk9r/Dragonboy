@@ -26,7 +26,7 @@ namespace Mod.Graphics
         private static bool isChangeWallpaper = true;
         static int updateGifBackgroundIndex;
         static int ticks;
-        static float speed;
+        static float speed = 1f;
         static CustomBackground instance = new CustomBackground();
 
         public static void ShowMenu()
@@ -42,6 +42,8 @@ namespace Mod.Graphics
                 .addItem(ifCondition: backgroundWallpapers.Count > 0,
                     "Xóa hết danh sách", new(() =>
                     {
+                        foreach (BackgroundVideo backgroundVideo in backgroundWallpapers.OfType<BackgroundVideo>())
+                            backgroundVideo.Stop();
                         backgroundWallpapers.Clear();
                         GameScr.info1.addInfo("Đã xóa hết nền trong danh sách!", 0);
                     }))
@@ -333,8 +335,26 @@ namespace Mod.Graphics
 
         public static void paintCustomBackgroundPanel(Panel panel, mGraphics g)
         {
-            PaintPanelTemplates.paintCollectionCaptionAndDescriptionTemplate(panel, g, backgroundWallpapers,
-                w => Path.GetFileName(w.Key), w => $"Đường dẫn đầy đủ: {w.Key}");
+            //PaintPanelTemplates.paintCollectionCaptionAndDescriptionTemplate(panel, g, backgroundWallpapers,
+            //    w => Path.GetFileName(w.Key), w => $"Đường dẫn đầy đủ: {w.Key}");
+            g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
+            g.translate(0, -GameCanvas.panel.cmy);
+            g.setColor(0);
+            if (backgroundWallpapers.Count != GameCanvas.panel.currentListLength) return;
+            for (int i = 0; i < GameCanvas.panel.currentListLength; i++)
+            {
+                int num = GameCanvas.panel.xScroll;
+                int num2 = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
+                int num3 = GameCanvas.panel.wScroll;
+                int num4 = GameCanvas.panel.ITEM_HEIGHT - 1;
+                g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
+                if (backgroundIndex == i)
+                    g.setColor((i != GameCanvas.panel.selected) ? new Color(.5f, 1, 0) : new Color(.375f, .75f, 0));
+                g.fillRect(num, num2, num3, num4);
+                mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + Path.GetFileName(backgroundWallpapers.ElementAt(i).Key), num + 5, num2, 0);
+                mFont.tahoma_7_blue.drawString(g, $"Đường dẫn đầy đủ: {backgroundWallpapers.ElementAt(i).Key}", num + 5, num2 + 11, 0);
+            }
+            GameCanvas.panel.paintScrollArrow(g);
         }
 
         public static void paintTabHeader(Panel panel, mGraphics g)
@@ -355,6 +375,8 @@ namespace Mod.Graphics
                 isChangeWallpaper = Utilities.loadRMSBool("ischangewallpaper");
                 backgroundIndex = Utilities.loadRMSInt("backgroundindex");
                 speed = Utilities.loadRMSFloat("gifbackgroundspeed");
+                if (speed == 0)
+                    speed = 1;
                 if (backgroundIndex >= backgroundWallpapers.Count)
                     backgroundIndex = 0;
             }

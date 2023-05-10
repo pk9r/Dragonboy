@@ -176,7 +176,7 @@ namespace Mod.ModMenu
                 if (!modMenuItemInts[selected].isDisabled) return;
                 GameScr.info1.addInfo(modMenuItemInts[selected].DisabledReason, 0);
             }
-            else
+            else if(panel.currentTabIndex == 2)
             {
                 if (!modMenuItemFunctions[selected].isDisabled) return;
                 GameScr.info1.addInfo(modMenuItemFunctions[selected].DisabledReason, 0);

@@ -23,7 +23,19 @@
     <Deterministic>False</Deterministic>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Mod\Resources\infinityChar-x1.png" />
+    <None Remove="Mod\Resources\infinityChar-x2.png" />
+    <None Remove="Mod\Resources\infinityChar-x3.png" />
+    <None Remove="Mod\Resources\infinityChar-x4.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mod\Resources\infinityChar-x1.png" />
+    <EmbeddedResource Include="Mod\Resources\infinityChar-x2.png" />
+    <EmbeddedResource Include="Mod\Resources\infinityChar-x3.png" />
+    <EmbeddedResource Include="Mod\Resources\infinityChar-x4.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="LitJSON">

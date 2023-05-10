@@ -9,7 +9,7 @@ using System.Collections;
 
 namespace Mod.CustomPanel
 {
-    internal static class PaintPanelTemplates
+    public static class PaintPanelTemplates
     {
         public static void paintTabHeaderTemplate(Panel panel, mGraphics g, string header)
         {

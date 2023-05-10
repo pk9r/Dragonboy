@@ -2280,8 +2280,10 @@ public class Controller : IMessageHandler
 			case -26:
 				ServerListScreen.testConnect = 2;
 				GameCanvas.debug("SA2", 2);
-				GameCanvas.startOKDlg(msg.reader().readUTF());
-				InfoDlg.hide();
+                string message = msg.reader().readUTF();
+                if (!message.StartsWith("Không thể đổi khu vực trong map này"))
+					GameCanvas.startOKDlg(message);
+                InfoDlg.hide();
 				LoginScr.isContinueToLogin = false;
 				Char.isLoadingMap = false;
 				if (GameCanvas.currentScreen == GameCanvas.loginScr)

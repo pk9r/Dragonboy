@@ -256,6 +256,8 @@ namespace Mod
         /// </summary>
         public static void onUpdateGameScr()
         {
+            if (GameCanvas.gameTick % (int)(10 * Time.timeScale) == 0)
+                Service.gI().openUIZone();
             Char.myCharz().cspeed = Utilities.speedRun;
             CharEffect.Update();
             TeleportMenu.TeleportMenu.Update();
@@ -412,9 +414,18 @@ namespace Mod
             CharEffect.Paint(g);
             SuicideRange.paint(g);
             Boss.Paint(g);
-            //mFont.tahoma_7.drawString(g, $"x={GameCanvas.pxMouse}, y={GameCanvas.pyMouse}", GameCanvas.w / 2, 10, mFont.CENTER);
-            //CustomGraphics.DrawCircle(g, Char.myCharz().cx, Char.myCharz().cy, 100, 2);
-            //if (Char.myCharz().charFocus != null) mFont.tahoma_7_yellow.drawString(g, Extensions.getDistance(Char.myCharz(), Char.myCharz().charFocus).ToString(), GameCanvas.w / 2, 10, mFont.CENTER);
+
+            //string str = "";
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    try
+            //    {
+            //        str += "X: " + GameCanvas.arrPos[i].x + ", Y: " + GameCanvas.arrPos[i].y + "\n";
+            //    }
+            //    catch (Exception) { }
+            //}
+            //mFont.tahoma_7.drawString(g, str, 50, 50, mFont.CENTER);
+
             ExtensionManager.Invoke(g);
         }
 
@@ -558,6 +569,16 @@ namespace Mod
         {
             SetDo.UpdateScrollMouse(ref pXYScrollMouse);
             ExtensionManager.Invoke(instance, pXYScrollMouse);
+        }
+
+        public static void onPanelHide(Panel instance)
+        {
+            ExtensionManager.Invoke(instance);
+        }
+
+        public static void onUpdateKeyPanel(Panel instance)
+        {
+            ExtensionManager.Invoke(instance);
         }
     }
 }
