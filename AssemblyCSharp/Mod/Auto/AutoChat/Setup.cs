@@ -31,6 +31,8 @@ namespace Mod.Auto.AutoChat
         /// </summary>
         public static void clearStringTrash()
         {
+            if (!File.Exists(Utilities.PathChatHistory))
+                return;
             // Đọc nội dung file text
             string content = File.ReadAllText(Utilities.PathChatHistory);
 

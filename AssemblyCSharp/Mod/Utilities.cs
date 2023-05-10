@@ -882,5 +882,10 @@ namespace Mod
                 return GameScr.nClasss[2].classId;
             return 3;
         }
+        //[HotkeyCommand('m')]
+        //public static void openUIZone()
+        //{
+        //    Service.gI().openUIZone();
+        //}
     }
 }
