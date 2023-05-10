@@ -296,6 +296,7 @@
             Chiều rộng tối da của khung gợi ý.
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "M:Mod.HistoryChat.clearStringTrash" -->
         <member name="M:Mod.ModHelper.CommandMod.BaseCommand.canExecute(System.String,System.Object[]@)">
             <summary>
             Kiểm tra có thể thực hiện command với args không.
