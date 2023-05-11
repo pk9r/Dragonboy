@@ -882,10 +882,17 @@ namespace Mod
                 return GameScr.nClasss[2].classId;
             return 3;
         }
-        //[HotkeyCommand('m')]
-        //public static void openUIZone()
-        //{
-        //    Service.gI().openUIZone();
-        //}
+
+        public static string TrimUntilFit(string str, GUIStyle style, int width)
+        {
+            int originalWidth = (int)(getWidth(style, str) / 1.025f);
+            if (originalWidth > width)
+            {
+                while (getWidth(style, str + "...") > width)
+                    str = str.Remove(str.Length - 1, 1);
+                str = str.Trim() + "...";
+            }
+            return str;
+        }
     }
 }
