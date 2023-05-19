@@ -215,7 +215,10 @@ namespace Mod
                 if (teleport.type == 0)
                     Controller.isStopReadMessage = false;
                 else
+                {
                     Char.myCharz().isTeleport = false;
+                    Char.myCharz().cy = teleport.y2;
+                }
             }
             else
             {
