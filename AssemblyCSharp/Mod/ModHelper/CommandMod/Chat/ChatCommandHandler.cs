@@ -31,7 +31,7 @@ namespace Mod.ModHelper.CommandMod.Chat
                             delimiter = cca.delimiter,
                             fullCommand = method.DeclaringType.FullName + "." + method.Name,
                             method = method,
-                            parameterInfos = method.GetParameters() 
+                            parameterInfos = method.GetParameters()
                         });
                     }
                 }
@@ -56,17 +56,20 @@ namespace Mod.ModHelper.CommandMod.Chat
         /// <returns>true nếu lệnh thực hiện thành công.</returns>
         public static bool execute(string command)
         {
-            foreach (var c in chatCommands)
+            foreach (var chatCommand in chatCommands)
             {
-                string args = null;
-                if (c.command != null && command.StartsWith(c.command))
-                    args = command.Substring(c.command.Length);
-                else if (command.StartsWith(c.fullCommand))
-                    args = command.Substring(c.fullCommand.Length);
+                int commandLength = -1;
 
-                if (args != null)
+                if (!string.IsNullOrEmpty(chatCommand.command) && command.StartsWith(chatCommand.command))
+                    commandLength = chatCommand.command.Length;
+                else if (command.StartsWith(chatCommand.fullCommand))
+                    commandLength = chatCommand.fullCommand.Length;
+
+                if (commandLength != -1)
                 {
-                    if (c.execute(args))
+                    string args = command.Substring(commandLength);
+
+                    if (chatCommand.execute(args))
                     {
                         return true;
                     }
@@ -107,9 +110,9 @@ namespace Mod.ModHelper.CommandMod.Chat
                 return false;
             }
 
-            foreach (var m in methods)
+            foreach (var method in methods)
             {
-                if (m.Name.ToLower() != methodName.ToLower())
+                if (method.Name.ToLower() != methodName.ToLower())
                 {
                     continue;
                 }
@@ -118,8 +121,8 @@ namespace Mod.ModHelper.CommandMod.Chat
                 {
                     command = null,
                     fullCommand = fullCommand,
-                    method = m,
-                    parameterInfos = m.GetParameters()
+                    method = method,
+                    parameterInfos = method.GetParameters()
                 };
 
                 if (c.execute(args))
