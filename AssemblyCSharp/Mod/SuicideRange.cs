@@ -42,9 +42,10 @@ namespace Mod
             if (!isShowSuicideRange) return;
             if (!Char.myCharz().isDie && Char.myCharz().cgender == 2 && Char.myCharz().myskill == Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[4]))
             {
-                g.setColor(Color.yellow);
-                if ((Char.myCharz().isStandAndCharge) && GameCanvas.gameTick % 10 >= 5) g.setColor(Color.red);
-                CustomGraphics.DrawCircle(g, Char.myCharz(), CharExtensions.getSuicideRange(Char.myCharz()), 1);
+                if (Char.myCharz().isStandAndCharge && GameCanvas.gameTick % 10 >= 5)
+                    CustomGraphics.DrawCircle(Color.red, Char.myCharz(), CharExtensions.getSuicideRange(Char.myCharz()), 1);
+                else
+                    CustomGraphics.DrawCircle(Color.yellow, Char.myCharz(), CharExtensions.getSuicideRange(Char.myCharz()), 1);
             }
             g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
             g.translate(-GameScr.cmx, -GameScr.cmy);
@@ -68,9 +69,10 @@ namespace Mod
                 Char c = GameScr.vCharInMap.elementAt(i) as Char;
                 if (c.isStandAndCharge && Utilities.getDistance(c, Char.myCharz()) <= CharExtensions.getSuicideRange(c) && ((c.cFlag != 0 && Char.myCharz().cFlag != 0 && (c.cFlag != Char.myCharz().cFlag || (c.cFlag == 8 && Char.myCharz().cFlag == 8))) || Char.myCharz().cTypePk == 5 || c.cTypePk == 5))
                 {
-                    g.setColor(Color.yellow);
-                    if (GameCanvas.gameTick % 10 >= 5) g.setColor(Color.red);
-                    CustomGraphics.drawLine(g, Char.myCharz().cx, Char.myCharz().cy, c.cx, c.cy, 3);
+                    if (GameCanvas.gameTick % 10 >= 5)
+                        CustomGraphics.drawLine(Color.red, Char.myCharz().cx * mGraphics.zoomLevel, Char.myCharz().cy * mGraphics.zoomLevel, c.cx * mGraphics.zoomLevel, c.cy * mGraphics.zoomLevel, 3);
+                    else 
+                    CustomGraphics.drawLine(Color.yellow, Char.myCharz().cx * mGraphics.zoomLevel, Char.myCharz().cy * mGraphics.zoomLevel, c.cx * mGraphics.zoomLevel, c.cy * mGraphics.zoomLevel, 3);
                     string str = $"Đang trong tầm bom của {CharExtensions.getNameWithoutClanTag(c)} [{NinjaUtil.getMoneys(c.cHPFull)}]!";
                     g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.6f));
                     g.fillRect(12, y + 2, mFont.tahoma_7_red.getWidth(str) + 5, 9);

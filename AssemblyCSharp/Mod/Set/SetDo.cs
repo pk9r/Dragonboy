@@ -591,7 +591,7 @@ namespace Mod.Set
                         SmallImage.drawSmallImage(g, item.template.iconID, x2 + w2 / 2, y2 + itemHeight / 2, 0, 3);
                         if (item.quantity > 1)
                             mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, x2 + w2, y2 + itemHeight - mFont.tahoma_7_yellow.getHeight(), 1);
-                        CustomGraphics.PaintStar(g, GameCanvas.panel, item, y1);
+                        CustomGraphics.PaintItemOptions(g, GameCanvas.panel, item, y1);
                     }
                 }
             }

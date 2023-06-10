@@ -2042,7 +2042,7 @@ public class Panel : IActionListener, IChatable
 			}
 			if (item.quantity > 1)
 				mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num5 + num7, num6 + num8 - mFont.tahoma_7_yellow.getHeight(), 1);
-			CustomGraphics.PaintStar(g, this, item, num2);
+			CustomGraphics.PaintItemOptions(g, this, item, num2);
 		}
 		paintScrollArrow(g);
 	}
@@ -3440,7 +3440,10 @@ public class Panel : IActionListener, IChatable
 					mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num5 + num7, num6 + num8 - mFont.tahoma_7_yellow.getHeight(), 1);
 				if (item.newItem && GameCanvas.gameTick % 10 > 5)
 					g.drawImage(imgNew, num5 + num7 / 2, num3 + 19, 3);
-                CustomGraphics.PaintStar(g, this, item, num3);
+				if (type == TYPE_KIGUI || type == TYPE_SHOP)
+					CustomGraphics.PaintItemOptions(g, this, item, num3 + mFont.tahoma_7b_blue.getHeight() + 1);
+				else
+					CustomGraphics.PaintItemOptions(g, this, item, num3);
             }
 			if (typeShop != 2 || (!Equals(GameCanvas.panel2) && currentTabIndex != 4) || item.buyType == 0)
 				continue;
@@ -3611,7 +3614,7 @@ public class Panel : IActionListener, IChatable
 				}
 				if (item.quantity > 1)
 					mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num6 + num8, num7 + num9 - mFont.tahoma_7_yellow.getHeight(), 1);
-                CustomGraphics.PaintStar(g, this, item, num4);
+                CustomGraphics.PaintItemOptions(g, this, item, num4);
 			}
 			else if (!flag)
 			{
@@ -4038,7 +4041,7 @@ public class Panel : IActionListener, IChatable
 				if (item.quantity > 1)
 					mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num5 + num7, num6 + num8 - mFont.tahoma_7_yellow.getHeight(), 1);
 				mFont.tahoma_7_yellow.drawStringBorder(g, i.ToString(), num2 - 35, num3, 0, mFont.tahoma_7b_dark);
-				CustomGraphics.PaintStar(g, this, item, num3);
+				CustomGraphics.PaintItemOptions(g, this, item, num3);
 			}
 		}
 		catch (Exception)
@@ -4601,7 +4604,7 @@ public class Panel : IActionListener, IChatable
 			}
 			if (item.quantity > 1)
 				mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num5 + num7, num6 + num8 - mFont.tahoma_7_yellow.getHeight(), 1);
-			CustomGraphics.PaintStar(g, this, item, num2);
+			CustomGraphics.PaintItemOptions(g, this, item, num2);
 		}
 		paintScrollArrow(g);
 	}
@@ -4731,7 +4734,7 @@ public class Panel : IActionListener, IChatable
 				if (item.quantity > 1)
 					mFont.tahoma_7_yellow.drawString(g, "x" + item.quantity, num6 + num8, num7 + num9 - mFont.tahoma_7_yellow.getHeight(), 1);
 				mFont.tahoma_7_yellow.drawStringBorder(g, j.ToString(), num3 - 35, num4, 0, mFont.tahoma_7b_dark);
-				CustomGraphics.PaintStar(g, this, item, num4);
+				CustomGraphics.PaintItemOptions(g, this, item, num4);
 			}
 		}
 		catch (Exception)

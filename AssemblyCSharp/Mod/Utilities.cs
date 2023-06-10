@@ -757,23 +757,21 @@ namespace Mod
             return ID_MAP_LANG_BASE * cgender;
         }
 
-        public static bool getStar(Item item, out uint star, out uint starE)
+        public static bool HasStarOption(Item item, out uint star, out uint starE)
         {
             star = 0;
             starE = 0;
             bool result = false;
             if (item.itemOption == null)
                 return result;
+            if (item.template.type != 0 && item.template.type != 1 && item.template.type != 2 && item.template.type != 3 && item.template.type != 4 && item.template.type != 32)
+                return result;
             for (int i = 0; i < item.itemOption.Length; i++)
             {
                 if (item.itemOption[i].optionTemplate.id == 102)
-                {
                     star = starE = (uint)item.itemOption[i].param;
-                }
                 if (item.itemOption[i].optionTemplate.id == 107)
-                {
                     starE = (uint)item.itemOption[i].param;
-                }
             }
             if (starE != 0)
                 result = true;
@@ -893,6 +891,16 @@ namespace Mod
                 str = str.Trim() + "...";
             }
             return str;
+        }
+
+        public static bool HasActivateOption(Item item)
+        {
+            for (int i = 0; i < item.itemOption.Length; i++)
+            {
+                if (item.itemOption[i].optionTemplate.id >= 127 && item.itemOption[i].optionTemplate.id <= 144)
+                    return true;
+            }
+            return false;
         }
     }
 }
