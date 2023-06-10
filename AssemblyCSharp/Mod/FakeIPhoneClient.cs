@@ -27,16 +27,20 @@ namespace Mod
 
         public static void onExitGame()
         {
+            if (!isEnabled)
+                return;
             if (clientType != Rms.loadRMSInt("clienttype"))
             {
                 Rms.clearAll();
-                Rms.saveRMSInt("clienttype", isEnabled ? 7 : 4);
+                Rms.saveRMSInt("clienttype", 7);
             }
         }
 
         public static void onGameStart()
         {
-            Rms.saveRMSInt("clienttype", isEnabled ? 7 : 4);
+            if (!isEnabled)
+                return;
+            Rms.saveRMSInt("clienttype", 7);
         }
     }
 }

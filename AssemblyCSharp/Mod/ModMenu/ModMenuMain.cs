@@ -217,14 +217,7 @@ namespace Mod.ModMenu
                 if (ext != null)
                 {
                     mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + ext.ExtensionName + ' ' + ext.ExtensionVersion, num + 5, num2, 0);
-                    string description;
-                    if (mFont.tahoma_7_blue.getWidth(ext.ExtensionDescription) > 160)
-                    {
-                        string str = ext.ExtensionDescription;
-                        while (mFont.tahoma_7_blue.getWidth(str + "...") > 160) str = str.Remove(str.Length - 1, 1);
-                        description = str + "...";
-                    }
-                    else description = ext.ExtensionDescription;
+                    string description = Utilities.TrimUntilFit(ext.ExtensionDescription, new GUIStyle() { font = mFont.tahoma_7_blue.myFont }, 160);
                     if (i == panel.selected && mFont.tahoma_7_blue.getWidth(ext.ExtensionDescription) > 160 && !panel.isClose)
                     {
                         isReset = false;
@@ -267,15 +260,7 @@ namespace Mod.ModMenu
                 if (modMenuItem != null)
                 {
                     mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + modMenuItem.Title, num + 5, num2, 0);
-                    string description = string.Empty;
-                    if (mFont.tahoma_7_blue.getWidth(modMenuItem.Description) > 160)
-                    {
-                        string str = modMenuItem.Description;
-                        while (mFont.tahoma_7_blue.getWidth(str + "...") > 160) str = str.Remove(str.Length - 1, 1);
-                        description = str + "...";
-                    }
-                    else description = modMenuItem.Description;
-                    //modMenuItem.Description.Length > 40 ? (modMenuItem.Description.Substring(0, 38) + "...") : modMenuItem.Description;
+                    string description = Utilities.TrimUntilFit(modMenuItem.Description, new GUIStyle() { font = mFont.tahoma_7_blue.myFont }, 160);
                     if (i == panel.selected && mFont.tahoma_7_blue.getWidth(modMenuItem.Description) > 160 && !panel.isClose)
                     {
                         isReset = false;
@@ -319,15 +304,7 @@ namespace Mod.ModMenu
                 if (modMenuItem != null)
                 {
                     mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + modMenuItem.Title, num + 5, num2, 0);
-                    string description = string.Empty;
-                    if (mFont.tahoma_7_blue.getWidth(modMenuItem.Description) > 145 - mFont.tahoma_7b_red.getWidth(str))
-                    {
-                        string str2 = modMenuItem.Description;
-                        while (mFont.tahoma_7_blue.getWidth(str2 + "...") > 145 - mFont.tahoma_7b_red.getWidth(str)) str2 = str2.Remove(str2.Length - 1, 1);
-                        description = str2 + "...";
-                    }
-                    else description = modMenuItem.Description;
-                    //modMenuItem.Description.Length > 28 ? (modMenuItem.Description.Substring(0, 27) + "...") : modMenuItem.Description;
+                    string description = Utilities.TrimUntilFit(modMenuItem.Description, new GUIStyle() { font = mFont.tahoma_7_blue.myFont }, 145 - mFont.tahoma_7b_red.getWidth(str));
                     if (i == panel.selected && mFont.tahoma_7_blue.getWidth(modMenuItem.Description) > 145 - mFont.tahoma_7b_red.getWidth(str) && !panel.isClose)
                     {
                         isReset = false;
@@ -377,26 +354,12 @@ namespace Mod.ModMenu
                     if (modMenuItem.Values != null)
                     {
                         str = modMenuItem.getSelectedValue();
-                        if (mFont.tahoma_7_blue.getWidth(str) > 160)
-                        {
-                            string str2 = str;
-                            while (mFont.tahoma_7_blue.getWidth(str2 + "...") > 160) str2 = str2.Remove(str2.Length - 1, 1);
-                            description = str2 + "...";
-                        }
-                        else description = str;
-                        //description = str.Length > 28 ? (str.Substring(0, 27) + "...") : str;
+                        description = Utilities.TrimUntilFit(str, new GUIStyle() { font = mFont.tahoma_7_blue.myFont}, 160);
                     }
                     else
                     {
                         str = modMenuItem.Description;
-                        //description = str.Length > 35 ? (str.Substring(0, 34) + "...") : str;
-                        if (mFont.tahoma_7b_red.getWidth(str) > 160 - mFont.tahoma_7_blue.getWidth(modMenuItem.SelectedValue.ToString()))
-                        {
-                            string str2 = str;
-                            while (mFont.tahoma_7_blue.getWidth(str2 + "...") > 160 - mFont.tahoma_7_blue.getWidth(modMenuItem.SelectedValue.ToString())) str2 = str2.Remove(str2.Length - 1, 1);
-                            description = str2 + "...";
-                        }
-                        else description = str;
+                        description = Utilities.TrimUntilFit(str, new GUIStyle() { font = mFont.tahoma_7_blue.myFont }, 160 - mFont.tahoma_7_blue.getWidth(modMenuItem.SelectedValue.ToString()));
                         mFont.tahoma_7b_red.drawString(g, modMenuItem.SelectedValue.ToString(), num + num3 - 2, num2 + panel.ITEM_HEIGHT - 14, mFont.RIGHT);
                     }
                     if (i == panel.selected && mFont.tahoma_7_blue.getWidth(str) > 160 - mFont.tahoma_7_blue.getWidth(modMenuItem.SelectedValue.ToString()) && !panel.isClose)
