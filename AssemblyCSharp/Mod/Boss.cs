@@ -1,10 +1,9 @@
 ﻿using Mod.Graphics;
-using Mod.ModHelper.CommandMod.Chat;
 using Mod.Xmap;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace Mod
@@ -20,6 +19,10 @@ namespace Mod
         public int zoneId = -1;
 
         public DateTime AppearTime;
+
+        public bool isDied;
+
+        public string killer;
 
         public static List<Boss> listBosses = new List<Boss>();
 
@@ -51,13 +54,48 @@ namespace Mod
 
         static int titleWidth;
 
-        static bool isOffsetX;
+        static int offsetX;
 
-        Boss(string name, string map) 
+        static readonly List<string> strBossHasBeenKilled = new List<string>()
+        {
+            " mọi người đều ngưỡng mộ.",
+            " everyone admired.",
+            " semua orang mengagumi.",
+            " đã đánh bại và nhận được cải trang thành ",
+            " killed and receive disguise of ",
+            " membunuh Dan menerima disguise ",
+            ": Đã tiêu diệt được ",
+            ": defeated ",
+            ": mengalahkan ",
+        };
+
+        static readonly List<string> strBossAppeared = new List<string>()
+        {
+            "BOSS ",
+            " vừa xuất hiện tại ",
+            " appear at ",
+            " muncul di ",
+            " khu vực ",
+            " zone ",
+            //Google translated: daerah, in-game menu: zona ???
+            " zona ",
+        };
+
+        Boss(string name, string map)
         {
             this.name = name;
             this.map = map;
-            if (map == "Trạm tàu vũ trụ") 
+            GetMapId(name, map);
+            AppearTime = DateTime.Now;
+        }
+
+        private void GetMapId(string name, string map)
+        {
+            if (map == "Vách núi Aru")
+                mapId = 42;
+            else if (map == "Vách núi Moori")
+                mapId = 43;
+            else if (map == "Trạm tàu vũ trụ")
             {
                 if (name.StartsWith("Số ") || name.StartsWith("Tiểu đội"))
                     mapId = 25;
@@ -65,40 +103,102 @@ namespace Mod
                     mapId = 24;
             }
             else mapId = GetMapID(map);
-            AppearTime = DateTime.Now;
         }
 
         public static void AddBoss(string chatVip)
         {
-            if (!chatVip.StartsWith("BOSS"))
-                return;
-            chatVip = chatVip.Replace("BOSS ", "").Replace(" vừa xuất hiện tại ", "|").Replace(" appear at ", "|").Replace(" khu vực ", "|").Replace(" zone ", "|");
-            string[] array = chatVip.Split('|');
-            listBosses.Add(new Boss(array[0].Trim(), array[1].Trim()));
-            if (array.Length == 3)
-                listBosses.Last().zoneId = int.Parse(array[2].Trim());
-            if (listBosses.Count > MAX_BOSS)
-                listBosses.RemoveAt(0);
-            getScrollBar(out int scrollBarWidth, out _, out _);
-            if (listBosses.Count > MAX_BOSS_DISPLAY && !isOffsetX)
+            if (strBossHasBeenKilled.Any(chatVip.Contains))
             {
-                isOffsetX = true;
-                x += scrollBarWidth;
+                strBossHasBeenKilled.ForEach(s => chatVip = chatVip.Replace(s, "|"));
+                string[] array = chatVip.Split('|');
+                Boss boss = null;
+                try
+                {
+                    boss = listBosses.Last(b =>
+                    {
+                        if (new int[] { 79, 82, 83 }.Contains(b.mapId))
+                        {
+                            if (Regex.IsMatch(b.name, "(Tiểu đội trưởng|(Captain|Kapten) Ginyu|Số [1-4]|Jeice|Burter|Recoome|Guldo)"))
+                                return false;
+                        }
+                        return b.name == array[1] && string.IsNullOrEmpty(b.killer);
+                    });
+                }
+                catch (InvalidOperationException) { }
+                if (boss == null)
+                {
+                    boss = new Boss(array[1], "");
+                    listBosses.Add(boss);
+                }
+                boss.isDied = true;
+                boss.killer = array[0];
+            }
+            else if (chatVip.StartsWith(strBossAppeared[0]))
+            {
+                strBossAppeared.ForEach(s => chatVip = chatVip.Replace(s, "|"));
+                string[] array = chatVip.Split('|');
+                Boss boss = null;
+                try
+                {
+                    int mapId = GetMapID(array[2]);
+                    boss = listBosses.Last(b =>
+                    {
+                        if (new int[] { 79, 82, 83 }.Contains(mapId))
+                        {
+                            if (Regex.IsMatch(array[1], "(Tiểu đội trưởng|(Captain|Kapten) Ginyu|Số [1-4]|Jeice|Burter|Recoome|Guldo)"))
+                                return false;
+                        }
+                        return string.IsNullOrEmpty(b.map) && b.name == array[1];
+                    });
+                }
+                catch (InvalidOperationException) { }
+                if (boss == null)
+                {
+                    boss = new Boss(array[1], array[2]);
+                    listBosses.Add(boss);
+                }
+                else
+                {
+                    boss.map = array[2];
+                    boss.GetMapId(boss.name, boss.map);
+                }
+                if (array.Length == 4)
+                    boss.zoneId = int.Parse(array[3]);
+                if (listBosses.Count > MAX_BOSS)
+                    listBosses.RemoveAt(0);
+                getScrollBar(out int scrollBarWidth, out _, out _);
+                if (listBosses.Count > MAX_BOSS_DISPLAY && offsetX == 0)
+                    offsetX = scrollBarWidth;
             }
         }
 
         public override string ToString()
         {
             TimeSpan timeSpan = DateTime.Now.Subtract(AppearTime);
-            string result = $"{name} - {map} [{mapId}] - ";
-            if (zoneId > -1)
-                result += $"khu {zoneId} - "; 
-            int hours = (int)System.Math.Floor((decimal)timeSpan.TotalHours);
-            if (hours > 0)
-                result += $"{hours}h";
-            if (timeSpan.Minutes > 0)
-                result += $"{timeSpan.Minutes}m";
-            result += $"{timeSpan.Seconds}s";
+            string result = $"{name} - ";
+            if (string.IsNullOrEmpty(map))
+                result += "chưa biết";
+            else
+                result += $"{map} [{mapId}]";
+            result += " - ";
+            if (!isDied)
+            {
+                if (zoneId > -1)
+                    result += $"khu {zoneId} - ";
+                int hours = (int)System.Math.Floor((decimal)timeSpan.TotalHours);
+                if (hours > 0)
+                    result += $"{hours}h";
+                if (timeSpan.Minutes > 0)
+                    result += $"{timeSpan.Minutes}m";
+                result += $"{timeSpan.Seconds}s";
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(killer))
+                    result += $"Bị {killer} tiêu diệt";
+                else 
+                    result += "Đã chết";
+            }
             return result;
         }
 
@@ -113,28 +213,43 @@ namespace Mod
             {
                 colorName = "orange";
                 colorMap = "red";
+                if (CharExtensions.findCharInMap(name) != null)
+                    colorName = "red";
             }
-            if (CharExtensions.findCharInMap(name) != null)
-                colorName = "red";
-            string result = $"<color={colorName}>{name}</color> - <color={colorMap}>{map}</color> [<color={colorMap}>{mapId}</color>] - ";
-            if (zoneId > -1)
+            string result = $"<color={colorName}>{name}</color> - ";
+            if (string.IsNullOrEmpty(map))
+                result += "chưa biết";
+            else
+                result += $"<color={colorMap}>{map}</color> [<color={colorMap}>{mapId}</color>]";
+            result += " - ";
+            if (!isDied)
             {
-                if (TileMap.mapID == mapId) 
+                if (zoneId > -1)
                 {
-                    if (TileMap.zoneID == zoneId)
-                        result += $"<color=yellow>khu</color> <color=red>{zoneId}</color> - ";
-                    else 
-                        result += $"<color=yellow>khu {zoneId}</color> - ";
+                    if (TileMap.mapID == mapId) 
+                    {
+                        if (TileMap.zoneID == zoneId)
+                            result += $"<color=yellow>khu</color> <color=red>{zoneId}</color> - ";
+                        else 
+                            result += $"<color=yellow>khu {zoneId}</color> - ";
+                    }
+                    else
+                        result += $"khu <color=yellow>{zoneId}</color> - ";
                 }
-                else
-                    result += $"khu <color=yellow>{zoneId}</color> - ";
+                int hours = (int)System.Math.Floor((decimal)timeSpan.TotalHours);
+                if (hours > 0)
+                    result += $"<color=orange>{hours}</color>h";
+                if (timeSpan.Minutes > 0)
+                    result += $"<color=orange>{timeSpan.Minutes}</color>m";
+                result += $"<color=orange>{timeSpan.Seconds}</color>s";
             }
-            int hours = (int)System.Math.Floor((decimal)timeSpan.TotalHours);
-            if (hours > 0)
-                result += $"<color=orange>{hours}</color>h";
-            if (timeSpan.Minutes > 0)
-                result += $"<color=orange>{timeSpan.Minutes}</color>m";
-            result += $"<color=orange>{timeSpan.Seconds}</color>s";
+            else
+            {
+                if (!string.IsNullOrEmpty(killer))
+                    result += $"Bị <color=orange>{killer}</color> tiêu diệt";
+                else
+                    result += "Đã chết";
+            }
             return result;
         }
 
@@ -144,29 +259,6 @@ namespace Mod
                 return;
             if (listBosses.Count <= 0)
                 return;
-            //getCollapseButton(out int collapseButtonX, out int collapseButtonY);
-            //g.drawRegion(Mob.imgHP, 0, 24, 9, 6, (isCollapsed ? 5 : 4), collapseButtonX, collapseButtonY, 0);
-            //if (isCollapsed)
-            //{
-            //    if (collapsedStyle == null)
-            //    {
-            //        collapsedStyle = new GUIStyle(GUI.skin.label)
-            //        {
-            //            alignment = TextAnchor.UpperRight,
-            //            fontSize = 6 * mGraphics.zoomLevel,
-            //            fontStyle = FontStyle.Bold,
-            //        };
-            //        collapsedStyle.normal.textColor = Color.white;
-            //        listBossWidth = Utilities.getWidth(collapsedStyle, LIST_BOSS);
-            //    }
-            //    if (GameCanvas.isMouseFocus(GameCanvas.w - x - listBossWidth, y, listBossWidth, 7))
-            //        CustomGraphics.fillRect(GameCanvas.w - x - listBossWidth, y + 7, (listBossWidth - 1) * mGraphics.zoomLevel, 1, collapsedStyle.normal.textColor);    
-            //    g.setColor(new Color(.2f, .2f, .2f, .7f));
-            //    g.fillRect(GameCanvas.w - x - listBossWidth, y, listBossWidth, 7);
-            //    g.drawString(LIST_BOSS, GameCanvas.w - x - listBossWidth - 1, y + 1, collapsedStyle, listBossWidth * mGraphics.zoomLevel);
-            //    return;
-            //}
-
             maxLength = 0;
             if (!isCollapsed)
             {
@@ -196,18 +288,20 @@ namespace Mod
                 maxLength = Math.max(length, maxLength);
             }
             FillBackground(g);
-            int xDraw = GameCanvas.w - x - maxLength;
+            int xDraw = GameCanvas.w - (x + offsetX) - maxLength;
             for (int i = start - offset; i < listBosses.Count - offset; i++)
             {
                 int yDraw = y + distanceBetweenLines * (i - start + offset);
                 Boss boss = listBosses[i];
                 g.setColor(new Color(.2f, .2f, .2f, .4f));
+                if (boss.isDied)
+                    g.setColor(new Color(.2f, .2f, .2f, .2f));
                 if (GameCanvas.isMouseFocus(xDraw, yDraw, maxLength, 7))
                     g.setColor(new Color(.2f, .2f, .2f, .7f));
                 g.fillRect(xDraw, yDraw + 1, maxLength, 7);
                 if (GameCanvas.isMouseFocus(xDraw, yDraw, maxLength, 7))
                     CustomGraphics.fillRect(xDraw + 1, yDraw + 7, (maxLength - 2) * mGraphics.zoomLevel + 2, 1, Color.white);
-                g.drawString($"{i + 1}. {boss.ToString(true)}", -x, mGraphics.zoomLevel - 3 + yDraw, styles[i - start + offset]);
+                g.drawString($"{i + 1}. {boss.ToString(true)}", -(x + offsetX), mGraphics.zoomLevel - 3 + yDraw, styles[i - start + offset]);
             }
         }
 
@@ -247,23 +341,23 @@ namespace Mod
             style.normal.textColor = Color.white;
             titleWidth = Utilities.getWidth(style, LIST_BOSS);
             g.setColor(new Color(.2f, .2f, .2f, .7f));
-            g.fillRect(GameCanvas.w - x - titleWidth + scrollBarWidth, y - distanceBetweenLines, titleWidth, 8);
-            if (GameCanvas.isMouseFocus(GameCanvas.w - x - titleWidth + scrollBarWidth, y - distanceBetweenLines, titleWidth, 8))
+            g.fillRect(GameCanvas.w - (x + offsetX) - titleWidth + scrollBarWidth, y - distanceBetweenLines, titleWidth, 8);
+            if (GameCanvas.isMouseFocus(GameCanvas.w - (x + offsetX) - titleWidth + scrollBarWidth, y - distanceBetweenLines, titleWidth, 8))
             {
                 g.setColor(style.normal.textColor);
-                g.fillRect(GameCanvas.w - x - titleWidth + scrollBarWidth, y - 1, titleWidth - 1, 1);
+                g.fillRect(GameCanvas.w - (x + offsetX) - titleWidth + scrollBarWidth, y - 1, titleWidth - 1, 1);
             }
-            g.drawString(LIST_BOSS, -x + scrollBarWidth, y - distanceBetweenLines - 2, style);
+            g.drawString(LIST_BOSS, -(x + offsetX) + scrollBarWidth, y - distanceBetweenLines - 2, style);
             getCollapseButton(out int collapseButtonX, out int collapseButtonY);
             g.drawRegion(Mob.imgHP, 0, 18, 9, 6, (isCollapsed ? 5 : 4), collapseButtonX, collapseButtonY, 0);
             if (isCollapsed || listBosses.Count <= 0)
                 return;
             g.setColor(Color.yellow);
-            g.fillRect(GameCanvas.w - x - maxLength - 3, y - 5, w - titleWidth - 9 - (scrollBarWidth > 0 ? 2 : 0), 1);
-            g.fillRect(GameCanvas.w - x + scrollBarWidth, y - 5, 3 + (scrollBarWidth > 0 ? 1 : 0), 1);
-            g.fillRect(GameCanvas.w - x - maxLength - 3, y - 5, 1, h);
-            g.fillRect(GameCanvas.w - x - maxLength - 3 + w, y - 5, 1, h + 1);
-            g.fillRect(GameCanvas.w - x - maxLength - 3, y - 5 + h, w + 1, 1);
+            g.fillRect(GameCanvas.w - (x + offsetX) - maxLength - 3, y - 5, w - titleWidth - 9 - (scrollBarWidth > 0 ? 2 : 0), 1);
+            g.fillRect(GameCanvas.w - (x + offsetX) + scrollBarWidth, y - 5, 3 + (scrollBarWidth > 0 ? 1 : 0), 1);
+            g.fillRect(GameCanvas.w - (x + offsetX) - maxLength - 3, y - 5, 1, h);
+            g.fillRect(GameCanvas.w - (x + offsetX) - maxLength - 3 + w, y - 5, 1, h + 1);
+            g.fillRect(GameCanvas.w - (x + offsetX) - maxLength - 3, y - 5 + h, w + 1, 1);
         }
 
         private static void FillBackground(mGraphics g)
@@ -276,7 +370,7 @@ namespace Mod
                     scrollBarWidth = 0;
                 int w = maxLength + 5 + (scrollBarWidth > 0 ? (scrollBarWidth + 2) : 0);
                 int h = distanceBetweenLines * Math.min(MAX_BOSS_DISPLAY, listBosses.Count) + 7;
-                g.fillRect(GameCanvas.w - x - maxLength - 3, y - 5, w, h);
+                g.fillRect(GameCanvas.w - (x + offsetX) - maxLength - 3, y - 5, w, h);
             }
         }
 
@@ -300,7 +394,7 @@ namespace Mod
                 return;
             getCollapseButton(out int collapseButtonX, out int collapseButtonY);
             getScrollBar(out int scrollBarWidth, out int scrollBarHeight, out _);
-            if (GameCanvas.isPointerHoldIn(collapseButtonX, collapseButtonY, 6, 9) || GameCanvas.isMouseFocus(GameCanvas.w - x - titleWidth + scrollBarWidth, y - distanceBetweenLines, titleWidth, 8))
+            if (GameCanvas.isPointerHoldIn(collapseButtonX, collapseButtonY, 6, 9) || GameCanvas.isMouseFocus(GameCanvas.w - (x + offsetX) - titleWidth + scrollBarWidth, y - distanceBetweenLines, titleWidth, 8))
             {
                 GameCanvas.isPointerJustDown = false;
                 GameScr.gI().isPointerDowning = false;
@@ -316,50 +410,58 @@ namespace Mod
                 start = listBosses.Count - MAX_BOSS_DISPLAY;
             for (int i = start - offset; i < listBosses.Count - offset; i++)
             {
-                if (GameCanvas.isPointerHoldIn(GameCanvas.w - x - maxLength, y + 1 + distanceBetweenLines * (i - start + offset), maxLength, 7))
+                if (GameCanvas.isPointerHoldIn(GameCanvas.w - (x + offsetX) - maxLength, y + 1 + distanceBetweenLines * (i - start + offset), maxLength, 7))
                 {
                     GameCanvas.isPointerJustDown = false;
                     GameScr.gI().isPointerDowning = false;
                     if (GameCanvas.isPointerClick)
                     {
-                        if (lastBoss == i && mSystem.currentTimeMillis() - Utilities.GetLastTimePress() <= 200)
-                        {
-                            if (TileMap.mapID != listBosses[i].mapId)
-                            {
-                                if (XmapController.gI.IsActing)
-                                    XmapController.finishXmap();
-                                XmapController.start(listBosses[i].mapId);
-                                lastBoss = -1;
-                                return;
-                            }
-                            if (listBosses[i].zoneId != -1 && TileMap.zoneID != listBosses[i].zoneId)
-                            {
-                                Service.gI().requestChangeZone(listBosses[i].zoneId, 0);
-                                return;
-                            }
-                        }
+                        if (listBosses[i].isDied)
+                            GameScr.info1.addInfo($"Boss đã {(string.IsNullOrEmpty(listBosses[i].killer) ? "chết" : $"bị {listBosses[i].killer} tiêu diệt")}!", 0);
                         else
-                            lastBoss = i;
-                        if (TileMap.mapID == listBosses[i].mapId)
                         {
-                            int j = 0;
-                            for (; j < GameScr.vCharInMap.size(); j++)
+                            if (lastBoss == i && mSystem.currentTimeMillis() - Utilities.GetLastTimePress() <= 200)
                             {
-                                Char ch = GameScr.vCharInMap.elementAt(j) as Char;
-                                if (ch.cName == listBosses[i].name)
+                                if (TileMap.mapID != listBosses[i].mapId)
                                 {
-                                    Char.myCharz().deFocusNPC();
-                                    Char.myCharz().itemFocus = null;
-                                    Char.myCharz().mobFocus = null;
-                                    if (Char.myCharz().charFocus != ch)
-                                        Char.myCharz().charFocus = ch;
-                                    else
-                                        Utilities.teleportMyChar(ch);
-                                    break;
+                                    if (XmapController.gI.IsActing)
+                                        XmapController.finishXmap();
+                                    XmapController.start(listBosses[i].mapId);
+                                    lastBoss = -1;
+                                    return;
                                 }
                             }
-                            if (j == GameScr.vCharInMap.size())
-                                GameScr.info1.addInfo("Boss không có trong khu!", 0);
+                            else
+                                lastBoss = i;
+                            if (TileMap.mapID == listBosses[i].mapId)
+                            {
+                                int j = 0;
+                                for (; j < GameScr.vCharInMap.size(); j++)
+                                {
+                                    Char ch = GameScr.vCharInMap.elementAt(j) as Char;
+                                    if (ch.cName == listBosses[i].name)
+                                    {
+                                        Char.myCharz().deFocusNPC();
+                                        Char.myCharz().itemFocus = null;
+                                        Char.myCharz().mobFocus = null;
+                                        if (Char.myCharz().charFocus != ch)
+                                            Char.myCharz().charFocus = ch;
+                                        else
+                                            Utilities.teleportMyChar(ch);
+                                        break;
+                                    }
+                                }
+                                if (j == GameScr.vCharInMap.size())
+                                {
+                                    if (listBosses[i].zoneId != -1 && TileMap.zoneID != listBosses[i].zoneId)
+                                    {
+                                        GameScr.info1.addInfo($"Vào khu {listBosses[i].zoneId}!", 0);
+                                        Service.gI().requestChangeZone(listBosses[i].zoneId, 0);
+                                        return;
+                                    }
+                                    GameScr.info1.addInfo("Boss không có trong khu!", 0);
+                                }
+                            }
                         }
                     }
                     GameCanvas.clearAllPointerEvent();
@@ -412,42 +514,48 @@ namespace Mod
 
         public static void Update()
         {
-            foreach (Boss boss in listBosses)
+            for (int i = listBosses.Count - 1; i >= 0; i--)
             {
-                if (boss.zoneId != -1)
-                    continue;
-                for (int i = 0; i < GameScr.vCharInMap.size(); i++)
+                Boss boss = listBosses[i];
+                if (boss.mapId == TileMap.mapID && !Char.isLoadingMap)
                 {
-                    Char ch = GameScr.vCharInMap.elementAt(i) as Char;
-                    if (ch.cName == boss.name)
+                    int j = 0;
+                    for (; j < GameScr.vCharInMap.size(); j++)
                     {
-                        boss.zoneId = TileMap.zoneID;
-                        break;
+                        Char ch = GameScr.vCharInMap.elementAt(j) as Char;
+                        if (ch.cName == boss.name)
+                        {
+                            if (boss.zoneId == -1)
+                                boss.zoneId = TileMap.zoneID;
+                            if (ch.isDie || ch.cHP == 0)
+                                boss.isDied = true;
+                            break;
+                        }   
                     }
+                    if (boss.zoneId == TileMap.zoneID && j == GameScr.vCharInMap.size())
+                        boss.isDied = true;
                 }
-                if (boss.zoneId == TileMap.zoneID)
-                    break;
             }
-            if (isEnabled && !isCollapsed && GameCanvas.isMouseFocus(GameCanvas.w - x - maxLength, y + 1, maxLength, 8 * MAX_BOSS_DISPLAY))
+            if (isEnabled && !isCollapsed && GameCanvas.isMouseFocus(GameCanvas.w - (x + offsetX) - maxLength, y + 1, maxLength, 8 * MAX_BOSS_DISPLAY))
             {
-                    if (GameCanvas.pXYScrollMouse > 0)
-                        if (offset < listBosses.Count - MAX_BOSS_DISPLAY)
-                            offset++;
-                    if (GameCanvas.pXYScrollMouse < 0)
-                        if (offset > 0)
-                            offset--;
-                }
+                if (GameCanvas.pXYScrollMouse > 0)
+                    if (offset < listBosses.Count - MAX_BOSS_DISPLAY)
+                        offset++;
+                if (GameCanvas.pXYScrollMouse < 0)
+                    if (offset > 0)
+                        offset--;
+            }
         }
 
         static void getButtonUp(out int buttonUpX, out int buttonUpY)
         {
-            buttonUpX = GameCanvas.w - x + 2;
+            buttonUpX = GameCanvas.w - (x + offsetX) + 2;
             buttonUpY = y + 1;
         }
 
         static void getButtonDown(out int buttonDownX, out int buttonDownY)
         {
-            buttonDownX = GameCanvas.w - x + 2;
+            buttonDownX = GameCanvas.w - (x + offsetX) + 2;
             buttonDownY = y + 2 + distanceBetweenLines * (MAX_BOSS_DISPLAY - 1);
         }
 
@@ -463,7 +571,7 @@ namespace Mod
             getScrollBar(out int scrollBarWidth, out _, out _);
             if (listBosses.Count <= MAX_BOSS_DISPLAY)
                 scrollBarWidth = 0;
-            collapseButtonX = GameCanvas.w - x - titleWidth + scrollBarWidth - 8;
+            collapseButtonX = GameCanvas.w - (x + offsetX) - titleWidth + scrollBarWidth - 8;
             collapseButtonY = y - distanceBetweenLines + 1;
         }
 
