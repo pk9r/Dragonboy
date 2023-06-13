@@ -1,4 +1,5 @@
 ﻿using Mod.Graphics;
+using UnityEngine;
 
 public class ItemTime
 {
@@ -7,6 +8,8 @@ public class ItemTime
 	public bool isInfinity;
 
     public short idIcon;
+
+	public int tenthSecond;
 
 	public int second;
 
@@ -50,9 +53,10 @@ public class ItemTime
 		this.idIcon = idIcon;
 		minute = s / 60;
 		second = s % 60;
-		time = s;
+		tenthSecond = 0;
+        time = s;
 		coutTime = s;
-		curr = (last = mSystem.currentTimeMillis());
+		curr = last = mSystem.currentTimeMillis();
 		isPaint_coolDownBar = idIcon == 14;
 	}
 
@@ -65,11 +69,12 @@ public class ItemTime
 		isText = true;
 		minute = time / 60;
 		second = time % 60;
-		idIcon = id;
+		tenthSecond = 0;
+        idIcon = id;
 		this.time = time;
 		coutTime = time;
 		this.text = text;
-		curr = (last = mSystem.currentTimeMillis());
+		curr = last = mSystem.currentTimeMillis();
 		isPaint_coolDownBar = idIcon == 14;
 	}
 
@@ -77,10 +82,12 @@ public class ItemTime
 	{
 		minute = time / 60;
 		second = time % 60;
-		this.time = time;
+		tenthSecond = 0;
+
+        this.time = time;
 		coutTime = time;
 		this.isText = isText;
-		curr = (last = mSystem.currentTimeMillis());
+		curr = last = mSystem.currentTimeMillis();
 	}
 
 	public static bool isExistItem(int id)
@@ -129,8 +136,9 @@ public class ItemTime
 	{
 		minute = time / 60;
 		second = time % 60;
-		coutTime = time;
-		curr = (last = mSystem.currentTimeMillis());
+		tenthSecond = 0;
+        coutTime = time;
+		curr = last = mSystem.currentTimeMillis();
 	}
 
 	public void paint(mGraphics g, int x, int y)
@@ -140,8 +148,11 @@ public class ItemTime
 		if (!isInfinity)
 		{
 			str = minute + "'" + second + "s";
-			if (minute == 0) str = second + "s";
-			if (isEquivalence) str = "~" + str;
+			if (minute == 0)
+				str = second + "s";
+			if (second < 10)
+				str = second + "." + tenthSecond + "s";
+            if (isEquivalence) str = "~" + str;
 		}
 		else
 		{
@@ -182,7 +193,8 @@ public class ItemTime
 	{
 		if (isInfinity) return;
 		curr = mSystem.currentTimeMillis();
-		if (curr - last >= 1000)
+		tenthSecond = Mathf.Clamp((int)(9 - (curr - last) / 100), 0, 9);
+        if (curr - last >= 1000)
 		{
 			last = mSystem.currentTimeMillis();
 			second--;
