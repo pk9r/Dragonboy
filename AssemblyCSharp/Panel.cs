@@ -5,6 +5,7 @@ using Mod;
 using Mod.ModMenu;
 using Mod.Graphics;
 using Mod.CustomPanel;
+using Mod.Auto;
 
 public class Panel : IActionListener, IChatable
 {
@@ -6319,6 +6320,14 @@ public class Panel : IActionListener, IChatable
 					else
 					{
 						myVector.addElement(new Command(mResources.USE, this, 2001, currItem));
+						if (AutoItem.checkList((int)this.currItem.template.id))
+						{
+							myVector.addElement(new Command("Ngưng Auto\nSử Dụng", AutoItem.gI(), 2, (int)this.currItem.template.id));
+						}
+						else
+						{
+							myVector.addElement(new Command("Auto\nSử Dụng", AutoItem.gI(), 1, (int)this.currItem.template.id));
+						}
 					}
 				}
 			}
