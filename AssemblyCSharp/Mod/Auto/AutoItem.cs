@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Mod.ModHelper.CommandMod.Chat;
+using Mod.ModHelper.CommandMod.Hotkey;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +9,6 @@ namespace Mod.Auto
 {
 	public class AutoItem : IActionListener, IChatable
 	{
-		// Token: 0x0600002D RID: 45 RVA: 0x000021DE File Offset: 0x000003DE
 		public static AutoItem gI()
 		{
 			if (AutoItem.Instance == null)
@@ -17,7 +18,6 @@ namespace Mod.Auto
 			return AutoItem.Instance;
 		}
 
-		// Token: 0x0600002E RID: 46 RVA: 0x00003ED8 File Offset: 0x000020D8
 		public static void update()
 		{
 			if (AutoItem.listItemUse.Count == 0 && GameCanvas.gameTick % 20 == 0)
@@ -34,7 +34,6 @@ namespace Mod.Auto
 			}
 		}
 
-		// Token: 0x0600002F RID: 47 RVA: 0x00003F74 File Offset: 0x00002174
 		public void onChatFromMe(string text, string to)
 		{
 			if (ChatTextField.gI().tfChat.getText() == null || ChatTextField.gI().tfChat.getText().Equals(string.Empty) || text.Equals(string.Empty) || text == null)
@@ -56,10 +55,13 @@ namespace Mod.Auto
 					" giây]"
 					}), 0);
 					AutoItem.listItemUse.Add(new AutoItem(AutoItem.idItemObj, time));
+					ShowMenu();
+
 				}
 				catch
 				{
 					GameScr.info1.addInfo("Số Không Hợp Lệ, Vui Lòng Nhập Lại!", 0);
+					ShowMenu();
 				}
 				ChatTextField.gI().strChat = "Chat";
 				ChatTextField.gI().tfChat.name = "chat";
@@ -68,12 +70,10 @@ namespace Mod.Auto
 			}
 		}
 
-		// Token: 0x06000030 RID: 48 RVA: 0x000020C8 File Offset: 0x000002C8
 		public void onCancelChat()
 		{
 		}
 
-		// Token: 0x06000031 RID: 49 RVA: 0x00004084 File Offset: 0x00002284
 		public void perform(int idAction, object p)
 		{
 			switch (idAction)
@@ -94,6 +94,7 @@ namespace Mod.Auto
 							GameScr.info1.addInfo("Dừng auto: " + ItemTemplates.get((short)((int)p)).name, 0);
 						}
 					}
+					ShowMenu();
 					return;
 				case 3:
 					return;
@@ -101,9 +102,53 @@ namespace Mod.Auto
 					return;
 			}
 		}
-
-	
-		// Token: 0x06000035 RID: 53 RVA: 0x000021F6 File Offset: 0x000003F6
+		[ChatCommand("item"), HotkeyCommand('i')]
+		public static void ShowMenu()
+		{
+			MyVector myVector = new MyVector();
+			List<int> list = new List<int>();
+			list.Clear();
+			for (int i = global::Char.myCharz().arrItemBag.Length - 1; i >= 0; i--)
+			{
+				Item item = global::Char.myCharz().arrItemBag[i];
+				if (item != null && !list.Contains((int)item.template.id) && AutoItem.ItemCanUse(item))
+				{
+					list.Add((int)item.template.id);
+				}
+			}
+			for (int j = 0; j < list.Count; j++)
+			{
+				if (!AutoItem.checkList(list[j]))
+				{
+					myVector.addElement(new Command(string.Concat(new string[]
+					{
+					ItemTemplates.get((short)list[j]).name,
+					"\n[TẮT]"
+					}), AutoItem.gI(), 1, list[j]));
+				}
+				else
+				{
+					for (int k = 0; k < AutoItem.listItemUse.Count; k++)
+					{
+						if (AutoItem.listItemUse[k].idItems == list[j])
+						{
+							myVector.addElement(new Command(string.Concat(new string[]
+							{
+							ItemTemplates.get((short)list[j]).name,
+							"\n[",
+							AutoItem.listItemUse[k].timeDelay.ToString(),
+							" giây]"
+							}), AutoItem.gI(), 2, list[j]));
+						}
+					}
+				}
+			}
+			GameCanvas.menu.startAt(myVector, 3);
+		}
+		public static bool ItemCanUse(Item item)
+		{
+			return item.template.type == 29 || item.template.type == 27 || item.template.type == 6 || item.template.type == 31;
+		}
 		public AutoItem(int ID, int time)
 		{
 			this.idItems = ID;
@@ -112,7 +157,7 @@ namespace Mod.Auto
 		public AutoItem()
 		{
 		}
-		// Token: 0x06000036 RID: 54 RVA: 0x00004158 File Offset: 0x00002358
+
 		public static bool checkList(int Id)
 		{
 			for (int i = 0; i < AutoItem.listItemUse.Count; i++)
@@ -143,7 +188,6 @@ namespace Mod.Auto
 		"By: NVan3177"
 		};
 
-		// Token: 0x0400001C RID: 28
 		private static int idItemObj;
 	}
 }
