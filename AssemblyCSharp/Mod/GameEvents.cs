@@ -271,6 +271,7 @@ namespace Mod
             ListCharsInMap.update();
             AutoGoback.update();
             AutoSS.update();
+            AutoItem.update();
             AutoT77.update();
             AutoPet.update();
             SuicideRange.update();

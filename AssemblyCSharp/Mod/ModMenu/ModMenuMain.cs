@@ -76,6 +76,7 @@ namespace Mod.ModMenu
         {
             new ModMenuItemFunction("Menu Xmap", "Mở menu Xmap (lệnh \"xmp\" hoặc bấm nút x)", Pk9rXmap.showXmapMenu),
             new ModMenuItemFunction("Menu PickMob", "Mở menu PickMob (lệnh \"pickmob\")", Pk9rPickMob.ShowMenu),
+            new ModMenuItemFunction("Menu AutoItem", "Mở menu AutoItem (lệnh \"item\" hoặc bấm nút I)", AutoItem.ShowMenu),
             new ModMenuItemFunction("Menu Teleport", "Mở menu dịch chuyển (lệnh \"tele\" hoặc bấm nút z)", TeleportMenu.TeleportMenu.ShowMenu),
             new ModMenuItemFunction("Menu Custom Background", "Mở menu nền tùy chỉnh", CustomBackground.ShowMenu),
             new ModMenuItemFunction("Menu Custom Logo", "Mở menu logo tùy chỉnh", CustomLogo.ShowMenu),
