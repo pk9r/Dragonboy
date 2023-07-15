@@ -164,8 +164,9 @@ namespace Mod
         /// <summary>
         /// Kích hoạt khi mở khung chat.
         /// </summary>
-        public static bool onStartChatTextField(ChatTextField sender)
+        public static bool onStartChatTextField(ChatTextField sender, IChatable parentScreen)
         {
+            ChatTextField.gI().parentScreen = parentScreen;
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return false;
             if (sender == ChatTextField.gI())
             {

@@ -404,6 +404,8 @@ namespace Mod
         public static void menuZone()
         {
             Service.gI().openUIZone();
+            GameCanvas.panel.setTypeZone();
+            GameCanvas.panel.show();
         }
 
         public static void changeMap(Waypoint waypoint)
