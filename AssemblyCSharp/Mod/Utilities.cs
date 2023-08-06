@@ -339,6 +339,7 @@ namespace Mod
         }
 
         [ChatCommand("bt")]
+        [HotkeyCommand('f')]
         public static void usePorata()
         {
             var index = getIndexItemBag(921, 454);
@@ -397,6 +398,14 @@ namespace Mod
         public static void changeZone(int zone)
         {
             Service.gI().requestChangeZone(zone, -1);
+        }
+
+        [HotkeyCommand('m')]
+        public static void menuZone()
+        {
+            Service.gI().openUIZone();
+            GameCanvas.panel.setTypeZone();
+            GameCanvas.panel.show();
         }
 
         public static void changeMap(Waypoint waypoint)
