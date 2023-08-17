@@ -1,5 +1,4 @@
 ﻿using LitJson;
-using Mod.CSharpInteractive;
 using Mod.CustomPanel;
 using Mod.Graphics;
 using Mod.ModHelper.CommandMod.Chat;

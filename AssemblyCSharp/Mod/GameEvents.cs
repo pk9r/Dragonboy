@@ -1,6 +1,5 @@
 ﻿using Mod.Auto;
 using Mod.Auto.AutoChat;
-using Mod.CSharpInteractive;
 using Mod.Graphics;
 using Mod.ModHelper;
 using Mod.ModHelper.CommandMod.Chat;
@@ -61,7 +60,6 @@ namespace Mod
             CustomLogo.LoadData();
             CustomCursor.LoadData();
             SetDo.LoadData();
-            FakeIPhoneClient.onGameStart();
             CustomGraphics.InitializeTileMap(true);
             VietKeyHandler.SmartMark = true;
             ExtensionManager.LoadExtensions();
@@ -84,8 +82,6 @@ namespace Mod
             CustomLogo.SaveData();
             CustomCursor.SaveData();
             SetDo.SaveData();
-            CSharpInteractiveForm.CloseForm();
-            FakeIPhoneClient.onExitGame();
             ExtensionManager.Invoke();
             return false;
         }
@@ -273,10 +269,11 @@ namespace Mod
             AutoGoback.update();
             AutoSS.update();
             AutoItem.update();
-            AutoT77.update();
+            //AutoT77.update();
             AutoPet.update();
             SuicideRange.update();
-            if (!AutoSS.isAutoSS && !AutoT77.isAutoT77)
+            //if (!AutoSS.isAutoSS && !AutoT77.isAutoT77)
+            if (!AutoSS.isAutoSS)
                 Pk9rPickMob.Update();
             Boss.Update();
             SetDo.Update();
@@ -388,7 +385,8 @@ namespace Mod
         public static bool onChatPopupMultiLine(string chat)
         {
             Pk9rXmap.Info(chat);
-            if (chat.ToLower().Contains("chưa thể chuyển khu") || AutoSS.isAutoSS || AutoT77.isAutoT77)
+            //if (chat.ToLower().Contains("chưa thể chuyển khu") || AutoSS.isAutoSS || AutoT77.isAutoT77)
+            if (chat.ToLower().Contains("chưa thể chuyển khu") || AutoSS.isAutoSS)
             {
                 GameScr.info1.addInfo(chat, 0);
                 ExtensionManager.Invoke(chat);
@@ -400,7 +398,8 @@ namespace Mod
 
         public static bool onAddBigMessage(string chat, Npc npc)
         {
-            if (npc.avatar == 1139 || AutoSS.isAutoSS || AutoT77.isAutoT77)
+            //if (npc.avatar == 1139 || AutoSS.isAutoSS || AutoT77.isAutoT77)
+            if (npc.avatar == 1139 || AutoSS.isAutoSS)
             {
                 if (!chat.Contains("NGOCRONGONLINE.COM") && !chat.Contains("Hack, Mod")) GameScr.info1.addInfo(chat, 0);
                 ExtensionManager.Invoke(chat, npc);

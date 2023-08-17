@@ -5541,7 +5541,8 @@ public class Char : IMapObject
 			cp3 = 0;
 			currentMovePoint = null;
 			cf = 25;
-			if (cName == "Tàu Pảy Pảy") AutoT77.isT77TeleToGround = true;	//t77 tele xuống đất
+			//if (cName == "Tàu Pảy Pảy")
+				//AutoT77.isT77TeleToGround = true;	//t77 tele xuống đất
             return;
 		}
 		int dir = 0;

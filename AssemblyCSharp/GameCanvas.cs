@@ -365,8 +365,6 @@ public class GameCanvas : IActionListener
 
 	public static string getPlatformName()
 	{
-		if (FakeIPhoneClient.isEnabled)
-			return "AndroidDevice";
 		return "Pc platform xxx";
     }
 
@@ -400,15 +398,10 @@ public class GameCanvas : IActionListener
 		panel = new Panel();
 		imgShuriken = loadImage("/mainImage/myTexture2df.png");
         int num = Rms.loadRMSInt("clienttype");
-        if (FakeIPhoneClient.isEnabled)
-			mSystem.clientType = 7;
+		if (num > 7)
+			Rms.saveRMSInt("clienttype", mSystem.clientType);
 		else
-		{
-			if (num > 7)
-				Rms.saveRMSInt("clienttype", mSystem.clientType);
-			else
-				mSystem.clientType = num;
-		}
+			mSystem.clientType = num;
 		if (mSystem.clientType == 7 && (Rms.loadRMSString("fake") == null || Rms.loadRMSString("fake") == string.Empty))
 			imgShuriken = loadImage("/mainImage/wait.png");
 		imgClear = loadImage("/mainImage/myTexture2der.png");

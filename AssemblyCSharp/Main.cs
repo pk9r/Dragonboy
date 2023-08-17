@@ -174,17 +174,12 @@ public class Main : MonoBehaviour
 			isPC = true;
 			//if (isPC)
 			//Screen.fullScreen = false;
-			if (FakeIPhoneClient.isEnabled)
-				typeClient = 7;
-			else
-			{
-				if (isWindowsPhone)
-					typeClient = 6;
-				if (isPC)
-					typeClient = 4;
-				if (IphoneVersionApp)
-					typeClient = 5;
-			}
+			if (isWindowsPhone)
+				typeClient = 6;
+			if (isPC)
+				typeClient = 4;
+			if (IphoneVersionApp)
+				typeClient = 5;
 			if (iPhoneSettings.generation == iPhoneGeneration.iPodTouch4Gen)
 				isIpod = true;
 			if (iPhoneSettings.generation == iPhoneGeneration.iPhone4)
