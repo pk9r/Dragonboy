@@ -5,6 +5,7 @@ using Mod;
 using Mod.ModMenu;
 using Mod.Graphics;
 using Mod.CustomPanel;
+using Mod.Auto;
 
 public class Panel : IActionListener, IChatable
 {
@@ -6318,7 +6319,7 @@ public class Panel : IActionListener, IChatable
 					}
 					else
 					{
-						myVector.addElement(new Command(mResources.USE, this, 2001, currItem));
+						myVector.addElement(new Command(mResources.USE, this, 2001, currItem));						
 					}
 				}
 			}
