@@ -150,7 +150,7 @@
             Kích hoạt sau khi vẽ khung chat.
             </summary>
         </member>
-        <member name="M:Mod.GameEvents.onStartChatTextField(ChatTextField)">
+        <member name="M:Mod.GameEvents.onStartChatTextField(ChatTextField,IChatable)">
             <summary>
             Kích hoạt khi mở khung chat.
             </summary>

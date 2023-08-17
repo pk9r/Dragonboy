@@ -136,7 +136,7 @@ public class ChatTextField : IActionListener
 
 	public void startChat(int firstCharacter, IChatable parentScreen, string to)
 	{
-        if (Mod.GameEvents.onStartChatTextField(this))
+        if (Mod.GameEvents.onStartChatTextField(this,parentScreen))
             return;
         right.caption = mResources.CLOSE;
 		this.to = to;
@@ -154,7 +154,7 @@ public class ChatTextField : IActionListener
 
 	public void startChat(IChatable parentScreen, string to)
 	{
-        if (Mod.GameEvents.onStartChatTextField(this))
+        if (Mod.GameEvents.onStartChatTextField(this,parentScreen))
             return;
 		right.caption = mResources.CLOSE;
 		this.to = to;
