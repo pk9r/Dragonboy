@@ -149,10 +149,13 @@ public class ItemTime
 		{
 			str = minute + "'" + second + "s";
 			if (minute == 0)
+			{
 				str = second + "s";
-			if (second < 10)
-				str = second + "." + tenthSecond + "s";
-            if (isEquivalence) str = "~" + str;
+				if (second < 10)
+					str = second + "." + tenthSecond + "s";
+			}
+            if (isEquivalence)
+				str = "~" + str;
 		}
 		else
 		{
