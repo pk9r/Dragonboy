@@ -565,14 +565,11 @@ public class Controller : IMessageHandler
 				break;
 			}
 			case -92:
-				if (!FakeIPhoneClient.isEnabled)
-				{
-					Main.typeClient = msg.reader().readByte();
-					Rms.clearAll();
-					Rms.saveRMSInt("clienttype", Main.typeClient);
-					Rms.saveRMSInt("lastZoomlevel", mGraphics.zoomLevel);
-					GameCanvas.startOK(mResources.plsRestartGame, 8885, null);
-				}
+				Main.typeClient = msg.reader().readByte();
+				Rms.clearAll();
+				Rms.saveRMSInt("clienttype", Main.typeClient);
+				Rms.saveRMSInt("lastZoomlevel", mGraphics.zoomLevel);
+				GameCanvas.startOK(mResources.plsRestartGame, 8885, null);
 				break;
 			case -91:
 			{

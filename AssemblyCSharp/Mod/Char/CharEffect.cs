@@ -24,13 +24,19 @@ namespace Mod
                 if (!isMobMeAdded)
                 {
                     isMobMeAdded = true;
-                    Char.vItemTime.addElement(new ItemTime(722, CharExtensions.getTimeMobMe(Char.myCharz())));
+                    if (Utilities.isMeWearingPikkoroDaimaoSet())
+                        Char.vItemTime.addElement(new ItemTime(722, true));
+                    else 
+                        Char.vItemTime.addElement(new ItemTime(722, CharExtensions.getTimeMobMe(Char.myCharz())));
                 }
             }
             else if (isMobMeAdded)
             {
                 isMobMeAdded = false;
-                removeElement(new ItemTime(722, 0));
+                if (Utilities.isMeWearingPikkoroDaimaoSet())
+                    removeElement(new ItemTime(722, true));
+                else 
+                    removeElement(new ItemTime(722, 0));
             }
             if (meEffTime.isTied)
             {
@@ -63,7 +69,10 @@ namespace Mod
                 if (!isMonkeyAdded)
                 {
                     isMonkeyAdded = true;
-                    Char.vItemTime.addElement(new ItemTime(718, CharExtensions.getTimeMonkey(Char.myCharz())));
+                    if (Utilities.isMeWearingCadicSet())
+                        Char.vItemTime.addElement(new ItemTime(718, CharExtensions.getTimeMonkey(Char.myCharz()) * 5));
+                    else 
+                        Char.vItemTime.addElement(new ItemTime(718, CharExtensions.getTimeMonkey(Char.myCharz())));
                 }
             }
             else if (isMonkeyAdded)
@@ -93,7 +102,7 @@ namespace Mod
             for (int i = 0; i < Char.vItemTime.size(); i++)
             {
                 ItemTime itemTime = Char.vItemTime.elementAt(i) as ItemTime;
-                if (itemTime.idIcon ==  item.idIcon && itemTime.isEquivalence == item.isEquivalence && itemTime.isInfinity == item.isInfinity)
+                if (itemTime.idIcon == item.idIcon && itemTime.isEquivalence == item.isEquivalence && itemTime.isInfinity == item.isInfinity)
                 {
                     Char.vItemTime.removeElementAt(i);
                     return;
@@ -108,8 +117,10 @@ namespace Mod
             {
                 Char c = storedChars.ElementAt(i);
                 Char @char = GameScr.findCharInMap(c.charID);
-                if (!c.charEffectTime.HasAnyEffect()) storedChars.RemoveAt(i);
-                else if (@char == null) c.charEffectTime.Update();
+                if (!c.charEffectTime.HasAnyEffect()) 
+                    storedChars.RemoveAt(i);
+                else if (@char == null) 
+                    c.charEffectTime.Update();
                 else
                 {
                     GameScr.findCharInMap(c.charID).charEffectTime = c.charEffectTime;
@@ -120,31 +131,46 @@ namespace Mod
 
         public static bool isContains(int charId)
         {
-            foreach (Char c in storedChars) if (c.charID == charId) return true;
+            foreach (Char c in storedChars)
+                if (c.charID == charId) 
+                    return true;
             return false;
         }
 
         public static void Paint(mGraphics g)
         {
-            if (!isEnabled) return;
+            if (!isEnabled)
+                return;
             Char focus = Char.myCharz().charFocus;
-            if (focus == null) return;
+            if (focus == null) 
+                return;
             List<string> strs = new List<string>();
             int y = 72;
             strs.Add(focus.cName + " [" + NinjaUtil.getMoneys(focus.cHP) + "/" + NinjaUtil.getMoneys(focus.cHPFull) + "]");
             if (focus.charEffectTime != null && focus.charEffectTime.HasAnyEffect())
             {
-                if (focus.charEffectTime.hasNRD) strs.Add("NRD còn: " + focus.charEffectTime.timeHoldingNRD + " giây");
-                if (focus.charEffectTime.hasShield) strs.Add("Khiên còn khoảng: " + focus.charEffectTime.timeShield + " giây");
-                if (focus.charEffectTime.hasMonkey) strs.Add("Khỉ còn: " + focus.charEffectTime.timeMonkey + " giây");
-                if (focus.charEffectTime.hasHuytSao) strs.Add("Huýt sáo còn: " + focus.charEffectTime.timeHuytSao + " giây");
-                if (focus.charEffectTime.hasMobMe) strs.Add("Đẻ trứng còn: " + focus.charEffectTime.timeMobMe + " giây");
-                if (focus.charEffectTime.isHypnotized) strs.Add(focus.charEffectTime.isHypnotizedByMe ? "Bị bạn thôi miên: " : "Bị thôi miên: khoảng " + focus.charEffectTime.timeHypnotized + " giây");
-                if (focus.charEffectTime.isTeleported) strs.Add("Bị DCTT: " + focus.charEffectTime.timeTeleported + " giây");
-                if (focus.charEffectTime.isTDHS) strs.Add("Bị TDHS: " + focus.charEffectTime.timeTDHS + " giây");
-                if (focus.charEffectTime.isTied) strs.Add((focus.charEffectTime.isTiedByMe ? "Bị bạn trói: " : "Bị trói: khoảng ") + focus.charEffectTime.timeTied + " giây");
-                if (focus.charEffectTime.isStone) strs.Add("Bị hóa đá: " + focus.charEffectTime.timeStone + " giây");
-                if (focus.charEffectTime.isChocolate) strs.Add("Bị biến Sôcôla: " + focus.charEffectTime.timeChocolate + " giây");
+                if (focus.charEffectTime.hasNRD)
+                    strs.Add("NRD còn: " + focus.charEffectTime.timeHoldingNRD + " giây");
+                if (focus.charEffectTime.hasShield) 
+                    strs.Add("Khiên còn khoảng: " + focus.charEffectTime.timeShield + " giây");
+                if (focus.charEffectTime.hasMonkey) 
+                    strs.Add("Khỉ còn: " + focus.charEffectTime.timeMonkey + " giây");
+                if (focus.charEffectTime.hasHuytSao) 
+                    strs.Add("Huýt sáo còn: " + focus.charEffectTime.timeHuytSao + " giây");
+                if (focus.charEffectTime.hasMobMe)
+                    strs.Add("Đẻ trứng còn: " + focus.charEffectTime.timeMobMe + " giây");
+                if (focus.charEffectTime.isHypnotized)
+                    strs.Add(focus.charEffectTime.isHypnotizedByMe ? "Bị bạn thôi miên: " : "Bị thôi miên: khoảng " + focus.charEffectTime.timeHypnotized + " giây");
+                if (focus.charEffectTime.isTeleported)
+                    strs.Add("Bị DCTT: " + focus.charEffectTime.timeTeleported + " giây");
+                if (focus.charEffectTime.isTDHS) 
+                    strs.Add("Bị TDHS: " + focus.charEffectTime.timeTDHS + " giây");
+                if (focus.charEffectTime.isTied)
+                    strs.Add((focus.charEffectTime.isTiedByMe ? "Bị bạn trói: " : "Bị trói: khoảng ") + focus.charEffectTime.timeTied + " giây");
+                if (focus.charEffectTime.isStone)
+                    strs.Add("Bị hóa đá: " + focus.charEffectTime.timeStone + " giây");
+                if (focus.charEffectTime.isChocolate)
+                    strs.Add("Bị biến Sôcôla: " + focus.charEffectTime.timeChocolate + " giây");
             }
             foreach (string str in strs)
             {
@@ -159,9 +185,13 @@ namespace Mod
         {
             if (Char.myCharz().charFocus != null)
             {
-                if (skill.template.id == 22) Char.myCharz().charFocus.charEffectTime.isHypnotizedByMe = true;
-                if (skill.template.id == 23) Char.myCharz().charFocus.charEffectTime.isTiedByMe = true;
+                if (skill.template.id == 22)
+                    Char.myCharz().charFocus.charEffectTime.isHypnotizedByMe = true;
+                if (skill.template.id == 23)
+                    Char.myCharz().charFocus.charEffectTime.isTiedByMe = true;
             }
+            if (skill.template.id == 6 && mSystem.currentTimeMillis() - skill.lastTimeUseThisSkill > skill.coolDown)
+                Char.vItemTime.addElement(new ItemTime(717, CharExtensions.getTimeTDHS() - 1));
         }
 
         public static void setState(bool value) => isEnabled = value;

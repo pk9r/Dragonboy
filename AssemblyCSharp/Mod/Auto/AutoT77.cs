@@ -1,4 +1,5 @@
-﻿using Mod.ModMenu;
+﻿#if false
+using Mod.ModMenu;
 using Mod.Xmap;
 using UnityEngine;
 
@@ -164,3 +165,4 @@ namespace Mod.Auto
         public static void setState(bool value) => isAutoT77 = value;
     }
 }
+#endif

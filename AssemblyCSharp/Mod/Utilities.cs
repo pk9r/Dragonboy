@@ -1,5 +1,4 @@
 ﻿using LitJson;
-using Mod.CSharpInteractive;
 using Mod.CustomPanel;
 using Mod.Graphics;
 using Mod.ModHelper.CommandMod.Chat;
@@ -658,20 +657,11 @@ namespace Mod
             return activateCount == 5;
         }
 
-        public static bool isMeWearingTXHSet()
-        {
-            return Char.myCharz().cgender == 0 && isMeWearingActivationSet(141);
-        }
+        public static bool isMeWearingTXHSet() => Char.myCharz().cgender == 0 && isMeWearingActivationSet(127);
+        
+        public static bool isMeWearingPikkoroDaimaoSet() => Char.myCharz().cgender == 1 && isMeWearingActivationSet(132);
 
-        public static bool isMeWearingCadicSet()
-        {
-            return Char.myCharz().cgender == 2 && isMeWearingActivationSet(0);  //TODO: Tìm id set Cadic
-        }
-
-        public static bool isMeWearingPikkoroDaimaoSet()
-        {
-            return Char.myCharz().cgender == 1 && isMeWearingActivationSet(0);  //TODO: Tìm id set Pikkoro Daimao
-        }
+        public static bool isMeWearingCadicSet() => Char.myCharz().cgender == 2 && isMeWearingActivationSet(134);
 
         public static Image createImage(byte[] imageData, int w = -1, int h = -1)
         {

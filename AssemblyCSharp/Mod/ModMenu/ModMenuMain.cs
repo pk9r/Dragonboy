@@ -1,5 +1,4 @@
 ﻿using Mod.Auto;
-using Mod.CSharpInteractive;
 using Mod.CustomPanel;
 using Mod.Graphics;
 using Mod.PickMob;
@@ -25,13 +24,12 @@ namespace Mod.ModMenu
             new ModMenuItemBoolean("Hiện danh sách nhân vật", "Hiện danh sách nhân vật trong map", ListCharsInMap.setState, false, "isshowlistchar"),
             new ModMenuItemBoolean("Hiện đệ tử trong danh sách", "Hiện đệ tử trong danh sách nhân vật trong map (đệ tử không có sư phụ trong map không được hiển thị)", ListCharsInMap.setStatePet, false, "isshowlistpet", true, "Bạn chưa bật chức năng \"Hiện danh sách nhân vật\"!"),
             new ModMenuItemBoolean("Auto up SS", "Auto up acc sơ sinh đến nhiệm vụ vào bang", AutoSS.setState, false, "", true, "Bạn đã qua nhiệm vụ sơ sinh!"),
-            new ModMenuItemBoolean("Auto T77", "Auto up Tàu Pảy Pảy", AutoT77.setState, false, "", true, "Bạn không thể vào map Đông Karin!"),
+            ///new ModMenuItemBoolean("Auto T77", "Auto up Tàu Pảy Pảy", AutoT77.setState, false, "", true, "Bạn không thể vào map Đông Karin!"),
             new ModMenuItemBoolean("Hiện khoảng cách bom", "Hiển thị người, quái, boss... trong tầm bom", SuicideRange.setState, false, "isshowsuiciderange"),
             new ModMenuItemBoolean("Nền tùy chỉnh", "Thay thế nền của game bằng nền tùy chỉnh (tự động điều chỉnh nền cho vừa kích thước màn hình)", CustomBackground.setState, false, "iscustombackground", false, "Bạn cần tắt chức năng \"Giảm đồ họa\"!"),
             new ModMenuItemBoolean("Logo tùy chỉnh", "Bật/tắt hiển thị logo tùy chỉnh trên màn hình game", CustomLogo.setState, false, "isshowlogo"),
             new ModMenuItemBoolean("Thông báo Boss", "Bật/tắt hiển thị thông báo boss", Boss.setState, false, "sanboss"),
             new ModMenuItemBoolean("Con trỏ tùy chỉnh", "Thay con trỏ chuột mặc định thành con trỏ chuột tùy chỉnh", CustomCursor.setState, false, "customcusor"),
-            new ModMenuItemBoolean("Fake iPhone Client", "Thay đổi client thành client của iPhone", FakeIPhoneClient.setState, false, "fakeclient"),
 
             new ModMenuItemBoolean("Tàn sát", "Bật/tắt tự động đánh quái", value => Pk9rPickMob.IsTanSat = value, false, "", false, "Bạn đang bật auto T77 hoặc auto up SS!"),
             new ModMenuItemBoolean("Né siêu quái khi tàn sát", "Tự động né siêu quái khi tàn sát", value => Pk9rPickMob.IsNeSieuQuai = value, true, "isnesieuquaits"),
@@ -82,7 +80,6 @@ namespace Mod.ModMenu
             new ModMenuItemFunction("Menu Custom Logo", "Mở menu logo tùy chỉnh", CustomLogo.ShowMenu),
             new ModMenuItemFunction("Menu Custom Cursor", "Mở menu con trỏ tùy chỉnh", CustomCursor.ShowMenu),
             new ModMenuItemFunction("Menu Set đồ", "Mở menu set đồ (lệnh \"set\" hoặc bấm nút \'`\')", SetDo.ShowMenu),
-            new ModMenuItemFunction("C# Interactive", "Mở cửa sổ C# Interactive", CSharpInteractiveForm.ShowForm),
         };
 
         public static Dictionary<int, string[]> inputModMenuItemInts = new Dictionary<int, string[]>()
@@ -391,7 +388,8 @@ namespace Mod.ModMenu
             if (Char.myCharz().cPower > 2000000 || (Char.myCharz().cPower > 1500000 && TileMap.mapID != 111) || (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId < 9)) modMenuItemBools[6].isDisabled = true;
             else modMenuItemBools[6].isDisabled = false;
             modMenuItemBools[8].isDisabled = modMenuItemInts[1].SelectedValue > 0;
-            modMenuItemBools[10].isDisabled = AutoSS.isAutoSS || AutoT77.isAutoT77;
+            //modMenuItemBools[10].isDisabled = AutoSS.isAutoSS || AutoT77.isAutoT77;
+            modMenuItemBools[10].isDisabled = AutoSS.isAutoSS;
 
             modMenuItemInts[0].isDisabled = modMenuItemBools[0].Value;
             modMenuItemInts[2].isDisabled = modMenuItemBools[5].Value || modMenuItemBools[6].Value;

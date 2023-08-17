@@ -5,6 +5,18 @@ namespace Mod
 {
     public static class CharExtensions
     {
+        public static int getTimeTDHS()
+        {
+            if (Char.myCharz().cgender == 0)
+            {
+                int result = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[2]).point;
+                if (Utilities.isMeWearingTXHSet())
+                    result *= 2;
+                return result - 1;
+            }
+            return 0;
+        }
+
         public static int getTimeHold(this Char @char)
         {
 

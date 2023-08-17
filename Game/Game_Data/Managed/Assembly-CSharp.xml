@@ -60,13 +60,6 @@
             Làm nhiệm vụ gặp sư phụ mới
             </summary>
         </member>
-        <member name="M:Mod.CSharpInteractive.MonoInteractiveCodeExecutor.RunInteractiveCode(System.String[])">
-            <summary>
-            Using the Mono Compiler Server (MCS) to evaluate script
-            
-            Code is evaluated on the fly (no assemblies generated)
-            </summary>
-        </member>
         <member name="T:Mod.Dialogs.FileDialog.OpenFileName">
             <summary>
             Link: https://docs.microsoft.com/en-us/windows/win32/api/commdlg/ns-commdlg-openfilenamea
