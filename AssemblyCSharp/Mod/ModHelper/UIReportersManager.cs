@@ -7,7 +7,7 @@ namespace Mod.ModHelper
 
     internal class UIReportersManager
     {
-        public const byte MinY = 60;
+        public const byte MinY = 50;
         public const byte ItemGap = 5;
         private static List<Reporter> reporters = [];
 
