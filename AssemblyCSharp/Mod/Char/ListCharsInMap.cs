@@ -16,6 +16,7 @@ namespace Mod
         static int maxLength = 0;
 
         public static int x = 15 - 9;
+
         public static int y = 0;
 
         static readonly int MAX_CHAR = 6;
@@ -83,8 +84,7 @@ namespace Mod
 
         public static int Paint(int _y, mGraphics g)
         {
-            if (!isEnabled)
-                return 0;
+            if (!isEnabled) return getSpaceOccupied();
             //if (backgroundGroupBox == null)
             //    InitializeGroupBox();
             //UpdateGroupBox();
@@ -99,7 +99,6 @@ namespace Mod
                     offset = 0;
             }
 
-            int border = 5;
             y = _y;
             maxLength = 0;
 
@@ -111,9 +110,7 @@ namespace Mod
 
             PaintRect(g);
 
-            return isCollapsed || listChars.Count == 0
-                ? distanceBetweenLines
-                : border + distanceBetweenLines * Mathf.Clamp(listChars.Count, 0, MAX_CHAR);
+            return getSpaceOccupied();
         }
 
         static string formatHP(Char ch)
@@ -424,6 +421,18 @@ namespace Mod
         public static void setState(bool value) => isEnabled = value;
 
         public static void setStatePet(bool value) => isShowPet = value;
+
+        internal static int getSpaceOccupied()
+        {
+            if (!isEnabled) return 0;
+
+            byte border = 5;
+            byte titleH = 7;
+
+            return isCollapsed
+                ? distanceBetweenLines
+                : titleH + border + distanceBetweenLines * Mathf.Clamp(listChars.Count, 0, MAX_CHAR);
+        }
 
         //static void InitializeGroupBox()
         //{
