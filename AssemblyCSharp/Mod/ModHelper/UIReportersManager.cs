@@ -7,8 +7,8 @@ namespace Mod.ModHelper
 
     internal class UIReportersManager
     {
-        public const UInt16 STARTER_Y = 60;
-        
+        public const byte MinY = 60;
+        public const byte ItemGap = 10;
         private static List<Reporter> reporters = [];
 
         public static void AddReporter(Reporter reporter)
@@ -28,12 +28,11 @@ namespace Mod.ModHelper
 
         public static void handlePaintGameScr(mGraphics g)
         {
-            int lastY = STARTER_Y;
-            int itemGap = 10;
+            int lastY = MinY;
 
             foreach (var reporter in reporters)
             {
-                lastY += reporter(lastY, g) + itemGap;
+                lastY += reporter(lastY, g) + ItemGap;
             }
         }
     }
