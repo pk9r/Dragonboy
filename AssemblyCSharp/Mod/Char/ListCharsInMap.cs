@@ -15,9 +15,9 @@ namespace Mod
 
         static int maxLength = 0;
 
-        static int x = 15 - 9;
+        public static int x = 15 - 9;
 
-        static int y = 60;
+        public static int y = 0;
 
         static readonly int MAX_CHAR = 6;
 
@@ -35,18 +35,6 @@ namespace Mod
 
         public static void update()
         {
-            if (Boss.isEnabled && Boss.listBosses.Count > 0)
-            {
-                if (Boss.isCollapsed)
-                {
-                    if (y != Boss.y + Boss.distanceBetweenLines + 3)
-                        y = Boss.y + Boss.distanceBetweenLines + 3;
-                }
-                else if (y != Boss.y + 5 + Boss.distanceBetweenLines * Mathf.Clamp(Boss.listBosses.Count, 0, Boss.MAX_BOSS_DISPLAY) + 10)
-                    y = Boss.y + 5 + Boss.distanceBetweenLines * Mathf.Clamp(Boss.listBosses.Count, 0, Boss.MAX_BOSS_DISPLAY) + 10;
-            }
-            else if (y != 60)
-                y = 60;
             if (!isEnabled)
                 return;
             listChars.Clear();
@@ -94,15 +82,15 @@ namespace Mod
                 offsetX = 0;
         }
 
-        public static void paint(mGraphics g)
+        public static int Paint(int _y, mGraphics g)
         {
-            if (!isEnabled)
-                return;
+            if (!isEnabled) return getSpaceOccupied();
             //if (backgroundGroupBox == null)
             //    InitializeGroupBox();
             //UpdateGroupBox();
             //backgroundGroupBox.Paint(g);
             //g.reset();
+
             if (offset >= listChars.Count - MAX_CHAR)
             {
                 if (listChars.Count - MAX_CHAR > 0)
@@ -110,13 +98,19 @@ namespace Mod
                 else
                     offset = 0;
             }
+
+            y = _y;
             maxLength = 0;
+
             if (!isCollapsed)
             {
                 PaintListChars(g);
                 PaintScroll(g);
             }
+
             PaintRect(g);
+
+            return getSpaceOccupied();
         }
 
         static string formatHP(Char ch)
@@ -427,6 +421,18 @@ namespace Mod
         public static void setState(bool value) => isEnabled = value;
 
         public static void setStatePet(bool value) => isShowPet = value;
+
+        internal static int getSpaceOccupied()
+        {
+            if (!isEnabled) return 0;
+
+            byte border = 5;
+            byte titleH = 7;
+
+            return isCollapsed
+                ? distanceBetweenLines
+                : titleH + border + distanceBetweenLines * Mathf.Clamp(listChars.Count, 0, MAX_CHAR);
+        }
 
         //static void InitializeGroupBox()
         //{

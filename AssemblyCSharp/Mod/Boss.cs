@@ -34,7 +34,7 @@ namespace Mod
 
         public static int x = 15 - 9;
 
-        public static int y = 50;
+        public static int y = 0;
 
         static int maxLength = 0;
 
@@ -253,19 +253,22 @@ namespace Mod
             return result;
         }
 
-        public static void Paint(mGraphics g)
+        public static int Paint(int _y, mGraphics g)
         {
-            if (!isEnabled)
-                return;
-            if (listBosses.Count <= 0)
-                return;
+            if (!isEnabled || listBosses.Count <= 0) return getSpaceOccupied();
+
             maxLength = 0;
+            y = _y;
+
             if (!isCollapsed)
             {
                 PaintListBosses(g);
                 PaintScroll(g);
             }
+
             PaintRect(g);
+
+            return getSpaceOccupied();
         }
 
         static void PaintListBosses(mGraphics g)
@@ -576,6 +579,18 @@ namespace Mod
         }
 
         public static void setState(bool value) => isEnabled = value;
+
+        internal static int getSpaceOccupied()
+        {
+            if (!isEnabled || listBosses.Count <= 0) return 0;
+
+            byte border = 5;
+            byte titleH = 7;
+
+            return isCollapsed
+                ? distanceBetweenLines
+                : titleH + border + distanceBetweenLines * Mathf.Clamp(listBosses.Count, 0, MAX_BOSS_DISPLAY);
+        }
 
         // [ChatCommand("testboss")]
         // public static void Test()

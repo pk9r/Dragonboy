@@ -66,6 +66,9 @@ namespace Mod
             System.Windows.Forms.Application.EnableVisualStyles();
             System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
             ExtensionManager.Invoke();
+
+            UIReportersManager.AddReporter(Boss.Paint);
+            UIReportersManager.AddReporter(ListCharsInMap.Paint);
         }
 
         /// <summary>
@@ -83,6 +86,8 @@ namespace Mod
             CustomCursor.SaveData();
             SetDo.SaveData();
             ExtensionManager.Invoke();
+            UIReportersManager.ClearReporters();
+
             return false;
         }
 
@@ -417,10 +422,9 @@ namespace Mod
 
         public static void onPaintGameScr(mGraphics g)
         {
-            ListCharsInMap.paint(g);
             CharEffect.Paint(g);
             SuicideRange.paint(g);
-            Boss.Paint(g);
+            UIReportersManager.handlePaintGameScr(g);
 
             //string str = "";
             //for (int i = 0; i < 4; i++)
