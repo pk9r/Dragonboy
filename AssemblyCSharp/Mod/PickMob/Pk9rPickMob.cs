@@ -1,4 +1,5 @@
-﻿using Mod.ModHelper.Menu;
+﻿using Mod.ModHelper.CommandMod.Chat;
+using Mod.ModHelper.Menu;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,15 +17,16 @@ namespace Mod.PickMob
             { 225, 353, 354, 355, 356, 357, 358, 359, 360, 362 };
 
         public static bool IsTanSat = false;
-        public static bool IsNeSieuQuai = true;
-        public static bool IsVuotDiaHinh = true;
+        public static bool IsNeSieuQuai { get; private set; } = true;
+        public static bool IsVuotDiaHinh { get; private set; } = true;
+        public static bool IsAutoPickItems { get; private set; } = true;
+        public static bool IsItemMe { get; private set; } = true;
+        public static bool IsLimitTimesPickItem { get; private set; } = true;
+
         public static List<int> IdMobsTanSat = new List<int>();
         public static List<int> TypeMobsTanSat = new List<int>();
         public static List<sbyte> IdSkillsTanSat = new List<sbyte>(IdSkillsBase);
 
-        public static bool IsAutoPickItems = true;
-        public static bool IsItemMe = true;
-        public static bool IsLimitTimesPickItem = true;
         public static int TimesAutoPickItemMax = 7;
         public static List<short> IdItemPicks = new List<short>();
         public static List<short> IdItemBlocks = new List<short>(IdItemBlockBase);
@@ -42,98 +44,224 @@ namespace Mod.PickMob
             return _Instance;
         }
 
+        public static void SetAvoindSuperMonster(bool newState) => IsNeSieuQuai = newState;
+        public static void SetCrossTerrain(bool newState) => IsVuotDiaHinh = newState;
+        public static void SetAutoPickItems(bool newState) => IsAutoPickItems = newState;
+        public static void SetAutoPickItemsFromOthers(bool newState) => IsItemMe = newState;
+        public static void SetPickUpLimited(bool newState) => IsLimitTimesPickItem = newState;
+
+        [ChatCommand("ts")]
+        public static void ToggleSlaughter() => SetSlaughter(!IsTanSat);
+
+        public static void SetSlaughter(bool newState)
+        {
+            IsTanSat = newState;
+            GameScr.info1.addInfo("Tự động đánh quái: " + (IsTanSat ? "Bật" : "Tắt"), 0);
+        }
+
+
+        // Mobs
+        [ChatCommand("add")]
+        public static void ToggleSelectedMob()
+        {
+            Mob mob = Char.myCharz().mobFocus;
+            ItemMap itemMap = Char.myCharz().itemFocus;
+
+            if (mob != null)
+            {
+                if (IdMobsTanSat.Contains(mob.mobId))
+                {
+                    IdMobsTanSat.Remove(mob.mobId);
+                    GameScr.info1.addInfo("Đã xoá mob: " + mob.mobId, 0);
+                }
+                else
+                {
+                    IdMobsTanSat.Add(mob.mobId);
+                    GameScr.info1.addInfo("Đã thêm mob: " + mob.mobId, 0);
+                }
+            }
+            else if (itemMap != null)
+            {
+                if (IdItemPicks.Contains(itemMap.template.id))
+                {
+                    IdItemPicks.Remove(itemMap.template.id);
+                    GameScr.info1.addInfo($"Đã xoá khỏi danh sách chỉ tự động nhặt item: {itemMap.template.name}[{itemMap.template.id}]", 0);
+                }
+                else
+                {
+                    IdItemPicks.Add(itemMap.template.id);
+                    GameScr.info1.addInfo($"Đã thêm vào danh sách chỉ tự động nhặt item: {itemMap.template.name}[{itemMap.template.id}]", 0);
+                }
+            }
+            else
+            {
+                GameScr.info1.addInfo("Cần trỏ vào quái hay vật phẩm cần thêm vào danh sách", 0);
+            }
+        }
+
+        [ChatCommand("addt")]
+        public static void ToggleItemOrMobType()
+        {
+            Mob mob = Char.myCharz().mobFocus;
+            ItemMap itemMap = Char.myCharz().itemFocus;
+
+            if (mob != null)
+            {
+                if (TypeMobsTanSat.Contains(mob.templateId))
+                {
+                    TypeMobsTanSat.Remove(mob.templateId);
+                    GameScr.info1.addInfo($"Đã xoá loại mob: {mob.getTemplate().name}[{mob.templateId}]", 0);
+                }
+                else
+                {
+                    TypeMobsTanSat.Add(mob.templateId);
+                    GameScr.info1.addInfo($"Đã thêm loại mob: {mob.getTemplate().name}[{mob.templateId}]", 0);
+                }
+            }
+            else if (itemMap != null)
+            {
+                if (TypeItemPicks.Contains(itemMap.template.type))
+                {
+                    TypeItemPicks.Remove(itemMap.template.type);
+                    GameScr.info1.addInfo("Đã xoá khỏi danh sách chỉ tự động nhặt loại item:" + itemMap.template.type, 0);
+                }
+                else
+                {
+                    TypeItemPicks.Add(itemMap.template.type);
+                    GameScr.info1.addInfo("Đã thêm vào danh sách chỉ tự động nhặt loại item:" + itemMap.template.type, 0);
+                }
+            }
+            else
+            {
+                GameScr.info1.addInfo("Cần trỏ vào quái hay vật phẩm cần thêm vào danh sách", 0);
+            }
+        }
+
+        [ChatCommand("clrm")]
+        public static void ClearMonsterToFightList()
+        {
+            IdMobsTanSat.Clear();
+            TypeMobsTanSat.Clear();
+            GameScr.info1.addInfo("Đã xoá danh sách đánh quái", 0);
+        }
+
+        [ChatCommand("vdh")]
+        public static void ToggleCrossTerrain()
+        {
+            SetCrossTerrain(!IsVuotDiaHinh);
+            GameScr.info1.addInfo("Tự động đánh quái vượt địa hình: " + (IsVuotDiaHinh ? "Bật" : "Tắt"), 0);
+        }
+
+        [ChatCommand("nsq")]
+        public static void ToggleAvoidSuperMonsters()
+        {
+            SetAvoindSuperMonster(!IsNeSieuQuai);
+            GameScr.info1.addInfo("Tàn sát né siêu quái: " + (IsNeSieuQuai ? "Bật" : "Tắt"), 0);
+        }
+
+        // Items
+        [ChatCommand("anhat")]
+        public static void ToggleAutoPickUpItems()
+        {
+            SetAutoPickItems(IsAutoPickItems);
+            GameScr.info1.addInfo("Tự động nhặt vật phẩm: " + (IsAutoPickItems ? "Bật" : "Tắt"), 0);
+        }
+
+        [ChatCommand("itm")]
+        public static void ToggleFilterOtherCharItems()
+        {
+            SetAutoPickItemsFromOthers(!IsItemMe);
+            GameScr.info1.addInfo("Lọc không nhặt vật phẩm của người khác: " + (IsItemMe ? "Bật" : "Tắt"), 0);
+        }
+
+        [ChatCommand("sln")]
+        public static void TogglePickUpLimit()
+        {
+            SetPickUpLimited(!IsLimitTimesPickItem);
+            StringBuilder builder = new StringBuilder();
+            builder.Append($"Giới hạn số lần nhặt là ");
+            builder.Append(TimesAutoPickItemMax);
+            builder.Append(IsLimitTimesPickItem ? ": Bật" : ": Tắt");
+            GameScr.info1.addInfo(builder.ToString(), 0);
+        }
+
+        [ChatCommand("clri")]
+        public static void ResetItemFilterToDefault()
+        {
+            IdItemPicks.Clear();
+            TypeItemPicks.Clear();
+            TypeItemBlocks.Clear();
+            IdItemBlocks.Clear();
+            IdItemBlocks.AddRange(IdItemBlockBase);
+            GameScr.info1.addInfo("Danh sách lọc item đã được đặt lại mặc định", 0);
+        }
+
+        [ChatCommand("cnn")]
+        public static void SetToPickOnlyGems()
+        {
+            IdItemPicks.Clear();
+            TypeItemPicks.Clear();
+            TypeItemBlocks.Clear();
+            IdItemBlocks.Clear();
+            IdItemBlocks.AddRange(IdItemBlockBase);
+            IdItemPicks.Add(ID_ITEM_GEM);
+            IdItemPicks.Add(ID_ITEM_GEM_LOCK);
+            GameScr.info1.addInfo("Đã cài đặt chỉ nhặt ngọc", 0);
+        }
+
+        // Skills
+        [ChatCommand("skill")]
+        public static void ToggleSelectedSkillForSlaughter()
+        {
+            SkillTemplate template = Char.myCharz().myskill.template;
+
+            if (IdSkillsTanSat.Contains(template.id))
+            {
+                IdSkillsTanSat.Remove(template.id);
+                GameScr.info1.addInfo($"Đã xoá khỏi danh sách skill sử dụng tự động đánh quái skill: {template.name}[{template.id}]", 0);
+            }
+            else
+            {
+                IdSkillsTanSat.Add(template.id);
+                GameScr.info1.addInfo($"Đã thêm vào danh sách skill sử dụng tự động đánh quái skill: {template.name}[{template.id}]", 0);
+            }
+        }
+
+        [ChatCommand("clrs")]
+        public static void SaveCurrentSkillListAsDefault()
+        {
+            IdSkillsTanSat.Clear();
+            IdSkillsTanSat.AddRange(IdSkillsBase);
+            GameScr.info1.addInfo("Đã đặt danh sách skill sử dụng tự động đánh quái về mặc định", 0);
+        }
+
+        [ChatCommand("blocki")]
+        public static void BlockFocusedItem()
+        {
+            ItemMap itemMap = Char.myCharz().itemFocus;
+
+            if (itemMap != null)
+            {
+                if (IdItemBlocks.Contains(itemMap.template.id))
+                {
+                    IdItemBlocks.Remove(itemMap.template.id);
+                    GameScr.info1.addInfo($"Đã xoá khỏi danh sách không tự động nhặt item: {itemMap.template.name}[{itemMap.template.id}]", 0);
+                }
+                else
+                {
+                    IdItemBlocks.Add(itemMap.template.id);
+                    GameScr.info1.addInfo($"Đã thêm vào danh sách không tự động nhặt item: {itemMap.template.name}[{itemMap.template.id}]", 0);
+                }
+            }
+            else
+            {
+                GameScr.info1.addInfo("Cần trỏ vào vật phẩm cần chặn khi auto nhặt", 0);
+            }
+        }
+
         public static bool Chat(string text)
         {
-            if (text == "add")
-            {
-                Mob mob = Char.myCharz().mobFocus;
-                ItemMap itemMap = Char.myCharz().itemFocus;
-                if (mob != null)
-                {
-                    if (IdMobsTanSat.Contains(mob.mobId))
-                    {
-                        IdMobsTanSat.Remove(mob.mobId);
-                        GameScr.info1.addInfo("Đã xoá mob: " + mob.mobId, 0);
-                    }
-                    else
-                    {
-                        IdMobsTanSat.Add(mob.mobId);
-                        GameScr.info1.addInfo("Đã thêm mob: " + mob.mobId, 0);
-                    }
-                }
-                else if (itemMap != null)
-                {
-                    if (IdItemPicks.Contains(itemMap.template.id))
-                    {
-                        IdItemPicks.Remove(itemMap.template.id);
-                        GameScr.info1.addInfo($"Đã xoá khỏi danh sách chỉ tự động nhặt item: {itemMap.template.name}[{itemMap.template.id}]", 0);
-                    }
-                    else
-                    {
-                        IdItemPicks.Add(itemMap.template.id);
-                        GameScr.info1.addInfo($"Đã thêm vào danh sách chỉ tự động nhặt item: {itemMap.template.name}[{itemMap.template.id}]", 0);
-                    }
-                }
-                else
-                {
-                    GameScr.info1.addInfo("Cần trỏ vào quái hay vật phẩm cần thêm vào danh sách", 0);
-                }
-            }
-            else if (text == "addt")
-            {
-                Mob mob = Char.myCharz().mobFocus;
-                ItemMap itemMap = Char.myCharz().itemFocus;
-                if (mob != null)
-                {
-                    if (TypeMobsTanSat.Contains(mob.templateId))
-                    {
-                        TypeMobsTanSat.Remove(mob.templateId);
-                        GameScr.info1.addInfo($"Đã xoá loại mob: {mob.getTemplate().name}[{mob.templateId}]", 0);
-                    }
-                    else
-                    {
-                        TypeMobsTanSat.Add(mob.templateId);
-                        GameScr.info1.addInfo($"Đã thêm loại mob: {mob.getTemplate().name}[{mob.templateId}]", 0);
-                    }
-                }
-                else if (itemMap != null)
-                {
-                    if (TypeItemPicks.Contains(itemMap.template.type))
-                    {
-                        TypeItemPicks.Remove(itemMap.template.type);
-                        GameScr.info1.addInfo("Đã xoá khỏi danh sách chỉ tự động nhặt loại item:" + itemMap.template.type, 0);
-                    }
-                    else
-                    {
-                        TypeItemPicks.Add(itemMap.template.type);
-                        GameScr.info1.addInfo("Đã thêm vào danh sách chỉ tự động nhặt loại item:" + itemMap.template.type, 0);
-                    }
-                }
-                else
-                {
-                    GameScr.info1.addInfo("Cần trỏ vào quái hay vật phẩm cần thêm vào danh sách", 0);
-                }
-            }
-            else if (text == "anhat")
-            {
-                IsAutoPickItems = !IsAutoPickItems;
-                GameScr.info1.addInfo("Tự động nhặt vật phẩm: " + (IsAutoPickItems ? "Bật" : "Tắt"), 0);
-            }
-            else if (text == "itm")
-            {
-                IsItemMe = !IsItemMe;
-                GameScr.info1.addInfo("Lọc không nhặt vật phẩm của người khác: " + (IsItemMe ? "Bật" : "Tắt"), 0);
-            }
-            else if (text == "sln")
-            {
-                IsLimitTimesPickItem = !IsLimitTimesPickItem;
-                StringBuilder builder = new StringBuilder();
-                builder.Append($"Giới hạn số lần nhặt là ");
-                builder.Append(TimesAutoPickItemMax);
-                builder.Append(IsLimitTimesPickItem ? ": Bật" : ": Tắt");
-                GameScr.info1.addInfo(builder.ToString(), 0);
-            }
-            else if (IsGetInfoChat<int>(text, "sln"))
+            if (IsGetInfoChat<int>(text, "sln"))
             {
                 TimesAutoPickItemMax = GetInfoChat<int>(text, "sln");
                 GameScr.info1.addInfo("Số lần nhặt giới hạn là: " + TimesAutoPickItemMax, 0);
@@ -150,27 +278,6 @@ namespace Mod.PickMob
                 {
                     IdItemPicks.Add(id);
                     GameScr.info1.addInfo($"Đã thêm vào danh sách chỉ tự động nhặt item: {ItemTemplates.get(id).name}[{id}]", 0);
-                }
-            }
-            else if (text == "blocki")
-            {
-                ItemMap itemMap = Char.myCharz().itemFocus;
-                if (itemMap != null)
-                {
-                    if (IdItemBlocks.Contains(itemMap.template.id))
-                    {
-                        IdItemBlocks.Remove(itemMap.template.id);
-                        GameScr.info1.addInfo($"Đã xoá khỏi danh sách không tự động nhặt item: {itemMap.template.name}[{itemMap.template.id}]", 0);
-                    }
-                    else
-                    {
-                        IdItemBlocks.Add(itemMap.template.id);
-                        GameScr.info1.addInfo($"Đã thêm vào danh sách không tự động nhặt item: {itemMap.template.name}[{itemMap.template.id}]", 0);
-                    }
-                }
-                else
-                {
-                    GameScr.info1.addInfo("Cần trỏ vào vật phẩm cần chặn khi auto nhặt", 0);
                 }
             }
             else if (IsGetInfoChat<short>(text, "blocki"))
@@ -215,36 +322,6 @@ namespace Mod.PickMob
                     GameScr.info1.addInfo("Đã thêm vào danh sách không tự động nhặt loại item: " + type, 0);
                 }
             }
-            else if (text == "clri")
-            {
-                IdItemPicks.Clear();
-                TypeItemPicks.Clear();
-                TypeItemBlocks.Clear();
-                IdItemBlocks.Clear();
-                IdItemBlocks.AddRange(IdItemBlockBase);
-                GameScr.info1.addInfo("Danh sách lọc item đã được đặt lại mặc định", 0);
-            }
-            else if (text == "cnn")
-            {
-                IdItemPicks.Clear();
-                TypeItemPicks.Clear();
-                TypeItemBlocks.Clear();
-                IdItemBlocks.Clear();
-                IdItemBlocks.AddRange(IdItemBlockBase);
-                IdItemPicks.Add(ID_ITEM_GEM);
-                IdItemPicks.Add(ID_ITEM_GEM_LOCK);
-                GameScr.info1.addInfo("Đã cài đặt chỉ nhặt ngọc", 0);
-            }
-            else if (text == "ts")
-            {
-                IsTanSat = !IsTanSat;
-                GameScr.info1.addInfo("Tự động đánh quái: " + (IsTanSat ? "Bật" : "Tắt"), 0);
-            }
-            else if (text == "nsq")
-            {
-                IsNeSieuQuai = !IsNeSieuQuai;
-                GameScr.info1.addInfo("Tàn sát né siêu quái: " + (IsNeSieuQuai ? "Bật" : "Tắt"), 0);
-            }
             else if (IsGetInfoChat<int>(text, "addm"))
             {
                 int id = GetInfoChat<int>(text, "addm");
@@ -271,26 +348,6 @@ namespace Mod.PickMob
                 {
                     TypeMobsTanSat.Add(id);
                     GameScr.info1.addInfo($"Đã thêm loại mob: {Mob.arrMobTemplate[id].name}[{id}]", 0);
-                }
-            }
-            else if (text == "clrm")
-            {
-                IdMobsTanSat.Clear();
-                TypeMobsTanSat.Clear();
-                GameScr.info1.addInfo("Đã xoá danh sách đánh quái", 0);
-            }
-            else if (text == "skill")
-            {
-                SkillTemplate template = Char.myCharz().myskill.template;
-                if (IdSkillsTanSat.Contains(template.id))
-                {
-                    IdSkillsTanSat.Remove(template.id);
-                    GameScr.info1.addInfo($"Đã xoá khỏi danh sách skill sử dụng tự động đánh quái skill: {template.name}[{template.id}]", 0);
-                }
-                else
-                {
-                    IdSkillsTanSat.Add(template.id);
-                    GameScr.info1.addInfo($"Đã thêm vào danh sách skill sử dụng tự động đánh quái skill: {template.name}[{template.id}]", 0);
                 }
             }
             else if (IsGetInfoChat<int>(text, "skill"))
@@ -322,12 +379,6 @@ namespace Mod.PickMob
                     GameScr.info1.addInfo("Đã thêm vào danh sách skill sử dụng tự động đánh quái skill: " + id, 0);
                 }
             }
-            else if (text == "clrs")
-            {
-                IdSkillsTanSat.Clear();
-                IdSkillsTanSat.AddRange(IdSkillsBase);
-                GameScr.info1.addInfo("Đã đặt danh sách skill sử dụng tự động đánh quái về mặc định", 0);
-            }
             //else if (text == "abf")
             //{
             //    if (HpBuff == 0 && MpBuff == 0)
@@ -354,11 +405,6 @@ namespace Mod.PickMob
             //    MpBuff = vs[1];
             //    GameScr.info1.addInfo($"Tự động sử dụng đậu thần khi HP dưới {HpBuff}%, MP dưới {MpBuff}%", 0);
             //}
-            else if (text == "vdh")
-            {
-                IsVuotDiaHinh = !IsVuotDiaHinh;
-                GameScr.info1.addInfo("Tự động đánh quái vượt địa hình: " + (IsVuotDiaHinh ? "Bật" : "Tắt"), 0);
-            }
             else return false;
             return true;
         }
@@ -369,13 +415,13 @@ namespace Mod.PickMob
             switch (GameCanvas.keyAsciiPress)
             {
                 case 't':
-                    Chat("ts");
+                    ToggleSlaughter();
                     break;
                 case 'n':
-                    Chat("anhat");
+                    ToggleAutoPickUpItems();
                     break;
                 case 'a':
-                    Chat("add");
+                    ToggleSelectedMob();
                     break;
                 case 'b':
                     Chat("abf");
@@ -597,7 +643,7 @@ namespace Mod.PickMob
                     if (IdItemPicks.Contains(itemFocus.template.id)) menuDesc = $"Xóa item khỏi danh sách";
                     else menuDesc = $"Thêm item vào danh sách";
                 }
-                menuBuilder.addItem(menuDesc, new(() => Chat("add")));
+                menuBuilder.addItem(menuDesc, new(() => ToggleSelectedMob()));
                 if (mobFocus != null)
                 {
                     if (TypeMobsTanSat.Contains(mobFocus.templateId)) menuDesc = $"Xóa {mobFocus.getTemplate().name} khỏi danh sách";
@@ -608,7 +654,7 @@ namespace Mod.PickMob
                     if (TypeItemPicks.Contains(itemFocus.template.type)) menuDesc = $"Xóa loại item ({itemFocus.template.type}) khỏi danh sách";
                     else menuDesc = $"Thêm loại item ({itemFocus.template.type}) vào danh sách";
                 }
-                menuBuilder.addItem(menuDesc, new(() => Chat("addt")));
+                menuBuilder.addItem(menuDesc, new(() => ToggleItemOrMobType()));
                 if (itemFocus != null)
                 {
                     if (IdItemBlocks.Contains(itemFocus.template.id)) menuDesc = $"Xóa {itemFocus.template.name} khỏi danh sách không nhặt";
@@ -628,22 +674,22 @@ namespace Mod.PickMob
             if (IdMobsTanSat.Count + TypeMobsTanSat.Count > 0)
                 menuBuilder.addItem("Xóa danh sách tàn sát", new(() =>
                 {
-                    Chat("clrm");
+                    ClearMonsterToFightList();
                 }));
             SkillTemplate mySkillTemplate = Char.myCharz().myskill.template;
             if (IdSkillsTanSat.Contains(mySkillTemplate.id)) menuDesc = $"Xóa {mySkillTemplate.name} khỏi danh sách skill";
             else menuDesc = $"Thêm {mySkillTemplate.name} vào danh sách skill";
             menuBuilder.addItem(menuDesc, new(() =>
             {
-                Chat("skill");
+                ToggleSelectedSkillForSlaughter();
             }));
             menuBuilder.addItem("Đặt lại danh sách skill", new(() =>
             {
-                Chat("clrs");
+                SaveCurrentSkillListAsDefault();
             }));
             menuBuilder.addItem("Đặt lại danh sách item", new(() =>
             {
-                Chat("clri");
+                ResetItemFilterToDefault();
             }));
             if (IdMobsTanSat.Count + TypeMobsTanSat.Count > 0)
                 menuBuilder.addItem("Xem danh sách quái", new(() =>
