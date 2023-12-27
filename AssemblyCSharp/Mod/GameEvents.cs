@@ -282,6 +282,7 @@ namespace Mod
                 Pk9rPickMob.Update();
             Boss.Update();
             SetDo.Update();
+            AutoPean.Update();
             //NOTE onUpdateChatTextField không thể bấm tab.
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();
