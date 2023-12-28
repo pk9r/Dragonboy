@@ -5,58 +5,76 @@ namespace Mod.Auto
 {
     public class AutoGoback
     {
-        public static InfoGoback infoGoback = new InfoGoback();
-        private static bool isGobacking = false;
-        private static GobackMode gobackMode;
-        private static long lastTimeGoback;
+        public static InfoGoback goingBackTo = new InfoGoback();
+        private static bool isGoingBack = false;
+        private static GobackMode mode;
+        private static long lastTimeGoBack;
+
+        public static bool isEnabled => mode != GobackMode.Disabled;
+        private static bool isMyCharInHome => TileMap.mapID == Char.myCharz().cgender + 21;
+        private static bool isOnIntegerGameTick => GameCanvas.gameTick % (60 * Time.timeScale) == 0;
+
+        public static void setState(int value)
+        {
+            mode = (GobackMode)value;
+
+            if (mode == GobackMode.GoBackToFixedLocation)
+            {
+                goingBackTo = new InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz().cx, Char.myCharz().cy);
+                GameScr.info1.addInfo($"Goback đến map: {TileMap.mapName}, khu: {TileMap.zoneID}, tọa độ: ({goingBackTo.x}, {goingBackTo.y})!", 0);
+            } else
+            {
+                goingBackTo = new InfoGoback();
+            }
+        }
 
         public static void update()
         {
-            if (gobackMode == GobackMode.Disabled) return;
-            if (GameCanvas.gameTick % (30 * Time.timeScale) == 0)
+            if (!isEnabled || !isOnIntegerGameTick) return;
+
+            if (isGoingBack)
+                handleGoingBack();
+            else if (Char.myCharz().cHP <= 0 || Char.myCharz().isDie)
+                handleDeath();
+        }
+
+        private static void handleGoingBack()
+        {
+            if (isMyCharInHome)
             {
-                if (!isGobacking)
+                if (hasChicken()) Service.gI().pickItem(-1);
+                else if (Char.myCharz().cHP <= 1) GameScr.gI().doUseHP();
+                else if (!XmapController.gI.IsActing) XmapController.start(goingBackTo.mapID);
+            }
+            else if (TileMap.mapID == goingBackTo.mapID)
+            {
+                if (TileMap.zoneID != goingBackTo.zoneID && isOnIntegerGameTick) Service.gI().requestChangeZone(goingBackTo.zoneID, 0);
+                if (TileMap.zoneID == goingBackTo.zoneID)
                 {
-                    if (Char.myCharz().cHP <= 0 || Char.myCharz().isDie)
-                    {
-                        if (mSystem.currentTimeMillis() - lastTimeGoback > 4000) lastTimeGoback = mSystem.currentTimeMillis();
-                        if (mSystem.currentTimeMillis() - lastTimeGoback > 3000)
-                        {
-                            if (gobackMode == GobackMode.GoBackToFixedLocation) infoGoback = new InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz());
-                            Service.gI().returnTownFromDead();
-                            isGobacking = true;
-                        }
-                    }
-                }
-                else
-                {
-                    if (TileMap.mapID == Char.myCharz().cgender + 21)
-                    {
-                        if (GameScr.vItemMap.size() > 0) Service.gI().pickItem(-1);
-                        else if (Char.myCharz().cHP <= 1) GameScr.gI().doUseHP();
-                        else if (!XmapController.gI.IsActing) XmapController.start(infoGoback.mapID);
-                    }
-                    else if (TileMap.mapID == infoGoback.mapID)
-                    {
-                        if (TileMap.zoneID != infoGoback.zoneID && GameCanvas.gameTick % (60 * Time.timeScale) == 0) Service.gI().requestChangeZone(infoGoback.zoneID, 0);
-                        if (TileMap.zoneID == infoGoback.zoneID)
-                        {
-                            if (Char.myCharz().cx != infoGoback.x || Char.myCharz().cy != infoGoback.y) Utilities.teleportMyChar(infoGoback.x, infoGoback.y);
-                            else isGobacking = false;
-                        }
-                    }
+                    if (mode == GobackMode.GoBackToFixedLocation && (Char.myCharz().cx != goingBackTo.x || Char.myCharz().cy != goingBackTo.y)) Utilities.teleportMyChar(goingBackTo.x, goingBackTo.y);
+                    else isGoingBack = false;
                 }
             }
         }
 
-        public static void setState(int value)
+        private static void handleDeath()
         {
-            gobackMode = (GobackMode)value;
-            if (gobackMode == GobackMode.GoBackToFixedLocation)
+            long now = mSystem.currentTimeMillis();
+            long timeSinceDeath = now - lastTimeGoBack;
+
+            if (timeSinceDeath > 4000) lastTimeGoBack = now;
+
+            if (timeSinceDeath > 3000)
             {
-                infoGoback = new InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz().cx, Char.myCharz().cy);
-                GameScr.info1.addInfo($"Goback đến map: {TileMap.mapName}, khu: {TileMap.zoneID}, tọa độ: ({infoGoback.x}, {infoGoback.y})!", 0);
+                goingBackTo = new InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz());
+                Service.gI().returnTownFromDead();
+                isGoingBack = true;
             }
+        }
+
+        private static bool hasChicken()
+        {
+            return GameScr.vItemMap.size() > 0;
         }
 
         public struct InfoGoback
@@ -85,7 +103,7 @@ namespace Mod.Auto
         public enum GobackMode
         {
             Disabled,
-            GoBackToWhereMeDied,
+            GoBackToWhereIDied,
             GoBackToFixedLocation
         }
 
