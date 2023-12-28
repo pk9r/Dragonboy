@@ -17,11 +17,11 @@ namespace Mod.PickMob
             { 225, 353, 354, 355, 356, 357, 358, 359, 360, 362 };
 
         public static bool IsTanSat = false;
-        public static bool IsNeSieuQuai { get; private set; } = true;
-        public static bool IsVuotDiaHinh { get; private set; } = true;
-        public static bool IsAutoPickItems { get; private set; } = true;
-        public static bool IsItemMe { get; private set; } = true;
-        public static bool IsLimitTimesPickItem { get; private set; } = true;
+        public static bool IsNeSieuQuai { get; set; } = true;
+        public static bool IsVuotDiaHinh { get; set; } = true;
+        public static bool IsAutoPickItems { get; set; } = true;
+        public static bool IsItemMe { get; set; } = true;
+        public static bool IsLimitTimesPickItem { get; set; } = true;
 
         public static List<int> IdMobsTanSat = new List<int>();
         public static List<int> TypeMobsTanSat = new List<int>();
