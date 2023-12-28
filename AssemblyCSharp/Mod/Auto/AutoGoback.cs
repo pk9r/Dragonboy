@@ -22,7 +22,8 @@ namespace Mod.Auto
             {
                 goingBackTo = new InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz().cx, Char.myCharz().cy);
                 GameScr.info1.addInfo($"Goback đến map: {TileMap.mapName}, khu: {TileMap.zoneID}, tọa độ: ({goingBackTo.x}, {goingBackTo.y})!", 0);
-            } else
+            }
+            else
             {
                 goingBackTo = new InfoGoback();
             }
@@ -30,7 +31,8 @@ namespace Mod.Auto
 
         public static void update()
         {
-            if (!isEnabled || !isOnIntegerGameTick) return;
+            if (!isEnabled || !isOnIntegerGameTick) 
+                return;
 
             if (isGoingBack)
                 handleGoingBack();
@@ -51,8 +53,10 @@ namespace Mod.Auto
                 if (TileMap.zoneID != goingBackTo.zoneID && isOnIntegerGameTick) Service.gI().requestChangeZone(goingBackTo.zoneID, 0);
                 if (TileMap.zoneID == goingBackTo.zoneID)
                 {
-                    if (mode == GobackMode.GoBackToFixedLocation && (Char.myCharz().cx != goingBackTo.x || Char.myCharz().cy != goingBackTo.y)) Utilities.teleportMyChar(goingBackTo.x, goingBackTo.y);
-                    else isGoingBack = false;
+                    if (Char.myCharz().cx != goingBackTo.x || Char.myCharz().cy != goingBackTo.y)
+                        Utilities.teleportMyChar(goingBackTo.x, goingBackTo.y);
+                    else
+                        isGoingBack = false;
                 }
             }
         }
@@ -62,11 +66,15 @@ namespace Mod.Auto
             long now = mSystem.currentTimeMillis();
             long timeSinceDeath = now - lastTimeGoBack;
 
-            if (timeSinceDeath > 4000) lastTimeGoBack = now;
-
+            if (timeSinceDeath > 4000)
+            {
+                lastTimeGoBack = now;
+                return;
+            }
             if (timeSinceDeath > 3000)
             {
-                goingBackTo = new InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz());
+                if (mode != GobackMode.GoBackToFixedLocation)
+                    goingBackTo = new InfoGoback(TileMap.mapID, TileMap.zoneID, Char.myCharz());
                 Service.gI().returnTownFromDead();
                 isGoingBack = true;
             }
