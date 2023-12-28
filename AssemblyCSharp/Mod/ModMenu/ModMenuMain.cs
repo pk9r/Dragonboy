@@ -37,6 +37,10 @@ namespace Mod.ModMenu
             new ModMenuItemBoolean("Tự động nhặt vật phẩm", "Bật/tắt tự động nhặt vật phẩm", value => Pk9rPickMob.IsAutoPickItems = value, true, "isautopick", false, "Bạn đang bật auto T77 hoặc auto up SS!"),
             new ModMenuItemBoolean("Không nhặt đồ của người khác", "Bật/tắt lọc không nhặt vật phẩm của người khác", value => Pk9rPickMob.IsItemMe = value, true, "ispickmyitemonly"),
             new ModMenuItemBoolean("Giới hạn số lần nhặt", "Bật/tắt giới hạn số lần tự động nhặt một vật phẩm", value => Pk9rPickMob.IsLimitTimesPickItem = value, true,"islimitpicktimes"),
+
+            new ModMenuItemBoolean("Yêu cầu đậu", "Tự động yêu cầu đậu", AutoPean.SetAutoRequestState, false),
+            new ModMenuItemBoolean("Tặng đậu", "Tự động tặng đậu", AutoPean.SetAutoDonateState, false),
+            new ModMenuItemBoolean("Thu hoạch đậu", "Tự động thu hoạch đậu khi ở nhà", AutoPean.SetAutoHarvestState, false),
         };
 
         /// <summary>

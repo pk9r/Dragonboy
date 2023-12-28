@@ -5,7 +5,7 @@ namespace Mod
 {
     internal class ClanUtilities
     {
-        private static DateTime lastRequestedPean = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private static DateTime lastRequestedPean = DateTime.MinValue;
         private const sbyte PeanRequestInterval = 5;
 
         public static bool CanAskForPeans()
