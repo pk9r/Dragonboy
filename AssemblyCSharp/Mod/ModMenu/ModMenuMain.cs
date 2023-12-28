@@ -31,12 +31,16 @@ namespace Mod.ModMenu
             new ModMenuItemBoolean("Thông báo Boss", "Bật/tắt hiển thị thông báo boss", Boss.setState, false, "sanboss"),
             new ModMenuItemBoolean("Con trỏ tùy chỉnh", "Thay con trỏ chuột mặc định thành con trỏ chuột tùy chỉnh", CustomCursor.setState, false, "customcusor"),
 
-            new ModMenuItemBoolean("Tàn sát", "Bật/tắt tự động đánh quái", Pk9rPickMob.SetSlaughter, false, "", false, "Bạn đang bật auto T77 hoặc auto up SS!"),
-            new ModMenuItemBoolean("Né siêu quái khi tàn sát", "Tự động né siêu quái khi tàn sát", Pk9rPickMob.SetAvoindSuperMonster, true, "isnesieuquaits"),
-            new ModMenuItemBoolean("Vượt địa hình khi tàn sát", "Bật/tắt tự động vượt địa hình khi đang tàn sát", Pk9rPickMob.SetCrossTerrain, true, "isvuotdiahinh"),
-            new ModMenuItemBoolean("Tự động nhặt vật phẩm", "Bật/tắt tự động nhặt vật phẩm", Pk9rPickMob.SetAutoPickItems, true, "isautopick", false, "Bạn đang bật auto T77 hoặc auto up SS!"),
-            new ModMenuItemBoolean("Không nhặt đồ của người khác", "Bật/tắt lọc không nhặt vật phẩm của người khác", Pk9rPickMob.SetAutoPickItemsFromOthers, true, "ispickmyitemonly"),
-            new ModMenuItemBoolean("Giới hạn số lần nhặt", "Bật/tắt giới hạn số lần tự động nhặt một vật phẩm", Pk9rPickMob.SetPickUpLimited, true,"islimitpicktimes"),
+            new ModMenuItemBoolean("Tàn sát", "Bật/tắt tự động đánh quái", value => Pk9rPickMob.IsTanSat = value, false, "", false, "Bạn đang bật auto T77 hoặc auto up SS!"),
+            new ModMenuItemBoolean("Né siêu quái khi tàn sát", "Tự động né siêu quái khi tàn sát", value => Pk9rPickMob.IsNeSieuQuai = value, true, "isnesieuquaits"),
+            new ModMenuItemBoolean("Vượt địa hình khi tàn sát", "Bật/tắt tự động vượt địa hình khi đang tàn sát", value => Pk9rPickMob.IsVuotDiaHinh = value, true, "isvuotdiahinh"),
+            new ModMenuItemBoolean("Tự động nhặt vật phẩm", "Bật/tắt tự động nhặt vật phẩm", value => Pk9rPickMob.IsAutoPickItems = value, true, "isautopick", false, "Bạn đang bật auto T77 hoặc auto up SS!"),
+            new ModMenuItemBoolean("Không nhặt đồ của người khác", "Bật/tắt lọc không nhặt vật phẩm của người khác", value => Pk9rPickMob.IsItemMe = value, true, "ispickmyitemonly"),
+            new ModMenuItemBoolean("Giới hạn số lần nhặt", "Bật/tắt giới hạn số lần tự động nhặt một vật phẩm", value => Pk9rPickMob.IsLimitTimesPickItem = value, true,"islimitpicktimes"),
+
+            new ModMenuItemBoolean("Auto xin đậu", "Tự động xin đậu", AutoPean.SetAutoRequestState, false),
+            new ModMenuItemBoolean("Auto cho đậu", "Tự động cho đậu", AutoPean.SetAutoDonateState, false),
+            new ModMenuItemBoolean("Auto thu đậu", "Tự động thu hoạch đậu ở nhà", AutoPean.SetAutoHarvestState, false),
         };
 
         /// <summary>
