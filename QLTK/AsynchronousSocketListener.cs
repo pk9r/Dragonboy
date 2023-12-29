@@ -16,7 +16,7 @@ namespace QLTK
     public class StateObject
     {
         // Size of receive buffer.  
-        public const int BufferSize = 1024;
+        public const int BufferSize = 4096;
 
         // Receive buffer.  
         public byte[] buffer = new byte[BufferSize];
@@ -29,10 +29,10 @@ namespace QLTK
 
     public static class AsynchronousSocketListener
     {
-        public static List<Account> waitingAccounts = new List<Account>();
+        public static List<Account> WaitingAccounts { get; } = [];
 
         // Thread signal.  
-        public static ManualResetEvent allDone = new ManualResetEvent(false);
+        public static ManualResetEvent allDone { get; } = new ManualResetEvent(false);
 
         private static void onMessage(JsonData msg, StateObject state)
         {
@@ -104,7 +104,7 @@ namespace QLTK
                     break;
                 case "connected":
                     int id = (int)msg["id"];
-                    state.account = waitingAccounts.Find(a => a.process.Id == id);
+                    state.account = WaitingAccounts.Find(a => a.process.Id == id);
                     state.account.workSocket = state.workSocket;
 
                     sendMessage(state.account, new

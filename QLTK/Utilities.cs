@@ -7,30 +7,29 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace QLTK
 {
-    public class Utilities
+    public partial class Utilities
     {
         internal static DevelopStatus currentDevelopStatus;
 
-        [DllImport("user32.dll", EntryPoint = "MessageBox", BestFitMapping = false, CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern int MessageBoxNative(IntPtr hWnd, string text, string caption, int type);
-
         internal static List<Server> LoadServersFromFile()
         {
-            List<Server> servers = new List<Server>();
+            List<Server> servers = [];
             if (File.Exists("ModData\\Servers.txt"))
-                foreach(string server in File.ReadAllLines("ModData\\Servers.txt"))
+                foreach (string server in File.ReadAllLines("ModData\\Servers.txt"))
                 {
                     try
                     {
-                        string[] strings = server.Split(new char[] { '|' });
+                        string[] strings = server.Split(['|']);
                         servers.Add(new Server(strings[0], strings[1], int.Parse(strings[2]), int.Parse(strings[3])));
                     }
                     catch (Exception) { }
@@ -40,46 +39,54 @@ namespace QLTK
 
         public static string EncryptString(string data)
         {
-            TripleDESCryptoServiceProvider tripleDESCryptoServiceProvider = new TripleDESCryptoServiceProvider
-            {
-                KeySize = 128,
-                BlockSize = 64,
-                Padding = PaddingMode.PKCS7,
-                Mode = CipherMode.CBC,
-                Key = Key,
-                IV = IV
-            };
-            ICryptoTransform cryptoTransform = tripleDESCryptoServiceProvider.CreateEncryptor();
-            byte[] bytes = Encoding.UTF8.GetBytes(data);
-            return Convert.ToBase64String(cryptoTransform.TransformFinalBlock(bytes, 0, bytes.Length));
+            //using var tripleDESCryptoServiceProvider = new TripleDESCryptoServiceProvider
+            //{
+            //    KeySize = 128,
+            //    BlockSize = 64,
+            //    Padding = PaddingMode.PKCS7,
+            //    Mode = CipherMode.CBC,
+            //    Key = Key,
+            //    IV = IV
+            //};
+            using var des = TripleDES.Create();
+            des.KeySize = 128;
+            des.BlockSize = 64;
+            des.Padding = PaddingMode.PKCS7;
+            des.Mode = CipherMode.CBC;
+            des.Key = Key;
+            des.IV = IV;
+
+            using var cryptoTransform = des.CreateEncryptor();
+            byte[] buffer = Encoding.UTF8.GetBytes(data);
+            var final = cryptoTransform.TransformFinalBlock(buffer, 0, buffer.Length);
+            return Convert.ToBase64String(final);
         }
 
         public static string DecryptString(string data)
         {
-            TripleDESCryptoServiceProvider tripleDESCryptoServiceProvider = new TripleDESCryptoServiceProvider
-            {
-                KeySize = 128,
-                BlockSize = 64,
-                Padding = PaddingMode.PKCS7,
-                Mode = CipherMode.CBC,
-                Key = Key,
-                IV = IV
-            };
-            ICryptoTransform cryptoTransform = tripleDESCryptoServiceProvider.CreateDecryptor(tripleDESCryptoServiceProvider.Key, tripleDESCryptoServiceProvider.IV);
-            byte[] array = Convert.FromBase64String(data);
-            return Encoding.UTF8.GetString(cryptoTransform.TransformFinalBlock(array, 0, array.Length));
+            using var des = TripleDES.Create();
+            des.KeySize = 128;
+            des.BlockSize = 64;
+            des.Padding = PaddingMode.PKCS7;
+            des.Mode = CipherMode.CBC;
+            des.Key = Key;
+            des.IV = IV;
+
+            using var cryptoTransform = des.CreateDecryptor(Key, IV);
+
+            var buffer = Convert.FromBase64String(data);
+            var final = cryptoTransform.TransformFinalBlock(buffer, 0, buffer.Length);
+            return Encoding.UTF8.GetString(final);
         }
 
         static byte[] Key
         {
             get
             {
-                return new MD5CryptoServiceProvider()
-                    .ComputeHash(Encoding.UTF8.GetBytes(
-                        Convert.ToBase64String(
-                            Encoding.UTF8.GetBytes(
-                                HWID.getHWID(true, false, true, true))) +
-                                "6VRRnrPsZfd6FtAqlqNUixYO7spOLu8P"));
+                var hwid = HWID.getHWID(true, false, true, true);
+                var hwidBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(hwid));
+                var s = hwidBase64 + "6VRRnrPsZfd6FtAqlqNUixYO7spOLu8P";
+                return MD5.HashData(Encoding.UTF8.GetBytes(s));
             }
         }
 
@@ -87,12 +94,20 @@ namespace QLTK
         {
             get
             {
-                byte[] bytes = new byte[8];
-                byte[] bytes1 = new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(Convert.ToBase64String(Encoding.UTF8.GetBytes(HWID.getHWID(true, false, true, true))) + "zXIDQhn6sgNm8l1ArxvOmcoCVK0OuGr6"));
-                for (int i = 0; i < bytes1.Length; i++) bytes1[i] ^= 113;
-                Random random = new Random(BitConverter.ToInt32(bytes1, 0));
-                random.NextBytes(bytes);
-                return bytes;
+                byte[] buffer = new byte[8];
+
+                var hwid = HWID.getHWID(true, false, true, true);
+                var hwidBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(hwid));
+                var s = hwidBase64 + "zXIDQhn6sgNm8l1ArxvOmcoCVK0OuGr6";
+
+                var hash = MD5.HashData(Encoding.UTF8.GetBytes(s));
+                for (int i = 0; i < hash.Length; i++)
+                    hash[i] ^= 113;
+
+                Random random = new Random(BitConverter.ToInt32(hash, 0));
+                random.NextBytes(buffer);
+
+                return buffer;
             }
         }
 
@@ -102,20 +117,32 @@ namespace QLTK
         }
 
         #region winAPI
-        [DllImport("user32.dll")]
-        public static extern int SetWindowText(IntPtr hWnd, string text);
+        [LibraryImport("user32.dll", EntryPoint = "SetWindowTextW", StringMarshalling = StringMarshalling.Utf16)]
+        public static partial int SetWindowText(IntPtr hWnd, string text);
 
-        [DllImport("user32.dll")]
-        public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern bool MoveWindow(IntPtr hWnd, int x, int y, int width, int height, bool bRepaint);
+        [LibraryImport("user32.dll", EntryPoint = "GetWindowRect")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static partial bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 
-        [DllImport("user32.dll")]
-        public static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        [DllImport("user32.dll")]
-        public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+        [LibraryImport("user32.dll", EntryPoint = "MoveWindow", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static partial bool MoveWindow(IntPtr hWnd, int x, int y, int width, int height, [MarshalAs(UnmanagedType.Bool)] bool bRepaint);
+
+
+        [LibraryImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static partial bool SetForegroundWindow(IntPtr hWnd);
+
+
+        [LibraryImport("user32.dll", EntryPoint = "ShowWindowAsync")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static partial bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+
+
+        [LibraryImport("user32.dll", EntryPoint = "MessageBoxW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        public static partial int MessageBoxNative(IntPtr hWnd, string text, string caption, int type);
         #endregion
 
         public static string Base64StringEncode(string originalString)
@@ -136,27 +163,32 @@ namespace QLTK
             return decodedString;
         }
 
-        internal static void CheckUpdateAndNotification()
+        internal static async Task CheckUpdateAndNotification()
         {
             try
             {
-                using (WebClient client = new WebClient())
+                using var client = new HttpClient();
+
+                string linkNotification = Settings.Default.LinkNotification;
+                string[] notifications = (await client.GetStringAsync(linkNotification)).Split('\n');
+
+                if (SaveSettings.Instance.versionNotification != notifications[0])
                 {
-                    string[] notifications = Encoding.UTF8.GetString(client.DownloadData(Settings.Default.LinkNotification)).Split('\n');
-                    if (SaveSettings.Instance.versionNotification != notifications[0])
+                    for (int i = 1; i < notifications.Length; i++)
                     {
-                        for (int i = 1; i < notifications.Length; i++)
+                        notifications[i] = notifications[i].Trim();
+                        if (!string.IsNullOrWhiteSpace(notifications[i]))
                         {
-                            notifications[i] = notifications[i].Trim();
-                            if (notifications[i] != "")
-                            {
-                                MessageBox.Show(notifications[i], "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                            }
+                            MessageBox.Show(
+                                messageBoxText: notifications[i],
+                                caption: "Thông báo",
+                                MessageBoxButton.OK, MessageBoxImage.Information);
                         }
-                        SaveSettings.Instance.versionNotification = notifications[0];
                     }
+                    SaveSettings.Instance.versionNotification = notifications[0];
                 }
-                switch (currentDevelopStatus = GetCurrentDevelopStatus())
+
+                switch (currentDevelopStatus = await GetCurrentDevelopStatus())
                 {
                     case DevelopStatus.None:
                         throw new NullReferenceException(nameof(currentDevelopStatus) + " is not initialized!");
@@ -177,7 +209,7 @@ namespace QLTK
                 }
 
             }
-            catch (WebException ex)
+            catch (HttpRequestException ex)
             {
                 MessageBox.Show("Không thể kết nối đến máy chủ!" + Environment.NewLine + ex, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -187,37 +219,36 @@ namespace QLTK
             }
         }
 
-        private static DevelopStatus GetCurrentDevelopStatus()
+        private static async Task<DevelopStatus> GetCurrentDevelopStatus()
         {
             try
             {
-                using (WebClient client = new WebClient())
+                using var client = new HttpClient();
+
+                string linkHash = Settings.Default.LinkHash;
+                string[] remoteInfo = (await client.GetStringAsync(linkHash)).Split('\n');
+
+                string hashGameAssemblyLocal = BitConverter.ToString(MD5.HashData(File.ReadAllBytes(@"Game_Data\Managed\Assembly-CSharp.dll"))).Replace("-", "");
+                string hashQLTKLocal = BitConverter.ToString(MD5.HashData(File.ReadAllBytes("QLTK.exe"))).Replace("-", "");
+
+                string hashGameAssemblyRemote = remoteInfo[0].TrimStart('\ufeff');
+                string hashQLTKRemote = remoteInfo[2];
+
+                if (hashQLTKLocal != hashQLTKRemote || hashGameAssemblyLocal != hashGameAssemblyRemote)
                 {
-                    MD5CryptoServiceProvider md5CryptoServiceProvider = new MD5CryptoServiceProvider();
-                    string[] remoteInfo = Encoding.UTF8.GetString(client.DownloadData(Settings.Default.LinkHash)).Split('\n');
-
-                    string hashGameAssemblyLocal = BitConverter.ToString(md5CryptoServiceProvider.ComputeHash(File.ReadAllBytes(@"Game_Data\Managed\Assembly-CSharp.dll"))).Replace("-", "");
-                    string hashQLTKLocal = BitConverter.ToString(md5CryptoServiceProvider.ComputeHash(File.ReadAllBytes("QLTK.exe"))).Replace("-", "");
-
-                    string hashGameAssemblyRemote = remoteInfo[0].TrimStart('\ufeff');
-                    string hashQLTKRemote = remoteInfo[2];
-
-                    if (hashQLTKLocal != hashQLTKRemote || hashGameAssemblyLocal != hashGameAssemblyRemote)
-                    {
-                        int timeStampGameAssemblyRemote = int.Parse(remoteInfo[1]);
-                        int timeStampQLTKRemote = int.Parse(remoteInfo[3]);
-                        int timeStampGameAssemblyLocal = BitConverter.ToInt32(File.ReadAllBytes(@"Game_Data\Managed\Assembly-CSharp.dll"), 0x00000088);
-                        int timeStampQLTKLocal = BitConverter.ToInt32(File.ReadAllBytes(@"QLTK.exe"), 0x00000088);
-                        if (timeStampGameAssemblyLocal >= timeStampGameAssemblyRemote || timeStampQLTKLocal >= timeStampQLTKRemote)
-                            return DevelopStatus.Developing;
-                        else if (timeStampGameAssemblyLocal < timeStampGameAssemblyRemote || timeStampQLTKLocal < timeStampQLTKRemote)
-                            return DevelopStatus.OldVersion;
-                    }
-                    else
-                        return DevelopStatus.NormalUser;
+                    int timeStampGameAssemblyRemote = int.Parse(remoteInfo[1]);
+                    int timeStampQLTKRemote = int.Parse(remoteInfo[3]);
+                    int timeStampGameAssemblyLocal = BitConverter.ToInt32(File.ReadAllBytes(@"Game_Data\Managed\Assembly-CSharp.dll"), 0x00000088);
+                    int timeStampQLTKLocal = BitConverter.ToInt32(File.ReadAllBytes(@"QLTK.exe"), 0x00000088);
+                    if (timeStampGameAssemblyLocal >= timeStampGameAssemblyRemote || timeStampQLTKLocal >= timeStampQLTKRemote)
+                        return DevelopStatus.Developing;
+                    else if (timeStampGameAssemblyLocal < timeStampGameAssemblyRemote || timeStampQLTKLocal < timeStampQLTKRemote)
+                        return DevelopStatus.OldVersion;
                 }
+                else
+                    return DevelopStatus.NormalUser;
             }
-            catch (WebException ex)
+            catch (HttpRequestException ex)
             {
                 MessageBox.Show("Không thể kết nối đến máy chủ!" + Environment.NewLine + ex, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 return DevelopStatus.NormalUser;
@@ -255,7 +286,7 @@ namespace QLTK
             }
             Program.discordClient.SetPresence(richPresence);
         }
-        
+
         internal static string GetWindowTitle()
         {
             string name = "QLTK - NRO";

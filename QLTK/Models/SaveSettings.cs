@@ -31,8 +31,8 @@ namespace QLTK.Models
             catch (Exception e)
             {
                 var r = MessageBox.Show(
-                    "Không tìm thấy dữ liệu cài đặt, bạn có muốn tạo dữ liệu mới?\n" + e.ToString(),
-                    "Lỗi tải dữ liệu", MessageBoxButton.YesNo);
+                    "Không tìm thấy dữ liệu cài đặt, bạn có muốn tạo dữ liệu mới?\n\n" + e.ToString(),
+                    "Lỗi tải dữ liệu", MessageBoxButton.YesNo, MessageBoxImage.Information);
 
                 if (r == MessageBoxResult.Yes)
                 {
