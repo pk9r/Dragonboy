@@ -27,8 +27,8 @@ namespace Mod.Auto.AutoChat
         }
         /// <summary>
         /// Kích hoạt khi người chơi tắt chức năng hoặc tắt game sẽ xóa các dòng auto chat 
-        /// <param name="pattern">Sử dụng biểu thức chính quy tìm các dòng autochat trong history.</param>
         /// </summary>
+        // <param name="pattern">Sử dụng biểu thức chính quy tìm các dòng autochat trong history.</param>
         public static void clearStringTrash()
         {
             if (!File.Exists(Utilities.PathChatHistory))

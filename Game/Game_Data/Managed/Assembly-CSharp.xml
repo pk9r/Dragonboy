@@ -7,7 +7,6 @@
         <member name="M:Mod.Auto.AutoChat.Setup.clearStringTrash">
             <summary>
             Kích hoạt khi người chơi tắt chức năng hoặc tắt game sẽ xóa các dòng auto chat 
-            <param name="pattern">Sử dụng biểu thức chính quy tìm các dòng autochat trong history.</param>
             </summary>
         </member>
         <member name="M:Mod.Auto.AutoSS.AutoNV0">
