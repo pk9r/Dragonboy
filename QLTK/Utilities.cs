@@ -229,7 +229,7 @@ namespace QLTK
                 string[] remoteInfo = (await client.GetStringAsync(linkHash)).Split('\n');
 
                 string hashGameAssemblyLocal = BitConverter.ToString(MD5.HashData(File.ReadAllBytes(@"Game_Data\Managed\Assembly-CSharp.dll"))).Replace("-", "");
-                string hashQLTKLocal = BitConverter.ToString(MD5.HashData(File.ReadAllBytes("QLTK.exe"))).Replace("-", "");
+                string hashQLTKLocal = BitConverter.ToString(MD5.HashData(File.ReadAllBytes("QLTK.dll"))).Replace("-", "");
 
                 string hashGameAssemblyRemote = remoteInfo[0].TrimStart('\ufeff');
                 string hashQLTKRemote = remoteInfo[2];
@@ -239,7 +239,7 @@ namespace QLTK
                     int timeStampGameAssemblyRemote = int.Parse(remoteInfo[1]);
                     int timeStampQLTKRemote = int.Parse(remoteInfo[3]);
                     int timeStampGameAssemblyLocal = BitConverter.ToInt32(File.ReadAllBytes(@"Game_Data\Managed\Assembly-CSharp.dll"), 0x00000088);
-                    int timeStampQLTKLocal = BitConverter.ToInt32(File.ReadAllBytes(@"QLTK.exe"), 0x00000088);
+                    int timeStampQLTKLocal = BitConverter.ToInt32(File.ReadAllBytes(@"QLTK.dll"), 0x00000088);
                     if (timeStampGameAssemblyLocal >= timeStampGameAssemblyRemote || timeStampQLTKLocal >= timeStampQLTKRemote)
                         return DevelopStatus.Developing;
                     else if (timeStampGameAssemblyLocal < timeStampGameAssemblyRemote || timeStampQLTKLocal < timeStampQLTKRemote)

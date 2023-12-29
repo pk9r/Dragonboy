@@ -1,0 +1,1 @@
+Powershell -NoProfile -ExecutionPolicy Bypass -File ".\hash.ps1"
