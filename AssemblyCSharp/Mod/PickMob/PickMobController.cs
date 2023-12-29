@@ -1,8 +1,6 @@
-﻿using Mod;
-using System;
+﻿using Mod.Auto;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Mod.PickMob
 {
@@ -28,7 +26,7 @@ namespace Mod.PickMob
 
         public static void Update()
         {
-            if (IsWaiting())
+            if (IsWaiting() || AutoGoback.isGoingBack)
                 return;
 
             Char myChar = Char.myCharz();
@@ -136,6 +134,7 @@ namespace Mod.PickMob
                             GameScr.gI().doSelectSkill(skill, true);
                             if (Res.distance(mobFocus.xFirst, mobFocus.yFirst, myChar.cx, myChar.cy) <= 48)
                             {
+                                myChar.focusManualTo(mobFocus);
                                 Utilities.DoDoubleClickToObj(mobFocus);
                             }
                             else
