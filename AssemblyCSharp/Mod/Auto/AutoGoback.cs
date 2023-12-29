@@ -6,7 +6,7 @@ namespace Mod.Auto
     public class AutoGoback
     {
         public static InfoGoback goingBackTo = new InfoGoback();
-        private static bool isGoingBack = false;
+        public static bool isGoingBack = false;
         private static GobackMode mode;
         private static long lastTimeGoBack;
 
