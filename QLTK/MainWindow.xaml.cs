@@ -5,11 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Runtime.InteropServices;
-using System.Security;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,8 +21,8 @@ namespace QLTK
     {
         public static object sizeData = null;
 
-        public static List<Server> Servers = new List<Server>()
-        {
+        public static List<Server> Servers { get; } =
+        [
             new Server("Vũ trụ 1", "dragon1.teamobi.com", 14445),
             new Server("Vũ trụ 2", "dragon2.teamobi.com", 14445),
             new Server("Vũ trụ 3", "dragon3.teamobi.com", 14445),
@@ -42,9 +37,9 @@ namespace QLTK
             new Server("Võ đài Liên Vũ Trụ", "dragonwar.teamobi.com", 20000),
             new Server("Universe 1", "dragon.indonaga.com", 14445, 2),
             new Server("Indonaga", "dragon.indonaga.com", 14446, 2),
-        };
+        ];
 
-        public static object settings;
+        private static object settings;
 
         static int width, height;
 
@@ -73,9 +68,9 @@ namespace QLTK
             this.LoadSaveSettings();
             if (SaveSettings.Instance.indexConnectToDiscordRPC >= 0 && SaveSettings.Instance.indexConnectToDiscordRPC < AccountsDataGrid.Items.Count)
                 SaveSettings.accountConnectToDiscordRPC = AccountsDataGrid.Items[SaveSettings.Instance.indexConnectToDiscordRPC] as Account;
-            new Thread(() =>
+            new Thread(async () =>
             {
-                Utilities.CheckUpdateAndNotification();
+                await Utilities.CheckUpdateAndNotification();
                 Dispatcher.Invoke(() => Title = Utilities.GetWindowTitle());
                 Utilities.SetPresence();
             }) 
@@ -292,7 +287,7 @@ namespace QLTK
                 account.status = "Đang khởi động...";
                 this.AccountsDataGrid.Items.Refresh();
 
-                AsynchronousSocketListener.waitingAccounts.Add(account);
+                AsynchronousSocketListener.WaitingAccounts.Add(account);
 
                 account.process = Process.Start(Settings.Default.PathGame,
                     $"-port {Settings.Default.PortListener} -screen-width {width} -screen-height {height} -screen-fullscreen {FullScreenCheckBox.IsChecked}");
