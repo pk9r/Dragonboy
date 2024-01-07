@@ -151,6 +151,18 @@ namespace QLTK
                 }
             }
         }
+        private void HideWindows(List<Account> accounts, int type)
+        {
+            for (int i = 0; i < accounts.Count; i++)
+            {
+                IntPtr hWnd;
+                RECT rect;
+                if (MainWindow.ExistedWindow(accounts[i], out hWnd) && Utilities.GetWindowRect(hWnd, out rect))
+                {
+                    Utilities.MoveWindow(hWnd, rect.left - rect.right, 0, rect.right - rect.left, rect.bottom - rect.top, true);
+                }
+            }
+        }
 
         private bool UpdateSizeData()
         {
@@ -360,7 +372,17 @@ namespace QLTK
             await ShowWindowsAsync(accounts);
             this.ArrangeWindows(accounts, type);
         }
+        private async Task HideAllTab(int type)
+        {
+            if (FullScreenCheckBox.IsChecked.Value)
+                return;
+            var accounts = this.GetSelectedAccounts();
+            if (accounts.Count <= 1)
+                accounts = this.GetAllAccounts();
 
+            await ShowWindowsAsync(accounts);
+            this.HideWindows(accounts, type);
+        }
         private void KillSelectedProcesses()
         {
             var accounts = this.GetSelectedAccounts();
@@ -678,7 +700,7 @@ namespace QLTK
         private async void ArrangeWindows2Button_Click(object sender, RoutedEventArgs e)
         {
             this.MainGrid.IsEnabled = false;
-            await this.ShowAndArrangeWindows(1);
+            await this.HideAllTab(1);
             this.MainGrid.IsEnabled = true;
         }
 

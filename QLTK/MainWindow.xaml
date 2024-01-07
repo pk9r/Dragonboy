@@ -20,7 +20,7 @@
     Top="0"
     Topmost="False"
     WindowStartupLocation="Manual"
-    mc:Ignorable="d">
+    mc:Ignorable="d" ResizeMode="CanMinimize">
 
     <Window.Resources>
 
@@ -596,7 +596,7 @@
                                 Grid.Column="1"
                                 Margin="5"
                                 Click="ArrangeWindows2Button_Click"
-                                Content="Sắp xếp 2" />
+                                Content="Ẩn tab" />
 
                             <TextBox
                                 x:Name="TextBoxSize"
