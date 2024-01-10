@@ -39,7 +39,7 @@ namespace Mod.Auto
         {
             var magicTree = GameScr.gI().magicTree;
 
-            if (!CharUtilities.isMyCharHome() || magicTree.isUpdate || magicTree.isPeasEffect || magicTree.currPeas == 0) return;
+            if (!MyChar.isHome() || magicTree.isUpdate || magicTree.isPeasEffect || magicTree.currPeas == 0) return;
 
             Service.gI().openMenu(4);
             Service.gI().confirmMenu(4, 0);

@@ -901,5 +901,10 @@ namespace Mod
             }
             return false;
         }
+
+
+        public static bool isFrameMultipleOf(int multiple){
+          return GameCanvas.gameTick % (multiple * Time.timeScale) == 0;
+        }
     }
 }
