@@ -373,3 +373,6 @@ Game/ModData/hotkeyCommands.json
 Game/ModData/settings.json
 Game/ModData/log.txt
 Game/ModData/Servers.txt
+
+# Crash Reports
+*-*-*_*/
