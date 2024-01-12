@@ -54,7 +54,7 @@ namespace Mod.ModMenu
                 else throw new ArgumentException();
             }, "targetfps", false, "Bạn chưa tắt Vsync!"),
             new ModMenuItemInt("Giảm đồ họa", new string[]{"Đang tắt", "Đang bật mức 1", "Đang bật mức 2", "Đang bật mức 3"}, "", 0, CustomBackground.StopAllBackgroundVideo, "levelreducegraphics"),
-            new ModMenuItemInt("Goback", new string[]{"Đang tắt", "Đang bật (goback tới chỗ cũ khi chết)", "Đang bật (goback tới map cố định)" }, "", 0, AutoGoback.setState),
+            new ModMenuItemInt("Goback", new string[]{"Đang tắt", "Đang bật (goback tới chỗ cũ khi chết)", "Đang bật (goback tới map cố định)", "Đang bật (trở về bản đồ cũ khi chết)" }, "", 0, AutoGoback.setState),
             new ModMenuItemInt("Gõ tiếng Việt", new string[]{"Đang tắt", "Đang bật kiểu gõ TELEX", "Đang bật kiểu gõ VIQR", "Đang bật kiểu gõ VNI"}, "", 0, delegate(int value)
             {
             if (value == 0) VietKeyHandler.VietModeEnabled = false;
