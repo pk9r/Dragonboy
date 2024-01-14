@@ -256,7 +256,9 @@ public class mGraphics
 		int num = rgb & 0xFF;
 		int num2 = (rgb >> 8) & 0xFF;
 		int num3 = (rgb >> 16) & 0xFF;
-		return new Color(b: (float)num / 256f, g: (float)num2 / 256f, r: (float)num3 / 256f);
+		float num4 = (float)num / 256f;
+		float num5 = (float)num2 / 256f;
+		return new Color((float)num3 / 256f, num5, num4);
 	}
 
 	public float[] getRGB(Color cl)
@@ -486,24 +488,30 @@ public class mGraphics
 
 	public void drawRegion(Image arg0, int x0, int y0, int w0, int h0, int arg5, int x, int y, int arg8)
 	{
-		x *= zoomLevel;
-		y *= zoomLevel;
-		x0 *= zoomLevel;
-		y0 *= zoomLevel;
-		w0 *= zoomLevel;
-		h0 *= zoomLevel;
-		_drawRegion(arg0, x0, y0, w0, h0, arg5, x, y, arg8);
+		if (arg0 != null)
+		{
+			x *= zoomLevel;
+			y *= zoomLevel;
+			x0 *= zoomLevel;
+			y0 *= zoomLevel;
+			w0 *= zoomLevel;
+			h0 *= zoomLevel;
+			_drawRegion(arg0, x0, y0, w0, h0, arg5, x, y, arg8);
+		}
 	}
 
 	public void drawRegion(Image arg0, int x0, int y0, int w0, int h0, int arg5, float x, float y, int arg8)
 	{
-		x *= (float)zoomLevel;
-		y *= (float)zoomLevel;
-		x0 *= zoomLevel;
-		y0 *= zoomLevel;
-		w0 *= zoomLevel;
-		h0 *= zoomLevel;
-		__drawRegion(arg0, x0, y0, w0, h0, arg5, x, y, arg8);
+		if (arg0 != null)
+		{
+			x *= (float)zoomLevel;
+			y *= (float)zoomLevel;
+			x0 *= zoomLevel;
+			y0 *= zoomLevel;
+			w0 *= zoomLevel;
+			h0 *= zoomLevel;
+			__drawRegion(arg0, x0, y0, w0, h0, arg5, x, y, arg8);
+		}
 	}
 
 	public void drawRegion(Image arg0, int x0, int y0, int w0, int h0, int arg5, int x, int y, int arg8, bool isClip)
@@ -555,7 +563,8 @@ public class mGraphics
 				num11 += clipTY;
 			}
 			Rect r = new Rect(x, y, w, h);
-			Rect rect = intersectRect(r2: new Rect(num10, num11, num12, num13), r1: r);
+			Rect r2 = new Rect(num10, num11, num12, num13);
+			Rect rect = intersectRect(r, r2);
 			if (rect.width <= 0f || rect.height <= 0f)
 				return;
 			num = rect.width;
@@ -683,7 +692,8 @@ public class mGraphics
 				num11 += clipTY;
 			}
 			Rect r = new Rect(x, y, w, h);
-			Rect rect = intersectRect(r2: new Rect(num10, num11, num12, num13), r1: r);
+			Rect r2 = new Rect(num10, num11, num12, num13);
+			Rect rect = intersectRect(r, r2);
 			if (rect.width <= 0f || rect.height <= 0f)
 				return;
 			num = rect.width;
@@ -948,7 +958,9 @@ public class mGraphics
 		int num = rgb & 0xFF;
 		int num2 = (rgb >> 8) & 0xFF;
 		int num3 = (rgb >> 16) & 0xFF;
-		Color color = new Color(b: (float)num / 256f, g: (float)num2 / 256f, r: (float)num3 / 256f);
+		float num4 = (float)num / 256f;
+		float num5 = (float)num2 / 256f;
+		Color color = new Color((float)num3 / 256f, num5, num4);
 		Color[] pixels = img0.texture.GetPixels();
 		float num6 = color.r;
 		float num7 = color.g;
@@ -991,7 +1003,9 @@ public class mGraphics
 		int num = rgb & 0xFF;
 		int num2 = (rgb >> 8) & 0xFF;
 		int num3 = (rgb >> 16) & 0xFF;
-		return new Color(b: (float)num / 256f, g: (float)num2 / 256f, r: (float)num3 / 256f);
+		float num4 = (float)num / 256f;
+		float num5 = (float)num2 / 256f;
+		return new Color((float)num3 / 256f, num5, num4);
 	}
 
 	public void fillTrans(Image imgTrans, int x, int y, int w, int h)

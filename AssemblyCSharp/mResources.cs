@@ -1,5 +1,17 @@
 public class mResources
 {
+	public static string confirmChangeServer = string.Empty;
+
+	public static string chooseDefaultsv = string.Empty;
+
+	public static string winLose = string.Empty;
+
+	public static string learnSkill = string.Empty;
+
+	public static string updSkill = string.Empty;
+
+	public static string proficiency = string.Empty;
+
 	public static string delacc = string.Empty;
 
 	public static string notiINAPP = string.Empty;
@@ -187,6 +199,8 @@ public class mResources
 	public static string select_server = string.Empty;
 
 	public static string pls_restart_game_error = string.Empty;
+
+	public static string pls_restart_game_error2 = string.Empty;
 
 	public static string lost_connection = string.Empty;
 
@@ -970,7 +984,7 @@ public class mResources
 
 	public static string KI_consume = string.Empty;
 
-	public static string speed = string.Empty;
+	public static string cooldown = string.Empty;
 
 	public static string milisecond = string.Empty;
 

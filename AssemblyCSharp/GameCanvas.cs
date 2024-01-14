@@ -106,6 +106,8 @@ public class GameCanvas : IActionListener
 
 	public static Panel panel2;
 
+	public static ChooseCharScr chooseCharScr;
+
 	public static LoginScr loginScr;
 
 	public static RegisterScreen registerScr;
@@ -146,6 +148,10 @@ public class GameCanvas : IActionListener
 
 	public static Image[] imgViolet = new Image[7];
 
+	public static MyHashTable danhHieu = new MyHashTable();
+
+	public static MyVector messageServer = new MyVector(string.Empty);
+
 	public static bool isPlaySound = true;
 
 	private static int clearOldData;
@@ -153,6 +159,22 @@ public class GameCanvas : IActionListener
 	public static int timeOpenKeyBoard;
 
 	public static bool isFocusPanel2;
+
+	public static int fps = 0;
+
+	public static int max;
+
+	public static int up;
+
+	public static int upmax;
+
+	private long timefps = mSystem.currentTimeMillis() + 1000;
+
+	private long timeup = mSystem.currentTimeMillis() + 1000;
+
+	private static int dir_ = -1;
+
+	private int tickWaitThongBao;
 
 	public bool isPaintCarret;
 
@@ -224,6 +246,8 @@ public class GameCanvas : IActionListener
 
 	public static int tBolt;
 
+	public static Image imgBgIOS;
+
 	public static int typeBg = -1;
 
 	public static int transY;
@@ -269,6 +293,12 @@ public class GameCanvas : IActionListener
 	public static MyVector flyTexts = new MyVector();
 
 	public int longTime;
+
+	public static long timeBreakLoading;
+
+	private static string thongBaoTest;
+
+	public static int xThongBaoTranslate = w - 60;
 
 	public static bool isPointerJustDown = false;
 
@@ -341,6 +371,10 @@ public class GameCanvas : IActionListener
 	public static ServerScr serverScr;
 
 	public bool resetToLoginScr;
+
+	public static long TIMEOUT;
+
+	public static int timeLoading = 15;
 
 	public GameCanvas()
 	{
@@ -420,7 +454,7 @@ public class GameCanvas : IActionListener
 		borderCenterH = mGraphics.getImageHeight(imgBorder[1]);
 		Panel.graphics = Rms.loadRMSInt("lowGraphic");
 		lowGraphic = Rms.loadRMSInt("lowGraphic") == 1;
-		GameScr.isPaintChatVip = Rms.loadRMSInt("serverchat") != 1;
+		GameScr.isPaintChatVip = ((Rms.loadRMSInt("serverchat") != 1) ? true : false);
 		Char.isPaintAura = Rms.loadRMSInt("isPaintAura") == 1;
 		Char.isPaintAura2 = Rms.loadRMSInt("isPaintAura2") == 1;
 		Res.init();
@@ -444,6 +478,7 @@ public class GameCanvas : IActionListener
 		}
 		ServerListScreen.createDeleteRMS();
 		serverScr = new ServerScr();
+		chooseCharScr = new ChooseCharScr();
 	}
 
 	public static GameCanvas gI()
@@ -465,6 +500,18 @@ public class GameCanvas : IActionListener
 
 	public void update()
 	{
+		if (mSystem.currentTimeMillis() > timefps)
+		{
+			timefps += 1000L;
+			max = fps;
+			fps = 0;
+		}
+		fps++;
+		if (messageServer.size() > 0 && thongBaoTest == null)
+		{
+			startserverThongBao((string)messageServer.elementAt(0));
+			messageServer.removeElementAt(0);
+		}
 		if (gameTick % 5 == 0)
 			timeNow = mSystem.currentTimeMillis();
 		Res.updateOnScreenDebug();
@@ -593,7 +640,6 @@ public class GameCanvas : IActionListener
 				{
 					GameMidlet.IP = ServerListScreen.address[ServerListScreen.ipSelect];
 					GameMidlet.PORT = ServerListScreen.port[ServerListScreen.ipSelect];
-					Cout.println("Connect ok");
 					ServerListScreen.testConnect = 2;
 					Rms.saveRMSInt("svselect", ServerListScreen.ipSelect);
 					Rms.saveIP(GameMidlet.IP + ":" + GameMidlet.PORT);
@@ -627,12 +673,17 @@ public class GameCanvas : IActionListener
 				if (!Controller.isMain)
 				{
 					if (currentScreen == serverScreen && ServerListScreen.isGetData && !Service.reciveFromMainSession)
+					{
+						ServerListScreen.testConnect = 0;
 						serverScreen.cancel();
+					}
 					if (currentScreen == loginScr && !Service.reciveFromMainSession)
 						onConnectionFail();
 				}
-				else
+				else if (Session_ME.gI().isCompareIPConnect())
+				{
 					onConnectionFail();
+				}
 				Controller.isConnectionFail = false;
 			}
 			if (Main.isResume)
@@ -640,6 +691,19 @@ public class GameCanvas : IActionListener
 				Main.isResume = false;
 				if (currentDialog != null && currentDialog.left != null && currentDialog.left.actionListener != null)
 					currentDialog.left.performAction();
+			}
+			if (currentScreen == null || !(currentScreen is GameScr))
+				return;
+			xThongBaoTranslate += dir_ * 2;
+			if (xThongBaoTranslate - Panel.imgNew.getWidth() <= 60)
+			{
+				dir_ = 0;
+				tickWaitThongBao++;
+				if (tickWaitThongBao > 150)
+				{
+					tickWaitThongBao = 0;
+					thongBaoTest = null;
+				}
 			}
 		}
 		catch (Exception)
@@ -654,6 +718,8 @@ public class GameCanvas : IActionListener
 		isResume = true;
 		Session_ME.gI().clearSendingMessage();
 		Session_ME2.gI().clearSendingMessage();
+		Session_ME.gI().close();
+		Session_ME2.gI().close();
 		if (Controller.isLoadingData)
 		{
 			instance.resetToLoginScrz();
@@ -661,17 +727,14 @@ public class GameCanvas : IActionListener
 			Controller.isDisconnected = false;
 			return;
 		}
+		if (currentScreen != serverScreen)
+			startOKDlg(mResources.maychutathoacmatsong);
+		else
+			endDlg();
 		Char.isLoadingMap = false;
 		if (Controller.isMain)
 			ServerListScreen.testConnect = 0;
 		instance.resetToLoginScrz();
-		if (Main.typeClient == 6)
-		{
-			if (currentScreen != serverScreen && currentScreen != loginScr)
-				startOKDlg(mResources.maychutathoacmatsong);
-		}
-		else
-			startOKDlg(mResources.maychutathoacmatsong);
 		mSystem.endKey();
 	}
 
@@ -724,9 +787,13 @@ public class GameCanvas : IActionListener
 			loginScr = new LoginScr();
 		LoginScr.serverName = ServerListScreen.nameServer[ServerListScreen.ipSelect];
 		if (currentScreen != serverScreen)
-			startOK(mResources.lost_connection + LoginScr.serverName, 888395, null);
+			ServerListScreen.countDieConnect = 0;
 		else
+		{
 			endDlg();
+			ServerListScreen.loadScreen = true;
+			serverScreen.switchToMe();
+		}
 		Char.isLoadingMap = false;
 		if (Controller.isMain)
 			ServerListScreen.testConnect = 0;
@@ -759,6 +826,14 @@ public class GameCanvas : IActionListener
 	{
 		g.translate(-g.getTranslateX(), -g.getTranslateY());
 		g.setClip(0, 0, w, h);
+	}
+
+	public static void resetTransGameScr(mGraphics g)
+	{
+		g.translate(-g.getTranslateX(), -g.getTranslateY());
+		g.translate(0, 0);
+		g.setClip(0, 0, w, h);
+		g.translate(-GameScr.cmx, -GameScr.cmy);
 	}
 
 	public void initGameCanvas()
@@ -853,6 +928,10 @@ public class GameCanvas : IActionListener
 		{
 			Cout.println("Loi tai doResetToLoginScr " + ex.ToString());
 		}
+		ServerListScreen.isAutoConect = true;
+		ServerListScreen.countDieConnect = 0;
+		ServerListScreen.testConnect = -1;
+		ServerListScreen.loadScreen = true;
 	}
 
 	public static void showErrorForm(int type, string moreInfo)
@@ -991,6 +1070,23 @@ public class GameCanvas : IActionListener
 		if (mGraphics.zoomLevel > 1)
 			return true;
 		return false;
+	}
+
+	public static void paint_ios_bg(mGraphics g)
+	{
+		if (mSystem.clientType != 5)
+			return;
+		if (imgBgIOS != null)
+		{
+			g.setColor(0);
+			g.fillRect(0, 0, w, h);
+			for (int i = 0; i < 3; i++)
+			{
+				g.drawImage(imgBgIOS, imgBgIOS.getWidth() * i, h / 2, mGraphics.VCENTER | mGraphics.HCENTER);
+			}
+		}
+		else
+			imgBgIOS = mSystem.loadImage("/bg/bg_ios_" + ((TileMap.bgID % 2 != 0) ? 1 : 2) + ".png");
 	}
 
 	public static void paintBGGameScr(mGraphics g)
@@ -1178,6 +1274,15 @@ public class GameCanvas : IActionListener
 					paintBackgroundtLayer(g, 2, 3, -1, colorBotton[1]);
 					paintBackgroundtLayer(g, 1, 2, -1, colorBotton[0]);
 				}
+				else if (typeBg == 19)
+				{
+					paintBackgroundtLayer(g, 5, 10, colorTop[4], colorBotton[4]);
+					paintBackgroundtLayer(g, 4, 8, -1, colorTop[2]);
+					paintBackgroundtLayer(g, 3, 5, -1, colorBotton[2]);
+					paintBackgroundtLayer(g, 2, 2, -1, colorBotton[1]);
+					paintBackgroundtLayer(g, 1, 1, -1, colorBotton[0]);
+					paintCloud(g);
+				}
 				else
 				{
 					fillRect(g, colorBotton[3], 0, yb[3] + bgH[3], GameScr.gW, yb[2] + bgH[2], 6);
@@ -1310,6 +1415,13 @@ public class GameCanvas : IActionListener
 				yb[2] = yb[1] - bgH[2] + 50;
 				yb[3] = yb[2] - bgH[3] + 90;
 				break;
+			case 19:
+				yb[0] = gH - bgH[0] + 150;
+				yb[1] = yb[0] - bgH[1] - 60;
+				yb[2] = yb[1] - bgH[2] - 40;
+				yb[3] = yb[2] - bgH[3] - 10;
+				yb[4] = yb[3] - bgH[4];
+				break;
 			default:
 				yb[0] = gH - bgH[0] + 75;
 				yb[1] = yb[0] - bgH[1] + 50;
@@ -1425,6 +1537,11 @@ public class GameCanvas : IActionListener
 				layerSpeed = new int[4] { 1, 3, 5, 7 };
 				nBg = 4;
 				break;
+			case 19:
+				moveX = new int[5] { 0, 2, 1, 0, 0 };
+				moveXSpeed = new int[5] { 0, 2, 1, 0, 0 };
+				nBg = 5;
+				break;
 			default:
 				layerSpeed = new int[4] { 1, 3, 5, 7 };
 				nBg = 4;
@@ -1536,6 +1653,11 @@ public class GameCanvas : IActionListener
 					imgSun = loadImageRMS("/bg/sun0.png");
 					sunX = GameScr.gW / 2 + 50;
 					sunY = yb[4] - 40;
+					TileMap.imgWaterflow = loadImageRMS("/tWater/wts");
+				}
+				else if (typeBg == 19)
+				{
+					TileMap.imgWaterflow = loadImageRMS("/tWater/water_flow_32");
 				}
 				else if (typeBg == 4)
 				{
@@ -1629,6 +1751,12 @@ public class GameCanvas : IActionListener
 							num = 160;
 						imgSunSpec[l] = loadImageRMS("/bg/sun" + num + ".png");
 					}
+				}
+				else if (typeBG == 19)
+				{
+					moveX = new int[5] { 0, 2, 1, 0, 0 };
+					moveXSpeed = new int[5] { 0, 2, 1, 0, 0 };
+					nBg = 5;
 				}
 				else
 				{
@@ -2118,12 +2246,13 @@ public class GameCanvas : IActionListener
 
 	public void paintChangeMap(mGraphics g)
 	{
+		string empty = string.Empty;
 		resetTrans(g);
 		g.setColor(0);
 		g.fillRect(0, 0, w, h);
 		g.drawImage(LoginScr.imgTitle, w / 2, h / 2 - 24, StaticObj.BOTTOM_HCENTER);
 		paintShukiren(hw, h / 2 + 24, g);
-		mFont.tahoma_7b_white.drawString(g, mResources.PLEASEWAIT + ((LoginScr.timeLogin <= 0) ? string.Empty : (" " + LoginScr.timeLogin + "s")), w / 2, h / 2, 2);
+		mFont.tahoma_7b_white.drawString(g, mResources.PLEASEWAIT + ((LoginScr.timeLogin <= 0) ? empty : (" " + LoginScr.timeLogin + "s")), w / 2, h / 2, 2);
 	}
 
 	public void paint(mGraphics gx)
@@ -2175,16 +2304,52 @@ public class GameCanvas : IActionListener
 					effect.paint(g);
 			}
 			if (Char.isLoadingMap || LoginScr.isContinueToLogin || ServerListScreen.waitToLogin || ServerListScreen.isWait)
+			{
 				paintChangeMap(g);
+				if (timeLoading > 0 && LoginScr.timeLogin <= 0)
+				{
+					startWaitDlg();
+					if (mSystem.currentTimeMillis() - TIMEOUT >= 1000)
+					{
+						timeLoading--;
+						Res.outz("[COUNT] == " + timeLoading);
+						if (timeLoading == 0)
+							timeLoading = 15;
+						TIMEOUT = mSystem.currentTimeMillis();
+					}
+				}
+				if (mSystem.currentTimeMillis() > timeBreakLoading)
+				{
+					timeBreakLoading = mSystem.currentTimeMillis() + 30000;
+					if (currentScreen != null)
+					{
+						if (currentScreen is GameScr)
+							GameScr.gI().switchToMe();
+						else if (!(currentScreen is SplashScr) && currentScreen is LoginScr)
+						{
+							gI().resetToLoginScrz();
+						}
+					}
+				}
+			}
 			debug("PE", 1);
 			resetTrans(g);
 			EffecMn.paintLayer4(g);
-			if (mResources.language == 0 && open3Hour && !isLoading)
+			if (open3Hour && !isLoading)
 			{
 				if (currentScreen == loginScr || currentScreen == serverScreen || currentScreen == serverScr)
 					g.drawImage(img12, 5, 5, 0);
 				if (currentScreen == CreateCharScr.instance)
 					g.drawImage(img12, 5, 20, 0);
+			}
+			resetTrans(g);
+			int num = h / 4;
+			if (currentScreen != null && currentScreen is GameScr && thongBaoTest != null)
+			{
+				g.setClip(60, num, w - 120, mFont.tahoma_7_white.getHeight() + 2);
+				mFont.tahoma_7_grey.drawString(g, thongBaoTest, xThongBaoTranslate, num + 1, 0);
+				mFont.tahoma_7_yellow.drawString(g, thongBaoTest, xThongBaoTranslate, num, 0);
+				g.setClip(0, 0, w, h);
 			}
 		}
 		catch (Exception)
@@ -2256,6 +2421,13 @@ public class GameCanvas : IActionListener
 		msgdlg.show();
 	}
 
+	public static void startserverThongBao(string msgSv)
+	{
+		thongBaoTest = msgSv;
+		xThongBaoTranslate = w - 60;
+		dir_ = -1;
+	}
+
 	public static string getMoneys(int m)
 	{
 		string text = string.Empty;
@@ -2302,7 +2474,6 @@ public class GameCanvas : IActionListener
 		try
 		{
 			result = Image.createImage(path);
-			return result;
 		}
 		catch (Exception ex)
 		{
@@ -2314,16 +2485,14 @@ public class GameCanvas : IActionListener
 				{
 					result = Image.createImage(array2, 0, array2.Length);
 					array2 = null;
-					return result;
 				}
-				return result;
 			}
 			catch (Exception)
 			{
 				Cout.LogError("Loi ham khong tim thay a: " + ex.ToString());
-				return result;
 			}
 		}
+		return result;
 	}
 
 	public static Image loadImage(string path)
@@ -2334,12 +2503,11 @@ public class GameCanvas : IActionListener
 		try
 		{
 			result = Image.createImage(path);
-			return result;
 		}
 		catch (Exception)
 		{
-			return result;
 		}
+		return result;
 	}
 
 	public static string cutPng(string str)
@@ -2666,6 +2834,8 @@ public class GameCanvas : IActionListener
 		case 8882:
 			InfoDlg.hide();
 			currentDialog = null;
+			ServerListScreen.isAutoConect = false;
+			ServerListScreen.countDieConnect = 0;
 			return;
 		case 8884:
 			endDlg();
@@ -2746,7 +2916,11 @@ public class GameCanvas : IActionListener
 			endDlg();
 			return;
 		case 101025:
-			Res.outz("output 101025");
+			endDlg();
+			if (ServerListScreen.loadScreen)
+				serverScreen.switchToMe();
+			else
+				serverScreen.show2();
 			return;
 		}
 		if (idAction != 999)

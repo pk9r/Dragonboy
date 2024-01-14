@@ -120,7 +120,9 @@ public class Image
 		int num = rgb & 0xFF;
 		int num2 = (rgb >> 8) & 0xFF;
 		int num3 = (rgb >> 16) & 0xFF;
-		return new Color(b: (float)num / 256f, g: (float)num2 / 256f, r: (float)num3 / 256f);
+		float b = (float)num / 256f;
+		float g = (float)num2 / 256f;
+		return new Color((float)num3 / 256f, g, b);
 	}
 
 	public static void update()
@@ -324,13 +326,12 @@ public class Image
 			image.w = image.texture.width;
 			image.h = image.texture.height;
 			setTextureQuality(image);
-			return image;
 		}
 		catch (Exception)
 		{
 			Cout.LogError("CREAT IMAGE FROM ARRAY FAIL \n" + Environment.StackTrace);
-			return image;
 		}
+		return image;
 	}
 
 	private static Image __createImage(Image src, int x, int y, int w, int h, int transform)

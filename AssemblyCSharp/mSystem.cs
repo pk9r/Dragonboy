@@ -38,6 +38,12 @@ public class mSystem
 
 	public static mSystem instance;
 
+	internal static bool isANDROID;
+
+	public static void AddIpTest()
+	{
+	}
+
 	public static void resetCurInapp()
 	{
 		curINAPP = 0;
@@ -55,10 +61,6 @@ public class mSystem
 		if (clientType == 5)
 			return img.getHeight();
 		return img.getWidth();
-	}
-
-	public static void LogCMD(string st)
-	{
 	}
 
 	public static string getTimeCountDown(long timeStart, int secondCount, bool isOnlySecond, bool isShortText)

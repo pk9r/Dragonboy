@@ -70,6 +70,7 @@ public class Teleport
 			}
 		}
 		isDown = true;
+		isUp = false;
 		if (this.planet > 2)
 		{
 			y2 += 4;

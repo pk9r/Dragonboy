@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using UnityEngine;
 
 public class ImgByName
 {
@@ -39,41 +40,46 @@ public class ImgByName
 
 	public static MainImage getFromRms(string nameImg)
 	{
-		string filename = mGraphics.zoomLevel + "ImgByName_" + nameImg;
+		string text = mGraphics.zoomLevel + "ImgByName_" + nameImg;
 		MainImage result = null;
 		sbyte[] array = null;
-		array = Rms.loadRMS(filename);
+		array = Rms.loadRMS(text);
 		if (array == null)
 			return result;
 		try
 		{
 			result = new MainImage();
 			result.nFrame = array[0];
-			result.img = Image.createImage(array, 1, array.Length);
-			return result;
+			result.img = Image.createImage(array, 1, array.Length - 1);
+			if (result.img != null)
+				;
 		}
 		catch (Exception)
 		{
+			Debug.LogError(text + ">>>>>getFromRms: nulllllllllll 2222");
 			return null;
 		}
+		return result;
 	}
 
 	public static void saveRMS(string nameImg, sbyte nFrame, sbyte[] data)
 	{
-		string filename = mGraphics.zoomLevel + "ImgByName_" + nameImg;
-		DataOutputStream dataOutputStream = new DataOutputStream();
+		string text = mGraphics.zoomLevel + "ImgByName_" + nameImg;
+		DataOutputStream dataOutputStream = new DataOutputStream(data.Length + 1);
+		int i = 0;
 		try
 		{
 			dataOutputStream.writeByte(nFrame);
-			for (int i = 0; i < data.Length; i++)
+			for (i = 0; i < data.Length; i++)
 			{
 				dataOutputStream.writeByte(data[i]);
 			}
-			Rms.saveRMS(filename, dataOutputStream.toByteArray());
+			Rms.saveRMS(text, dataOutputStream.toByteArray());
 			dataOutputStream.close();
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
+			Debug.LogError(i + ">>Errr save rms: " + text + "  " + ex.ToString());
 		}
 	}
 

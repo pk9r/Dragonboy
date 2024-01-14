@@ -464,6 +464,8 @@ public class Char : IMapObject
 
 	public short y_hint;
 
+	public short s_danhHieu1;
+
 	public static int[][][] CharInfo = new int[33][][]
 	{
 		new int[4][]
@@ -835,13 +837,15 @@ public class Char : IMapObject
 
 	private Effect eProtect;
 
+	private Effect eDanhHieu;
+
 	private int twHp;
 
 	public bool isInjureHp;
 
 	public bool changePos;
 
-	private bool isHide;
+	public bool isHide;
 
 	private bool wy;
 
@@ -963,6 +967,10 @@ public class Char : IMapObject
 
 	private bool isMiniPet;
 
+	private int iiii;
+
+	private int danhHieuFramme;
+
 	public int xSd;
 
 	public int ySd;
@@ -1040,6 +1048,8 @@ public class Char : IMapObject
 	public bool holder;
 
 	public bool protectEff;
+
+	public bool danhHieuEff = true;
 
 	private bool isSetPos;
 
@@ -1185,6 +1195,58 @@ public class Char : IMapObject
 		new int[2] { 7, -3 }
 	};
 
+	public const byte TYPE_SKILL_KAMEX10 = 1;
+
+	public const byte TYPE_SKILL_FINAL = 2;
+
+	public const byte TYPE_SKILL_MAFUBA = 3;
+
+	public const byte TYPE_SKILL_GENKI = 4;
+
+	public bool isPaintNewSkill;
+
+	private bool isFly;
+
+	private long timeReset_newSkill;
+
+	private sbyte typeFrame;
+
+	private short idskillPaint;
+
+	private byte[] fr_start;
+
+	private byte[] fr_atk;
+
+	private byte[] fr_end;
+
+	private int count_NEW;
+
+	private int stt;
+
+	private short rangeDame;
+
+	private sbyte typePaint;
+
+	private sbyte typeItem;
+
+	private Point targetDame;
+
+	private long timeDame;
+
+	public bool isMafuba;
+
+	private short countMafuba;
+
+	public int xMFB;
+
+	public int yMFB;
+
+	public int timeGongSkill;
+
+	private FrameImage fraDanhHieu;
+
+	private MainImage mainImg;
+
 	public Char()
 	{
 		statusMe = 6;
@@ -1302,7 +1364,10 @@ public class Char : IMapObject
 
 	public string getStrLevel()
 	{
-		return strLevel[clevel] + "+" + cLevelPercent / 100 + "." + cLevelPercent % 100 + "%";
+		string text = strLevel[clevel] + "+" + cLevelPercent / 100 + "." + cLevelPercent % 100 + "%";
+		if (text.Length > 23 && text.IndexOf("cấp ") >= 0)
+			text = Res.replace(text, "cấp ", "c");
+		return text;
 	}
 
 	public int avatarz()
@@ -1520,7 +1585,7 @@ public class Char : IMapObject
 		if (task != null && task.taskId == 0 && task.index < 6)
 			return null;
 		int num = TileMap.vGo.size();
-		for (sbyte b = 0; b < num; b = (sbyte)(b + 1))
+		for (sbyte b = 0; b < num; b++)
 		{
 			Waypoint waypoint = (Waypoint)TileMap.vGo.elementAt(b);
 			if (PopUp.vPopups.size() >= num && !((PopUp)PopUp.vPopups.elementAt(b)).isPaint)
@@ -1537,7 +1602,7 @@ public class Char : IMapObject
 		if (task != null && task.taskId == 0 && task.index < 6)
 			return null;
 		int num = TileMap.vGo.size();
-		for (sbyte b = 0; b < num; b = (sbyte)(b + 1))
+		for (sbyte b = 0; b < num; b++)
 		{
 			Waypoint waypoint = (Waypoint)TileMap.vGo.elementAt(b);
 			if (PopUp.vPopups.size() >= num && !((PopUp)PopUp.vPopups.elementAt(b)).isPaint)
@@ -1555,7 +1620,7 @@ public class Char : IMapObject
 		if (isTeleport || isUsePlane)
 			return false;
 		int num = TileMap.vGo.size();
-		for (sbyte b = 0; b < num; b = (sbyte)(b + 1))
+		for (sbyte b = 0; b < num; b++)
 		{
 			Waypoint waypoint = (Waypoint)TileMap.vGo.elementAt(b);
 			if ((TileMap.mapID == 47 || TileMap.isInAirMap()) && cy <= waypoint.minY + waypoint.maxY && cx > waypoint.minX && cx < waypoint.maxX)
@@ -1604,6 +1669,15 @@ public class Char : IMapObject
 
 	public virtual void update()
 	{
+		if (isMafuba)
+		{
+			cf = 23;
+			countMafuba++;
+			if (countMafuba > 150)
+				isMafuba = false;
+			return;
+		}
+		countMafuba = 0;
 		if (isHide || isMabuHold)
 			return;
 		if ((!isCopy && clevel < 14) || statusMe == 1 || statusMe == 6)
@@ -1659,432 +1733,481 @@ public class Char : IMapObject
 				secondPower--;
 			}
 		}
-		if (!me && GameScr.notPaint)
-			return;
-		if (sleepEff && GameCanvas.gameTick % 10 == 0)
-			EffecMn.addEff(new Effect(41, cx, cy, 3, 1, 1));
-		if (huytSao)
+		if (isPaintNewSkill)
 		{
-			huytSao = false;
-			EffecMn.addEff(new Effect(39, cx, cy, 3, 3, 1));
-		}
-		if (blindEff && GameCanvas.gameTick % 5 == 0)
-			ServerEffect.addServerEffect(113, this, 1);
-		if (protectEff)
-		{
-			int y = cH_new + 73;
-			if (GameCanvas.gameTick % 5 == 0)
-				eProtect = new Effect(33, cx, y, 3, 3, 1);
-			if (eProtect != null)
+			if (GameCanvas.timeNow > timeReset_newSkill || statusMe == 14 || statusMe == 5)
 			{
-				eProtect.update();
-				eProtect.x = cx;
-				eProtect.y = y;
+				timeReset_newSkill = 0L;
+				isPaintNewSkill = false;
 			}
+			UpdSkillPaint_NEW();
+			if (isShadown)
+				updateShadown();
 		}
-		if (charFocus != null && charFocus.cy < 0)
-			charFocus = null;
-		if (isFusion)
-			tFusion++;
-		if (isNhapThe)
+		else
 		{
-			int num2 = 0;
-			if (GameCanvas.gameTick % 25 == 0)
-				ServerEffect.addServerEffect(114, this, 1);
-		}
-		if (isSetPos)
-		{
-			tpos++;
-			if (tpos != 1)
+			if (!me && GameScr.notPaint)
 				return;
-			tpos = 0;
-			isSetPos = false;
-			cx = xPos;
-			cy = yPos;
-			cp1 = (cp2 = (cp3 = 0));
-			if (typePos == 1)
+			if (sleepEff && GameCanvas.gameTick % 10 == 0)
+				EffecMn.addEff(new Effect(41, cx, cy, 3, 1, 1));
+			if (huytSao)
 			{
-				if (me)
-				{
-					cxSend = cx;
-					cySend = cy;
-				}
-				currentMovePoint = null;
-				telePortSkill = false;
-				ServerEffect.addServerEffect(173, cx, cy, 1);
+				huytSao = false;
+				EffecMn.addEff(new Effect(39, cx, cy, 3, 3, 1));
 			}
-			else
-				ServerEffect.addServerEffect(60, cx, cy, 1);
-			if ((TileMap.tileTypeAtPixel(cx, cy) & 2) == 2)
-				statusMe = 1;
-			else
-				statusMe = 4;
-			return;
-		}
-		soundUpdate();
-		if (stone)
-			return;
-		if (isFreez)
-		{
-			if (GameCanvas.gameTick % 5 == 0)
-				ServerEffect.addServerEffect(113, cx, cy, 1);
-			cf = 23;
-			long num3 = mSystem.currentTimeMillis();
-			if (num3 - lastFreez >= 1000)
+			if (blindEff && GameCanvas.gameTick % 5 == 0)
+				ServerEffect.addServerEffect(113, this, 1);
+			if (protectEff)
 			{
-				freezSeconds--;
-				lastFreez = num3;
-				if (freezSeconds < 0)
+				int y = cH_new + 73;
+				if (GameCanvas.gameTick % 5 == 0)
+					eProtect = new Effect(33, cx, y, 3, 3, 1);
+				if (eProtect != null)
 				{
-					isFreez = false;
-					seconds = 0;
+					eProtect.update();
+					eProtect.x = cx;
+					eProtect.y = y;
+				}
+			}
+			if (danhHieuEff)
+			{
+				if (eDanhHieu == null)
+				{
+					string text = (string)GameCanvas.danhHieu.get(charID + string.Empty);
+					if (text != null)
+					{
+						string[] array = Res.split(text.Trim(), ",", 0);
+						short id = short.Parse(array[0]);
+						short num2 = short.Parse(array[1]);
+						eDanhHieu = new Effect(id, cx, cH_new + 73, 1, -1, -1);
+						eDanhHieu.timeExist = num2 * 1000 + mSystem.currentTimeMillis();
+					}
+				}
+				if (eDanhHieu != null)
+				{
+					eDanhHieu.update();
+					eDanhHieu.x = cx;
+					eDanhHieu.y = cH_new;
+					if (eDanhHieu.timeExist <= mSystem.currentTimeMillis())
+					{
+						eDanhHieu = null;
+						GameCanvas.danhHieu.remove(charID + string.Empty);
+					}
+				}
+			}
+			if (charFocus != null && charFocus.cy < 0)
+				charFocus = null;
+			if (isFusion)
+				tFusion++;
+			if (isNhapThe)
+			{
+				int num3 = 0;
+				if (GameCanvas.gameTick % 25 == 0)
+					ServerEffect.addServerEffect(114, this, 1);
+			}
+			if (isSetPos)
+			{
+				tpos++;
+				if (tpos != 1)
+					return;
+				tpos = 0;
+				isSetPos = false;
+				cx = xPos;
+				cy = yPos;
+				cp1 = (cp2 = (cp3 = 0));
+				if (typePos == 1)
+				{
 					if (me)
 					{
-						myCharz().isLockMove = false;
-						GameScr.gI().dem = 0;
-						GameScr.gI().isFreez = false;
+						cxSend = cx;
+						cySend = cy;
 					}
+					currentMovePoint = null;
+					telePortSkill = false;
+					ServerEffect.addServerEffect(173, cx, cy, 1);
 				}
-			}
-			if (TileMap.tileTypeAt(cx / TileMap.size, cy / TileMap.size) == 0)
-			{
-				ty++;
-				wt++;
-				fy += ((!wy) ? 1 : (-1));
-				if (wt == 10)
-				{
-					wt = 0;
-					wy = !wy;
-				}
-			}
-			return;
-		}
-		if (isWaitMonkey)
-		{
-			isLockMove = true;
-			cf = 17;
-			if (GameCanvas.gameTick % 5 == 0)
-				ServerEffect.addServerEffect(154, cx, cy - 10, 2);
-			if (GameCanvas.gameTick % 5 == 0)
-				ServerEffect.addServerEffect(1, cx, cy + 10, 1);
-			chargeCount++;
-			if (chargeCount == 500)
-			{
-				isWaitMonkey = false;
-				isLockMove = false;
-			}
-			return;
-		}
-		if (isStandAndCharge)
-		{
-			chargeCount++;
-			bool flag = !TileMap.tileTypeAt(myCharz().cx, myCharz().cy, 2);
-			updateEffect();
-			updateSkillPaint();
-			moveFast = null;
-			currentMovePoint = null;
-			cf = 17;
-			if (flag && cgender != 2)
-				cf = 12;
-			if (cgender == 2)
-			{
-				if (GameCanvas.gameTick % 3 == 0)
-					ServerEffect.addServerEffect(154, cx, cy - ch / 2 + 10, 1);
-				if (GameCanvas.gameTick % 5 == 0)
-					ServerEffect.addServerEffect(114, cx + Res.random(-20, 20), cy + Res.random(-20, 20), 1);
-			}
-			if (cgender == 1)
-			{
-				if (GameCanvas.gameTick % 4 == 0)
-					;
-				if (GameCanvas.gameTick % 2 == 0)
-				{
-					if (cdir == 1)
-					{
-						ServerEffect.addServerEffect(70, cx - 18, cy - ch / 2 + 8, 1);
-						ServerEffect.addServerEffect(70, cx + 23, cy - ch / 2 + 15, 1);
-					}
-					else
-					{
-						ServerEffect.addServerEffect(70, cx + 18, cy - ch / 2 + 8, 1);
-						ServerEffect.addServerEffect(70, cx - 23, cy - ch / 2 + 15, 1);
-					}
-				}
-			}
-			cur = mSystem.currentTimeMillis();
-			if (cur - last > seconds || cur - last > 10000)
-			{
-				stopUseChargeSkill();
-				if (me)
-				{
-					GameScr.gI().auto = 0;
-					if (cgender == 2)
-					{
-						myCharz().setAutoSkillPaint(GameScr.sks[myCharz().myskill.skillId], flag ? 1 : 0);
-						Service.gI().skill_not_focus(8);
-					}
-					if (cgender == 1)
-					{
-						Res.outz("set skipp paint");
-						isCreateDark = true;
-						myCharz().setSkillPaint(GameScr.sks[myCharz().myskill.skillId], flag ? 1 : 0);
-					}
-				}
-				else if (cgender == 2)
-				{
-					setAutoSkillPaint(GameScr.sks[skillTemplateId], flag ? 1 : 0);
-				}
-				if (cgender == 2 && statusMe != 14 && statusMe != 5)
-					GameScr.gI().activeSuperPower(cx, cy);
-			}
-			chargeCount++;
-			if (chargeCount == 500)
-				stopUseChargeSkill();
-			return;
-		}
-		if (isFlyAndCharge)
-		{
-			updateEffect();
-			updateSkillPaint();
-			moveFast = null;
-			currentMovePoint = null;
-			posDisY++;
-			if (TileMap.tileTypeAt(cx, cy - ch, 8192))
-			{
-				stopUseChargeSkill();
+				else
+					ServerEffect.addServerEffect(60, cx, cy, 1);
+				if ((TileMap.tileTypeAtPixel(cx, cy) & 2) == 2)
+					statusMe = 1;
+				else
+					statusMe = 4;
 				return;
 			}
-			if (posDisY == 20)
-				last = mSystem.currentTimeMillis();
-			if (posDisY > 20)
+			soundUpdate();
+			if (stone)
+				return;
+			if (isFreez)
 			{
+				if (GameCanvas.gameTick % 5 == 0)
+					ServerEffect.addServerEffect(113, cx, cy, 1);
+				cf = 23;
+				long num4 = mSystem.currentTimeMillis();
+				if (num4 - lastFreez >= 1000)
+				{
+					freezSeconds--;
+					lastFreez = num4;
+					if (freezSeconds < 0)
+					{
+						isFreez = false;
+						seconds = 0;
+						if (me)
+						{
+							myCharz().isLockMove = false;
+							GameScr.gI().dem = 0;
+							GameScr.gI().isFreez = false;
+						}
+					}
+				}
+				if (TileMap.tileTypeAt(cx / TileMap.size, cy / TileMap.size) == 0)
+				{
+					ty++;
+					wt++;
+					fy += ((!wy) ? 1 : (-1));
+					if (wt == 10)
+					{
+						wt = 0;
+						wy = !wy;
+					}
+				}
+				return;
+			}
+			if (isWaitMonkey)
+			{
+				isLockMove = true;
+				cf = 17;
+				if (GameCanvas.gameTick % 5 == 0)
+					ServerEffect.addServerEffect(154, cx, cy - 10, 2);
+				if (GameCanvas.gameTick % 5 == 0)
+					ServerEffect.addServerEffect(1, cx, cy + 10, 1);
+				chargeCount++;
+				if (chargeCount == 500)
+				{
+					isWaitMonkey = false;
+					isLockMove = false;
+				}
+				return;
+			}
+			if (isStandAndCharge)
+			{
+				chargeCount++;
+				bool flag = !TileMap.tileTypeAt(myCharz().cx, myCharz().cy, 2);
+				updateEffect();
+				updateSkillPaint();
+				moveFast = null;
+				currentMovePoint = null;
+				cf = 17;
+				if (flag && cgender != 2)
+					cf = 12;
+				if (cgender == 2)
+				{
+					if (GameCanvas.gameTick % 3 == 0)
+						ServerEffect.addServerEffect(154, cx, cy - ch / 2 + 10, 1);
+					if (GameCanvas.gameTick % 5 == 0)
+						ServerEffect.addServerEffect(114, cx + Res.random(-20, 20), cy + Res.random(-20, 20), 1);
+				}
+				if (cgender == 1)
+				{
+					if (GameCanvas.gameTick % 4 == 0)
+						;
+					if (GameCanvas.gameTick % 2 == 0)
+					{
+						if (cdir == 1)
+						{
+							ServerEffect.addServerEffect(70, cx - 18, cy - ch / 2 + 8, 1);
+							ServerEffect.addServerEffect(70, cx + 23, cy - ch / 2 + 15, 1);
+						}
+						else
+						{
+							ServerEffect.addServerEffect(70, cx + 18, cy - ch / 2 + 8, 1);
+							ServerEffect.addServerEffect(70, cx - 23, cy - ch / 2 + 15, 1);
+						}
+					}
+				}
 				cur = mSystem.currentTimeMillis();
 				if (cur - last > seconds || cur - last > 10000)
 				{
-					isFlyAndCharge = false;
+					stopUseChargeSkill();
 					if (me)
 					{
-						isCreateDark = true;
-						bool flag2 = TileMap.tileTypeAt(myCharz().cx, myCharz().cy, 2);
-						isUseSkillAfterCharge = true;
-						myCharz().setSkillPaint(GameScr.sks[myCharz().myskill.skillId], (!flag2) ? 1 : 0);
+						GameScr.gI().auto = 0;
+						if (cgender == 2)
+						{
+							myCharz().setAutoSkillPaint(GameScr.sks[myCharz().myskill.skillId], flag ? 1 : 0);
+							Service.gI().skill_not_focus(8);
+						}
+						if (cgender == 1)
+						{
+							Res.outz("set skipp paint");
+							isCreateDark = true;
+							myCharz().setSkillPaint(GameScr.sks[myCharz().myskill.skillId], flag ? 1 : 0);
+						}
 					}
-					return;
+					else if (cgender == 2)
+					{
+						setAutoSkillPaint(GameScr.sks[skillTemplateId], flag ? 1 : 0);
+					}
+					if (cgender == 2 && statusMe != 14 && statusMe != 5)
+						GameScr.gI().activeSuperPower(cx, cy);
 				}
-				cf = 32;
-				if (cgender == 0 && GameCanvas.gameTick % 3 == 0)
-					ServerEffect.addServerEffect(153, cx, cy - ch, 2);
 				chargeCount++;
 				if (chargeCount == 500)
 					stopUseChargeSkill();
+				return;
 			}
-			else
+			if (isFlyAndCharge)
 			{
-				if (statusMe != 14)
-					statusMe = 3;
-				cvy = -3;
-				cy += cvy;
-				cf = 7;
-			}
-			return;
-		}
-		if (me && GameCanvas.isTouch)
-		{
-			if (charFocus != null && charFocus.charID >= 0 && charFocus.cx > 100 && charFocus.cx < TileMap.pxw - 100 && isInEnterOnlinePoint() == null && isInEnterOfflinePoint() == null && !isAttacPlayerStatus() && TileMap.mapID != 51 && TileMap.mapID != 52 && GameCanvas.panel.vPlayerMenu.size() > 0 && GameScr.gI().popUpYesNo == null)
-			{
-				int num4 = Math.abs(cx - charFocus.cx);
-				int num5 = Math.abs(cy - charFocus.cy);
-				if (num4 < 60 && num5 < 40)
+				updateEffect();
+				updateSkillPaint();
+				moveFast = null;
+				currentMovePoint = null;
+				posDisY++;
+				if (TileMap.tileTypeAt(cx, cy - ch, 8192))
 				{
-					if (cmdMenu == null)
+					stopUseChargeSkill();
+					return;
+				}
+				if (posDisY == 20)
+					last = mSystem.currentTimeMillis();
+				if (posDisY > 20)
+				{
+					cur = mSystem.currentTimeMillis();
+					if (cur - last > seconds || cur - last > 10000)
 					{
-						cmdMenu = new Command(mResources.MENU, 11111);
-						cmdMenu.isPlaySoundButton = false;
+						isFlyAndCharge = false;
+						if (me)
+						{
+							isCreateDark = true;
+							bool flag2 = TileMap.tileTypeAt(myCharz().cx, myCharz().cy, 2);
+							isUseSkillAfterCharge = true;
+							myCharz().setSkillPaint(GameScr.sks[myCharz().myskill.skillId], (!flag2) ? 1 : 0);
+						}
+						return;
 					}
-					cmdMenu.x = charFocus.cx - GameScr.cmx;
-					cmdMenu.y = charFocus.cy - charFocus.ch - 30 - GameScr.cmy;
+					cf = 32;
+					if (cgender == 0 && GameCanvas.gameTick % 3 == 0)
+						ServerEffect.addServerEffect(153, cx, cy - ch, 2);
+					chargeCount++;
+					if (chargeCount == 500)
+						stopUseChargeSkill();
+				}
+				else
+				{
+					if (statusMe != 14)
+						statusMe = 3;
+					cvy = -3;
+					cy += cvy;
+					cf = 7;
+				}
+				return;
+			}
+			if (me && GameCanvas.isTouch)
+			{
+				if (charFocus != null && charFocus.charID >= 0 && charFocus.cx > 100 && charFocus.cx < TileMap.pxw - 100 && isInEnterOnlinePoint() == null && isInEnterOfflinePoint() == null && !isAttacPlayerStatus() && TileMap.mapID != 51 && TileMap.mapID != 52 && GameCanvas.panel.vPlayerMenu.size() > 0 && GameScr.gI().popUpYesNo == null)
+				{
+					int num5 = Math.abs(cx - charFocus.cx);
+					int num6 = Math.abs(cy - charFocus.cy);
+					if (num5 < 60 && num6 < 40)
+					{
+						if (cmdMenu == null)
+						{
+							cmdMenu = new Command(mResources.MENU, 11111);
+							cmdMenu.isPlaySoundButton = false;
+						}
+						cmdMenu.x = charFocus.cx - GameScr.cmx;
+						cmdMenu.y = charFocus.cy - charFocus.ch - 30 - GameScr.cmy;
+					}
+					else
+						cmdMenu = null;
 				}
 				else
 					cmdMenu = null;
 			}
+			if (isShadown)
+				updateShadown();
+			if (isTeleport)
+				return;
+			if (chatInfo != null)
+				chatInfo.update();
+			if (shadowLife > 0)
+				shadowLife--;
+			if (resultTest > 0 && GameCanvas.gameTick % 2 == 0)
+			{
+				resultTest--;
+				if (resultTest == 30 || resultTest == 60)
+					resultTest = 0;
+			}
+			updateSkillPaint();
+			if (mobMe != null)
+				updateMobMe();
+			if (arr != null)
+				arr.update();
+			if (dart != null)
+				dart.update();
+			updateEffect();
+			if (holdEffID != 0)
+			{
+				if (GameCanvas.gameTick % 5 == 0)
+					EffecMn.addEff(new Effect(32, cx, cy + 24, 3, 5, 1));
+			}
 			else
-				cmdMenu = null;
-		}
-		if (isShadown)
-			updateShadown();
-		if (isTeleport)
-			return;
-		if (chatInfo != null)
-			chatInfo.update();
-		if (shadowLife > 0)
-			shadowLife--;
-		if (resultTest > 0 && GameCanvas.gameTick % 2 == 0)
-		{
-			resultTest = (sbyte)(resultTest - 1);
-			if (resultTest == 30 || resultTest == 60)
-				resultTest = 0;
-		}
-		updateSkillPaint();
-		if (mobMe != null)
-			updateMobMe();
-		if (arr != null)
-			arr.update();
-		if (dart != null)
-			dart.update();
-		updateEffect();
-		if (holdEffID != 0)
-		{
-			if (GameCanvas.gameTick % 5 == 0)
-				EffecMn.addEff(new Effect(32, cx, cy + 24, 3, 5, 1));
-		}
-		else
-		{
-			if (blindEff || sleepEff)
-				return;
-			if (holder)
 			{
-				if (charHold != null && (charHold.statusMe == 14 || charHold.statusMe == 5))
-					removeHoleEff();
-				if (mobHold != null && mobHold.status == 1)
-					removeHoleEff();
-				if (me && statusMe == 2 && currentMovePoint != null)
+				if (blindEff || sleepEff)
+					return;
+				if (holder)
 				{
-					holder = false;
-					charHold = null;
-					mobHold = null;
-				}
-				if (TileMap.tileTypeAt(cx, cy, 2))
-					cf = 16;
-				else
-					cf = 31;
-				return;
-			}
-			if (cHP > 0)
-			{
-				for (int i = 0; i < vEff.size(); i++)
-				{
-					EffectChar effectChar = (EffectChar)vEff.elementAt(i);
-					if (effectChar.template.type == 0 || effectChar.template.type == 12)
+					if (charHold != null && (charHold.statusMe == 14 || charHold.statusMe == 5))
+						removeHoleEff();
+					if (mobHold != null && mobHold.status == 1)
+						removeHoleEff();
+					if (me && statusMe == 2 && currentMovePoint != null)
 					{
-						if (GameCanvas.isEff1)
-						{
-							cHP += effectChar.param;
-							cMP += effectChar.param;
-						}
+						holder = false;
+						charHold = null;
+						mobHold = null;
 					}
-					else if (effectChar.template.type == 4 || effectChar.template.type == 17)
-					{
-						if (GameCanvas.isEff1)
-							cHP += effectChar.param;
-					}
-					else if (effectChar.template.type == 13 && GameCanvas.isEff1)
-					{
-						cHP -= cHPFull * 3 / 100;
-						if (cHP < 1)
-							cHP = 1;
-					}
-				}
-				if (eff5BuffHp > 0 && GameCanvas.isEff2)
-					cHP += eff5BuffHp;
-				if (eff5BuffMp > 0 && GameCanvas.isEff2)
-					cMP += eff5BuffMp;
-				if (cHP > cHPFull)
-					cHP = cHPFull;
-				if (cMP > cMPFull)
-					cMP = cMPFull;
-			}
-			if (cmtoChar)
-			{
-				GameScr.cmtoX = cx - GameScr.gW2;
-				GameScr.cmtoY = cy - GameScr.gH23;
-				if (!GameCanvas.isTouchControl)
-					GameScr.cmtoX += GameScr.gW6 * cdir;
-			}
-			tick = (tick + 1) % 100;
-			if (me)
-			{
-				if (charFocus != null && !GameScr.vCharInMap.contains(charFocus))
-					charFocus = null;
-				if (cx < 10)
-				{
-					cvx = 0;
-					cx = 10;
-				}
-				else if (cx > TileMap.pxw - 10)
-				{
-					cx = TileMap.pxw - 10;
-					cvx = 0;
-				}
-				if (me && !ischangingMap && isInWaypoint())
-				{
-					Service.gI().charMove();
-					if (TileMap.isTrainingMap())
-					{
-						Service.gI().getMapOffline();
-						ischangingMap = true;
-					}
+					if (TileMap.tileTypeAt(cx, cy, 2))
+						cf = 16;
 					else
-						Service.gI().requestChangeMap();
-					isLockKey = true;
-					ischangingMap = true;
-					GameCanvas.clearKeyHold();
-					GameCanvas.clearKeyPressed();
-					InfoDlg.showWait();
+						cf = 31;
 					return;
 				}
-				if (statusMe != 4 && Res.abs(cx - cxSend) + Res.abs(cy - cySend) >= 70 && cy - cySend <= 0 && me)
-					Service.gI().charMove();
-				if (isLockMove)
-					currentMovePoint = null;
-				if (currentMovePoint != null)
+				if (cHP > 0)
 				{
-					if (abs(cx - currentMovePoint.xEnd) <= 16 && abs(cy - currentMovePoint.yEnd) <= 16)
+					for (int i = 0; i < vEff.size(); i++)
 					{
-						cx = (currentMovePoint.xEnd + cx) / 2;
-						cy = currentMovePoint.yEnd;
-						currentMovePoint = null;
-						GameScr.instance.clickMoving = false;
-						checkPerformEndMovePointAction();
-						cvx = (cvy = 0);
-						if ((TileMap.tileTypeAtPixel(cx, cy) & 2) == 2)
-							statusMe = 1;
-						else
-							setCharFallFromJump();
-						Service.gI().charMove();
-					}
-					else
-					{
-						cdir = ((currentMovePoint.xEnd > cx) ? 1 : (-1));
-						if (TileMap.tileTypeAt(cx, cy, 2))
+						EffectChar effectChar = (EffectChar)vEff.elementAt(i);
+						if (effectChar.template.type == 0 || effectChar.template.type == 12)
 						{
-							statusMe = 2;
-							if (currentMovePoint != null)
+							if (GameCanvas.isEff1)
 							{
-								cvx = cspeed * cdir;
-								cvy = 0;
+								cHP += effectChar.param;
+								cMP += effectChar.param;
 							}
-							if (abs(cx - currentMovePoint.xEnd) <= 10)
+						}
+						else if (effectChar.template.type == 4 || effectChar.template.type == 17)
+						{
+							if (GameCanvas.isEff1)
+								cHP += effectChar.param;
+						}
+						else if (effectChar.template.type == 13 && GameCanvas.isEff1)
+						{
+							cHP -= cHPFull * 3 / 100;
+							if (cHP < 1)
+								cHP = 1;
+						}
+					}
+					if (eff5BuffHp > 0 && GameCanvas.isEff2)
+						cHP += eff5BuffHp;
+					if (eff5BuffMp > 0 && GameCanvas.isEff2)
+						cMP += eff5BuffMp;
+					if (cHP > cHPFull)
+						cHP = cHPFull;
+					if (cMP > cMPFull)
+						cMP = cMPFull;
+				}
+				if (cmtoChar)
+				{
+					GameScr.cmtoX = cx - GameScr.gW2;
+					GameScr.cmtoY = cy - GameScr.gH23;
+					if (!GameCanvas.isTouchControl)
+						GameScr.cmtoX += GameScr.gW6 * cdir;
+				}
+				tick = (tick + 1) % 100;
+				if (me)
+				{
+					if (charFocus != null && !GameScr.vCharInMap.contains(charFocus))
+						charFocus = null;
+					if (cx < 10)
+					{
+						cvx = 0;
+						cx = 10;
+					}
+					else if (cx > TileMap.pxw - 10)
+					{
+						cx = TileMap.pxw - 10;
+						cvx = 0;
+					}
+					if (me && !ischangingMap && isInWaypoint())
+					{
+						Service.gI().charMove();
+						if (TileMap.isTrainingMap())
+						{
+							Service.gI().getMapOffline();
+							ischangingMap = true;
+						}
+						else
+							Service.gI().requestChangeMap();
+						isLockKey = true;
+						ischangingMap = true;
+						GameCanvas.clearKeyHold();
+						GameCanvas.clearKeyPressed();
+						InfoDlg.showWait();
+						return;
+					}
+					if (statusMe != 4 && Res.abs(cx - cxSend) + Res.abs(cy - cySend) >= 70 && cy - cySend <= 0 && me)
+						Service.gI().charMove();
+					if (isLockMove)
+						currentMovePoint = null;
+					if (currentMovePoint != null)
+					{
+						if (abs(cx - currentMovePoint.xEnd) <= 16 && abs(cy - currentMovePoint.yEnd) <= 16)
+						{
+							cx = (currentMovePoint.xEnd + cx) / 2;
+							cy = currentMovePoint.yEnd;
+							currentMovePoint = null;
+							GameScr.instance.clickMoving = false;
+							checkPerformEndMovePointAction();
+							cvx = (cvy = 0);
+							if ((TileMap.tileTypeAtPixel(cx, cy) & 2) == 2)
+								statusMe = 1;
+							else
+								setCharFallFromJump();
+							Service.gI().charMove();
+						}
+						else
+						{
+							cdir = ((currentMovePoint.xEnd > cx) ? 1 : (-1));
+							if (TileMap.tileTypeAt(cx, cy, 2))
 							{
-								if (currentMovePoint.yEnd > cy)
+								statusMe = 2;
+								if (currentMovePoint != null)
 								{
-									bool flag3 = false;
-									sbyte b = 1;
-									b = (sbyte)((cdir == 1) ? 1 : (-1));
-									for (int j = 0; j < 2; j++)
+									cvx = cspeed * cdir;
+									cvy = 0;
+								}
+								if (abs(cx - currentMovePoint.xEnd) <= 10)
+								{
+									if (currentMovePoint.yEnd > cy)
 									{
-										if (TileMap.tileTypeAt(currentMovePoint.xEnd + chw * b, cy + chh * j, 2))
+										bool flag3 = false;
+										sbyte b = 1;
+										b = (sbyte)((cdir == 1) ? 1 : (-1));
+										for (int j = 0; j < 2; j++)
 										{
-											flag3 = true;
-											break;
+											if (TileMap.tileTypeAt(currentMovePoint.xEnd + chw * b, cy + chh * j, 2))
+											{
+												flag3 = true;
+												break;
+											}
 										}
-									}
-									if (flag3)
-									{
-										currentMovePoint = null;
-										GameScr.instance.clickMoving = false;
-										statusMe = 1;
-										cvx = (cvy = 0);
-										checkPerformEndMovePointAction();
+										if (flag3)
+										{
+											currentMovePoint = null;
+											GameScr.instance.clickMoving = false;
+											statusMe = 1;
+											cvx = (cvy = 0);
+											checkPerformEndMovePointAction();
+										}
+										else
+										{
+											SoundMn.gI().charJump();
+											cx = currentMovePoint.xEnd;
+											statusMe = 10;
+											cvy = -5;
+											cvx = 0;
+											Res.outz("Jum lun");
+										}
 									}
 									else
 									{
@@ -2093,69 +2216,68 @@ public class Char : IMapObject
 										statusMe = 10;
 										cvy = -5;
 										cvx = 0;
-										Res.outz("Jum lun");
 									}
 								}
-								else
-								{
-									SoundMn.gI().charJump();
-									cx = currentMovePoint.xEnd;
-									statusMe = 10;
-									cvy = -5;
-									cvx = 0;
-								}
-							}
-							if (cdir == 1)
-							{
-								if (TileMap.tileTypeAt(cx + chw, cy - chh, 4))
-								{
-									cvx = cspeed * cdir;
-									statusMe = 10;
-									cvy = -5;
-								}
-							}
-							else if (TileMap.tileTypeAt(cx - chw - 1, cy - chh, 8))
-							{
-								cvx = cspeed * cdir;
-								statusMe = 10;
-								cvy = -5;
-							}
-						}
-						else
-						{
-							if (currentMovePoint.yEnd < cy + 10)
-							{
-								statusMe = 10;
-								cvy = -5;
-								if (abs(cy - currentMovePoint.yEnd) <= 10)
-								{
-									cy = currentMovePoint.yEnd;
-									cvy = 0;
-								}
-								if (abs(cx - currentMovePoint.xEnd) <= 10)
-									cvx = 0;
-								else
-									cvx = cspeed * cdir;
-							}
-							else if (TileMap.tileTypeAt(cx, cy, 2))
-							{
-								currentMovePoint = null;
-								GameScr.instance.clickMoving = false;
-								statusMe = 1;
-								cvx = (cvy = 0);
-								checkPerformEndMovePointAction();
-							}
-							else
-							{
-								if (statusMe == 10 || statusMe == 2)
-									cvy = 0;
-								statusMe = 4;
-							}
-							if (currentMovePoint.yEnd > cy)
-							{
 								if (cdir == 1)
 								{
 									if (TileMap.tileTypeAt(cx + chw, cy - chh, 4))
+									{
+										cvx = cspeed * cdir;
+										statusMe = 10;
+										cvy = -5;
+									}
+								}
+								else if (TileMap.tileTypeAt(cx - chw - 1, cy - chh, 8))
+								{
+									cvx = cspeed * cdir;
+									statusMe = 10;
+									cvy = -5;
+								}
+							}
+							else
+							{
+								if (currentMovePoint.yEnd < cy + 10)
+								{
+									statusMe = 10;
+									cvy = -5;
+									if (abs(cy - currentMovePoint.yEnd) <= 10)
+									{
+										cy = currentMovePoint.yEnd;
+										cvy = 0;
+									}
+									if (abs(cx - currentMovePoint.xEnd) <= 10)
+										cvx = 0;
+									else
+										cvx = cspeed * cdir;
+								}
+								else if (TileMap.tileTypeAt(cx, cy, 2))
+								{
+									currentMovePoint = null;
+									GameScr.instance.clickMoving = false;
+									statusMe = 1;
+									cvx = (cvy = 0);
+									checkPerformEndMovePointAction();
+								}
+								else
+								{
+									if (statusMe == 10 || statusMe == 2)
+										cvy = 0;
+									statusMe = 4;
+								}
+								if (currentMovePoint.yEnd > cy)
+								{
+									if (cdir == 1)
+									{
+										if (TileMap.tileTypeAt(cx + chw, cy - chh, 4))
+										{
+											cvx = (cvy = 0);
+											statusMe = 4;
+											currentMovePoint = null;
+											GameScr.instance.clickMoving = false;
+											checkPerformEndMovePointAction();
+										}
+									}
+									else if (TileMap.tileTypeAt(cx - chw - 1, cy - chh, 8))
 									{
 										cvx = (cvy = 0);
 										statusMe = 4;
@@ -2164,350 +2286,342 @@ public class Char : IMapObject
 										checkPerformEndMovePointAction();
 									}
 								}
-								else if (TileMap.tileTypeAt(cx - chw - 1, cy - chh, 8))
-								{
-									cvx = (cvy = 0);
-									statusMe = 4;
-									currentMovePoint = null;
-									GameScr.instance.clickMoving = false;
-									checkPerformEndMovePointAction();
-								}
 							}
 						}
 					}
+					searchFocus();
 				}
-				searchFocus();
-			}
-			else
-			{
-				checkHideCharName();
-				if (statusMe == 1 || statusMe == 6)
+				else
 				{
-					bool flag4 = false;
-					if (currentMovePoint != null)
+					checkHideCharName();
+					if (statusMe == 1 || statusMe == 6)
 					{
-						if (abs(currentMovePoint.xEnd - cx) < 17 && abs(currentMovePoint.yEnd - cy) < 25)
+						bool flag4 = false;
+						if (currentMovePoint != null)
 						{
-							cx = currentMovePoint.xEnd;
-							cy = currentMovePoint.yEnd;
-							currentMovePoint = null;
-							if ((TileMap.tileTypeAtPixel(cx, cy) & 2) == 2)
+							if (abs(currentMovePoint.xEnd - cx) < 17 && abs(currentMovePoint.yEnd - cy) < 25)
 							{
-								statusMe = 1;
-								cp3 = 0;
-								GameCanvas.gI().startDust(-1, cx - -8, cy);
-								GameCanvas.gI().startDust(1, cx - 8, cy);
+								cx = currentMovePoint.xEnd;
+								cy = currentMovePoint.yEnd;
+								currentMovePoint = null;
+								if ((TileMap.tileTypeAtPixel(cx, cy) & 2) == 2)
+								{
+									statusMe = 1;
+									cp3 = 0;
+									GameCanvas.gI().startDust(-1, cx - -8, cy);
+									GameCanvas.gI().startDust(1, cx - 8, cy);
+								}
+								else
+								{
+									statusMe = 4;
+									cvy = 0;
+									cp1 = 0;
+								}
+								flag4 = true;
+							}
+							else if ((statusBeforeNothing == 10 || cf == 8) && vMovePoints.size() > 0)
+							{
+								flag4 = true;
+							}
+							else if (cy == currentMovePoint.yEnd)
+							{
+								if (cx != currentMovePoint.xEnd)
+								{
+									cx = (cx + currentMovePoint.xEnd) / 2;
+									cf = GameCanvas.gameTick % 5 + 2;
+								}
+							}
+							else if (cy < currentMovePoint.yEnd)
+							{
+								cf = 12;
+								cx = (cx + currentMovePoint.xEnd) / 2;
+								if (cvy < 0)
+									cvy = 0;
+								cy += cvy;
+								if ((TileMap.tileTypeAtPixel(cx, cy) & 2) == 2)
+								{
+									GameCanvas.gI().startDust(-1, cx - -8, cy);
+									GameCanvas.gI().startDust(1, cx - 8, cy);
+								}
+								cvy++;
+								if (cvy > 16)
+									cy = (cy + currentMovePoint.yEnd) / 2;
 							}
 							else
+							{
+								cf = 7;
+								cx = (cx + currentMovePoint.xEnd) / 2;
+								cy = (cy + currentMovePoint.yEnd) / 2;
+							}
+						}
+						else
+							flag4 = true;
+						if (flag4 && vMovePoints.size() > 0)
+						{
+							currentMovePoint = (MovePoint)vMovePoints.firstElement();
+							vMovePoints.removeElementAt(0);
+							if (currentMovePoint.status == 2)
+							{
+								if ((TileMap.tileTypeAtPixel(cx, cy + 12) & 2) != 2)
+								{
+									statusMe = 10;
+									cp1 = 0;
+									cp2 = 0;
+									cvx = -(cx - currentMovePoint.xEnd) / 10;
+									cvy = -(cy - currentMovePoint.yEnd) / 10;
+									if (cx - currentMovePoint.xEnd > 0)
+										cdir = -1;
+									else if (cx - currentMovePoint.xEnd < 0)
+									{
+										cdir = 1;
+									}
+								}
+								else
+								{
+									statusMe = 2;
+									if (cx - currentMovePoint.xEnd > 0)
+										cdir = -1;
+									else if (cx - currentMovePoint.xEnd < 0)
+									{
+										cdir = 1;
+									}
+									cvx = cspeed * cdir;
+									cvy = 0;
+								}
+							}
+							else if (currentMovePoint.status == 3)
+							{
+								if ((TileMap.tileTypeAtPixel(cx, cy + 23) & 2) != 2)
+								{
+									statusMe = 10;
+									cp1 = 0;
+									cp2 = 0;
+									cvx = -(cx - currentMovePoint.xEnd) / 10;
+									cvy = -(cy - currentMovePoint.yEnd) / 10;
+									if (cx - currentMovePoint.xEnd > 0)
+										cdir = -1;
+									else if (cx - currentMovePoint.xEnd < 0)
+									{
+										cdir = 1;
+									}
+								}
+								else
+								{
+									statusMe = 3;
+									GameCanvas.gI().startDust(-1, cx - -8, cy);
+									GameCanvas.gI().startDust(1, cx - 8, cy);
+									if (cx - currentMovePoint.xEnd > 0)
+										cdir = -1;
+									else if (cx - currentMovePoint.xEnd < 0)
+									{
+										cdir = 1;
+									}
+									cvx = abs(cx - currentMovePoint.xEnd) / 10 * cdir;
+									cvy = -10;
+								}
+							}
+							else if (currentMovePoint.status == 4)
 							{
 								statusMe = 4;
-								cvy = 0;
-								cp1 = 0;
-							}
-							flag4 = true;
-						}
-						else if ((statusBeforeNothing == 10 || cf == 8) && vMovePoints.size() > 0)
-						{
-							flag4 = true;
-						}
-						else if (cy == currentMovePoint.yEnd)
-						{
-							if (cx != currentMovePoint.xEnd)
-							{
-								cx = (cx + currentMovePoint.xEnd) / 2;
-								cf = GameCanvas.gameTick % 5 + 2;
-							}
-						}
-						else if (cy < currentMovePoint.yEnd)
-						{
-							cf = 12;
-							cx = (cx + currentMovePoint.xEnd) / 2;
-							if (cvy < 0)
-								cvy = 0;
-							cy += cvy;
-							if ((TileMap.tileTypeAtPixel(cx, cy) & 2) == 2)
-							{
-								GameCanvas.gI().startDust(-1, cx - -8, cy);
-								GameCanvas.gI().startDust(1, cx - 8, cy);
-							}
-							cvy++;
-							if (cvy > 16)
-								cy = (cy + currentMovePoint.yEnd) / 2;
-						}
-						else
-						{
-							cf = 7;
-							cx = (cx + currentMovePoint.xEnd) / 2;
-							cy = (cy + currentMovePoint.yEnd) / 2;
-						}
-					}
-					else
-						flag4 = true;
-					if (flag4 && vMovePoints.size() > 0)
-					{
-						currentMovePoint = (MovePoint)vMovePoints.firstElement();
-						vMovePoints.removeElementAt(0);
-						if (currentMovePoint.status == 2)
-						{
-							if ((TileMap.tileTypeAtPixel(cx, cy + 12) & 2) != 2)
-							{
-								statusMe = 10;
-								cp1 = 0;
-								cp2 = 0;
-								cvx = -(cx - currentMovePoint.xEnd) / 10;
-								cvy = -(cy - currentMovePoint.yEnd) / 10;
 								if (cx - currentMovePoint.xEnd > 0)
 									cdir = -1;
 								else if (cx - currentMovePoint.xEnd < 0)
 								{
 									cdir = 1;
 								}
+								cvx = abs(cx - currentMovePoint.xEnd) / 9 * cdir;
+								cvy = 0;
 							}
 							else
 							{
-								statusMe = 2;
-								if (cx - currentMovePoint.xEnd > 0)
-									cdir = -1;
-								else if (cx - currentMovePoint.xEnd < 0)
-								{
-									cdir = 1;
-								}
-								cvx = cspeed * cdir;
-								cvy = 0;
+								cx = currentMovePoint.xEnd;
+								cy = currentMovePoint.yEnd;
+								currentMovePoint = null;
 							}
-						}
-						else if (currentMovePoint.status == 3)
-						{
-							if ((TileMap.tileTypeAtPixel(cx, cy + 23) & 2) != 2)
-							{
-								statusMe = 10;
-								cp1 = 0;
-								cp2 = 0;
-								cvx = -(cx - currentMovePoint.xEnd) / 10;
-								cvy = -(cy - currentMovePoint.yEnd) / 10;
-								if (cx - currentMovePoint.xEnd > 0)
-									cdir = -1;
-								else if (cx - currentMovePoint.xEnd < 0)
-								{
-									cdir = 1;
-								}
-							}
-							else
-							{
-								statusMe = 3;
-								GameCanvas.gI().startDust(-1, cx - -8, cy);
-								GameCanvas.gI().startDust(1, cx - 8, cy);
-								if (cx - currentMovePoint.xEnd > 0)
-									cdir = -1;
-								else if (cx - currentMovePoint.xEnd < 0)
-								{
-									cdir = 1;
-								}
-								cvx = abs(cx - currentMovePoint.xEnd) / 10 * cdir;
-								cvy = -10;
-							}
-						}
-						else if (currentMovePoint.status == 4)
-						{
-							statusMe = 4;
-							if (cx - currentMovePoint.xEnd > 0)
-								cdir = -1;
-							else if (cx - currentMovePoint.xEnd < 0)
-							{
-								cdir = 1;
-							}
-							cvx = abs(cx - currentMovePoint.xEnd) / 9 * cdir;
-							cvy = 0;
-						}
-						else
-						{
-							cx = currentMovePoint.xEnd;
-							cy = currentMovePoint.yEnd;
-							currentMovePoint = null;
 						}
 					}
 				}
-			}
-			switch (statusMe)
-			{
-			case 1:
-				updateCharStand();
-				break;
-			case 2:
-				updateCharRun();
-				break;
-			case 3:
-				updateCharJump();
-				break;
-			case 4:
-				updateCharFall();
-				break;
-			case 5:
-				updateCharDeadFly();
-				break;
-			case 16:
-				updateResetPoint();
-				break;
-			case 9:
-				updateCharAutoJump();
-				break;
-			case 10:
-				updateCharFly();
-				break;
-			case 12:
-				updateSkillStand();
-				break;
-			case 13:
-				updateSkillFall();
-				break;
-			case 14:
-				cp1++;
-				if (cp1 > 30)
-					cp1 = 0;
-				if (cp1 % 15 < 5)
-					cf = 0;
-				else
-					cf = 1;
-				break;
-			case 6:
-				if (isInjure <= 0)
-					cf = 0;
-				else if (statusBeforeNothing == 10)
+				switch (statusMe)
 				{
-					cx += cvx;
-				}
-				else if (cf <= 1)
-				{
+				case 1:
+					updateCharStand();
+					break;
+				case 2:
+					updateCharRun();
+					break;
+				case 3:
+					updateCharJump();
+					break;
+				case 4:
+					updateCharFall();
+					break;
+				case 5:
+					updateCharDeadFly();
+					break;
+				case 16:
+					updateResetPoint();
+					break;
+				case 9:
+					updateCharAutoJump();
+					break;
+				case 10:
+					updateCharFly();
+					break;
+				case 12:
+					updateSkillStand();
+					break;
+				case 13:
+					updateSkillFall();
+					break;
+				case 14:
 					cp1++;
-					if (cp1 > 6)
+					if (cp1 > 30)
+						cp1 = 0;
+					if (cp1 % 15 < 5)
 						cf = 0;
 					else
 						cf = 1;
-					if (cp1 > 10)
-						cp1 = 0;
-				}
-				if (cf != 7 && cf != 12 && (TileMap.tileTypeAtPixel(cx, cy + 1) & 2) != 2)
-				{
-					cvx = 0;
-					cvy = 0;
-					statusMe = 4;
-					cf = 7;
-				}
-				if (me)
 					break;
-				cp3++;
-				if (cp3 > 10)
-				{
-					if ((TileMap.tileTypeAtPixel(cx, cy + 1) & 2) != 2)
-						cy += 5;
-					else
+				case 6:
+					if (isInjure <= 0)
 						cf = 0;
+					else if (statusBeforeNothing == 10)
+					{
+						cx += cvx;
+					}
+					else if (cf <= 1)
+					{
+						cp1++;
+						if (cp1 > 6)
+							cf = 0;
+						else
+							cf = 1;
+						if (cp1 > 10)
+							cp1 = 0;
+					}
+					if (cf != 7 && cf != 12 && (TileMap.tileTypeAtPixel(cx, cy + 1) & 2) != 2)
+					{
+						cvx = 0;
+						cvy = 0;
+						statusMe = 4;
+						cf = 7;
+					}
+					if (me)
+						break;
+					cp3++;
+					if (cp3 > 10)
+					{
+						if ((TileMap.tileTypeAtPixel(cx, cy + 1) & 2) != 2)
+							cy += 5;
+						else
+							cf = 0;
+					}
+					if (cp3 > 50)
+					{
+						cp3 = 0;
+						currentMovePoint = null;
+					}
+					break;
 				}
-				if (cp3 > 50)
+				if (isInjure > 0)
 				{
-					cp3 = 0;
-					currentMovePoint = null;
+					cf = 23;
+					isInjure--;
 				}
-				break;
-			}
-			if (isInjure > 0)
-			{
-				cf = 23;
-				isInjure = (sbyte)(isInjure - 1);
-			}
-			if (wdx != 0 || wdy != 0)
-			{
-				startDie(wdx, wdy);
-				wdx = 0;
-				wdy = 0;
-			}
-			if (moveFast != null)
-			{
-				if (moveFast[0] == 0)
+				if (wdx != 0 || wdy != 0)
 				{
-					moveFast[0]++;
-					ServerEffect.addServerEffect(60, this, 1);
+					startDie(wdx, wdy);
+					wdx = 0;
+					wdy = 0;
 				}
-				else if (moveFast[0] < 10)
+				if (moveFast != null)
 				{
-					moveFast[0]++;
+					if (moveFast[0] == 0)
+					{
+						moveFast[0]++;
+						ServerEffect.addServerEffect(60, this, 1);
+					}
+					else if (moveFast[0] < 10)
+					{
+						moveFast[0]++;
+					}
+					else
+					{
+						cx = moveFast[1];
+						cy = moveFast[2];
+						moveFast = null;
+						ServerEffect.addServerEffect(60, this, 1);
+						if (me)
+						{
+							if ((TileMap.tileTypeAtPixel(cx, cy) & 2) != 2)
+							{
+								statusMe = 4;
+								myCharz().setAutoSkillPaint(GameScr.sks[38], 1);
+							}
+							else
+							{
+								Service.gI().charMove();
+								myCharz().setAutoSkillPaint(GameScr.sks[38], 0);
+							}
+						}
+					}
 				}
-				else
+				if (statusMe != 10)
+					fy = 0;
+				if (isCharge)
 				{
-					cx = moveFast[1];
-					cy = moveFast[2];
-					moveFast = null;
-					ServerEffect.addServerEffect(60, this, 1);
+					cf = 17;
+					if (GameCanvas.gameTick % 4 == 0)
+						ServerEffect.addServerEffect(1, cx, cy + GameCanvas.transY, 1);
 					if (me)
 					{
-						if ((TileMap.tileTypeAtPixel(cx, cy) & 2) != 2)
+						long num7 = mSystem.currentTimeMillis();
+						if (num7 - last >= 1000)
 						{
+							Res.outz("%= " + myskill.damage);
+							last = num7;
+							cHP += cHPFull * myskill.damage / 100;
+							cMP += cMPFull * myskill.damage / 100;
+							if (cHP < cHPFull)
+								GameScr.startFlyText("+" + cHPFull * myskill.damage / 100 + " " + mResources.HP, cx, cy - ch - 20, 0, -1, mFont.HP);
+							if (cMP < cMPFull)
+								GameScr.startFlyText("+" + cMPFull * myskill.damage / 100 + " " + mResources.KI, cx, cy - ch - 20, 0, -2, mFont.MP);
+							Service.gI().skill_not_focus(2);
+						}
+					}
+				}
+				if (isFlyUp)
+				{
+					if (me)
+					{
+						isLockKey = true;
+						statusMe = 3;
+						cvy = -8;
+						if (cy <= TileMap.pxh - 240)
+						{
+							isFlyUp = false;
+							isLockKey = false;
 							statusMe = 4;
-							myCharz().setAutoSkillPaint(GameScr.sks[38], 1);
 						}
-						else
+					}
+					else
+					{
+						statusMe = 3;
+						cvy = -8;
+						if (cy <= TileMap.pxh - 240)
 						{
-							Service.gI().charMove();
-							myCharz().setAutoSkillPaint(GameScr.sks[38], 0);
+							cvy = 0;
+							isFlyUp = false;
+							cvy = 0;
+							statusMe = 1;
 						}
 					}
 				}
+				updateMount();
+				updEffChar();
+				updateEye();
+				updateFHead();
 			}
-			if (statusMe != 10)
-				fy = 0;
-			if (isCharge)
-			{
-				cf = 17;
-				if (GameCanvas.gameTick % 4 == 0)
-					ServerEffect.addServerEffect(1, cx, cy + GameCanvas.transY, 1);
-				if (me)
-				{
-					long num6 = mSystem.currentTimeMillis();
-					if (num6 - last >= 1000)
-					{
-						Res.outz("%= " + myskill.damage);
-						last = num6;
-						cHP += cHPFull * myskill.damage / 100;
-						cMP += cMPFull * myskill.damage / 100;
-						if (cHP < cHPFull)
-							GameScr.startFlyText("+" + cHPFull * myskill.damage / 100 + " " + mResources.HP, cx, cy - ch - 20, 0, -1, mFont.HP);
-						if (cMP < cMPFull)
-							GameScr.startFlyText("+" + cMPFull * myskill.damage / 100 + " " + mResources.KI, cx, cy - ch - 20, 0, -2, mFont.MP);
-						Service.gI().skill_not_focus(2);
-					}
-				}
-			}
-			if (isFlyUp)
-			{
-				if (me)
-				{
-					isLockKey = true;
-					statusMe = 3;
-					cvy = -8;
-					if (cy <= TileMap.pxh - 240)
-					{
-						isFlyUp = false;
-						isLockKey = false;
-						statusMe = 4;
-					}
-				}
-				else
-				{
-					statusMe = 3;
-					cvy = -8;
-					if (cy <= TileMap.pxh - 240)
-					{
-						cvy = 0;
-						isFlyUp = false;
-						cvy = 0;
-						statusMe = 1;
-					}
-				}
-			}
-			updateMount();
-			updEffChar();
-			updateEye();
-			updateFHead();
 		}
 	}
 
@@ -4091,6 +4205,11 @@ public class Char : IMapObject
 		return myskill != null && myskill.template.isUseAlone();
 	}
 
+	public bool isUseSkillSpec()
+	{
+		return myskill != null && myskill.template.isSkillSpec();
+	}
+
 	public bool isSelectingSkillBuffToPlayer()
 	{
 		return myskill != null && myskill.template.isBuffToPlayer();
@@ -4312,7 +4431,7 @@ public class Char : IMapObject
 	public void setAutoSkillPaint(SkillPaint skillPaint, int sType)
 	{
 		this.skillPaint = skillPaint;
-		Res.outz("set auto skill " + ((skillPaint == null) ? "null" : "!null"));
+		Res.outz("set auto skill " + ((skillPaint == null) ? "null" : "ko null"));
 		if (skillPaint.id >= 0 && skillPaint.id <= 6)
 		{
 			int num = Res.random(0, skillPaint.id + 4) - 1;
@@ -4500,7 +4619,9 @@ public class Char : IMapObject
 	{
 		if (isHide)
 			return;
-		if (isMabuHold)
+		if (isMafuba)
+			paintCharWithoutSkill(g);
+		else if (isMabuHold)
 		{
 			if (cmtoChar)
 			{
@@ -4531,6 +4652,7 @@ public class Char : IMapObject
 			paintAuraBehind(g);
 			paintEffBehind(g);
 			paintEff_Lvup_behind(g);
+			paintEff_Pet(g);
 			if (shadowLife > 0)
 			{
 				if (GameCanvas.gameTick % 2 == 0)
@@ -4566,7 +4688,6 @@ public class Char : IMapObject
 				if (mobMe != null)
 					;
 				paintMount2(g);
-				paintEff_Pet(g);
 				paintEff_Lvup_front(g);
 				paintSuperEffFront(g);
 				paintAuraFront(g);
@@ -4578,7 +4699,7 @@ public class Char : IMapObject
 
 	private void paint_map_line(mGraphics g)
 	{
-		if (x_hint == 0 || y_hint == 0 || statusMe == 14)
+		if (isPaintNewSkill || x_hint == 0 || y_hint == 0 || statusMe == 14)
 			return;
 		int arg = 0;
 		int x = cx - 30;
@@ -4652,9 +4773,12 @@ public class Char : IMapObject
 		{
 			Small small = SmallImage.imgNew[num];
 			if (small == null)
+			{
 				SmallImage.createImage(num);
-			else
-				g.drawRegion(y0: GameCanvas.gameTick / 4 % num2 * (mGraphics.getImageHeight(small.img) / num2), arg0: small.img, x0: 0, w0: mGraphics.getImageWidth(small.img), h0: mGraphics.getImageHeight(small.img) / num2, arg5: 0, x: cx, y: cy + 2, arg8: mGraphics.BOTTOM | mGraphics.HCENTER);
+				return;
+			}
+			int y = GameCanvas.gameTick / 4 % num2 * (mGraphics.getImageHeight(small.img) / num2);
+			g.drawRegion(small.img, 0, y, mGraphics.getImageWidth(small.img), mGraphics.getImageHeight(small.img) / num2, 0, cx, cy + 2, mGraphics.BOTTOM | mGraphics.HCENTER);
 		}
 	}
 
@@ -4735,9 +4859,12 @@ public class Char : IMapObject
 				{
 					Small small = SmallImage.imgNew[num];
 					if (small == null)
+					{
 						SmallImage.createImage(num);
-					else
-						g.drawRegion(y0: GameCanvas.gameTick / 4 % num2 * (mGraphics.getImageHeight(small.img) / num2), arg0: small.img, x0: 0, w0: mGraphics.getImageWidth(small.img), h0: mGraphics.getImageHeight(small.img) / num2, arg5: 0, x: cx, y: cy + 2, arg8: mGraphics.BOTTOM | mGraphics.HCENTER);
+						return;
+					}
+					int y = GameCanvas.gameTick / 4 % num2 * (mGraphics.getImageHeight(small.img) / num2);
+					g.drawRegion(small.img, 0, y, mGraphics.getImageWidth(small.img), mGraphics.getImageHeight(small.img) / num2, 0, cx, cy + 2, mGraphics.BOTTOM | mGraphics.HCENTER);
 				}
 			}
 		}
@@ -4791,7 +4918,8 @@ public class Char : IMapObject
 			num = 0;
 		if (num > 9)
 			num = 9;
-		g.drawRegion(Mob.imgHP, 0, 6 * (9 - num), 9, 6, 0, x, y, 3);
+		if (!me)
+			g.drawRegion(Mob.imgHP, 0, 6 * (9 - num), 9, 6, 0, x, y, 3);
 		if (cTypePk == 0 && (myCharz().cFlag == 0 || cFlag == 0 || (cFlag != 8 && myCharz().cFlag != 8 && cFlag == myCharz().cFlag)))
 			return;
 		len = (int)((long)cHP * 100L / cHPFull * w_hp_bar) / 100;
@@ -4852,8 +4980,24 @@ public class Char : IMapObject
 	{
 		Part part = GameScr.parts[getFHead(head)];
 		int num = CharInfo[cf][0][2] - part.pi[CharInfo[cf][0][0]].dy + 5;
-		if ((isInvisiblez && !me) || (!me && TileMap.mapID == 113 && cy >= 360) || me)
+		if ((isInvisiblez && !me) || (!me && TileMap.mapID == 113 && cy >= 360))
 			return;
+		if (me)
+		{
+			num += 5;
+			paintHp(g, cx, cy - num + 3);
+			if (fraDanhHieu != null)
+			{
+				int x = cx - fraDanhHieu.frameWidth / 2;
+				int y = cy - num + 3 - mFont.tahoma_7.getHeight() - (fraDanhHieu.frameHeight + 5);
+				if (GameCanvas.gameTick % 5 == 0)
+					danhHieuFramme++;
+				if (danhHieuFramme >= fraDanhHieu.nFrame)
+					danhHieuFramme = 0;
+				fraDanhHieu.drawFrame(danhHieuFramme, x, y, 0, mGraphics.TOP | mGraphics.LEFT, g);
+			}
+			return;
+		}
 		bool flag = myChar.clan != null && clanID == myChar.clan.ID;
 		bool flag2 = cTypePk == 3 || cTypePk == 5;
 		bool flag3 = cTypePk == 4;
@@ -4871,6 +5015,16 @@ public class Char : IMapObject
 		{
 			num += 5;
 			paintHp(g, cx, cy - num + 3);
+			if (fraDanhHieu != null)
+			{
+				int x2 = cx - fraDanhHieu.frameWidth / 2;
+				int y2 = cy - num + 3 - mFont.tahoma_7.getHeight() - (fraDanhHieu.frameHeight + 5);
+				if (GameCanvas.gameTick % 5 == 0)
+					danhHieuFramme++;
+				if (danhHieuFramme >= fraDanhHieu.nFrame)
+					danhHieuFramme = 0;
+				fraDanhHieu.drawFrame(danhHieuFramme, x2, y2, 0, mGraphics.TOP | mGraphics.LEFT, g);
+			}
 		}
 		num += mFont.tahoma_7_white.getHeight();
 		mFont mFont2 = mFont.tahoma_7_whiteSmall;
@@ -4892,8 +5046,14 @@ public class Char : IMapObject
 		{
 			if (mSystem.clientType == 1)
 				mFont2.drawString(g, cName, cx, cy - num, mFont.CENTER, mFont.tahoma_7_greySmall);
+			else if (charID == -83)
+			{
+				mFont2.drawString(g, cName, cx, cy - num, mFont.CENTER, mFont.tahoma_7_greySmall);
+			}
 			else
+			{
 				mFont2.drawString(g, cName, cx, cy - num, mFont.CENTER);
+			}
 			num += mFont.tahoma_7.getHeight();
 		}
 		if (flag)
@@ -4913,14 +5073,10 @@ public class Char : IMapObject
 		if (isMabuHold || head == 377 || leg == 471 || isTeleport || isFlyUp)
 			return;
 		int num = TileMap.size;
-		if ((TileMap.mapID < 114 || TileMap.mapID > 120) && TileMap.mapID != 127 && TileMap.mapID != 128)
+		if ((TileMap.mapID < 114 || TileMap.mapID > 120) && TileMap.mapID != 127 && TileMap.mapID != 128 && !TileMap.tileTypeAt(xSd + num / 2, ySd + 1, 4))
 		{
-			if (TileMap.tileTypeAt(xSd + num / 2, ySd + 1, 4))
-				g.setClip(xSd / num * num, (ySd - 30) / num * num, num, 100);
-			else if (TileMap.tileTypeAt((xSd - num / 2) / num, (ySd + 1) / num) == 0)
-			{
+			if (TileMap.tileTypeAt((xSd - num / 2) / num, (ySd + 1) / num) == 0)
 				g.setClip(xSd / num * num, (ySd - 30) / num * num, 100, 100);
-			}
 			else if (TileMap.tileTypeAt((xSd + num / 2) / num, (ySd + 1) / num) == 0)
 			{
 				g.setClip(xSd / num * num, (ySd - 30) / num * num, num, 100);
@@ -4961,6 +5117,11 @@ public class Char : IMapObject
 	{
 		try
 		{
+			if (isMafuba)
+			{
+				paintCharBody(g, xMFB, yMFB, cdir, cf, false);
+				return;
+			}
 			if (isInvisiblez)
 			{
 				if (me)
@@ -5037,7 +5198,6 @@ public class Char : IMapObject
 		}
 		if (statusMe == 10)
 		{
-			Res.outz("cf= " + cf);
 			if (cf == 8)
 			{
 				num = 0;
@@ -5189,6 +5349,8 @@ public class Char : IMapObject
 			g.drawImage((cgender != 1) ? eyeTraiDat : eyeNamek, cx + -((cgender != 1) ? 2 : 2) * num2, cy - 32 + ((cgender != 1) ? 11 : 10) - cf, anchor2);
 		if (eProtect != null)
 			eProtect.paint(g);
+		if (eDanhHieu != null)
+			eDanhHieu.paint(g);
 		paintPKFlag(g);
 	}
 
@@ -5434,7 +5596,7 @@ public class Char : IMapObject
 		if (GameCanvas.gameTick % 2 == 0 || isMeCanAttackOtherPlayer(charFocus))
 			return;
 		int num = 0;
-		if (nClass.classId == 0 || nClass.classId == 1 || nClass.classId == 3 || nClass.classId == 5)
+		if (nClass != null && (nClass.classId == 0 || nClass.classId == 1 || nClass.classId == 3 || nClass.classId == 5))
 			num = 40;
 		int[] array = new int[4] { -1, -1, -1, -1 };
 		int num2 = GameScr.cmx - 10;
@@ -6617,5 +6779,295 @@ public class Char : IMapObject
 		if (fr == 2 || fr == 3 || fr == 4 || fr == 5 || fr == 6 || fr == 9 || fr == 10 || fr == 13 || fr == 14 || fr == 15 || fr == 16 || fr == 26 || fr == 27 || fr == 28 || fr == 29)
 			return true;
 		return false;
+	}
+
+	public void sendNewAttack(short idTemplateSkill)
+	{
+		short x = -1;
+		short y = -1;
+		if (mobFocus != null)
+		{
+			x = (short)mobFocus.x;
+			y = (short)mobFocus.y;
+		}
+		if (charFocus != null && !charFocus.isPet && !charFocus.isMiniPet)
+		{
+			x = (short)charFocus.cx;
+			y = (short)charFocus.cy;
+		}
+		Service.gI().new_skill_not_focus((sbyte)idTemplateSkill, (sbyte)cdir, x, y);
+	}
+
+	public void SetSkillPaint_NEW(short idskillPaint, bool isFly, sbyte typeFrame, sbyte typePaint, sbyte dir, short timeGong, sbyte typeItem)
+	{
+		isPaintNewSkill = true;
+		timeReset_newSkill = GameCanvas.timeNow + 10000;
+		this.idskillPaint = idskillPaint;
+		this.isFly = isFly;
+		this.typeFrame = typeFrame;
+		this.typePaint = typePaint;
+		this.typeItem = typeItem;
+		cdir = dir;
+		count_NEW = 0;
+		stt = 0;
+		long lastTimeUseThisSkill = mSystem.currentTimeMillis();
+		if (me)
+		{
+			saveLoadPreviousSkill();
+			myskill.lastTimeUseThisSkill = lastTimeUseThisSkill;
+			if (myskill.template.manaUseType == 2)
+				cMP = 1;
+			else if (myskill.template.manaUseType != 1)
+			{
+				cMP -= myskill.manaUse;
+			}
+			else
+			{
+				cMP -= myskill.manaUse * cMPFull / 100;
+			}
+			myCharz().cStamina--;
+			GameScr.gI().isInjureMp = true;
+			GameScr.gI().twMp = 0;
+			if (cMP < 0)
+				cMP = 0;
+		}
+		if (idskillPaint == 24)
+		{
+			GameScr.addEffectEnd_Target(18, 0, typePaint, clone(), null, 3, timeGong, 0);
+			GameScr.addEffectEnd_Target(21, 0, typePaint, clone(), null, 1, timeGong, 0);
+		}
+		else if (idskillPaint == 25)
+		{
+			GameScr.addEffectEnd_Target(19, 0, typePaint, clone(), null, 3, timeGong, 0);
+			GameScr.addEffectEnd_Target(22, 0, typePaint, clone(), null, 1, timeGong, 0);
+		}
+		else if (idskillPaint == 26)
+		{
+			GameScr.addEffectEnd_Target(20, 0, typePaint, clone(), null, 3, timeGong, 0);
+			GameScr.addEffectEnd_Target(23, 0, typePaint, clone(), null, 1, timeGong, 0);
+		}
+		if (this.typeFrame == 1)
+		{
+			if (!this.isFly)
+			{
+				fr_start = new byte[7] { 20, 20, 20, 20, 20, 20, 19 };
+				fr_atk = new byte[1] { 20 };
+				fr_end = new byte[1];
+			}
+			else
+			{
+				fr_start = new byte[7] { 31, 31, 31, 31, 31, 31, 30 };
+				fr_atk = new byte[1] { 31 };
+				fr_end = new byte[1] { 12 };
+			}
+		}
+		if (this.typeFrame == 2)
+		{
+			if (!this.isFly)
+			{
+				fr_start = new byte[1] { 20 };
+				fr_atk = new byte[6] { 13, 13, 13, 14, 14, 14 };
+				fr_end = new byte[1];
+			}
+			else
+			{
+				fr_start = new byte[1] { 31 };
+				fr_atk = new byte[6] { 26, 26, 26, 27, 27, 27 };
+				fr_end = new byte[1] { 12 };
+			}
+		}
+		if (this.typeFrame == 4)
+		{
+			if (!this.isFly)
+			{
+				fr_start = new byte[6] { 17, 17, 17, 18, 18, 18 };
+				fr_atk = new byte[1] { 18 };
+				fr_end = new byte[1];
+			}
+			else
+			{
+				fr_start = new byte[7] { 7, 7, 7, 12, 12, 12, 12 };
+				fr_atk = new byte[1] { 12 };
+				fr_end = new byte[1] { 12 };
+			}
+		}
+		if (this.typeFrame == 3)
+		{
+			if (!this.isFly)
+			{
+				fr_start = new byte[9] { 24, 24, 24, 17, 17, 17, 18, 18, 18 };
+				fr_atk = new byte[1] { 20 };
+				fr_end = new byte[1];
+			}
+			else
+			{
+				fr_start = new byte[10] { 23, 23, 23, 7, 7, 7, 12, 12, 12, 12 };
+				fr_atk = new byte[1] { 31 };
+				fr_end = new byte[1] { 12 };
+			}
+		}
+	}
+
+	public void SetSkillPaint_STT(int stt, short idskillPaint, Point targetDame, short timeDame, short rangeDame, sbyte typePaint, Point[] listObj, sbyte typeItem)
+	{
+		this.stt = stt;
+		this.idskillPaint = idskillPaint;
+		count_NEW = 0;
+		this.targetDame = targetDame;
+		this.typePaint = typePaint;
+		this.timeDame = mSystem.currentTimeMillis() + timeDame;
+		this.rangeDame = rangeDame;
+		this.typeItem = typeItem;
+		if (this.stt == 1)
+		{
+			if (this.idskillPaint == 24)
+			{
+				GameScr.addEffectEnd_Target(18, 1, typePaint, this, null, 3, timeDame, 0);
+				GameScr.addEffectEnd_Target(24, 0, typePaint, this, this.targetDame, 1, timeDame, rangeDame);
+			}
+			if (this.idskillPaint == 25)
+			{
+				GameScr.addEffectEnd_Target(19, 0, typePaint, this, null, 3, timeDame, 0);
+				GameScr.addEffectEnd_Target(25, 0, typePaint, this, this.targetDame, 1, timeDame, rangeDame);
+			}
+			if (this.idskillPaint == 26)
+			{
+				GameScr.addEffectEnd_Target(20, 0, typePaint, this, null, 3, timeDame, 0);
+				GameScr.addEffectEnd(26, typeItem, typePaint, targetDame.x, targetDame.y, 1, 0, timeDame, listObj);
+			}
+		}
+	}
+
+	public void UpdSkillPaint_NEW()
+	{
+		if (stt == 0)
+		{
+			if (isFly && count_NEW < 20)
+			{
+				cvy = -3;
+				cy += cvy;
+			}
+			if (fr_start.Length == 1)
+				cf = fr_start[0];
+			else if (count_NEW > fr_start.Length - 1)
+			{
+				cf = fr_start[fr_start.Length - 1];
+			}
+			else
+			{
+				cf = fr_start[count_NEW];
+			}
+		}
+		else if (stt == 1)
+		{
+			cf = fr_atk[count_NEW % fr_atk.Length];
+			if (mSystem.currentTimeMillis() - timeDame > 0)
+				SetSkillPaint_STT(2, 0, null, 0, 0, 0, null, 0);
+			if (count_NEW % 5 == 0)
+				GameScr.shock_scr = 5;
+			if (typeFrame == 1 && count_NEW < 10 && !TileMap.tileTypeAt(cx - (chw + 1) * cdir, cy, (cdir != 1) ? 4 : 8))
+				cx -= cdir;
+			if (typeFrame != 2)
+				;
+		}
+		else if (stt == 2)
+		{
+			if (fr_end.Length == 1)
+				cf = fr_end[0];
+			else if (count_NEW > fr_end.Length - 1)
+			{
+				cf = fr_end[fr_end.Length - 1];
+			}
+			else
+			{
+				cf = fr_end[count_NEW];
+			}
+			if (isFly)
+			{
+				cvx = (cvy = 0);
+				statusMe = 4;
+			}
+			isPaintNewSkill = false;
+		}
+		count_NEW++;
+	}
+
+	public Char clone()
+	{
+		Char @char = new Char();
+		@char.charID = charID;
+		@char.cx = cx;
+		@char.cy = cy;
+		@char.cdir = cdir;
+		if (arrItemBody != null)
+		{
+			@char.arrItemBody = new Item[arrItemBody.Length];
+			for (int i = 0; i < arrItemBody.Length; i++)
+			{
+				if (arrItemBody[i] == null)
+					@char.arrItemBody[i] = null;
+				else
+					@char.arrItemBody[i] = arrItemBody[i].clone();
+			}
+		}
+		return @char;
+	}
+
+	public bool containsCaiTrang(int v)
+	{
+		if (arrItemBody != null)
+		{
+			for (int i = 0; i < arrItemBody.Length; i++)
+			{
+				if (arrItemBody[i] != null && arrItemBody[i].template != null && arrItemBody[i].template.id == v)
+					return true;
+			}
+		}
+		Res.err("tim kiem id cai trang " + v + " ko tim thay");
+		return false;
+	}
+
+	public void printlog()
+	{
+		string empty = string.Empty;
+		empty = empty + "isInjure " + isInjure + "\n";
+		empty = empty + "isInjure " + isMonkey + "\n";
+		empty = empty + "isInjure " + isAddChopMat + "\n";
+		empty = empty + "isInjure " + isAttack + "\n";
+		empty = empty + "isInjure " + isAttFly + "\n";
+		empty = empty + "isInjure " + ischangingMap + "\n";
+		empty = empty + "isInjure " + isCharge + "\n";
+		empty = empty + "isInjure " + isCopy + "\n";
+		empty = empty + "isInjure " + isCreateDark + "\n";
+		empty = empty + "isInjure " + isCrit + "\n";
+		empty = empty + "isInjure " + isDirtyPostion + "\n";
+		empty = empty + "isInjure " + isEndMount + "\n";
+		empty = empty + "isInjure " + isEventMount + "\n";
+		empty = empty + "isInjure " + isMafuba + "\n";
+		empty = empty + "isInjure " + isFusion + "\n";
+		empty = empty + "isInjure " + isFeetEff + "\n";
+		empty = empty + "isInjure " + isFlying + "\n";
+		empty = empty + "isInjure " + isWaitMonkey + "\n";
+		empty = empty + "isInjure " + isUseSkillSpec() + "\n";
+		empty = empty + "isInjure " + isDie + "\n";
+		empty = empty + "isInjure " + isDie + "\n";
+		empty = empty + "isInjure " + isDie + "\n";
+		Res.outz(empty + "isInjure " + isDie + "\n");
+	}
+
+	public void setDanhHieu(int smallDanhHieu, int frame)
+	{
+		smallDanhHieu = 0;
+		frame = 1;
+		if (mainImg == null)
+			mainImg = ImgByName.getImagePath("banner_" + 0, ImgByName.hashImagePath);
+		if (mainImg.img != null)
+		{
+			int num = mainImg.img.getHeight() / mainImg.nFrame;
+			if (num < 1)
+				num = 1;
+			fraDanhHieu = new FrameImage(mainImg.img, mainImg.img.getWidth(), num);
+		}
+		Res.err("===== tim thay DanhHieu ve danh hieu ra");
 	}
 }

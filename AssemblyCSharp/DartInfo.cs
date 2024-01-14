@@ -19,4 +19,11 @@ public class DartInfo
 	public short nUpdate;
 
 	public int va;
+
+	public short loop;
+
+	public DartInfo clone()
+	{
+		return null;
+	}
 }

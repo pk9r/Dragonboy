@@ -1,5 +1,7 @@
 public class Command
 {
+	public bool isDisplay;
+
 	public ActionChat actionChat;
 
 	public string caption;

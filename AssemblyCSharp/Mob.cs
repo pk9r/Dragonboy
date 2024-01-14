@@ -145,6 +145,12 @@ public class Mob : IMapObject
 
 	public static MyVector newMob = new MyVector();
 
+	public bool isMafuba;
+
+	public int xMFB;
+
+	public int yMFB;
+
 	public int xSd;
 
 	public int ySd;
@@ -208,6 +214,8 @@ public class Mob : IMapObject
 	public Image imgHPtem;
 
 	private int offset;
+
+	public bool isHide;
 
 	private sbyte[] cou = new sbyte[2] { -1, 1 };
 
@@ -372,6 +380,11 @@ public class Mob : IMapObject
 			}
 			else
 				Service.gI().requestModTemplate(templateId);
+			if (lastMob.size() > 15)
+			{
+				arrMobTemplate[int.Parse((string)lastMob.elementAt(0))].data = null;
+				lastMob.removeElementAt(0);
+			}
 			lastMob.addElement(templateId + string.Empty);
 		}
 		else
@@ -381,13 +394,13 @@ public class Mob : IMapObject
 		}
 	}
 
-	public void setBody(short id)
+	public virtual void setBody(short id)
 	{
 		changBody = true;
 		smallBody = id;
 	}
 
-	public void clearBody()
+	public virtual void clearBody()
 	{
 		changBody = false;
 	}
@@ -488,6 +501,8 @@ public class Mob : IMapObject
 
 	public virtual void update()
 	{
+		if (isMafuba)
+			return;
 		GetFrame();
 		if (blindEff && GameCanvas.gameTick % 5 == 0)
 			ServerEffect.addServerEffect(113, x, y, 1);
@@ -717,7 +732,7 @@ public class Mob : IMapObject
 
 	public void setInjure()
 	{
-		if (hp > 0 && status != 3)
+		if (hp > 0 && status != 3 && status != 7)
 		{
 			timeStatus = 4;
 			status = 7;
@@ -793,13 +808,7 @@ public class Mob : IMapObject
 		int cx = cFocus.cx;
 		int cy = cFocus.cy;
 		if (Res.abs(cx - x) < w * 2 && Res.abs(cy - y) < h * 2)
-		{
-			if (x < cx)
-				x = cx - w;
-			else
-				x = cx + w;
 			p3 = 0;
-		}
 		else
 			p3 = 1;
 	}
@@ -984,18 +993,22 @@ public class Mob : IMapObject
 		}
 		else if (p1 == 1)
 		{
-			if (arrMobTemplate[templateId].type != 0 && !isDontMove && !isIce && !isWind)
-			{
-				x += (xFirst - x) / 4;
-				y += (yFirst - y) / 4;
-			}
-			if (Res.abs(xFirst - x) < 5 && Res.abs(yFirst - y) < 5 && tick == array.Length)
+			if (arrMobTemplate[templateId].type == 0 || isDontMove || isIce || !isWind)
+				;
+			if (tick == array.Length)
 			{
 				status = 2;
 				p1 = 0;
 				p2 = 0;
 				tick = 0;
 			}
+		}
+		if (tick == 5 && cFocus != null && cFocus.charID == Char.myCharz().charID)
+		{
+			if (templateId == 88 && p3 != 0)
+				GameScr.shock_scr = 2;
+			if (templateId == 89)
+				GameScr.shock_scr = 2;
 		}
 	}
 
@@ -1041,11 +1054,11 @@ public class Mob : IMapObject
 				}
 				else if (b2 > 2)
 				{
-					b2 = (sbyte)(b2 + (sbyte)(mobId % 2));
+					b2 += (sbyte)(mobId % 2);
 				}
 				else if (GameCanvas.gameTick % 2 == 1)
 				{
-					b2 = (sbyte)(b2 - 1);
+					b2--;
 				}
 				x += b2 * dir;
 				if (x > xFirst + arrMobTemplate[templateId].rangeMove)
@@ -1072,7 +1085,7 @@ public class Mob : IMapObject
 				x += b3 * dir;
 				if (GameCanvas.gameTick % 10 > 2)
 					y += b3 * dirV;
-				b3 = (sbyte)(b3 + (sbyte)((GameCanvas.gameTick + mobId) % 2));
+				b3 += (sbyte)((GameCanvas.gameTick + mobId) % 2);
 				if (x > xFirst + arrMobTemplate[templateId].rangeMove)
 				{
 					dir = -1;
@@ -1101,7 +1114,7 @@ public class Mob : IMapObject
 				num = 5;
 				sbyte b = (sbyte)(arrMobTemplate[templateId].speed + (sbyte)(mobId % 2));
 				x += b * dir;
-				b = (sbyte)(b + (sbyte)((GameCanvas.gameTick + mobId) % 2));
+				b += (sbyte)((GameCanvas.gameTick + mobId) % 2);
 				if (GameCanvas.gameTick % 10 > 2)
 					y += b * dirV;
 				if (x > xFirst + arrMobTemplate[templateId].rangeMove)
@@ -1218,6 +1231,16 @@ public class Mob : IMapObject
 
 	public virtual void paint(mGraphics g)
 	{
+		if (isHide)
+			return;
+		if (isMafuba)
+		{
+			if (!changBody)
+				arrMobTemplate[templateId].data.paintFrame(g, frame, xMFB, yMFB, (dir != 1) ? 1 : 0, 2);
+			else
+				SmallImage.drawSmallImage(g, smallBody, xMFB, yMFB, (dir != 1) ? 2 : 0, mGraphics.BOTTOM | mGraphics.HCENTER);
+			return;
+		}
 		if (isShadown && status != 0)
 			paintShadow(g);
 		if (!isPaint() || (status == 1 && p3 > 0 && GameCanvas.gameTick % 3 == 0))
@@ -1226,7 +1249,7 @@ public class Mob : IMapObject
 		if (!changBody)
 			arrMobTemplate[templateId].data.paintFrame(g, frame, x, y + fy, (dir != 1) ? 1 : 0, 2);
 		else
-			SmallImage.drawSmallImage(g, smallBody, x, y + fy - 14, 0, 3);
+			SmallImage.drawSmallImage(g, smallBody, x, y + fy - 9, (dir != 1) ? 2 : 0, mGraphics.BOTTOM | mGraphics.HCENTER);
 		g.translate(0, -GameCanvas.transY);
 		if (Char.myCharz().mobFocus == null || !Char.myCharz().mobFocus.Equals(this) || status == 1 || hp <= 0 || imgHPtem == null)
 			return;

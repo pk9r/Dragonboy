@@ -425,7 +425,8 @@ public class LoginScr : mScreen, IActionListener
 				right = tfPass.cmdClear;
 			return;
 		}
-		GameCanvas.connect();
+		if (!Session_ME.gI().isConnected())
+			GameCanvas.connect();
 		Res.outz("ccccccc " + text + " " + text2 + " " + GameMidlet.VERSION + " " + (sbyte)(isLogin2 ? 1 : 0));
 		Service.gI().login(text, text2, GameMidlet.VERSION, (sbyte)(isLogin2 ? 1 : 0));
 		if (Session_ME.connected)
@@ -435,6 +436,7 @@ public class LoginScr : mScreen, IActionListener
 		focus = 0;
 		if (!isLogin2)
 			actRegisterLeft();
+		GameCanvas.timeBreakLoading = mSystem.currentTimeMillis() + 30000;
 	}
 
 	public void savePass()
@@ -475,10 +477,7 @@ public class LoginScr : mScreen, IActionListener
 			{
 				timeLogin--;
 				if (timeLogin == 0)
-				{
-					Session_ME.gI().close();
 					GameCanvas.loginScr.doLogin();
-				}
 				lastTimeLogin = currTimeLogin;
 			}
 		}
@@ -632,7 +631,9 @@ public class LoginScr : mScreen, IActionListener
 			return;
 		if (GameCanvas.currentDialog == null)
 		{
-			PopUp.paintPopUp(h: 105, w: (GameCanvas.w < 200) ? 160 : 180, g: g, x: xLog, y: yLog - 10, color: -1, isButton: true);
+			int h = 105;
+			int w = ((GameCanvas.w < 200) ? 160 : 180);
+			PopUp.paintPopUp(g, xLog, yLog - 10, w, h, -1, true);
 			if (GameCanvas.h > 160 && imgTitle != null)
 				g.drawImage(imgTitle, GameCanvas.hw, num, 3);
 			GameCanvas.debug("PLG4", 1);
@@ -908,6 +909,8 @@ public class LoginScr : mScreen, IActionListener
 
 	public void backToRegister()
 	{
+		GameCanvas.timeBreakLoading = mSystem.currentTimeMillis() + 30000;
+		ServerListScreen.countDieConnect = 0;
 		if (GameCanvas.loginScr.isLogin2)
 		{
 			GameCanvas.startYesNoDlg(mResources.note, new Command(mResources.YES, GameCanvas.panel, 10019, null), new Command(mResources.NO, GameCanvas.panel, 10020, null));
@@ -917,6 +920,5 @@ public class LoginScr : mScreen, IActionListener
 			GameMidlet.isBackWindowsPhone = true;
 		GameCanvas.instance.resetToLoginScr = false;
 		GameCanvas.instance.doResetToLoginScr(GameCanvas.loginScr);
-		Session_ME.gI().close();
 	}
 }

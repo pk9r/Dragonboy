@@ -40,4 +40,11 @@ public class SkillTemplate
 			return true;
 		return false;
 	}
+
+	public bool isSkillSpec()
+	{
+		if (type == 4)
+			return true;
+		return false;
+	}
 }

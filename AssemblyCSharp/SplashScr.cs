@@ -14,6 +14,10 @@ public class SplashScr : mScreen
 
 	public static Image imgLogo;
 
+	private int timeLoading = 10;
+
+	public long TIMEOUT;
+
 	public SplashScr()
 	{
 		instance = this;
@@ -30,16 +34,47 @@ public class SplashScr : mScreen
 		{
 			isCheckConnect = true;
 			if (Rms.loadRMSInt("serverchat") != -1)
-				GameScr.isPaintChatVip = ((Rms.loadRMSInt("serverchat") == 0) ? true : false);
+				GameScr.isPaintChatVip = Rms.loadRMSInt("serverchat") == 0;
 			if (Rms.loadRMSInt("isPlaySound") != -1)
 				GameCanvas.isPlaySound = Rms.loadRMSInt("isPlaySound") == 1;
 			if (GameCanvas.isPlaySound)
 				SoundMn.gI().loadSound(TileMap.mapID);
 			SoundMn.gI().getStrOption();
-			ServerListScreen.loadIP();
+			if (Rms.loadRMSInt("svselect") == -1)
+			{
+				string[] array = Res.split(ServerListScreen.linkDefault.Trim(), ",", 0);
+				mResources.loadLanguague(sbyte.Parse(array[array.Length - 2]));
+				ServerListScreen.nameServer = new string[array.Length - 2];
+				ServerListScreen.address = new string[array.Length - 2];
+				ServerListScreen.port = new short[array.Length - 2];
+				ServerListScreen.language = new sbyte[array.Length - 2];
+				ServerListScreen.hasConnected = new bool[2];
+				for (int i = 0; i < array.Length - 2; i++)
+				{
+					string[] array2 = Res.split(array[i].Trim(), ":", 0);
+					ServerListScreen.nameServer[i] = array2[0];
+					ServerListScreen.address[i] = array2[1];
+					ServerListScreen.port[i] = short.Parse(array2[2]);
+					ServerListScreen.language[i] = sbyte.Parse(array2[3].Trim());
+				}
+				GameCanvas.serverScr.switchToMe();
+			}
+			else
+				ServerListScreen.loadIP();
 		}
 		splashScrStat++;
 		ServerListScreen.updateDeleteData();
+		if (splashScrStat >= 150)
+		{
+			Res.outz("cho man hinh nay qa lau");
+			if (Session_ME.gI().isConnected())
+			{
+				ServerListScreen.loadScreen = true;
+				GameCanvas.serverScreen.switchToMe();
+			}
+			else
+				mSystem.onDisconnected();
+		}
 	}
 
 	public static void loadIP()

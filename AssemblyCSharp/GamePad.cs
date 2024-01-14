@@ -75,12 +75,17 @@ public class GamePad
 			wZone = GameCanvas.hw;
 			yZone = GameCanvas.hh >> 1;
 			hZone = GameCanvas.h - 80;
+			return;
 		}
-		else
+		xZone = 0;
+		wZone = GameCanvas.hw / 4 * 3 - 20;
+		yZone = GameCanvas.hh >> 1;
+		hZone = GameCanvas.h;
+		if (mSystem.clientType == 2)
 		{
 			xZone = 0;
-			wZone = GameCanvas.hw / 4 * 3 - 20;
-			yZone = GameCanvas.hh >> 1;
+			yZone = (GameCanvas.h >> 1) + 40;
+			wZone = GameCanvas.hw / 4 * 3 - 40;
 			hZone = GameCanvas.h;
 		}
 	}
@@ -257,9 +262,7 @@ public class GamePad
 			if (GameScr.isAnalog == 0)
 				return false;
 			bool flag = false;
-			if ((GameCanvas.px >= xZone && GameCanvas.px <= wZone && GameCanvas.py >= yZone && GameCanvas.py <= hZone) || GameCanvas.px >= GameCanvas.w - 50)
-				return true;
-			return false;
+			return ((GameCanvas.px >= xZone && GameCanvas.px <= wZone && GameCanvas.py >= yZone && GameCanvas.py <= hZone) || GameCanvas.px >= GameCanvas.w - 50) ? true : false;
 		}
 		catch (Exception)
 		{

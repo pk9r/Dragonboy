@@ -33,15 +33,7 @@ public class Sound
 
 	public static GameObject[] player;
 
-	public static string[] fileName = new string[34]
-	{
-		"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-		"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
-		"29", "21", "22", "23", "24", "25", "26", "27", "28", "29",
-		"30", "31", "32", "33"
-	};
-
-	public static sbyte MLogin = 0;
+	public static sbyte MLogin;
 
 	public static sbyte MBClick = 1;
 

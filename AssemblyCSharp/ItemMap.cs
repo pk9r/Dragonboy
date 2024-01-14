@@ -127,7 +127,7 @@ public class ItemMap : IMapObject
 		}
 		else
 		{
-			status = (sbyte)(status - 4);
+			status -= 4;
 			if (status < -12)
 			{
 				y -= 12;

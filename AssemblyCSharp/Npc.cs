@@ -24,7 +24,7 @@ public class Npc : Char
 
 	public int sys;
 
-	public bool isHide;
+	public new bool isHide;
 
 	private int duaHauIndex;
 
@@ -254,7 +254,16 @@ public class Npc : Char
 						if (Char.myCharz().npcFocus != null && Char.myCharz().npcFocus.Equals(this))
 						{
 							if (ChatPopup.currChatPopup == null)
-								g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx, cy - ch - (num2 - 8), mGraphics.BOTTOM | mGraphics.HCENTER);
+							{
+								int num3 = 0;
+								int num4 = 0;
+								if (Char.myCharz().npcFocus.template.npcTemplateId == 28 || Char.myCharz().npcFocus.template.npcTemplateId == 41)
+								{
+									num3 = 3;
+									num4 = -12;
+								}
+								g.drawRegion(Mob.imgHP, 0, 0, 9, 6, 0, cx + num3, cy - ch - (num2 - 8) + num4, mGraphics.BOTTOM | mGraphics.HCENTER);
+							}
 						}
 						else
 						{
@@ -324,7 +333,16 @@ public class Npc : Char
 				if (Char.myCharz().npcFocus != null && Char.myCharz().npcFocus.Equals(this))
 				{
 					if (TileMap.mapID != 113)
-						mFont.tahoma_7_yellow.drawString(g, template.name, cx, cy - ch - mFont.tahoma_7.getHeight() - num2, mFont.CENTER, mFont.tahoma_7_grey);
+					{
+						int num3 = 0;
+						int num4 = 0;
+						if (Char.myCharz().npcFocus.template.npcTemplateId == 28 || Char.myCharz().npcFocus.template.npcTemplateId == 41)
+						{
+							num3 = 3;
+							num4 = -12;
+						}
+						mFont.tahoma_7_yellow.drawString(g, template.name, cx + num3, cy - ch - mFont.tahoma_7.getHeight() - num2 + num4, mFont.CENTER, mFont.tahoma_7_grey);
+					}
 				}
 				else
 				{
@@ -332,7 +350,16 @@ public class Npc : Char
 					if (template.npcTemplateId == 47)
 						num2 = 40;
 					if (TileMap.mapID != 113)
-						mFont.tahoma_7_yellow.drawString(g, template.name, cx, cy - ch - num2 - mFont.tahoma_7.getHeight(), mFont.CENTER, mFont.tahoma_7_grey);
+					{
+						int num5 = 0;
+						int num6 = 0;
+						if (template.npcTemplateId == 28 || template.npcTemplateId == 41)
+						{
+							num5 = 3;
+							num6 = -12;
+						}
+						mFont.tahoma_7_yellow.drawString(g, template.name, cx + num5, cy - ch - num2 - mFont.tahoma_7.getHeight() + num6, mFont.CENTER, mFont.tahoma_7_grey);
+					}
 				}
 			}
 			dyEff = 65;

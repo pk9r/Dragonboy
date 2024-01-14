@@ -335,7 +335,9 @@ public class mFont
 		int num = rgb & 0xFF;
 		int num2 = (rgb >> 8) & 0xFF;
 		int num3 = (rgb >> 16) & 0xFF;
-		return new Color(b: (float)num / 256f, g: (float)num2 / 256f, r: (float)num3 / 256f);
+		float b = (float)num / 256f;
+		float g = (float)num2 / 256f;
+		return new Color((float)num3 / 256f, g, b);
 	}
 
 	public Color bigColor(int id)
@@ -604,27 +606,23 @@ public class mFont
 				if (text2[text2.Length - 1] == '\n')
 					text2 = text2.Substring(0, text2.Length - 1);
 				arrayList.Add(text2);
-				if (num != length - 1)
+				if (num == length - 1)
+					break;
+				for (i = num + 1; i != length - 1 && src[i] == ' '; i++)
 				{
-					for (i = num + 1; i != length - 1 && src[i] == ' '; i++)
-					{
-					}
-					if (i == length - 1)
-						break;
-					num = i;
-					text = string.Empty;
-					continue;
 				}
-				return arrayList;
+				if (i == length - 1)
+					break;
+				num = i;
+				text = string.Empty;
 			}
-			return arrayList;
 		}
 		catch (Exception ex)
 		{
 			Cout.LogWarning("EXCEPTION WHEN REAL SPLIT " + src + "\nend=" + num + "\n" + ex.Message + "\n" + ex.StackTrace);
 			arrayList.Add(src);
-			return arrayList;
 		}
+		return arrayList;
 	}
 
 	public string[] splitFontArray(string src, int lineWidth)

@@ -108,6 +108,8 @@ public class Effect
 
 	public int trans;
 
+	public long timeExist;
+
 	public static MyVector lastEff = new MyVector();
 
 	public static MyVector newEff = new MyVector();
@@ -199,6 +201,11 @@ public class Effect
 			else
 				Service.gI().getEffData((short)id);
 			addEffData(effectData);
+			if (lastEff.size() > 20)
+			{
+				removeEffData(int.Parse((string)lastEff.elementAt(0)));
+				lastEff.removeElementAt(0);
+			}
 			lastEff.addElement(effId + string.Empty);
 		}
 		indexFrom = -1;
@@ -420,21 +427,21 @@ public class Effect
 					if (loop == -1)
 					{
 						tLoopCount++;
+						t = 0;
 						if (tLoopCount == tLoop)
 						{
 							tLoopCount = 0;
-							t = 0;
 							if (tLoop > 1)
 								trans = Res.random(0, 2);
 						}
 						return;
 					}
 					tLoopCount++;
+					t = 0;
 					if (tLoopCount == tLoop)
 					{
 						tLoopCount = 0;
 						loop--;
-						t = 0;
 						if (loop == 0)
 							EffecMn.vEff.removeElement(this);
 					}
@@ -447,5 +454,10 @@ public class Effect
 		{
 			EffecMn.vEff.removeElement(this);
 		}
+	}
+
+	public int getnFrame()
+	{
+		return data.Length;
 	}
 }

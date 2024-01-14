@@ -236,9 +236,18 @@ public class ChatPopup : Effect2, IActionListener
 			delay--;
 		if (performDelay > 0)
 			performDelay--;
+		else
+		{
+			GameScr.info1.info.time = 0;
+			for (int i = 0; i < GameScr.info1.info.infoWaitToShow.size(); i++)
+			{
+				if (((InfoItem)GameScr.info1.info.infoWaitToShow.elementAt(i)).speed != 70)
+					((InfoItem)GameScr.info1.info.infoWaitToShow.elementAt(i)).speed = 10;
+			}
+		}
 		if (sayRun > 1)
 			sayRun--;
-		if ((c != null && Char.chatPopup != null && Char.chatPopup != this) || (c != null && Char.chatPopup == null) || delay == 0)
+		if ((c != null && Char.chatPopup != null && Char.chatPopup != this) || (c != null && Char.chatPopup == null) || delay <= 0)
 		{
 			Effect2.vEffect2Outside.removeElement(this);
 			Effect2.vEffect2.removeElement(this);
@@ -257,10 +266,17 @@ public class ChatPopup : Effect2, IActionListener
 		if ((num <= 0 || num2 <= 0) && !GameCanvas.panel.isShow)
 			return;
 		PopUp.paintPopUp(g, num, num2, num3, num4, 16777215, false);
+		int num5 = 0;
 		if (c != null)
-			SmallImage.drawSmallImage(g, c.avatar, cx + 14, cy, 0, StaticObj.BOTTOM_LEFT);
+		{
+			num5 = ((GameCanvas.gameTick % 10 <= 2) ? 1 : 0);
+			SmallImage.drawSmallImage(g, c.avatar, cx + 14, cy + num5, 0, StaticObj.BOTTOM_LEFT);
+		}
 		if (iconID != 0)
-			SmallImage.drawSmallImage(g, iconID, cx + num3 / 2, cy + ch - 15, 0, StaticObj.VCENTER_HCENTER);
+		{
+			num5 = ((GameCanvas.gameTick % 10 <= 2) ? 1 : 0);
+			SmallImage.drawSmallImage(g, iconID, cx + num3 / 2, cy + ch - 15 + num5, 0, StaticObj.VCENTER_HCENTER);
+		}
 		if (scr != null)
 		{
 			g.setClip(num, num2, num3, num4 - 16);
@@ -275,7 +291,7 @@ public class ChatPopup : Effect2, IActionListener
 			g.setClip(num, num2 + 1, num3, num4 - 17);
 			g.translate(0, -cmyText);
 		}
-		int num5 = -1;
+		int num6 = -1;
 		for (int i = 0; i < says.Length; i++)
 		{
 			if (says[i].StartsWith("--"))
@@ -285,9 +301,9 @@ public class ChatPopup : Effect2, IActionListener
 				continue;
 			}
 			mFont mFont2 = mFont.tahoma_7;
-			int num6 = 2;
+			int num7 = 2;
 			string st = says[i];
-			int num7 = 0;
+			int num8 = 0;
 			if (says[i].StartsWith("|"))
 			{
 				string[] array = Res.split(says[i], "|", 0);
@@ -296,14 +312,14 @@ public class ChatPopup : Effect2, IActionListener
 				if (array.Length == 4)
 				{
 					st = array[3];
-					num6 = int.Parse(array[2]);
+					num7 = int.Parse(array[2]);
 				}
-				num7 = int.Parse(array[1]);
-				num5 = num7;
+				num8 = int.Parse(array[1]);
+				num6 = num8;
 			}
 			else
-				num7 = num5;
-			switch (num7)
+				num8 = num6;
+			switch (num8)
 			{
 			case -1:
 				mFont2 = mFont.tahoma_7;
@@ -347,14 +363,14 @@ public class ChatPopup : Effect2, IActionListener
 						second--;
 					}
 				}
-				mFont2.drawString(g, second + " " + array2[2], cx + sayWidth / 2, cy + sayRun + i * 12 - strY + 12, num6);
+				mFont2.drawString(g, second + " " + array2[2], cx + sayWidth / 2, cy + sayRun + i * 12 - strY + 12, num7);
 			}
 			else
 			{
-				if (num6 == 2)
-					mFont2.drawString(g, st, cx + sayWidth / 2, cy + sayRun + i * 12 - strY + 12, num6);
-				if (num6 == 1)
-					mFont2.drawString(g, st, cx + sayWidth - 5, cy + sayRun + i * 12 - strY + 12, num6);
+				if (num7 == 2)
+					mFont2.drawString(g, st, cx + sayWidth / 2, cy + sayRun + i * 12 - strY + 12, num7);
+				if (num7 == 1)
+					mFont2.drawString(g, st, cx + sayWidth - 5, cy + sayRun + i * 12 - strY + 12, num7);
 			}
 		}
 		if (isClip)
@@ -402,15 +418,15 @@ public class ChatPopup : Effect2, IActionListener
 		}
 		else
 		{
-			for (int num8 = 0; num8 < maxStarSlot; num8++)
+			for (int num9 = 0; num9 < maxStarSlot; num9++)
 			{
-				g.drawImage(Panel.imgMaxStar, num + num3 / 2 - maxStarSlot * 20 / 2 + num8 * 20 + mGraphics.getImageWidth(Panel.imgMaxStar), num2 + num4 - 13, 3);
+				g.drawImage(Panel.imgMaxStar, num + num3 / 2 - maxStarSlot * 20 / 2 + num9 * 20 + mGraphics.getImageWidth(Panel.imgMaxStar), num2 + num4 - 13, 3);
 			}
 			if (starSlot > 0)
 			{
-				for (int num9 = 0; num9 < starSlot; num9++)
+				for (int num10 = 0; num10 < starSlot; num10++)
 				{
-					g.drawImage(Panel.imgStar, num + num3 / 2 - maxStarSlot * 20 / 2 + num9 * 20 + mGraphics.getImageWidth(Panel.imgStar), num2 + num4 - 13, 3);
+					g.drawImage(Panel.imgStar, num + num3 / 2 - maxStarSlot * 20 / 2 + num10 * 20 + mGraphics.getImageWidth(Panel.imgStar), num2 + num4 - 13, 3);
 				}
 			}
 		}

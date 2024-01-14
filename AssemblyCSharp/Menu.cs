@@ -141,7 +141,6 @@ public class Menu
 				command2.isPlaySoundButton = false;
 				int width = mFont.tahoma_7_yellow.getWidth(command2.caption);
 				command2.subCaption = mFont.tahoma_7_yellow.splitFontArray(command2.caption, menuW - 10);
-				Res.outz("c caption= " + command2.caption);
 			}
 			menuTemY = new int[menuItems.size()];
 			menuX = (GameCanvas.w - menuItems.size() * menuW) / 2;
@@ -390,7 +389,8 @@ public class Menu
 				g.drawImage(imgMenu2, menuX + i * menuW + 1, menuTemY[i], 0);
 			else
 				g.drawImage(imgMenu1, menuX + i * menuW + 1, menuTemY[i], 0);
-			string[] array = ((Command)menuItems.elementAt(i)).subCaption;
+			Command command = (Command)menuItems.elementAt(i);
+			string[] array = command.subCaption;
 			if (array == null)
 				array = new string[1] { ((Command)menuItems.elementAt(i)).caption };
 			int num = menuTemY[i] + (menuH - array.Length * 14) / 2 + 1;
@@ -398,8 +398,14 @@ public class Menu
 			{
 				if (i == menuSelectedItem)
 					mFont.tahoma_7b_green2.drawString(g, array[j], menuX + i * menuW + menuW / 2, num + j * 14, 2);
+				else if (command.isDisplay)
+				{
+					mFont.tahoma_7b_red.drawString(g, array[j], menuX + i * menuW + menuW / 2, num + j * 14, 2);
+				}
 				else
+				{
 					mFont.tahoma_7b_dark.drawString(g, array[j], menuX + i * menuW + menuW / 2, num + j * 14, 2);
+				}
 			}
 		}
 		g.translate(-g.getTranslateX(), -g.getTranslateY());

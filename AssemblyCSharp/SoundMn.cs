@@ -98,6 +98,22 @@ public class SoundMn
 
 	public static int FIREWORK = 30;
 
+	public static int KAMEX10_0 = 31;
+
+	public static int KAMEX10_1 = 32;
+
+	public static int DESTROY_0 = 33;
+
+	public static int DESTROY_1 = 34;
+
+	public static int MAFUBA_0 = 35;
+
+	public static int MAFUBA_1 = 36;
+
+	public static int MAFUBA_2 = 37;
+
+	public static int DESTROY_2 = 38;
+
 	public bool freePool;
 
 	public int poolCount;
@@ -118,12 +134,12 @@ public class SoundMn
 
 	public void loadSound(int mapID)
 	{
-		Sound.init(new int[3] { AIR_SHIP, RAIN, TAITAONANGLUONG }, new int[31]
+		Sound.init(new int[3] { AIR_SHIP, RAIN, TAITAONANGLUONG }, new int[39]
 		{
 			GET_ITEM, MOVE, LOW_PUNCH, LOW_KICK, FLY, JUMP, PANEL_OPEN, BUTTON_CLOSE, BUTTON_CLICK, MEDIUM_PUNCH,
 			MEDIUM_KICK, PANEL_OPEN, EAT_PEAN, OPEN_DIALOG, NORMAL_KAME, NAMEK_KAME, XAYDA_KAME, EXPLODE_1, EXPLODE_2, TRAIDAT_KAME,
 			HP_UP, THAIDUONGHASAN, HOISINH, GONG, KHICHAY, BIG_EXPLODE, NAMEK_LAZER, NAMEK_CHARGE, RADAR_CLICK, RADAR_ITEM,
-			FIREWORK
+			FIREWORK, KAMEX10_0, KAMEX10_1, DESTROY_0, DESTROY_1, MAFUBA_0, MAFUBA_1, MAFUBA_2, DESTROY_2
 		});
 	}
 
@@ -209,9 +225,9 @@ public class SoundMn
 		{
 			Panel.strCauhinh = new string[4]
 			{
-				(!Char.isPaintAura) ? (text2 + mResources.aura_off.Trim()) : (text + mResources.aura_off.Trim()),
-				(!Char.isPaintAura2) ? (text2 + mResources.aura_off_2.Trim()) : (text + mResources.aura_off_2.Trim()),
-				(!GameCanvas.isPlaySound) ? (text2 + mResources.turnOffSound.Trim()) : (text + mResources.turnOffSound.Trim()),
+				(!Char.isPaintAura) ? (text + mResources.aura_off) : (text2 + mResources.aura_off),
+				(!Char.isPaintAura2) ? (text + mResources.aura_off_2) : (text2 + mResources.aura_off_2),
+				(!GameCanvas.isPlaySound) ? (text2 + mResources.turnOffSound) : (text + mResources.turnOffSound),
 				(mGraphics.zoomLevel <= 1) ? (text2 + mResources.x2Screen) : (text + mResources.x1Screen)
 			};
 			return;
@@ -221,10 +237,10 @@ public class SoundMn
 			text3 = (GameScr.isPaintChatVip ? (text + mResources.serverchat_off) : (text2 + mResources.serverchat_off));
 		Panel.strCauhinh = new string[5]
 		{
-			(!Char.isPaintAura) ? (text2 + mResources.aura_off.Trim()) : (text + mResources.aura_off.Trim()),
-			(!Char.isPaintAura2) ? (text2 + mResources.aura_off_2.Trim()) : (text + mResources.aura_off_2.Trim()),
-			(!GameCanvas.isPlaySound) ? (text2 + mResources.turnOffSound.Trim()) : (text + mResources.turnOffSound.Trim()),
-			(!GameCanvas.lowGraphic) ? (text2 + mResources.cauhinhthap.Trim()) : (text + mResources.cauhinhthap.Trim()),
+			(!Char.isPaintAura) ? (text + mResources.aura_off) : (text2 + mResources.aura_off),
+			(!Char.isPaintAura2) ? (text + mResources.aura_off_2) : (text2 + mResources.aura_off_2),
+			(!GameCanvas.isPlaySound) ? (text2 + mResources.turnOffSound) : (text + mResources.turnOffSound),
+			(!GameCanvas.lowGraphic) ? (text2 + mResources.cauhinhthap) : (text + mResources.cauhinhthap),
 			text3
 		};
 	}
@@ -378,7 +394,7 @@ public class SoundMn
 
 	public void HatToolOption()
 	{
-		Service.gI().sendOptHat();
+		Service.gI().sendOptHat(0);
 	}
 
 	public void update()

@@ -1,3 +1,5 @@
+using System;
+
 public class BackgroudEffect
 {
 	public static MyVector vBgEffect = new MyVector();
@@ -113,6 +115,12 @@ public class BackgroudEffect
 	public static Image imgChamTron1;
 
 	public static Image imgChamTron2;
+
+	public static short id_water1;
+
+	public static short id_water2;
+
+	public static Image water3 = null;
 
 	public static bool isFog;
 
@@ -499,12 +507,20 @@ public class BackgroudEffect
 
 	public void paintWater(mGraphics g)
 	{
-		if (typeEff == 10)
+		if (typeEff != 10)
+			return;
+		g.setColor(colorWater);
+		for (int i = 0; i < num; i++)
 		{
-			g.setColor(colorWater);
-			for (int i = 0; i < num; i++)
+			g.drawImage((i >= num / 2) ? water1 : water2, x[i], y[i] + yWater, 0);
+		}
+		if (id_water1 != 0 && water3 == null)
+			water3 = SmallImage.imgNew[id_water1].img;
+		if (water3 != null)
+		{
+			for (int j = 0; j < num / 2; j++)
 			{
-				g.drawImage((i >= num / 2) ? water1 : water2, x[i], y[i] + yWater, 0);
+				g.drawImage(water3, x[j], y[j] + yWater, 0);
 			}
 		}
 	}
@@ -531,234 +547,246 @@ public class BackgroudEffect
 
 	public void update()
 	{
-		switch (typeEff)
+		try
 		{
-		case 10:
-		{
-			for (int m = 0; m < this.num; m++)
+			switch (typeEff)
 			{
-				x[m] -= vx[m];
-				if (x[m] < -vx[m] + GameScr.cmx)
-					x[m] = GameCanvas.w + vx[m] + GameScr.cmx;
+			case 10:
+			{
+				for (int m = 0; m < this.num; m++)
+				{
+					x[m] -= vx[m];
+					if (x[m] < -vx[m] + GameScr.cmx)
+						x[m] = GameCanvas.w + vx[m] + GameScr.cmx;
+				}
+				break;
 			}
-			break;
-		}
-		case 9:
-		{
-			for (int i = 0; i < this.num; i++)
+			case 9:
 			{
-				x[i] -= vx[i];
-				if (x[i] < -vx[i])
+				for (int i = 0; i < this.num; i++)
 				{
-					wP[i] = Res.abs(Res.random(1, 3));
-					vx[i] = wP[i];
-					x[i] = GameCanvas.w + vx[i];
-				}
-			}
-			break;
-		}
-		case 3:
-			break;
-		case 0:
-		case 12:
-		{
-			for (int l = 0; l < sum; l++)
-			{
-				if (l % 3 != 0 && typeEff != 12 && TileMap.tileTypeAt(x[l], y[l] - GameCanvas.transY, 2))
-					activeEff[l] = true;
-				if (l % 3 == 0 && y[l] > GameCanvas.h + GameScr.cmy)
-				{
-					x[l] = Res.random(-10, GameCanvas.w + 300) + GameScr.cmx;
-					y[l] = Res.random(-100, 0) + GameScr.cmy;
-				}
-				if (!activeEff[l])
-				{
-					y[l] += vy[l];
-					x[l] += vx[l];
-				}
-				if (!activeEff[l])
-					continue;
-				t[l]++;
-				if (t[l] > 2)
-				{
-					frame[l]++;
-					t[l] = 0;
-					if (frame[l] > 1)
+					x[i] -= vx[i];
+					if (x[i] < -vx[i])
 					{
-						frame[l] = 0;
-						activeEff[l] = false;
+						wP[i] = Res.abs(Res.random(1, 3));
+						vx[i] = wP[i];
+						x[i] = GameCanvas.w + vx[i];
+					}
+				}
+				break;
+			}
+			case 3:
+				break;
+			case 0:
+			case 12:
+			{
+				for (int l = 0; l < sum; l++)
+				{
+					if (l % 3 != 0 && typeEff != 12 && TileMap.tileTypeAt(x[l], y[l] - GameCanvas.transY, 2))
+						activeEff[l] = true;
+					if (l % 3 == 0 && y[l] > GameCanvas.h + GameScr.cmy)
+					{
 						x[l] = Res.random(-10, GameCanvas.w + 300) + GameScr.cmx;
 						y[l] = Res.random(-100, 0) + GameScr.cmy;
 					}
+					if (!activeEff[l])
+					{
+						y[l] += vy[l];
+						x[l] += vx[l];
+					}
+					if (!activeEff[l])
+						continue;
+					t[l]++;
+					if (t[l] > 2)
+					{
+						frame[l]++;
+						t[l] = 0;
+						if (frame[l] > 1)
+						{
+							frame[l] = 0;
+							activeEff[l] = false;
+							x[l] = Res.random(-10, GameCanvas.w + 300) + GameScr.cmx;
+							y[l] = Res.random(-100, 0) + GameScr.cmy;
+						}
+					}
 				}
+				break;
 			}
-			break;
-		}
-		case 1:
-		case 2:
-		case 5:
-		case 6:
-		case 7:
-		case 11:
-		case 15:
-		{
-			for (int j = 0; j < sum; j++)
+			case 1:
+			case 2:
+			case 5:
+			case 6:
+			case 7:
+			case 11:
+			case 15:
 			{
-				if (j % 3 != 0 && TileMap.tileTypeAt(x[j], y[j] + ((TileMap.tileID == 15) ? 10 : 0), 2))
-					activeEff[j] = true;
-				if (j % 3 == 0 && y[j] > TileMap.pxh)
+				for (int j = 0; j < sum; j++)
 				{
-					x[j] = Res.random(-10, TileMap.pxw + 50);
-					y[j] = Res.random(-50, 0);
-				}
-				if (!activeEff[j])
-				{
-					for (int k = 0; k < Teleport.vTeleport.size(); k++)
+					if (j % 3 != 0 && TileMap.tileTypeAt(x[j], y[j] + ((TileMap.tileID == 15) ? 10 : 0), 2))
+						activeEff[j] = true;
+					if (j % 3 == 0 && y[j] > TileMap.pxh)
 					{
-						Teleport teleport = (Teleport)Teleport.vTeleport.elementAt(k);
-						if (teleport != null && teleport.paintFire && x[j] < teleport.x + 80 && x[j] > teleport.x - 80 && y[j] < teleport.y + 80 && y[j] > teleport.y - 80)
-							x[j] += ((x[j] >= teleport.x) ? 10 : (-10));
-					}
-					y[j] += vy[j];
-					x[j] += vx[j];
-					t[j]++;
-					int num = ((typeEff != 11) ? 4 : 3);
-					num = ((typeEff != 15) ? 4 : 4);
-					if (t[j] > ((typeEff == 2) ? 4 : 2))
-					{
-						if (typeEff != 11 && typeEff != 15)
-							frame[j]++;
-						t[j] = 0;
-						if (frame[j] > num - 1)
-							frame[j] = 0;
-					}
-				}
-				else
-				{
-					t[j]++;
-					if (t[j] == 100)
-					{
-						t[j] = 0;
 						x[j] = Res.random(-10, TileMap.pxw + 50);
 						y[j] = Res.random(-50, 0);
-						activeEff[j] = false;
+					}
+					if (!activeEff[j])
+					{
+						for (int k = 0; k < Teleport.vTeleport.size(); k++)
+						{
+							Teleport teleport = (Teleport)Teleport.vTeleport.elementAt(k);
+							if (teleport != null && teleport.paintFire && x[j] < teleport.x + 80 && x[j] > teleport.x - 80 && y[j] < teleport.y + 80 && y[j] > teleport.y - 80)
+								x[j] += ((x[j] >= teleport.x) ? 10 : (-10));
+						}
+						y[j] += vy[j];
+						x[j] += vx[j];
+						t[j]++;
+						int num = ((typeEff != 11) ? 4 : 3);
+						num = ((typeEff != 15) ? 4 : 4);
+						if (t[j] > ((typeEff == 2) ? 4 : 2))
+						{
+							if (typeEff != 11 && typeEff != 15)
+								frame[j]++;
+							t[j] = 0;
+							if (frame[j] > num - 1)
+								frame[j] = 0;
+						}
+					}
+					else
+					{
+						t[j]++;
+						if (t[j] == 100)
+						{
+							t[j] = 0;
+							x[j] = Res.random(-10, TileMap.pxw + 50);
+							y[j] = Res.random(-50, 0);
+							activeEff[j] = false;
+						}
 					}
 				}
-			}
-			break;
-		}
-		case 4:
-		{
-			for (int n = 0; n < sum; n++)
-			{
-				t[n]++;
-				if (t[n] > 10)
-				{
-					tick[n]++;
-					t[n] = 0;
-					if (tick[n] > 5)
-						tick[n] = 0;
-					frame[n] = dem[tick[n]];
-				}
-			}
-			break;
-		}
-		case 8:
-			tFire++;
-			if (tFire == 3)
-			{
-				tFire = 0;
-				frameFire++;
-				if (frameFire > 1)
-					frameFire = 0;
-			}
-			if (GameCanvas.gameTick % tStart == 0)
-				isFly = true;
-			if (!isFly)
 				break;
-			if (way == 1)
-			{
-				xShip += speed;
-				if (xShip > TileMap.pxw + 50)
-					reloadShip();
 			}
-			else if (way == 2)
+			case 4:
 			{
-				xShip -= speed;
-				if (xShip < -50)
-					reloadShip();
+				for (int n = 0; n < sum; n++)
+				{
+					t[n]++;
+					if (t[n] > 10)
+					{
+						tick[n]++;
+						t[n] = 0;
+						if (tick[n] > 5)
+							tick[n] = 0;
+						frame[n] = dem[tick[n]];
+					}
+				}
+				break;
 			}
-			else if (way == 3)
-			{
-				yShip += speed;
-				if (yShip > TileMap.pxh + 50)
-					reloadShip();
+			case 8:
+				tFire++;
+				if (tFire == 3)
+				{
+					tFire = 0;
+					frameFire++;
+					if (frameFire > 1)
+						frameFire = 0;
+				}
+				if (GameCanvas.gameTick % tStart == 0)
+					isFly = true;
+				if (!isFly)
+					break;
+				if (way == 1)
+				{
+					xShip += speed;
+					if (xShip > TileMap.pxw + 50)
+						reloadShip();
+				}
+				else if (way == 2)
+				{
+					xShip -= speed;
+					if (xShip < -50)
+						reloadShip();
+				}
+				else if (way == 3)
+				{
+					yShip += speed;
+					if (yShip > TileMap.pxh + 50)
+						reloadShip();
+				}
+				else if (way == 4)
+				{
+					yShip -= speed;
+					if (yShip < -50)
+						reloadShip();
+				}
+				break;
+			case 13:
+				updateCloud2();
+				break;
+			case 14:
+				updateFog();
+				break;
 			}
-			else if (way == 4)
-			{
-				yShip -= speed;
-				if (yShip < -50)
-					reloadShip();
-			}
-			break;
-		case 13:
-			updateCloud2();
-			break;
-		case 14:
-			updateFog();
-			break;
+		}
+		catch (Exception)
+		{
 		}
 	}
 
 	public void paintFront(mGraphics g)
 	{
-		switch (typeEff)
+		try
 		{
-		case 3:
-			break;
-		case 0:
-		case 12:
-		{
-			int cmx = GameScr.cmx;
-			int cmy = GameScr.cmy;
-			for (int i = 0; i < sum; i++)
+			switch (typeEff)
 			{
-				if (type[i] == 2 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy)
+			case 3:
+				break;
+			case 0:
+			case 12:
+			{
+				int cmx = GameScr.cmx;
+				int cmy = GameScr.cmy;
+				for (int i = 0; i < sum; i++)
 				{
-					if (activeEff[i])
-						g.drawRegion(imgHatMua, 0, 10 * frame[i], 13, 10, 0, x[i], y[i] - 10, 0);
-					else
-						g.drawImage(imgMua1, x[i], y[i], 0);
+					if (type[i] == 2 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy)
+					{
+						if (activeEff[i])
+							g.drawRegion(imgHatMua, 0, 10 * frame[i], 13, 10, 0, x[i], y[i] - 10, 0);
+						else
+							g.drawImage(imgMua1, x[i], y[i], 0);
+					}
 				}
+				break;
 			}
-			break;
+			case 1:
+			case 2:
+			case 5:
+			case 6:
+			case 7:
+			case 11:
+			case 15:
+				if (typeEff == 15)
+				{
+					if (SmallImage.imgNew[11120] != null && SmallImage.imgNew[11120].img != null)
+						imgLacay = SmallImage.imgNew[11120].img;
+					if (imgLacay == null)
+						break;
+				}
+				paintLacay1(g, imgLacay);
+				break;
+			case 13:
+				if (!isPaintFar)
+					paintCloud2(g);
+				break;
+			case 4:
+			case 8:
+			case 9:
+			case 10:
+			case 14:
+				break;
+			}
 		}
-		case 1:
-		case 2:
-		case 5:
-		case 6:
-		case 7:
-		case 11:
-		case 15:
-			if (typeEff == 15)
-			{
-				if (SmallImage.imgNew[11120] != null && SmallImage.imgNew[11120].img != null)
-					imgLacay = SmallImage.imgNew[11120].img;
-				if (imgLacay == null)
-					break;
-			}
-			paintLacay1(g, imgLacay);
-			break;
-		case 13:
-			if (!isPaintFar)
-				paintCloud2(g);
-			break;
-		case 4:
-		case 8:
-		case 9:
-		case 10:
-		case 14:
-			break;
+		catch (Exception)
+		{
 		}
 	}
 
@@ -768,7 +796,7 @@ public class BackgroudEffect
 		num = ((typeEff != 15) ? 4 : 4);
 		for (int i = 0; i < sum; i++)
 		{
-			if (i % 3 == 0 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy && PIXEL <= mGraphics.getImageHeight(img) && PIXEL * frame[i] < img.getHeight())
+			if (i % 3 == 0 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy && img != null)
 				g.drawRegion(img, 0, PIXEL * frame[i], img.getWidth(), PIXEL, 0, x[i], y[i], 0);
 		}
 	}
@@ -779,7 +807,7 @@ public class BackgroudEffect
 		num = ((typeEff != 15) ? 4 : 4);
 		for (int i = 0; i < sum; i++)
 		{
-			if (i % 3 != 0 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy && PIXEL <= mGraphics.getImageHeight(img) && PIXEL * frame[i] < img.getHeight())
+			if (i % 3 != 0 && x[i] >= GameScr.cmx && x[i] <= GameCanvas.w + GameScr.cmx && y[i] >= GameScr.cmy && y[i] <= GameCanvas.h + GameScr.cmy && img != null)
 				g.drawRegion(img, 0, PIXEL * frame[i], img.getWidth(), PIXEL, 0, x[i], y[i], 0);
 		}
 	}

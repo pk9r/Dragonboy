@@ -196,6 +196,8 @@ public class Item
 
 	public int wpTemp = -1;
 
+	public string nameNguoiKyGui = string.Empty;
+
 	private int[] color = new int[18]
 	{
 		0, 0, 0, 0, 600841, 600841, 667658, 667658, 3346944, 3346688,

@@ -170,6 +170,8 @@ public class TileMap
 
 	public const int BEERUS = 16;
 
+	public const int THE_HELL = 19;
+
 	public static Image[] bgItem = new Image[8];
 
 	public static MyVector vObject = new MyVector();
@@ -561,7 +563,7 @@ public class TileMap
 
 	public static bool isWaterEff()
 	{
-		if (mapID == 54 || mapID == 55 || mapID == 56 || mapID == 57 || mapID == 138)
+		if (mapID == 54 || mapID == 55 || mapID == 56 || mapID == 57 || mapID == 138 || mapID == 167)
 			return false;
 		return true;
 	}
@@ -599,6 +601,10 @@ public class TileMap
 					else if (GameCanvas.typeBg == 7)
 					{
 						color = 5693125;
+					}
+					else if (GameCanvas.typeBg == 19)
+					{
+						color = 16711680;
 					}
 					BackgroudEffect.addWater(color, yWater + 15);
 				}

@@ -211,13 +211,19 @@ public class EffectData
 				{
 					anim_data[0] = new short[num8];
 					Array.Copy(array, 0, anim_data[num7], 0, num8);
+					return;
+				}
+				for (int m = 0; m < 16; m++)
+				{
+					if (anim_data[m] == null)
+						anim_data[m] = anim_data[2];
 				}
 			}
 			else
 			{
-				for (int m = 0; m < num6; m++)
+				for (int n = 0; n < num6; n++)
 				{
-					arrFrame[m] = iss.readShort();
+					arrFrame[n] = iss.readShort();
 				}
 			}
 		}
@@ -249,12 +255,18 @@ public class EffectData
 			{
 				if (trans == -1)
 					g.drawRegion(img, imageInfo.x0, imageInfo.y0, imageInfo.w, imageInfo.h, 0, x + frame.dx[i], y + frame.dy[i], 0);
-				if (trans == 0)
+				else if (trans == 0)
+				{
 					g.drawRegion(img, imageInfo.x0, imageInfo.y0, imageInfo.w, imageInfo.h, 0, x + frame.dx[i], y + frame.dy[i] - ((layer < 4 && layer > 0) ? GameCanvas.transY : 0), 0);
-				if (trans == 1)
+				}
+				else if (trans == 1)
+				{
 					g.drawRegion(img, imageInfo.x0, imageInfo.y0, imageInfo.w, imageInfo.h, 2, x - frame.dx[i], y + frame.dy[i] - ((layer < 4 && layer > 0) ? GameCanvas.transY : 0), StaticObj.TOP_RIGHT);
-				if (trans == 2)
+				}
+				else if (trans == 2)
+				{
 					g.drawRegion(img, imageInfo.x0, imageInfo.y0, imageInfo.w, imageInfo.h, 7, x - frame.dx[i], y + frame.dy[i] - ((layer < 4 && layer > 0) ? GameCanvas.transY : 0), StaticObj.VCENTER_HCENTER);
+				}
 			}
 			catch (Exception)
 			{

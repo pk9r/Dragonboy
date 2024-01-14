@@ -340,7 +340,8 @@ public class TField : IActionListener
 		{
 			indexOfActiveChar = (indexOfActiveChar + 1) % array[keyCode - 48].Length;
 			char c = array[keyCode - 48][indexOfActiveChar];
-			string text = string.Concat(arg1: (mode == 0) ? char.ToLower(c) : ((mode == 1) ? char.ToUpper(c) : ((mode != 2) ? array[keyCode - 48][array[keyCode - 48].Length - 1] : char.ToUpper(c))), arg0: this.text.Substring(0, caretPos - 1));
+			c = ((mode == 0) ? char.ToLower(c) : ((mode == 1) ? char.ToUpper(c) : ((mode != 2) ? array[keyCode - 48][array[keyCode - 48].Length - 1] : char.ToUpper(c))));
+			string text = this.text.Substring(0, caretPos - 1) + c;
 			if (caretPos < this.text.Length)
 				text += this.text.Substring(caretPos, this.text.Length);
 			this.text = text;
@@ -353,7 +354,8 @@ public class TField : IActionListener
 				mode = 0;
 			indexOfActiveChar = 0;
 			char c2 = array[keyCode - 48][indexOfActiveChar];
-			string text2 = string.Concat(arg1: (mode == 0) ? char.ToLower(c2) : ((mode == 1) ? char.ToUpper(c2) : ((mode != 2) ? array[keyCode - 48][array[keyCode - 48].Length - 1] : char.ToUpper(c2))), arg0: this.text.Substring(0, caretPos));
+			c2 = ((mode == 0) ? char.ToLower(c2) : ((mode == 1) ? char.ToUpper(c2) : ((mode != 2) ? array[keyCode - 48][array[keyCode - 48].Length - 1] : char.ToUpper(c2))));
+			string text2 = this.text.Substring(0, caretPos) + c2;
 			if (caretPos < this.text.Length)
 				text2 += this.text.Substring(caretPos, this.text.Length);
 			this.text = text2;
@@ -399,7 +401,7 @@ public class TField : IActionListener
 		{
 			for (int num = caretPos; num > 0; num--)
 			{
-				char c = text[num - 1];
+				char c = this.text[num - 1];
 				for (int i = 0; i < printDau.Length; i++)
 				{
 					if (c == printDau[i])
@@ -418,7 +420,9 @@ public class TField : IActionListener
 			indexCong++;
 			if (indexCong >= 6)
 				indexCong = 0;
-			text = string.Concat(text.Substring(0, indexDau), str2: text.Substring(indexDau + 1), str1: printDau.Substring(indexTemplate + indexCong, 1));
+			string text = this.text.Substring(0, indexDau);
+			string text2 = this.text.Substring(indexDau + 1);
+			this.text = text + printDau.Substring(indexTemplate + indexCong, 1) + text2;
 		}
 	}
 

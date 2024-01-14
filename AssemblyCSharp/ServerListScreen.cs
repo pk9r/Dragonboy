@@ -30,17 +30,17 @@ public class ServerListScreen : mScreen, IActionListener
 
 	private int lY;
 
-	public static string smartPhoneVN = "Vũ trụ 1:dragon1.teamobi.com:14445:0,Vũ trụ 2:dragon2.teamobi.com:14445:0,Vũ trụ 3:dragon3.teamobi.com:14445:0,Vũ trụ 4:dragon4.teamobi.com:14445:0,Vũ trụ 5:dragon5.teamobi.com:14445:0,Vũ trụ 6:dragon6.teamobi.com:14445:0,Vũ trụ 7:dragon7.teamobi.com:14445:0,Võ đài liên vũ trụ:dragonwar.teamobi.com:20000:0,Universe 1:dragon.indonaga.com:14445:1,Naga:dragon.indonaga.com:14446:2,0,6";
+	public static string smartPhoneVN = "Vũ trụ 1:dragon1.teamobi.com:14445:0,Vũ trụ 2:dragon2.teamobi.com:14445:0,Vũ trụ 3:dragon3.teamobi.com:14445:0,Vũ trụ 4:dragon4.teamobi.com:14445:0,Vũ trụ 5:dragon5.teamobi.com:14445:0,Vũ trụ 6:dragon6.teamobi.com:14445:0,Vũ trụ 7:dragon7.teamobi.com:14445:0,Vũ trụ 8:dragon10.teamobi.com:14446:0,Vũ trụ 9:dragon10.teamobi.com:14447:0,Vũ trụ 10:dragon10.teamobi.com:14445:0,Vũ trụ 11:dragon11.teamobi.com:14445:0,Võ đài liên vũ trụ:dragonwar.teamobi.com:20000:0,Universe 1:dragon.indonaga.com:14445:1,Naga:dragon.indonaga.com:14446:2,0,0";
 
-	public static string javaVN = "Vũ trụ 1:112.213.94.23:14445:0,Vũ trụ 2:210.211.109.199:14445:0,Vũ trụ 3:112.213.85.88:14445:0,Vũ trụ 4:27.0.12.164:14445:0,Vũ trụ 5:27.0.12.16:14445:0,Vũ trụ 6:27.0.12.173:14445:0,Vũ trụ 7:112.213.94.223:14445:0,Võ đài liên vũ trụ:27.0.12.173:20000:0,Universe 1:54.255.195.65:14445:1,Naga:54.255.195.65:14446:2,0,6";
+	public static string javaVN = "Vũ trụ 1:112.213.94.23:14445:0,Vũ trụ 2:210.211.109.199:14445:0,Vũ trụ 3:112.213.85.88:14445:0,Vũ trụ 4:27.0.12.164:14445:0,Vũ trụ 5:27.0.12.16:14445:0,Vũ trụ 6:27.0.12.173:14445:0,Vũ trụ 7:112.213.94.223:14445:0,Vũ trụ 8:27.0.14.66:14446:0,Vũ trụ 9:27.0.14.66:14447:0,Vũ trụ 10:27.0.14.66:14445:0,Vũ trụ 11:112.213.85.35:14445:0,Võ đài liên vũ trụ:27.0.12.173:20000:0,Universe 1:52.74.230.22:14445:1,Naga:52.74.230.22:14446:2,0,0";
 
 	public static string smartPhoneIn = "Naga:dragon.indonaga.com:14446:2,2,0";
 
-	public static string javaIn = "Naga:54.255.195.65:14446:2,2,0";
+	public static string javaIn = "Naga:52.74.230.22:14446:2,2,0";
 
 	public static string smartPhoneE = "Universe 1:dragon.indonaga.com:14445:1,1,0";
 
-	public static string javaE = "Universe 1:54.255.195.65:14445:1,1,0";
+	public static string javaE = "Universe 1:52.74.230.22:14445:1,1,0";
 
 	public static string linkGetHost = "http://sv1.ngocrongonline.com/game/ngocrong031_t.php";
 
@@ -55,6 +55,8 @@ public class ServerListScreen : mScreen, IActionListener
 	public static bool stopDownload;
 
 	public static string linkweb = "http://ngocrongonline.com";
+
+	public static int countDieConnect;
 
 	public static bool waitToLogin;
 
@@ -93,6 +95,8 @@ public class ServerListScreen : mScreen, IActionListener
 	public static int testConnect = -1;
 
 	public static bool loadScreen;
+
+	public static bool isAutoConect = true;
 
 	public ServerListScreen()
 	{
@@ -272,7 +276,6 @@ public class ServerListScreen : mScreen, IActionListener
 		}
 		serverPriority = sbyte.Parse(array[array.Length - 1]);
 		saveIP();
-		GameCanvas.endDlg();
 	}
 
 	public override void paint(mGraphics g)
@@ -289,6 +292,10 @@ public class ServerListScreen : mScreen, IActionListener
 			GameCanvas.paintBGGameScr(g);
 		int num2 = 2;
 		mFont.tahoma_7_white.drawString(g, "v" + GameMidlet.VERSION + "(" + mGraphics.zoomLevel + ")", GameCanvas.w - 2, num2 + 15, 1, mFont.tahoma_7_grey);
+		string empty = string.Empty;
+		empty = ((testConnect != 0) ? (empty + nameServer[ipSelect] + " connected") : (empty + nameServer[ipSelect] + " disconnect"));
+		if (mSystem.isTest)
+			mFont.tahoma_7_white.drawString(g, empty, GameCanvas.w - 2, num2 + 15 + 15, 1, mFont.tahoma_7_grey);
 		if (!isGetData || loadScreen)
 		{
 			if (mSystem.clientType == 1 && !GameCanvas.isTouch)
@@ -352,15 +359,19 @@ public class ServerListScreen : mScreen, IActionListener
 	{
 		flagServer = 30;
 		GameCanvas.startWaitDlg(mResources.PLEASEWAIT);
-		if (Session_ME.gI().isConnected())
-			Session_ME.gI().close();
+		Session_ME.gI().close();
 		GameMidlet.IP = address[ipSelect];
 		GameMidlet.PORT = port[ipSelect];
+		GameMidlet.LANGUAGE = language[ipSelect];
+		Rms.saveRMSInt("svselect", ipSelect);
 		if (language[ipSelect] != mResources.language)
 			mResources.loadLanguague(language[ipSelect]);
 		LoginScr.serverName = nameServer[ipSelect];
 		initCommand();
-		GameCanvas.connect();
+		loadScreen = true;
+		countDieConnect = 0;
+		testConnect = -1;
+		isAutoConect = true;
 	}
 
 	public override void update()
@@ -384,6 +395,17 @@ public class ServerListScreen : mScreen, IActionListener
 			flagServer--;
 			if (flagServer == 0)
 				GameCanvas.endDlg();
+			if (testConnect == 2)
+			{
+				flagServer = 0;
+				GameCanvas.endDlg();
+			}
+		}
+		if (flagServer <= 0 && isAutoConect)
+		{
+			countDieConnect++;
+			if (countDieConnect > 100000)
+				countDieConnect = 0;
 		}
 		for (int i = 0; i < cmd.Length; i++)
 		{
@@ -396,6 +418,31 @@ public class ServerListScreen : mScreen, IActionListener
 		if (!loadScreen && (bigOk || percent == 100))
 			cmdDownload = null;
 		base.update();
+		if (Char.isLoadingMap || !loadScreen || !isAutoConect || GameCanvas.currentScreen != this || testConnect == 2)
+			return;
+		if (countDieConnect < ((mSystem.clientType != 1) ? 5 : 2))
+		{
+			if (flagServer <= 0)
+			{
+				flagServer = 30;
+				GameCanvas.startWaitDlg(mResources.PLEASEWAIT);
+				GameCanvas.connect();
+			}
+		}
+		else if (!Session_ME.gI().isConnected())
+		{
+			if (flagServer <= 0)
+			{
+				Command cmdYes = new Command(mResources.YES, GameCanvas.serverScreen, 18, null);
+				Command cmdNo = new Command(mResources.NO, GameCanvas.serverScreen, 19, null);
+				GameCanvas.startYesNoDlg(mResources.maychutathoacmatsong + "." + mResources.confirmChangeServer, cmdYes, cmdNo);
+				flagServer = 30;
+			}
+		}
+		else if (flagServer <= 0)
+		{
+			countDieConnect = 0;
+		}
 	}
 
 	private void processInput()
@@ -428,7 +475,14 @@ public class ServerListScreen : mScreen, IActionListener
 			}
 			for (int i = 0; i < cmd.Length; i++)
 			{
-				if (cmd[i] != null && cmd[i].isPointerPressInside())
+				if (cmd[i] == null || !cmd[i].isPointerPressInside())
+					continue;
+				if (testConnect == -1 || testConnect == 0)
+				{
+					if (cmd[i].caption.IndexOf(mResources.server) != -1)
+						cmd[i].performAction();
+				}
+				else
 					cmd[i].performAction();
 			}
 		}
@@ -471,6 +525,7 @@ public class ServerListScreen : mScreen, IActionListener
 				dataOutputStream.writeShort(port[i]);
 				dataOutputStream.writeByte(language[i]);
 			}
+			serverPriority = (sbyte)((!mSystem.isTest) ? serverPriority : (serverPriority + 5));
 			dataOutputStream.writeByte(serverPriority);
 			Rms.saveRMS("NRlink2", dataOutputStream.toByteArray());
 			dataOutputStream.close();
@@ -528,9 +583,47 @@ public class ServerListScreen : mScreen, IActionListener
 		}
 	}
 
+	public static string[] loadIP_2()
+	{
+		string[] array = null;
+		sbyte[] array2 = Rms.loadRMS("NRlink2");
+		if (array2 == null)
+			return null;
+		DataInputStream dataInputStream = new DataInputStream(array2);
+		if (dataInputStream == null)
+			return null;
+		try
+		{
+			lengthServer = new int[3];
+			dataInputStream.readByte();
+			sbyte b = dataInputStream.readByte();
+			nameServer = new string[b];
+			address = new string[b];
+			port = new short[b];
+			language = new sbyte[b];
+			array = new string[b];
+			Res.outz("len sv == " + b);
+			for (int i = 0; i < b; i++)
+			{
+				nameServer[i] = dataInputStream.readUTF();
+				address[i] = dataInputStream.readUTF();
+				port[i] = dataInputStream.readShort();
+				language[i] = dataInputStream.readByte();
+				lengthServer[language[i]]++;
+				array[i] = nameServer[i] + ":" + address[i] + ":" + port[i] + ":" + language[i];
+			}
+			serverPriority = dataInputStream.readByte();
+			dataInputStream.close();
+		}
+		catch (Exception)
+		{
+		}
+		return array;
+	}
+
 	public override void switchToMe()
 	{
-		GameCanvas.connect();
+		EffectManager.remove();
 		GameScr.cmy = 0;
 		GameScr.cmx = 0;
 		initCommand();
@@ -548,6 +641,7 @@ public class ServerListScreen : mScreen, IActionListener
 		cmd[1 + nCmdPlay].caption = mResources.change_account;
 		if (cmd.Length == 4 + nCmdPlay)
 			cmd[3 + nCmdPlay].caption = mResources.option;
+		Char.isLoadingMap = false;
 		mSystem.resetCurInapp();
 		base.switchToMe();
 	}
@@ -598,7 +692,16 @@ public class ServerListScreen : mScreen, IActionListener
 		if (idAction == 1000)
 			GameCanvas.connect();
 		if (idAction == 1 || idAction == 4)
-			cancel();
+		{
+			Session_ME.gI().close();
+			isAutoConect = false;
+			countDieConnect = 0;
+			loadScreen = true;
+			testConnect = 0;
+			isGetData = false;
+			Rms.clearAll();
+			switchToMe();
+		}
 		if (idAction == 2)
 		{
 			stopDownload = false;
@@ -629,8 +732,8 @@ public class ServerListScreen : mScreen, IActionListener
 			if (GameCanvas.loginScr == null)
 				GameCanvas.loginScr = new LoginScr();
 			GameCanvas.loginScr.switchToMe();
-			bool flag = Rms.loadRMSString("acc") != null && ((!Rms.loadRMSString("acc").Equals(string.Empty)) ? true : false);
-			bool flag2 = Rms.loadRMSString("userAo" + ipSelect) != null && ((!Rms.loadRMSString("userAo" + ipSelect).Equals(string.Empty)) ? true : false);
+			bool flag = Rms.loadRMSString("acc") != null && !Rms.loadRMSString("acc").Equals(string.Empty);
+			bool flag2 = Rms.loadRMSString("userAo" + ipSelect) != null && !Rms.loadRMSString("userAo" + ipSelect).Equals(string.Empty);
 			if (!flag && !flag2)
 			{
 				GameCanvas.connect();
@@ -751,7 +854,11 @@ public class ServerListScreen : mScreen, IActionListener
 			}
 		}
 		if (idAction == 14)
-			GameCanvas.startYesNoDlg(cmdYes: new Command(mResources.YES, GameCanvas.serverScreen, 15, null), cmdNo: new Command(mResources.NO, GameCanvas.serverScreen, 16, null), info: mResources.deletaDataNote);
+		{
+			Command cmdYes = new Command(mResources.YES, GameCanvas.serverScreen, 15, null);
+			Command cmdNo = new Command(mResources.NO, GameCanvas.serverScreen, 16, null);
+			GameCanvas.startYesNoDlg(mResources.deletaDataNote, cmdYes, cmdNo);
+		}
 		if (idAction == 15)
 		{
 			Rms.clearAll();
@@ -767,6 +874,28 @@ public class ServerListScreen : mScreen, IActionListener
 			if (GameCanvas.serverScr == null)
 				GameCanvas.serverScr = new ServerScr();
 			GameCanvas.serverScr.switchToMe();
+		}
+		if (idAction == 18)
+		{
+			GameCanvas.endDlg();
+			InfoDlg.hide();
+			if (GameCanvas.serverScr == null)
+				GameCanvas.serverScr = new ServerScr();
+			GameCanvas.serverScr.switchToMe();
+		}
+		if (idAction == 19)
+		{
+			if (mSystem.clientType == 1)
+			{
+				InfoDlg.hide();
+				GameCanvas.currentDialog = null;
+			}
+			else
+			{
+				countDieConnect = 0;
+				testConnect = 0;
+				isAutoConect = true;
+			}
 		}
 	}
 
@@ -800,6 +929,7 @@ public class ServerListScreen : mScreen, IActionListener
 		p = 0;
 		demPercent = 0;
 		strWait = mResources.PLEASEWAIT;
+		Char.isLoadingMap = false;
 		init();
 		base.switchToMe();
 	}
@@ -829,5 +959,6 @@ public class ServerListScreen : mScreen, IActionListener
 			else
 				linkDefault = smartPhoneVN;
 		}
+		mSystem.AddIpTest();
 	}
 }

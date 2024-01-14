@@ -202,13 +202,13 @@ namespace Assets.src.g
 			h = data.height;
 		}
 
-		public new void setBody(short id)
+		public override void setBody(short id)
 		{
 			changBody = true;
 			smallBody = id;
 		}
 
-		public new void clearBody()
+		public override void clearBody()
 		{
 			changBody = false;
 		}
@@ -529,12 +529,23 @@ namespace Assets.src.g
 
 		public override void paint(mGraphics g)
 		{
-			if (data == null)
+			if (data == null || isHide)
 				return;
+			if (isMafuba)
+			{
+				if (!changBody)
+					data.paintFrame(g, frame, xMFB, yMFB, (dir != 1) ? 1 : 0, 2);
+				else
+					SmallImage.drawSmallImage(g, smallBody, xMFB, yMFB, (dir != 1) ? 2 : 0, mGraphics.BOTTOM | mGraphics.HCENTER);
+				return;
+			}
 			if (isShadown && status != 0)
 				paintShadow(g);
 			g.translate(0, GameCanvas.transY);
-			data.paintFrame(g, frame, x, y + fy, (dir != 1) ? 1 : 0, 2);
+			if (!changBody)
+				data.paintFrame(g, frame, x, y + fy, (dir != 1) ? 1 : 0, 2);
+			else
+				SmallImage.drawSmallImage(g, smallBody, x, y + fy - 9, (dir != 1) ? 2 : 0, mGraphics.BOTTOM | mGraphics.HCENTER);
 			g.translate(0, -GameCanvas.transY);
 			int imageWidth = mGraphics.getImageWidth(imgHPtem);
 			int imageHeight = mGraphics.getImageHeight(imgHPtem);

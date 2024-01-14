@@ -1,3 +1,5 @@
+using System;
+
 public class NewBoss : Mob, IMapObject
 {
 	public static Image shadowBig = mSystem.loadImage("/mainImage/shadowBig.png");
@@ -57,6 +59,14 @@ public class NewBoss : Mob, IMapObject
 	private sbyte type;
 
 	private int ff;
+
+	private int offset;
+
+	private int xTempRight = -1;
+
+	private int xTempLeft = -1;
+
+	private int yTemp = -1;
 
 	private sbyte[] cou = new sbyte[2] { -1, 1 };
 
@@ -147,13 +157,13 @@ public class NewBoss : Mob, IMapObject
 		frameArr = null;
 	}
 
-	public new void setBody(short id)
+	public override void setBody(short id)
 	{
 		changBody = true;
 		smallBody = id;
 	}
 
-	public new void clearBody()
+	public override void clearBody()
 	{
 		changBody = false;
 	}
@@ -259,6 +269,7 @@ public class NewBoss : Mob, IMapObject
 			break;
 		case 7:
 			updateInjure();
+			base.update();
 			break;
 		case 0:
 		case 1:
@@ -405,35 +416,83 @@ public class NewBoss : Mob, IMapObject
 
 	public override void paint(mGraphics g)
 	{
-		if (Mob.arrMobTemplate[templateId].data == null)
+		if (Mob.arrMobTemplate[templateId].data == null || isHide)
 			return;
+		if (isMafuba)
+		{
+			if (!changBody)
+				Mob.arrMobTemplate[templateId].data.paintFrame(g, frame, xMFB, yMFB, (dir != 1) ? 1 : 0, 2);
+			else
+				SmallImage.drawSmallImage(g, smallBody, xMFB, yMFB, (dir != 1) ? 2 : 0, mGraphics.BOTTOM | mGraphics.HCENTER);
+			return;
+		}
 		if (isShadown)
 			paintShadow(g);
 		g.translate(0, GameCanvas.transY);
-		Mob.arrMobTemplate[templateId].data.paintFrame(g, frame, x, y + fy, (dir != 1) ? 1 : 0, 2);
+		if (!changBody)
+		{
+			int num = 33;
+			if (yTemp == -1)
+				yTemp = y;
+			if (TileMap.tileTypeAt(x + num, y + fy, 4))
+			{
+				xTempLeft = TileMap.tileXofPixel(x + num) - num;
+				xTempRight = TileMap.tileXofPixel(x + num);
+				if (x > xTempLeft && x < xTempRight && xTempRight != -1)
+					x = xTempLeft;
+			}
+			if (y < yTemp && yTemp != -1)
+			{
+				yTemp = y;
+				x += num;
+			}
+			if (y > yTemp)
+			{
+				yTemp = y;
+				x -= num;
+			}
+			Mob.arrMobTemplate[templateId].data.paintFrame(g, frame, x, y + fy, (dir != 1) ? 1 : 0, 2);
+		}
+		else
+			SmallImage.drawSmallImage(g, smallBody, x, y + fy - 9, (dir != 1) ? 2 : 0, mGraphics.BOTTOM | mGraphics.HCENTER);
 		g.translate(0, -GameCanvas.transY);
+		if (hp <= 0)
+			return;
 		int imageWidth = mGraphics.getImageWidth(imgHPtem);
 		int imageHeight = mGraphics.getImageHeight(imgHPtem);
-		int num = imageWidth;
 		int num2 = imageWidth;
-		int num3 = x - imageWidth;
-		int num4 = y - h - 5;
-		int num5 = imageWidth * 2 * per / 100;
-		if (num5 > num)
+		int num3 = imageWidth;
+		int num4 = x - imageWidth;
+		int num5 = y - h - 5;
+		int num6 = imageWidth * 2 * per / 100;
+		int num7 = num6;
+		if (per_tem >= per)
 		{
-			num2 = num5 - num;
-			if (num2 <= 0)
-				num2 = 0;
+			num7 = imageWidth * (per_tem -= ((GameCanvas.gameTick % 6 <= 3) ? offset : offset++)) / 100;
+			if (per_tem <= 0)
+				per_tem = 0;
+			if (per_tem < per)
+				per_tem = per;
+			if (offset >= 3)
+				offset = 3;
+		}
+		if (num6 > num2)
+		{
+			num3 = num6 - num2;
+			if (num3 <= 0)
+				num3 = 0;
 		}
 		else
 		{
-			num = num5;
-			num2 = 0;
+			num2 = num6;
+			num3 = 0;
 		}
-		g.drawImage(GameScr.imgHP_tm_xam, num3, num4, mGraphics.TOP | mGraphics.LEFT);
-		g.drawImage(GameScr.imgHP_tm_xam, num3 + imageWidth, num4, mGraphics.TOP | mGraphics.LEFT);
-		g.drawRegion(imgHPtem, 0, 0, num, imageHeight, 0, num3, num4, mGraphics.TOP | mGraphics.LEFT);
-		g.drawRegion(imgHPtem, 0, 0, num2, imageHeight, 0, num3 + imageWidth, num4, mGraphics.TOP | mGraphics.LEFT);
+		g.drawImage(GameScr.imgHP_tm_xam, num4, num5, mGraphics.TOP | mGraphics.LEFT);
+		g.drawImage(GameScr.imgHP_tm_xam, num4 + imageWidth, num5, mGraphics.TOP | mGraphics.LEFT);
+		g.setColor(16777215);
+		g.fillRect(num4, num5, num7, 2);
+		g.drawRegion(imgHPtem, 0, 0, num2, imageHeight, 0, num4, num5, mGraphics.TOP | mGraphics.LEFT);
+		g.drawRegion(imgHPtem, 0, 0, num3, imageHeight, 0, num4 + imageWidth, num5, mGraphics.TOP | mGraphics.LEFT);
 	}
 
 	public new int getHPColor()
@@ -552,9 +611,15 @@ public class NewBoss : Mob, IMapObject
 
 	public new void GetFrame()
 	{
-		frameArr = (int[][])Controller.frameHT_NEWBOSS.get(templateId + string.Empty);
-		w = Mob.arrMobTemplate[templateId].data.width;
-		h = Mob.arrMobTemplate[templateId].data.height;
+		try
+		{
+			frameArr = (int[][])Controller.frameHT_NEWBOSS.get(templateId + string.Empty);
+			w = Mob.arrMobTemplate[templateId].data.width;
+			h = Mob.arrMobTemplate[templateId].data.height;
+		}
+		catch (Exception)
+		{
+		}
 	}
 
 	public void setDie()

@@ -2,7 +2,7 @@ public class ServerScr : mScreen, IActionListener
 {
 	private int mainSelect;
 
-	private Command[] vecServer;
+	private MyVector vecServer = new MyVector();
 
 	private Command cmdCheck;
 
@@ -18,6 +18,10 @@ public class ServerScr : mScreen, IActionListener
 
 	private int numh;
 
+	private Command cmdGlobal;
+
+	private Command cmdVietNam;
+
 	public ServerScr()
 	{
 		TileMap.bgID = (byte)(mSystem.currentTimeMillis() % 9);
@@ -32,11 +36,20 @@ public class ServerScr : mScreen, IActionListener
 	{
 		SoundMn.gI().stopAll();
 		base.switchToMe();
-		vecServer = new Command[ServerListScreen.nameServer.Length];
-		for (int i = 0; i < ServerListScreen.nameServer.Length; i++)
-		{
-			vecServer[i] = new Command(ServerListScreen.nameServer[i], this, 100 + i, null);
-		}
+		cmdGlobal = new Command("VIỆT NAM", this, 98, null);
+		cmdGlobal.x = 0;
+		cmdGlobal.y = 0;
+		cmdVietNam = new Command("GLOBAL", this, 97, null);
+		cmdVietNam.x = 50;
+		cmdVietNam.y = 0;
+		vecServer = new MyVector();
+		vecServer.addElement(cmdGlobal);
+		vecServer.addElement(cmdVietNam);
+		sort();
+	}
+
+	private void sort()
+	{
 		mainSelect = ServerListScreen.ipSelect;
 		w2c = 5;
 		wc = 76;
@@ -44,21 +57,19 @@ public class ServerScr : mScreen, IActionListener
 		numw = 2;
 		if (GameCanvas.w > 3 * (wc + w2c))
 			numw = 3;
-		numh = vecServer.Length / numw + ((vecServer.Length % numw != 0) ? 1 : 0);
-		for (int j = 0; j < vecServer.Length; j++)
+		if (vecServer.size() < 3)
+			numw = 2;
+		numh = vecServer.size() / numw + ((vecServer.size() % numw != 0) ? 1 : 0);
+		for (int i = 0; i < vecServer.size(); i++)
 		{
-			if (vecServer[j] != null)
+			Command command = (Command)vecServer.elementAt(i);
+			if (command != null)
 			{
-				int x = GameCanvas.hw - numw * (wc + w2c) / 2 + j % numw * (wc + w2c);
-				int y = GameCanvas.hh - numh * (hc + w2c) / 2 + j / numw * (hc + w2c);
-				vecServer[j].x = x;
-				vecServer[j].y = y;
+				int x = GameCanvas.hw - numw * (wc + w2c) / 2 + i % numw * (wc + w2c);
+				int y = GameCanvas.hh - numh * (hc + w2c) / 2 + i / numw * (hc + w2c);
+				command.x = x;
+				command.y = y;
 			}
-		}
-		if (!GameCanvas.isTouch)
-		{
-			cmdCheck = new Command(mResources.SELECT, this, 99, null);
-			center = cmdCheck;
 		}
 	}
 
@@ -67,23 +78,26 @@ public class ServerScr : mScreen, IActionListener
 		GameScr.cmx++;
 		if (GameScr.cmx > GameCanvas.w * 3 + 100)
 			GameScr.cmx = 100;
-		for (int i = 0; i < vecServer.Length; i++)
+		for (int i = 0; i < vecServer.size(); i++)
 		{
+			Command command = (Command)vecServer.elementAt(i);
 			if (!GameCanvas.isTouch)
 			{
 				if (i == mainSelect)
 				{
 					if (GameCanvas.gameTick % 10 < 4)
-						vecServer[i].isFocus = true;
+						command.isFocus = true;
 					else
-						vecServer[i].isFocus = false;
+						command.isFocus = false;
+					cmdCheck = new Command(mResources.SELECT, this, command.idAction, null);
+					center = cmdCheck;
 				}
 				else
-					vecServer[i].isFocus = false;
+					command.isFocus = false;
 			}
-			else if (vecServer[i] != null && vecServer[i].isPointerPressInside())
+			else if (command != null && command.isPointerPressInside())
 			{
-				vecServer[i].performAction();
+				command.performAction();
 			}
 		}
 	}
@@ -91,10 +105,10 @@ public class ServerScr : mScreen, IActionListener
 	public override void paint(mGraphics g)
 	{
 		GameCanvas.paintBGGameScr(g);
-		for (int i = 0; i < vecServer.Length; i++)
+		for (int i = 0; i < vecServer.size(); i++)
 		{
-			if (vecServer[i] != null)
-				vecServer[i].paint(g);
+			if (vecServer.elementAt(i) != null)
+				((Command)vecServer.elementAt(i)).paint(g);
 		}
 		base.paint(g);
 	}
@@ -130,11 +144,11 @@ public class ServerScr : mScreen, IActionListener
 		}
 		if (mainSelect < 0)
 			mainSelect = 0;
-		if (mainSelect >= vecServer.Length)
-			mainSelect = vecServer.Length - 1;
+		if (mainSelect >= vecServer.size())
+			mainSelect = vecServer.size() - 1;
 		if (GameCanvas.keyPressed[5])
 		{
-			vecServer[num].performAction();
+			((Command)vecServer.elementAt(num)).performAction();
 			GameCanvas.keyPressed[5] = false;
 		}
 		GameCanvas.clearKeyPressed();
@@ -142,17 +156,43 @@ public class ServerScr : mScreen, IActionListener
 
 	public void perform(int idAction, object p)
 	{
-		if (idAction == 99)
+		switch (idAction)
 		{
+		case 97:
+		{
+			vecServer.removeAllElements();
+			for (int j = 0; j < ServerListScreen.nameServer.Length; j++)
+			{
+				if (ServerListScreen.language[j] != 0)
+					vecServer.addElement(new Command(ServerListScreen.nameServer[j], this, 100 + j, null));
+			}
+			sort();
+			break;
+		}
+		case 98:
+		{
+			vecServer.removeAllElements();
+			for (int i = 0; i < ServerListScreen.nameServer.Length; i++)
+			{
+				if (ServerListScreen.language[i] == 0)
+					vecServer.addElement(new Command(ServerListScreen.nameServer[i], this, 100 + i, null));
+			}
+			sort();
+			break;
+		}
+		case 99:
+			Session_ME.gI().clearSendingMessage();
 			ServerListScreen.ipSelect = mainSelect;
 			GameCanvas.serverScreen.selectServer();
 			GameCanvas.serverScreen.switchToMe();
-		}
-		else
-		{
+			break;
+		default:
+			Session_ME.gI().clearSendingMessage();
 			ServerListScreen.ipSelect = idAction - 100;
+			Res.outz("Default:    ServerListScreen.ipSelect " + ServerListScreen.ipSelect);
 			GameCanvas.serverScreen.selectServer();
 			GameCanvas.serverScreen.switchToMe();
+			break;
 		}
 	}
 }

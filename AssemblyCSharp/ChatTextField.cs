@@ -241,7 +241,8 @@ public class ChatTextField : IActionListener
 	{
 		if (isShow && !Main.isIPhone)
 		{
-			PopUp.paintPopUp(y: (!Main.isWindowsPhone) ? (y - KC) : (tfChat.y - 5), g: g, x: (!Main.isWindowsPhone) ? x : 0, w: (!Main.isWindowsPhone) ? w : GameCanvas.w, h: h, color: -1, isButton: true);
+			int num = ((!Main.isWindowsPhone) ? (y - KC) : (tfChat.y - 5));
+			PopUp.paintPopUp(g, (!Main.isWindowsPhone) ? x : 0, num, (!Main.isWindowsPhone) ? w : GameCanvas.w, h, -1, true);
 			if (Main.isPC)
 			{
 				mFont.tahoma_7b_green2.drawString(g, strChat + to, tfChat.x, tfChat.y - ((!GameCanvas.isTouch) ? 12 : 17), 0);

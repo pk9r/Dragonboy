@@ -9,7 +9,6 @@ namespace Assets.src.f
 		{
 			try
 			{
-				Res.outz("cmd=" + msg.command);
 				sbyte command = msg.command;
 				switch (command)
 				{
@@ -495,6 +494,11 @@ namespace Assets.src.f
 							int bagTemp = msg.reader().readShort();
 							Char.myCharz().arrItemShop[b][i].setPartTemp(headTemp, bodyTemp, legTemp, bagTemp);
 						}
+						if (GameMidlet.intVERSION >= 237)
+						{
+							Char.myCharz().arrItemShop[b][i].nameNguoiKyGui = msg.reader().readUTF();
+							Res.err("nguoi ki gui  " + Char.myCharz().arrItemShop[b][i].nameNguoiKyGui);
+						}
 					}
 					if (flag)
 						GameCanvas.panel2.setTabKiGui();
@@ -778,17 +782,20 @@ namespace Assets.src.f
 					item2.info = msg.reader().readUTF();
 					item2.content = msg.reader().readUTF();
 					sbyte b23 = msg.reader().readByte();
-					if (b23 == 0)
-						return;
-					item2.itemOption = new ItemOption[b23];
-					for (int num34 = 0; num34 < item2.itemOption.Length; num34++)
+					if (b23 != 0)
 					{
-						int num35 = msg.reader().readUnsignedByte();
-						Res.outz("id o= " + num35);
-						int param3 = msg.reader().readUnsignedShort();
-						if (num35 != -1)
-							item2.itemOption[num34] = new ItemOption(num35, param3);
+						item2.itemOption = new ItemOption[b23];
+						for (int num34 = 0; num34 < item2.itemOption.Length; num34++)
+						{
+							int num35 = msg.reader().readUnsignedByte();
+							Res.outz("id o= " + num35);
+							int param3 = msg.reader().readUnsignedShort();
+							if (num35 != -1)
+								item2.itemOption[num34] = new ItemOption(num35, param3);
+						}
 					}
+					if (item2.quantity <= 0)
+						item2 = null;
 					return;
 				}
 				}

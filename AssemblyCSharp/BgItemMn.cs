@@ -72,7 +72,8 @@ public class BgItemMn
 			if (layer == 3)
 				image = mGraphics.blend(img, 0.15f, 0);
 		}
-		Rms.saveRMS(data: ArrayCast.cast(getByteArray(image)), filename: "x" + mGraphics.zoomLevel + "blend" + idImage + "layer" + layer);
+		byte[] byteArray = getByteArray(image);
+		Rms.saveRMS("x" + mGraphics.zoomLevel + "blend" + idImage + "layer" + layer, ArrayCast.cast(byteArray));
 		return image;
 	}
 

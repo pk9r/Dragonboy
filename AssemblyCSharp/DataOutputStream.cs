@@ -2,6 +2,15 @@ public class DataOutputStream
 {
 	private myWriter w = new myWriter();
 
+	public DataOutputStream()
+	{
+	}
+
+	public DataOutputStream(int len)
+	{
+		w = new myWriter(len);
+	}
+
 	public void writeShort(short i)
 	{
 		w.writeShort(i);

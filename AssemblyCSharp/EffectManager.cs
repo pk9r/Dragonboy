@@ -2,6 +2,8 @@ public class EffectManager : MyVector
 {
 	public static EffectManager lowEffects = new EffectManager();
 
+	public static EffectManager mid_2Effects = new EffectManager();
+
 	public static EffectManager midEffects = new EffectManager();
 
 	public static EffectManager hiEffects = new EffectManager();
@@ -23,6 +25,7 @@ public class EffectManager : MyVector
 	public static void update()
 	{
 		hiEffects.updateAll();
+		mid_2Effects.updateAll();
 		midEffects.updateAll();
 		lowEffects.updateAll();
 	}
@@ -50,14 +53,17 @@ public class EffectManager : MyVector
 		}
 	}
 
+	public static void remove()
+	{
+		hiEffects.removeAll();
+		lowEffects.removeAll();
+		midEffects.removeAll();
+		mid_2Effects.removeAll();
+	}
+
 	public static void addHiEffect(Effect_End eff)
 	{
 		hiEffects.addElement(eff);
-	}
-
-	public static void removeHiEffect(Effect_End eff)
-	{
-		hiEffects.removeElement(eff);
 	}
 
 	public static void addMidEffects(Effect_End eff)
@@ -65,18 +71,13 @@ public class EffectManager : MyVector
 		midEffects.addElement(eff);
 	}
 
-	public static void removeMidEffects(Effect_End eff)
+	public static void addMid_2Effects(Effect_End eff)
 	{
-		midEffects.removeElement(eff);
+		mid_2Effects.addElement(eff);
 	}
 
 	public static void addLowEffect(Effect_End eff)
 	{
 		lowEffects.addElement(eff);
-	}
-
-	public static void removeLowEffect(Effect_End eff)
-	{
-		lowEffects.removeElement(eff);
 	}
 }

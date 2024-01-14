@@ -2,6 +2,12 @@ public class T3 : mResources
 {
 	public static void load()
 	{
+		mResources.confirmChangeServer = "Apakah Anda ingin mengubah server?";
+		mResources.chooseDefaultsv = "Default server connect";
+		mResources.winLose = "Menang/Kehilangan: ";
+		mResources.learnSkill = "Pergi ke Whis (Beerus Planet) untuk mempelajari keterampilan";
+		mResources.updSkill = "Saat mencapai kemahiran maksimum, pergi ke Whis (Beerus Planet) untuk meningkatkan keterampilan Anda";
+		mResources.proficiency = "Kecakapan";
 		mResources.delacc = "Delete account";
 		mResources.notiINAPP = "Anda membeli banyak permata hari ini. Mari kita coba lagi besok!";
 		mResources.notiRuby = "Saat menjual dengan sukses, Anda akan menerima Ruby non Gem. Apakah Anda ingin melanjutkan menyerahkan?";
@@ -120,7 +126,7 @@ public class T3 : mResources
 		mResources.dragon_ball = "Dragon Ball";
 		mResources.character = "Karakter";
 		mResources.account = "Account";
-		mResources.account_server = "Server account";
+		mResources.account_server = "Server";
 		mResources.char_name_blank = "Nama karakter tidak dimasukkan";
 		mResources.char_name_short = "Nama karakter terlalu pendek";
 		mResources.char_name_long = "Nama karakter tidak bisa lebih dari 15 huruf";
@@ -139,6 +145,7 @@ public class T3 : mResources
 		mResources.downloading_data = "Downloading ";
 		mResources.select_server = "Pilih server";
 		mResources.pls_restart_game_error = "Error! Harap ulang kembali game.";
+		mResources.pls_restart_game_error2 = "Error!.";
 		mResources.lost_connection = "Koneksi terputus";
 		mResources.check_3G = "Tidak bisa terhubung, harap periksa jaringan GPRS/3G/Wifi";
 		mResources.UPDATE = "Update";
@@ -482,7 +489,7 @@ public class T3 : mResources
 		mResources.want_to_trade = "ingin bertukar dengan kamu, terima?";
 		mResources.hasJustUpgrade1 = "Kamu baru saja mengupgrade";
 		mResources.hasJustUpgrade2 = "ke";
-		mResources.potential_to_learn = "potential pts";
+		mResources.potential_to_learn = "potential untuk Whis untuk belajar";
 		mResources.potential_point = "Potential points";
 		mResources.achievement_point = " Achievement point ";
 		mResources.increase = "bertambah";
@@ -507,7 +514,7 @@ public class T3 : mResources
 		mResources.critical = "Critical";
 		mResources.cap_do = "Level";
 		mResources.KI_consume = "Pemakaian KI:";
-		mResources.speed = "Speed (alternatively, Kecepatan)";
+		mResources.cooldown = "Tenang";
 		mResources.milisecond = "milidetik";
 		mResources.max_level_reach = "Level maksimum tercapai";
 		mResources.next_level_require = "Level berikut dibutuhkan";

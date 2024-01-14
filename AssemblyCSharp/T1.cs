@@ -2,6 +2,12 @@ public class T1 : mResources
 {
 	public static void load()
 	{
+		mResources.confirmChangeServer = "Bạn có muốn đổi máy chủ khác không?";
+		mResources.chooseDefaultsv = "Chọn máy chủ mặc định";
+		mResources.winLose = "Thắng/Thua: ";
+		mResources.learnSkill = "Tới Whis (Hành tinh Bill) để học tuyệt kỹ";
+		mResources.updSkill = "Khi đạt tối đa thành thạo, hãy đến Whis (Hành tinh Bill) để nâng cấp tuyệt kỹ";
+		mResources.proficiency = "Thành thạo";
 		mResources.delacc = "Xóa tài khoản";
 		mResources.notiINAPP = "Hôm nay bạn đã nạp nhiều ngọc. Ngày mai hãy nạp tiếp nhé!";
 		mResources.notiRuby = "Khi bán thành công sẽ nhận lại Hồng Ngọc không phải Ngọc, bạn có muốn tiếp tục kí gửi?";
@@ -115,7 +121,7 @@ public class T1 : mResources
 		mResources.dragon_ball = "Ngọc rồng";
 		mResources.character = "Nhân vật";
 		mResources.account = "Tài khoản";
-		mResources.account_server = "Tài khoản máy chủ";
+		mResources.account_server = "Máy chủ";
 		mResources.char_name_blank = "Bạn chưa nhập tên nhân vật";
 		mResources.char_name_short = "Tên nhân vật quá ngắn";
 		mResources.char_name_long = "Tên nhân vật không được quá 15 kí tự";
@@ -135,6 +141,7 @@ public class T1 : mResources
 		mResources.downloading_data = "Đang tải ";
 		mResources.select_server = "Chọn";
 		mResources.pls_restart_game_error = "Có lỗi xảy ra, xin vui lòng khởi động lại game.";
+		mResources.pls_restart_game_error2 = "Có lỗi xảy ra.";
 		mResources.lost_connection = "Mất kết nối với máy chủ ";
 		mResources.check_3G = "Không thể kết nối, xin kiểm tra lại GPRS/3G/Wifi.";
 		mResources.UPDATE = "Cập nhật";
@@ -417,7 +424,7 @@ public class T1 : mResources
 		mResources.unlock_item_to_trade = "Vui lòng mở khóa trước khi sử dụng vật phẩm để giao dịch";
 		mResources.root = "gốc";
 		mResources.need = "cần";
-		mResources.need_upper = "Cần";
+		mResources.need_upper = "Đủ";
 		mResources.free = "Miễn phí";
 		mResources.free1 = "Miễn";
 		mResources.free2 = "phí";
@@ -437,7 +444,7 @@ public class T1 : mResources
 		mResources.want_to_trade = " muốn giao dịch với bạn, bạn có đồng ý không ?";
 		mResources.hasJustUpgrade1 = "Bạn vừa nâng cấp ";
 		mResources.hasJustUpgrade2 = " sang cấp ";
-		mResources.potential_to_learn = "tiềm năng để học";
+		mResources.potential_to_learn = "tiềm năng đến Whis học";
 		mResources.potential_point = "Điểm tiềm năng";
 		mResources.achievement_point = "Điểm thành tích";
 		mResources.increase = "tăng";
@@ -462,7 +469,7 @@ public class T1 : mResources
 		mResources.critical = "Chí mạng";
 		mResources.cap_do = "Cấp độ";
 		mResources.KI_consume = "KI tiêu hao: ";
-		mResources.speed = "Tốc độ";
+		mResources.cooldown = "Hồi chiêu";
 		mResources.milisecond = "miligiây";
 		mResources.max_level_reach = "Đã đạt cấp tối đa";
 		mResources.next_level_require = "Cấp kế cần ";

@@ -213,6 +213,7 @@ public class CreateCharScr : mScreen, IActionListener
 		doChangeMap();
 		Char.isLoadingMap = false;
 		tAddName.setFocusWithKb(true);
+		ServerListScreen.countDieConnect = 0;
 	}
 
 	public void doChangeMap()
@@ -369,7 +370,10 @@ public class CreateCharScr : mScreen, IActionListener
 					bgItem.paint(g);
 			}
 		}
-		TileMap.paintTilemap(g);
+		if (mSystem.clientType == 5)
+			GameCanvas.paint_ios_bg(g);
+		else
+			TileMap.paintTilemap(g);
 		int num = 30;
 		if (GameCanvas.w == 128)
 			num = 20;

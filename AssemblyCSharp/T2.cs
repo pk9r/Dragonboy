@@ -2,6 +2,12 @@ public class T2 : mResources
 {
 	public static void load()
 	{
+		mResources.confirmChangeServer = "Do you want to change server?";
+		mResources.chooseDefaultsv = "Default server connect";
+		mResources.winLose = "Win/Lose: ";
+		mResources.learnSkill = "Go to Whis (Beerus Planet) to learn skill";
+		mResources.updSkill = "When reach maximum proficiency, go to Whis (Beerus Planet) to upgrade skill";
+		mResources.proficiency = "Proficiency";
 		mResources.delacc = "Delete account";
 		mResources.notiINAPP = "You bought many gems today. Let's try again tomorrow!";
 		mResources.notiRuby = "When selling successfully, you will receive Ruby non Gem. Do you want to continue consign?";
@@ -120,7 +126,7 @@ public class T2 : mResources
 		mResources.dragon_ball = "Dragon Ball";
 		mResources.character = "Character";
 		mResources.account = "Account";
-		mResources.account_server = "Account server";
+		mResources.account_server = "Server";
 		mResources.char_name_blank = "You didn't enter character name";
 		mResources.char_name_short = "Character name can not too short";
 		mResources.char_name_long = "Character name can not longer than 15 characters";
@@ -139,6 +145,7 @@ public class T2 : mResources
 		mResources.downloading_data = "Downloading ";
 		mResources.select_server = "Select server";
 		mResources.pls_restart_game_error = "Error! please restart game.";
+		mResources.pls_restart_game_error2 = "Error!.";
 		mResources.lost_connection = "Lost connection ";
 		mResources.check_3G = "Can not connect, please check your GPRS/3G/Wifi connection.";
 		mResources.UPDATE = "Update";
@@ -489,7 +496,7 @@ public class T2 : mResources
 		mResources.want_to_trade = " want to trade with you, do you accept?";
 		mResources.hasJustUpgrade1 = "You have just upgrade ";
 		mResources.hasJustUpgrade2 = " to ";
-		mResources.potential_to_learn = "potential pts";
+		mResources.potential_to_learn = "potential to Whis to learn";
 		mResources.potential_point = "Potential points";
 		mResources.achievement_point = "Achievement point";
 		mResources.increase = "increase";
@@ -514,7 +521,7 @@ public class T2 : mResources
 		mResources.critical = "Critical";
 		mResources.cap_do = "Level";
 		mResources.KI_consume = "KI consume: ";
-		mResources.speed = "Speed";
+		mResources.cooldown = "Cooldown";
 		mResources.milisecond = "millisecond";
 		mResources.max_level_reach = "Maximum level reached";
 		mResources.next_level_require = "Next level required ";

@@ -1,6 +1,6 @@
 public class Point
 {
-	public byte type;
+	public sbyte type;
 
 	public int x;
 
@@ -106,6 +106,31 @@ public class Point
 
 	public FrameImage fraImgEff;
 
+	public FrameImage fraImgEff_2;
+
+	public short index;
+
+	public byte[] mpaintone_Arrow = new byte[24]
+	{
+		12, 11, 10, 9, 8, 7, 6, 5, 4, 3,
+		2, 1, 0, 23, 22, 21, 20, 19, 18, 17,
+		16, 15, 14, 13
+	};
+
+	public byte[] mImageArrow = new byte[24]
+	{
+		0, 0, 2, 1, 1, 2, 0, 0, 2, 1,
+		1, 2, 0, 0, 2, 1, 1, 2, 0, 0,
+		2, 1, 1, 2
+	};
+
+	public byte[] mXoayArrow = new byte[24]
+	{
+		2, 2, 3, 3, 3, 4, 5, 5, 5, 5,
+		5, 1, 0, 0, 0, 0, 0, 7, 6, 6,
+		6, 6, 6, 2
+	};
+
 	public Point()
 	{
 	}
@@ -158,5 +183,114 @@ public class Point
 		}
 		if (f >= fRe)
 			isRemove = true;
+	}
+
+	public int setFrameAngle(int goc)
+	{
+		if (goc <= 15 || goc > 345)
+			return 12;
+		int num = (goc - 15) / 15 + 1;
+		if (num > 24)
+			num = 24;
+		return mpaintone_Arrow[num];
+	}
+
+	public void create_Arrow(int vMax)
+	{
+		this.vMax = vMax;
+		int num = 0;
+		int num2 = 0;
+		num = toX - x;
+		num2 = toY - y;
+		if (x > toX)
+		{
+			dir = 2;
+			dir_nguoc = 0;
+		}
+		else
+		{
+			dir = 0;
+			dir_nguoc = 2;
+		}
+		create_Speed(num, num2);
+	}
+
+	public void create_Speed(int dx, int dy)
+	{
+		frame = setFrameAngle(Res.angle(dx, dy));
+		int num = 0;
+		int num2 = 0;
+		int num3 = Res.getDistance(dx, dy) / vMax;
+		if (num3 == 0)
+			num3 = 1;
+		num = dx / num3;
+		num2 = dy / num3;
+		if (num == 0 && dx < num3)
+			num = ((dx >= 0) ? 1 : (-1));
+		if (num2 == 0 && dy < num3)
+			num2 = ((dy >= 0) ? 1 : (-1));
+		if (Res.abs(num) > Res.abs(dx))
+			num = dx;
+		if (Res.abs(num2) > Res.abs(dy))
+			num2 = dy;
+		vx = num;
+		vy = num2;
+	}
+
+	public void moveTo_xy(int toX, int toY)
+	{
+		int num = toX - x;
+		int dy = toY - y;
+		if (num > 1)
+			frame = setFrameAngle(Res.angle(num, dy));
+		if (Res.abs(vx) > 0)
+		{
+			if (Res.abs(x - toX) < Res.abs(vx))
+			{
+				x = toX;
+				vx = 0;
+			}
+			else
+				x += vx;
+		}
+		else
+		{
+			x = toX;
+			vx = 0;
+		}
+		if (Res.abs(vy) > 0)
+		{
+			if (Res.abs(y - toY) < Res.abs(vy))
+			{
+				y = toY;
+				vy = 0;
+			}
+			else
+				y += vy;
+		}
+		else
+		{
+			y = toY;
+			vy = 0;
+		}
+	}
+
+	public void paint_Arrow(mGraphics g, FrameImage frm, int anchor, bool isCountFr)
+	{
+		if (frm != null)
+		{
+			int num = frm.nFrame / 3;
+			if (num < 1)
+				num = 1;
+			int num2 = 0;
+			int num3 = 3;
+			num2 = ((frm.nFrame <= 3) ? (f % num) : ((f / num3 % 2 != 0) ? 3 : 0));
+			int idx = num * mImageArrow[frame] + num2;
+			if (frm.nFrame < 3)
+				idx = f / num3 % frm.nFrame;
+			if (isCountFr)
+				idx = f / num3 % frm.nFrame;
+			frm.drawFrame(idx, x, y, mXoayArrow[frame], anchor, g);
+		}
 	}
 }

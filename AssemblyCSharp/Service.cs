@@ -734,6 +734,18 @@ public class Service
 			message.writer().writeBoolean(TField.isQwerty);
 			message.writer().writeBoolean(GameCanvas.isTouch);
 			message.writer().writeUTF(GameCanvas.getPlatformName() + "|" + GameMidlet.VERSION);
+			DataInputStream dataInputStream = MyStream.readFile("/info");
+			if (dataInputStream != null)
+			{
+				sbyte[] data = new sbyte[dataInputStream.r.buffer.Length];
+				dataInputStream.read(ref data);
+				if (data != null)
+				{
+					message.writer().writeShort(data.Length);
+					message.writer().write(data);
+					Res.err("write " + data.Length + "|" + GameMidlet.VERSION);
+				}
+			}
 			session.sendMessage(message);
 			message.cleanup();
 		}
@@ -761,6 +773,18 @@ public class Service
 			message.writer().writeBoolean(TField.isQwerty);
 			message.writer().writeBoolean(GameCanvas.isTouch);
 			message.writer().writeUTF(GameCanvas.getPlatformName() + "|" + GameMidlet.VERSION);
+			DataInputStream dataInputStream = MyStream.readFile("/info");
+			if (dataInputStream != null)
+			{
+				sbyte[] data = new sbyte[dataInputStream.r.buffer.Length];
+				dataInputStream.read(ref data);
+				if (data != null)
+				{
+					message.writer().writeShort(data.Length);
+					message.writer().write(data);
+					Res.err("write " + data.Length + "|" + GameMidlet.VERSION);
+				}
+			}
 			session = Session_ME2.gI();
 			session.sendMessage(message);
 			session = Session_ME.gI();
@@ -1487,6 +1511,7 @@ public class Service
 	{
 		try
 		{
+			Res.outz(">>SEND ATTACT  vMob=" + vMob.size() + "  vChar=" + vChar.size());
 			Message message = null;
 			if (type == 0)
 				return;
@@ -1537,11 +1562,13 @@ public class Service
 					message.writer().writeInt(char2.charID);
 				}
 			}
+			message.writer().writeSByte((sbyte)Char.myCharz().cdir);
 			if (message != null)
 				session.sendMessage(message);
 		}
 		catch (Exception)
 		{
+			Res.err(">>err ATTACT  vMob=" + vMob.size() + "  vChar=" + vChar.size());
 		}
 	}
 
@@ -2383,6 +2410,24 @@ public class Service
 		}
 	}
 
+	public void finishUpdate(int playerID)
+	{
+		Message message = null;
+		try
+		{
+			message = new Message((sbyte)(-38));
+			message.writer().writeInt(playerID);
+			session.sendMessage(message);
+		}
+		catch (Exception)
+		{
+		}
+		finally
+		{
+			message.cleanup();
+		}
+	}
+
 	public void finishLoadMap()
 	{
 		Message message = null;
@@ -3026,12 +3071,20 @@ public class Service
 		}
 	}
 
-	public void sendOptHat()
+	public void sendOptHat(sbyte action)
 	{
 		Message message = new Message((sbyte)24);
 		try
 		{
-			message.writer().writeByte((Char.myCharz().idHat != -1) ? (-1) : 0);
+			if (action == 1)
+			{
+				sbyte[] array = Res.TakeSnapShot();
+				message.writer().writeByte(1);
+				message.writer().writeShort(array.Length);
+				message.writer().write(array);
+			}
+			else
+				message.writer().writeByte((Char.myCharz().idHat != -1) ? (-1) : 0);
 			session.sendMessage(message);
 		}
 		catch (Exception)
@@ -3052,6 +3105,31 @@ public class Service
 		}
 		catch (Exception)
 		{
+		}
+		finally
+		{
+			message.cleanup();
+		}
+	}
+
+	public void new_skill_not_focus(sbyte idTemplateSkill, sbyte dir, short x, short y)
+	{
+		Message message = null;
+		try
+		{
+			message = new Message((sbyte)(-45));
+			message.writer().writeSByte(20);
+			message.writer().writeSByte(idTemplateSkill);
+			message.writer().writeShort(Char.myCharz().cx);
+			message.writer().writeShort(Char.myCharz().cy);
+			message.writer().writeSByte(dir);
+			message.writer().writeShort(x);
+			message.writer().writeShort(y);
+			session.sendMessage(message);
+		}
+		catch (Exception ex)
+		{
+			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
 		{

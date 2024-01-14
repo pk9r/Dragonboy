@@ -116,7 +116,7 @@ public class Session_ME : ISession
 				for (int j = 0; j < key.Length - 1; j++)
 				{
 					ref sbyte reference = ref key[j + 1];
-					reference = (sbyte)(reference ^ key[j]);
+					reference ^= key[j];
 				}
 				getKeyComplete = true;
 				GameMidlet.IP2 = message.reader().readUTF();
@@ -135,7 +135,6 @@ public class Session_ME : ISession
 			int num = readKey(dis.ReadSByte()) + 128;
 			int num2 = readKey(dis.ReadSByte()) + 128;
 			int num3 = ((readKey(dis.ReadSByte()) + 128) * 256 + num2) * 256 + num;
-			Cout.LogError("SIZE = " + num3);
 			sbyte[] array = new sbyte[num3];
 			int num4 = 0;
 			Buffer.BlockCopy(dis.ReadBytes(num3), 0, array, 0, num3);
@@ -244,6 +243,8 @@ public class Session_ME : ISession
 
 	private int port;
 
+	private long timeWaitConnect;
+
 	public static int count;
 
 	public static MyVector recieveMsg = new MyVector();
@@ -267,7 +268,7 @@ public class Session_ME : ISession
 
 	public bool isConnected()
 	{
-		return connected;
+		return connected && sc != null && dis != null;
 	}
 
 	public void setHandler(IMessageHandler msgHandler)
@@ -277,14 +278,15 @@ public class Session_ME : ISession
 
 	public void connect(string host, int port)
 	{
-		if (!connected && !connecting)
+		if (!connected && !connecting && mSystem.currentTimeMillis() >= timeWaitConnect)
 		{
+			timeWaitConnect = mSystem.currentTimeMillis() + 50;
 			if (isMainSession)
 				ServerListScreen.testConnect = -1;
 			this.host = host;
 			this.port = port;
 			getKeyComplete = false;
-			sc = null;
+			close();
 			Debug.Log("connecting...!");
 			Debug.Log("host: " + host);
 			Debug.Log("port: " + port);
@@ -321,7 +323,8 @@ public class Session_ME : ISession
 		dataStream = sc.GetStream();
 		dis = new BinaryReader(dataStream, new UTF8Encoding());
 		dos = new BinaryWriter(dataStream, new UTF8Encoding());
-		new Thread(sender.run).Start();
+		sendThread = new Thread(sender.run);
+		sendThread.Start();
 		MessageCollector @object = new MessageCollector();
 		Cout.LogError("new -----");
 		collectorThread = new Thread(@object.run);
@@ -329,6 +332,7 @@ public class Session_ME : ISession
 		timeConnected = currentTimeMillis();
 		connecting = false;
 		doSendMessage(new Message(-27));
+		key = null;
 	}
 
 	public void sendMessage(Message message)
@@ -391,6 +395,7 @@ public class Session_ME : ISession
 		catch (Exception ex)
 		{
 			Debug.Log(ex.StackTrace);
+			dos.Flush();
 		}
 	}
 
@@ -401,7 +406,7 @@ public class Session_ME : ISession
 		curR = (sbyte)(num + 1);
 		sbyte result = (sbyte)((array[num] & 0xFF) ^ (b & 0xFF));
 		if (curR >= key.Length)
-			curR = (sbyte)(curR % (sbyte)key.Length);
+			curR %= (sbyte)key.Length;
 		return result;
 	}
 
@@ -412,7 +417,7 @@ public class Session_ME : ISession
 		curW = (sbyte)(num + 1);
 		sbyte result = (sbyte)((array[num] & 0xFF) ^ (b & 0xFF));
 		if (curW >= key.Length)
-			curW = (sbyte)(curW % (sbyte)key.Length);
+			curW %= (sbyte)key.Length;
 		return result;
 	}
 
@@ -475,8 +480,24 @@ public class Session_ME : ISession
 				dis.Close();
 				dis = null;
 			}
-			sendThread = null;
-			collectorThread = null;
+			if (Thread.CurrentThread.Name == Main.mainThreadName)
+			{
+				if (sendThread != null)
+					sendThread.Abort();
+				sendThread = null;
+				if (initThread != null)
+					initThread.Abort();
+				initThread = null;
+				if (collectorThread != null)
+					collectorThread.Abort();
+				collectorThread = null;
+			}
+			else
+			{
+				sendThread = null;
+				initThread = null;
+				collectorThread = null;
+			}
 			if (isMainSession)
 				ServerListScreen.testConnect = 0;
 		}
@@ -508,5 +529,10 @@ public class Session_ME : ISession
 				array[i] = (byte)(var[i] + 256);
 		}
 		return array;
+	}
+
+	public bool isCompareIPConnect()
+	{
+		return true;
 	}
 }

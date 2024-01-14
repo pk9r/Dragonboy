@@ -116,7 +116,7 @@ public class Session_ME2 : ISession
 				for (int j = 0; j < key.Length - 1; j++)
 				{
 					ref sbyte reference = ref key[j + 1];
-					reference = (sbyte)(reference ^ key[j]);
+					reference ^= key[j];
 				}
 				getKeyComplete = true;
 				GameMidlet.IP2 = message.reader().readUTF();
@@ -244,6 +244,8 @@ public class Session_ME2 : ISession
 
 	private int port;
 
+	private long timeWaitConnect;
+
 	public static MyVector recieveMsg = new MyVector();
 
 	public Session_ME2()
@@ -265,7 +267,7 @@ public class Session_ME2 : ISession
 
 	public bool isConnected()
 	{
-		return connected;
+		return connected && sc != null && dis != null;
 	}
 
 	public void setHandler(IMessageHandler msgHandler)
@@ -275,12 +277,13 @@ public class Session_ME2 : ISession
 
 	public void connect(string host, int port)
 	{
-		if (!connected && !connecting)
+		if (!connected && !connecting && mSystem.currentTimeMillis() >= timeWaitConnect)
 		{
+			timeWaitConnect = mSystem.currentTimeMillis() + 50;
 			this.host = host;
 			this.port = port;
 			getKeyComplete = false;
-			sc = null;
+			close();
 			Debug.Log("connecting...!");
 			Debug.Log("host: " + host);
 			Debug.Log("port: " + port);
@@ -317,7 +320,8 @@ public class Session_ME2 : ISession
 		dataStream = sc.GetStream();
 		dis = new BinaryReader(dataStream, new UTF8Encoding());
 		dos = new BinaryWriter(dataStream, new UTF8Encoding());
-		new Thread(sender.run).Start();
+		sendThread = new Thread(sender.run);
+		sendThread.Start();
 		MessageCollector @object = new MessageCollector();
 		Cout.LogError("new -----");
 		collectorThread = new Thread(@object.run);
@@ -396,7 +400,7 @@ public class Session_ME2 : ISession
 		curR = (sbyte)(num + 1);
 		sbyte result = (sbyte)((array[num] & 0xFF) ^ (b & 0xFF));
 		if (curR >= key.Length)
-			curR = (sbyte)(curR % (sbyte)key.Length);
+			curR %= (sbyte)key.Length;
 		return result;
 	}
 
@@ -407,7 +411,7 @@ public class Session_ME2 : ISession
 		curW = (sbyte)(num + 1);
 		sbyte result = (sbyte)((array[num] & 0xFF) ^ (b & 0xFF));
 		if (curW >= key.Length)
-			curW = (sbyte)(curW % (sbyte)key.Length);
+			curW %= (sbyte)key.Length;
 		return result;
 	}
 

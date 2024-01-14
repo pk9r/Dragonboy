@@ -21,13 +21,16 @@ public class NinjaUtil
 	{
 		try
 		{
-			sbyte[] data = new sbyte[msg.reader().readInt()];
-			msg.reader().read(ref data);
-			return data;
+			int num = msg.reader().readInt();
+			if (num > 1)
+			{
+				sbyte[] data = new sbyte[num];
+				msg.reader().read(ref data);
+				return data;
+			}
 		}
 		catch (Exception)
 		{
-			Cout.LogError("LOI DOC readByteArray NINJAUTIL");
 		}
 		return null;
 	}
@@ -187,5 +190,18 @@ public class NinjaUtil
 			}
 		}
 		return array;
+	}
+
+	public static bool checkNumber(string numberStr)
+	{
+		try
+		{
+			int.Parse(numberStr);
+			return true;
+		}
+		catch (Exception)
+		{
+			return false;
+		}
 	}
 }

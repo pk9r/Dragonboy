@@ -44,6 +44,18 @@ public class Skill
 
 	public short price;
 
+	public short curExp;
+
+	public string strCurExp()
+	{
+		if (curExp / 10 >= 100)
+			return "MAX";
+		if (curExp % 10 == 0)
+			return curExp / 10 + "%";
+		int num = curExp % 10;
+		return curExp / 10 + "." + num % 10 + "%";
+	}
+
 	public string strTimeReplay()
 	{
 		if (coolDown % 1000 == 0)

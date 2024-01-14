@@ -103,12 +103,12 @@ public class myReader
 
 	public bool readBool()
 	{
-		return readSByte() > 0;
+		return (readSByte() > 0) ? true : false;
 	}
 
 	public bool readBoolean()
 	{
-		return readSByte() > 0;
+		return (readSByte() > 0) ? true : false;
 	}
 
 	public string readString()

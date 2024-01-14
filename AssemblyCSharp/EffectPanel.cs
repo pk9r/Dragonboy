@@ -48,7 +48,9 @@ public class EffectPanel : Effect2
 				x = m.x;
 				y = m.y + GameCanvas.transY;
 			}
-			SmallImage.drawSmallImage(x: x + dx0 + eff.arrEfInfo[i0].dx, y: y + dy0 + eff.arrEfInfo[i0].dy, g: g, id: eff.arrEfInfo[i0].idImg, transform: trans, anchor: mGraphics.VCENTER | mGraphics.HCENTER);
+			int num = x + dx0 + eff.arrEfInfo[i0].dx;
+			int num2 = y + dy0 + eff.arrEfInfo[i0].dy;
+			SmallImage.drawSmallImage(g, eff.arrEfInfo[i0].idImg, num, num2, trans, mGraphics.VCENTER | mGraphics.HCENTER);
 		}
 	}
 

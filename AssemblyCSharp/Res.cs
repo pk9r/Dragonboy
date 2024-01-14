@@ -126,6 +126,11 @@ public class Res
 		return angle;
 	}
 
+	public static sbyte[] TakeSnapShot()
+	{
+		return null;
+	}
+
 	public static void outz(string s)
 	{
 		if (mSystem.isTest)
@@ -192,6 +197,14 @@ public class Res
 		return r.nextInt(a);
 	}
 
+	public static int random_Am(int a, int b)
+	{
+		int num = a + r.nextInt(b - a);
+		if (random(2) == 0)
+			num = -num;
+		return num;
+	}
+
 	public static int random_Am_0(int a)
 	{
 		int num;
@@ -213,6 +226,11 @@ public class Res
 	public static int distance(int x1, int y1, int x2, int y2)
 	{
 		return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+	}
+
+	public static int getDistance(int x, int y)
+	{
+		return sqrt(x * x + y * y);
 	}
 
 	public static int sqrt(int a)

@@ -66,7 +66,7 @@ public class FrameImage
 				int num = idx * frameHeight;
 				if (num > frameHeight * (nFrame - 1) || num < 0)
 					num = frameHeight * (nFrame - 1);
-				g.drawRegion(imgFrame, 0, idx * frameHeight, frameWidth, frameHeight, trans, x, y, anchor);
+				g.drawRegion(imgFrame, 0, num, frameWidth, frameHeight, trans, x, y, anchor);
 			}
 		}
 		catch (Exception)

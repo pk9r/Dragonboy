@@ -449,9 +449,8 @@ public class CrackBallScr : mScreen
 
 	private void doClickSkill(int index)
 	{
-		if (indexSkillSelect != index)
-			indexSkillSelect = index;
-		else if (index == 0)
+		indexSkillSelect = index;
+		if (index == 0)
 		{
 			if (step < 2)
 			{
@@ -584,7 +583,7 @@ public class CrackBallScr : mScreen
 		for (int i = 0; i < listBall.Length; i++)
 		{
 			if (listBall[i].isDone)
-				b = (byte)(b + 1);
+				b++;
 		}
 		if (b > numTicket)
 			b = (byte)numTicket;
@@ -597,9 +596,9 @@ public class CrackBallScr : mScreen
 		for (int i = 0; i < listBall.Length; i++)
 		{
 			if (listBall[i].isDone)
-				b = (byte)(b + 1);
+				b++;
 		}
-		b = (byte)(b - checkTicket());
+		b -= checkTicket();
 		if (b <= 0)
 			b = 0;
 		return b;

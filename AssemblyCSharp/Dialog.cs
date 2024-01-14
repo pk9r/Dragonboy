@@ -25,38 +25,34 @@ public abstract class Dialog
 				goto case -2;
 			if (keyCode == -38)
 				goto case -1;
-			if (keyCode != -22)
-			{
-				if (keyCode != -21)
-				{
-					if (keyCode != 10)
-						return;
-					break;
-				}
+			if (keyCode == -22)
+				goto case -7;
+			if (keyCode == -21)
 				goto case -6;
-			}
-			goto case -7;
+			if (keyCode == -27 || keyCode != 10)
+				break;
+			goto case -5;
 		case -1:
 			GameCanvas.keyHold[(!Main.isPC) ? 2 : 21] = true;
 			GameCanvas.keyPressed[(!Main.isPC) ? 2 : 21] = true;
-			return;
+			break;
 		case -2:
 			GameCanvas.keyHold[(!Main.isPC) ? 8 : 22] = true;
 			GameCanvas.keyPressed[(!Main.isPC) ? 8 : 22] = true;
-			return;
+			break;
 		case -6:
 			GameCanvas.keyHold[12] = true;
 			GameCanvas.keyPressed[12] = true;
-			return;
+			break;
 		case -7:
 			GameCanvas.keyHold[13] = true;
 			GameCanvas.keyPressed[13] = true;
-			return;
+			break;
 		case -5:
+			GameCanvas.keyHold[(!Main.isPC) ? 5 : 25] = true;
+			GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = true;
 			break;
 		}
-		GameCanvas.keyHold[(!Main.isPC) ? 5 : 25] = true;
-		GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = true;
 	}
 
 	public virtual void update()

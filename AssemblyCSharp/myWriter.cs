@@ -1,6 +1,4 @@
-using System.IO;
 using System.Text;
-using UnityEngine;
 
 public class myWriter
 {
@@ -9,6 +7,16 @@ public class myWriter
 	private int posWrite;
 
 	private int lenght = 2048;
+
+	public myWriter()
+	{
+	}
+
+	public myWriter(int len)
+	{
+		buffer = new sbyte[len];
+		lenght = len;
+	}
 
 	public void writeSByte(sbyte value)
 	{
@@ -139,11 +147,6 @@ public class myWriter
 		}
 	}
 
-	public void write(sbyte value)
-	{
-		writeSByte(value);
-	}
-
 	public void write(ref sbyte[] data, int arg1, int arg2)
 	{
 		if (data == null)
@@ -186,47 +189,6 @@ public class myWriter
 			buffer = array;
 			lenght += 1024 + ltemp;
 		}
-	}
-
-	private static void convertString(string[] args)
-	{
-		string path = args[0];
-		string path2 = args[1];
-		using (StreamReader input = new StreamReader(path, Encoding.Unicode))
-			using (StreamWriter output = new StreamWriter(path2, false, Encoding.UTF8))
-				CopyContents(input, output);
-	}
-
-	private static void CopyContents(TextReader input, TextWriter output)
-	{
-		char[] array = new char[8192];
-		int count;
-		while ((count = input.Read(array, 0, array.Length)) != 0)
-		{
-			output.Write(array, 0, count);
-		}
-		output.Flush();
-		Debug.Log(output.ToString());
-	}
-
-	public byte convertSbyteToByte(sbyte var)
-	{
-		if (var > 0)
-			return (byte)var;
-		return (byte)(var + 256);
-	}
-
-	public byte[] convertSbyteToByte(sbyte[] var)
-	{
-		byte[] array = new byte[var.Length];
-		for (int i = 0; i < var.Length; i++)
-		{
-			if (var[i] > 0)
-				array[i] = (byte)var[i];
-			else
-				array[i] = (byte)(var[i] + 256);
-		}
-		return array;
 	}
 
 	public void Close()
