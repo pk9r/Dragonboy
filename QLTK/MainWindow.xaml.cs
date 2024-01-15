@@ -35,7 +35,7 @@ namespace QLTK
             new Server("Vũ trụ 10", "dragon10.teamobi.com", 14445),
             new Server("Vũ trụ 11", "dragon11.teamobi.com", 14445),
             new Server("Võ đài Liên Vũ Trụ", "dragonwar.teamobi.com", 20000),
-            new Server("Universe 1", "dragon.indonaga.com", 14445, 2),
+            new Server("Universe 1", "dragon.indonaga.com", 14445, 1),
             new Server("Indonaga", "dragon.indonaga.com", 14446, 2),
         ];
 
