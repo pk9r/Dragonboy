@@ -481,7 +481,7 @@
             <param name="isDisabled">Trạng thái vô hiệu hóa</param>
             <param name="disabledReason">Lý do bị vô hiệu hóa, được thông báo khi ModMenuItem được chọn đang bị vô hiệu hóa.</param>
         </member>
-        <member name="M:Mod.ModMenu.ModMenuItemBoolean.#ctor(System.String,System.String,System.Action{System.Boolean},System.Boolean,System.String,System.Boolean,System.String)">
+        <member name="M:Mod.ModMenu.ModMenuItemBoolean.#ctor(Mod.ModMenu.ModMenuItemBooleanConfig)">
             <summary>
             Constructor
             </summary>

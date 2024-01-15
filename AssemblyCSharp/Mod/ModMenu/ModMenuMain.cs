@@ -18,30 +18,218 @@ namespace Mod.ModMenu
         /// </summary>
         public static ModMenuItemBoolean[] modMenuItemBools = new ModMenuItemBoolean[]
         {
-            new ModMenuItemBoolean("Vsync", "Tắt Vsync nếu bạn muốn điều chỉnh FPS!", value => QualitySettings.vSyncCount = value ? 1 : 0, true, "isvsync"),
-            new ModMenuItemBoolean("Hiện thông tin nhân vật", "Hiện gần chính xác thời gian NRD, khiên, khỉ, huýt sáo... của nhân vật đang focus", CharEffect.setState, true, "isshowinfochar"),
-            new ModMenuItemBoolean("Tự đánh", "Bật/tắt tự đánh", AutoAttack.toggle),
-            new ModMenuItemBoolean("Hiện danh sách nhân vật", "Hiện danh sách nhân vật trong map", ListCharsInMap.setState, false, "isshowlistchar"),
-            new ModMenuItemBoolean("Hiện đệ tử trong danh sách", "Hiện đệ tử trong danh sách nhân vật trong map (đệ tử không có sư phụ trong map không được hiển thị)", ListCharsInMap.setStatePet, false, "isshowlistpet", true, "Bạn chưa bật chức năng \"Hiện danh sách nhân vật\"!"),
-            new ModMenuItemBoolean("Auto up SS", "Auto up acc sơ sinh đến nhiệm vụ vào bang", AutoSS.setState, false, "", true, "Bạn đã qua nhiệm vụ sơ sinh!"),
-            //new ModMenuItemBoolean("Auto T77", "Auto up Tàu Pảy Pảy", AutoT77.setState, false, "", true, "Bạn không thể vào map Đông Karin!"),
-            new ModMenuItemBoolean("Hiện khoảng cách bom", "Hiển thị người, quái, boss... trong tầm bom", SuicideRange.setState, false, "isshowsuiciderange"),
-            new ModMenuItemBoolean("Nền tùy chỉnh", "Thay thế nền của game bằng nền tùy chỉnh (tự động điều chỉnh nền cho vừa kích thước màn hình)", CustomBackground.setState, false, "iscustombackground", false, "Bạn cần tắt chức năng \"Giảm đồ họa\"!"),
-            new ModMenuItemBoolean("Logo tùy chỉnh", "Bật/tắt hiển thị logo tùy chỉnh trên màn hình game", CustomLogo.setState, false, "isshowlogo"),
-            new ModMenuItemBoolean("Thông báo Boss", "Bật/tắt hiển thị thông báo boss", Boss.setState, false, "sanboss"),
-            new ModMenuItemBoolean("Con trỏ tùy chỉnh", "Thay con trỏ chuột mặc định thành con trỏ chuột tùy chỉnh", CustomCursor.setState, false, "customcusor"),
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig {
+                Title = "Vync",
+                Description = "Tắt Vsync nếu bạn muốn điều chỉnh FPS!",
+                GetStatus = () => QualitySettings.vSyncCount == 1,
+                Action = value => QualitySettings.vSyncCount = value ? 1 : 0,
+                DefaultValue = true,
+                RMSName = "isvsync"
+            }),
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Hiện thông tin nhân vật",
+                Description = "Hiện gần chính xác thời gian NRD, khiên, khỉ, huýt sáo... của nhân vật đang focus",
+                GetStatus = () => CharEffect.isEnabled,
+                Action = CharEffect.setState,
+                DefaultValue = true,
+                RMSName = "isshowinfochar"
+            }),
 
-            new ModMenuItemBoolean("Tàn sát", "Bật/tắt tự động đánh quái", value => Pk9rPickMob.IsTanSat = value, false, "", false, "Bạn đang bật auto T77 hoặc auto up SS!"),
-            new ModMenuItemBoolean("Né siêu quái khi tàn sát", "Tự động né siêu quái khi tàn sát", value => Pk9rPickMob.IsNeSieuQuai = value, true, "isnesieuquaits"),
-            new ModMenuItemBoolean("Vượt địa hình khi tàn sát", "Bật/tắt tự động vượt địa hình khi đang tàn sát", value => Pk9rPickMob.IsVuotDiaHinh = value, true, "isvuotdiahinh"),
-            new ModMenuItemBoolean("Tự động nhặt vật phẩm", "Bật/tắt tự động nhặt vật phẩm", value => Pk9rPickMob.IsAutoPickItems = value, true, "isautopick", false, "Bạn đang bật auto T77 hoặc auto up SS!"),
-            new ModMenuItemBoolean("Không nhặt đồ của người khác", "Bật/tắt lọc không nhặt vật phẩm của người khác", value => Pk9rPickMob.IsItemMe = value, true, "ispickmyitemonly"),
-            new ModMenuItemBoolean("Giới hạn số lần nhặt", "Bật/tắt giới hạn số lần tự động nhặt một vật phẩm", value => Pk9rPickMob.IsLimitTimesPickItem = value, true,"islimitpicktimes"),
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Tự đánh",
+                Description = "Bật/tắt tự đánh",
+                GetStatus = () => AutoAttack.gI.IsActing,
+                Action = AutoAttack.toggle
+            }),
 
-            new ModMenuItemBoolean("Auto xin đậu", "Tự động xin đậu", AutoPean.SetAutoRequestState, false),
-            new ModMenuItemBoolean("Auto cho đậu", "Tự động cho đậu", AutoPean.SetAutoDonateState, false),
-            new ModMenuItemBoolean("Auto thu đậu", "Tự động thu hoạch đậu ở nhà", AutoPean.SetAutoHarvestState, false),
-        };
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Hiện danh sách nhân vật",
+                Description = "Hiện danh sách nhân vật trong map",
+                GetStatus = () => ListCharsInMap.isEnabled,
+                Action = ListCharsInMap.setState,
+                DefaultValue = false,
+                RMSName = "isshowlistchar"
+            }),
+
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Hiện đệ tử trong danh sách",
+                Description = "Hiện đệ tử trong danh sách nhân vật trong map (đệ tử không có sư phụ trong map không được hiển thị)",
+                GetStatus = () => ListCharsInMap.isShowPet,
+                Action = ListCharsInMap.setStatePet,
+                DefaultValue = false,
+                RMSName = "isshowlistpet",
+                IsDisabled = true,
+                DisabledReason = "Bạn chưa bật chức năng \"Hiện danh sách nhân vật\"!"
+            }),
+
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Auto up SS",
+                Description = "Auto up acc sơ sinh đến nhiệm vụ vào bang",
+                GetStatus = () => AutoSS.isAutoSS,
+                Action = AutoSS.setState,
+                DefaultValue = false,
+                DisabledReason = "Bạn đã qua nhiệm vụ sơ sinh!"
+            }),
+
+            // new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            // {
+            //     Title = "Auto T77",
+            //     Description = "Auto up Tàu Pảy Pảy",
+            //     GetStatus = () => AutoT77.isEnabled,
+            //     Action = AutoT77.setState,
+            //     DefaultValue = false,
+            //     DisabledReason = "Bạn không thể vào map Đông Karin!"
+            // }),
+
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Hiện khoảng cách bom",
+                Description = "Hiển thị người, quái, boss... trong tầm bom",
+                GetStatus = () => SuicideRange.isShowSuicideRange,
+                Action = SuicideRange.setState,
+                DefaultValue = false,
+                RMSName = "isshowsuiciderange"
+            }),
+
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Nền tùy chỉnh",
+                Description = "Thay thế nền của game bằng nền tùy chỉnh (tự động điều chỉnh nền cho vừa kích thước màn hình)",
+                GetStatus = () => CustomBackground.isEnabled,
+                Action = CustomBackground.setState,
+                DefaultValue = false,
+                RMSName = "iscustombackground",
+                IsDisabled = false,
+                DisabledReason = "Bạn cần tắt chức năng \"Giảm đồ họa\"!"
+            }),
+
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Logo tùy chỉnh",
+                Description = "Bật/tắt hiển thị logo tùy chỉnh trên màn hình game",
+                GetStatus = () => CustomLogo.isEnabled,
+                Action = CustomLogo.setState,
+                DefaultValue = false,
+                RMSName = "isshowlogo"
+            }),
+
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Thông báo Boss",
+                Description = "Bật/tắt hiển thị thông báo boss",
+                GetStatus = () => Boss.isEnabled,
+                Action = Boss.setState,
+                DefaultValue = false,
+                RMSName = "sanboss"
+            }),
+
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Con trỏ tùy chỉnh",
+                Description = "Thay con trỏ chuột mặc định thành con trỏ chuột tùy chỉnh",
+                GetStatus = () => CustomCursor.isEnabled,
+                Action = CustomCursor.setState,
+                DefaultValue = false,
+                RMSName = "customcusor"
+            }),
+
+            // Slaughter
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Tàn sát",
+                Description = "Bật/tắt tự động đánh quái",
+                GetStatus = () => Pk9rPickMob.IsTanSat,
+                Action = value => Pk9rPickMob.IsTanSat = value,
+                DefaultValue = false,
+                IsDisabled = false,
+                DisabledReason = "Bạn đang bật auto T77 hoặc auto up SS!"
+            }),
+
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Né siêu quái khi tàn sát",
+                Description = "Tự động né siêu quái khi tàn sát",
+                GetStatus = () => Pk9rPickMob.IsNeSieuQuai,
+                Action = value => Pk9rPickMob.IsNeSieuQuai = value,
+                DefaultValue = true,
+                RMSName = "isnesieuquaits"
+            }),
+
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Vượt địa hình khi tàn sát",
+                Description = "Bật/tắt tự động vượt địa hình khi đang tàn sát",
+                GetStatus = () => Pk9rPickMob.IsVuotDiaHinh,
+                Action = value => Pk9rPickMob.IsVuotDiaHinh = value,
+                DefaultValue = true,
+                RMSName = "isvuotdiahinh"
+            }),
+
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Tự động nhặt vật phẩm",
+                Description = "Bật/tắt tự động nhặt vật phẩm",
+                GetStatus = () => Pk9rPickMob.IsAutoPickItems,
+                Action = value => Pk9rPickMob.IsAutoPickItems = value,
+                DefaultValue = true,
+                RMSName = "isautopick",
+                IsDisabled = false,
+                DisabledReason = "Bạn đang bật auto T77 hoặc auto up SS!"
+            }),
+
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Không nhặt đồ của người khác",
+                Description = "Bật/t ắt lọc không nhặt vật phẩm của người khác",
+                GetStatus = () => Pk9rPickMob.IsItemMe,
+                Action = value => Pk9rPickMob.IsItemMe = value,
+                DefaultValue = true,
+                RMSName = "ispickmyitemonly"
+            }),
+
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Giới hạn số lần nhặt",
+                Description = "Bật/tắt giới hạn số lần tự động nhặt một vật phẩm",
+                GetStatus = () => Pk9rPickMob.IsLimitTimesPickItem,
+                Action = value => Pk9rPickMob.IsLimitTimesPickItem = value,
+                DefaultValue = true,
+                RMSName = "islimitpicktimes"
+            }),
+
+            // Auto Pean
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Auto xin đậu",
+                Description = "Tự động xin đậu",
+                GetStatus = () => AutoPean.isAutoRequestEnabled,
+                Action = AutoPean.SetAutoRequestState,
+                DefaultValue = false
+            }),
+
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Auto cho đậu",
+                Description = "Tự động cho đậu",
+                GetStatus = () => AutoPean.isAutoDonateEnabled,
+                Action = AutoPean.SetAutoDonateState,
+                DefaultValue = false
+            }),
+
+            new ModMenuItemBoolean(new ModMenuItemBooleanConfig
+            {
+                Title = "Auto thu đậu",
+                Description = "Tự động thu hoạch đậu ở nhà",
+                GetStatus = () => AutoPean.isAutoHarvestEnabled,
+                Action = AutoPean.SetAutoHarvestState,
+                DefaultValue = false
+            }),
+    };
 
         /// <summary>
         /// Thêm điều chỉnh chỉ số của chức năng mod ở đây
@@ -57,12 +245,12 @@ namespace Mod.ModMenu
             new ModMenuItemInt("Goback", new string[]{"Đang tắt", "Đang bật (goback tới chỗ cũ khi chết)", "Đang bật (goback tới map cố định)", "Đang bật (trở về bản đồ cũ khi chết)" }, "", 0, AutoGoback.setState),
             new ModMenuItemInt("Gõ tiếng Việt", new string[]{"Đang tắt", "Đang bật kiểu gõ TELEX", "Đang bật kiểu gõ VIQR", "Đang bật kiểu gõ VNI"}, "", 0, delegate(int value)
             {
-            if (value == 0) VietKeyHandler.VietModeEnabled = false;
-            else
-            {
-                VietKeyHandler.VietModeEnabled = true;
-                VietKeyHandler.InputMethod = (InputMethods)(value - 1);
-            }
+                if (value == 0) VietKeyHandler.VietModeEnabled = false;
+                else
+                {
+                    VietKeyHandler.VietModeEnabled = true;
+                    VietKeyHandler.InputMethod = (InputMethods)(value - 1);
+                }
             }, "vietmode", false, "Bạn không biết gõ tiếng Việt!"),
             new ModMenuItemInt("Auto up đệ tử", new string[]{"Đang tắt", "Đang bật up đệ thường", "Đang bật up đệ né siêu quái", "Đang bật up đệ kaioken"}, "", 0, AutoPet.setState, "", false, "Bạn không có đệ tử!"),
             new ModMenuItemInt("Đánh khi đệ cần", new string[]{"Đánh quái gần nhất", "Đánh đệ (tự động bật cờ xám)", "Đánh bản thân (tự động bật cờ xám)"}, "", 0, AutoPet.setAttackState, "modeautopet", true, "Bạn chưa bật chức năng \"Auto up đệ tử\"!"),
@@ -119,7 +307,7 @@ namespace Mod.ModMenu
                 doFireModMenuInts(panel);
             else if (panel.currentTabIndex == 2)
                 doFireModMenuFunctions(panel);
-            else 
+            else
                 doFireModMenuExtensions(panel);
             notifySelectDisabledItem(panel);
         }
@@ -133,7 +321,7 @@ namespace Mod.ModMenu
         private static void doFireModMenuFunctions(Panel panel)
         {
             panel.hideNow();
-            if (modMenuItemFunctions[panel.selected].Action != null) 
+            if (modMenuItemFunctions[panel.selected].Action != null)
                 modMenuItemFunctions[panel.selected].Action();
         }
 
@@ -178,7 +366,7 @@ namespace Mod.ModMenu
                 if (!modMenuItemInts[selected].isDisabled) return;
                 GameScr.info1.addInfo(modMenuItemInts[selected].DisabledReason, 0);
             }
-            else if(panel.currentTabIndex == 2)
+            else if (panel.currentTabIndex == 2)
             {
                 if (!modMenuItemFunctions[selected].isDisabled) return;
                 GameScr.info1.addInfo(modMenuItemFunctions[selected].DisabledReason, 0);
@@ -188,13 +376,13 @@ namespace Mod.ModMenu
         public static void paintModMenu(Panel panel, mGraphics g)
         {
             if (panel.currentTabIndex == 0)
-                paintModMenuBools(panel ,g);
+                paintModMenuBools(panel, g);
             else if (panel.currentTabIndex == 1)
-                paintModMenuInts(panel ,g);
+                paintModMenuInts(panel, g);
             else if (panel.currentTabIndex == 2)
-                paintModMenuFunctions(panel ,g);
+                paintModMenuFunctions(panel, g);
             else
-                paintModMenuExtensions(panel ,g);
+                paintModMenuExtensions(panel, g);
         }
 
         private static void paintModMenuExtensions(Panel panel, mGraphics g)
@@ -356,7 +544,7 @@ namespace Mod.ModMenu
                     if (modMenuItem.Values != null)
                     {
                         str = modMenuItem.getSelectedValue();
-                        description = Utilities.TrimUntilFit(str, new GUIStyle() { font = mFont.tahoma_7_blue.myFont}, 160);
+                        description = Utilities.TrimUntilFit(str, new GUIStyle() { font = mFont.tahoma_7_blue.myFont }, 160);
                     }
                     else
                     {
@@ -520,7 +708,7 @@ namespace Mod.ModMenu
                     }
                 }
             }
-            else 
+            else
                 GameCanvas.panel.chatTField.isShow = false;
             GameCanvas.panel.chatTField.ResetTF();
         }
