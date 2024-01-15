@@ -50,7 +50,6 @@ namespace Mod.ModMenu
                 Description = "Hiện danh sách nhân vật trong map",
                 GetStatus = () => ListCharsInMap.isEnabled,
                 Action = ListCharsInMap.setState,
-                DefaultValue = false,
                 RMSName = "isshowlistchar"
             }),
 
@@ -60,7 +59,6 @@ namespace Mod.ModMenu
                 Description = "Hiện đệ tử trong danh sách nhân vật trong map (đệ tử không có sư phụ trong map không được hiển thị)",
                 GetStatus = () => ListCharsInMap.isShowPet,
                 Action = ListCharsInMap.setStatePet,
-                DefaultValue = false,
                 RMSName = "isshowlistpet",
                 IsDisabled = true,
                 DisabledReason = "Bạn chưa bật chức năng \"Hiện danh sách nhân vật\"!"
@@ -72,7 +70,6 @@ namespace Mod.ModMenu
                 Description = "Auto up acc sơ sinh đến nhiệm vụ vào bang",
                 GetStatus = () => AutoSS.isAutoSS,
                 Action = AutoSS.setState,
-                DefaultValue = false,
                 DisabledReason = "Bạn đã qua nhiệm vụ sơ sinh!"
             }),
 
@@ -92,7 +89,6 @@ namespace Mod.ModMenu
                 Description = "Hiển thị người, quái, boss... trong tầm bom",
                 GetStatus = () => SuicideRange.isShowSuicideRange,
                 Action = SuicideRange.setState,
-                DefaultValue = false,
                 RMSName = "isshowsuiciderange"
             }),
 
@@ -102,9 +98,7 @@ namespace Mod.ModMenu
                 Description = "Thay thế nền của game bằng nền tùy chỉnh (tự động điều chỉnh nền cho vừa kích thước màn hình)",
                 GetStatus = () => CustomBackground.isEnabled,
                 Action = CustomBackground.setState,
-                DefaultValue = false,
                 RMSName = "iscustombackground",
-                IsDisabled = false,
                 DisabledReason = "Bạn cần tắt chức năng \"Giảm đồ họa\"!"
             }),
 
@@ -114,7 +108,6 @@ namespace Mod.ModMenu
                 Description = "Bật/tắt hiển thị logo tùy chỉnh trên màn hình game",
                 GetStatus = () => CustomLogo.isEnabled,
                 Action = CustomLogo.setState,
-                DefaultValue = false,
                 RMSName = "isshowlogo"
             }),
 
@@ -124,7 +117,6 @@ namespace Mod.ModMenu
                 Description = "Bật/tắt hiển thị thông báo boss",
                 GetStatus = () => Boss.isEnabled,
                 Action = Boss.setState,
-                DefaultValue = false,
                 RMSName = "sanboss"
             }),
 
@@ -134,7 +126,6 @@ namespace Mod.ModMenu
                 Description = "Thay con trỏ chuột mặc định thành con trỏ chuột tùy chỉnh",
                 GetStatus = () => CustomCursor.isEnabled,
                 Action = CustomCursor.setState,
-                DefaultValue = false,
                 RMSName = "customcusor"
             }),
 
@@ -145,8 +136,6 @@ namespace Mod.ModMenu
                 Description = "Bật/tắt tự động đánh quái",
                 GetStatus = () => Pk9rPickMob.IsTanSat,
                 Action = value => Pk9rPickMob.IsTanSat = value,
-                DefaultValue = false,
-                IsDisabled = false,
                 DisabledReason = "Bạn đang bật auto T77 hoặc auto up SS!"
             }),
 
@@ -178,7 +167,6 @@ namespace Mod.ModMenu
                 Action = value => Pk9rPickMob.IsAutoPickItems = value,
                 DefaultValue = true,
                 RMSName = "isautopick",
-                IsDisabled = false,
                 DisabledReason = "Bạn đang bật auto T77 hoặc auto up SS!"
             }),
 
