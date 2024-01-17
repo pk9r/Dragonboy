@@ -6,7 +6,7 @@ namespace Mod.Auto
     {
         public static InfoGoBack goingBackTo = new InfoGoBack();
         public static bool isGoingBack = false;
-        private static GoBackMode mode;
+        public static GoBackMode mode { get; private set; }
         private static long lastTimeGoBack;
 
         public static bool isEnabled => mode != GoBackMode.Disabled;

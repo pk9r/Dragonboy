@@ -481,17 +481,29 @@
             <param name="isDisabled">Trạng thái vô hiệu hóa</param>
             <param name="disabledReason">Lý do bị vô hiệu hóa, được thông báo khi ModMenuItem được chọn đang bị vô hiệu hóa.</param>
         </member>
-        <member name="M:Mod.ModMenu.ModMenuItemBoolean.#ctor(System.String,System.String,System.Action{System.Boolean},System.Boolean,System.String,System.Boolean,System.String)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="title">Tiêu đề</param>
-            <param name="description">Mô tả</param>
-            <param name="action">Hàm được gọi khi giá trị hiện tại thay đổi, có 1 đối số kiểu boolean và không trả về giá trị.</param>
-            <param name="value">Giá trị hiện tại</param>
-            <param name="rmsName">Tên tệp lưu dữ liệu</param>
-            <param name="isDisabled">Trạng thái vô hiệu hóa</param>
-            <param name="disabledReason">Lý do bị vô hiệu hóa, được thông báo khi ModMenuItem được chọn đang bị vô hiệu hóa.</param>
+        <member name="P:Mod.ModMenu.ModMenuItemBooleanConfig.Title">
+            <summary>Tiêu đề</summary>
+        </member>
+        <member name="P:Mod.ModMenu.ModMenuItemBooleanConfig.Description">
+            <summary>Mô tả</summary>
+        </member>
+        <member name="P:Mod.ModMenu.ModMenuItemBooleanConfig.GetStatus">
+            <summary>Hàm được gọi để biết trạng thái hiện tại của menu, không có đối số và trả về một boolean.</summary>
+        </member>
+        <member name="P:Mod.ModMenu.ModMenuItemBooleanConfig.Action">
+            <summary>Hàm được gọi khi giá trị hiện tại thay đổi, có 1 đối số kiểu boolean và không trả về giá trị.</summary>
+        </member>
+        <member name="P:Mod.ModMenu.ModMenuItemBooleanConfig.DefaultValue">
+            <summary>Giá trị hiện tại</summary>
+        </member>
+        <member name="P:Mod.ModMenu.ModMenuItemBooleanConfig.RMSName">
+            <summary>Tên tệp lưu dữ liệu</summary>
+        </member>
+        <member name="P:Mod.ModMenu.ModMenuItemBooleanConfig.IsDisabled">
+            <summary>Trạng thái vô hiệu hóa</summary>
+        </member>
+        <member name="P:Mod.ModMenu.ModMenuItemBooleanConfig.DisabledReason">
+            <summary>Lý do bị vô hiệu hóa, được thông báo khi ModMenuItem được chọn đang bị vô hiệu hóa.</summary>
         </member>
         <member name="M:Mod.ModMenu.ModMenuItemFunction.#ctor(System.String,System.String,System.Action,System.Boolean,System.String)">
             <summary>

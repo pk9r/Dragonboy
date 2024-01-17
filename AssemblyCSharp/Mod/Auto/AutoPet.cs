@@ -29,8 +29,8 @@ namespace Mod.Auto
         private static bool isTTNL;
 
         public static bool isSaoMayLuoiThe;
-        private static AutoPetMode mode;
-        private static AttackMode modeAttackWhenNeeded;
+        public static AutoPetMode mode { get; private set; }
+        public static AttackMode modeAttackWhenNeeded { get; private set; }
 
         public static void update()
         {
