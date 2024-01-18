@@ -8,6 +8,13 @@ namespace Mod
         private static DateTime lastRequestedPean = DateTime.MinValue;
         private const sbyte PeanRequestInterval = 5;
 
+        public static bool isFromMyClan(Char @char)
+        {
+            @char = @char.isPet() ? GameScr.findCharInMap(-@char.charID) : @char;
+
+            return @char.clanID == Char.myCharz().clan.ID;
+        }
+
         public static bool CanAskForPeans()
         {
             TimeSpan timeSinceLastRequest = DateTime.Now - lastRequestedPean;

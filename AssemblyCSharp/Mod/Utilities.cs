@@ -25,7 +25,7 @@ namespace Mod
         public static readonly string PathHotkeyCommand = @"ModData\hotkeyCommands.json";
 
 
-        public static readonly sbyte ID_SKILL_BUFF = 7;
+        public static readonly sbyte ID_SKILL_BUFF = Ability.Rescue;
         public static readonly short ID_ICON_ITEM_TDLT = 4387;
         public static readonly short ID_NPC_MOD_FACE = 7333;    // Doraemon
 

@@ -242,6 +242,15 @@ namespace Mod.ModMenu
             }, "vietmode", false, "Bạn không biết gõ tiếng Việt!"),
             new ModMenuItemInt("Auto up đệ tử", new string[]{"Đang tắt", "Đang bật up đệ thường", "Đang bật up đệ né siêu quái", "Đang bật up đệ kaioken"}, "", 0, AutoPet.setState, "", false, "Bạn không có đệ tử!"),
             new ModMenuItemInt("Đánh khi đệ cần", new string[]{"Đánh quái gần nhất", "Đánh đệ (tự động bật cờ xám)", "Đánh bản thân (tự động bật cờ xám)"}, "", 0, AutoPet.setAttackState, "modeautopet", true, "Bạn chưa bật chức năng \"Auto up đệ tử\"!"),
+            new ModMenuItemInt(
+                 "Auto rescue",
+                 new string[]{ "Đang tắt", "Mọi người", "Chỉ thành viên trong bang hội", "Chỉ thú cưng", "Chỉ thú cưng của tôi" },
+                 "",
+                 0,
+                 AutoSkill.setReviveTargetMode,
+                 "",
+                 false
+            ),
             new ModMenuItemInt("Thời gian đổi nền", null, "Điều chỉnh thời gian thay đổi nền (giây)", 30, CustomBackground.setState, "backgroundinveral", false),
             new ModMenuItemInt("Thời gian đổi logo", null, "Điều chỉnh thời gian thay đổi logo (giây)", 30, CustomLogo.setState, "logoinveral", false),
             new ModMenuItemInt("Chiều cao của logo", null, "Điều chỉnh chiều cao của logo", 80, CustomLogo.setLogoHeight, "logoheight"),
