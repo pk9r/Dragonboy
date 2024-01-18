@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Mod.ModHelper.CommandMod.Chat
@@ -143,12 +144,12 @@ namespace Mod.ModHelper.CommandMod.Chat
         {
             // Lệnh chat phải bắt đầu bằng / để phân biệt với chat bình thường
             if (!text.StartsWith("/"))
-            {
                 return false;
-            }
 
-            text = text.Substring(1);
-            return execute(text);
+            return text
+                .Substring(1)
+                .Split(',')
+                .Aggregate(false, (acc, command) => execute(command.ToString()) || acc);
         }
     }
 }
