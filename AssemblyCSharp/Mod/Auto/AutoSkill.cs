@@ -28,7 +28,7 @@ namespace Mod.Auto
             if (deadChar == null || !SkillUtilities.canUseSkill(skillRescure))
                 return;
 
-            if (canHealChar(deadChar))
+            if (canHealChar(deadChar) && skillRescure.point <= 1)
                 useSkillOn(deadChar, skillRescure);
             else
                 Utilities.buffMe();
