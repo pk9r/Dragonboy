@@ -109,7 +109,7 @@ namespace Mod
         {
             return waypoint.maxX < 60 ? 15 :
                 waypoint.minX > TileMap.pxw - 60 ? TileMap.pxw - 15 :
-                waypoint.minX + 30;
+                waypoint.minX + ((waypoint.maxX - waypoint.minX) / 2);
         }
 
         public static int getYWayPoint(Waypoint waypoint)
