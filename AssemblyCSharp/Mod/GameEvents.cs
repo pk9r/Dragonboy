@@ -1,4 +1,4 @@
-﻿using Mod.Auto;
+using Mod.Auto;
 using Mod.Auto.AutoChat;
 using Mod.Graphics;
 using Mod.ModHelper;
@@ -283,6 +283,7 @@ namespace Mod
             Boss.Update();
             SetDo.Update();
             AutoPean.Update();
+            AutoSkill.Update();
             //NOTE onUpdateChatTextField không thể bấm tab.
             if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat") return;
             HistoryChat.gI.update();

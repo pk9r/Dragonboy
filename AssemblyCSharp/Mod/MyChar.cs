@@ -9,6 +9,11 @@
             return Char.myCharz().cgender + HomeBaseId;
         }
 
+        public static int petId()
+        {
+            return CharUtilities.getPetId(Char.myCharz());
+        }
+
         public static bool isHome()
         {
             return TileMap.mapID == homeId();
@@ -17,8 +22,8 @@
         public static bool isDead()
         {
             Char myChar = Char.myCharz();
-            
-            return myChar.isDie || myChar.cHP <= 0 || myChar.statusMe == 14;
+
+            return CharUtilities.isCharDead(myChar);
         }
     }
 }
