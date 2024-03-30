@@ -37,7 +37,7 @@ namespace QLTK.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Game.exe")]
+        [global::System.Configuration.DefaultSettingValueAttribute("DragonBoy.exe")]
         public string PathGame {
             get {
                 return ((string)(this["PathGame"]));

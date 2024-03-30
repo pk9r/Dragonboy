@@ -6,7 +6,7 @@
       <Value Profile="(Default)">ModData\accounts.json</Value>
     </Setting>
     <Setting Name="PathGame" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Game.exe</Value>
+      <Value Profile="(Default)">DragonBoy.exe</Value>
     </Setting>
     <Setting Name="PortListener" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">22327</Value>
