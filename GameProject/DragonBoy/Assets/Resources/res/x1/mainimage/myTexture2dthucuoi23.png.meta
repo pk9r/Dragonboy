@@ -1,0 +1,178 @@
+fileFormatVersion: 2
+guid: 872ca9b54bbb1b44f92ea8d18e5cbfd5
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: myTexture2dthucuoi23
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 120
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0, y: 1}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: myTexture2dthucuoi23
+      rect:
+        serializedVersion: 2
+        x: 6.012913
+        y: 7.026751
+        width: 31.96033
+        height: 111.8971
+      alignment: 9
+      pivot: {x: -0.1881367, y: 1.009617}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -14.99308, y: 41.02469}
+        - {x: -15.99308, y: 44.02469}
+        - {x: -11.99308, y: 48.02469}
+        - {x: -4.99308, y: 54.02469}
+        - {x: -1.99308, y: 56.02469}
+        - {x: 9.00692, y: 56.02469}
+        - {x: 10.00692, y: 55.02469}
+        - {x: 10.00692, y: 42.02469}
+        - {x: 5.006922, y: 34.02469}
+        - {x: -4.99308, y: 34.02469}
+      - - {x: -10.99308, y: -5.975307}
+        - {x: -14.99308, y: -0.9753075}
+        - {x: -14.99308, y: 5.024693}
+        - {x: -10.99308, y: 9.024693}
+        - {x: 10.00692, y: 9.024693}
+        - {x: 10.00692, y: 2.024693}
+        - {x: 2.00692, y: -5.975307}
+      - - {x: -0.9930801, y: -55.97531}
+        - {x: -9.99308, y: -47.9753}
+        - {x: -9.99308, y: -41.97531}
+        - {x: -7.99308, y: -38.97531}
+        - {x: -1.99308, y: -38.97531}
+        - {x: 13.00692, y: -39.97531}
+        - {x: 16.00692, y: -40.97531}
+        - {x: 16.00692, y: -45.97531}
+        - {x: 10.00692, y: -55.97531}
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 02305410000000000800000000000000
+      internalID: 21300000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      myTexture2dthucuoi23: 21300000
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,149 @@
+name: Build project
+
+# on: [push, pull_request]
+on: workflow_dispatch
+
+jobs:
+  build-Windows:
+    name: Build for ${{ matrix.targetPlatform }} with ${{matrix.scriptingBackend}} scripting backend on Windows runner
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneWindows # Build a Windows standalone.
+          - StandaloneWindows64 # Build a Windows 64-bit standalone.
+          - WSAPlayer # Build an Windows Store Apps player.
+        scriptingBackend:
+          - Mono # 0
+          - IL2CPP # 1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: DragonBoy/Library
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
+      - name: Change scripting backend to ${{matrix.scriptingBackend}}
+        run: pwsh ./set_scripting_backend.ps1 -projectSettingsPath "DragonBoy/ProjectSettings/ProjectSettings.asset" -platform ${{ matrix.targetPlatform }} -scriptingBackend ${{matrix.scriptingBackend}} || powershell ./set_scripting_backend.ps1 -projectSettingsPath "DragonBoy/ProjectSettings/ProjectSettings.asset" -platform ${{ matrix.targetPlatform }} -scriptingBackend ${{matrix.scriptingBackend}};     
+      - name: Build project
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          projectPath: DragonBoy
+          buildName: DragonBoy
+          allowDirtyBuild: true          
+      - name: Upload build results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Build-${{ matrix.targetPlatform }}-${{matrix.scriptingBackend}}
+          path: build/${{ matrix.targetPlatform }}
+  build-Linux:
+    name: Build for ${{ matrix.targetPlatform }} with ${{matrix.scriptingBackend}} scripting backend on Linux runner
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneLinux64 # Build a Linux 64-bit standalone.
+          - Android # Build an Android .apk standalone app.
+          - WebGL # Build to WebGL platform.
+        scriptingBackend:
+          - Mono # 0
+          - IL2CPP # 1 
+        exclude:
+          - targetPlatform: WebGL
+            scriptingBackend: Mono
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: DragonBoy/Library
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
+      - name: Change scripting backend to ${{matrix.scriptingBackend}}
+        run: chmod +x set_scripting_backend.sh && ./set_scripting_backend.sh "DragonBoy/ProjectSettings/ProjectSettings.asset" "${{ matrix.targetPlatform }}" "${{matrix.scriptingBackend}}"
+      - if: ${{ matrix.targetPlatform == 'Android' }} 
+        name: Free Disk Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+      - name: Build project
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          androidKeystoreName: DragonBoy-UnityProject.keystore # This file won't exist, but this property needs to exist.
+          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
+          androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+          androidTargetSdkVersion: AndroidApiLevel33
+          projectPath: DragonBoy
+          buildName: DragonBoy
+          allowDirtyBuild: true
+      - name: Upload build results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Build-${{ matrix.targetPlatform }}-${{matrix.scriptingBackend}}
+          path: build/${{ matrix.targetPlatform }}
+  build-MacOS:
+    name: Build for ${{ matrix.targetPlatform }} with ${{matrix.scriptingBackend}} scripting backend on MacOS runner
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneOSX # Build a macOS standalone (Intel 64-bit).
+          - iOS # Build an iOS player.
+        scriptingBackend:
+          - Mono # 0
+          - IL2CPP # 1
+        exclude:
+          - targetPlatform: iOS
+            scriptingBackend: Mono
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: DragonBoy/Library
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
+      - name: Change scripting backend to ${{matrix.scriptingBackend}}
+        run: chmod +x set_scripting_backend_mac.sh && ./set_scripting_backend_mac.sh "DragonBoy/ProjectSettings/ProjectSettings.asset" "${{ matrix.targetPlatform }}" "${{matrix.scriptingBackend}}"
+      - name: Build project
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          projectPath: DragonBoy
+          buildName: DragonBoy
+          allowDirtyBuild: true
+      - name: Upload build results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Build-${{ matrix.targetPlatform }}-${{matrix.scriptingBackend}}
+          path: build/${{ matrix.targetPlatform }}

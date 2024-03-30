@@ -1,0 +1,44 @@
+name: Build project for Linux operating system
+on: workflow_dispatch
+jobs:
+  build-Linux:
+    name: Build for ${{ matrix.targetPlatform }} with ${{matrix.scriptingBackend}} scripting backend on Linux runner
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneLinux64 # Build a Linux 64-bit standalone.
+        scriptingBackend:
+          - Mono # 0
+          - IL2CPP # 1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: DragonBoy/Library
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
+      - name: Change scripting backend to ${{matrix.scriptingBackend}}
+        run: chmod +x set_scripting_backend.sh && ./set_scripting_backend.sh "DragonBoy/ProjectSettings/ProjectSettings.asset" "${{ matrix.targetPlatform }}" "${{matrix.scriptingBackend}}"
+      - name: Build project
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          projectPath: DragonBoy
+          buildName: DragonBoy
+          allowDirtyBuild: true
+      - name: Upload build results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Build-${{ matrix.targetPlatform }}-${{matrix.scriptingBackend}}
+          path: build/${{ matrix.targetPlatform }}
