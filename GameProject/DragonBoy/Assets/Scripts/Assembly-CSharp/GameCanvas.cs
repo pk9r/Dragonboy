@@ -509,14 +509,6 @@ public class GameCanvas : IActionListener
 	{
 		if (gameTick % 100 == 0)
 			;
-		if (isRequestMapID == 1 && waitingTimeChangeMap < mSystem.currentTimeMillis())
-		{
-			waitingTimeChangeMap = mSystem.currentTimeMillis();
-			isRequestMapID = -1;
-			Char.isLoadingMap = false;
-			endDlg();
-			mSystem.onConnectionFail();
-		}
 		if (isRequestMapID == 2 && waitingTimeChangeMap < mSystem.currentTimeMillis() && gameTick % 2 == 0 && currentScreen != null)
 		{
 			if (currentScreen == GameScr.gI())
