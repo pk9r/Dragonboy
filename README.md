@@ -6,4 +6,4 @@ Hướng dẫn xây dựng thêm tính năng cho bản mod: https://youtu.be/9sC
 Discord hỏi đáp: https://discord.gg/zdvBdVxRh6
 
 ## Building
-Sử dụng Visual Studio để build QLTK, Unity Editor phiên bản 2022.3.21f1 để build game. Nếu bạn không tự build được, bạn có thể tải xuống bản build sẵn tại [Dragonboy-pk9r327-Builds](https://github.com/ElectroHeavenVN/Dragonboy-CommunityMod-Builds) host bởi [@ElectroHeavenVN](https://github.com/ElectroHeavenVN).
+Sử dụng Visual Studio để build QLTK, Unity Editor phiên bản 2022.3.21f1 để build game. Nếu bạn không tự build được, bạn có thể tải xuống bản build sẵn tại [Dragonboy-CommunityMod-Builds](https://github.com/ElectroHeavenVN/Dragonboy-CommunityMod-Builds) host bởi [@ElectroHeavenVN](https://github.com/ElectroHeavenVN).
