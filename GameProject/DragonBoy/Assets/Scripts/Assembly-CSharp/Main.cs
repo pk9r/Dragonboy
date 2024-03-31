@@ -1,5 +1,6 @@
-using System.Net.NetworkInformation;
+﻿using System.Net.NetworkInformation;
 using System.Threading;
+using Mod;
 using UnityEngine;
 
 public class Main : MonoBehaviour
@@ -91,14 +92,21 @@ public class Main : MonoBehaviour
 		mainThreadName = Thread.CurrentThread.Name;
 		isPC = true;
 		started = true;
-		if (isPC)
+
+		//GameEventHook.InstallAll();
+
+		// Không thể hook hàm Start vì hàm này dùng để gọi InstallAll
+        GameEvents.onGameStarted();
+        if (GameEvents.onSetResolution())
+            return;
+        if (isPC)
 		{
 			level = Rms.loadRMSInt("levelScreenKN");
 			if (level == 1)
 				Screen.SetResolution(720, 320, false);
 			else
 				Screen.SetResolution(1024, 600, false);
-		}
+        }
 	}
 
 	private void SetInit()
