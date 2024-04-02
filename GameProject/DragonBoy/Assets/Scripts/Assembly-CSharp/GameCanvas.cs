@@ -1,11 +1,16 @@
-using System;
+﻿using System;
 using Assets.src.e;
 using Assets.src.g;
 using UnityEngine;
 
 public class GameCanvas : IActionListener
 {
-	public static long timeNow = 0L;
+    /// <summary>
+    /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
+    /// </summary>
+    internal GameCanvas(HookObj _) { }
+
+    public static long timeNow = 0L;
 
 	public static bool open3Hour;
 

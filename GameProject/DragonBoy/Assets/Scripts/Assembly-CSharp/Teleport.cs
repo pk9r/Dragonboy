@@ -1,6 +1,11 @@
 ﻿public class Teleport
 {
-	public static MyVector vTeleport = new MyVector();
+    /// <summary>
+    /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
+	/// </summary>
+    internal Teleport(HookObj _) { }
+
+    public static MyVector vTeleport = new MyVector();
 
 	public int x;
 
@@ -45,9 +50,6 @@
 	private bool tHole;
 
 	private bool isShock;
-
-    //Constructor này chỉ được gọi từ GameEventHook.InstallAll()
-    public Teleport() { }
 
 	public Teleport(int x, int y, int headId, int dir, int type, bool isMe, int planet)
 	{

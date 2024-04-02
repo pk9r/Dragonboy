@@ -1,11 +1,16 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Assets.src.g;
 using UnityEngine;
 
 public class Panel : IActionListener, IChatable
 {
-	public class PlayerChat
+    /// <summary>
+    /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
+    /// </summary>
+    internal Panel(HookObj _) { }
+
+    public class PlayerChat
 	{
 		public string name;
 
@@ -401,7 +406,7 @@ public class Panel : IActionListener, IChatable
 
 	public int[] partID;
 
-	private int timeShow;
+	internal int timeShow;
 
 	public bool isBoxClan;
 

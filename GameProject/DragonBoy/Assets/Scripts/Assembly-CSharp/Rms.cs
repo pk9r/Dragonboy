@@ -191,7 +191,19 @@ public class Rms
 		Cout.LogError3("clean rms");
 		foreach (FileInfo file in new DirectoryInfo(GetiPhoneDocumentsPath() + "/").GetFiles().Where(f => f.Extension != ".log"))
 		{
-			file.Delete();
+			try
+			{
+				file.Delete();
+			}
+			catch { }
+		}
+		foreach (DirectoryInfo directory in new DirectoryInfo(GetiPhoneDocumentsPath() + "/").EnumerateDirectories())
+		{
+			try
+			{
+				directory.Delete(true);
+			}
+			catch { }
 		}
 	}
 

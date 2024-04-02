@@ -103,7 +103,7 @@ namespace Mod
 
         internal static bool onGetRMSPath(out string result)
         {
-            result = $"asset\\{GameMidlet.IP}_{GameMidlet.PORT}_x{mGraphics.zoomLevel}\\";
+            result = $"{Application.persistentDataPath}\\{GameMidlet.IP}_{GameMidlet.PORT}_x{mGraphics.zoomLevel}\\";
             if (!Directory.Exists(result))
                 Directory.CreateDirectory(result);
             return true;
@@ -204,7 +204,7 @@ namespace Mod
 
         }
 
-        public static bool onUseSkill(Skill skill)
+        public static bool onUseSkill(Char ch)
         {
             return false;
         }
@@ -244,7 +244,7 @@ namespace Mod
             return false;
         }
 
-        public static void onAddInfoChar(string info, Char c)
+        public static void onAddInfoChar(Char c, string info)
         {
 
         }
@@ -271,15 +271,16 @@ namespace Mod
 
         public static Image onCreateImage(string filename)
         {
+            string customAssetsPath = Path.Combine(Application.streamingAssetsPath, "CustomAssets");
             Image image = new Image();
             Texture2D texture2D = new Texture2D(1, 1);
-            if (!Directory.Exists("Game_Data\\CustomAssets")) Directory.CreateDirectory("Game_Data\\CustomAssets");
-            if (File.Exists("Game_Data\\CustomAssets\\" + filename.Replace('/', '\\') + ".png"))
-            {
-                texture2D.LoadImage(File.ReadAllBytes("Game_Data\\CustomAssets\\" + filename.Replace('/', '\\') + ".png"));
-            }
-            else texture2D = Resources.Load(filename) as Texture2D;
-            image.texture = texture2D ?? throw new Exception("NULL POINTER EXCEPTION AT Image onCreateImage " + filename);
+            if (!Directory.Exists(customAssetsPath))
+                Directory.CreateDirectory(customAssetsPath);
+            if (File.Exists(Path.Combine(customAssetsPath, filename.Replace('/', '\\') + ".png")))
+                texture2D.LoadImage(File.ReadAllBytes(Path.Combine(customAssetsPath, filename.Replace('/', '\\') + ".png")));
+            else 
+                texture2D = Resources.Load(filename) as Texture2D;
+            image.texture = texture2D != null ? texture2D : throw new Exception("NULL POINTER EXCEPTION AT Image onCreateImage " + filename);
             image.w = image.texture.width;
             image.h = image.texture.height;
             image.texture.anisoLevel = 0;

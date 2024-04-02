@@ -2,7 +2,12 @@ using System;
 
 public class ServerListScreen : mScreen, IActionListener
 {
-	public static string[] nameServer;
+    /// <summary>
+    /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
+    /// </summary>
+    internal ServerListScreen(HookObj _) { }
+
+    public static string[] nameServer;
 
 	public static string[] address;
 

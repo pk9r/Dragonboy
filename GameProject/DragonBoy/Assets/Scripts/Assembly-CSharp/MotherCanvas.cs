@@ -1,6 +1,11 @@
-public class MotherCanvas
+﻿public class MotherCanvas
 {
-	public static MotherCanvas instance;
+    /// <summary>
+    /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
+	/// </summary>
+    internal MotherCanvas(HookObj _) { }
+
+    public static MotherCanvas instance;
 
 	public GameCanvas tCanvas;
 

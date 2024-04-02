@@ -1,6 +1,11 @@
-public class ItemMap : IMapObject
+﻿public class ItemMap : IMapObject
 {
-	public int x;
+    /// <summary>
+    /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
+    /// </summary>
+    internal ItemMap(HookObj _) { }
+
+    public int x;
 
 	public int y;
 

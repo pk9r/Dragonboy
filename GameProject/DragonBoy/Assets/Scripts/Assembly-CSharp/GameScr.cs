@@ -3,7 +3,12 @@ using Assets.src.g;
 
 public class GameScr : mScreen, IChatable
 {
-	public bool isWaitingDoubleClick;
+    /// <summary>
+    /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
+    /// </summary>
+    internal GameScr(HookObj _) { }
+
+    public bool isWaitingDoubleClick;
 
 	public long timeStartDblClick;
 

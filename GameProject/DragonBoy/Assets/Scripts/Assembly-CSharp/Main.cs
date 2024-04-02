@@ -51,7 +51,7 @@ public class Main : MonoBehaviour
 
 	private int paintCount;
 
-	private int count;
+	internal int count;
 
 	private int fps;
 
@@ -92,9 +92,7 @@ public class Main : MonoBehaviour
 		mainThreadName = Thread.CurrentThread.Name;
 		isPC = true;
 		started = true;
-
-		//GameEventHook.InstallAll();
-
+		GameEventHook.InstallAll();
 		// Không thể hook hàm Start vì hàm này dùng để gọi InstallAll
         GameEvents.onGameStarted();
         if (GameEvents.onSetResolution())
@@ -113,7 +111,7 @@ public class Main : MonoBehaviour
 	{
 		base.enabled = true;
 	}
-
+		
 	private void OnHideUnity(bool isGameShown)
 	{
 		if (!isGameShown)
