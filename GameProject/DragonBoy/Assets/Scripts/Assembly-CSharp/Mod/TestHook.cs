@@ -14,7 +14,7 @@ namespace Mod
     {
         static MethodHook _hook;
 
-        internal static void InstallPatch()
+        internal static void Install()
         {
             MethodInfo miAFunc = typeof(GUI).GetMethod("Label", new Type[] {typeof(Rect), typeof(string), typeof(GUIStyle)});
             MethodInfo miBReplace = typeof(TestHook).GetMethod("FuncReplace");
@@ -23,11 +23,10 @@ namespace Mod
             _hook = new MethodHook(miAFunc, miBReplace, miBProxy);
             _hook.Install();
         }
-        internal static void UninstallPatch()
+        internal static void Uninstall()
         {
             if (_hook != null)
                 _hook.Uninstall();
-
             _hook = null;
         }
         public static void FuncReplace(Rect rect, string text, GUIStyle style)

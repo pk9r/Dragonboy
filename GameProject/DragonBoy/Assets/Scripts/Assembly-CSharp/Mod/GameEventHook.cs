@@ -5,8 +5,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using MonoHook;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
+using UnityEngine.Scripting;
 
+[assembly: Preserve]
 namespace Mod
 {
     /// <summary>
@@ -23,7 +24,6 @@ namespace Mod
         public static void InstallAll()
         {
             InstallHook<Action<string>, Action<Service, string>, Action<Service, string>>(Service.gI().chat, Service_chat_hook, Service_chat_original);
-            InstallHook(typeof(Main).GetMethod("OnApplicationQuit", BindingFlags.NonPublic | BindingFlags.Instance), new Action<Main>(Main_OnApplicationQuit_hook).Method, new Action<Main>(Main_OnApplicationQuit_original).Method);
             InstallHook<Action<string, string>, Action<string, string>, Action<string, string>>(Rms.saveRMSString, Rms_saveRMSString_hook, Rms_saveRMSString_original);
             InstallHook<Action, Action<GameScr>, Action<GameScr>>(new GameScr(_).updateKey, GameScr_updateKey_hook, GameScr_updateKey_original);
             InstallHook<Action<mGraphics>, Action<ChatTextField, mGraphics>, Action<ChatTextField, mGraphics>>(new ChatTextField(_).paint, ChatTextField_paint_hook, ChatTextField_paint_original);
@@ -47,8 +47,6 @@ namespace Mod
             InstallHook<Action<Message>, Action<Controller, Message>, Action<Controller, Message>>(Controller.gI().loadInfoMap, Controller_loadInfoMap_hook, Controller_loadInfoMap_original);
             InstallHook<Action<mGraphics>, Action<GameScr, mGraphics>, Action<GameScr, mGraphics>>(new GameScr(_).paint, GameScr_paint_hook, GameScr_paint_original);
             InstallHook<Action<SkillPaint, int>, Action<Char, SkillPaint, int>, Action<Char, SkillPaint, int>>(new Char().setSkillPaint, Char_setSkillPaint_hook, Char_setSkillPaint_original);
-            InstallHook(typeof(Main).GetMethod("FixedUpdate", BindingFlags.NonPublic | BindingFlags.Instance), new Action<Main>(Main_FixedUpdate_hook).Method, new Action<Main>(Main_FixedUpdate_original).Method);
-            InstallHook(typeof(Main).GetMethod("Update", BindingFlags.NonPublic | BindingFlags.Instance), new Action<Main>(Main_Update_hook).Method, new Action<Main>(Main_Update_original).Method);
             InstallHook<Action<string, int>, Action<InfoMe, string, int>, Action<InfoMe, string, int>>(InfoMe.gI().addInfo, InfoMe_addInfo_hook, InfoMe_addInfo_original);
             InstallHook<Action, Action<Panel>, Action<Panel>>(new Panel(_).updateKey, Panel_updateKey_hook, Panel_updateKey_original);
             InstallHook<Action<int, int>, Action<ItemMap, int, int>, Action<ItemMap, int, int>>(new ItemMap(_).setPoint, ItemMap_setPoint_hook, ItemMap_setPoint_original);
@@ -130,17 +128,6 @@ namespace Mod
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Service_chat_original(Service _this, string text)
-        {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
-        }
-
-        static void Main_OnApplicationQuit_hook(Main _this)
-        {
-            GameEvents.onGameClosing();
-            Main_OnApplicationQuit_original(_this);
-        }
-        [MethodImpl(MethodImplOptions.NoOptimization)]
-        static void Main_OnApplicationQuit_original(Main _this)
         {
             Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
         }
@@ -419,29 +406,6 @@ namespace Mod
             Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
         }
 
-        static void Main_FixedUpdate_hook(Main _this)
-        {
-            if (_this.count >= 10)
-                GameEvents.onFixedUpdateMain();
-            Main_FixedUpdate_original(_this);
-        }
-        [MethodImpl(MethodImplOptions.NoOptimization)]
-        static void Main_FixedUpdate_original(Main _this)
-        {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
-        }
-
-        static void Main_Update_hook(Main _this)
-        {
-            GameEvents.onUpdateMain();
-            Main_Update_original(_this);
-        }
-        [MethodImpl(MethodImplOptions.NoOptimization)]
-        static void Main_Update_original(Main _this)
-        {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
-        }
-
         static void InfoMe_addInfo_hook(InfoMe _this, string s, int Type)
         {
             InfoMe_addInfo_original(_this, s, Type);
@@ -602,8 +566,6 @@ namespace Mod
         {
             Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
         }
-
-        //Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
         #endregion
     }
 }

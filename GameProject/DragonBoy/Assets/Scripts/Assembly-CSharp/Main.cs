@@ -51,7 +51,7 @@ public class Main : MonoBehaviour
 
 	private int paintCount;
 
-	internal int count;
+	private int count;
 
 	private int fps;
 
@@ -94,6 +94,7 @@ public class Main : MonoBehaviour
 		started = true;
 		GameEventHook.InstallAll();
 		// Không thể hook hàm Start vì hàm này dùng để gọi InstallAll
+		//TestHook.Install();
         GameEvents.onGameStarted();
         if (GameEvents.onSetResolution())
             return;
@@ -249,7 +250,8 @@ public class Main : MonoBehaviour
 			DataInputStream.update();
 			//SMS.update();
 			Net.update();
-			f++;
+            GameEvents.onFixedUpdateMain();
+            f++;
 			if (f > 8)
 				f = 0;
 			if (!isPC)
@@ -261,9 +263,10 @@ public class Main : MonoBehaviour
 
 	private void Update()
 	{
-	}
+        GameEvents.onUpdateMain();
+    }
 
-	private void checkInput()
+    private void checkInput()
 	{
 		if (Input.GetMouseButtonDown(0))
 		{
@@ -322,7 +325,8 @@ public class Main : MonoBehaviour
 
 	private void OnApplicationQuit()
 	{
-		Debug.LogWarning("APP QUIT");
+        GameEvents.onGameClosing();
+        Debug.LogWarning("APP QUIT");
 		GameCanvas.bRun = false;
 		Session_ME.gI().close();
 		Session_ME2.gI().close();
