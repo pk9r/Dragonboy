@@ -218,7 +218,7 @@ namespace MonoHook
 
         private void CreateCodePatcher()
         {
-            long addrOffset = System.Math.Abs(_targetPtr.ToInt64() - _proxyPtr.ToInt64());
+            long addrOffset = System.Math.Abs(_targetPtr.ToInt64() - _replacementPtr.ToInt64());
             
             if(_proxyPtr != IntPtr.Zero)
                 addrOffset = System.Math.Max(addrOffset, System.Math.Abs(_targetPtr.ToInt64() - _proxyPtr.ToInt64()));

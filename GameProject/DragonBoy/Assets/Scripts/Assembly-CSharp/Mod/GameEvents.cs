@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -28,7 +29,7 @@ namespace Mod
             bool result = true;
             if (text == "test")
                 GameScr.info1.addInfo("Test OK", 0);
-            else 
+            else
                 result = false;
             return result;
         }
@@ -38,7 +39,8 @@ namespace Mod
         /// </summary>
         public static void onGameStarted()
         {
-
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
         }
 
         /// <summary>
@@ -51,7 +53,7 @@ namespace Mod
 
         public static void onSaveRMSString(ref string filename, ref string data)
         {
-            
+
         }
 
         /// <summary>
@@ -68,7 +70,7 @@ namespace Mod
         /// </summary>
         public static void onGameScrPressHotkeysUnassigned()
         {
-            
+
         }
 
         /// <summary>
@@ -76,7 +78,7 @@ namespace Mod
         /// </summary>
         public static void onGameScrPressHotkeys()
         {
-           
+
         }
 
         /// <summary>
@@ -103,7 +105,16 @@ namespace Mod
 
         internal static bool onGetRMSPath(out string result)
         {
-            result = $"{Application.persistentDataPath}\\{GameMidlet.IP}_{GameMidlet.PORT}_x{mGraphics.zoomLevel}\\";
+            //result = $"{Application.persistentDataPath}\\{GameMidlet.IP}_{GameMidlet.PORT}_x{mGraphics.zoomLevel}\\";
+            string subFolder = "TeaMobi";
+            // check ip server lậu, lưu rms riêng
+            // ...
+            result = Application.persistentDataPath;
+            if (Utilities.IsLinuxBuild())
+                result = Path.Combine(Application.persistentDataPath, Application.companyName, Application.productName);
+            if (Utilities.IsAndroidBuild())
+                result = Application.persistentDataPath;
+            result = Path.Combine(result, subFolder);
             if (!Directory.Exists(result))
                 Directory.CreateDirectory(result);
             return true;
@@ -119,12 +130,29 @@ namespace Mod
         /// </summary>
         public static void onUpdateChatTextField(ChatTextField sender)
         {
-           
+
         }
 
         public static bool onClearAllRMS()
         {
-            return false;
+            foreach (FileInfo file in new DirectoryInfo(Rms.GetiPhoneDocumentsPath() + "/").GetFiles().Where(f => f.Extension != ".log"))
+            {
+                try
+                {
+                    if (file.Name != "isPlaySound")
+                        file.Delete();
+                }
+                catch { }
+            }
+            foreach (DirectoryInfo directory in new DirectoryInfo(Rms.GetiPhoneDocumentsPath() + "/").EnumerateDirectories())
+            {
+                try
+                {
+                    directory.Delete(true);
+                }
+                catch { }
+            }
+            return true;
         }
 
         /// <summary>
@@ -132,7 +160,7 @@ namespace Mod
         /// </summary>
         public static void onUpdateGameScr()
         {
-           
+
         }
 
         /// <summary>
@@ -169,9 +197,20 @@ namespace Mod
 
         }
 
-        public static bool onCheckZoomLevel()
+        public static bool onCheckZoomLevel(int w, int h)
         {
-
+            if (Utilities.IsAndroidBuild())
+            {
+                if (w * h >= 2073600)
+                    mGraphics.zoomLevel = 4;
+                else if (w * h >= 691200)
+                    mGraphics.zoomLevel = 3;
+                else if (w * h > 153600)
+                    mGraphics.zoomLevel = 2;
+                else
+                    mGraphics.zoomLevel = 1;
+                return true;
+            }
             return false;
         }
 
@@ -181,7 +220,7 @@ namespace Mod
         }
 
         public static bool onKeyReleasedz(int keyCode, bool isFromAsync)
-        { 
+        {
             return false;
         }
 
@@ -197,6 +236,7 @@ namespace Mod
 
         public static void onInfoMapLoaded()
         {
+
         }
 
         public static void onPaintGameScr(mGraphics g)
@@ -236,7 +276,7 @@ namespace Mod
 
         public static void onSetPointItemMap(int xEnd, int yEnd)
         {
-           
+
         }
 
         public static bool onMenuStartAt(MyVector menuItems)
@@ -261,33 +301,43 @@ namespace Mod
 
         public static void onMobStartDie(Mob instance)
         {
-           
+
         }
 
         public static void onUpdateMob(Mob instance)
         {
-            
+
         }
 
-        public static Image onCreateImage(string filename)
+        public static bool onCreateImage(string filename, out Image image)
         {
-            string customAssetsPath = Path.Combine(Application.streamingAssetsPath, "CustomAssets");
-            Image image = new Image();
-            Texture2D texture2D = new Texture2D(1, 1);
+            Debug.Log("Create image: " + filename);
+            string streamingAssetsPath = Application.streamingAssetsPath;
+            if (Utilities.IsAndroidBuild())
+                streamingAssetsPath = Path.Combine(Application.persistentDataPath, "StreamingAssets");
+            string customAssetsPath = Path.Combine(streamingAssetsPath, "CustomAssets");
+            Debug.Log(customAssetsPath);
+            image = new Image();
+            Texture2D texture2D;
             if (!Directory.Exists(customAssetsPath))
                 Directory.CreateDirectory(customAssetsPath);
             if (File.Exists(Path.Combine(customAssetsPath, filename.Replace('/', '\\') + ".png")))
+            {
+                texture2D = new Texture2D(1, 1);
                 texture2D.LoadImage(File.ReadAllBytes(Path.Combine(customAssetsPath, filename.Replace('/', '\\') + ".png")));
-            else 
-                texture2D = Resources.Load(filename) as Texture2D;
-            image.texture = texture2D != null ? texture2D : throw new Exception("NULL POINTER EXCEPTION AT Image onCreateImage " + filename);
+            }
+            else
+                texture2D = Resources.Load<Texture2D>(filename);
+            if (texture2D == null)
+                throw new Exception("NULL POINTER EXCEPTION AT Image __createImage " + filename);
+            image.texture = texture2D;
             image.w = image.texture.width;
             image.h = image.texture.height;
             image.texture.anisoLevel = 0;
             image.texture.filterMode = FilterMode.Point;
             image.texture.mipMapBias = 0f;
             image.texture.wrapMode = TextureWrapMode.Clamp;
-            return image;
+            return true;
         }
 
         public static void onChatVip(string chatVip)

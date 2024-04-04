@@ -98,7 +98,7 @@ public class Main : MonoBehaviour
         GameEvents.onGameStarted();
         if (GameEvents.onSetResolution())
             return;
-        if (isPC)
+        if (!Utilities.IsAndroidBuild())
 		{
 			level = Rms.loadRMSInt("levelScreenKN");
 			if (level == 1)
@@ -152,7 +152,7 @@ public class Main : MonoBehaviour
 		{
 			Screen.orientation = ScreenOrientation.LandscapeLeft;
 			Application.runInBackground = true;
-			Application.targetFrameRate = 35;
+			//Application.targetFrameRate = 35;
 			base.useGUILayout = false;
 			isCompactDevice = detectCompactDevice();
 			if (main == null)
@@ -164,7 +164,7 @@ public class Main : MonoBehaviour
 			else
 				IMEI = GetMacAddress();
 			isPC = true;
-			if (isPC)
+			if (!Utilities.IsAndroidBuild())
 				Screen.fullScreen = false;
 			if (isWindowsPhone)
 				typeClient = 6;

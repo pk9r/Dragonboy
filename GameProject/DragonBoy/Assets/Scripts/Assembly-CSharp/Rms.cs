@@ -189,23 +189,12 @@ public class Rms
 	public static void clearAll()
 	{
 		Cout.LogError3("clean rms");
-		foreach (FileInfo file in new DirectoryInfo(GetiPhoneDocumentsPath() + "/").GetFiles().Where(f => f.Extension != ".log"))
-		{
-			try
-			{
-				file.Delete();
-			}
-			catch { }
-		}
-		foreach (DirectoryInfo directory in new DirectoryInfo(GetiPhoneDocumentsPath() + "/").EnumerateDirectories())
-		{
-			try
-			{
-				directory.Delete(true);
-			}
-			catch { }
-		}
-	}
+        FileInfo[] files = new DirectoryInfo(GetiPhoneDocumentsPath() + "/").GetFiles();
+        for (int i = 0; i < files.Length; i++)
+        {
+            files[i].Delete();
+        }
+    }
 
 	public static void DeleteStorage(string path)
 	{

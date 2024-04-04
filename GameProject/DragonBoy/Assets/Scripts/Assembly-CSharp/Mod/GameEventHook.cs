@@ -13,6 +13,9 @@ namespace Mod
     /// <summary>
     /// Hook vào các hàm của game để gọi các hàm trong <see cref="GameEvents"/>.
     /// </summary>
+    /// <remarks>
+    /// Vấn đề đã biết: trên Android scripting backend Mono, 1 số hàm thỉnh thoảng sẽ không hook được do vị trí của các hàm trong bộ nhớ sau khi JIT quá xa.
+    /// </remarks>
     public static class GameEventHook
     {
         static List<MethodHook> _hooks = new List<MethodHook>();
@@ -23,47 +26,60 @@ namespace Mod
         /// </summary>
         public static void InstallAll()
         {
-            InstallHook<Action<string>, Action<Service, string>, Action<Service, string>>(Service.gI().chat, Service_chat_hook, Service_chat_original);
-            InstallHook<Action<string, string>, Action<string, string>, Action<string, string>>(Rms.saveRMSString, Rms_saveRMSString_hook, Rms_saveRMSString_original);
-            InstallHook<Action, Action<GameScr>, Action<GameScr>>(new GameScr(_).updateKey, GameScr_updateKey_hook, GameScr_updateKey_original);
-            InstallHook<Action<mGraphics>, Action<ChatTextField, mGraphics>, Action<ChatTextField, mGraphics>>(new ChatTextField(_).paint, ChatTextField_paint_hook, ChatTextField_paint_original);
-            InstallHook<Action<int, IChatable, string>, Action<ChatTextField, int, IChatable, string>, Action<ChatTextField, int, IChatable, string>>(new ChatTextField(_).startChat, ChatTextField_startChat_hook_1, ChatTextField_startChat_original_1);
-            InstallHook<Action<IChatable, string>, Action<ChatTextField, IChatable, string>, Action<ChatTextField, IChatable, string>>(new ChatTextField(_).startChat, ChatTextField_startChat_hook_2, ChatTextField_startChat_original_2);
-            InstallHook<Func<string, int>, Func<string, int>, Func<string, int>>(Rms.loadRMSInt, Rms_loadRMSInt_hook, Rms_loadRMSInt_original);
-            InstallHook<Func<string>, Func<string>, Func<string>>(Rms.GetiPhoneDocumentsPath, Rms_GetiPhoneDocumentsPath_hook, Rms_GetiPhoneDocumentsPath_original);
-            InstallHook<Action, Action<Teleport>, Action<Teleport>>(new Teleport(_).update, Teleport_update_hook, Teleport_update_original);
-            InstallHook<Action, Action<ChatTextField>, Action<ChatTextField>>(new ChatTextField(_).update, ChatTextField_update_hook, ChatTextField_update_original);
-            InstallHook<Action, Action, Action>(Rms.clearAll, Rms_clearAll_hook, Rms_clearAll_original);
-            InstallHook<Action, Action<GameScr>, Action<GameScr>>(new GameScr(_).update, GameScr_update_hook, GameScr_update_original);
-            InstallHook<Action<string, string, string, sbyte>, Action<Service, string, string, string, sbyte>, Action<Service, string, string, string, sbyte>>(Service.gI().login, Service_login_hook, Service_login_original);
-            InstallHook<Action, Action<ServerListScreen>, Action<ServerListScreen>>(new ServerListScreen(_).switchToMe, ServerListScreen_switchToMe_hook, ServerListScreen_switchToMe_original);
-            InstallHook<Action<string, int>, Action<Session_ME, string, int>, Action<Session_ME, string, int>>(Session_ME.gI().connect, Session_ME_connect_hook, Session_ME_connect_original);
-            InstallHook<Action, Action<ServerListScreen>, Action<ServerListScreen>>(new ServerListScreen(_).show2, ServerListScreen_show2_hook, ServerListScreen_show2_original);
-            InstallHook<Action<int, int>, Action<MotherCanvas, int, int>, Action<MotherCanvas, int, int>>(new MotherCanvas(_).checkZoomLevel, MotherCanvas_checkZoomLevel_hook, MotherCanvas_checkZoomLevel_original);
-            InstallHook<Action<int>, Action<GameCanvas, int>, Action<GameCanvas, int>>(new GameCanvas(_).keyPressedz, GameCanvas_keyPressedz_hook, GameCanvas_keyPressedz_original);
-            InstallHook<Action<int>, Action<GameCanvas, int>, Action<GameCanvas, int>>(new GameCanvas(_).keyReleasedz, GameCanvas_keyReleasedz_hook, GameCanvas_keyReleasedz_original);
-            InstallHook<Action<string, int, Npc>, Action<string, int, Npc>, Action<string, int, Npc>>(ChatPopup.addChatPopupMultiLine, ChatPopup_addChatPopupMultiLine_hook, ChatPopup_addChatPopupMultiLine_original);
-            InstallHook<Action<string, int, Npc>, Action<string, int, Npc>, Action<string, int, Npc>>(ChatPopup.addBigMessage, ChatPopup_addBigMessage_hook, ChatPopup_addBigMessage_original);
-            InstallHook<Action<Message>, Action<Controller, Message>, Action<Controller, Message>>(Controller.gI().loadInfoMap, Controller_loadInfoMap_hook, Controller_loadInfoMap_original);
-            InstallHook<Action<mGraphics>, Action<GameScr, mGraphics>, Action<GameScr, mGraphics>>(new GameScr(_).paint, GameScr_paint_hook, GameScr_paint_original);
-            InstallHook<Action<SkillPaint, int>, Action<Char, SkillPaint, int>, Action<Char, SkillPaint, int>>(new Char().setSkillPaint, Char_setSkillPaint_hook, Char_setSkillPaint_original);
-            InstallHook<Action<string, int>, Action<InfoMe, string, int>, Action<InfoMe, string, int>>(InfoMe.gI().addInfo, InfoMe_addInfo_hook, InfoMe_addInfo_original);
-            InstallHook<Action, Action<Panel>, Action<Panel>>(new Panel(_).updateKey, Panel_updateKey_hook, Panel_updateKey_original);
-            InstallHook<Action<int, int>, Action<ItemMap, int, int>, Action<ItemMap, int, int>>(new ItemMap(_).setPoint, ItemMap_setPoint_hook, ItemMap_setPoint_original);
-            InstallHook<Action<MyVector, int>, Action<Menu, MyVector, int>, Action<Menu, MyVector, int>>(new Menu().startAt, Menu_startAt_hook, Menu_startAt_original);
-            InstallHook<Action<string>, Action<Char, string>, Action<Char, string>>(new Char().addInfo, Char_addInfo_hook, Char_addInfo_original);
-            InstallHook<Func<string, Image>, Func<string, Image>, Func<string, Image>>(GameCanvas.loadImage, GameCanvas_loadImage_hook, GameCanvas_loadImage_original);
-            InstallHook<Action<mGraphics>, Action<mGraphics>, Action<mGraphics>>(GameCanvas.paintBGGameScr, GameCanvas_paintBGGameScr_hook, GameCanvas_paintBGGameScr_original);
-            InstallHook<Action, Action<Mob>, Action<Mob>>(new Mob().startDie, Mob_startDie_hook, Mob_startDie_original);
-            InstallHook<Action, Action<Mob>, Action<Mob>>(new Mob().update, Mob_update_hook, Mob_update_original);
+            TryInstallHook<Action<string>, Action<Service, string>, Action<Service, string>>(Service.gI().chat, Service_chat_hook, Service_chat_original);
+            TryInstallHook<Action<string, string>, Action<string, string>, Action<string, string>>(Rms.saveRMSString, Rms_saveRMSString_hook, Rms_saveRMSString_original);
+            TryInstallHook<Action, Action<GameScr>, Action<GameScr>>(new GameScr(_).updateKey, GameScr_updateKey_hook, GameScr_updateKey_original);
+            TryInstallHook<Action<mGraphics>, Action<ChatTextField, mGraphics>, Action<ChatTextField, mGraphics>>(new ChatTextField(_).paint, ChatTextField_paint_hook, ChatTextField_paint_original);
+            TryInstallHook<Action<int, IChatable, string>, Action<ChatTextField, int, IChatable, string>, Action<ChatTextField, int, IChatable, string>>(new ChatTextField(_).startChat, ChatTextField_startChat_hook_1, ChatTextField_startChat_original_1);
+            TryInstallHook<Action<IChatable, string>, Action<ChatTextField, IChatable, string>, Action<ChatTextField, IChatable, string>>(new ChatTextField(_).startChat, ChatTextField_startChat_hook_2, ChatTextField_startChat_original_2);
+            TryInstallHook<Func<string, int>, Func<string, int>, Func<string, int>>(Rms.loadRMSInt, Rms_loadRMSInt_hook, Rms_loadRMSInt_original);
+            TryInstallHook<Func<string>, Func<string>, Func<string>>(Rms.GetiPhoneDocumentsPath, Rms_GetiPhoneDocumentsPath_hook, Rms_GetiPhoneDocumentsPath_original);
+            TryInstallHook<Action, Action<Teleport>, Action<Teleport>>(new Teleport(_).update, Teleport_update_hook, Teleport_update_original);
+            TryInstallHook<Action, Action<ChatTextField>, Action<ChatTextField>>(new ChatTextField(_).update, ChatTextField_update_hook, ChatTextField_update_original);
+            TryInstallHook<Action, Action, Action>(Rms.clearAll, Rms_clearAll_hook, Rms_clearAll_original);
+            TryInstallHook<Action, Action<GameScr>, Action<GameScr>>(new GameScr(_).update, GameScr_update_hook, GameScr_update_original);
+            TryInstallHook<Action<string, string, string, sbyte>, Action<Service, string, string, string, sbyte>, Action<Service, string, string, string, sbyte>>(Service.gI().login, Service_login_hook, Service_login_original);
+            TryInstallHook<Action, Action<ServerListScreen>, Action<ServerListScreen>>(new ServerListScreen(_).switchToMe, ServerListScreen_switchToMe_hook, ServerListScreen_switchToMe_original);
+            TryInstallHook<Action<string, int>, Action<Session_ME, string, int>, Action<Session_ME, string, int>>(Session_ME.gI().connect, Session_ME_connect_hook, Session_ME_connect_original);
+            TryInstallHook<Action, Action<ServerListScreen>, Action<ServerListScreen>>(new ServerListScreen(_).show2, ServerListScreen_show2_hook, ServerListScreen_show2_original);
+            TryInstallHook<Action<int, int>, Action<MotherCanvas, int, int>, Action<MotherCanvas, int, int>>(new MotherCanvas(_).checkZoomLevel, MotherCanvas_checkZoomLevel_hook, MotherCanvas_checkZoomLevel_original);
+            TryInstallHook<Action<int>, Action<GameCanvas, int>, Action<GameCanvas, int>>(new GameCanvas(_).keyPressedz, GameCanvas_keyPressedz_hook, GameCanvas_keyPressedz_original);
+            TryInstallHook<Action<int>, Action<GameCanvas, int>, Action<GameCanvas, int>>(new GameCanvas(_).keyReleasedz, GameCanvas_keyReleasedz_hook, GameCanvas_keyReleasedz_original);
+            TryInstallHook<Action<string, int, Npc>, Action<string, int, Npc>, Action<string, int, Npc>>(ChatPopup.addChatPopupMultiLine, ChatPopup_addChatPopupMultiLine_hook, ChatPopup_addChatPopupMultiLine_original);
+            TryInstallHook<Action<string, int, Npc>, Action<string, int, Npc>, Action<string, int, Npc>>(ChatPopup.addBigMessage, ChatPopup_addBigMessage_hook, ChatPopup_addBigMessage_original);
+            TryInstallHook<Action<Message>, Action<Controller, Message>, Action<Controller, Message>>(Controller.gI().loadInfoMap, Controller_loadInfoMap_hook, Controller_loadInfoMap_original);
+            TryInstallHook<Action<mGraphics>, Action<GameScr, mGraphics>, Action<GameScr, mGraphics>>(new GameScr(_).paint, GameScr_paint_hook, GameScr_paint_original);
+            TryInstallHook<Action<SkillPaint, int>, Action<Char, SkillPaint, int>, Action<Char, SkillPaint, int>>(new Char().setSkillPaint, Char_setSkillPaint_hook, Char_setSkillPaint_original);
+            TryInstallHook<Action<string, int>, Action<InfoMe, string, int>, Action<InfoMe, string, int>>(InfoMe.gI().addInfo, InfoMe_addInfo_hook, InfoMe_addInfo_original);
+            TryInstallHook<Action, Action<Panel>, Action<Panel>>(new Panel(_).updateKey, Panel_updateKey_hook, Panel_updateKey_original);
+            TryInstallHook<Action<int, int>, Action<ItemMap, int, int>, Action<ItemMap, int, int>>(new ItemMap(_).setPoint, ItemMap_setPoint_hook, ItemMap_setPoint_original);
+            TryInstallHook<Action<MyVector, int>, Action<Menu, MyVector, int>, Action<Menu, MyVector, int>>(new Menu().startAt, Menu_startAt_hook, Menu_startAt_original);
+            TryInstallHook<Action<string>, Action<Char, string>, Action<Char, string>>(new Char().addInfo, Char_addInfo_hook, Char_addInfo_original);
+            TryInstallHook<Func<string, Image>, Func<string, Image>, Func<string, Image>>(GameCanvas.loadImage, GameCanvas_loadImage_hook, GameCanvas_loadImage_original);
+            TryInstallHook<Action<mGraphics>, Action<mGraphics>, Action<mGraphics>>(GameCanvas.paintBGGameScr, GameCanvas_paintBGGameScr_hook, GameCanvas_paintBGGameScr_original);
+            TryInstallHook<Action, Action<Mob>, Action<Mob>>(new Mob().startDie, Mob_startDie_hook, Mob_startDie_original);
+            TryInstallHook<Action, Action<Mob>, Action<Mob>>(new Mob().update, Mob_update_hook, Mob_update_original);
+            TryInstallHook<Func<string, Image>, Func<string, Image>, Func<string, Image>>(Image.createImage, Image_createImage_hook, Image_createImage_original);
+            TryInstallHook<Action<string>, Action<GameScr, string>, Action<GameScr, string>>(new GameScr(_).chatVip, GameScr_chatVip_hook, GameScr_chatVip_original);
+            TryInstallHook<Action<int>, Action<Panel, int>, Action<Panel, int>>(new Panel(_).updateScroolMouse, Panel_updateScroolMouse_hook, Panel_updateScroolMouse_original);
+            TryInstallHook<Action, Action<Panel>, Action<Panel>>(new Panel(_).hide, Panel_hide_hook, Panel_hide_original);
+            TryInstallHook<Action, Action<Panel>, Action<Panel>>(new Panel(_).hideNow, Panel_hideNow_hook, Panel_hideNow_original);
 
-            InstallHook<Func<string, Image>, Func<string, Image>, Func<string, Image>>(Image.createImage, Image_createImage_hook, Image_createImage_original);
-            InstallHook<Action<string>, Action<GameScr, string>, Action<GameScr, string>>(new GameScr(_).chatVip, GameScr_chatVip_hook, GameScr_chatVip_original);
-            InstallHook<Action<int>, Action<Panel, int>, Action<Panel, int>>(new Panel(_).updateScroolMouse, Panel_updateScroolMouse_hook, Panel_updateScroolMouse_original);
-            InstallHook<Action, Action<Panel>, Action<Panel>>(new Panel(_).hide, Panel_hide_hook, Panel_hide_original);
-            InstallHook<Action, Action<Panel>, Action<Panel>>(new Panel(_).hideNow, Panel_hideNow_hook, Panel_hideNow_original);
+            //TryInstallHook<Action, Action, Action>(, _hook, _original);
+        }
 
-            //InstallHook<Action, Action, Action>(, _hook, _original);
+        /// <summary>
+        /// Thử cài đặt 1 hook.
+        /// </summary>
+        /// <typeparam name="T1">Loại <see cref="Delegate"/> của <paramref name="hookTargetMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
+        /// <typeparam name="T2">Loại <see cref="Delegate"/> của <paramref name="hookMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
+        /// <typeparam name="T3">Loại <see cref="Delegate"/> của <paramref name="originalProxyMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
+        /// <param name="hookTargetMethod">Hàm để hook vào.</param>
+        /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
+        /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
+        static void TryInstallHook<T1, T2, T3>(T1 hookTargetMethod, T2 hookMethod, T3 originalProxyMethod) where T1 : Delegate where T2 : Delegate where T3 : Delegate
+        {
+            TryInstallHook(hookTargetMethod.Method, hookMethod.Method, originalProxyMethod.Method);
         }
 
         /// <summary>
@@ -77,6 +93,24 @@ namespace Mod
         /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
         static void InstallHook<T1, T2, T3>(T1 hookTargetMethod, T2 hookMethod, T3 originalProxyMethod) where T1 : Delegate where T2 : Delegate where T3 : Delegate => InstallHook(hookTargetMethod.Method, hookMethod.Method, originalProxyMethod.Method);
 
+        /// <summary>
+        /// Thử cài đặt 1 hook.
+        /// </summary>
+        /// <param name="hookTargetMethod">Hàm để hook vào.</param>
+        /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
+        /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
+        static void TryInstallHook(MethodInfo hookTargetMethod, MethodInfo hookMethod, MethodInfo originalProxyMethod)
+        {
+            try
+            {
+                InstallHook(hookTargetMethod, hookMethod, originalProxyMethod);
+            }
+            catch (Exception ex) { Debug.LogException(ex); }
+        }
+
+        /// <summary>
+        /// Cài đặt 1 hook.
+        /// </summary>
         /// <param name="hookTargetMethod">Hàm để hook vào.</param>
         /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
         /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
@@ -84,6 +118,7 @@ namespace Mod
         {
             if (_hooks.Any(mH => mH.targetMethod == hookTargetMethod))
                 throw new Exception("Hook already installed");
+            Debug.Log($"Hooking {hookTargetMethod.Name} to {hookMethod.Name}...");
             MethodHook hook = new MethodHook(hookTargetMethod, hookMethod, originalProxyMethod);
             _hooks.Add(hook);
             hook.Install();
@@ -252,8 +287,8 @@ namespace Mod
 
         static void Rms_clearAll_hook()
         {
-            GameEvents.onClearAllRMS();
-            Rms_clearAll_original();
+            if (!GameEvents.onClearAllRMS())
+                Rms_clearAll_original();
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Rms_clearAll_original()
@@ -318,7 +353,7 @@ namespace Mod
 
         static void MotherCanvas_checkZoomLevel_hook(MotherCanvas _this, int w, int h)
         {
-            if (!GameEvents.onCheckZoomLevel())
+            if (!GameEvents.onCheckZoomLevel(w, h))
                 MotherCanvas_checkZoomLevel_original(_this, w, h);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -511,8 +546,9 @@ namespace Mod
 
         static Image Image_createImage_hook(string filename)
         {
-            return GameEvents.onCreateImage(filename);
-            //return Image_createImage_original(filename);
+            if (GameEvents.onCreateImage(filename, out Image image))
+                return image;
+            return Image_createImage_original(filename);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static Image Image_createImage_original(string filename)
