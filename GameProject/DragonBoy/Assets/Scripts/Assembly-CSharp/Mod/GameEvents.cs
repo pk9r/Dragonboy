@@ -311,12 +311,10 @@ namespace Mod
 
         public static bool onCreateImage(string filename, out Image image)
         {
-            Debug.Log("Create image: " + filename);
             string streamingAssetsPath = Application.streamingAssetsPath;
             if (Utilities.IsAndroidBuild())
                 streamingAssetsPath = Path.Combine(Application.persistentDataPath, "StreamingAssets");
             string customAssetsPath = Path.Combine(streamingAssetsPath, "CustomAssets");
-            Debug.Log(customAssetsPath);
             image = new Image();
             Texture2D texture2D;
             if (!Directory.Exists(customAssetsPath))
