@@ -92,13 +92,9 @@ public class Main : MonoBehaviour
 		mainThreadName = Thread.CurrentThread.Name;
 		isPC = true;
 		started = true;
-		GameEventHook.InstallAll();
-		// Không thể hook hàm Start vì hàm này dùng để gọi InstallAll
-		//TestHook.Install();
-        GameEvents.onGameStarted();
-        if (GameEvents.onSetResolution())
-            return;
-        if (!Utilities.IsAndroidBuild())
+		if (GameEvents.onGameStarted())
+			return;
+        if (isPC)
 		{
 			level = Rms.loadRMSInt("levelScreenKN");
 			if (level == 1)

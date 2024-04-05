@@ -17,8 +17,6 @@ namespace Mod
     /// </remarks>
     public static class GameEvents
     {
-        private static bool isZoomLevelChecked;
-
         /// <summary>
         /// Kích hoạt khi người chơi chat.
         /// </summary>
@@ -37,10 +35,17 @@ namespace Mod
         /// <summary>
         /// Kích hoạt sau khi game khởi động.
         /// </summary>
-        public static void onGameStarted()
+        public static bool onGameStarted()
         {
+            bool result = false;
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
+            GameEventHook.InstallAll();
+            //TestHook.Install();
+            if (onSetResolution())
+                result = true;
+            onCheckZoomLevel(Screen.width, Screen.height);
+            return result;
         }
 
         /// <summary>
@@ -62,7 +67,7 @@ namespace Mod
         /// <returns></returns>
         public static bool onSetResolution()
         {
-            return false;
+            return Utilities.IsAndroidBuild();
         }
 
         /// <summary>
@@ -192,7 +197,7 @@ namespace Mod
 
         }
 
-        public static void onSceenDownloadDataShow()
+        public static void onScreenDownloadDataShow()
         {
 
         }
@@ -209,9 +214,14 @@ namespace Mod
                     mGraphics.zoomLevel = 2;
                 else
                     mGraphics.zoomLevel = 1;
-                return true;
             }
-            return false;
+            else
+            {
+                mGraphics.zoomLevel = 2;
+                if (w * h < 480000)
+                    mGraphics.zoomLevel = 1;
+            }
+            return true;
         }
 
         public static bool onKeyPressedz(int keyCode, bool isFromSync)
@@ -285,11 +295,6 @@ namespace Mod
         }
 
         public static void onAddInfoChar(Char c, string info)
-        {
-
-        }
-
-        public static void onLoadImageGameCanvas()
         {
 
         }

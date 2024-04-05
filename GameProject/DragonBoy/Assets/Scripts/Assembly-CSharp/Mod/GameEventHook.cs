@@ -26,14 +26,16 @@ namespace Mod
         /// </summary>
         public static void InstallAll()
         {
-            TryInstallHook<Action<string>, Action<Service, string>, Action<Service, string>>(Service.gI().chat, Service_chat_hook, Service_chat_original);
+            TryInstallHook<Action<int, int>, Action<MotherCanvas, int, int>, Action<MotherCanvas, int, int>>(new MotherCanvas(_).checkZoomLevel, MotherCanvas_checkZoomLevel_hook, MotherCanvas_checkZoomLevel_original);
+            TryInstallHook<Func<string, Image>, Func<string, Image>, Func<string, Image>>(Image.createImage, Image_createImage_hook, Image_createImage_original);
+            TryInstallHook<Func<string>, Func<string>, Func<string>>(Rms.GetiPhoneDocumentsPath, Rms_GetiPhoneDocumentsPath_hook, Rms_GetiPhoneDocumentsPath_original);
+            TryInstallHook<Func<string, int>, Func<string, int>, Func<string, int>>(Rms.loadRMSInt, Rms_loadRMSInt_hook, Rms_loadRMSInt_original);
             TryInstallHook<Action<string, string>, Action<string, string>, Action<string, string>>(Rms.saveRMSString, Rms_saveRMSString_hook, Rms_saveRMSString_original);
+            TryInstallHook<Action<string>, Action<Service, string>, Action<Service, string>>(Service.gI().chat, Service_chat_hook, Service_chat_original);
             TryInstallHook<Action, Action<GameScr>, Action<GameScr>>(new GameScr(_).updateKey, GameScr_updateKey_hook, GameScr_updateKey_original);
             TryInstallHook<Action<mGraphics>, Action<ChatTextField, mGraphics>, Action<ChatTextField, mGraphics>>(new ChatTextField(_).paint, ChatTextField_paint_hook, ChatTextField_paint_original);
             TryInstallHook<Action<int, IChatable, string>, Action<ChatTextField, int, IChatable, string>, Action<ChatTextField, int, IChatable, string>>(new ChatTextField(_).startChat, ChatTextField_startChat_hook_1, ChatTextField_startChat_original_1);
             TryInstallHook<Action<IChatable, string>, Action<ChatTextField, IChatable, string>, Action<ChatTextField, IChatable, string>>(new ChatTextField(_).startChat, ChatTextField_startChat_hook_2, ChatTextField_startChat_original_2);
-            TryInstallHook<Func<string, int>, Func<string, int>, Func<string, int>>(Rms.loadRMSInt, Rms_loadRMSInt_hook, Rms_loadRMSInt_original);
-            TryInstallHook<Func<string>, Func<string>, Func<string>>(Rms.GetiPhoneDocumentsPath, Rms_GetiPhoneDocumentsPath_hook, Rms_GetiPhoneDocumentsPath_original);
             TryInstallHook<Action, Action<Teleport>, Action<Teleport>>(new Teleport(_).update, Teleport_update_hook, Teleport_update_original);
             TryInstallHook<Action, Action<ChatTextField>, Action<ChatTextField>>(new ChatTextField(_).update, ChatTextField_update_hook, ChatTextField_update_original);
             TryInstallHook<Action, Action, Action>(Rms.clearAll, Rms_clearAll_hook, Rms_clearAll_original);
@@ -42,7 +44,6 @@ namespace Mod
             TryInstallHook<Action, Action<ServerListScreen>, Action<ServerListScreen>>(new ServerListScreen(_).switchToMe, ServerListScreen_switchToMe_hook, ServerListScreen_switchToMe_original);
             TryInstallHook<Action<string, int>, Action<Session_ME, string, int>, Action<Session_ME, string, int>>(Session_ME.gI().connect, Session_ME_connect_hook, Session_ME_connect_original);
             TryInstallHook<Action, Action<ServerListScreen>, Action<ServerListScreen>>(new ServerListScreen(_).show2, ServerListScreen_show2_hook, ServerListScreen_show2_original);
-            TryInstallHook<Action<int, int>, Action<MotherCanvas, int, int>, Action<MotherCanvas, int, int>>(new MotherCanvas(_).checkZoomLevel, MotherCanvas_checkZoomLevel_hook, MotherCanvas_checkZoomLevel_original);
             TryInstallHook<Action<int>, Action<GameCanvas, int>, Action<GameCanvas, int>>(new GameCanvas(_).keyPressedz, GameCanvas_keyPressedz_hook, GameCanvas_keyPressedz_original);
             TryInstallHook<Action<int>, Action<GameCanvas, int>, Action<GameCanvas, int>>(new GameCanvas(_).keyReleasedz, GameCanvas_keyReleasedz_hook, GameCanvas_keyReleasedz_original);
             TryInstallHook<Action<string, int, Npc>, Action<string, int, Npc>, Action<string, int, Npc>>(ChatPopup.addChatPopupMultiLine, ChatPopup_addChatPopupMultiLine_hook, ChatPopup_addChatPopupMultiLine_original);
@@ -55,11 +56,9 @@ namespace Mod
             TryInstallHook<Action<int, int>, Action<ItemMap, int, int>, Action<ItemMap, int, int>>(new ItemMap(_).setPoint, ItemMap_setPoint_hook, ItemMap_setPoint_original);
             TryInstallHook<Action<MyVector, int>, Action<Menu, MyVector, int>, Action<Menu, MyVector, int>>(new Menu().startAt, Menu_startAt_hook, Menu_startAt_original);
             TryInstallHook<Action<string>, Action<Char, string>, Action<Char, string>>(new Char().addInfo, Char_addInfo_hook, Char_addInfo_original);
-            TryInstallHook<Func<string, Image>, Func<string, Image>, Func<string, Image>>(GameCanvas.loadImage, GameCanvas_loadImage_hook, GameCanvas_loadImage_original);
             TryInstallHook<Action<mGraphics>, Action<mGraphics>, Action<mGraphics>>(GameCanvas.paintBGGameScr, GameCanvas_paintBGGameScr_hook, GameCanvas_paintBGGameScr_original);
             TryInstallHook<Action, Action<Mob>, Action<Mob>>(new Mob().startDie, Mob_startDie_hook, Mob_startDie_original);
             TryInstallHook<Action, Action<Mob>, Action<Mob>>(new Mob().update, Mob_update_hook, Mob_update_original);
-            TryInstallHook<Func<string, Image>, Func<string, Image>, Func<string, Image>>(Image.createImage, Image_createImage_hook, Image_createImage_original);
             TryInstallHook<Action<string>, Action<GameScr, string>, Action<GameScr, string>>(new GameScr(_).chatVip, GameScr_chatVip_hook, GameScr_chatVip_original);
             TryInstallHook<Action<int>, Action<Panel, int>, Action<Panel, int>>(new Panel(_).updateScroolMouse, Panel_updateScroolMouse_hook, Panel_updateScroolMouse_original);
             TryInstallHook<Action, Action<Panel>, Action<Panel>>(new Panel(_).hide, Panel_hide_hook, Panel_hide_original);
@@ -343,7 +342,7 @@ namespace Mod
         static void ServerListScreen_show2_hook(ServerListScreen _this)
         {
             ServerListScreen_show2_original(_this);
-            GameEvents.onSceenDownloadDataShow();
+            GameEvents.onScreenDownloadDataShow();
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void ServerListScreen_show2_original(ServerListScreen _this)
@@ -497,18 +496,6 @@ namespace Mod
         static void Char_addInfo_original(Char _this, string info)
         {
             Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
-        }
-
-        static Image GameCanvas_loadImage_hook(string path)
-        {
-            GameEvents.onLoadImageGameCanvas();
-            return GameCanvas_loadImage_original(path);
-        }
-        [MethodImpl(MethodImplOptions.NoOptimization)]
-        static Image GameCanvas_loadImage_original(string path)
-        {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
-            return null;
         }
 
         static void GameCanvas_paintBGGameScr_hook(mGraphics g)

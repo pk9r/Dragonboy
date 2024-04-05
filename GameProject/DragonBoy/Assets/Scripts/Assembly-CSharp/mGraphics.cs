@@ -938,7 +938,7 @@ public class mGraphics
 
 	public static int getImageWidth(Image image)
 	{
-		return image.getWidth();
+        return image.getWidth();
 	}
 
 	public static int getImageHeight(Image image)
