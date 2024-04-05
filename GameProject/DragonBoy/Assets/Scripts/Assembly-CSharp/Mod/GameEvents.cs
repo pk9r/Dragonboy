@@ -39,6 +39,8 @@ namespace Mod
         {
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
+            if (Utilities.IsAndroidBuild())
+                Screen.sleepTimeout = SleepTimeout.NeverSleep;
             onCheckZoomLevel(Screen.width, Screen.height);
             GameEventHook.InstallAll();
             //TestHook.Install();
