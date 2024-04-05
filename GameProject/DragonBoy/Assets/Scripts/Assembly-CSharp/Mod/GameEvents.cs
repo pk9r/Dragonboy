@@ -37,15 +37,14 @@ namespace Mod
         /// </summary>
         public static bool onGameStarted()
         {
-            bool result = false;
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
+            onCheckZoomLevel(Screen.width, Screen.height);
             GameEventHook.InstallAll();
             //TestHook.Install();
             if (onSetResolution())
-                result = true;
-            onCheckZoomLevel(Screen.width, Screen.height);
-            return result;
+                return true;
+            return false;
         }
 
         /// <summary>
