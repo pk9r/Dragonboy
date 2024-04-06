@@ -63,7 +63,7 @@ public class FireWorkEff
 			((FireWorkMn)mg.elementAt(i)).paint(g);
 		}
 		if (!st)
-			keyPressed(-(Math.abs(r.nextInt() % 3) + 5));
+			keyPressed(-(Math2.abs(r.nextInt() % 3) + 5));
 	}
 
 	public static void keyPressed(int k)
@@ -113,8 +113,8 @@ public class FireWorkEff
 		mang_x[1] = mang_x[0];
 		mang_y[0] = y;
 		mang_x[0] = x;
-		x = Res.cos((int)((double)ag * System.Math.PI / 180.0)) * v * t + x0;
-		y = (int)((float)(v * Res.sin((int)((double)ag * System.Math.PI / 180.0)) * t) - a * (float)t * (float)t / 2f) + y0;
+		x = Res.cos((int)((double)ag * Math.PI / 180.0)) * v * t + x0;
+		y = (int)((float)(v * Res.sin((int)((double)ag * Math.PI / 180.0)) * t) - a * (float)t * (float)t / 2f) + y0;
 		if (time() - last >= delay)
 		{
 			t++;

@@ -747,8 +747,9 @@ public class GameCanvas : IActionListener
 			}
 			isPointerSelect = false;
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
+			Debug.LogException(ex);
 		}
 	}
 
@@ -2404,8 +2405,9 @@ public class GameCanvas : IActionListener
 				g.setClip(0, 0, w, h);
 			}
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
+			Debug.LogException(ex);
 		}
 	}
 

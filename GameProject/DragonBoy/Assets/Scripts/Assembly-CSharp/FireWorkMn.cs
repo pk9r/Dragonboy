@@ -22,7 +22,7 @@ public class FireWorkMn
 		this.n = n;
 		for (int i = 0; i < n; i++)
 		{
-			fw.addElement(new Firework(x, y, Math.abs(rd.nextInt() % 8) + 3, i * goc, color[Math.abs(rd.nextInt() % color.Length)]));
+			fw.addElement(new Firework(x, y, Math2.abs(rd.nextInt() % 8) + 3, i * goc, color[Math2.abs(rd.nextInt() % color.Length)]));
 		}
 	}
 

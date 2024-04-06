@@ -179,7 +179,7 @@ public class TabClanIcon : IActionListener
 			cmx += cmdx >> 3;
 			cmdx &= 15;
 		}
-		if (Math.abs(cmtoX - cmx) < 10)
+		if (Math2.abs(cmtoX - cmx) < 10)
 			cmx = cmtoX;
 		if (cmx >= x + w - 10 && cmtoX >= x + w - 10)
 			isShow = false;

@@ -77,9 +77,9 @@ public class PlayerDart
 				return;
 			}
 			int num2 = Res.angle(dx, dy);
-			if (Math.abs(num2 - angle) < 90 || dx * dx + dy * dy > 4096)
+			if (Math2.abs(num2 - angle) < 90 || dx * dx + dy * dy > 4096)
 			{
-				if (Math.abs(num2 - angle) < 15)
+				if (Math2.abs(num2 - angle) < 15)
 					angle = num2;
 				else if ((num2 - angle >= 0 && num2 - angle < 180) || num2 - angle < -180)
 				{

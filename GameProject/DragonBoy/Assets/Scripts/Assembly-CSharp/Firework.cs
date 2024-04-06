@@ -62,8 +62,8 @@ public class Firework
 			arr_y[1] = arr_y[0];
 			arr_x[0] = x;
 			arr_y[0] = y;
-			x = Res.cos((int)((double)angle * System.Math.PI / 180.0)) * v * t + x0;
-			y = (int)((float)(v * Res.sin((int)((double)angle * System.Math.PI / 180.0)) * t) - a * (float)t * (float)t / 2f) + y0;
+			x = Res.cos((int)((double)angle * Math.PI / 180.0)) * v * t + x0;
+			y = (int)((float)(v * Res.sin((int)((double)angle * Math.PI / 180.0)) * t) - a * (float)t * (float)t / 2f) + y0;
 		}
 	}
 

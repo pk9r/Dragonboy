@@ -1,6 +1,6 @@
-public enum TouchScreenKeyboardType
-{
-	Default,
-	ASCIICapable,
-	NumberPad
-}
+//public enum TouchScreenKeyboardType
+//{
+//	Default,
+//	ASCIICapable,
+//	NumberPad
+//}

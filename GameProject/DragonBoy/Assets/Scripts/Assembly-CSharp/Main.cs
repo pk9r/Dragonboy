@@ -146,7 +146,7 @@ public class Main : MonoBehaviour
 	{
 		if (!isRun)
 		{
-			Screen.orientation = ScreenOrientation.LandscapeLeft;
+			//Screen.orientation = ScreenOrientation.LandscapeLeft;
 			Application.runInBackground = true;
 			//Application.targetFrameRate = 35;
 			base.useGUILayout = false;
@@ -160,8 +160,8 @@ public class Main : MonoBehaviour
 			else
 				IMEI = GetMacAddress();
 			isPC = true;
-			if (!Utilities.IsAndroidBuild())
-				Screen.fullScreen = false;
+			//if (isPC)
+			//	Screen.fullScreen = false;
 			if (isWindowsPhone)
 				typeClient = 6;
 			if (isPC)
@@ -183,7 +183,7 @@ public class Main : MonoBehaviour
 			Menu.loadBg();
 			Key.mapKeyPC();
 			SoundMn.gI().loadSound(TileMap.mapID);
-			g.CreateLineMaterial();
+			//g.CreateLineMaterial();
 		}
 	}
 
@@ -240,7 +240,7 @@ public class Main : MonoBehaviour
 			up++;
 			setsizeChange();
 			updateCount++;
-			ipKeyboard.update();
+			//ipKeyboard.update();
 			GameMidlet.gameCanvas.update();
 			Image.update();
 			DataInputStream.update();
@@ -285,21 +285,27 @@ public class Main : MonoBehaviour
 			lastMousePos.y = mousePosition3.y / (float)mGraphics.zoomLevel + (float)mGraphics.addYWhenOpenKeyBoard;
 			GameMidlet.gameCanvas.pointerReleased((int)(mousePosition3.x / (float)mGraphics.zoomLevel), (int)(((float)Screen.height - mousePosition3.y) / (float)mGraphics.zoomLevel) + mGraphics.addYWhenOpenKeyBoard);
 		}
-		if (Input.anyKeyDown && Event.current.type == EventType.KeyDown)
+
+        if (TField.currentTField != null && TField.currentTField.isFocus)
+            TField.currentTField.HandleInputText(false);
+
+        if (Input.anyKeyDown && Event.current.type == EventType.KeyDown)
 		{
 			int num = MyKeyMap.map(Event.current.keyCode);
-			if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-			{
-				KeyCode keyCode = Event.current.keyCode;
-				if (keyCode != KeyCode.Alpha2)
-				{
-					if (keyCode == KeyCode.Minus)
-						num = 95;
-				}
-				else
-					num = 64;
-			}
-			if (num != 0)
+            //if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            //{
+            //	KeyCode keyCode = Event.current.keyCode;
+            //	if (keyCode != KeyCode.Alpha2)
+            //	{
+            //		if (keyCode == KeyCode.Minus)
+            //			num = 95;
+            //	}
+            //	else
+            //		num = 64;
+            //}
+            if (num == -30)
+                Utils.CheckBackButtonPress();
+            if (num != 0)
 				GameMidlet.gameCanvas.keyPressedz(num);
 		}
 		if (Event.current.type == EventType.KeyUp)
@@ -308,15 +314,15 @@ public class Main : MonoBehaviour
 			if (num2 != 0)
 				GameMidlet.gameCanvas.keyReleasedz(num2);
 		}
-		if (isPC)
-		{
+		//if (isPC)
+		//{
 			GameMidlet.gameCanvas.scrollMouse((int)(Input.GetAxis("Mouse ScrollWheel") * 10f));
 			float x = Input.mousePosition.x;
 			float y = Input.mousePosition.y;
 			int x2 = (int)x / mGraphics.zoomLevel;
 			int y2 = (Screen.height - (int)y) / mGraphics.zoomLevel;
 			GameMidlet.gameCanvas.pointerMouse(x2, y2);
-		}
+		//}
 	}
 
 	private void OnApplicationQuit()
@@ -327,7 +333,13 @@ public class Main : MonoBehaviour
 		Session_ME.gI().close();
 		Session_ME2.gI().close();
 		if (isPC)
+		{
+#if UNITY_EDITOR
+			UnityEditor.EditorApplication.isPlaying = false;
+#else
 			Application.Quit();
+#endif
+		}
 	}
 
 	private void OnApplicationPause(bool paused)
@@ -335,8 +347,8 @@ public class Main : MonoBehaviour
 		isResume = false;
 		if (paused)
 		{
-			if (GameCanvas.isWaiting())
-				isQuitApp = true;
+			//if (GameCanvas.isWaiting())
+				//isQuitApp = true;
 		}
 		else
 			isResume = true;
@@ -345,16 +357,16 @@ public class Main : MonoBehaviour
 			TField.kb.active = false;
 			TField.kb = null;
 		}
-		if (isQuitApp)
-			Application.Quit();
+		//if (isQuitApp)
+			//Application.Quit();
 	}
 
 	public static void exit()
 	{
-		if (isPC)
+		//if (isPC)
 			main.OnApplicationQuit();
-		else
-			a = 0;
+		//else
+			//a = 0;
 	}
 
 	public static bool detectCompactDevice()

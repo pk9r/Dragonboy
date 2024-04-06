@@ -1,17 +1,64 @@
 using System;
 using System.Threading;
+using Mod;
+using UnityEngine;
 
 public class TField : IActionListener
 {
-	public bool isFocus;
+    TextEditor textEditor = (TextEditor)GUIUtility.GetStateObject(typeof(TextEditor), GUIUtility.keyboardControl);
 
-	public int x;
+    Rect position;
 
-	public int y;
+    int _x, _y, _w, _h;
+    public int x
+    {
+        get => _x;
+        set
+        {
+            _x = value;
+            OnRectChanged();
+        }
+    }
 
-	public int width;
+    public int y
+    {
+        get => _y;
+        set
+        {
+            _y = value;
+            OnRectChanged();
+        }
+    }
 
-	public int height;
+    public int width
+    {
+        get => _w;
+        set
+        {
+            _w = value;
+            OnRectChanged();
+        }
+    }
+
+    public int height
+    {
+        get => _h;
+        set
+        {
+            _h = value;
+            OnRectChanged();
+        }
+    }
+
+    public bool isFocus;
+
+    //public int x;
+
+    //public int y;
+
+    //public int width;
+
+    //public int height;
 
 	public bool lockArrow;
 
@@ -65,15 +112,52 @@ public class TField : IActionListener
 		"0", "0", "qw!", "as?", "zx", "op.", "l,"
 	};
 
-	private string text = string.Empty;
+    //private string text = string.Empty;
+    string _text;
+    string text
+    {
+        get
+        {
+            if (Utils.IsPC())
+                return textEditor.text;
+            return _text;
+        }
 
-	private string passwordText = string.Empty;
+        set
+        {
+            if (Utils.IsPC())
+                textEditor.text = value;
+            else
+                _text = value;
+        }
+    }
+
+    private string passwordText = string.Empty;
 
 	private string paintedText = string.Empty;
 
-	private int caretPos;
+    //private int caretPos;
+    int _caretPos;
+    int caretPos
+    {
+        get
+        {
+            if (!Utils.IsPC())
+                return _caretPos;
+            if (textEditor.cursorIndex == -1)
+                return 0;
+            return textEditor.cursorIndex;
+        }
+        set
+        {
+            if (!Utils.IsPC())
+                _caretPos = value;
+			else
+                textEditor.cursorIndex = value;
+        }
+    }
 
-	private int counter;
+    private int counter;
 
 	private int maxTextLenght = 500;
 
@@ -428,7 +512,9 @@ public class TField : IActionListener
 
 	public bool keyPressed(int keyCode)
 	{
-		if (Main.isPC && keyCode == -8)
+        if (textEditor != null && Utils.IsPC())
+            return false;
+        if (Main.isPC && keyCode == -8)
 		{
 			clearKeyWhenPutText(-8);
 			return true;
@@ -554,7 +640,17 @@ public class TField : IActionListener
 			}
 		}
 		g.setClip(x + 3, y + 1, w - 4, h);
-		if (text != null && !text.Equals(string.Empty))
+
+        if (textEditor.hasSelection)
+        {
+            g.setColor(new Color(0, 0, 0, .4f));
+            string selectedText = textEditor.SelectedText;
+            if (inputType == INPUT_TYPE_PASSWORD)
+                selectedText = new string('*', selectedText.Length);
+            g.fillRect(xText + mFont.tahoma_8b.getWidth(paintedText.Substring(0, Math.Min(textEditor.selectIndex, caretPos))) - 1, yText, mFont.tahoma_8b.getWidth(selectedText), mFont.tahoma_8b.getHeight());
+        }
+
+        if (text != null && !text.Equals(string.Empty))
 			mFont.tahoma_8b.drawString(g, text, xText, yText, 0);
 		else if (info != null)
 		{
@@ -587,7 +683,13 @@ public class TField : IActionListener
 			if (text != null && text.Length > 0 && GameCanvas.isTouch)
 				g.drawImage(GameCanvas.imgClear, x + width - 13, y + height / 2 + 3, mGraphics.VCENTER | mGraphics.HCENTER);
 		}
-	}
+
+        if (isFocus)
+        {
+            textEditor.DetectFocusChange();
+            textEditor.UpdateScrollOffsetIfNeeded(Event.current);
+        }
+    }
 
 	private bool isFocused()
 	{
@@ -636,7 +738,7 @@ public class TField : IActionListener
 		{
 			if (kb.text.Length < 40 && isFocus)
 				setText(kb.text);
-			if (kb.done && cmdDoneAction != null)
+			if (kb.status == TouchScreenKeyboard.Status.Done && cmdDoneAction != null)
 				cmdDoneAction.performAction();
 		}
 		counter++;
@@ -702,20 +804,18 @@ public class TField : IActionListener
 		if (isFocus)
 			currentTField = this;
 		else if (currentTField == this)
-		{
 			currentTField = null;
-		}
 		if (Thread.CurrentThread.Name == Main.mainThreadName && currentTField != null)
 		{
-			isFocus = true;
 			TouchScreenKeyboard.hideInput = !currentTField.showSubTextField;
-			TouchScreenKeyboardType t = TouchScreenKeyboardType.ASCIICapable;
+			TouchScreenKeyboardType t = TouchScreenKeyboardType.Default;
 			if (inputType == INPUT_TYPE_NUMERIC)
 				t = TouchScreenKeyboardType.NumberPad;
 			bool type = false;
 			if (inputType == INPUT_TYPE_PASSWORD)
 				type = true;
-			kb = TouchScreenKeyboard.Open(currentTField.text, t, false, false, type, false, currentTField.name);
+			if (Utils.IsMobile())
+				kb = TouchScreenKeyboard.Open(currentTField.text, t, false, false, type, false, currentTField.name);
 			if (kb != null)
 				kb.text = currentTField.text;
 			Cout.LogWarning("SHOW KEYBOARD FOR " + currentTField.text);
@@ -742,9 +842,9 @@ public class TField : IActionListener
 			indexOfActiveChar = 0;
 			this.text = text;
 			paintedText = text;
-			if (text == string.Empty)
-				TouchScreenKeyboard.Clear();
-			setPasswordTest();
+			if (text == string.Empty && kb != null)
+                kb.text = "";
+            setPasswordTest();
 			caretPos = text.Length;
 			setOffset();
 		}
@@ -784,4 +884,101 @@ public class TField : IActionListener
 		if (idAction == 1000)
 			clear();
 	}
+
+    internal void HandleInputText(bool multiline)
+    {
+        if (!Utils.IsPC())
+            return;
+        bool changed = false;
+        switch (Event.current.type)
+        {
+            case EventType.MouseDown:
+                if (position.Contains(Event.current.mousePosition))
+                {
+                    GUIUtility.hotControl = GUIUtility.keyboardControl = textEditor.controlID;
+                    textEditor.OnFocus();
+                    textEditor.MoveCursorToPosition(Event.current.mousePosition);
+                    if (Event.current.clickCount == 2 && GUI.skin.settings.doubleClickSelectsWord)
+                    {
+                        textEditor.SelectCurrentWord();
+                        textEditor.DblClickSnap(TextEditor.DblClickSnapping.WORDS);
+                        textEditor.MouseDragSelectsWholeWords(true);
+                    }
+                    if (Event.current.clickCount == 3 && GUI.skin.settings.tripleClickSelectsLine)
+                    {
+                        textEditor.SelectCurrentParagraph();
+                        textEditor.MouseDragSelectsWholeWords(true);
+                        textEditor.DblClickSnap(TextEditor.DblClickSnapping.PARAGRAPHS);
+                    }
+                    Event.current.Use();
+                }
+                break;
+            case EventType.MouseDrag:
+                //if (GUIUtility.hotControl != textEditor.controlID)
+                //	break;
+                if (Event.current.shift)
+                    textEditor.MoveCursorToPosition(Event.current.mousePosition);
+                else
+                    textEditor.SelectToPosition(Event.current.mousePosition);
+                Event.current.Use();
+                break;
+            case EventType.MouseUp:
+                //if (GUIUtility.hotControl != textEditor.controlID)
+                //    break;
+                textEditor.MouseDragSelectsWholeWords(false);
+                GUIUtility.hotControl = 0;
+                Event.current.Use();
+                break;
+            case EventType.KeyDown:
+                //if (GUIUtility.keyboardControl != textEditor.controlID)
+                //	break;
+                if (textEditor.HandleKeyEvent(Event.current))
+                {
+                    changed = true;
+                    Event.current.Use();
+                    break;
+                }
+                if (Event.current.keyCode == KeyCode.Tab || Event.current.character == '\t')
+                    break;
+                char c = Event.current.character;
+                if (c == '\n' && !multiline && !Event.current.alt)
+                    break;
+                Font font = mFont.tahoma_7b_focus.myFont;
+                if (!font)
+                    font = GUI.skin.font;
+
+                if (font.HasCharacter(c) || c == '\n')
+                {
+                    textEditor.Insert(c);
+                    changed = true;
+                }
+                Event.current.Use();
+                break;
+        }
+        if (changed)
+        {
+            //content.text = textEditor.text;
+            if (maxTextLenght >= 0 && textEditor.text.Length > maxTextLenght)
+                textEditor.text = textEditor.text.Substring(0, maxTextLenght);
+            textEditor.SaveBackup();
+            setPasswordTest();
+            setOffset(0);
+        }
+    }
+
+    void OnRectChanged()
+    {
+        if (!Utils.IsPC())
+            return;
+        position = new Rect(x * mGraphics.zoomLevel, y * mGraphics.zoomLevel, width * mGraphics.zoomLevel, height * mGraphics.zoomLevel);
+        int id = GUIUtility.GetControlID(FocusType.Keyboard, position);
+        if (textEditor.controlID != id)
+        {
+            string oldText = textEditor.text;
+            textEditor = (TextEditor)GUIUtility.GetStateObject(typeof(TextEditor), id);
+            textEditor.controlID = id;
+            textEditor.text = oldText;
+        }
+        textEditor.position = position;
+    }
 }

@@ -3148,7 +3148,7 @@ public class Panel : IActionListener, IChatable
 			cmx += cmdx >> 3;
 			cmdx &= 15;
 		}
-		if (Math.abs(cmtoX - cmx) < 10)
+		if (Math2.abs(cmtoX - cmx) < 10)
 			cmx = cmtoX;
 		if (isClose)
 		{
@@ -5405,7 +5405,7 @@ public class Panel : IActionListener, IChatable
 		}
 	}
 
-	private void paintToolInfo(mGraphics g)
+	internal void paintToolInfo(mGraphics g)
 	{
 		mFont.tahoma_7b_white.drawString(g, mResources.dragon_ball + " " + GameMidlet.VERSION, 60, 4, mFont.LEFT, mFont.tahoma_7b_dark);
 		mFont.tahoma_7_yellow.drawString(g, mResources.character + ": " + Char.myCharz().cName, 60, 16, mFont.LEFT, mFont.tahoma_7_grey);
@@ -8964,7 +8964,7 @@ public class Panel : IActionListener, IChatable
 		paintScrollArrow(g);
 	}
 
-	private void doFireOption()
+	internal void doFireOption()
 	{
 		if (selected < 0)
 			return;

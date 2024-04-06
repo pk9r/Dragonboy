@@ -2088,8 +2088,8 @@ public class Char : IMapObject
 			{
 				if (charFocus != null && charFocus.charID >= 0 && charFocus.cx > 100 && charFocus.cx < TileMap.pxw - 100 && isInEnterOnlinePoint() == null && isInEnterOfflinePoint() == null && !isAttacPlayerStatus() && TileMap.mapID != 51 && TileMap.mapID != 52 && GameCanvas.panel.vPlayerMenu.size() > 0 && GameScr.gI().popUpYesNo == null)
 				{
-					int num5 = Math.abs(cx - charFocus.cx);
-					int num6 = Math.abs(cy - charFocus.cy);
+					int num5 = Math2.abs(cx - charFocus.cx);
+					int num6 = Math2.abs(cy - charFocus.cy);
 					if (num5 < 60 && num6 < 40)
 					{
 						if (cmdMenu == null)
@@ -5680,8 +5680,8 @@ public class Char : IMapObject
 		for (int i = 0; i < GameScr.vItemMap.size(); i++)
 		{
 			ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(i);
-			int num = Math.abs(myCharz().cx - itemMap.x);
-			int num2 = Math.abs(myCharz().cy - itemMap.y);
+			int num = Math2.abs(myCharz().cx - itemMap.x);
+			int num2 = Math2.abs(myCharz().cy - itemMap.y);
 			int num3 = ((num <= num2) ? num2 : num);
 			if (num > 48 || num2 > 48 || (itemFocus != null && num3 >= array[3]))
 				continue;
@@ -5749,8 +5749,8 @@ public class Char : IMapObject
 				Npc npc = (Npc)GameScr.vNpc.elementAt(i);
 				if (npc.statusMe != 15)
 				{
-					int num5 = Math.abs(myCharz().cx - npc.cx);
-					int num6 = Math.abs(myCharz().cy - npc.cy);
+					int num5 = Math2.abs(myCharz().cx - npc.cx);
+					int num6 = Math2.abs(myCharz().cy - npc.cy);
 					int num7 = ((num5 <= num6) ? num6 : num5);
 					num2 = myCharz().cx - 80;
 					num3 = myCharz().cx + 80;
@@ -5784,8 +5784,8 @@ public class Char : IMapObject
 				Npc npc2 = (Npc)GameScr.vNpc.elementAt(j);
 				if (npc2.statusMe != 15)
 				{
-					int num8 = Math.abs(myCharz().cx - npc2.cx);
-					int num9 = Math.abs(myCharz().cy - npc2.cy);
+					int num8 = Math2.abs(myCharz().cx - npc2.cx);
+					int num9 = Math2.abs(myCharz().cy - npc2.cy);
 					int num10 = ((num8 <= num9) ? num9 : num8);
 					num2 = myCharz().cx - 80;
 					num3 = myCharz().cx + 80;
@@ -5811,8 +5811,8 @@ public class Char : IMapObject
 			for (int k = 0; k < GameScr.vItemMap.size(); k++)
 			{
 				ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(k);
-				int num11 = Math.abs(myCharz().cx - itemMap.x);
-				int num12 = Math.abs(myCharz().cy - itemMap.y);
+				int num11 = Math2.abs(myCharz().cx - itemMap.x);
+				int num12 = Math2.abs(myCharz().cy - itemMap.y);
 				int num13 = ((num11 <= num12) ? num12 : num11);
 				if (num11 > 48 || num12 > 48 || (itemFocus != null && num13 >= array[3]))
 					continue;
@@ -5842,8 +5842,8 @@ public class Char : IMapObject
 			for (int l = 0; l < GameScr.vItemMap.size(); l++)
 			{
 				ItemMap itemMap2 = (ItemMap)GameScr.vItemMap.elementAt(l);
-				int num14 = Math.abs(myCharz().cx - itemMap2.x);
-				int num15 = Math.abs(myCharz().cy - itemMap2.y);
+				int num14 = Math2.abs(myCharz().cx - itemMap2.x);
+				int num15 = Math2.abs(myCharz().cy - itemMap2.y);
 				int num16 = ((num14 <= num15) ? num15 : num14);
 				if (num2 > itemMap2.x || itemMap2.x > num3 || cmy > itemMap2.y || itemMap2.y > num4 || (itemFocus != null && num16 >= array[3]))
 					continue;
@@ -5873,8 +5873,8 @@ public class Char : IMapObject
 			for (int m = 0; m < GameScr.vMob.size(); m++)
 			{
 				Mob mob = (Mob)GameScr.vMob.elementAt(m);
-				int num17 = Math.abs(myCharz().cx - mob.x);
-				int num18 = Math.abs(myCharz().cy - mob.y);
+				int num17 = Math2.abs(myCharz().cx - mob.x);
+				int num18 = Math2.abs(myCharz().cy - mob.y);
 				int num19 = ((num17 <= num18) ? num18 : num17);
 				if (num2 <= mob.x && mob.x <= num3 && cmy <= mob.y && mob.y <= num4 && (mobFocus == null || num19 < array[0]))
 				{
@@ -5894,8 +5894,8 @@ public class Char : IMapObject
 			for (int n = 0; n < GameScr.vMob.size(); n++)
 			{
 				Mob mob2 = (Mob)GameScr.vMob.elementAt(n);
-				int num20 = Math.abs(myCharz().cx - mob2.x);
-				int num21 = Math.abs(myCharz().cy - mob2.y);
+				int num20 = Math2.abs(myCharz().cx - mob2.x);
+				int num21 = Math2.abs(myCharz().cy - mob2.y);
 				int num22 = ((num20 <= num21) ? num21 : num20);
 				if (num2 <= mob2.x && mob2.x <= num3 && cmy <= mob2.y && mob2.y <= num4 && (mobFocus == null || num22 < array[0]))
 				{
@@ -5911,8 +5911,8 @@ public class Char : IMapObject
 				Char @char = (Char)GameScr.vCharInMap.elementAt(num23);
 				if (@char.statusMe != 15 && !@char.isInvisiblez && wdx == 0 && wdy == 0)
 				{
-					int num24 = Math.abs(myCharz().cx - @char.cx);
-					int num25 = Math.abs(myCharz().cy - @char.cy);
+					int num24 = Math2.abs(myCharz().cx - @char.cx);
+					int num25 = Math2.abs(myCharz().cy - @char.cy);
 					int num26 = ((num24 <= num25) ? num25 : num24);
 					if (num2 <= @char.cx && @char.cx <= num3 && cmy <= @char.cy && @char.cy <= num4 && (charFocus == null || num26 < array[2]))
 					{
@@ -5935,8 +5935,8 @@ public class Char : IMapObject
 				Char char2 = (Char)GameScr.vCharInMap.elementAt(num27);
 				if (char2.statusMe != 15 && !char2.isInvisiblez && wdx == 0 && wdy == 0)
 				{
-					int num28 = Math.abs(myCharz().cx - char2.cx);
-					int num29 = Math.abs(myCharz().cy - char2.cy);
+					int num28 = Math2.abs(myCharz().cx - char2.cx);
+					int num29 = Math2.abs(myCharz().cy - char2.cy);
 					int num30 = ((num28 <= num29) ? num29 : num28);
 					if (num2 <= char2.cx && char2.cx <= num3 && cmy <= char2.cy && char2.cy <= num4 && (charFocus == null || num30 < array[2]))
 					{

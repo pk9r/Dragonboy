@@ -1,14 +1,21 @@
-using System;
+﻿using System;
 
 public class GamePad
 {
-	private int xC;
+    /// <summary>
+    /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
+    /// </summary>
+    internal GamePad(HookObj _) { }
 
-	private int yC;
+    bool isResetKeyHold = true;
 
-	private int xM;
+    internal int xC;
 
-	private int yM;
+    internal int yC;
+
+    internal int xM;
+
+    internal int yM;
 
 	private int xMLast;
 
@@ -98,7 +105,8 @@ public class GamePad
 				return;
 			if (GameCanvas.isPointerDown && !GameCanvas.isPointerJustRelease)
 			{
-				xTemp = GameCanvas.pxFirst;
+                isResetKeyHold = true;
+                xTemp = GameCanvas.pxFirst;
 				yTemp = GameCanvas.pyFirst;
 				if (xTemp < xZone || xTemp > wZone || yTemp < yZone || yTemp > hZone)
 					return;
@@ -110,9 +118,9 @@ public class GamePad
 				isGamePad = true;
 				deltaX = GameCanvas.px - xC;
 				deltaY = GameCanvas.py - yC;
-				delta = Math.pow(deltaX, 2) + Math.pow(deltaY, 2);
+				delta = Math2.pow(deltaX, 2) + Math2.pow(deltaY, 2);
 				d = Res.sqrt(delta);
-				if (Math.abs(deltaX) <= 4 && Math.abs(deltaY) <= 4)
+				if (Math2.abs(deltaX) <= 4 && Math2.abs(deltaY) <= 4)
 					return;
 				angle = Res.angle(deltaX, deltaY);
 				if (!GameCanvas.isPointerHoldIn(xC - R, yC - R, 2 * R, 2 * R))
@@ -204,8 +212,12 @@ public class GamePad
 				else
 					yM = (yC = GameCanvas.h - 45);
 				isGamePad = false;
-				resetHold();
-			}
+                if (isResetKeyHold)
+                {
+                    resetHold();
+                    isResetKeyHold = false;
+                }
+            }
 		}
 		catch (Exception)
 		{

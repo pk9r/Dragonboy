@@ -187,7 +187,7 @@ namespace MonoHook
 
         public CodePatcher_arm32_near(IntPtr target, IntPtr replace, IntPtr proxy) : base(target, replace, proxy, s_jmpCode.Length)
         {
-            if (System.Math.Abs((long)target - (long)replace) >= ((1 << 25) - 1))
+            if (Math.Abs((long)target - (long)replace) >= ((1 << 25) - 1))
                 throw new ArgumentException("address offset of target and replace must less than ((1 << 25) - 1)");
 
 #if ENABLE_HOOK_DEBUG
@@ -222,7 +222,7 @@ namespace MonoHook
 
         public CodePatcher_arm32_far(IntPtr target, IntPtr replace, IntPtr proxy) : base(target, replace, proxy, s_jmpCode.Length)
         {
-            if (System.Math.Abs((long)target - (long)replace) < ((1 << 25) - 1))
+            if (Math.Abs((long)target - (long)replace) < ((1 << 25) - 1))
                 throw new ArgumentException("address offset of target and replace must larger than ((1 << 25) - 1), please use InstructionModifier_arm32_near instead");
 
 #if ENABLE_HOOK_DEBUG
@@ -261,7 +261,7 @@ namespace MonoHook
 
         public CodePatcher_arm64_near(IntPtr target, IntPtr replace, IntPtr proxy) : base(target, replace, proxy, s_jmpCode.Length)
         {
-            if (System.Math.Abs((long)target - (long)replace) >= ((1 << 26) - 1) * 4)
+            if (Math.Abs((long)target - (long)replace) >= ((1 << 26) - 1) * 4)
                 throw new ArgumentException("address offset of target and replace must less than (1 << 26) - 1) * 4");
 
 #if ENABLE_HOOK_DEBUG

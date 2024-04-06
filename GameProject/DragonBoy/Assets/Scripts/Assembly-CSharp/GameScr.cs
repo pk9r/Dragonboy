@@ -602,9 +602,9 @@ public class GameScr : mScreen, IChatable
 
 	private int timeSkill;
 
-	private int nSkill;
+	internal int nSkill;
 
-	private int selectedIndexSkill = -1;
+	internal int selectedIndexSkill = -1;
 
 	private Skill lastSkill;
 
@@ -666,9 +666,9 @@ public class GameScr : mScreen, IChatable
 
 	private static int yTouchBar;
 
-	private static int xC;
+	internal static int xC;
 
-	private static int yC;
+    internal static int yC;
 
 	private static int xL;
 
@@ -682,17 +682,17 @@ public class GameScr : mScreen, IChatable
 
 	private static int yU;
 
-	private static int xF;
+	internal static int xF;
 
-	private static int yF;
+    internal static int yF;
 
 	public static int xHP;
 
 	public static int yHP;
 
-	private static int xTG;
+	internal static int xTG;
 
-	private static int yTG;
+	internal static int yTG;
 
 	public static int[] xS;
 
@@ -2117,8 +2117,8 @@ public class GameScr : mScreen, IChatable
 				Char.myCharz().cdir = 1;
 			else
 				Char.myCharz().cdir = -1;
-			int num3 = Math.abs(Char.myCharz().cx - Char.myCharz().mobFocus.getX());
-			int num4 = Math.abs(Char.myCharz().cy - Char.myCharz().mobFocus.getY());
+			int num3 = Math2.abs(Char.myCharz().cx - Char.myCharz().mobFocus.getX());
+			int num4 = Math2.abs(Char.myCharz().cy - Char.myCharz().mobFocus.getY());
 			Char.myCharz().cvx = 0;
 			if (num3 <= Char.myCharz().myskill.dx && num4 <= Char.myCharz().myskill.dy)
 			{
@@ -2220,8 +2220,8 @@ public class GameScr : mScreen, IChatable
 				Char.myCharz().npcFocus.cdir = -1;
 			else
 				Char.myCharz().npcFocus.cdir = 1;
-			int num11 = Math.abs(Char.myCharz().cx - Char.myCharz().npcFocus.cx);
-			if (Math.abs(Char.myCharz().cy - Char.myCharz().npcFocus.cy) > 40)
+			int num11 = Math2.abs(Char.myCharz().cx - Char.myCharz().npcFocus.cx);
+			if (Math2.abs(Char.myCharz().cy - Char.myCharz().npcFocus.cy) > 40)
 				Char.myCharz().cy = Char.myCharz().npcFocus.cy - 40;
 			if (num11 < 60)
 			{
@@ -2261,8 +2261,8 @@ public class GameScr : mScreen, IChatable
 				Char.myCharz().cdir = 1;
 			else
 				Char.myCharz().cdir = -1;
-			int num14 = Math.abs(Char.myCharz().cx - Char.myCharz().charFocus.cx);
-			int num15 = Math.abs(Char.myCharz().cy - Char.myCharz().charFocus.cy);
+			int num14 = Math2.abs(Char.myCharz().cx - Char.myCharz().charFocus.cx);
+			int num15 = Math2.abs(Char.myCharz().cy - Char.myCharz().charFocus.cy);
 			if (Char.myCharz().isMeCanAttackOtherPlayer(Char.myCharz().charFocus) || Char.myCharz().isSelectingSkillBuffToPlayer())
 			{
 				if (Char.myCharz().myskill == null)
@@ -3674,8 +3674,8 @@ public class GameScr : mScreen, IChatable
 			Char.myCharz().cdir = 1;
 		else
 			Char.myCharz().cdir = -1;
-		int num = Math.abs(Char.myCharz().cx - Char.myCharz().itemFocus.x);
-		int num2 = Math.abs(Char.myCharz().cy - Char.myCharz().itemFocus.y);
+		int num = Math2.abs(Char.myCharz().cx - Char.myCharz().itemFocus.x);
+		int num2 = Math2.abs(Char.myCharz().cy - Char.myCharz().itemFocus.y);
 		if (num <= 40 && num2 < 40)
 		{
 			GameCanvas.clearKeyHold();
@@ -5170,7 +5170,7 @@ public class GameScr : mScreen, IChatable
 		g.setClip(0, -200, GameCanvas.w, 200 + GameCanvas.h);
 	}
 
-	private void paintTouchControl(mGraphics g)
+	internal void paintTouchControl(mGraphics g)
 	{
 		if (isNotPaintTouchControl())
 			return;
@@ -5391,7 +5391,7 @@ public class GameScr : mScreen, IChatable
 		return false;
 	}
 
-	private void paintSelectedSkill(mGraphics g)
+	internal void paintSelectedSkill(mGraphics g)
 	{
 		if (mobCapcha != null)
 			paintCapcha(g);
@@ -5710,9 +5710,9 @@ public class GameScr : mScreen, IChatable
 				cmySK += cmdySK >> 4;
 				cmdySK &= 15;
 			}
-			if (Math.abs(cmtoYSK - cmySK) < 15 && cmySK < 0)
+			if (Math2.abs(cmtoYSK - cmySK) < 15 && cmySK < 0)
 				cmtoYSK = 0;
-			if (Math.abs(cmtoYSK - cmySK) < 15 && cmySK > cmyLimSK)
+			if (Math2.abs(cmtoYSK - cmySK) < 15 && cmySK > cmyLimSK)
 				cmtoYSK = cmyLimSK;
 		}
 	}
@@ -6406,7 +6406,7 @@ public class GameScr : mScreen, IChatable
 		}
 	}
 
-	private void paintGamePad(mGraphics g)
+	internal void paintGamePad(mGraphics g)
 	{
 		if (isAnalog != 0 && Char.myCharz().statusMe != 14)
 		{

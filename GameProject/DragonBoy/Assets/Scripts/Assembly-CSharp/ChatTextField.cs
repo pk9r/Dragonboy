@@ -23,13 +23,13 @@
 
 	public Command center;
 
-	private int x;
+	internal int x;
 
-	private int y;
+	internal int y;
 
-	private int w;
+	internal int w;
 
-	private int h;
+	internal int h;
 
 	private bool isPublic;
 
@@ -169,7 +169,7 @@
 			tfChat.isFocus = true;
 			if (!Main.isPC)
 			{
-				ipKeyboard.openKeyBoard(strChat, ipKeyboard.TEXT, string.Empty, cmdChat);
+				//ipKeyboard.openKeyBoard(strChat, ipKeyboard.TEXT, string.Empty, cmdChat);
 				tfChat.setFocusWithKb(true);
 			}
 		}
@@ -192,7 +192,7 @@
 			isShow = true;
 			if (!Main.isPC)
 			{
-				ipKeyboard.openKeyBoard(strChat, ipKeyboard.TEXT, string.Empty, cmdChat2);
+				//ipKeyboard.openKeyBoard(strChat, ipKeyboard.TEXT, string.Empty, cmdChat2);
 				tfChat.setFocusWithKb(true);
 			}
 		}

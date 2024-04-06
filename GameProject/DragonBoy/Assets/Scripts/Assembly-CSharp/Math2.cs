@@ -1,8 +1,8 @@
 using System;
 
-public class Math
+public class Math2
 {
-	public const double PI = System.Math.PI;
+	public const double PI = Math.PI;
 
 	public static int abs(int i)
 	{

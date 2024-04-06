@@ -71,7 +71,11 @@ public class mGraphics
 
 	public static Hashtable cachedTextures = new Hashtable();
 
-	public static int addYWhenOpenKeyBoard;
+	public static int addYWhenOpenKeyBoard
+	{
+		get => 0;
+		set { }
+	}
 
 	private int clipTX;
 
@@ -341,6 +345,7 @@ public class mGraphics
 		b = color.b;
 		g = color.g;
 		r = color.r;
+		a = color.a;
 	}
 
 	public void setBgColor(int rgb)

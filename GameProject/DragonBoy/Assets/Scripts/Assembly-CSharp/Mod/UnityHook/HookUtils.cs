@@ -92,7 +92,7 @@ namespace MonoHook
             sb.AppendLine($"addr:{formatAddr(new IntPtr(addr))}");
 
             addr += offset;
-            size += System.Math.Abs(offset);
+            size += Math.Abs(offset);
 
             int count = 0;
             while (true)

@@ -104,7 +104,7 @@ public class Res
 		int num;
 		if (dx != 0)
 		{
-			num = atan(Math.abs((dy << 10) / dx));
+			num = atan(Math2.abs((dy << 10) / dx));
 			if (dy >= 0 && dx < 0)
 				num = 180 - num;
 			if (dy < 0 && dx < 0)
@@ -244,7 +244,7 @@ public class Res
 			num2 = num;
 			num = num / 2 + a / (2 * num);
 		}
-		while (Math.abs(num2 - num) > 1);
+		while (Math2.abs(num2 - num) > 1);
 		return num;
 	}
 

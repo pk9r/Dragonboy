@@ -56,7 +56,7 @@ public class Position
 	{
 		if (x == xTo && y == yTo)
 			return -1;
-		if (Math.abs((xTo - x) / 2) <= 1 && Math.abs((yTo - y) / 2) <= 1)
+		if (Math2.abs((xTo - x) / 2) <= 1 && Math2.abs((yTo - y) / 2) <= 1)
 		{
 			x = xTo;
 			y = yTo;
