@@ -518,8 +518,8 @@ public class GameCanvas : IActionListener
 		{
 			if (currentScreen == GameScr.gI())
 			{
-				if (Char.isLoadingMap)
-					Char.isLoadingMap = false;
+				//if (Char.isLoadingMap)
+				//	Char.isLoadingMap = false;
 				if (ServerListScreen.waitToLogin)
 					ServerListScreen.waitToLogin = false;
 			}
