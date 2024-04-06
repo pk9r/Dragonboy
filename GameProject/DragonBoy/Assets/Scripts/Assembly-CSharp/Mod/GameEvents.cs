@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Mod.Graphics;
 using Mod.R;
 using UnityEngine;
 
@@ -56,6 +57,7 @@ namespace Mod
             }
             onCheckZoomLevel(Screen.width, Screen.height);
             GameEventHook.InstallAll();
+            UIImage.OnStart();
             //TestHook.Install();
             if (onSetResolution())
                 return true;
@@ -749,5 +751,30 @@ namespace Mod
             return true;
         }
 
+        internal static bool onSkillPaint(Skill skill, int x, int y, mGraphics g)
+        {
+            SmallImage.drawSmallImage(g, skill.template.iconId, x, y, 0, StaticObj.VCENTER_HCENTER);
+            long coolingDown = mSystem.currentTimeMillis() - skill.lastTimeUseThisSkill;
+            if (coolingDown < skill.coolDown)
+            {
+                float opacity = .6f;
+                int realX = x - 11;
+                int realY = y - 11;
+                Color color = new Color(0, 0, 0, opacity);
+                Color color2 = new Color(0, 0, 0, opacity / 2);
+                g.setColor(color2);
+                g.fillRect(realX, realY, 22, 22);
+                float coolDownRatio = 1 - coolingDown / (float)skill.coolDown;
+                CustomGraphics.drawCooldownRect(x, y, 22, 22, coolDownRatio, color);
+                string cooldownStr = $"{(skill.coolDown - coolingDown) / 1000f:#.0}";
+                if (cooldownStr.Length > 4)
+                    cooldownStr = cooldownStr.Substring(0, cooldownStr.IndexOf(','));
+                cooldownStr = cooldownStr.Replace(',', '.');
+                mFont.tahoma_7_yellow.drawString(g, cooldownStr, x + 1, y - 12 + mFont.tahoma_7.getHeight() / 2, mFont.CENTER);
+            }
+            else
+                skill.paintCanNotUseSkill = false;
+            return true;
+        }
     }
 }

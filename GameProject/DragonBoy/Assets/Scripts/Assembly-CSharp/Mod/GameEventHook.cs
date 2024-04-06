@@ -41,6 +41,7 @@ namespace Mod
             SoundMn soundMn = new SoundMn();
             GamePad gamePad = new GamePad(_);
             LoginScr loginScr = new LoginScr(_);
+            Skill skill = new Skill();
 
             TryInstallHook<Action<int, int>, Action<MotherCanvas, int, int>>(motherCanvas.checkZoomLevel, MotherCanvas_checkZoomLevel_hook, MotherCanvas_checkZoomLevel_original);
             TryInstallHook<Func<string, Image>, Func<string, Image>>(Image.createImage, Image_createImage_hook, Image_createImage_original);
@@ -92,6 +93,7 @@ namespace Mod
             TryInstallHook<Action<mGraphics>, Action<Panel, mGraphics>>(panel.paintToolInfo, Panel_paintToolInfo_hook, Panel_paintToolInfo_original);
             TryInstallHook<Action<sbyte>, Action<sbyte>>(mResources.loadLanguague, mResources_loadLanguague_hook, mResources_loadLanguague_original);
             TryInstallHook<Action, Action<LoginScr>>(loginScr.switchToMe, LoginScr_switchToMe_hook, LoginScr_switchToMe_original);
+            TryInstallHook<Action<int, int, mGraphics>, Action<Skill, int, int, mGraphics>>(skill.paint, Skill_paint_hook, Skill_paint_original);
 
             //TryInstallHook<Action, Action>(, _hook, _original);
         }
@@ -752,6 +754,18 @@ namespace Mod
         {
             Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
         }
+
+        static void Skill_paint_hook(Skill _this, int x, int y, mGraphics g)
+        {
+            if (!GameEvents.onSkillPaint(_this, x, y, g))
+                Skill_paint_original(_this, x, y, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Skill_paint_original(Skill _this, int x, int y, mGraphics g)
+        {
+            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+        }
+
         #endregion
     }
 }
