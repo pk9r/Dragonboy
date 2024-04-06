@@ -116,10 +116,11 @@ namespace MonoHook
 
         static void SetupFlushICacheFunc()
         {
-            string processorType = SystemInfo.processorType;
-            if (processorType.Contains("Intel") || processorType.Contains("AMD"))
+            //string processorType = SystemInfo.processorType;
+            //if (processorType.Contains("Intel") || processorType.Contains("AMD") || processorType.Contains("x86"))
+            //    return;
+            if (RuntimeInformation.ProcessArchitecture == Architecture.X86 || RuntimeInformation.ProcessArchitecture == Architecture.X64)
                 return;
-
             if (IntPtr.Size == 4)
             {
                 // never release, so save GCHandle is unnecessary
