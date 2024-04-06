@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Mod.R;
 using MonoHook;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -39,12 +40,15 @@ namespace Mod
             Mob mob = new Mob();
             SoundMn soundMn = new SoundMn();
             GamePad gamePad = new GamePad(_);
+            LoginScr loginScr = new LoginScr(_);
 
             TryInstallHook<Action<int, int>, Action<MotherCanvas, int, int>>(motherCanvas.checkZoomLevel, MotherCanvas_checkZoomLevel_hook, MotherCanvas_checkZoomLevel_original);
             TryInstallHook<Func<string, Image>, Func<string, Image>>(Image.createImage, Image_createImage_hook, Image_createImage_original);
             TryInstallHook<Func<string>, Func<string>>(Rms.GetiPhoneDocumentsPath, Rms_GetiPhoneDocumentsPath_hook, Rms_GetiPhoneDocumentsPath_original);
-            TryInstallHook<Func<string, int>, Func<string, int>>(Rms.loadRMSInt, Rms_loadRMSInt_hook, Rms_loadRMSInt_original);
             TryInstallHook<Action<string, string>, Action<string, string>>(Rms.saveRMSString, Rms_saveRMSString_hook, Rms_saveRMSString_original);
+            TryInstallHook(new Action(ServerListScreen.saveIP).Method, new Action(ServerListScreen_saveIP_hook).Method, null);
+            TryInstallHook(new Action(ServerListScreen.loadIP).Method, new Action(ServerListScreen_loadIP_hook).Method, null);
+
             TryInstallHook<Action<string>, Action<Service, string>>(Service.gI().chat, Service_chat_hook, Service_chat_original);
             TryInstallHook<Action, Action<GameScr>>(gameScr.updateKey, GameScr_updateKey_hook, GameScr_updateKey_original);
             TryInstallHook<Action<mGraphics>, Action<ChatTextField, mGraphics>>(chatTextField.paint, ChatTextField_paint_hook, ChatTextField_paint_original);
@@ -87,8 +91,9 @@ namespace Mod
             TryInstallHook<Action<mGraphics>, Action<GameScr, mGraphics>>(gameScr.paintSelectedSkill, GameScr_paintSelectedSkill_hook, GameScr_paintSelectedSkill_original);
             TryInstallHook<Action<mGraphics>, Action<Panel, mGraphics>>(panel.paintToolInfo, Panel_paintToolInfo_hook, Panel_paintToolInfo_original);
             TryInstallHook<Action<sbyte>, Action<sbyte>>(mResources.loadLanguague, mResources_loadLanguague_hook, mResources_loadLanguague_original);
+            TryInstallHook<Action, Action<LoginScr>>(loginScr.switchToMe, LoginScr_switchToMe_hook, LoginScr_switchToMe_original);
 
-            //TryInstallHook<Action, Action, Action>(, _hook, _original);
+            //TryInstallHook<Action, Action>(, _hook, _original);
         }
 
         #region Hook methods
@@ -269,19 +274,6 @@ namespace Mod
         static void ChatTextField_startChat_original_2(ChatTextField _this, IChatable parentScreen, string to)
         {
             Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
-        }
-
-        static int Rms_loadRMSInt_hook(string file)
-        {
-            if (GameEvents.onLoadRMSInt(file, out int result))
-                return result;
-            return Rms_loadRMSInt_original(file);
-        }
-        [MethodImpl(MethodImplOptions.NoOptimization)]
-        static int Rms_loadRMSInt_original(string file)
-        {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
-            return 0;
         }
 
         static string Rms_GetiPhoneDocumentsPath_hook()
@@ -713,9 +705,7 @@ namespace Mod
         {
             Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
         }
-        #endregion
 
-        #region Hooks 2
         static void Panel_paintToolInfo_hook(Panel _this, mGraphics g)
         {
             if (!GameEvents.onPanelPaintToolInfo(g))
@@ -734,6 +724,31 @@ namespace Mod
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void mResources_loadLanguague_original(sbyte newLanguage)
+        {
+            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+        }
+
+        static void ServerListScreen_saveIP_hook()
+        {
+            //don't save IP
+            if (Rms.loadRMSInt("svselect") == -1)
+                Rms.saveRMSInt("svselect", ServerListScreen.ipSelect);
+            SplashScr.loadIP();
+        }
+
+        static void ServerListScreen_loadIP_hook()
+        {
+            ServerListScreen.getServerList(Strings.DEFAULT_IP_SERVERS);
+        }
+
+        static void LoginScr_switchToMe_hook(LoginScr _this)
+        {
+            LoginScr_switchToMe_original(_this);
+            _this.tfUser.setText(Rms.loadRMSString("acc"));
+            _this.tfPass.setText(Rms.loadRMSString("pass"));
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void LoginScr_switchToMe_original(LoginScr _this)
         {
             Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
         }

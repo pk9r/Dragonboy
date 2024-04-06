@@ -122,12 +122,6 @@ namespace Mod
             return false;
         }
 
-        internal static bool onLoadRMSInt(string file, out int result)
-        {
-            result = -1;
-            return false;
-        }
-
         internal static bool onGetRMSPath(out string result)
         {
             //result = $"{Application.persistentDataPath}\\{GameMidlet.IP}_{GameMidlet.PORT}_x{mGraphics.zoomLevel}\\";

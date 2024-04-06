@@ -847,6 +847,8 @@ public class TField : IActionListener
             setPasswordTest();
 			caretPos = text.Length;
 			setOffset();
+			if (Utils.IsPC())
+				textEditor.SelectNone();
 		}
 	}
 

@@ -3,7 +3,12 @@ using UnityEngine;
 
 public class LoginScr : mScreen, IActionListener
 {
-	public TField tfUser;
+    /// <summary>
+    /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
+    /// </summary>
+    internal LoginScr(HookObj _) { }
+
+    public TField tfUser;
 
 	public TField tfPass;
 
@@ -270,7 +275,7 @@ public class LoginScr : mScreen, IActionListener
 		if (GameCanvas.isTouch)
 			tfUser.isFocus = false;
 		GameCanvas.loadBG(0);
-		base.switchToMe();
+        base.switchToMe();
 	}
 
 	public void setUserPass()
