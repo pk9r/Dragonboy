@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Mod.R;
 using UnityEngine;
 
@@ -273,7 +271,23 @@ namespace Mod
 
         internal static void onPaintGameScr(mGraphics g)
         {
-
+            //g.setColor(0xff0000);
+            //Skill[] skills = Main.isPC ? GameScr.keySkill : GameScr.onScreenSkill;
+            //int xSMax = int.MinValue;
+            //int xSMin = int.MaxValue;
+            //int ySMax = int.MinValue;
+            //int ySMin = int.MaxValue;
+            //for (int i = skills.Length - 1; i >= 0; i--)
+            //{
+            //    if (skills[i] != null)
+            //    {
+            //        xSMax = Math.Max(GameScr.xS[i], xSMax);
+            //        xSMin = Math.Min(GameScr.xS[i], xSMin);
+            //        ySMax = Math.Max(GameScr.yS[i], ySMax);
+            //        ySMin = Math.Min(GameScr.yS[i], ySMin);
+            //    }
+            //}
+            //g.drawRect(GameScr.xSkill, ySMin, xSMax - xSMin + GameScr.wSkill, ySMax - ySMin + GameScr.wSkill);
         }
 
         internal static bool onUseSkill(Char ch)
@@ -348,36 +362,52 @@ namespace Mod
             {
                 if (!instance.isCharging())
                 {
-                    bool isSelectingSkill = false;
-                    for (int i = 0; i < GameScr.onScreenSkill.Length; i++)
+                    Skill[] skills = Main.isPC ? GameScr.keySkill : GameScr.onScreenSkill;
+                    int xSMax = int.MinValue;
+                    int xSMin = int.MaxValue;
+                    int ySMax = int.MinValue;
+                    int ySMin = int.MaxValue;
+                    for (int i = skills.Length - 1; i >= 0; i--)
                     {
-                        if (GameCanvas.isPointerHoldIn(GameScr.xSkill + GameScr.xS[i], GameScr.yS[i], GameScr.wSkill, GameScr.wSkill))
+                        if (skills[i] != null)
                         {
-                            GameCanvas.isPointerJustDown = false;
-                            instance.isPointerDowning = false;
-                            instance.keyTouchSkill = i;
-                            if (GameCanvas.isPointerClick && GameCanvas.isPointerJustRelease)
-                            {
-                                GameCanvas.isPointerClick = (GameCanvas.isPointerJustDown = (GameCanvas.isPointerJustRelease = false));
-                                instance.selectedIndexSkill = i;
-                                if (GameScr.indexSelect < 0)
-                                    GameScr.indexSelect = 0;
-                                if (!Main.isPC)
-                                {
-                                    if (instance.selectedIndexSkill > GameScr.onScreenSkill.Length - 1)
-                                        instance.selectedIndexSkill = GameScr.onScreenSkill.Length - 1;
-                                }
-                                else if (instance.selectedIndexSkill > GameScr.keySkill.Length - 1)
-                                    instance.selectedIndexSkill = GameScr.keySkill.Length - 1;
-                                Skill skill = Main.isPC ? GameScr.keySkill[instance.selectedIndexSkill] : GameScr.onScreenSkill[instance.selectedIndexSkill];
-                                if (skill != null)
-                                    instance.doSelectSkill(skill, true);
-                                break;
-                            }
-                            isSelectingSkill = true;
+                            xSMax = Math.Max(GameScr.xS[i], xSMax);
+                            xSMin = Math.Min(GameScr.xS[i], xSMin);
+                            ySMax = Math.Max(GameScr.yS[i], ySMax);
+                            ySMin = Math.Min(GameScr.yS[i], ySMin);
                         }
                     }
-                    return isSelectingSkill;
+                    if (GameCanvas.isPointerHoldIn(GameScr.xSkill, ySMin, xSMax - xSMin + GameScr.wSkill, ySMax - ySMin + GameScr.wSkill))
+                    {
+                        for (int i = 0; i < GameScr.onScreenSkill.Length; i++)
+                        {
+                            if (GameCanvas.isPointerHoldIn(GameScr.xSkill + GameScr.xS[i], GameScr.yS[i], GameScr.wSkill, GameScr.wSkill))
+                            {
+                                GameCanvas.isPointerJustDown = false;
+                                instance.isPointerDowning = false;
+                                instance.keyTouchSkill = i;
+                                if (GameCanvas.isPointerClick && GameCanvas.isPointerJustRelease)
+                                {
+                                    GameCanvas.isPointerClick = (GameCanvas.isPointerJustDown = (GameCanvas.isPointerJustRelease = false));
+                                    instance.selectedIndexSkill = i;
+                                    if (GameScr.indexSelect < 0)
+                                        GameScr.indexSelect = 0;
+                                    if (!Main.isPC)
+                                    {
+                                        if (instance.selectedIndexSkill > GameScr.onScreenSkill.Length - 1)
+                                            instance.selectedIndexSkill = GameScr.onScreenSkill.Length - 1;
+                                    }
+                                    else if (instance.selectedIndexSkill > GameScr.keySkill.Length - 1)
+                                        instance.selectedIndexSkill = GameScr.keySkill.Length - 1;
+                                    Skill skill = Main.isPC ? GameScr.keySkill[instance.selectedIndexSkill] : GameScr.onScreenSkill[instance.selectedIndexSkill];
+                                    if (skill != null)
+                                        instance.doSelectSkill(skill, true);
+                                    break;
+                                }
+                            }
+                        }
+                        return true;
+                    }
                 }
             }
             return false;
