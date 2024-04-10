@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Mod.CustomPanel;
 using Mod.R;
 using MonoHook;
 using UnityEngine;
@@ -34,7 +35,7 @@ namespace Mod
             GameCanvas gameCanvas = new GameCanvas(_);
             GameScr gameScr = new GameScr(_);
             Panel panel = new Panel(_);
-            Char @char = new Char();
+            Char ch = new Char();
             ItemMap itemMap = new ItemMap(_);
             Menu menu = new Menu();
             Mob mob = new Mob();
@@ -49,8 +50,8 @@ namespace Mod
             TryInstallHook<Action<string, string>, Action<string, string>>(Rms.saveRMSString, Rms_saveRMSString_hook, Rms_saveRMSString_original);
             TryInstallHook(new Action(ServerListScreen.saveIP).Method, new Action(ServerListScreen_saveIP_hook).Method, null);
             TryInstallHook(new Action(ServerListScreen.loadIP).Method, new Action(ServerListScreen_loadIP_hook).Method, null);
+            TryInstallHook(typeof(Panel).GetConstructor(new Type[0]), new Action<Panel>(Panel_ctor_hook).Method, new Action<Panel>(Panel__ctor_original).Method);
 
-            TryInstallHook<Action<string>, Action<Service, string>>(Service.gI().chat, Service_chat_hook, Service_chat_original);
             TryInstallHook<Action, Action<GameScr>>(gameScr.updateKey, GameScr_updateKey_hook, GameScr_updateKey_original);
             TryInstallHook<Action<mGraphics>, Action<ChatTextField, mGraphics>>(chatTextField.paint, ChatTextField_paint_hook, ChatTextField_paint_original);
             TryInstallHook<Action<int, IChatable, string>, Action<ChatTextField, int, IChatable, string>>(chatTextField.startChat, ChatTextField_startChat_hook_1, ChatTextField_startChat_original_1);
@@ -63,18 +64,18 @@ namespace Mod
             TryInstallHook<Action, Action<ServerListScreen>>(serverListScreen.switchToMe, ServerListScreen_switchToMe_hook, ServerListScreen_switchToMe_original);
             TryInstallHook<Action<string, int>, Action<Session_ME, string, int>>(Session_ME.gI().connect, Session_ME_connect_hook, Session_ME_connect_original);
             TryInstallHook<Action, Action<ServerListScreen>>(serverListScreen.show2, ServerListScreen_show2_hook, ServerListScreen_show2_original);
-            TryInstallHook<Action<int>, Action<GameCanvas, int>>(gameCanvas.keyPressedz, GameCanvas_keyPressedz_hook, GameCanvas_keyPressedz_original);
-            TryInstallHook<Action<int>, Action<GameCanvas, int>>(gameCanvas.keyReleasedz, GameCanvas_keyReleasedz_hook, GameCanvas_keyReleasedz_original);
+            TryInstallHook<Action<int, bool>, Action<GameCanvas, int, bool>>(gameCanvas.keyPressedz, GameCanvas_keyPressedz_hook, GameCanvas_keyPressedz_original);
+            TryInstallHook<Action<int, bool>, Action<GameCanvas, int, bool>>(gameCanvas.keyReleasedz, GameCanvas_keyReleasedz_hook, GameCanvas_keyReleasedz_original);
             TryInstallHook<Action<string, int, Npc>, Action<string, int, Npc>>(ChatPopup.addChatPopupMultiLine, ChatPopup_addChatPopupMultiLine_hook, ChatPopup_addChatPopupMultiLine_original);
             TryInstallHook<Action<string, int, Npc>, Action<string, int, Npc>>(ChatPopup.addBigMessage, ChatPopup_addBigMessage_hook, ChatPopup_addBigMessage_original);
             TryInstallHook<Action<Message>, Action<Controller, Message>>(Controller.gI().loadInfoMap, Controller_loadInfoMap_hook, Controller_loadInfoMap_original);
             TryInstallHook<Action<mGraphics>, Action<GameScr, mGraphics>>(gameScr.paint, GameScr_paint_hook, GameScr_paint_original);
-            TryInstallHook<Action<SkillPaint, int>, Action<Char, SkillPaint, int>>(@char.setSkillPaint, Char_setSkillPaint_hook, Char_setSkillPaint_original);
+            TryInstallHook<Action<SkillPaint, int>, Action<Char, SkillPaint, int>>(ch.setSkillPaint, Char_setSkillPaint_hook, Char_setSkillPaint_original);
             TryInstallHook<Action<string, int>, Action<InfoMe, string, int>>(InfoMe.gI().addInfo, InfoMe_addInfo_hook, InfoMe_addInfo_original);
             TryInstallHook<Action, Action<Panel>>(panel.updateKey, Panel_updateKey_hook, Panel_updateKey_original);
             TryInstallHook<Action<int, int>, Action<ItemMap, int, int>>(itemMap.setPoint, ItemMap_setPoint_hook, ItemMap_setPoint_original);
             TryInstallHook<Action<MyVector, int>, Action<Menu, MyVector, int>>(menu.startAt, Menu_startAt_hook, Menu_startAt_original);
-            TryInstallHook<Action<string>, Action<Char, string>>(@char.addInfo, Char_addInfo_hook, Char_addInfo_original);
+            TryInstallHook<Action<string>, Action<Char, string>>(ch.addInfo, Char_addInfo_hook, Char_addInfo_original);
             TryInstallHook<Action<mGraphics>, Action<mGraphics>>(GameCanvas.paintBGGameScr, GameCanvas_paintBGGameScr_hook, GameCanvas_paintBGGameScr_original);
             TryInstallHook<Action, Action<Mob>>(mob.startDie, Mob_startDie_hook, Mob_startDie_original);
             TryInstallHook<Action, Action<Mob>>(mob.update, Mob_update_hook, Mob_update_original);
@@ -94,6 +95,17 @@ namespace Mod
             TryInstallHook<Action<sbyte>, Action<sbyte>>(mResources.loadLanguague, mResources_loadLanguague_hook, mResources_loadLanguague_original);
             TryInstallHook<Action, Action<LoginScr>>(loginScr.switchToMe, LoginScr_switchToMe_hook, LoginScr_switchToMe_original);
             TryInstallHook<Action<int, int, mGraphics>, Action<Skill, int, int, mGraphics>>(skill.paint, Skill_paint_hook, Skill_paint_original);
+            TryInstallHook<Action<string>, Action<Service, string>>(Service.gI().chat, Service_chat_hook, Service_chat_original);
+            TryInstallHook<Action<int>, Action<Service, int>>(Service.gI().gotoPlayer, Service_gotoPlayer_hook, Service_gotoPlayer_original);
+            TryInstallHook<Action, Action<Panel>>(panel.updateKeyInTabBar, Panel_updateKeyInTabBar_hook, Panel_updateKeyInTabBar_original);
+            TryInstallHook<Action<mGraphics>, Action<Panel, mGraphics>>(panel.paint, Panel_paint_hook, Panel_paint_original);
+            TryInstallHook<Action, Action<Panel>>(panel.update, Panel_update_hook, Panel_update_original);
+            TryInstallHook<Action<mGraphics>, Action<GameCanvas, mGraphics>>(gameCanvas.paint, GameCanvas_paint_hook, GameCanvas_paint_original);
+            TryInstallHook<Action, Action<Char>>(ch.update, Char_update_hook, Char_update_original);
+            TryInstallHook<Action, Action<Char>>(ch.removeHoleEff, Char_removeHoleEff_hook, Char_removeHoleEff_original);
+            TryInstallHook<Action<Char>, Action<Char, Char>>(ch.setHoldChar, Char_setHoldChar_hook, Char_setHoldChar_original);
+            TryInstallHook<Action<Mob>, Action<Char, Mob>>(ch.setHoldMob, Char_setHoldMob_hook, Char_setHoldMob_original);
+            TryInstallHook<Action<mGraphics, bool, Char>, Action<GameScr, mGraphics, bool, Char>> (gameScr.paintImageBar, GameScr_paintImageBar_hook, GameScr_paintImageBar_original);
 
             //TryInstallHook<Action, Action>(, _hook, _original);
         }
@@ -197,7 +209,7 @@ namespace Mod
         #region Hooks
         static void Service_chat_hook(Service _this, string text)
         {
-            if (!GameEvents.onSendChat(text))
+            if (!GameEvents.OnSendChat(text))
                 Service_chat_original(_this, text);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -208,7 +220,7 @@ namespace Mod
 
         static void Rms_saveRMSString_hook(string filename, string data)
         {
-            GameEvents.onSaveRMSString(ref filename, ref data);
+            GameEvents.OnSaveRMSString(ref filename, ref data);
             Rms_saveRMSString_original(filename, data);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -226,15 +238,15 @@ namespace Mod
                     //GameScr.updateKeyTouchControl()
                     if (!_this.isNotPaintTouchControl())
                     {
-                        if (GameEvents.onUpdateTouchGameScr(_this))
+                        if (GameEvents.OnUpdateTouchGameScr(_this))
                             return;
                     }
                 }
                 if ((!ChatTextField.gI().isShow || GameCanvas.keyAsciiPress == 0) && !_this.isLockKey && !GameCanvas.menu.showMenu && !_this.isOpenUI() && !Char.isLockKey && Char.myCharz().skillPaint == null && GameCanvas.keyAsciiPress != 0 && _this.mobCapcha == null && TField.isQwerty)
                 {
-                    GameEvents.onGameScrPressHotkeys();
+                    GameEvents.OnGameScrPressHotkeys();
                     if (!GameCanvas.keyPressed[1] && !GameCanvas.keyPressed[2] && !GameCanvas.keyPressed[3] && !GameCanvas.keyPressed[4] && !GameCanvas.keyPressed[5] && !GameCanvas.keyPressed[6] && !GameCanvas.keyPressed[7] && !GameCanvas.keyPressed[8] && !GameCanvas.keyPressed[9] && !GameCanvas.keyPressed[0] && GameCanvas.keyAsciiPress != 114 && GameCanvas.keyAsciiPress != 47)
-                        GameEvents.onGameScrPressHotkeysUnassigned();
+                        GameEvents.OnGameScrPressHotkeysUnassigned();
                 }
             }
             GameScr_updateKey_original(_this);
@@ -247,7 +259,7 @@ namespace Mod
 
         static void ChatTextField_paint_hook(ChatTextField _this, mGraphics g)
         {
-            GameEvents.onPaintChatTextField(_this, g);
+            GameEvents.OnPaintChatTextField(_this, g);
             ChatTextField_paint_original(_this, g);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -258,7 +270,7 @@ namespace Mod
 
         static void ChatTextField_startChat_hook_1(ChatTextField _this, int firstCharacter, IChatable parentScreen, string to)
         {
-            if (!GameEvents.onStartChatTextField(_this, parentScreen))
+            if (!GameEvents.OnStartChatTextField(_this, parentScreen))
                 ChatTextField_startChat_original_1(_this, firstCharacter, parentScreen, to);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -269,7 +281,7 @@ namespace Mod
 
         static void ChatTextField_startChat_hook_2(ChatTextField _this, IChatable parentScreen, string to)
         {
-            if (!GameEvents.onStartChatTextField(_this, parentScreen))
+            if (!GameEvents.OnStartChatTextField(_this, parentScreen))
                 ChatTextField_startChat_original_2(_this, parentScreen, to);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -280,7 +292,7 @@ namespace Mod
 
         static string Rms_GetiPhoneDocumentsPath_hook()
         {
-            if (GameEvents.onGetRMSPath(out string result))
+            if (GameEvents.OnGetRMSPath(out string result))
                 return result;
             return Rms_GetiPhoneDocumentsPath_original();
         }
@@ -293,7 +305,7 @@ namespace Mod
 
         static void Teleport_update_hook(Teleport _this)
         {
-            GameEvents.onTeleportUpdate(_this);
+            GameEvents.OnTeleportUpdate(_this);
             Teleport_update_original(_this);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -305,7 +317,7 @@ namespace Mod
         static void ChatTextField_update_hook(ChatTextField _this)
         {
             if (!_this.isShow)
-                GameEvents.onUpdateChatTextField(_this);
+                GameEvents.OnUpdateChatTextField(_this);
             ChatTextField_update_original(_this);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -316,7 +328,7 @@ namespace Mod
 
         static void Rms_clearAll_hook()
         {
-            if (!GameEvents.onClearAllRMS())
+            if (!GameEvents.OnClearAllRMS())
                 Rms_clearAll_original();
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -327,7 +339,7 @@ namespace Mod
 
         static void GameScr_update_hook(GameScr _this)
         {
-            GameEvents.onUpdateGameScr();
+            GameEvents.OnUpdateGameScr();
             GameScr_update_original(_this);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -338,7 +350,7 @@ namespace Mod
 
         static void Service_login_hook(Service _this, string username, string pass, string version, sbyte type)
         {
-            GameEvents.onLogin(ref username, ref pass, ref type);
+            GameEvents.OnLogin(ref username, ref pass, ref type);
             Service_login_original(_this, username, pass, version, type);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -350,7 +362,7 @@ namespace Mod
         static void ServerListScreen_switchToMe_hook(ServerListScreen _this)
         {
             ServerListScreen_switchToMe_original(_this);
-            GameEvents.onServerListScreenLoaded();
+            GameEvents.OnServerListScreenLoaded();
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void ServerListScreen_switchToMe_original(ServerListScreen _this)
@@ -360,7 +372,7 @@ namespace Mod
 
         static void Session_ME_connect_hook(Session_ME _this, string host, int port)
         {
-            GameEvents.onSessionConnecting(ref host, ref port);
+            GameEvents.OnSessionConnecting(ref host, ref port);
             Session_ME_connect_original(_this, host, port);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -372,7 +384,7 @@ namespace Mod
         static void ServerListScreen_show2_hook(ServerListScreen _this)
         {
             ServerListScreen_show2_original(_this);
-            GameEvents.onScreenDownloadDataShow();
+            GameEvents.OnScreenDownloadDataShow();
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void ServerListScreen_show2_original(ServerListScreen _this)
@@ -382,7 +394,7 @@ namespace Mod
 
         static void MotherCanvas_checkZoomLevel_hook(MotherCanvas _this, int w, int h)
         {
-            if (!GameEvents.onCheckZoomLevel(w, h))
+            if (!GameEvents.OnCheckZoomLevel(w, h))
                 MotherCanvas_checkZoomLevel_original(_this, w, h);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -391,33 +403,31 @@ namespace Mod
             Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
         }
 
-        static void GameCanvas_keyPressedz_hook(GameCanvas _this, int keyCode)
+        static void GameCanvas_keyPressedz_hook(GameCanvas _this, int keyCode, bool isFromSync)
         {
-            //if (!GameEvents.onKeyPressedz(keyCode, isFromSync))  
-            if (!GameEvents.onKeyPressedz(keyCode, false))
-                GameCanvas_keyPressedz_original(_this, keyCode);
+            if (!GameEvents.OnKeyPressed(keyCode, isFromSync))
+                GameCanvas_keyPressedz_original(_this, keyCode, isFromSync);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
-        static void GameCanvas_keyPressedz_original(GameCanvas _this, int keyCode)
+        static void GameCanvas_keyPressedz_original(GameCanvas _this, int keyCode, bool isFromSync)
         {
             Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
         }
 
-        static void GameCanvas_keyReleasedz_hook(GameCanvas _this, int keyCode)
+        static void GameCanvas_keyReleasedz_hook(GameCanvas _this, int keyCode, bool isFromSync)
         {
-            //if (!GameEvents.onKeyReleasedz(keyCode, isFromSync))  
-            if (!GameEvents.onKeyReleasedz(keyCode, false))
-                GameCanvas_keyReleasedz_original(_this, keyCode);
+            if (!GameEvents.OnKeyReleased(keyCode, isFromSync))
+                GameCanvas_keyReleasedz_original(_this, keyCode, isFromSync);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
-        static void GameCanvas_keyReleasedz_original(GameCanvas _this, int keyCode)
+        static void GameCanvas_keyReleasedz_original(GameCanvas _this, int keyCode, bool isFromSync)
         {
             Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
         }
 
         static void ChatPopup_addChatPopupMultiLine_hook(string chat, int howLong, Npc c)
         {
-            if (!GameEvents.onChatPopupMultiLine(chat))
+            if (!GameEvents.OnChatPopupMultiLine(chat))
                 ChatPopup_addChatPopupMultiLine_original(chat, howLong, c);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -428,7 +438,7 @@ namespace Mod
         
         static void ChatPopup_addBigMessage_hook(string chat, int howLong, Npc c)
         {
-            if (!GameEvents.onAddBigMessage(chat, c))
+            if (!GameEvents.OnAddBigMessage(chat, c))
                 ChatPopup_addChatPopupMultiLine_original(chat, howLong, c);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -440,7 +450,7 @@ namespace Mod
         static void Controller_loadInfoMap_hook(Controller _this, Message msg)
         {
             Controller_loadInfoMap_original(_this, msg);
-            GameEvents.onInfoMapLoaded();
+            GameEvents.OnInfoMapLoaded();
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Controller_loadInfoMap_original(Controller _this, Message msg)
@@ -451,7 +461,7 @@ namespace Mod
         static void GameScr_paint_hook(GameScr _this, mGraphics g)
         {
             GameScr_paint_original(_this, g);
-            GameEvents.onPaintGameScr(g);
+            GameEvents.OnPaintGameScr(g);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void GameScr_paint_original(GameScr _this, mGraphics g)
@@ -461,7 +471,7 @@ namespace Mod
 
         static void Char_setSkillPaint_hook(Char _this, SkillPaint skillPaint, int sType)
         {
-            if (!GameEvents.onUseSkill(_this))
+            if (!GameEvents.OnUseSkill(_this))
                 Char_setSkillPaint_original(_this, skillPaint, sType);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -473,7 +483,7 @@ namespace Mod
         static void InfoMe_addInfo_hook(InfoMe _this, string s, int Type)
         {
             InfoMe_addInfo_original(_this, s, Type);
-            GameEvents.onAddInfoMe(s);   
+            GameEvents.OnAddInfoMe(s);   
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void InfoMe_addInfo_original(InfoMe _this, string s, int Type)
@@ -484,9 +494,9 @@ namespace Mod
         static void Panel_updateKey_hook(Panel _this)
         {
             if ((_this.chatTField == null || !_this.chatTField.isShow) && GameCanvas.panel.isDoneCombine && !InfoDlg.isShow)
-                GameEvents.onUpdateKeyPanel(_this);
+                GameEvents.OnUpdateKeyPanel(_this);
             if ((_this.tabIcon == null || !_this.tabIcon.isShow) && !_this.isClose && _this.isShow && !_this.cmdClose.isPointerPressInside())
-                GameEvents.onUpdateTouchPanel();
+                GameEvents.OnUpdateTouchPanel(_this);
             Panel_updateKey_original(_this);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -497,7 +507,7 @@ namespace Mod
 
         static void ItemMap_setPoint_hook(ItemMap _this, int xEnd, int yEnd)
         {
-            GameEvents.onSetPointItemMap(xEnd, yEnd);
+            GameEvents.OnSetPointItemMap(xEnd, yEnd);
             ItemMap_setPoint_original(_this, xEnd, yEnd);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -508,7 +518,7 @@ namespace Mod
 
         static void Menu_startAt_hook(Menu _this, MyVector menuItems, int pos)
         {
-            if (!GameEvents.onMenuStartAt(menuItems))
+            if (!GameEvents.OnMenuStartAt(menuItems))
                 Menu_startAt_original(_this, menuItems, pos);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -519,7 +529,7 @@ namespace Mod
 
         static void Char_addInfo_hook(Char _this, string info)
         {
-            GameEvents.onAddInfoChar(_this, info);
+            GameEvents.OnAddInfoChar(_this, info);
             Char_addInfo_original(_this, info);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -530,7 +540,7 @@ namespace Mod
 
         static void GameCanvas_paintBGGameScr_hook(mGraphics g)
         {
-            if (!GameEvents.onPaintBgGameScr(g))
+            if (!GameEvents.OnPaintBgGameScr(g))
                 GameCanvas_paintBGGameScr_original(g);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -541,7 +551,7 @@ namespace Mod
 
         static void Mob_startDie_hook(Mob _this)
         {
-            GameEvents.onMobStartDie(_this);
+            GameEvents.OnMobStartDie(_this);
             Mob_startDie_original(_this);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -552,7 +562,7 @@ namespace Mod
 
         static void Mob_update_hook(Mob _this)
         {
-            GameEvents.onUpdateMob(_this);
+            GameEvents.OnUpdateMob(_this);
             Mob_update_original(_this);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -563,7 +573,7 @@ namespace Mod
 
         static Image Image_createImage_hook(string filename)
         {
-            if (GameEvents.onCreateImage(filename, out Image image))
+            if (GameEvents.OnCreateImage(filename, out Image image))
                 return image;
             return Image_createImage_original(filename);
         }
@@ -576,7 +586,7 @@ namespace Mod
 
         static void GameScr_chatVip_hook(GameScr _this, string chatVip)
         {
-            GameEvents.onChatVip(chatVip);
+            GameEvents.OnChatVip(chatVip);
             GameScr_chatVip_original(_this, chatVip);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -587,8 +597,8 @@ namespace Mod
 
         static void Panel_updateScroolMouse_hook(Panel _this, int a)
         {
-            GameEvents.onUpdateScrollMousePanel(_this, ref a);
-            Panel_updateScroolMouse_original(_this, a);
+            if (!GameEvents.OnUpdateScrollMousePanel(_this, ref a));
+                Panel_updateScroolMouse_original(_this, a);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Panel_updateScroolMouse_original(Panel _this, int a)
@@ -599,7 +609,7 @@ namespace Mod
         static void Panel_hide_hook(Panel _this)
         {
             if (_this.timeShow <= 0)
-                GameEvents.onPanelHide(_this);
+                GameEvents.OnPanelHide(_this);
             Panel_hide_original(_this);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -611,7 +621,7 @@ namespace Mod
         static void Panel_hideNow_hook(Panel _this)
         {
             if (_this.timeShow <= 0)
-                GameEvents.onPanelHide(_this);
+                GameEvents.OnPanelHide(_this);
             Panel_hideNow_original(_this);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -622,7 +632,7 @@ namespace Mod
 
         static void GameScr_paintTouchControl_hook(GameScr _this, mGraphics g)
         {
-            if (!GameEvents.onPaintTouchControl(_this, g))
+            if (!GameEvents.OnPaintTouchControl(_this, g))
                 GameScr_paintTouchControl_original(_this, g);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -633,7 +643,7 @@ namespace Mod
 
         static void GameScr_paintGamePad_hook(GameScr _this, mGraphics g)
         {
-            if (!GameEvents.onPaintGamePad(g))
+            if (!GameEvents.OnPaintGamePad(g))
                 GameScr_paintGamePad_original(_this, g);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -644,7 +654,7 @@ namespace Mod
 
         static void SoundMn_getStrOption_hook(SoundMn _this)
         {
-            if (!GameEvents.onSoundMnGetStrOption())
+            if (!GameEvents.OnSoundMnGetStrOption())
                 SoundMn_getStrOption_original(_this);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -655,7 +665,7 @@ namespace Mod
 
         static void Panel_doFireOption_hook(Panel _this)
         {
-            if (!GameEvents.onPanelFireOption(_this))
+            if (!GameEvents.OnPanelFireOption(_this))
                 Panel_doFireOption_original(_this);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -666,7 +676,7 @@ namespace Mod
 
         static void GamePad_paint_hook(GamePad _this, mGraphics g)
         {
-            if (!GameEvents.onGamepadPaint(_this, g))
+            if (!GameEvents.OnGamepadPaint(_this, g))
                 GamePad_paint_original(_this, g);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -688,7 +698,7 @@ namespace Mod
 
         static void GameScr_setSkillBarPosition_hook()
         {
-            if (!GameEvents.onSetSkillBarPosition())
+            if (!GameEvents.OnSetSkillBarPosition())
                 GameScr_setSkillBarPosition_original();
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -699,7 +709,9 @@ namespace Mod
 
         static void GameScr_paintSelectedSkill_hook(GameScr _this, mGraphics g)
         {
-            GameEvents.onGameScrPaintSelectedSkill(_this, g);
+            if (Char.myCharz().isCharDead())
+                return;
+            GameEvents.OnGameScrPaintSelectedSkill(_this, g);
             GameScr_paintSelectedSkill_original(_this, g);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -710,7 +722,7 @@ namespace Mod
 
         static void Panel_paintToolInfo_hook(Panel _this, mGraphics g)
         {
-            if (!GameEvents.onPanelPaintToolInfo(g))
+            if (!GameEvents.OnPanelPaintToolInfo(g))
                 Panel_paintToolInfo_original(_this, g);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -722,7 +734,7 @@ namespace Mod
         static void mResources_loadLanguague_hook(sbyte newLanguage)
         {
             mResources_loadLanguague_original(newLanguage);
-            GameEvents.onLoadLanguage(newLanguage);
+            GameEvents.OnLoadLanguage(newLanguage);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void mResources_loadLanguague_original(sbyte newLanguage)
@@ -757,7 +769,7 @@ namespace Mod
 
         static void Skill_paint_hook(Skill _this, int x, int y, mGraphics g)
         {
-            if (!GameEvents.onSkillPaint(_this, x, y, g))
+            if (!GameEvents.OnSkillPaint(_this, x, y, g))
                 Skill_paint_original(_this, x, y, g);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -766,6 +778,173 @@ namespace Mod
             Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
         }
 
+        static void Service_gotoPlayer_hook(Service _this, int id)
+        {
+            if (!GameEvents.OnGotoPlayer(id))
+                Service_gotoPlayer_original(_this, id);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        internal static void Service_gotoPlayer_original(Service _this, int id)
+        {
+            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+        }
+
+        static void Panel_updateKeyInTabBar_hook(Panel _this)
+        {
+            if (!GameEvents.OnPanelUpdateKeyInTabBar(_this))
+                Panel_updateKeyInTabBar_original(_this);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Panel_updateKeyInTabBar_original(Panel _this)
+        {
+            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+        }
+
+        static void Panel_paint_hook(Panel _this, mGraphics g)
+        {
+            if (!GameEvents.OnPaintPanel(_this, g))
+                Panel_paint_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Panel_paint_original(Panel _this, mGraphics g)
+        {
+            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+        }
+
+        static void Panel_update_hook(Panel _this)
+        {
+            if (!GameEvents.OnUpdatePanel(_this))
+                Panel_update_original(_this);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Panel_update_original(Panel _this)
+        {
+            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+        }
+
+        static void GameCanvas_paint_hook(GameCanvas _this, mGraphics g)
+        {
+            GameCanvas_paint_original(_this, g);
+            GameEvents.OnPaintGameCanvas(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void GameCanvas_paint_original(GameCanvas _this, mGraphics g)
+        {
+            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+        }
+
+        static void Char_setHoldMob_hook(Char _this, Mob r)
+        {
+            Char_setHoldMob_original(_this, r);
+            GameEvents.OnCharSetHoldMob(_this);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_setHoldMob_original(Char _this, Mob r)
+        {
+            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+        }
+
+        static void Char_setHoldChar_hook(Char _this, Char r)
+        {
+            Char_setHoldChar_original(_this, r);
+            GameEvents.OnCharSetHoldChar(_this, r);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_setHoldChar_original(Char _this, Char r)
+        {
+            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+        }
+
+        static void Char_removeHoleEff_hook(Char _this)
+        {
+            Char_removeHoleEff_original(_this);
+            GameEvents.OnCharRemoveHoldEff(_this);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_removeHoleEff_original(Char _this)
+        {
+            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+        }
+
+        static void Char_update_hook(Char _this)
+        {
+            GameEvents.OnUpdateChar(_this);
+            Char_update_original(_this);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_update_original(Char _this)
+        {
+            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+        }
+
+        static void GameScr_paintImageBar_hook(GameScr _this, mGraphics g, bool isLeft, Char c)
+        {
+            GameScr_paintImageBar_original(_this, g, isLeft, c);
+            GameEvents.OnPaintImageBar(g, isLeft, c);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void GameScr_paintImageBar_original(GameScr _this, mGraphics g, bool isLeft, Char c)
+        {
+            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+        }
+
+        static void Panel_ctor_hook(Panel _this)
+        {
+            Panel__ctor_original(_this);
+            _this.tabName = new string[28][][]
+            {
+                null,
+                null,
+                new string[2][]
+                {
+                    mResources.chestt,
+                    mResources.inventory
+                },
+                new string[1][] { mResources.zonee },
+                new string[1][] { mResources.mapp },
+                null,
+                null,
+                new string[1][] { new string[1] { string.Empty } },
+                new string[1][] { new string[1] { string.Empty } },
+                new string[1][] { new string[1] { string.Empty } },
+                new string[1][] { new string[1] { string.Empty } },
+                new string[1][] { new string[1] { string.Empty } },
+                new string[2][]
+                {
+                    mResources.combine,
+                    mResources.inventory
+                },
+                new string[3][]
+                {
+                    mResources.inventory,
+                    mResources.item_give,
+                    mResources.item_receive
+                },
+                new string[1][] { new string[1] { string.Empty } },
+                new string[1][] { new string[1] { string.Empty } },
+                new string[1][] { new string[1] { string.Empty } },
+                new string[1][] { new string[1] { string.Empty } },
+                new string[1][] { new string[1] { string.Empty } },
+                new string[1][] { new string[1] { string.Empty } },
+                new string[1][] { new string[1] { string.Empty } },
+                mResources.petMainTab,
+                new string[1][] { new string[1] { string.Empty } },
+                new string[1][] { new string[1] { string.Empty } },
+                new string[1][] { new string[1] { string.Empty } },
+                new string[1][] { new string[1] { string.Empty } },
+                new string[1][] { new string[1] { string.Empty } },
+                // thêm 1 phần tử cho CustomPanelMenu
+                new string[1][] { new string[1] { string.Empty } },
+            };
+            _this.lastTabIndex = new int[_this.tabName.Length];
+            for (int i = 0; i < _this.lastTabIndex.Length; i++)
+                _this.lastTabIndex[i] = -1;
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Panel__ctor_original(Panel _this)
+        {
+            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+        }
         #endregion
     }
 }

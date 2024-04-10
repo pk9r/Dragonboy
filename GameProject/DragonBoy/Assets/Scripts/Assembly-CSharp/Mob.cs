@@ -3,7 +3,10 @@ using Assets.src.g;
 
 public class Mob : IMapObject
 {
-	public const sbyte TYPE_DUNG = 0;
+    public int countDie;
+    public long lastTimeDie;
+
+    public const sbyte TYPE_DUNG = 0;
 
 	public const sbyte TYPE_DI = 1;
 

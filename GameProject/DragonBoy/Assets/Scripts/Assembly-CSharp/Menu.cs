@@ -38,7 +38,7 @@ public class Menu
 
 	public static Image imgMenu2;
 
-	private bool disableClose;
+	internal bool disableClose;
 
 	public int tDelay;
 
@@ -72,7 +72,7 @@ public class Menu
 
 	private int cmdx;
 
-	private bool isClose;
+	internal bool isClose;
 
 	public bool[] isNotClose;
 

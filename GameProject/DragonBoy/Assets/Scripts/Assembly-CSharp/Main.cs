@@ -92,7 +92,7 @@ public class Main : MonoBehaviour
 		mainThreadName = Thread.CurrentThread.Name;
 		isPC = true;
 		started = true;
-		if (GameEvents.onGameStarted())
+		if (GameEvents.OnGameStarted())
 			return;
         if (isPC)
 		{
@@ -246,7 +246,7 @@ public class Main : MonoBehaviour
 			DataInputStream.update();
 			//SMS.update();
 			Net.update();
-            GameEvents.onFixedUpdateMain();
+            GameEvents.OnFixedUpdateMain();
             f++;
 			if (f > 8)
 				f = 0;
@@ -259,7 +259,7 @@ public class Main : MonoBehaviour
 
 	private void Update()
 	{
-        GameEvents.onUpdateMain();
+        GameEvents.OnUpdateMain();
     }
 
     private void checkInput()
@@ -327,7 +327,7 @@ public class Main : MonoBehaviour
 
 	private void OnApplicationQuit()
 	{
-        GameEvents.onGameClosing();
+        GameEvents.OnGameClosing();
         Debug.LogWarning("APP QUIT");
 		GameCanvas.bRun = false;
 		Session_ME.gI().close();
@@ -344,7 +344,8 @@ public class Main : MonoBehaviour
 
 	private void OnApplicationPause(bool paused)
 	{
-		isResume = false;
+        GameEvents.OnGamePause(paused);
+        isResume = false;
 		if (paused)
 		{
 			//if (GameCanvas.isWaiting())

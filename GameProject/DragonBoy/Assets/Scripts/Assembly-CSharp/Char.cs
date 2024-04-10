@@ -1,10 +1,13 @@
 using System;
 using Assets.src.e;
 using Assets.src.g;
+using Mod;
 
 public class Char : IMapObject
 {
-	public string xuStr;
+    internal CharEffectTime charEffectTime = new CharEffectTime();
+
+    public string xuStr;
 
 	public string luongStr;
 
@@ -971,9 +974,9 @@ public class Char : IMapObject
 
 	private Image imgHPtem;
 
-	private bool isPet;
+	internal bool isPet;
 
-	private bool isMiniPet;
+	internal bool isMiniPet;
 
 	private int iiii;
 
@@ -1001,7 +1004,7 @@ public class Char : IMapObject
 
 	public static bool isManualFocus = false;
 
-	private Char charHold;
+	internal Char charHold;
 
 	private Mob mobHold;
 
@@ -1257,7 +1260,7 @@ public class Char : IMapObject
 
 	private MainImage mainImg;
 
-	public Char()
+    public Char()
 	{
 		statusMe = 6;
 	}

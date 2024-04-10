@@ -294,7 +294,7 @@ public class GameCanvas : IActionListener
 
 	public static bool isLoadBGok;
 
-	private static long lastTimePress = 0L;
+	internal static long lastTimePress = 0L;
 
 	public static int keyAsciiPress;
 
@@ -646,11 +646,11 @@ public class GameCanvas : IActionListener
 					if (isPointer(panel.X + panel.W, panel.Y, w - panel.W * 2, panel.H) && isPointerJustRelease && panel.isDoneCombine)
 						panel.hide();
 				}
-				debug("E", 0);
+                debug("E", 0);
 				if (!isLoading)
 					currentScreen.update();
 				debug("F", 0);
-				if (!panel.isShow && ChatPopup.serverChatPopUp == null)
+				if (!panel.isShow && (panel2 == null || !panel2.isShow) && ChatPopup.serverChatPopUp == null)
 					currentScreen.updateKey();
 				Hint.update();
 				SoundMn.gI().update();
@@ -1833,10 +1833,10 @@ public class GameCanvas : IActionListener
 		}
 	}
 
-	public void keyPressedz(int keyCode)
+	public void keyPressedz(int keyCode, bool isFromSync = false)
 	{
 		lastTimePress = mSystem.currentTimeMillis();
-		if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 122) || keyCode == 10 || keyCode == 8 || keyCode == 13 || keyCode == 32 || keyCode == 31)
+		//if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 122) || keyCode == 10 || keyCode == 8 || keyCode == 13 || keyCode == 32 || keyCode == 31)
 			keyAsciiPress = keyCode;
 		mapKeyPress(keyCode);
 	}
@@ -2036,7 +2036,7 @@ public class GameCanvas : IActionListener
 		}
 	}
 
-	public void keyReleasedz(int keyCode)
+	public void keyReleasedz(int keyCode, bool isFromSync = false)
 	{
 		keyAsciiPress = 0;
 		mapKeyRelease(keyCode);
@@ -2195,9 +2195,11 @@ public class GameCanvas : IActionListener
 	public void scrollMouse(int a)
 	{
 		pXYScrollMouse = a;
-		if (panel != null && panel.isShow)
-			panel.updateScroolMouse(a);
-	}
+        if (panel != null && panel.isShow)
+            panel.updateScroolMouse(a);
+        if (panel2 != null && panel2.isShow)
+            panel2.updateScroolMouse(a);
+    }
 
 	public void pointerDragged(int x, int y)
 	{
@@ -2333,7 +2335,7 @@ public class GameCanvas : IActionListener
 				if (panel2 != null && panel2.chatTField != null && panel2.chatTField.isShow)
 					panel2.chatTField.paint(g);
 			}
-			Res.paintOnScreenDebug(g);
+            Res.paintOnScreenDebug(g);
 			InfoDlg.paint(g);
 			if (currentDialog != null)
 			{

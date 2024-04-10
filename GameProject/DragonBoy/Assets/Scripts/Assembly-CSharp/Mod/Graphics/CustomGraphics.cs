@@ -6,9 +6,9 @@ namespace Mod.Graphics
 {
     internal static class CustomGraphics
     {
-        private static Texture2D aaLineTex = null;
-        private static Texture2D lineTex = null;
-        private static Rect lineRect = new Rect(0, 0, 1, 1);
+        static Texture2D aaLineTex = null;
+        static Texture2D lineTex = null;
+        static Rect lineRect = new Rect(0, 0, 1, 1);
         static int[] array2 = new int[] { 0, 0, 0, 0, 600841, 3346944, 3932211, 6684682 };
         static int[] size = new int[6] { 2, 1, 1, 1, 1, 1 };
         static int[,] colorBorder = new int[5, 6]
@@ -40,7 +40,8 @@ namespace Mod.Graphics
             float dx = pointB.x - pointA.x;
             float dy = pointB.y - pointA.y;
             float len = Mathf.Sqrt(dx * dx + dy * dy);
-            if (len < 0.001f) return;
+            if (len < 0.001f) 
+                return;
             Texture2D tex;
             if (antiAlias)
             {
@@ -101,13 +102,13 @@ namespace Mod.Graphics
             }
         }
 
-        private static Vector2 CubeBezier(Vector2 s, Vector2 st, Vector2 e, Vector2 et, float t)
+        static Vector2 CubeBezier(Vector2 s, Vector2 st, Vector2 e, Vector2 et, float t)
         {
             float rt = 1 - t;
             return rt * rt * rt * s + 3 * rt * rt * t * st + 3 * rt * t * t * et + t * t * t * e;
         }
 
-        private static void Initialize()
+        static void Initialize()
         {
             if (lineTex == null)
             {
@@ -167,19 +168,19 @@ namespace Mod.Graphics
             GUIUtility.RotateAroundPivot(-angle, vector);
         }
 
-        //internal static void PaintItemOptions(mGraphics g, Panel instance, Item item, int y)
-        //{
-        //    int x = instance.X + Panel.WIDTH_PANEL - 2;
-        //    if (instance == GameCanvas.panel2)
-        //        x -= 2;
-        //    if (Utils.HasActivateOption(item))
-        //    {
-        //        mFont.tahoma_7b_red.drawString(g, "$", x, y, mFont.RIGHT);
-        //        x -= mFont.tahoma_7b_red.getWidth("$") + 2;
-        //    }
-        //    if (Utils.HasStarOption(item, out uint star, out uint starE))
-        //        PaintStarOption(g, x, y, star, starE);
-        //}
+        internal static void PaintItemOptions(mGraphics g, Panel instance, Item item, int y)
+        {
+            int x = instance.X + Panel.WIDTH_PANEL - 2;
+            if (instance == GameCanvas.panel2)
+                x -= 2;
+            if (Utils.HasActivateOption(item))
+            {
+                mFont.tahoma_7b_red.drawString(g, "$", x, y, mFont.RIGHT);
+                x -= mFont.tahoma_7b_red.getWidth("$") + 2;
+            }
+            if (Utils.HasStarOption(item, out uint star, out uint starE))
+                PaintStarOption(g, x, y, star, starE);
+        }
 
         static void PaintStarOption(mGraphics g, int x, int y, uint star, uint starE)
         {
@@ -495,7 +496,7 @@ namespace Mod.Graphics
             return texture;
         }
 
-        public static void drawCooldownRect(float x, float y, float w, float h, float value, Color color)
+        internal static void drawCooldownRect(float x, float y, float w, float h, float value, Color color)
         {
             x *= mGraphics.zoomLevel;
             y *= mGraphics.zoomLevel;
@@ -509,6 +510,44 @@ namespace Mod.Graphics
             UIImage.PopulateMesh();
             UnityEngine.Graphics.DrawMeshNow(UIImage.mesh, new Vector3(x, y, -1), Quaternion.identity, 0);
             GUI.matrix = matrix;
+        }
+
+        internal static Texture2D FlipTextureVertically(Texture2D original)
+        {
+            var originalPixels = original.GetPixels();
+            var newPixels = new Color32[originalPixels.Length];
+            var width = original.width;
+            var rows = original.height;
+            for (var x = 0; x < width; x++)
+            {
+                for (var y = 0; y < rows; y++)
+                {
+                    newPixels[x + y * width] = originalPixels[x + (rows - y - 1) * width];
+                }
+            }
+            Texture2D newTexture = new Texture2D(width, rows);
+            newTexture.SetPixels32(newPixels);
+            newTexture.Apply();
+            return newTexture;
+        }
+
+        internal static Texture2D FlipTextureHorizontally(Texture2D original)
+        {
+            var originalPixels = original.GetPixels();
+            var newPixels = new Color32[originalPixels.Length];
+            var width = original.width;
+            var rows = original.height;
+            for (var x = 0; x < width; x++)
+            {
+                for (var y = 0; y < rows; y++)
+                {
+                    newPixels[x + y * width] = originalPixels[(width - x - 1) + y * width];
+                }
+            }
+            Texture2D newTexture = new Texture2D(width, rows);
+            newTexture.SetPixels32(newPixels);
+            newTexture.Apply();
+            return newTexture;
         }
     }
 }

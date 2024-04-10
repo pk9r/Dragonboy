@@ -1,7 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using EHVN;
+using Mod.Auto;
+using Mod.CustomPanel;
 using Mod.Graphics;
+using Mod.ModHelper;
+using Mod.ModMenu;
 using Mod.R;
 using UnityEngine;
 
@@ -20,15 +26,15 @@ namespace Mod
         static float _previousWidth = Screen.width;
         static float _previousHeight = Screen.height;
         static bool isHaveSelectSkill_old;
-
-        static bool isRegistered = false;
+        static long lastTimeGamePause;
+        static bool isFirstPause = true;
 
         /// <summary>
         /// Kích hoạt khi người chơi chat.
         /// </summary>
         /// <param name="text">Nội dung chat.</param>
         /// <returns></returns>
-        internal static bool onSendChat(string text)
+        internal static bool OnSendChat(string text)
         {
             bool result = true;
             if (text == "test")
@@ -41,7 +47,7 @@ namespace Mod
         /// <summary>
         /// Kích hoạt sau khi game khởi động.
         /// </summary>
-        internal static bool onGameStarted()
+        internal static bool OnGameStarted()
         {
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
@@ -54,40 +60,96 @@ namespace Mod
                 Screen.autorotateToLandscapeRight = true;
                 Screen.autorotateToPortrait = false;
                 Screen.autorotateToPortraitUpsideDown = false;
+                FileChooser.InitializeUnityActivity();
             }
-            onCheckZoomLevel(Screen.width, Screen.height);
+            OnCheckZoomLevel(Screen.width, Screen.height);
             GameEventHook.InstallAll();
-            UIImage.OnStart();
             //TestHook.Install();
-            if (onSetResolution())
+            UIImage.OnStart();
+            CustomBackground.LoadData();
+            CharEffect.Init();
+            if (OnSetResolution())
                 return true;
             return false;
+        }
+
+        internal static void OnGamePause(bool paused)
+        {
+            if (mSystem.currentTimeMillis() - lastTimeGamePause > 1000 && !isFirstPause)
+            {
+                ModMenuMain.SaveData();
+                CustomBackground.SaveData();
+            }
+            lastTimeGamePause = mSystem.currentTimeMillis();
+            if (isFirstPause)
+                isFirstPause = false;
         }
 
         /// <summary>
         /// Kích hoạt khi game đóng
         /// </summary>
-        internal static void onGameClosing()
+        internal static void OnGameClosing()
+        {
+            ModMenuMain.SaveData();
+            CustomBackground.SaveData();
+        }
+
+        internal static void OnFixedUpdateMain()
+        {
+            if (GameCanvas.currentScreen != null)
+            {
+                if (!GameCanvas.panel.isShow && GameCanvas.panel2 != null && GameCanvas.panel2.isShow)
+                {
+                    GameCanvas.isFocusPanel2 = true;
+                    if (GameCanvas.panel2.chatTField != null && GameCanvas.panel2.chatTField.isShow)
+                        GameCanvas.panel2?.chatTFUpdateKey();
+                    else
+                    {
+                        GameCanvas.panel2?.update();
+                        GameCanvas.panel2?.updateKey();
+                    }
+                }
+                if (!GameCanvas.panel.isShow && GameCanvas.panel2 != null && GameCanvas.panel2.isShow)
+                    if (!GameCanvas.isPointer(GameCanvas.panel2.X, GameCanvas.panel2.Y, GameCanvas.panel2.W, GameCanvas.panel2.H) && GameCanvas.isPointerJustRelease && GameCanvas.panel2.isDoneCombine)
+                        GameCanvas.panel2?.hide();
+            }
+            CustomBackground.FixedUpdate();
+        }
+
+        internal static void OnUpdateMain()
+        {
+            MainThreadDispatcher.update();
+            if (_previousWidth != Screen.width || _previousHeight != Screen.height)
+            {
+                _previousWidth = Screen.width;
+                _previousHeight = Screen.height;
+                ScaleGUI.initScaleGUI();
+                GameCanvas.instance?.ResetSize();
+                ChatTextField.gI().ResetTextField();
+                GameScr.gamePad?.SetGamePadZone();
+                GameScr.loadCamera(false, -1, -1);
+                if (GameCanvas.panel2 != null)
+                    GameCanvas.panel2.EmulateSetTypePanel(1);
+                ModMenuMain.UpdatePosition();
+            }
+        }
+
+        internal static void OnSaveRMSString(ref string filename, ref string data)
         {
 
         }
 
-        internal static void onSaveRMSString(ref string filename, ref string data)
-        {
-
-        }
-
-
-        internal static void onLoadLanguage(sbyte newLanguage)
+        internal static void OnLoadLanguage(sbyte newLanguage)
         {
             Strings.LoadLanguage(newLanguage);
+            ModMenuMain.UpdateLanguage(newLanguage);
         }
 
         /// <summary>
         /// Kích hoạt khi cài đăt kích thước màn hình.
         /// </summary>
         /// <returns></returns>
-        internal static bool onSetResolution()
+        internal static bool OnSetResolution()
         {
             return Utils.IsAndroidBuild();
         }
@@ -95,7 +157,7 @@ namespace Mod
         /// <summary>
         /// Kích hoạt khi nhấn phím tắt (GameScr) chưa được xử lý.
         /// </summary>
-        internal static void onGameScrPressHotkeysUnassigned()
+        internal static void OnGameScrPressHotkeysUnassigned()
         {
 
         }
@@ -103,7 +165,7 @@ namespace Mod
         /// <summary>
         /// Kích hoạt khi nhấn phím tắt (GameScr).
         /// </summary>
-        internal static void onGameScrPressHotkeys()
+        internal static void OnGameScrPressHotkeys()
         {
 
         }
@@ -111,7 +173,7 @@ namespace Mod
         /// <summary>
         /// Kích hoạt sau khi vẽ khung chat.
         /// </summary>
-        internal static void onPaintChatTextField(ChatTextField instance, mGraphics g)
+        internal static void OnPaintChatTextField(ChatTextField instance, mGraphics g)
         {
 
         }
@@ -119,12 +181,12 @@ namespace Mod
         /// <summary>
         /// Kích hoạt khi mở khung chat.
         /// </summary>
-        internal static bool onStartChatTextField(ChatTextField sender, IChatable parentScreen)
+        internal static bool OnStartChatTextField(ChatTextField sender, IChatable parentScreen)
         {
             return false;
         }
 
-        internal static bool onGetRMSPath(out string result)
+        internal static bool OnGetRMSPath(out string result)
         {
             //result = $"{Application.persistentDataPath}\\{GameMidlet.IP}_{GameMidlet.PORT}_x{mGraphics.zoomLevel}\\";
             string subFolder = "TeaMobi";
@@ -141,7 +203,7 @@ namespace Mod
             return true;
         }
 
-        internal static bool onTeleportUpdate(Teleport teleport)
+        internal static bool OnTeleportUpdate(Teleport teleport)
         {
             return false;
         }
@@ -149,12 +211,12 @@ namespace Mod
         /// <summary>
         /// Kích hoạt khi có ChatTextField update.
         /// </summary>
-        internal static void onUpdateChatTextField(ChatTextField sender)
+        internal static void OnUpdateChatTextField(ChatTextField sender)
         {
 
         }
 
-        internal static bool onClearAllRMS()
+        internal static bool OnClearAllRMS()
         {
             foreach (FileInfo file in new DirectoryInfo(Rms.GetiPhoneDocumentsPath() + "/").GetFiles().Where(f => f.Extension != ".log"))
             {
@@ -179,9 +241,9 @@ namespace Mod
         /// <summary>
         /// Kích hoạt khi GameScr.gI() update.
         /// </summary>
-        internal static void onUpdateGameScr()
+        internal static void OnUpdateGameScr()
         {
-
+            CharEffect.Update();
         }
 
         /// <summary>
@@ -190,7 +252,7 @@ namespace Mod
         /// <param name="username"></param>
         /// <param name="pass"></param>
         /// <param name="type"></param>
-        internal static void onLogin(ref string username, ref string pass, ref sbyte type)
+        internal static void OnLogin(ref string username, ref string pass, ref sbyte type)
         {
 
         }
@@ -198,9 +260,9 @@ namespace Mod
         /// <summary>
         /// Kích hoạt sau khi màn hình chọn server được load.
         /// </summary>
-        internal static void onServerListScreenLoaded()
+        internal static void OnServerListScreenLoaded()
         {
-            isRegistered = !string.IsNullOrEmpty(Rms.loadRMSString("acc"));
+            ModMenuMain.Initialize();
         }
 
         /// <summary>
@@ -208,17 +270,17 @@ namespace Mod
         /// </summary>
         /// <param name="host"></param>
         /// <param name="port"></param>
-        internal static void onSessionConnecting(ref string host, ref int port)
+        internal static void OnSessionConnecting(ref string host, ref int port)
         {
 
         }
 
-        internal static void onScreenDownloadDataShow()
+        internal static void OnScreenDownloadDataShow()
         {
 
         }
 
-        internal static bool onCheckZoomLevel(int w, int h)
+        internal static bool OnCheckZoomLevel(int w, int h)
         {
             if (Utils.IsAndroidBuild())
             {
@@ -240,83 +302,52 @@ namespace Mod
             return true;
         }
 
-        internal static bool onKeyPressedz(int keyCode, bool isFromSync)
+        internal static bool OnKeyPressed(int keyCode, bool isFromSync)
         {
             return false;
         }
 
-        internal static bool onKeyReleasedz(int keyCode, bool isFromAsync)
+        internal static bool OnKeyReleased(int keyCode, bool isFromSync)
         {
             return false;
         }
 
-        internal static bool onChatPopupMultiLine(string chat)
+        internal static bool OnChatPopupMultiLine(string chat)
         {
             return false;
         }
 
-        internal static bool onAddBigMessage(string chat, Npc npc)
+        internal static bool OnAddBigMessage(string chat, Npc npc)
         {
             return false;
         }
 
-        internal static void onInfoMapLoaded()
+        internal static void OnInfoMapLoaded()
         {
 
         }
 
-        internal static void onPaintGameScr(mGraphics g)
+        internal static void OnPaintGameScr(mGraphics g)
         {
-            //g.setColor(0xff0000);
-            //Skill[] skills = Main.isPC ? GameScr.keySkill : GameScr.onScreenSkill;
-            //int xSMax = int.MinValue;
-            //int xSMin = int.MaxValue;
-            //int ySMax = int.MinValue;
-            //int ySMin = int.MaxValue;
-            //for (int i = skills.Length - 1; i >= 0; i--)
-            //{
-            //    if (skills[i] != null)
-            //    {
-            //        xSMax = Math.Max(GameScr.xS[i], xSMax);
-            //        xSMin = Math.Min(GameScr.xS[i], xSMin);
-            //        ySMax = Math.Max(GameScr.yS[i], ySMax);
-            //        ySMin = Math.Min(GameScr.yS[i], ySMin);
-            //    }
-            //}
-            //g.drawRect(GameScr.xSkill, ySMin, xSMax - xSMin + GameScr.wSkill, ySMax - ySMin + GameScr.wSkill);
+            ModMenuMain.Paint(g);
+            CharEffect.Paint(g);
         }
 
-        internal static bool onUseSkill(Char ch)
+        internal static bool OnUseSkill(Char ch)
         {
+            if (ch.me)
+                CharEffect.AddEffectCreatedByMe(ch.myskill);
             return false;
         }
 
-        internal static void onFixedUpdateMain()
+        internal static void OnAddInfoMe(string str)
         {
 
         }
 
-        internal static void onUpdateMain()
+        internal static bool OnUpdateTouchGameScr(GameScr instance)
         {
-            if (_previousWidth != Screen.width || _previousHeight != Screen.height)
-            {
-                _previousWidth = Screen.width;
-                _previousHeight = Screen.height;
-                ScaleGUI.initScaleGUI();
-                GameCanvas.instance?.resetSize();
-                ChatTextField.gI().ResetTextField();
-                GameScr.gamePad?.SetGamePadZone();
-                GameScr.loadCamera(false, -1, -1);
-            }
-        }
-
-        internal static void onAddInfoMe(string str)
-        {
-
-        }
-
-        internal static bool onUpdateTouchGameScr(GameScr instance)
-        {
+            ModMenuMain.UpdateTouch();
             if (GameCanvas.isTouchControl)
             {
                 if (!TileMap.isOfflineMap())
@@ -356,6 +387,8 @@ namespace Mod
                 ;
             else if (GameScr.isHaveSelectSkill)
             {
+                if (Char.myCharz().isCharDead())
+                    return false;
                 if (!instance.isCharging())
                 {
                     Skill[] skills = Main.isPC ? GameScr.keySkill : GameScr.onScreenSkill;
@@ -373,7 +406,7 @@ namespace Mod
                             ySMin = Math.Min(GameScr.yS[i], ySMin);
                         }
                     }
-                    if (GameCanvas.isPointerHoldIn(GameScr.xSkill, ySMin, xSMax - xSMin + GameScr.wSkill, ySMax - ySMin + GameScr.wSkill))
+                    if (GameCanvas.isPointerHoldIn(GameScr.xSkill - 5, ySMin - 5, xSMax - xSMin + GameScr.wSkill, ySMax - ySMin + GameScr.wSkill))
                     {
                         for (int i = 0; i < GameScr.onScreenSkill.Length; i++)
                         {
@@ -409,42 +442,57 @@ namespace Mod
             return false;
         }
 
-        internal static void onUpdateTouchPanel()
+        internal static void OnUpdateTouchPanel(Panel instance)
         {
-
+            if (instance.type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
+            {
+                instance.updateKeyScrollView();
+            }
         }
 
-        internal static void onSetPointItemMap(int xEnd, int yEnd)
+        internal static void OnSetPointItemMap(int xEnd, int yEnd)
         {
-
+            if (xEnd == Char.myCharz().cx && yEnd == Char.myCharz().cy - 10)
+            {
+                if (AutoTrainNewAccount.isEnabled) 
+                    AutoTrainNewAccount.isPicking = false;
+                if (ModMenuMain.GetModMenuItem<ModMenuItemValues>("Set_AutoTrainPet").SelectedValue != 0) 
+                    AutoPet.isPicking = false;
+            }
         }
 
-        internal static bool onMenuStartAt(MyVector menuItems)
+        internal static bool OnMenuStartAt(MyVector menuItems)
         {
             return false;
         }
 
-        internal static void onAddInfoChar(Char c, string info)
+        internal static void OnAddInfoChar(Char c, string info)
         {
-
+            if (LocalizedString.saoMayLuoiThe.ContainsReversed(info.ToLower()) && ModMenuMain.GetModMenuItem<ModMenuItemValues>("Set_AutoTrainPet").SelectedValue > 0 && c.charID == -Char.myCharz().charID) 
+                AutoPet.saoMayLuoiThe = true;
         }
 
-        internal static bool onPaintBgGameScr(mGraphics g)
+        internal static bool OnPaintBgGameScr(mGraphics g)
         {
+            if (CustomBackground.isEnabled && CustomBackground.backgroundWallpapers.Count > 0 && !ModMenuMain.GetModMenuItem<ModMenuItemBoolean>("CustomBg_Toggle").IsDisabled)
+            {
+                CustomBackground.paint(g);
+                return true;
+            }
             return false;
         }
 
-        internal static void onMobStartDie(Mob instance)
+        internal static void OnMobStartDie(Mob instance)
         {
 
         }
 
-        internal static void onUpdateMob(Mob instance)
+        internal static void OnUpdateMob(Mob instance)
         {
 
         }
 
-        internal static bool onCreateImage(string filename, out Image image)
+        internal static bool OnCreateImage(string filename, out Image image)
         {
             string streamingAssetsPath = Application.streamingAssetsPath;
             if (Utils.IsAndroidBuild())
@@ -473,27 +521,49 @@ namespace Mod
             return true;
         }
 
-        internal static void onChatVip(string chatVip)
+        internal static void OnChatVip(string chatVip)
         {
 
         }
 
-        internal static void onUpdateScrollMousePanel(Panel instance, ref int pXYScrollMouse)
+        internal static bool OnUpdateScrollMousePanel(Panel instance, ref int pXYScrollMouse)
+        {
+            //if (GameCanvas.pxMouse > instance.X + instance.wScroll || GameCanvas.pxMouse < instance.X)
+            //    return true;
+            return false;
+        }
+
+        internal static void OnPanelHide(Panel instance)
         {
 
         }
 
-        internal static void onPanelHide(Panel instance)
+        internal static void OnUpdateChar(Char ch)
+        {
+            CharEffect.UpdateChar(ch);
+        }
+
+        internal static void OnCharRemoveHoldEff(Char ch)
+        {
+            CharEffect.RemoveHold(ch);
+        }
+
+        internal static void OnCharSetHoldChar(Char ch, Char r)
+        {
+            CharEffect.AddCharHoldChar(ch, r);
+        }
+
+        internal static void OnCharSetHoldMob(Char ch)
+        {
+            CharEffect.AddCharHoldMob(ch);
+        }
+
+        internal static void OnUpdateKeyPanel(Panel instance)
         {
 
         }
 
-        internal static void onUpdateKeyPanel(Panel instance)
-        {
-
-        }
-
-        internal static bool onPaintTouchControl(GameScr instance, mGraphics g)
+        internal static bool OnPaintTouchControl(GameScr instance, mGraphics g)
         {
             if (instance.isNotPaintTouchControl())
                 return false;
@@ -505,7 +575,7 @@ namespace Mod
             return true;
         }
 
-        internal static bool onPaintGamePad(mGraphics g)
+        internal static bool OnPaintGamePad(mGraphics g)
         {
             GameScr.isHaveSelectSkill = isHaveSelectSkill_old;
             if (GameScr.isAnalog != 0 && Char.myCharz().statusMe != 14)
@@ -517,7 +587,7 @@ namespace Mod
             return true;
         }
 
-        internal static bool onPanelFireOption(Panel panel)
+        internal static bool OnPanelFireOption(Panel panel)
         {
             if (panel.selected >= 0)
             {
@@ -549,31 +619,22 @@ namespace Mod
             return true;
         }
 
-        internal static bool onSoundMnGetStrOption()
+        internal static bool OnSoundMnGetStrOption()
         {
-            static string status(bool value) => value ? mResources.ON : mResources.OFF;
-            //string on = "[x]   ";
-            //string off = "[  ]   ";
             Panel.strCauhinh = new string[]
             {
-                //Char.isPaintAura ? (off + mResources.aura_off.Trim()) : (on + mResources.aura_off.Trim()),
-                //Char.isPaintAura2 ? (off + mResources.aura_off_2.Trim()) : (on + mResources.aura_off_2.Trim()),
-                //GameCanvas.isPlaySound ? (on + mResources.turnOffSound.Trim()) : (off + mResources.turnOffSound.Trim()),
-                //GameScr.isAnalog == 0 ? (off + mResources.turnOnAnalog) : (on + mResources.turnOffAnalog),
-                //GameCanvas.lowGraphic ? (on + mResources.cauhinhcao?.Trim()) : (off + mResources.cauhinhthap?.Trim()),
-                //(mGraphics.zoomLevel <= 1) ? (off + mResources.x2Screen) : (on + mResources.x1Screen)
-                mResources.aura_off?.Trim() + ": " + status(Char.isPaintAura),
-                mResources.aura_off_2?.Trim() + ": " + status(Char.isPaintAura2),
-                mResources.serverchat_off?.Trim() + ": " + status(GameScr.isPaintChatVip),
-                mResources.turnOffSound?.Trim() + ": " + status(GameCanvas.isPlaySound),
-                mResources.turnOnAnalog?.Trim() + ": " + status(GameScr.isAnalog != 0),
+                mResources.aura_off?.Trim() + ": " + Strings.OnOffStatus(Char.isPaintAura),
+                mResources.aura_off_2?.Trim() + ": " + Strings.OnOffStatus(Char.isPaintAura2),
+                mResources.serverchat_off?.Trim() + ": " + Strings.OnOffStatus(GameScr.isPaintChatVip),
+                mResources.turnOffSound?.Trim() + ": " + Strings.OnOffStatus(GameCanvas.isPlaySound),
+                mResources.analog?.Trim() + ": " + Strings.OnOffStatus(GameScr.isAnalog != 0),
                 (GameCanvas.lowGraphic ? mResources.cauhinhcao : mResources.cauhinhthap)?.Trim(),
                 mGraphics.zoomLevel <= 1 ? mResources.x2Screen : mResources.x1Screen,
             };
             return true;
         }
 
-        internal static bool onSetSkillBarPosition()
+        internal static bool OnSetSkillBarPosition()
         {
             Skill[] skills = GameCanvas.isTouch ? GameScr.onScreenSkill : GameScr.keySkill;
             GameScr.xS = new int[skills.Length];
@@ -656,7 +717,7 @@ namespace Mod
             return true;
         }
 
-        internal static bool onGamepadPaint(GamePad instance, mGraphics g)
+        internal static bool OnGamepadPaint(GamePad instance, mGraphics g)
         {
             if (GameScr.isAnalog != 0)
             {
@@ -667,7 +728,7 @@ namespace Mod
             return false;
         }
 
-        internal static void onGameScrPaintSelectedSkill(GameScr instance, mGraphics g)
+        internal static void OnGameScrPaintSelectedSkill(GameScr instance, mGraphics g)
         {
             if (!GameScr.isHaveSelectSkill)
                 return;
@@ -682,7 +743,7 @@ namespace Mod
                 array = GameScr.keySkill;
             if (!GameCanvas.isTouch)
             {
-                g.setColor(11152401);
+                g.setColor(0xAA2C11);
                 g.fillRect(GameScr.xSkill + GameScr.xHP + 2, GameScr.yHP - 10 + 6, 20, 10);
                 mFont.tahoma_7_white.drawString(g, "*", GameScr.xSkill + GameScr.xHP + 12, GameScr.yHP - 8 + 6, mFont.CENTER);
             }
@@ -742,16 +803,16 @@ namespace Mod
             }
         }
 
-        internal static bool onPanelPaintToolInfo(mGraphics g)
+        internal static bool OnPanelPaintToolInfo(mGraphics g)
         {
-            mFont.tahoma_7b_white.drawString(g, Strings.communityMod + " " + GameMidlet.VERSION, 60, 4, mFont.LEFT, mFont.tahoma_7b_dark);
-            mFont.tahoma_7_yellow.drawString(g, mResources.character + ": " + Char.myCharz().cName, 60, 16, mFont.LEFT, mFont.tahoma_7_grey);
-            mFont.tahoma_7_yellow.drawString(g, mResources.account + " " + mResources.account_server.ToLower() + " " + ServerListScreen.nameServer[ServerListScreen.ipSelect], 60, 27, mFont.LEFT, mFont.tahoma_7_grey);
-            mFont.tahoma_7_yellow.drawString(g, isRegistered ? Strings.registered : mResources.not_register_yet, 60, 39, mFont.LEFT, mFont.tahoma_7_grey);
+            mFont.tahoma_7b_white.drawString(g, Strings.communityMod, 60, 4, mFont.LEFT, mFont.tahoma_7b_dark);
+            mFont.tahoma_7_yellow.drawString(g, Strings.gameVersion + ": v" + GameMidlet.VERSION, 60, 16, mFont.LEFT, mFont.tahoma_7_grey);
+            mFont.tahoma_7_yellow.drawString(g, mResources.character + ": " + Char.myCharz().cName, 60, 27, mFont.LEFT, mFont.tahoma_7_grey);
+            mFont.tahoma_7_yellow.drawString(g, mResources.account + " " + mResources.account_server.ToLower() + " " + ServerListScreen.nameServer[ServerListScreen.ipSelect], 60, 39, mFont.LEFT, mFont.tahoma_7_grey);
             return true;
         }
 
-        internal static bool onSkillPaint(Skill skill, int x, int y, mGraphics g)
+        internal static bool OnSkillPaint(Skill skill, int x, int y, mGraphics g)
         {
             SmallImage.drawSmallImage(g, skill.template.iconId, x, y, 0, StaticObj.VCENTER_HCENTER);
             long coolingDown = mSystem.currentTimeMillis() - skill.lastTimeUseThisSkill;
@@ -775,6 +836,320 @@ namespace Mod
             else
                 skill.paintCanNotUseSkill = false;
             return true;
+        }
+
+        internal static bool OnGotoPlayer(int id, bool isAutoUseYardrat = true)
+        {
+            if (isAutoUseYardrat) 
+            { 
+                new Thread(delegate ()
+                {
+                    int previousDisguiseId = -1;
+                    if (Char.myCharz().arrItemBody[5] == null || (Char.myCharz().arrItemBody[5] != null && (Char.myCharz().arrItemBody[5].template.id < 592 || Char.myCharz().arrItemBody[5].template.id > 594)))
+                    {
+                        if (Char.myCharz().arrItemBody[5] != null) previousDisguiseId = Char.myCharz().arrItemBody[5].template.id;
+                        for (int i = 0; i < Char.myCharz().arrItemBag.Length; i++)
+                        {
+                            Item item = Char.myCharz().arrItemBag[i];
+                            if (item != null && item.template.id >= 592 && item.template.id <= 594)
+                            {
+                                do
+                                {
+                                    Service.gI().getItem(4, (sbyte)i);
+                                    Thread.Sleep(250);
+                                }
+                                while (Char.myCharz().arrItemBody[5].template.id < 592 || Char.myCharz().arrItemBody[5].template.id > 594);
+                                break;
+                            }
+                        }
+                    }
+                    GameEventHook.Service_gotoPlayer_original(Service.gI(), id);
+                    if (previousDisguiseId != -1)
+                    {
+                        Thread.Sleep(500);
+                        for (int j = 0; j < Char.myCharz().arrItemBag.Length; j++)
+                        {
+                            Item item = Char.myCharz().arrItemBag[j];
+                            if (item != null && item.template.id == previousDisguiseId)
+                            {
+                                do
+                                {
+                                    Service.gI().getItem(4, (sbyte)j);
+                                    Thread.Sleep(250);
+                                }
+                                while (Char.myCharz().arrItemBody[5].template.id != previousDisguiseId);
+                                break;
+                            }
+                        }
+                    }
+                }).Start();
+                return true; 
+            }
+            else
+                return false;
+        }
+
+        internal static bool OnPaintPanel(Panel panel, mGraphics g)
+        {
+            if (panel.type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
+            {
+                g.translate(-g.getTranslateX(), -g.getTranslateY());
+                g.translate(-panel.cmx, 0);
+                g.translate(panel.X, panel.Y);
+                GameCanvas.paintz.paintFrameSimple(panel.X, panel.Y, panel.W, panel.H, g);
+                g.setClip(panel.X + 1, panel.Y, panel.W - 2, panel.yScroll - 2);
+                g.setColor(0x987B55);
+                g.fillRect(panel.X, panel.Y, panel.W - 2, 50);
+                SmallImage.drawSmallImage(g, Utils.ID_NPC_MOD_FACE, panel.X + 25, 50, 0, 33);
+                //panel.paintCharInfo(g, Char.myCharz());
+                mFont.tahoma_7b_white.drawString(g, Strings.communityMod, panel.X + 60, 4, mFont.LEFT, mFont.tahoma_7b_dark);
+                mFont.tahoma_7_yellow.drawString(g, Strings.gameVersion + ": v" + GameMidlet.VERSION, panel.X + 60, 16, mFont.LEFT, mFont.tahoma_7_grey);
+                g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
+                mFont.tahoma_7_yellow.drawString(g, mResources.character + ": " + Char.myCharz().cName, panel.X + 60, 27, mFont.LEFT, mFont.tahoma_7_grey);
+                mFont.tahoma_7_yellow.drawString(g, mResources.account + " " + mResources.account_server.ToLower() + " " + ServerListScreen.nameServer[ServerListScreen.ipSelect], panel.X + 60, 38, mFont.LEFT, mFont.tahoma_7_grey);
+
+                panel.paintBottomMoneyInfo(g);
+                if (!CustomPanelMenu.paintTabHeader(panel, g))
+                    panel.paintTab(g);
+                CustomPanelMenu.paintModMenuMain(panel, g);
+                GameScr.resetTranslate(g);
+                panel.paintDetail(g);
+                if (panel.cmx == panel.cmtoX)
+                    panel.cmdClose.paint(g);
+                if (panel.tabIcon != null && panel.tabIcon.isShow)
+                    panel.tabIcon.paint(g);
+                return true;
+            }
+            return false;
+        }
+
+        internal static void OnPaintGameCanvas(GameCanvas instance, mGraphics g)
+        {
+            if (!GameCanvas.panel.isShow)
+            {
+                if (GameCanvas.panel2 != null)
+                {
+                    g.translate(-g.getTranslateX(), -g.getTranslateY());
+                    g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
+                    if (GameCanvas.panel2.isShow)
+                        GameCanvas.panel2.paint(g);
+                    if (GameCanvas.panel2.chatTField != null && GameCanvas.panel2.chatTField.isShow)
+                        GameCanvas.panel2.chatTField.paint(g);
+                }
+            }
+            g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.6f));
+            double fps = Math.Round((double)(1f / Time.smoothDeltaTime * Time.timeScale), 1);
+            string fpsStr = fps.ToString("F1").Replace(',', '.');
+            g.fillRect(0, 0, mFont.tahoma_7b_red.getWidth(fpsStr) + 2, 12);
+            mFont.tahoma_7b_red.drawString(g, fpsStr, 2, 0, 0);
+        }
+
+        internal static bool OnUpdatePanel(Panel instance)
+        {
+            if (instance.type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
+            {
+                if ((instance.chatTField == null || !instance.chatTField.isShow) && !instance.isKiguiXu && !instance.isKiguiLuong && (instance.tabIcon == null || !instance.tabIcon.isShow) && instance.waitToPerform > 0)
+                {
+                    if (instance.waitToPerform - 1 == 0)
+                    {
+                        instance.waitToPerform--;
+                        instance.lastSelect[instance.currentTabIndex] = instance.selected;
+                        CustomPanelMenu.doFireCustomPanelMenu(instance);
+                    }
+                }
+            }
+            return false;
+        }
+
+        internal static bool OnPanelUpdateKeyInTabBar(Panel instance)
+        {
+            if (instance.type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
+            {
+                if ((instance.scroll != null && instance.scroll.pointerIsDowning) || instance.pointerIsDowning)
+                    return true;
+                int num = instance.currentTabIndex;
+                if (instance.isTabInven() && instance.isnewInventory)
+                {
+                    if (instance.selected == -1)
+                    {
+                        if (GameCanvas.keyPressed[6])
+                        {
+                            instance.currentTabIndex++;
+                            if (instance.currentTabIndex >= instance.currentTabName.Length)
+                            {
+                                if (GameCanvas.panel2 != null)
+                                {
+                                    instance.currentTabIndex = instance.currentTabName.Length - 1;
+                                    GameCanvas.isFocusPanel2 = true;
+                                }
+                                else
+                                    instance.currentTabIndex = 0;
+                            }
+                            instance.selected = instance.lastSelect[instance.currentTabIndex];
+                            instance.lastTabIndex[instance.type] = instance.currentTabIndex;
+                        }
+                        if (GameCanvas.keyPressed[4])
+                        {
+                            instance.currentTabIndex--;
+                            if (instance.currentTabIndex < 0)
+                                instance.currentTabIndex = instance.currentTabName.Length - 1;
+                            if (GameCanvas.isFocusPanel2)
+                                GameCanvas.isFocusPanel2 = false;
+                            instance.selected = instance.lastSelect[instance.currentTabIndex];
+                            instance.lastTabIndex[instance.type] = instance.currentTabIndex;
+                        }
+                    }
+                    else if (instance.selected > 0)
+                    {
+                        if (GameCanvas.keyPressed[8])
+                        {
+                            if (instance.newSelected == 0)
+                                instance.sellectInventory++;
+                            else
+                                instance.sellectInventory += 5;
+                        }
+                        else if (GameCanvas.keyPressed[2])
+                        {
+                            if (instance.newSelected == 0)
+                                instance.sellectInventory--;
+                            else
+                                instance.sellectInventory -= 5;
+                        }
+                        else if (GameCanvas.keyPressed[4])
+                        {
+                            if (instance.newSelected == 0)
+                                instance.sellectInventory -= 5;
+                            else
+                                instance.sellectInventory--;
+                        }
+                        else if (GameCanvas.keyPressed[6])
+                        {
+                            if (instance.newSelected == 0)
+                                instance.sellectInventory += 5;
+                            else
+                                instance.sellectInventory++;
+                        }
+                    }
+                    if (instance.sellectInventory == instance.nTableItem)
+                        instance.sellectInventory = 0;
+                }
+                else if (!instance.IsTabOption())
+                {
+                    if (GameCanvas.keyPressed[(!Main.isPC) ? 6 : 24])
+                    {
+                        if (instance.isTabInven())
+                        {
+                            if (instance.selected >= 0)
+                                instance.updateKeyInvenTab();
+                            else
+                            {
+                                instance.currentTabIndex++;
+                                if (instance.currentTabIndex >= instance.currentTabName.Length)
+                                {
+                                    if (GameCanvas.panel2 != null)
+                                    {
+                                        instance.currentTabIndex = instance.currentTabName.Length - 1;
+                                        GameCanvas.isFocusPanel2 = true;
+                                    }
+                                    else
+                                        instance.currentTabIndex = 0;
+                                }
+                                instance.selected = instance.lastSelect[instance.currentTabIndex];
+                                instance.lastTabIndex[instance.type] = instance.currentTabIndex;
+                            }
+                        }
+                        else
+                        {
+                            instance.currentTabIndex++;
+                            if (instance.currentTabIndex >= instance.currentTabName.Length)
+                            {
+                                if (GameCanvas.panel2 != null)
+                                {
+                                    instance.currentTabIndex = instance.currentTabName.Length - 1;
+                                    GameCanvas.isFocusPanel2 = true;
+                                }
+                                else
+                                    instance.currentTabIndex = 0;
+                            }
+                            instance.selected = instance.lastSelect[instance.currentTabIndex];
+                            instance.lastTabIndex[instance.type] = instance.currentTabIndex;
+                        }
+                    }
+                    if (GameCanvas.keyPressed[(!Main.isPC) ? 4 : 23])
+                    {
+                        instance.currentTabIndex--;
+                        if (instance.currentTabIndex < 0)
+                            instance.currentTabIndex = instance.currentTabName.Length - 1;
+                        if (GameCanvas.isFocusPanel2)
+                            GameCanvas.isFocusPanel2 = false;
+                        instance.selected = instance.lastSelect[instance.currentTabIndex];
+                        instance.lastTabIndex[instance.type] = instance.currentTabIndex;
+                    }
+                }
+                instance.keyTouchTab = -1;
+                for (int i = 0; i < instance.currentTabName.Length; i++)
+                {
+                    if (!GameCanvas.isPointer(instance.startTabPos + i * instance.TAB_W, 52, instance.TAB_W - 1, 25))
+                        continue;
+                    instance.keyTouchTab = i;
+                    if (GameCanvas.isPointerJustRelease)
+                    {
+                        instance.currentTabIndex = i;
+                        instance.lastTabIndex[instance.type] = i;
+                        GameCanvas.isPointerJustRelease = false;
+                        instance.selected = instance.lastSelect[instance.currentTabIndex];
+                        if (num == instance.currentTabIndex && instance.cmRun == 0)
+                        {
+                            instance.cmtoY = 0;
+                            instance.selected = (GameCanvas.isTouch ? (-1) : 0);
+                        }
+                        break;
+                    }
+                }
+                if (num == instance.currentTabIndex)
+                    return true;
+                instance.size_tab = 0;
+                SoundMn.gI().panelClick();
+                CustomPanelMenu.setTabCustomPanelMenu(instance);
+                instance.selected = instance.lastSelect[instance.currentTabIndex];
+                
+                return true;
+            }
+            return false;
+        }
+
+        internal static void OnPaintImageBar(mGraphics g, bool isLeft, Char c)
+        {
+            if (!isLeft)
+                return;
+            if (c != Char.myCharz())
+                return;
+            int xHP = 85;
+            int xMP = xHP;
+            int yHP = 4;
+            int yMP = 19;
+            string cHP = Utils.FormatWithSIPrefix(Char.myCharz().cHP);
+            string cMP = Utils.FormatWithSIPrefix(Char.myCharz().cMP);
+            g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.6f));
+            if (mGraphics.zoomLevel > 1)
+            {
+                GUIStyle style = new GUIStyle(GUI.skin.label);
+                style.normal.textColor = style.hover.textColor = Color.yellow;
+                style.fontStyle = FontStyle.Bold;
+                style.fontSize = (int)(8.5 * mGraphics.zoomLevel);
+                g.fillRect(xHP, yHP + 1, Utils.getWidth(style, cHP) + 1, Utils.getHeight(style, cHP) - 2);
+                g.drawString(cHP, xHP, yHP, style);
+                style.fontSize = 5 * mGraphics.zoomLevel;
+                g.fillRect(xMP - 1, yMP + 1, Utils.getWidth(style, cMP) + 1, Utils.getHeight(style, cMP) - 2);
+                g.drawString(cMP, xMP, yMP, style);
+            }
+            else
+            {
+                g.fillRect(xHP - 1, yHP + 1, mFont.tahoma_7b_yellow.getWidth(cHP), mFont.tahoma_7b_yellow.getHeight() - 2);
+                mFont.tahoma_7b_yellow.drawString(g, cHP, xHP, yHP, mFont.LEFT);
+                g.fillRect(xMP - 1, yMP + 1, mFont.tahoma_7_yellow.getWidth(cMP), mFont.tahoma_7_yellow.getHeight() - 2);
+                mFont.tahoma_7_yellow.drawString(g, cMP, xMP, yMP, mFont.LEFT);
+            }
         }
     }
 }

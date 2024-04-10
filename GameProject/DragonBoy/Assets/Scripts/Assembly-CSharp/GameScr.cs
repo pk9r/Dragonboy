@@ -3257,7 +3257,7 @@ public class GameScr : mScreen, IChatable
 		return false;
 	}
 
-	private void doDoubleClickToObj(IMapObject obj)
+	internal void doDoubleClickToObj(IMapObject obj)
 	{
 		if ((obj.Equals(Char.myCharz().npcFocus) || mobCapcha == null) && !checkClickToBotton(obj))
 		{
@@ -5208,7 +5208,7 @@ public class GameScr : mScreen, IChatable
 		g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
 	}
 
-	private void paintImageBar(mGraphics g, bool isLeft, Char c)
+	internal void paintImageBar(mGraphics g, bool isLeft, Char c)
 	{
 		if (c != null)
 		{
