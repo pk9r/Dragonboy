@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Mod.R;
-using MonoHook;
+using UnityHook;
 using UnityEngine;
 
 namespace Mod

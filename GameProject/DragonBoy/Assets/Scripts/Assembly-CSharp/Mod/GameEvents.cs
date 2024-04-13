@@ -17,7 +17,7 @@ using Mod.ModHelper.CommandMod.Chat;
 using Mod.Auto.AutoChat;
 using Mod.ModHelper.CommandMod.Hotkey;
 
-#if UNITY_ANDROID
+#if !UNITY_EDITOR && UNITY_ANDROID 
 using EHVN;
 #endif
 
@@ -166,7 +166,7 @@ namespace Mod
                     GameCanvas.panel2.EmulateSetTypePanel(1);
                 ModMenuMain.UpdatePosition();
             }
-#if UNITY_ANDROID
+#if !UNITY_EDITOR && UNITY_ANDROID
             FileChooser.Update();
 #endif
             MainThreadDispatcher.update();

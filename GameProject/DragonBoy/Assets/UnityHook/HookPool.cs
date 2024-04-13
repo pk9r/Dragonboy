@@ -1,14 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.IO;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+using System.Reflection;
 
-namespace MonoHook
+namespace UnityHook
 {
     /// <summary>
     /// Hook 池，防止重复 Hook

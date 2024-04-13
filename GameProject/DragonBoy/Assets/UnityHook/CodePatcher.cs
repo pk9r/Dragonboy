@@ -1,11 +1,7 @@
-﻿using DotNetDetour;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
+﻿using System;
+using DotNetDetour;
 
-namespace MonoHook
+namespace UnityHook
 {
     public unsafe abstract class CodePatcher
     {

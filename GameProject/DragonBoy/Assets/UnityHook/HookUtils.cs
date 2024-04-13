@@ -1,12 +1,10 @@
-﻿#if !(UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX)
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using UnityEngine;
 
-namespace MonoHook
+namespace UnityHook
 {
     public static unsafe class HookUtils
     {
@@ -269,5 +267,3 @@ namespace MonoHook
 #endif
     }
 }
-
-#endif

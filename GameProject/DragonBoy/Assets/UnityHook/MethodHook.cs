@@ -6,15 +6,9 @@
 
 using DotNetDetour;
 using System;
-using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using Unity.Collections.LowLevel.Unsafe;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 using UnityEngine;
-using System.Runtime.CompilerServices;
 
 
 /*
@@ -64,7 +58,7 @@ il2cpp:00000000003DE728 A2 56 47 F9                             LDR             
 il2cpp:00000000003DE72C F3 03 01 2A                             MOV             W19, W1                                             |
  */
 
-namespace MonoHook
+namespace UnityHook
 {
     /// <summary>
     /// Hook 类，用来 Hook 某个 C# 方法
@@ -161,20 +155,20 @@ namespace MonoHook
                 if (GetFunctionAddr())
                 {
 #if ENABLE_HOOK_DEBUG
-                    UnityEngine.Debug.Log($"Original [{targetMethod.DeclaringType.Name}.{targetMethod.Name}]: {HookUtils.HexToString(_targetPtr.ToPointer(), 64, -16)}");
-                    UnityEngine.Debug.Log($"Original [{replacementMethod.DeclaringType.Name}.{replacementMethod.Name}]: {HookUtils.HexToString(_replacementPtr.ToPointer(), 64, -16)}");
+                    Debug.Log($"Original [{targetMethod.DeclaringType.Name}.{targetMethod.Name}]: {HookUtils.HexToString(_targetPtr.ToPointer(), 64, -16)}");
+                    Debug.Log($"Original [{replacementMethod.DeclaringType.Name}.{replacementMethod.Name}]: {HookUtils.HexToString(_replacementPtr.ToPointer(), 64, -16)}");
                     if(proxyMethod != null)
-                        UnityEngine.Debug.Log($"Original [{proxyMethod.DeclaringType.Name}.{proxyMethod.Name}]: {HookUtils.HexToString(_proxyPtr.ToPointer(), 64, -16)}");
+                        Debug.Log($"Original [{proxyMethod.DeclaringType.Name}.{proxyMethod.Name}]: {HookUtils.HexToString(_proxyPtr.ToPointer(), 64, -16)}");
 #endif
 
                     CreateCodePatcher();
                     _codePatcher.ApplyPatch();
 
 #if ENABLE_HOOK_DEBUG
-                    UnityEngine.Debug.Log($"New [{targetMethod.DeclaringType.Name}.{targetMethod.Name}]: {HookUtils.HexToString(_targetPtr.ToPointer(), 64, -16)}");
-                    UnityEngine.Debug.Log($"New [{replacementMethod.DeclaringType.Name}.{replacementMethod.Name}]: {HookUtils.HexToString(_replacementPtr.ToPointer(), 64, -16)}");
+                    Debug.Log($"New [{targetMethod.DeclaringType.Name}.{targetMethod.Name}]: {HookUtils.HexToString(_targetPtr.ToPointer(), 64, -16)}");
+                    Debug.Log($"New [{replacementMethod.DeclaringType.Name}.{replacementMethod.Name}]: {HookUtils.HexToString(_replacementPtr.ToPointer(), 64, -16)}");
                     if(proxyMethod != null)
-                        UnityEngine.Debug.Log($"New [{proxyMethod.DeclaringType.Name}.{proxyMethod.Name}]: {HookUtils.HexToString(_proxyPtr.ToPointer(), 64, -16)}");
+                        Debug.Log($"New [{proxyMethod.DeclaringType.Name}.{proxyMethod.Name}]: {HookUtils.HexToString(_proxyPtr.ToPointer(), 64, -16)}");
 #endif
                 }
             }
@@ -199,7 +193,7 @@ namespace MonoHook
                 {
                     int codeSize = targetMethod.GetMethodBody().GetILAsByteArray().Length; // GetMethodBody can not call on il2cpp
                     if (codeSize < minMethodBodySize)
-                        UnityEngine.Debug.LogWarning($"WRANING: you can not hook method [{methodName}], cause its method body is too short({codeSize}), will random crash on IL2CPP release mode");
+                        Debug.LogWarning($"WRANING: you can not hook method [{methodName}], cause its method body is too short({codeSize}), will random crash on IL2CPP release mode");
                 }
             }
 
@@ -208,7 +202,7 @@ namespace MonoHook
                 methodName = $"{proxyMethod.DeclaringType.Name}.{proxyMethod.Name}";
                 int codeSize = proxyMethod.GetMethodBody().GetILAsByteArray().Length;
                 if (codeSize < minMethodBodySize)
-                    UnityEngine.Debug.LogWarning($"WRANING: size of method body[{methodName}] is too short({codeSize}), will random crash on IL2CPP release mode, please fill some dummy code inside");
+                    Debug.LogWarning($"WRANING: size of method body[{methodName}] is too short({codeSize}), will random crash on IL2CPP release mode, please fill some dummy code inside");
 
                 if ((proxyMethod.MethodImplementationFlags & MethodImplAttributes.NoOptimization) != MethodImplAttributes.NoOptimization)
                     throw new Exception($"WRANING: method [{methodName}] must has a Attribute `MethodImpl(MethodImplOptions.NoOptimization)` to prevent code call to this optimized by compiler(pass args by shared stack)");

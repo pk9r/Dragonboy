@@ -1,9 +1,8 @@
-﻿#if UNITY_ANDROID
+﻿#if !UNITY_EDITOR && UNITY_ANDROID
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
-using Mod;
 using UnityEngine;
 
 namespace EHVN
@@ -16,7 +15,7 @@ namespace EHVN
 
         internal static string[] Open(string[] mimeTypes)
         {
-            if (!Utils.IsAndroidBuild())
+            if (Application.platform != RuntimePlatform.Android)
                 return null;
             InitializeUnityActivity();
             string[] selectedFiles = null;
@@ -62,8 +61,6 @@ namespace EHVN
         static T GetStaticRunInUIThread<T>(AndroidJavaClass javaClass, string name)
         {
             T result = default;
-            if (!Utils.IsAndroidBuild())
-                return default;
             bool assigned = false;
             Exception ex = null;
             RunOnMainThread(() =>
@@ -87,10 +84,7 @@ namespace EHVN
             return result;
         }
 
-        static void RunOnMainThread(Action action)
-        {
-            runOnMainThreadActions.Enqueue(action);
-        }
+        static void RunOnMainThread(Action action) => runOnMainThreadActions.Enqueue(action);
     }
 }
 #endif

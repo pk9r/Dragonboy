@@ -676,7 +676,7 @@ namespace DotNetDetour
 
             try
             {
-                byte[] ilBody = typeof(LDasm).GetMethod("IsIL2CPP").GetMethodBody().GetILAsByteArray();
+                byte[] ilBody = typeof(LDasm).GetMethod(nameof(IsIL2CPP)).GetMethodBody().GetILAsByteArray();
                 if (ilBody == null || ilBody.Length == 0)
                     s_isIL2CPP = true;
                 else
