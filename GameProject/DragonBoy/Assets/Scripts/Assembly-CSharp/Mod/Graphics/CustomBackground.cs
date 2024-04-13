@@ -1,5 +1,4 @@
 ﻿using Mod.CustomPanel;
-using Mod.ModHelper;
 using Mod.ModHelper.Menu;
 using Mod.ModMenu;
 using System;
@@ -10,12 +9,10 @@ using System.Linq;
 using System.Threading;
 using UnityEngine;
 using Mod.R;
-using EHVN;
-
-#if UNITY_STANDALONE_WIN
+#if UNITY_EDITOR || UNITY_STANDALONE
 using SFB;
 #elif UNITY_ANDROID
-
+using EHVN;
 #endif
 
 namespace Mod.Graphics
@@ -27,84 +24,48 @@ namespace Mod.Graphics
         internal static Dictionary<string, IImage> backgroundWallpapers = new Dictionary<string, IImage>();
 
         internal static int intervalChangeBackgroundWallpaper = 30000;
-        private static int backgroundIndex;
-        private static bool isAllWallpaperLoaded;
-        private static long lastTimeChangedWallpaper;
-        private static bool isChangeWallpaper = true;
+        static int backgroundIndex;
+        static bool isAllWallpaperLoaded;
+        static long lastTimeChangedWallpaper;
+        static bool isChangeWallpaper = true;
         static float speed = 1f;
         static CustomBackground instance = new CustomBackground();
 
         internal static void ShowMenu()
         {
             new MenuBuilder()
-                .setChatPopup("Loại hình nền được hỗ trợ: ảnh (*.png), ảnh động (*.gif), video (*.mp4).\n" +
-                               "Ảnh động và video tiêu tốn nhiều tài nguyên máy, nên cân nhắc trước khi\nsử dụng.")
-                .addItem(ifCondition: backgroundWallpapers.Count > 0,
-                    "Mở danh sách hình nền đã lưu", new MenuAction(() =>
-                        CustomPanelMenu.show(setTabCustomBackgroundPanel,
-                            doFireCustomBackgroundListPanel, paintTabHeader, paintCustomBackgroundPanel)))
-                .addItem("Thêm hình nền vào danh sách", new MenuAction(SelectBackgrounds))
-                .addItem(ifCondition: backgroundWallpapers.Count > 0,
-                    "Xóa hết danh sách", new MenuAction(() =>
+                .setChatPopup(Strings.customBgChatPopup)
+                .addItem(backgroundWallpapers.Count > 0, Strings.customBgOpenBgList, new MenuAction(() => CustomPanelMenu.show(SetTabCustomBackgroundPanel, DoFireCustomBackgroundListPanel, PaintTabHeader, PaintCustomBackgroundPanel)))
+                .addItem(Strings.customBgAddNewBg, new MenuAction(SelectBackgrounds))
+                .addItem(backgroundWallpapers.Count > 0, Strings.customBgRemoveAll, new MenuAction(() =>
                     {
                         foreach (BackgroundVideo backgroundVideo in backgroundWallpapers.OfType<BackgroundVideo>())
                             backgroundVideo.Stop();
                         backgroundWallpapers.Clear();
-                        GameScr.info1.addInfo("Đã xóa hết hình nền trong danh sách!", 0);
+                        GameScr.info1.addInfo(Strings.customBgAllBgRemoved + '!', 0);
                     }))
-                .addItem("Tự động chuyển hình nền: " + Strings.OnOffStatus(isChangeWallpaper), new MenuAction(() => { isChangeWallpaper = !isChangeWallpaper; lastTimeChangedWallpaper = mSystem.currentTimeMillis(); GameScr.info1.addInfo("Đã " + Strings.OnOffStatus(isChangeWallpaper) + " tự động chuyển hình nền!", 0); }))
-                .addItem("Thay đổi thời gian chuyển hình nền", new MenuAction(() => { ChatTextField.gI().strChat = "Nhập thời gian thay đổi hình nền"; ChatTextField.gI().tfChat.name = "Thời gian (giây)"; ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_NUMERIC); ChatTextField.gI().startChat2(instance, string.Empty); }))
-                .addItem("Thay đổi tốc độ ảnh động", new MenuAction(() => { ChatTextField.gI().strChat = "Nhập tốc độ ảnh động"; ChatTextField.gI().tfChat.name = "Tốc độ"; ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_ANY); ChatTextField.gI().startChat2(instance, string.Empty); ChatTextField.gI().tfChat.setText(speed.ToString()); }))
-                .start();
-        }
-
-        internal static void setTabCustomBackgroundPanel(Panel panel)
-        {
-            SetTabPanelTemplates.setTabListTemplate(panel, backgroundWallpapers);
-        }
-
-        internal static void doFireCustomBackgroundListPanel(Panel panel)
-        {
-            int selected = panel.selected;
-            if (selected < 0)
-                return;
-            string fileName = Path.GetFileName(backgroundWallpapers.ElementAt(selected).Key);
-
-            new MenuBuilder()
-                .addItem(ifCondition: backgroundIndex != selected,
-                    "Chuyển tới hình nền này", new MenuAction(() => { StopAllBackgroundVideo(); backgroundIndex = selected; lastTimeChangedWallpaper = mSystem.currentTimeMillis(); }))
-                .addItem("Xóa", new MenuAction(() => { if (backgroundWallpapers.ElementAt(selected).Value is BackgroundVideo videoBackground && videoBackground.isPlaying) videoBackground.Stop(); backgroundWallpapers.Remove(backgroundWallpapers.ElementAt(selected).Key); if (selected < backgroundIndex) { backgroundIndex--; lastTimeChangedWallpaper = mSystem.currentTimeMillis(); } else if (selected == backgroundIndex && backgroundWallpapers.Count == backgroundIndex) { backgroundIndex = 0; lastTimeChangedWallpaper = mSystem.currentTimeMillis(); } GameScr.info1.addInfo("Đã xóa hình nền " + selected + "!", 0); setTabCustomBackgroundPanel(panel); SaveData(); }))
-                .setPos(panel.X, (selected + 1) * panel.ITEM_HEIGHT - panel.cmy + panel.yScroll)
-                .start();
-
-            panel.cp = new ChatPopup();
-            panel.cp.isClip = false;
-            panel.cp.sayWidth = 180;
-            panel.cp.cx = 3 + panel.X - ((panel.X != 0) ? (Res.abs(panel.cp.sayWidth - panel.W) + 8) : 0);
-            panel.cp.says = mFont.tahoma_7_red.splitFontArray("|0|2|" + fileName + "\n--\n|6|Đường dẫn đầy đủ: " + backgroundWallpapers.ElementAt(selected).Key, panel.cp.sayWidth - 10);
-            panel.cp.delay = 10000000;
-            panel.cp.c = null;
-            panel.cp.sayRun = 7;
-            panel.cp.ch = 15 - panel.cp.sayRun + panel.cp.says.Length * 12 + 10;
-            if (panel.cp.ch > GameCanvas.h - 80)
-            {
-                panel.cp.ch = GameCanvas.h - 80;
-                panel.cp.lim = panel.cp.says.Length * 12 - panel.cp.ch + 17;
-                if (panel.cp.lim < 0)
+                .addItem(Strings.customBgAutoChangeBg + ": " + Strings.OnOffStatus(isChangeWallpaper), new MenuAction(() => 
                 {
-                    panel.cp.lim = 0;
-                }
-                ChatPopup.cmyText = 0;
-                panel.cp.isClip = true;
-            }
-            panel.cp.cy = GameCanvas.menu.menuY - panel.cp.ch;
-            while (panel.cp.cy < 10)
-            {
-                panel.cp.cy++;
-                GameCanvas.menu.menuY++;
-            }
-            panel.cp.mH = 0;
-            panel.cp.strY = 10;
+                    isChangeWallpaper = !isChangeWallpaper;
+                    lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+                    GameScr.info1.addInfo(Strings.customBgAutoChangeBg + ": " + Strings.OnOffStatus(isChangeWallpaper), 0); 
+                }))
+                .addItem(Strings.customBgSetTimeChange, new MenuAction(() =>
+                { 
+                    ChatTextField.gI().strChat = Strings.inputTimeChangeBg;
+                    ChatTextField.gI().tfChat.name = Strings.inputTimeChangeBgHint; 
+                    ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
+                    ChatTextField.gI().startChat2(instance, string.Empty); 
+                }))
+                .addItem(Strings.customBgChangeGifSpeed, new MenuAction(() => 
+                { 
+                    ChatTextField.gI().strChat = Strings.customBgInputGifSpeed;
+                    ChatTextField.gI().tfChat.name = Strings.speed; 
+                    ChatTextField.gI().tfChat.setIputType(TField.INPUT_TYPE_ANY);
+                    ChatTextField.gI().startChat2(instance, string.Empty); 
+                    ChatTextField.gI().tfChat.setText(speed.ToString()); 
+                }))
+                .start();
         }
 
         internal static void StopAllBackgroundVideo()
@@ -118,13 +79,13 @@ namespace Mod.Graphics
             string[] paths = null;
             new Thread(delegate ()
             {
-#if UNITY_STANDALONE_WIN
+#if UNITY_EDITOR || UNITY_STANDALONE
                 ExtensionFilter[] extensions = new[]
                 {
-                    new ExtensionFilter("Tệp ảnh/video", "png", "jpg", "jpeg", "gif", "mp4" ),
-                    new ExtensionFilter("Tất cả", "*" ),
+                    new ExtensionFilter(Strings.imageVideoFile, "png", "jpg", "jpeg", "gif", "mp4" ),
+                    new ExtensionFilter(Strings.allFileTypes, "*" ),
                 };
-                paths = StandaloneFileBrowser.OpenFilePanel("Chọn tệp ảnh/video nền", "", extensions, true);
+                paths = StandaloneFileBrowser.OpenFilePanel(Strings.customBgSelectBgFiles, "", extensions, true);
 #elif UNITY_ANDROID
                 paths = FileChooser.Open(new string[] { "image/*", "video/mp4" });
 #endif
@@ -137,7 +98,7 @@ namespace Mod.Graphics
             { IsBackground = true }.Start();
         }
 
-        internal static void FixedUpdate()
+        internal static void Update()
         {
             if (!isAllWallpaperLoaded)
             {
@@ -172,7 +133,7 @@ namespace Mod.Graphics
             }
         }
 
-        internal static void paint(mGraphics g)
+        internal static void Paint(mGraphics g)
         {
             if (!isEnabled || backgroundWallpapers.Count <= 0)
                 return;
@@ -216,33 +177,98 @@ namespace Mod.Graphics
             catch (Exception ex) { Debug.LogException(ex); }
         }
 
-        internal static void paintCustomBackgroundPanel(Panel panel, mGraphics g)
+        internal static void PaintCustomBackgroundPanel(Panel panel, mGraphics g)
         {
             g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
             g.translate(0, -GameCanvas.panel.cmy);
             g.setColor(0);
-            if (backgroundWallpapers.Count != GameCanvas.panel.currentListLength) 
+            if (backgroundWallpapers.Count != GameCanvas.panel.currentListLength)
                 return;
-            for (int i = 0; i < GameCanvas.panel.currentListLength; i++)
+            int offset = Math.Max(panel.cmy / panel.ITEM_HEIGHT, 0);
+            for (int i = offset; i < Mathf.Clamp(offset + panel.hScroll / panel.ITEM_HEIGHT + 2, 0, panel.currentListLength); i++)
             {
-                int num = GameCanvas.panel.xScroll;
-                int num2 = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
-                int num3 = GameCanvas.panel.wScroll;
-                int num4 = GameCanvas.panel.ITEM_HEIGHT - 1;
+                int xScroll = GameCanvas.panel.xScroll;
+                int yScroll = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
+                int wScroll = GameCanvas.panel.wScroll;
+                int itemHeight = GameCanvas.panel.ITEM_HEIGHT - 1;
                 if (backgroundIndex == i)
                     g.setColor((i != GameCanvas.panel.selected) ? new Color(.5f, 1, 0) : new Color(.375f, .75f, 0));
-                else 
+                else
                     g.setColor((i != GameCanvas.panel.selected) ? 0xE7DFD2 : 0xF9FF4A);
-                g.fillRect(num, num2, num3, num4);
-                mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + Path.GetFileName(backgroundWallpapers.ElementAt(i).Key), num + 5, num2, 0);
-                mFont.tahoma_7_blue.drawString(g, $"Đường dẫn đầy đủ: {backgroundWallpapers.ElementAt(i).Key}", num + 5, num2 + 11, 0);
+                g.fillRect(xScroll, yScroll, wScroll, itemHeight);
+                mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + Path.GetFileName(backgroundWallpapers.ElementAt(i).Key), xScroll + 5, yScroll, 0);
+                mFont.tahoma_7_blue.drawString(g, $"{Strings.fullPath}: {backgroundWallpapers.ElementAt(i).Key}", xScroll + 5, yScroll + 11, 0);
             }
             GameCanvas.panel.paintScrollArrow(g);
         }
 
-        internal static void paintTabHeader(Panel panel, mGraphics g)
+        internal static void PaintTabHeader(Panel panel, mGraphics g) => PaintPanelTemplates.paintTabHeaderTemplate(panel, g, Strings.customBgList);
+
+        internal static void SetTabCustomBackgroundPanel(Panel panel) => SetTabPanelTemplates.setTabListTemplate(panel, backgroundWallpapers);
+
+        internal static void DoFireCustomBackgroundListPanel(Panel panel)
         {
-            PaintPanelTemplates.paintTabHeaderTemplate(panel, g, "Danh sách hình nền tùy chỉnh");
+            int selected = panel.selected;
+            if (selected < 0)
+                return;
+            string fileName = Path.GetFileName(backgroundWallpapers.ElementAt(selected).Key);
+
+            new MenuBuilder()
+                .addItem(backgroundIndex != selected, Strings.customBgSwitchToThisBg, new MenuAction(() =>
+                {
+                    StopAllBackgroundVideo();
+                    backgroundIndex = selected;
+                    lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+                }))
+                .addItem(Strings.delete, new MenuAction(() =>
+                {
+                    if (backgroundWallpapers.ElementAt(selected).Value is BackgroundVideo videoBackground && videoBackground.isPlaying)
+                        videoBackground.Stop();
+                    string bgFileName = backgroundWallpapers.ElementAt(selected).Key;
+                    backgroundWallpapers.Remove(backgroundWallpapers.ElementAt(selected).Key);
+                    if (selected < backgroundIndex)
+                    {
+                        backgroundIndex--;
+                        lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+                    }
+                    else if (selected == backgroundIndex && backgroundWallpapers.Count == backgroundIndex)
+                    {
+                        backgroundIndex = 0;
+                        lastTimeChangedWallpaper = mSystem.currentTimeMillis();
+                    }
+                    GameScr.info1.addInfo(string.Format(Strings.customBgRemovedBg, bgFileName) + '!', 0); SetTabCustomBackgroundPanel(panel); SaveData();
+                }))
+                .setPos(panel.X, (selected + 1) * panel.ITEM_HEIGHT - panel.cmy + panel.yScroll)
+                .start();
+
+            panel.cp = new ChatPopup();
+            panel.cp.isClip = false;
+            panel.cp.sayWidth = 180;
+            panel.cp.cx = 3 + panel.X;
+            if (panel.X != 0)
+                panel.cp.cx -= Res.abs(panel.cp.sayWidth - panel.W) + 8;
+            panel.cp.says = mFont.tahoma_7_red.splitFontArray("|0|2|" + fileName + "\n--\n|6|" + Strings.fullPath + ": " + backgroundWallpapers.ElementAt(selected).Key, panel.cp.sayWidth - 10);
+            panel.cp.delay = 10000000;
+            panel.cp.c = null;
+            panel.cp.sayRun = 7;
+            panel.cp.ch = 15 - panel.cp.sayRun + panel.cp.says.Length * 12 + 10;
+            if (panel.cp.ch > GameCanvas.h - 80)
+            {
+                panel.cp.ch = GameCanvas.h - 80;
+                panel.cp.lim = panel.cp.says.Length * 12 - panel.cp.ch + 17;
+                if (panel.cp.lim < 0)
+                    panel.cp.lim = 0;
+                ChatPopup.cmyText = 0;
+                panel.cp.isClip = true;
+            }
+            panel.cp.cy = GameCanvas.menu.menuY - panel.cp.ch;
+            while (panel.cp.cy < 10)
+            {
+                panel.cp.cy++;
+                GameCanvas.menu.menuY++;
+            }
+            panel.cp.mH = 0;
+            panel.cp.strY = 10;
         }
 
         internal static void LoadData()
@@ -257,10 +283,10 @@ namespace Mod.Graphics
                 isAllWallpaperLoaded = false;
                 Utils.TryLoadDataBool("ischangewallpaper", out isChangeWallpaper);
                 Utils.TryLoadDataInt("backgroundindex", out backgroundIndex);
-                Utils.TryLoadDataFloat("gifbackgroundspeed", out float gifbackgroundspeed);
-                speed = Mathf.Clamp(gifbackgroundspeed, 0, 100);
                 if (backgroundIndex >= backgroundWallpapers.Count)
                     backgroundIndex = 0;
+                if (Utils.TryLoadDataFloat("gifbackgroundspeed", out float gifbackgroundspeed))
+                    speed = Mathf.Clamp(gifbackgroundspeed, 0, 100);
             }
             catch (Exception)
             { }
@@ -275,78 +301,61 @@ namespace Mod.Graphics
             Utils.SaveData("gifbackgroundspeed", speed);
         }
 
-        internal static void setState(bool value)
+        internal static void SetState(bool value)
         {
             isEnabled = value;
-            if (!value)
-                foreach (BackgroundVideo backgroundVideo in backgroundWallpapers.Values.Where((background) => background is BackgroundVideo))
-                    backgroundVideo.Stop();
+            if (value)
+                return;
+            foreach (BackgroundVideo backgroundVideo in backgroundWallpapers.Values.Where((background) => background is BackgroundVideo))
+                backgroundVideo.Stop();
         }
-
-        internal static void setState(int value) => intervalChangeBackgroundWallpaper = value * 1000;
 
         public void onChatFromMe(string text, string to)
         {
-            if (ChatTextField.gI().tfChat.name == "Tốc độ")
+            if (string.IsNullOrEmpty(text))
+                return;
+            if (to == Strings.customBgInputGifSpeed)
             {
-                if (string.IsNullOrEmpty(text))
-                {
-                    GameCanvas.startOKDlg("Bạn chưa nhập số!");
-                    return;
-                }
                 try
                 {
                     float value = float.Parse(text);
                     if (value > 10f || value < 0.1f)
                     {
-                        GameCanvas.startOKDlg("Số đã nhập phải trong khoảng 0.1 và 10!");
+                        GameCanvas.startOKDlg(string.Format(Strings.inputNumberOutOfRange, 0.1, 10) + '!');
                         return;
                     }
                     if (value == speed)
                         return;
                     speed = value;
-                    GameScr.info1.addInfo($"Thay đổi tốc độ ảnh động thành: {value}!", 0);
+                    GameScr.info1.addInfo(string.Format(Strings.valueChanged, Strings.customBgGifSpeed, value) + '!', 0);
                     SaveData();
-                    ChatTextField.gI().ResetTF();
                 }
-                catch (FormatException)
+                catch (Exception)
                 {
-                    GameCanvas.startOKDlg("Số đã nhập không hợp lệ!");
-                }
-                catch (OverflowException)
-                {
-                    GameCanvas.startOKDlg("Số đã nhập quá lớn, quá nhỏ hoặc quá nhiều số thập phân!");
+                    GameCanvas.startOKDlg(Strings.invalidValue + '!');
                 }
             }
-            else if (ChatTextField.gI().tfChat.name == "Thời gian (giây)")
+            else if (to == Strings.inputTimeChangeBg)
             {
-                if (string.IsNullOrEmpty(text))
-                {
-                    GameCanvas.startOKDlg("Bạn chưa nhập số!");
-                    return;
-                }
                 try
                 {
                     int value = int.Parse(text);
                     if (value < 10)
                     {
-                        GameCanvas.startOKDlg("Số đã nhập phải lớn hơn hoặc bằng 10!");
+                        GameCanvas.startOKDlg(string.Format(Strings.inputNumberMustBeBiggerThanOrEqual, 10) + '!');
                         return;
                     }
                     ModMenuMain.GetModMenuItem<ModMenuItemValues>("Set_TimeChangeBg").SelectedValue = value;
-                    GameScr.info1.addInfo($"Thay đổi thời gian chuyển hình nền thành: {text} giây!", 0);
+                    GameScr.info1.addInfo(string.Format(Strings.valueChanged, Strings.setTimeChangeCustomBgTitle.ToLower(), value) + '!', 0);
                     SaveData();
                     ChatTextField.gI().ResetTF();
                 }
-                catch (FormatException)
+                catch (Exception)
                 {
-                    GameCanvas.startOKDlg("Số đã nhập không hợp lệ!");
-                }
-                catch (OverflowException)
-                {
-                    GameCanvas.startOKDlg("Số đã nhập quá lớn hoặc quá nhỏ!");
+                    GameCanvas.startOKDlg(Strings.invalidValue + '!');
                 }
             }
+            onCancelChat();
         }
 
         public void onCancelChat() => ChatTextField.gI().ResetTF();

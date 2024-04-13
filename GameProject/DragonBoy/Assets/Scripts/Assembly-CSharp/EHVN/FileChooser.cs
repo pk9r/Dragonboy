@@ -1,8 +1,9 @@
-﻿using System;
+﻿#if UNITY_ANDROID
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using Mod;
-using Mod.ModHelper;
 using UnityEngine;
 
 namespace EHVN
@@ -11,16 +12,18 @@ namespace EHVN
     {
         static AndroidJavaObject unityActivity;
 
+        static Queue<Action> runOnMainThreadActions = new Queue<Action>();
+
         internal static string[] Open(string[] mimeTypes)
         {
             if (!Utils.IsAndroidBuild())
                 return null;
+            InitializeUnityActivity();
             string[] selectedFiles = null;
             AndroidJavaClass fileChooserActivity = null;
-            MainThreadDispatcher.dispatch(() =>
+            RunOnMainThread(() =>
             {
                 fileChooserActivity = new AndroidJavaClass("com.EHVN.FileChooser.FileChooserActivity");
-                //fileChooserActivity = new AndroidJavaClass("com.EHVN.FileChooserActivity");
                 fileChooserActivity.CallStatic("chooseFiles", unityActivity, mimeTypes);
             });
             Thread.Sleep(2000);
@@ -38,36 +41,22 @@ namespace EHVN
             return selectedFiles;
         }
 
-        static string[] OpenFilePicker(string[] mimeTypes)
+        static void InitializeUnityActivity()
         {
-            string[] selectedFiles = null;
-            AndroidJavaClass fileChooserActivity = null;
-            MainThreadDispatcher.dispatch(() =>
-            {
-                fileChooserActivity = new AndroidJavaClass("com.EHVN.FileChooserActivity");
-                fileChooserActivity.CallStatic("chooseFiles", unityActivity, mimeTypes);
-            });
-            Thread.Sleep(2000);
-            while (fileChooserActivity == null)
+            if (unityActivity == null)
+                RunOnMainThread(() =>
+                {
+                    AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+                    unityActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+                });
+            while (unityActivity == null)
                 Thread.Sleep(100);
-            new Thread(() =>
-            {
-                while (GetStaticRunInUIThread<bool>(fileChooserActivity, "isOpening"))
-                    Thread.Sleep(200);
-                selectedFiles = GetStaticRunInUIThread<string[]>(fileChooserActivity, "selectedFiles");
-            })
-            { IsBackground = true }.Start();
-            while (selectedFiles == null)
-                Thread.Sleep(100);
-            return selectedFiles;
         }
 
-        internal static void InitializeUnityActivity()
+        internal static void Update()
         {
-            if (!Utils.IsAndroidBuild())
-                return;
-            AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            unityActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+            while (runOnMainThreadActions.Count > 0)
+                runOnMainThreadActions.Dequeue()();
         }
 
         static T GetStaticRunInUIThread<T>(AndroidJavaClass javaClass, string name)
@@ -77,7 +66,7 @@ namespace EHVN
                 return default;
             bool assigned = false;
             Exception ex = null;
-            MainThreadDispatcher.dispatch(() =>
+            RunOnMainThread(() =>
             {
                 unityActivity.Call("runOnUiThread", new AndroidJavaRunnable(() =>
                 {
@@ -98,5 +87,10 @@ namespace EHVN
             return result;
         }
 
+        static void RunOnMainThread(Action action)
+        {
+            runOnMainThreadActions.Enqueue(action);
+        }
     }
 }
+#endif

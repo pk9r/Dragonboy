@@ -42,7 +42,7 @@ namespace Mod.Auto
         static long lastTimeCheckTN;
         static bool _isTanSatInternal;
 
-        internal static void update()
+        internal static void Update()
         {
             if (!isEnabled)
 				return;

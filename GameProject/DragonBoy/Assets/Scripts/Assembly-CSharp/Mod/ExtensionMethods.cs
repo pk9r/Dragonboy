@@ -146,50 +146,8 @@ namespace Mod
             Panel.WIDTH_PANEL = 176;
             if (Panel.WIDTH_PANEL > GameCanvas.w)
                 Panel.WIDTH_PANEL = GameCanvas.w;
-            GameCanvas.panel?.chatTField?.ResetTextField();
-            GameCanvas.panel2?.chatTField?.ResetTextField();
-        }
-
-        internal static void ResetTextField(this ChatTextField chatTextField)
-        {
-            chatTextField.left = new Command(mResources.OK, chatTextField, 8000, null, 1, GameCanvas.h - mScreen.cmdH + 1);
-            chatTextField.right = new Command(mResources.DELETE, chatTextField, 8001, null, GameCanvas.w - 70, GameCanvas.h - mScreen.cmdH + 1);
-            chatTextField.center = null;
-            chatTextField.w = chatTextField.tfChat.width + 20;
-            chatTextField.h = chatTextField.tfChat.height + 26;
-            chatTextField.x = GameCanvas.w / 2 - chatTextField.w / 2;
-            chatTextField.tfChat.y = GameCanvas.h - 40 - chatTextField.tfChat.height;
-            chatTextField.y = chatTextField.tfChat.y - 18;
-            if (Main.isPC && chatTextField.w > 320)
-                chatTextField.w = 320;
-            chatTextField.left.x = chatTextField.x;
-            chatTextField.right.x = chatTextField.x + chatTextField.w - 68;
-            if (GameCanvas.isTouch)
-            {
-                //tfChat.y -= 5;
-                chatTextField.y -= 15;
-                chatTextField.h += 30;
-                chatTextField.left.x = GameCanvas.w / 2 - 68 - 5;
-                chatTextField.right.x = GameCanvas.w / 2 + 5;
-                chatTextField.left.y = GameCanvas.h - 30;
-                chatTextField.right.y = GameCanvas.h - 30;
-            }
-            chatTextField.yBegin = chatTextField.tfChat.y;
-            chatTextField.yUp = GameCanvas.h / 2 - 2 * chatTextField.tfChat.height;
-            if (Main.isWindowsPhone)
-                chatTextField.tfChat.showSubTextField = false;
-            if (Main.isIPhone)
-                chatTextField.tfChat.isPaintMouse = false;
-            chatTextField.tfChat.name = "chat";
-            if (Main.isWindowsPhone)
-                chatTextField.tfChat.strInfo = chatTextField.tfChat.name;
-            chatTextField.tfChat.width = GameCanvas.w - 6;
-            if (Main.isPC && chatTextField.tfChat.width > 250)
-                chatTextField.tfChat.width = 250;
-            chatTextField.tfChat.height = mScreen.ITEM_HEIGHT + 2;
-            chatTextField.tfChat.x = GameCanvas.w / 2 - chatTextField.tfChat.width / 2;
-            chatTextField.tfChat.isFocus = true;
-            chatTextField.tfChat.setMaxTextLenght(80);
+            Utils.ResetTextField(GameCanvas.panel?.chatTField);
+            Utils.ResetTextField(GameCanvas.panel2?.chatTField);
         }
 
         internal static void SetGamePadZone(this GamePad gamePad)

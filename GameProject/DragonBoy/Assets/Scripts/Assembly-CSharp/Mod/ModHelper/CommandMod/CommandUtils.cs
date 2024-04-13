@@ -39,7 +39,7 @@ namespace Mod.ModHelper.CommandMod
         /// <item><description>Tên class phải bao gồm cả namespace.</description></item>
         /// </list>
         /// </remarks>
-        /// <returns>Danh sách các hàm của tệp Assembly-CSharp.dll.</returns>
+        /// <returns>Danh sách các hàm của Assembly hiện tại.</returns>
         public static MethodInfo[] GetMethods()
         {
             return typeof(CommandUtils).Assembly

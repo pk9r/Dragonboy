@@ -23,9 +23,9 @@ namespace Mod.Graphics
 
         public bool IsLoaded => isLoaded;
 
-        internal GifImage(string filepath)
+        internal GifImage(string path)
         {
-            byte[] data = File.ReadAllBytes(filepath);
+            byte[] data = File.ReadAllBytes(path);
             frameCount = SimpleGif.Gif.GetDecodeIteratorSize(data);
             ThreadPool.QueueUserWorkItem(_ =>
             {
@@ -47,23 +47,6 @@ namespace Mod.Graphics
                 gif = new Gif(frames);
                 isLoaded = true;
             });
-        }
-
-        internal GifImage(string filepath, int width, int height) : this(filepath)
-        {
-            //SimpleGif.Gif.DecodeParallel(File.ReadAllBytes(filepath), p =>
-            //{
-            //    if (!p.Completed)
-            //    {
-            //        frameIndex = p.Progress;
-            //        frameCount = p.FrameCount;
-            //        return;
-            //    }
-            //    var frames = Converter.ConvertFrames(p.Gif.Frames);
-            //    frames.ForEach(i => i.Texture.filterMode = FilterMode.Point);
-            //    gif = new Gif(frames);
-            //    isLoaded = true;
-            //});
         }
 
         public void Paint(mGraphics g, int x, int y)

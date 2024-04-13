@@ -36,7 +36,7 @@ namespace Mod.Auto.AutoChat
             // Đọc nội dung file text
             string content = File.ReadAllText(Utils.PathChatHistory);
             //Regex.Replace() thay thế các chuỗi tìm được bằng chuỗi rỗng, loại bỏ chúng khỏi chuỗi đầu vào
-            string output = Regex.Replace(content, @",?\s*\mcd\d{2}\:\s*[^""]*""[^""]*""", "");
+            string output = Regex.Replace(content, @",?\s*mcd\d{2}\:\s*[^""]*""[^""]*""", "");
             // Ghi nội dung vào file output
             File.WriteAllText(Utils.PathChatHistory, output);
         }
@@ -77,7 +77,7 @@ namespace Mod.Auto.AutoChat
                     if (delayAutoChat < 5000)
                         delayAutoChat = 5000;
                     //Dù Interval là Int thì làm tròn hết nhưng mà cứ in ra cho nó chuyên nghiệp
-                    GameScr.info1.addInfo(string.Format(Strings.delayChanged + '!', (float)delayAutoChat / 1000), 0);
+                    GameScr.info1.addInfo(string.Format(Strings.valueChanged, "delay", (float)delayAutoChat / 1000), 0);
                 }
                 catch
                 {

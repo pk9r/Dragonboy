@@ -9,30 +9,21 @@ namespace Mod
     internal class ListCharsInMap
     {
         internal static List<Char> listChars = new List<Char>();
-
         internal static bool isEnabled;
-
         internal static bool isShowPet;
 
-        static int maxLength = 0;
-
         internal static int x = 15 - 9;
-
         internal static int y = 0;
 
+        static int maxLength = 0;
         static readonly int MAX_CHAR = 6;
-
         static int distanceBetweenLines = 8;
-
         static int offset = 0;
-
         static bool isCollapsed;
-
         static int titleWidth;
-
         static int offsetX;
 
-        internal static void update()
+        internal static void Update()
         {
             if (!isEnabled)
                 return;

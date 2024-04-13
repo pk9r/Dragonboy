@@ -8,7 +8,7 @@ namespace Mod.R
 {
     internal static class Strings
     {
-        internal static readonly string DEFAULT_IP_SERVERS = "Vũ trụ 1:dragon1.teamobi.com:14445:0:0:0,Vũ trụ 2:dragon2.teamobi.com:14445:0:0:0,Vũ trụ 3:dragon3.teamobi.com:14445:0:0:0,Vũ trụ 4:dragon4.teamobi.com:14445:0:0:0,Vũ trụ 5:dragon5.teamobi.com:14445:0:0:0,Vũ trụ 6:dragon6.teamobi.com:14445:0:0:0,Vũ trụ 7:dragon7.teamobi.com:14445:0:0:0,Vũ trụ 8:dragon10.teamobi.com:14446:0:0:0,Vũ trụ 9:dragon10.teamobi.com:14447:0:0:0,Vũ trụ 10:dragon10.teamobi.com:14445:0:0:0,Vũ trụ 11:dragon11.teamobi.com:14445:0:0:0,Vũ trụ 12:dragon12.teamobi.com:14445:0:0:1,Võ đài liên vũ trụ:dragonwar.teamobi.com:20000:0:0:0,Universe 1:dragon.indonaga.com:14445:1:0:0,Naga:dragon.indonaga.com:14446:2:0:0,Super 1:dragon11.teamobi.com:14446:0:1:1,0,0";
+        internal static readonly string DEFAULT_IP_SERVERS = "Vũ trụ 1:dragon1.teamobi.com:14445:0:0:0,Vũ trụ 2:dragon2.teamobi.com:14445:0:0:0,Vũ trụ 3:dragon3.teamobi.com:14445:0:0:0,Vũ trụ 4:dragon4.teamobi.com:14445:0:0:0,Vũ trụ 5:dragon5.teamobi.com:14445:0:0:0,Vũ trụ 6:dragon6.teamobi.com:14445:0:0:0,Vũ trụ 7:dragon7.teamobi.com:14445:0:0:0,Vũ trụ 8:dragon10.teamobi.com:14446:0:0:0,Vũ trụ 9:dragon10.teamobi.com:14447:0:0:0,Vũ trụ 10:dragon10.teamobi.com:14445:0:0:0,Vũ trụ 11:dragon11.teamobi.com:14445:0:0:0,Vũ trụ 12:dragon12.teamobi.com:14445:0:0:0,Võ đài liên vũ trụ:dragonwar.teamobi.com:20000:0:0:0,Universe 1:dragon.indonaga.com:14445:1:0:0,Naga:dragon.indonaga.com:14446:2:0:0,Super 1:dragon11.teamobi.com:14446:0:1:1,0,0";
         #region Fields
         internal static string communityMod = "";
         internal static string gameVersion = "";
@@ -23,7 +23,6 @@ namespace Mod.R
         internal static string timeMilliseconds = "";
         internal static string errorOccurred = "";
         internal static string contentSaved = "";
-        internal static string delayChanged = "";
         internal static string autoAttack = "";
         internal static string gobackTo = "";
         internal static string youAreNotNamekian = "";
@@ -92,6 +91,36 @@ namespace Mod.R
         internal static string openCustomBackgroundMenuDescription = "";
         internal static string openSetsMenuTitle = "";
         internal static string openSetsMenuDescription = "";
+        internal static string valueChanged = "";
+        internal static string invalidValue = "";
+        internal static string inputFPS = "";
+        internal static string inputTimeChangeBg = "";
+        internal static string inputTimeChangeBgHint = "";
+        internal static string customBgChatPopup;
+        internal static string customBgOpenBgList;
+        internal static string customBgAddNewBg;
+        internal static string customBgRemoveAll;
+        internal static string customBgAllBgRemoved;
+        internal static string customBgAutoChangeBg;
+        internal static string customBgSetTimeChange;
+        internal static string customBgChangeGifSpeed;
+        internal static string customBgInputGifSpeed;
+        internal static string speed;
+        internal static string customBgSwitchToThisBg;
+        internal static string delete;
+        internal static string customBgRemovedBg;
+        internal static string fullPath;
+        internal static string customBgList;
+        internal static string inputNumberOutOfRange;
+        internal static string customBgGifSpeed;
+        internal static string inputNumberMustBeBiggerThanOrEqual;
+        internal static string imageVideoFile;
+        internal static string allFileTypes;
+        internal static string customBgSelectBgFiles;
+        internal static string skipSpaceshipTitle;
+        internal static string skipSpaceshipDescription;
+        internal static string setAutoRescueSkill3BuffInvalid;
+        internal static string setAutoRescueSkill3Null;
         #endregion
 
         internal static void LoadLanguage(sbyte newLanguage)
@@ -101,12 +130,12 @@ namespace Mod.R
                 case 0:
                     LoadLanguageVI();
                     break;
-                case 1:
+                default:
                     LoadLanguageEN();
                     break;
-                case 2:
-                    LoadLanguageID();
-                    break;
+                //case 2:
+                //    LoadLanguageID();
+                //    break;
             }
         }
 
@@ -127,7 +156,6 @@ namespace Mod.R
             timeMilliseconds = "Thời gian (ms)";
             errorOccurred = "Có lỗi xảy ra";
             contentSaved = "Đã lưu nội dung";
-            delayChanged = "Đã đổi delay thành {0} giây";
             autoAttack = "Tự đánh";
             gobackTo = "Goback đến map: {0}, khu: {1}, tọa độ: ({2}, {3})";
             youAreNotNamekian = "Bạn không phải là Namek";
@@ -143,7 +171,33 @@ namespace Mod.R
             zone = "khu";
             functionShouldBeDisabled = "Bạn cần tắt chức năng \"{0}\"!";
             functionShouldBeEnabled = "Bạn cần bật chức năng \"{0}\"!";
-
+            valueChanged = "Đã thay đổi {0} thành {1}";
+            invalidValue = "Giá trị không hợp lệ";
+            inputNumberOutOfRange = "Số đã nhập phải trong khoảng {0} và {1}";
+            inputNumberMustBeBiggerThanOrEqual = "Số đã nhập phải lớn hơn hoặc bằng {0}";
+            inputFPS = "Nhập số khung hình trên giây";
+            inputTimeChangeBg = "Nhập thời gian thay đổi hình nền";
+            inputTimeChangeBgHint = "Thời gian (giây)";
+            customBgChatPopup = "Loại hình nền được hỗ trợ: ảnh (*.jpg, *.png), ảnh động (*.gif), video (*.mp4).\nẢnh động và video tiêu tốn nhiều tài nguyên của hệ thống, nên cân nhắc trước khi sử dụng.";
+            customBgOpenBgList = "Mở danh sách hình nền";
+            customBgAddNewBg = "Thêm hình nền mới";
+            customBgRemoveAll = "Xóa hết hình nền";
+            customBgAllBgRemoved = "Đã xóa hết hình nền trong danh sách";
+            customBgAutoChangeBg = "Tự động chuyển hình nền";
+            customBgSetTimeChange = "Thay đổi thời gian chuyển hình nền";
+            imageVideoFile = "Tệp ảnh/video";
+            allFileTypes = "Tất cả";
+            customBgSelectBgFiles = "Chọn hình nền";
+            customBgChangeGifSpeed = "Thay đổi tốc độ ảnh động";
+            customBgInputGifSpeed = "Nhập tốc độ ảnh động";
+            speed = "Tốc độ";
+            customBgSwitchToThisBg = "Chuyển sang hình nền này";
+            delete = "Xóa";
+            customBgRemovedBg = "Đã xóa hình nền \"{0}\"";
+            fullPath = "Đường dẫn đầy đủ";
+            customBgList = "Danh sách hình nền tùy chỉnh";
+            customBgGifSpeed = "Tốc độ ảnh động";
+            //---------------------------------------------------
             vSyncDescription = "Tự động giới hạn FPS theo tốc độ khung hình của màn hình";
             showTargetInfoTitle = "Thông tin đối thủ";
             showTargetInfoDescription = "Hiện gần chính xác thời gian NRD, khiên, khỉ, huýt sáo... của đối thủ";
@@ -157,11 +211,12 @@ namespace Mod.R
             noLongerNewAccount = "Bạn đã qua nhiệm vụ vào bang";
             customBackgroundTitle = "Hình nền tùy chỉnh";
             customBackgroundDescription = "Thay thế hình nền mặc định của game bằng hình nền tùy chỉnh";
+            skipSpaceshipTitle = "Bỏ qua tàu vũ trụ";
+            skipSpaceshipDescription = "Bỏ qua hoạt ảnh tàu vũ trụ";
             notifyBossTitle = "Thông báo Boss";
             notifyBossDescription = "Hiển thị danh sách thông báo boss";
             pickMobTitle = "Tàn sát";
             pickMobDescription = "Tự động đánh quái";
-
             avoidSuperMobTitle = "Né siêu quái khi tàn sát";
             avoidSuperMobDescription = "Không đánh siêu quái khi tàn sát";
             vdhTitle = "Vượt địa hình khi tàn sát";
@@ -220,6 +275,8 @@ namespace Mod.R
                 "Đang bật (chỉ đệ tử)",
                 "Đang bật (chỉ đệ tử của bản thân)"
             };
+            setAutoRescueSkill3Null = "Bạn chưa có kỹ năng Trị thương";
+            setAutoRescueSkill3BuffInvalid = "Skill 3 của bạn không phải kỹ năng Trị thương";
             setTimeChangeCustomBgTitle = "Thời gian đổi hình nền";
             setTimeChangeCustomBgDescription = "Điều chỉnh thời gian thay đổi hình nền (giây)";
             openXmapMenuTitle = "Menu Xmap";
@@ -249,7 +306,6 @@ namespace Mod.R
             timeMilliseconds = "Time (ms)";
             errorOccurred = "Error occurred";
             contentSaved = "Content saved";
-            delayChanged = "Changed delay to {0} seconds";
             autoAttack = "Auto attack";
             gobackTo = "Goback to map: {0}, zone: {1}, coordinates: ({2}, {3})";
             youAreNotNamekian = "You are not a Namekian character";
@@ -265,7 +321,33 @@ namespace Mod.R
             zone = "zone";
             functionShouldBeDisabled = "You need to disable the \"{0}\" feature!";
             functionShouldBeEnabled = "You need to enable the \"{0}\" feature!";
-
+            valueChanged = "Changed {0} to {1}";
+            invalidValue = "Invalid value";
+            inputNumberOutOfRange = "The number entered must be between {0} and {1}";
+            inputNumberMustBeBiggerThanOrEqual = "The number entered must be bigger than or equal to {0}";
+            inputFPS = "Input the number of frames per second";
+            inputTimeChangeBg = "Input the background interval";
+            inputTimeChangeBgHint = "Time (seconds)";
+            customBgChatPopup = "Supported background types: static images (*.jpg, *.png), animated images (*.gif), videos (*.mp4).\nAnimated images and videos consume a lot of system resources, which you should consider before using them.";
+            customBgOpenBgList = "Open background list";
+            customBgAddNewBg = "Add new background";
+            customBgRemoveAll = "Remove all backgrounds";
+            customBgAllBgRemoved = "All backgrounds have been removed from the list";
+            customBgAutoChangeBg = "Auto change background";
+            customBgSetTimeChange = "Change background interval";
+            customBgChangeGifSpeed = "Change animated background speed";
+            imageVideoFile = "Image/video file";
+            allFileTypes = "All file types";
+            customBgSelectBgFiles = "Select background files";
+            customBgInputGifSpeed = "Input animated background speed";
+            speed = "Speed";
+            customBgSwitchToThisBg = "Switch to this background";
+            delete = "Delete";
+            customBgRemovedBg = "Background \"{0}\" has been removed";
+            fullPath = "Full path";
+            customBgList = "Custom background list";
+            customBgGifSpeed = "Animated background speed";
+            //---------------------------------------------------
             vSyncDescription = "Automatically limit the FPS according to the monitor's refresh rate";
             showTargetInfoTitle = "Target's effect information";
             showTargetInfoDescription = "Show the near-accurate duration of Black Star Dragonball, Energy Shield, Super Monkey, Whistle, etc. of the target character";
@@ -277,8 +359,10 @@ namespace Mod.R
             autoTrainForNewbieTitle = "Auto train new account";
             autoTrainForNewbieDescription = "Auto train new account until the clan mission";
             noLongerNewAccount = "You have completed the clan mission";
-            customBackgroundTitle = "Custom background wallpaper";
-            customBackgroundDescription = "Replace the game default background with custom wallpaper";
+            customBackgroundTitle = "Custom background";
+            customBackgroundDescription = "Replace the game default background with custom background";
+            skipSpaceshipTitle = "Skip spaceship";
+            skipSpaceshipDescription = "Skip spaceship animation";
             notifyBossTitle = "Boss notification";
             notifyBossDescription = "Show boss notification list";
             pickMobTitle = "Slaughter";
@@ -341,8 +425,10 @@ namespace Mod.R
                 "Enabled (disciple only)",
                 "Enabled (own disciple only)"
             };
+            setAutoRescueSkill3Null = "You don't have Rescue skill";
+            setAutoRescueSkill3BuffInvalid = "Your third skill is not Rescue";
             setTimeChangeCustomBgTitle = "Background duration";
-            setTimeChangeCustomBgDescription = "Adjust the time to switch background wallpaper (seconds)";
+            setTimeChangeCustomBgDescription = "Adjust the time to switch background (seconds)";
             openXmapMenuTitle = "Xmap menu";
             openXmapMenuDescription = "Open the Xmap menu (\"xmp\" chat command or \'x\' key)";
             openPickMobMenuTitle = "PickMob menu";
@@ -355,54 +441,65 @@ namespace Mod.R
             openSetsMenuDescription = "Open the Sets menu (\"set\" command or \'`\' key)";
         }
 
-        static void LoadLanguageID()
-        {
-            communityMod = "Mod Komunitas DBO";
-            gameVersion = "Versi game";
-            registered = "Terdaftar";
-            arbitration = "Penyelenggara";
-            autoChatDisabled = "Auto Chat dinonaktifkan";
-            inputContent = "Masukkan konten";
-            delaySeconds = "Penundaan:\n{0} detik";
-            viewContent = "Lihat konten";
-            autoChatContent = "Konten Auto Chat";
-            inputDelay = "Masukkan waktu penundaan";
-            timeMilliseconds = "Waktu (ms)";
-            errorOccurred = "Terjadi kesalahan";
-            contentSaved = "Konten disimpan";
-            delayChanged = "Mengubah penundaan menjadi {0} detik";
-            autoAttack = "Serangan otomatis";
-            gobackTo = "Kembali ke peta: {0}, zona: {1}, koordinat: ({2}, {3})";
-            youAreNotNamekian = "Anda bukan karakter Namekian";
-            completed = "Selesai";
-            modMenuPanelTabName = new string[][]
-            {
-                new string[]{ "Beralih", "" },
-                new string[]{ "Menyes-", "uaikan" },
-                new string[]{ "fungsi", "" },
-            };
-            someonePet = $" [<color=cyan>{mResources.pet}</color> {{0}}]";
-            petLostMaster = $" [<color=cyan>{mResources.pet}</color> itu kehilangan gurunya]";
-            zone = "zona";
-            functionShouldBeDisabled = "Anda perlu menonaktifkan fitur \"{0}\"!";
-            functionShouldBeEnabled = "Anda harus mengaktifkan fitur \"{0}\"!";
-
-            vSyncDescription = "Secara otomatis membatasi FPS sesuai dengan kecepatan refresh layar";
-            showTargetInfoTitle = "Informasi sasaran";
-            showTargetInfoDescription = "Menampilkan waktu bola naga bintang hitam, perisai energi, transformasi, peluit... hampir seakurat mungkin untuk karakter sasaran";
-            autoSendAttackDescription = "Secara otomatis mengirim perintah serangan ke sasaran tanpa memindahkan karakter";
-            showCharListTitle = "Daftar karakter";
-            showCharListDescription = "Menampilkan daftar karakter di zona saat ini";
-            showPetInCharListTitle = "Sertakan murid dalam daftar karakter";
-            showPetInCharListDescription = "Sertakan murid dalam daftar karakter di zona saat ini";
-            autoTrainForNewbieTitle = "Latih akun baru secara otomatis";
-            autoTrainForNewbieDescription = "Latih otomatis akun baru ke misi klan";
-            noLongerNewAccount = "Anda telah melewati misi klan";
-            customBackgroundTitle = "Wallpaper khusus";
-            customBackgroundDescription = "Ganti latar belakang game dengan wallpaper khusus";
-            notifyBossTitle = "Pemberitahuan Boss";
-            //someone pls translate this
-            notifyBossDescription = "";
-        }
+        //static void LoadLanguageID()
+        //{
+        //    communityMod = "Mod Komunitas DBO";
+        //    gameVersion = "Versi game";
+        //    registered = "Terdaftar";
+        //    arbitration = "Penyelenggara";
+        //    autoChatDisabled = "Auto Chat dinonaktifkan";
+        //    inputContent = "Masukkan konten";
+        //    delaySeconds = "Penundaan:\n{0} detik";
+        //    viewContent = "Lihat konten";
+        //    autoChatContent = "Konten Auto Chat";
+        //    inputDelay = "Masukkan waktu penundaan";
+        //    timeMilliseconds = "Waktu (ms)";
+        //    errorOccurred = "Terjadi kesalahan";
+        //    contentSaved = "Konten disimpan";
+        //    delayChanged = "Mengubah penundaan menjadi {0} detik";
+        //    autoAttack = "Serangan otomatis";
+        //    gobackTo = "Kembali ke peta: {0}, zona: {1}, koordinat: ({2}, {3})";
+        //    youAreNotNamekian = "Anda bukan karakter Namekian";
+        //    completed = "Selesai";
+        //    modMenuPanelTabName = new string[][]
+        //    {
+        //        new string[]{ "Beralih", "" },
+        //        new string[]{ "Menyes-", "uaikan" },
+        //        new string[]{ "fungsi", "" },
+        //    };
+        //    someonePet = $" [<color=cyan>{mResources.pet}</color> {{0}}]";
+        //    petLostMaster = $" [<color=cyan>{mResources.pet}</color> itu kehilangan gurunya]";
+        //    zone = "zona";
+        //    functionShouldBeDisabled = "Anda perlu menonaktifkan fitur \"{0}\"!";
+        //    functionShouldBeEnabled = "Anda harus mengaktifkan fitur \"{0}\"!";
+        //    valueChanged = "Berubah {0} menjadi {1}";
+        //    invalidValue = "Nilai tidak valid";
+        //    inputFPS = "Masukkan jumlah frame per detik";
+        //    inputTimeChangeBg = "Masukkan waktu untuk mengganti wallpaper latar belakang";
+        //    inputTimeChangeBgHint = "Waktu (detik)";
+        //    customBgChatPopup = "Jenis latar belakang yang didukung: gambar statis (*.jpg, *.png), gambar animasi (*.gif), video (*.mp4).\nGambar animasi dan video mengonsumsi banyak sumber daya, jadi pertimbangkan itu sebelum menggunakannya.";
+        //    customBgOpenBgList = "Buka daftar latar belakang";
+        //    customBgAddNewBg = "Tambahkan latar belakang baru";
+        //    customBgRemoveAll = "Hapus semua latar belakang";
+        //    customBgAllBgRemoved = "Semua latar belakang telah dihapus dari daftar";
+        //    customBgAutoChangeBg = "Ganti latar belakang otomatis";
+        //    //---------------------------------------------------
+        //    vSyncDescription = "Secara otomatis membatasi FPS sesuai dengan kecepatan refresh layar";
+        //    showTargetInfoTitle = "Informasi sasaran";
+        //    showTargetInfoDescription = "Menampilkan waktu bola naga bintang hitam, perisai energi, transformasi, peluit... hampir seakurat mungkin untuk karakter sasaran";
+        //    autoSendAttackDescription = "Secara otomatis mengirim perintah serangan ke sasaran tanpa memindahkan karakter";
+        //    showCharListTitle = "Daftar karakter";
+        //    showCharListDescription = "Menampilkan daftar karakter di zona saat ini";
+        //    showPetInCharListTitle = "Sertakan murid dalam daftar karakter";
+        //    showPetInCharListDescription = "Sertakan murid dalam daftar karakter di zona saat ini";
+        //    autoTrainForNewbieTitle = "Latih akun baru secara otomatis";
+        //    autoTrainForNewbieDescription = "Latih otomatis akun baru ke misi klan";
+        //    noLongerNewAccount = "Anda telah melewati misi klan";
+        //    customBackgroundTitle = "Wallpaper khusus";
+        //    customBackgroundDescription = "Ganti latar belakang game dengan wallpaper khusus";
+        //    notifyBossTitle = "Pemberitahuan Boss";
+        //    //someone pls translate this
+        //    notifyBossDescription = "";
+        //}
     }
 }

@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Mod.CustomPanel;
 using Mod.R;
 using MonoHook;
 using UnityEngine;
-using UnityEngine.Scripting;
 
-[assembly: Preserve]
 namespace Mod
 {
     /// <summary>
@@ -64,8 +61,8 @@ namespace Mod
             TryInstallHook<Action, Action<ServerListScreen>>(serverListScreen.switchToMe, ServerListScreen_switchToMe_hook, ServerListScreen_switchToMe_original);
             TryInstallHook<Action<string, int>, Action<Session_ME, string, int>>(Session_ME.gI().connect, Session_ME_connect_hook, Session_ME_connect_original);
             TryInstallHook<Action, Action<ServerListScreen>>(serverListScreen.show2, ServerListScreen_show2_hook, ServerListScreen_show2_original);
-            TryInstallHook<Action<int, bool>, Action<GameCanvas, int, bool>>(gameCanvas.keyPressedz, GameCanvas_keyPressedz_hook, GameCanvas_keyPressedz_original);
-            TryInstallHook<Action<int, bool>, Action<GameCanvas, int, bool>>(gameCanvas.keyReleasedz, GameCanvas_keyReleasedz_hook, GameCanvas_keyReleasedz_original);
+            TryInstallHook<Action<int>, Action<GameCanvas, int>>(gameCanvas.keyPressedz, GameCanvas_keyPressedz_hook, GameCanvas_keyPressedz_original);
+            TryInstallHook<Action<int>, Action<GameCanvas, int>>(gameCanvas.keyReleasedz, GameCanvas_keyReleasedz_hook, GameCanvas_keyReleasedz_original);
             TryInstallHook<Action<string, int, Npc>, Action<string, int, Npc>>(ChatPopup.addChatPopupMultiLine, ChatPopup_addChatPopupMultiLine_hook, ChatPopup_addChatPopupMultiLine_original);
             TryInstallHook<Action<string, int, Npc>, Action<string, int, Npc>>(ChatPopup.addBigMessage, ChatPopup_addBigMessage_hook, ChatPopup_addBigMessage_original);
             TryInstallHook<Action<Message>, Action<Controller, Message>>(Controller.gI().loadInfoMap, Controller_loadInfoMap_hook, Controller_loadInfoMap_original);
@@ -403,24 +400,24 @@ namespace Mod
             Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
         }
 
-        static void GameCanvas_keyPressedz_hook(GameCanvas _this, int keyCode, bool isFromSync)
+        static void GameCanvas_keyPressedz_hook(GameCanvas _this, int keyCode)
         {
-            if (!GameEvents.OnKeyPressed(keyCode, isFromSync))
-                GameCanvas_keyPressedz_original(_this, keyCode, isFromSync);
+            if (!GameEvents.OnKeyPressed(keyCode, false))
+                GameCanvas_keyPressedz_original(_this, keyCode);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
-        static void GameCanvas_keyPressedz_original(GameCanvas _this, int keyCode, bool isFromSync)
+        static void GameCanvas_keyPressedz_original(GameCanvas _this, int keyCode)
         {
             Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
         }
 
-        static void GameCanvas_keyReleasedz_hook(GameCanvas _this, int keyCode, bool isFromSync)
+        static void GameCanvas_keyReleasedz_hook(GameCanvas _this, int keyCode)
         {
-            if (!GameEvents.OnKeyReleased(keyCode, isFromSync))
-                GameCanvas_keyReleasedz_original(_this, keyCode, isFromSync);
+            if (!GameEvents.OnKeyReleased(keyCode, false))
+                GameCanvas_keyReleasedz_original(_this, keyCode);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
-        static void GameCanvas_keyReleasedz_original(GameCanvas _this, int keyCode, bool isFromSync)
+        static void GameCanvas_keyReleasedz_original(GameCanvas _this, int keyCode)
         {
             Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
         }
@@ -752,7 +749,7 @@ namespace Mod
 
         static void ServerListScreen_loadIP_hook()
         {
-            ServerListScreen.getServerList(Strings.DEFAULT_IP_SERVERS);
+            GameEvents.OnLoadIP();
         }
 
         static void LoginScr_switchToMe_hook(LoginScr _this)

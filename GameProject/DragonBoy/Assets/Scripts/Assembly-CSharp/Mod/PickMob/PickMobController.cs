@@ -1,5 +1,4 @@
-﻿using Mod.Auto;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Mod.PickMob
@@ -26,7 +25,7 @@ namespace Mod.PickMob
 
         public static void Update()
         {
-            if (IsWaiting() || AutoGoback.isGoingBack)
+            if (IsWaiting())
                 return;
 
             Char myChar = Char.myCharz();

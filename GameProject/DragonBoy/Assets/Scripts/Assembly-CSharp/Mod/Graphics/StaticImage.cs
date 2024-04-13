@@ -10,29 +10,7 @@ namespace Mod.Graphics
     internal class StaticImage : IImage
     {
         Texture2D texture = new Texture2D(1, 1);
-
         bool isLoaded;
-
-        internal StaticImage(string path, int width, int height) : this(path)
-        {
-            //Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-            //byte[] imageData = new byte[stream.Length];
-            //stream.Read(imageData, 0, imageData.Length);
-            //stream.Close();
-            //texture.LoadImage(imageData);
-            //if (width == -1 && height != -1)
-            //    width = texture.width * height / texture.height;
-            //else if (height == -1 && width != -1)
-            //    height = texture.height * width / texture.width;
-            //if ((texture.width != width || texture.height != height) && width != -1 && height != -1)
-            //    texture = TextureScaler.ScaleTexture(texture, width, height);
-            //texture.anisoLevel = 0;
-            //texture.filterMode = FilterMode.Point;
-            //texture.mipMapBias = 0f;
-            //texture.wrapMode = TextureWrapMode.Clamp;
-            //texture.Apply();
-            //isLoaded = true;
-        }
 
         internal StaticImage(string path)
         {

@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Threading;
-using EHVN;
 using Mod.Auto;
 using Mod.CustomPanel;
 using Mod.Graphics;
@@ -10,6 +9,17 @@ using Mod.ModHelper;
 using Mod.ModMenu;
 using Mod.R;
 using UnityEngine;
+using Mod.PickMob;
+using Mod.Set;
+using Mod.TeleportMenu;
+using Mod.Xmap;
+using Mod.ModHelper.CommandMod.Chat;
+using Mod.Auto.AutoChat;
+using Mod.ModHelper.CommandMod.Hotkey;
+
+#if UNITY_ANDROID
+using EHVN;
+#endif
 
 namespace Mod
 {
@@ -28,6 +38,7 @@ namespace Mod
         static bool isHaveSelectSkill_old;
         static long lastTimeGamePause;
         static bool isFirstPause = true;
+        static GUIStyle style;
 
         /// <summary>
         /// Kích hoạt khi người chơi chat.
@@ -36,12 +47,9 @@ namespace Mod
         /// <returns></returns>
         internal static bool OnSendChat(string text)
         {
-            bool result = true;
-            if (text == "test")
-                GameScr.info1.addInfo("Test OK", 0);
-            else
-                result = false;
-            return result;
+            //HistoryChat.gI.append(text);
+            //return ChatCommandHandler.handleChatText(text);
+            return false;
         }
 
         /// <summary>
@@ -60,14 +68,33 @@ namespace Mod
                 Screen.autorotateToLandscapeRight = true;
                 Screen.autorotateToPortrait = false;
                 Screen.autorotateToPortraitUpsideDown = false;
-                FileChooser.InitializeUnityActivity();
             }
             OnCheckZoomLevel(Screen.width, Screen.height);
             GameEventHook.InstallAll();
             //TestHook.Install();
+            if (!Directory.Exists(Utils.dataPath))
+                Directory.CreateDirectory(Utils.dataPath);
             UIImage.OnStart();
             CustomBackground.LoadData();
             CharEffect.Init();
+            
+            Setup.loadFile();
+            //ChatCommandHandler.loadDefault();
+            //HotkeyCommandHandler.loadDefault();
+            //SocketClient.gI.initSender();
+            CustomBackground.LoadData();
+            //CustomLogo.LoadData();
+            //CustomCursor.LoadData();
+            SetDo.LoadData();
+            CustomGraphics.InitializeTileMap(true);
+            //UIReportersManager.AddReporter(Boss.Paint);
+            //UIReportersManager.AddReporter(ListCharsInMap.Paint);
+            //ShareInfo.gI.toggle(true);
+            if (Rms.loadRMSInt("svselect") == -1)
+            {
+                ServerListScreen.linkDefault = Strings.DEFAULT_IP_SERVERS;
+                ServerListScreen.getServerList(Strings.DEFAULT_IP_SERVERS);
+            }
             if (OnSetResolution())
                 return true;
             return false;
@@ -92,6 +119,15 @@ namespace Mod
         {
             ModMenuMain.SaveData();
             CustomBackground.SaveData();
+
+            Setup.clearStringTrash();
+            //SocketClient.gI.close();
+            TeleportMenuMain.SaveData();
+            CustomBackground.SaveData();
+            //CustomLogo.SaveData();
+            //CustomCursor.SaveData();
+            SetDo.SaveData();
+            //UIReportersManager.ClearReporters();
         }
 
         internal static void OnFixedUpdateMain()
@@ -101,42 +137,46 @@ namespace Mod
                 if (!GameCanvas.panel.isShow && GameCanvas.panel2 != null && GameCanvas.panel2.isShow)
                 {
                     GameCanvas.isFocusPanel2 = true;
-                    if (GameCanvas.panel2.chatTField != null && GameCanvas.panel2.chatTField.isShow)
+                    GameCanvas.panel2?.update();
+                    if (GameCanvas.panel2?.chatTField != null && GameCanvas.panel2.chatTField.isShow)
                         GameCanvas.panel2?.chatTFUpdateKey();
                     else
-                    {
-                        GameCanvas.panel2?.update();
                         GameCanvas.panel2?.updateKey();
-                    }
                 }
                 if (!GameCanvas.panel.isShow && GameCanvas.panel2 != null && GameCanvas.panel2.isShow)
                     if (!GameCanvas.isPointer(GameCanvas.panel2.X, GameCanvas.panel2.Y, GameCanvas.panel2.W, GameCanvas.panel2.H) && GameCanvas.isPointerJustRelease && GameCanvas.panel2.isDoneCombine)
                         GameCanvas.panel2?.hide();
             }
-            CustomBackground.FixedUpdate();
+            CustomBackground.Update();
+            //CustomLogo.update();
         }
 
         internal static void OnUpdateMain()
         {
-            MainThreadDispatcher.update();
             if (_previousWidth != Screen.width || _previousHeight != Screen.height)
             {
                 _previousWidth = Screen.width;
                 _previousHeight = Screen.height;
                 ScaleGUI.initScaleGUI();
                 GameCanvas.instance?.ResetSize();
-                ChatTextField.gI().ResetTextField();
+                Utils.ResetTextField(ChatTextField.gI());
                 GameScr.gamePad?.SetGamePadZone();
                 GameScr.loadCamera(false, -1, -1);
                 if (GameCanvas.panel2 != null)
                     GameCanvas.panel2.EmulateSetTypePanel(1);
                 ModMenuMain.UpdatePosition();
             }
+#if UNITY_ANDROID
+            FileChooser.Update();
+#endif
+            MainThreadDispatcher.update();
+            //CustomCursor.Update();
         }
 
         internal static void OnSaveRMSString(ref string filename, ref string data)
         {
-
+            //if (filename == "acc" || filename == "pass")
+            //    data = "pk9r327";
         }
 
         internal static void OnLoadLanguage(sbyte newLanguage)
@@ -151,7 +191,26 @@ namespace Mod
         /// <returns></returns>
         internal static bool OnSetResolution()
         {
-            return Utils.IsAndroidBuild();
+            if (Utils.IsAndroidBuild())
+                return true;
+            if (Utils.sizeData != null)
+            {
+                int width = (int)Utils.sizeData["width"];
+                int height = (int)Utils.sizeData["height"];
+                bool fullScreen = (bool)Utils.sizeData["fullScreen"];
+                if (Screen.width != width || Screen.height != height)
+                    Screen.SetResolution(width, height, fullScreen);
+                new Thread(() =>
+                {
+                    while (Screen.fullScreen != fullScreen)
+                    {
+                        Screen.fullScreen = fullScreen;
+                        Thread.Sleep(100);
+                    }
+                }).Start();
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -159,7 +218,7 @@ namespace Mod
         /// </summary>
         internal static void OnGameScrPressHotkeysUnassigned()
         {
-
+            //HotkeyCommandHandler.handleHotkey(GameCanvas.keyAsciiPress);
         }
 
         /// <summary>
@@ -167,7 +226,7 @@ namespace Mod
         /// </summary>
         internal static void OnGameScrPressHotkeys()
         {
-
+            SetDo.UpdateKey();
         }
 
         /// <summary>
@@ -175,7 +234,8 @@ namespace Mod
         /// </summary>
         internal static void OnPaintChatTextField(ChatTextField instance, mGraphics g)
         {
-
+            //if (instance == ChatTextField.gI() && instance.strChat.Replace(" ", "") == "Chat" && instance.tfChat.name == "chat")
+                //HistoryChat.gI.paint(g);
         }
 
         /// <summary>
@@ -183,20 +243,36 @@ namespace Mod
         /// </summary>
         internal static bool OnStartChatTextField(ChatTextField sender, IChatable parentScreen)
         {
+            sender.parentScreen = parentScreen;
+            if (sender.strChat.Replace(" ", "") != "Chat" || sender.tfChat.name != "chat") 
+                return false;
+            //if (sender == ChatTextField.gI())
+                //HistoryChat.gI.show();
             return false;
         }
 
         internal static bool OnGetRMSPath(out string result)
         {
             //result = $"{Application.persistentDataPath}\\{GameMidlet.IP}_{GameMidlet.PORT}_x{mGraphics.zoomLevel}\\";
-            string subFolder = "TeaMobi";
+            string subFolder = $"TeaMobi";
+            //string subFolder = $"TeaMobi{Path.DirectorySeparatorChar}Vietnam";
+
+            //if (ServerListScreen.address[ServerListScreen.ipSelect] == "dragon.indonaga.com")
+            //{
+            //    switch (ServerListScreen.language[ServerListScreen.ipSelect])
+            //    {
+            //        case 1:
+            //            subFolder = $"TeaMobi{Path.DirectorySeparatorChar}World";
+            //            break;
+            //        case 2:
+            //            subFolder = $"TeaMobi{Path.DirectorySeparatorChar}Indonaga";
+            //            break;
+            //    }
+            //}
+
+            result = Utils.GetRootDataPath();
             // check ip server lậu, lưu rms riêng
             // ...
-            result = Application.persistentDataPath;
-            if (Utils.IsLinuxBuild())
-                result = Path.Combine(Application.persistentDataPath, Application.companyName, Application.productName);
-            if (Utils.IsAndroidBuild())
-                result = Application.persistentDataPath;
             result = Path.Combine(result, subFolder);
             if (!Directory.Exists(result))
                 Directory.CreateDirectory(result);
@@ -205,6 +281,11 @@ namespace Mod
 
         internal static bool OnTeleportUpdate(Teleport teleport)
         {
+            if (SpaceshipSkip.isEnabled)
+            {
+                SpaceshipSkip.Update(teleport);
+                return true;
+            }
             return false;
         }
 
@@ -213,7 +294,8 @@ namespace Mod
         /// </summary>
         internal static void OnUpdateChatTextField(ChatTextField sender)
         {
-
+            if (!string.IsNullOrEmpty(sender.tfChat.getText()))
+                GameCanvas.keyPressed[14] = false;
         }
 
         internal static bool OnClearAllRMS()
@@ -227,23 +309,44 @@ namespace Mod
                 }
                 catch { }
             }
-            foreach (DirectoryInfo directory in new DirectoryInfo(Rms.GetiPhoneDocumentsPath() + "/").EnumerateDirectories())
-            {
-                try
-                {
-                    directory.Delete(true);
-                }
-                catch { }
-            }
             return true;
         }
 
         /// <summary>
-        /// Kích hoạt khi GameScr.gI() update.
+        /// Kích hoạt khi <see cref="GameScr.update"/> được gọi.
         /// </summary>
         internal static void OnUpdateGameScr()
         {
+            if (GameCanvas.gameTick % (10 * Time.timeScale) == 0)
+            {
+                //Service.gI().openUIZone();
+                //Service.gI().petInfo();
+            }
+            Char.myCharz().cspeed = Utils.speedRun;
+
             CharEffect.Update();
+            TeleportMenuMain.Update();
+            //ListCharsInMap.Update();
+            AutoGoback.update();
+            AutoTrainNewAccount.Update();
+            //AutoItem.update();
+            AutoPet.Update();
+            //SuicideRange.update();
+            //if (!AutoSS.isAutoSS && !AutoT77.isAutoT77)
+            if (!AutoTrainNewAccount.isEnabled && !AutoGoback.isGoingBack)
+            {
+                if (Pk9rPickMob.IsTanSat)
+                    GameScr.isAutoPlay = GameScr.canAutoPlay = false;
+                Pk9rPickMob.Update();
+            }
+            Boss.Update();
+            SetDo.Update();
+            AutoPean.Update();
+            AutoSkill.Update();
+            //NOTE onUpdateChatTextField không thể bấm tab.
+            if (ChatTextField.gI().strChat.Replace(" ", "") != "Chat" || ChatTextField.gI().tfChat.name != "chat")
+                return;
+            //HistoryChat.gI.update();
         }
 
         /// <summary>
@@ -254,7 +357,14 @@ namespace Mod
         /// <param name="type"></param>
         internal static void OnLogin(ref string username, ref string pass, ref sbyte type)
         {
-
+            username = Utils.username == "" ? username : Utils.username;
+            if (username.StartsWith("User"))
+            {
+                pass = string.Empty;
+                type = 1;
+            }
+            else
+                pass = Utils.password == "" ? pass : Utils.password;
         }
 
         /// <summary>
@@ -263,6 +373,14 @@ namespace Mod
         internal static void OnServerListScreenLoaded()
         {
             ModMenuMain.Initialize();
+
+            //if (GameCanvas.loginScr == null)
+            //    GameCanvas.loginScr = new LoginScr();
+            //GameCanvas.loginScr.switchToMe();
+            //Service.gI().login("", "", GameMidlet.VERSION, 0);
+            //GameCanvas.startWaitDlg();
+            TeleportMenuMain.LoadData();
+            AutoPet.isFirstTimeCheckPet = true;
         }
 
         /// <summary>
@@ -272,12 +390,16 @@ namespace Mod
         /// <param name="port"></param>
         internal static void OnSessionConnecting(ref string host, ref int port)
         {
-
+            if (Utils.server != null)
+            {
+                host = (string)Utils.server["ip"];
+                port = (int)Utils.server["port"];
+            }
         }
 
         internal static void OnScreenDownloadDataShow()
         {
-
+            //GameCanvas.serverScreen.perform(2, null);
         }
 
         internal static bool OnCheckZoomLevel(int w, int h)
@@ -304,33 +426,63 @@ namespace Mod
 
         internal static bool OnKeyPressed(int keyCode, bool isFromSync)
         {
+            if (Utils.channelSyncKey != -1 && !isFromSync)
+            {
+                //SocketClient.gI.sendMessage(new
+                //{
+                //    action = "syncKeyPressed",
+                //    keyCode,
+                //    Utils.channelSyncKey
+                //});
+            }
             return false;
         }
 
         internal static bool OnKeyReleased(int keyCode, bool isFromSync)
         {
+            if (Utils.channelSyncKey != -1 && !isFromSync)
+            {
+                //SocketClient.gI.sendMessage(new
+                //{
+                //    action = "syncKeyReleased",
+                //    keyCode,
+                //    Utils.channelSyncKey
+                //});
+            }
             return false;
         }
 
         internal static bool OnChatPopupMultiLine(string chat)
         {
+            if (chat.ToLower().Contains("chưa thể chuyển khu") || AutoTrainNewAccount.isEnabled)
+            {
+                GameScr.info1.addInfo(chat, 0);
+                return true;
+            }
             return false;
         }
 
         internal static bool OnAddBigMessage(string chat, Npc npc)
         {
+            if (npc.avatar == 1139 || AutoTrainNewAccount.isEnabled)
+            {
+                if (!new string[] { "NGOCRONGONLINE.COM", "Hack, Mod" }.Any(s => chat.Contains(s)))
+                    GameScr.info1.addInfo(chat, 0);
+                return true;
+            }
             return false;
         }
 
         internal static void OnInfoMapLoaded()
         {
-
+            Utils.UpdateWaypointChangeMap();
         }
 
         internal static void OnPaintGameScr(mGraphics g)
         {
             ModMenuMain.Paint(g);
             CharEffect.Paint(g);
+            //UIReportersManager.handlePaintGameScr(g);
         }
 
         internal static bool OnUseSkill(Char ch)
@@ -342,7 +494,11 @@ namespace Mod
 
         internal static void OnAddInfoMe(string str)
         {
-
+            Pk9rXmap.Info(str);
+            if (str.StartsWith("Bạn vừa thu hoạch") && !AutoTrainNewAccount.isNeedMorePean)
+                AutoTrainNewAccount.isHarvestingPean = false;
+            if (str.ToLower().Contains("bạn vừa nhận thưởng bùa"))
+                AutoTrainNewAccount.isNhanBua = true;
         }
 
         internal static bool OnUpdateTouchGameScr(GameScr instance)
@@ -439,15 +595,15 @@ namespace Mod
                     }
                 }
             }
+            //ListCharsInMap.updateTouch();
             return false;
         }
 
         internal static void OnUpdateTouchPanel(Panel instance)
         {
             if (instance.type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
-            {
                 instance.updateKeyScrollView();
-            }
+            SetDo.UpdateTouch(instance);
         }
 
         internal static void OnSetPointItemMap(int xEnd, int yEnd)
@@ -463,6 +619,18 @@ namespace Mod
 
         internal static bool OnMenuStartAt(MyVector menuItems)
         {
+            if (AutoTrainNewAccount.isEnabled && menuItems.size() == 2)
+            {
+                Command command1 = (Command)menuItems.elementAt(0);
+                Command command2 = (Command)menuItems.elementAt(1);
+                if (command1.caption == "Nhận quà" && command2.caption == "Từ chối")
+                {
+                    GameCanvas.menu.menuSelectedItem = 0;
+                    command1.performAction();
+                    AutoTrainNewAccount.isNhapCodeTanThu = true;
+                    return true;
+                }
+            }
             return false;
         }
 
@@ -476,20 +644,20 @@ namespace Mod
         {
             if (CustomBackground.isEnabled && CustomBackground.backgroundWallpapers.Count > 0 && !ModMenuMain.GetModMenuItem<ModMenuItemBoolean>("CustomBg_Toggle").IsDisabled)
             {
-                CustomBackground.paint(g);
+                CustomBackground.Paint(g);
                 return true;
             }
             return false;
         }
 
-        internal static void OnMobStartDie(Mob instance)
+        internal static void OnMobStartDie(Mob mob)
         {
-
+            Pk9rPickMob.MobStartDie(mob);
         }
 
-        internal static void OnUpdateMob(Mob instance)
+        internal static void OnUpdateMob(Mob mob)
         {
-
+            Pk9rPickMob.UpdateCountDieMob(mob);
         }
 
         internal static bool OnCreateImage(string filename, out Image image)
@@ -502,15 +670,16 @@ namespace Mod
             Texture2D texture2D;
             if (!Utils.IsEditor() && !Directory.Exists(customAssetsPath))
                 Directory.CreateDirectory(customAssetsPath);
-            if (File.Exists(Path.Combine(customAssetsPath, filename.Replace('/', '\\') + ".png")))
+            string filePath = Path.Combine(customAssetsPath, filename.Replace('/', Path.DirectorySeparatorChar) + ".png");
+            if (File.Exists(filePath))
             {
                 texture2D = new Texture2D(1, 1);
-                texture2D.LoadImage(File.ReadAllBytes(Path.Combine(customAssetsPath, filename.Replace('/', '\\') + ".png")));
+                texture2D.LoadImage(File.ReadAllBytes(filePath));
             }
             else
                 texture2D = Resources.Load<Texture2D>(filename);
             if (texture2D == null)
-                throw new Exception("NULL POINTER EXCEPTION AT Image __createImage " + filename);
+                throw new NullReferenceException(nameof(texture2D));
             image.texture = texture2D;
             image.w = image.texture.width;
             image.h = image.texture.height;
@@ -523,17 +692,23 @@ namespace Mod
 
         internal static void OnChatVip(string chatVip)
         {
-
+            Boss.AddBoss(chatVip);
         }
 
-        internal static bool OnUpdateScrollMousePanel(Panel instance, ref int pXYScrollMouse)
+        internal static bool OnUpdateScrollMousePanel(Panel panel, ref int pXYScrollMouse)
         {
             //if (GameCanvas.pxMouse > instance.X + instance.wScroll || GameCanvas.pxMouse < instance.X)
             //    return true;
+            SetDo.UpdateScrollMouse(panel, ref pXYScrollMouse);
             return false;
         }
 
         internal static void OnPanelHide(Panel instance)
+        {
+
+        }
+
+        internal static void OnUpdateKeyPanel(Panel instance)
         {
 
         }
@@ -556,11 +731,6 @@ namespace Mod
         internal static void OnCharSetHoldMob(Char ch)
         {
             CharEffect.AddCharHoldMob(ch);
-        }
-
-        internal static void OnUpdateKeyPanel(Panel instance)
-        {
-
         }
 
         internal static bool OnPaintTouchControl(GameScr instance, mGraphics g)
@@ -925,6 +1095,15 @@ namespace Mod
 
         internal static void OnPaintGameCanvas(GameCanvas instance, mGraphics g)
         {
+            if (style == null)
+            {
+                style = new GUIStyle(GUI.skin.label)
+                {
+                    fontStyle = FontStyle.Bold,
+                    fontSize = (int)(8.5 * mGraphics.zoomLevel),
+                };
+                style.normal.textColor = style.hover.textColor = Color.yellow;
+            }
             if (!GameCanvas.panel.isShow)
             {
                 if (GameCanvas.panel2 != null)
@@ -1101,7 +1280,7 @@ namespace Mod
                         if (num == instance.currentTabIndex && instance.cmRun == 0)
                         {
                             instance.cmtoY = 0;
-                            instance.selected = (GameCanvas.isTouch ? (-1) : 0);
+                            instance.selected = GameCanvas.isTouch ? -1 : 0;
                         }
                         break;
                     }
@@ -1133,9 +1312,6 @@ namespace Mod
             g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.6f));
             if (mGraphics.zoomLevel > 1)
             {
-                GUIStyle style = new GUIStyle(GUI.skin.label);
-                style.normal.textColor = style.hover.textColor = Color.yellow;
-                style.fontStyle = FontStyle.Bold;
                 style.fontSize = (int)(8.5 * mGraphics.zoomLevel);
                 g.fillRect(xHP, yHP + 1, Utils.getWidth(style, cHP) + 1, Utils.getHeight(style, cHP) - 2);
                 g.drawString(cHP, xHP, yHP, style);
@@ -1150,6 +1326,11 @@ namespace Mod
                 g.fillRect(xMP - 1, yMP + 1, mFont.tahoma_7_yellow.getWidth(cMP), mFont.tahoma_7_yellow.getHeight() - 2);
                 mFont.tahoma_7_yellow.drawString(g, cMP, xMP, yMP, mFont.LEFT);
             }
+        }
+
+        internal static void OnLoadIP()
+        {
+            ServerListScreen.getServerList(Strings.DEFAULT_IP_SERVERS);
         }
     }
 }

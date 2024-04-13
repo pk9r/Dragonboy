@@ -10,9 +10,9 @@ namespace Mod.ModHelper.CommandMod.Hotkey
         public static List<HotkeyCommand> hotkeyCommands = new List<HotkeyCommand>();
 
         /// <summary>
-        /// Tải lệnh chat mặc định.
+        /// Tải phím tắt mặc định.
         /// </summary>
-        public static void loadDefalut()
+        public static void loadDefault()
         {
             var methods = CommandUtils.GetMethods();
 
@@ -44,7 +44,7 @@ namespace Mod.ModHelper.CommandMod.Hotkey
         }
 
         /// <summary>
-        /// Lưu lệnh chat.
+        /// Lưu phím tắt.
         /// </summary>
         public static void save()
         {

@@ -1,42 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
+using Mod.R;
 
 namespace Mod.ModMenu
 {
-    internal class ModMenuItemValues : ModMenuItem
+    internal class ModMenuItemValues : ModMenuItem, IChatable
     {
-        internal string[] Values { get; }
-        internal string RMSName { get; }
         internal int SelectedValue
         {
             get => GetValueFunc();
             set => SetValueAction(value);
         }
-        internal Action<int> SetValueAction { get; }
-        internal Func<int> GetValueFunc { get; }
+
+        /// <summary>Danh sách giá trị để lựa chọn</summary>
+        internal string[] Values => _config.Values;
+        /// <summary>Tên tệp lưu dữ liệu</summary>
+        internal string RMSName => _config.RMSName;
+        /// <summary>Hàm được gọi để lấy giá trị hiện tại, không có đối số và trả về giá trị kiểu <see cref="int"/>.</summary>
+        internal Action<int> SetValueAction => _config.SetValueAction;
+        /// <summary>Hàm được gọi để gán giá trị mới, có 1 đối số kiểu <see cref="int"/> và không trả về giá trị.</summary>
+        internal Func<int> GetValueFunc => _config.GetValueFunc;
+        /// <summary>Tiêu đề của trường nhập liệu <see cref="ChatTextField"/></summary>
+        internal string TextFieldName => _config.TextFieldTitle;
+        /// <summary>Gợi ý cho trường nhập liệu <see cref="ChatTextField"/></summary>
+        internal string TextFieldHint => _config.TextFieldHint;
+
+        ModMenuItemValuesConfig _config;
+        ChatTextField currentCTF;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">ID</param>
-        /// <param name="title">Tiêu đề</param>
-        /// <param name="values">Danh sách giá trị để lựa chọn</param>
-        /// <param name="description">Mô tả</param>
-        /// <param name="getValue">Hàm được gọi để lấy giá trị hiện tại, không có đối số và trả về giá trị kiểu <see cref="int"/>.</param>
-        /// <param name="setValue">Hàm được gọi để gán giá trị mới, có 1 đối số kiểu <see cref="int"/> và không trả về giá trị.</param>
-        /// <param name="rmsName">Tên tệp lưu dữ liệu</param>
-        /// <param name="getIsDisabled">Hàm được gọi để lấy giá trị của trạng thái vô hiệu hóa, không có đối số và trả về giá trị kiểu <see cref="bool"/>.</param>
-        /// <param name="disabledReasonCallback">Hàm trả về lý do bị vô hiệu hóa, được gọi khi ModMenuItem được chọn bị vô hiệu hóa.</param>
+        /// <param name="config">Cấu hình <see cref="ModMenuItemValues"/></param>
         /// <exception cref="ArgumentException">Danh sách giá trị và mô tả đều bằng <see langword="null"/> hoặc rỗng.</exception>
-        internal ModMenuItemValues(string id, string title, Func<int> getValue, Action<int> setValue, string[] values = null, string description = "", string rmsName = "", Func<bool> getIsDisabled = null, Func<string> disabledReasonCallback = null) : base(id, title, description, getIsDisabled, disabledReasonCallback)
+        internal ModMenuItemValues(ModMenuItemValuesConfig config) : base(config)
         {
-            if ((values == null || values.Length <= 0) && string.IsNullOrEmpty(description))
+            if ((config.Values == null || config.Values.Length <= 0) && string.IsNullOrEmpty(config.Description))
                 throw new ArgumentException("Values and description cannot be null at the same time");
-            Values = values;
-            GetValueFunc = getValue;
-            SetValueAction = setValue;
-            SelectedValue = getValue();
-            RMSName = rmsName;
+            _config = config;
         }
 
         internal string getSelectedValue() => Values[SelectedValue];
@@ -52,31 +52,36 @@ namespace Mod.ModMenu
             }
         }
 
-        public override bool Equals(object obj)
+        internal void StartChat(ChatTextField textField)
         {
-            return obj is ModMenuItemValues @int &&
-                   base.Equals(obj) &&
-                   EqualityComparer<string[]>.Default.Equals(Values, @int.Values) &&
-                   GetValueFunc.Method == @int.GetValueFunc.Method &&
-                   SetValueAction.Method == @int.SetValueAction.Method &&
-                   RMSName == @int.RMSName;
+            currentCTF = textField;
+            textField.tfChat.y = GameCanvas.h - 35 - ChatTextField.gI().tfChat.height;
+            textField.initChatTextField();
+            textField.strChat = string.Empty;
+            textField.tfChat.name = TextFieldHint;
+            textField.tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
+            textField.startChat2(this, TextFieldName);
         }
 
-        public override int GetHashCode()
+        public void onChatFromMe(string text, string to)
         {
-            HashCode hash = new HashCode();
-            hash.Add(base.GetHashCode());
-            hash.Add(ID);
-            hash.Add(Title);
-            hash.Add(Description);
-            hash.Add(GetIsDisabled);
-            hash.Add(DisabledReasonCallback);
-            hash.Add(Values);
-            hash.Add(RMSName);
-            hash.Add(SelectedValue);
-            hash.Add(SetValueAction);
-            hash.Add(GetValueFunc);
-            return hash.ToHashCode();
+            if (string.IsNullOrEmpty(text))
+                return;
+            if (to == TextFieldName)
+            {
+                if (int.TryParse(text, out int value))
+                {
+                    SelectedValue = value;
+                    GameScr.info1.addInfo(string.Format(Strings.valueChanged, Title, SelectedValue) + '!', 0);
+                }
+                else 
+                    GameScr.info1.addInfo(Strings.invalidValue + '!', 0);
+            }
+            else
+                currentCTF.isShow = false;
+            onCancelChat();
         }
+
+        public void onCancelChat() => currentCTF.ResetTF();
     }
 }

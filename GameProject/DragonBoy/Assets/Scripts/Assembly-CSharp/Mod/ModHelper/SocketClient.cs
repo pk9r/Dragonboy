@@ -83,21 +83,25 @@ namespace Mod.ModHelper
                     Service.gI().chat((string)msg["text"]);
                     break;
                 case "keyPress":
-                    GameMidlet.gameCanvas.keyPressedz((int)msg["keyCode"], true);
+                    GameMidlet.gameCanvas.keyPressedz((int)msg["keyCode"]);
+                    GameEvents.OnKeyPressed((int)msg["keyCode"], true);
                     break;
                 case "keyRelease":
-                    GameMidlet.gameCanvas.keyReleasedz((int)msg["keyCode"], true);
+                    GameMidlet.gameCanvas.keyReleasedz((int)msg["keyCode"]);
+                    GameEvents.OnKeyReleased((int)msg["keyCode"], true);
                     break;
                 case "syncKeyPressed":
                     if (Utils.channelSyncKey == (int)msg["channelSyncKey"])
                     {
-                        GameMidlet.gameCanvas.keyPressedz((int)msg["keyCode"], true);
+                        GameMidlet.gameCanvas.keyPressedz((int)msg["keyCode"]);
+                        GameEvents.OnKeyPressed((int)msg["keyCode"], true);
                     }
                     break;
                 case "syncKeyReleased":
                     if (Utils.channelSyncKey == (int)msg["channelSyncKey"])
                     {
-                        GameMidlet.gameCanvas.keyReleasedz((int)msg["keyCode"], true);
+                        GameMidlet.gameCanvas.keyReleasedz((int)msg["keyCode"]);
+                        GameEvents.OnKeyReleased((int)msg["keyCode"], true);
                     }
                     break;
                 default:

@@ -4,6 +4,7 @@ using Mod.Graphics;
 using Mod.PickMob;
 using Mod.R;
 using Mod.Set;
+using Mod.TeleportMenu;
 using Mod.Xmap;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,23 @@ using UnityEngine;
 
 namespace Mod.ModMenu
 {
-    internal class ModMenuMain : IChatable, IActionListener
+    internal static class ModMenuMain
     {
-        static ModMenuMain instance = new ModMenuMain();
-        internal static ModMenuMain gI() => instance;
+        class ModMenuMainActionListener : IActionListener
+        {
+            public void perform(int idAction, object p)
+            {
+                if (idAction == 1)
+                {
+                    if (currentPanel == null)
+                        currentPanel = new Panel();
+                    CustomPanelMenu.show(SetTabModMenu, DoFireModMenu, null, PaintModMenu, currentPanel);
+                    currentPanel.cmdClose.x = GameCanvas.w - currentPanel.cmdClose.img.getWidth() - 1;
+                    currentPanel.cmdClose.y = 1;
+                }
+            }
+        }
+
         internal static Panel currentPanel
         {
             get => GameCanvas.panel2;
@@ -25,33 +39,32 @@ namespace Mod.ModMenu
         internal static ModMenuItemValues[] modMenuItemValues;
         internal static ModMenuItemFunction[] modMenuItemFunctions;
 
+        static ModMenuMainActionListener actionListener = new ModMenuMainActionListener();
         static sbyte lastLanguage = -1;
+        static GUIStyle style = new GUIStyle() { font = Resources.Load<Font>($"FontSys/x{mGraphics.zoomLevel}/chelthm") };
 
-        internal static Dictionary<int, string[]> inputModMenuItemInts = new Dictionary<int, string[]>()
-        {
-            { 0, new string[]{ "Nhập mức FPS", "FPS" } },
-            { 6, new string[]{ "Nhập thời gian thay đổi hình nền", "Thời gian (giây)" } },
-            { 7, new string[]{ "Nhập thời gian thay đổi logo", "Thời gian (giây)" } },
-            { 8, new string[]{ "Nhập chiều cao logo", "Chiều cao logo" } },
-        };
+        //internal static Dictionary<int, string[]> inputModMenuItemValues = new Dictionary<int, string[]>()
+        //{
+        //    { 7, new string[]{ "Nhập thời gian thay đổi logo", "Thời gian (giây)" } },
+        //    { 8, new string[]{ "Nhập chiều cao logo", "Chiều cao logo" } },
+        //};
 
         internal static Command cmdOpenModMenu;
 
         internal static void Initialize()
         {
-            if (cmdOpenModMenu == null)
-            {
-                cmdOpenModMenu = new Command("", instance, 1, null);
-                cmdOpenModMenu.img = new Image();
-                cmdOpenModMenu.img.texture = CustomGraphics.FlipTextureHorizontally(GameScr.imgMenu.texture);
-                cmdOpenModMenu.img.w = cmdOpenModMenu.img.texture.width;
-                cmdOpenModMenu.img.h = cmdOpenModMenu.img.texture.height;
-                cmdOpenModMenu.isPlaySoundButton = false;
-                cmdOpenModMenu.w = cmdOpenModMenu.img.w / mGraphics.zoomLevel;
-                cmdOpenModMenu.h = cmdOpenModMenu.img.h / mGraphics.zoomLevel;
-                UpdatePosition();
-                LoadData();
-            }
+            if (cmdOpenModMenu != null)
+                return;
+            cmdOpenModMenu = new Command("", actionListener, 1, null);
+            cmdOpenModMenu.img = new Image();
+            cmdOpenModMenu.img.texture = CustomGraphics.FlipTextureHorizontally(GameScr.imgMenu.texture);
+            cmdOpenModMenu.img.w = cmdOpenModMenu.img.texture.width;
+            cmdOpenModMenu.img.h = cmdOpenModMenu.img.texture.height;
+            cmdOpenModMenu.isPlaySoundButton = false;
+            cmdOpenModMenu.w = cmdOpenModMenu.img.w / mGraphics.zoomLevel;
+            cmdOpenModMenu.h = cmdOpenModMenu.img.h / mGraphics.zoomLevel;
+            UpdatePosition();
+            LoadData();
         }
 
         internal static void UpdatePosition()
@@ -75,188 +88,236 @@ namespace Mod.ModMenu
             lastLanguage = newLanguage;
             modMenuItemBools = new ModMenuItemBoolean[]
             {
-                new ModMenuItemBoolean(
-                    "VSync_Toggle",
-                    "VSync",
-                    Strings.vSyncDescription,
-                    () => QualitySettings.vSyncCount == 1,
-                    value => QualitySettings.vSyncCount = value ? 1 : 0,
-                    "isvsync"),
-                new ModMenuItemBoolean(
-                    "ShowTargetInfo_Toggle",
-                    Strings.showTargetInfoTitle,
-                    Strings.showTargetInfoDescription,
-                    () => CharEffect.isEnabled,
-                    CharEffect.setState,
-                    "isshowinfochar"),
-                new ModMenuItemBoolean(
-                    "AutoSendAttack_Toggle",
-                    Strings.autoAttack,
-                    Strings.autoSendAttackDescription,
-                    () => AutoSendAttack.gI.IsActing,
-                    AutoSendAttack.toggle),
-                new ModMenuItemBoolean(
-                    "ShowCharList_Toggle",
-                    Strings.showCharListTitle,
-                    Strings.showCharListDescription,
-                    () => ListCharsInMap.isEnabled,
-                    ListCharsInMap.setState,
-                    "isshowlistchar"),
-                new ModMenuItemBoolean(
-                    "ShowPetInCharList_Toogle",
-                    Strings.showPetInCharListTitle,
-                    Strings.showPetInCharListDescription,
-                    () => ListCharsInMap.isShowPet,
-                    ListCharsInMap.setStatePet,
-                    "isshowlistpet",
-                    () => !ListCharsInMap.isEnabled,
-                    () => string.Format(Strings.functionShouldBeEnabled, Strings.showCharListTitle)),
-                new ModMenuItemBoolean(
-                    "AutoTrainForNewbie_Toggle",
-                    Strings.autoTrainForNewbieTitle,
-                    Strings.autoTrainForNewbieDescription,
-                    () => AutoTrainNewAccount.isEnabled,
-                    AutoTrainNewAccount.setState,
-                    "",
-                    () => Char.myCharz().taskMaint == null || Char.myCharz().taskMaint.taskId > 11,
-                    () => Strings.noLongerNewAccount + '!'),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "VSync_Toggle",
+                    Title = "VSync",
+                    Description = Strings.vSyncDescription,
+                    GetValueFunc = () => QualitySettings.vSyncCount == 1,
+                    SetValueAction = value => QualitySettings.vSyncCount = value ? 1 : 0,
+                    RMSName = "isvsync"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
+                {
+                    ID = "ShowTargetInfo_Toggle",
+                    Title = Strings.showTargetInfoTitle,
+                    Description = Strings.showTargetInfoDescription,
+                    GetValueFunc = () => CharEffect.isEnabled,
+                    SetValueAction = CharEffect.setState,
+                    RMSName = "isshowinfochar"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "AutoSendAttack_Toggle",
+                    Title = Strings.autoAttack,
+                    Description = Strings.autoSendAttackDescription,
+                    GetValueFunc = () => AutoSendAttack.gI.IsActing,
+                    SetValueAction = AutoSendAttack.toggle
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "ShowCharList_Toggle",
+                    Title = Strings.showCharListTitle,
+                    Description = Strings.showCharListDescription,
+                    GetValueFunc =  () => ListCharsInMap.isEnabled,
+                    SetValueAction = ListCharsInMap.setState,
+                    RMSName = "isshowlistchar",
+                    GetIsDisabled = () => true,
+                    GetDisabledReason = () => "This feature is currently in development state"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "ShowPetInCharList_Toggle",
+                    Title = Strings.showPetInCharListTitle,
+                    Description = Strings.showPetInCharListDescription,
+                    GetValueFunc = () => ListCharsInMap.isShowPet,
+                    SetValueAction = ListCharsInMap.setStatePet,
+                    RMSName = "isshowlistpet",
+                    GetIsDisabled = () => !ListCharsInMap.isEnabled,
+                    GetDisabledReason = () => string.Format(Strings.functionShouldBeEnabled, Strings.showCharListTitle)
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "AutoTrainForNewbie_Toggle",
+                    Title = Strings.autoTrainForNewbieTitle,
+                    Description = Strings.autoTrainForNewbieDescription,
+                    GetValueFunc = () => AutoTrainNewAccount.isEnabled,
+                    SetValueAction = AutoTrainNewAccount.setState,
+                    GetIsDisabled = () => Char.myCharz().taskMaint == null || Char.myCharz().taskMaint.taskId > 11,
+                    GetDisabledReason = () => Strings.noLongerNewAccount + '!'
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "CustomBg_Toggle",
+                    Title = Strings.customBackgroundTitle,
+                    Description = Strings.customBackgroundDescription,
+                    GetValueFunc = () => CustomBackground.isEnabled,
+                    SetValueAction = CustomBackground.SetState,
+                    RMSName = "iscustombackground",
+                    GetIsDisabled = () => GraphicsReducer.level > ReduceGraphicsLevel.None,
+                    GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.setReduceGraphicsTitle)
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "SkipSpaceship_Toggle",
+                    Title = Strings.skipSpaceshipTitle,
+                    Description = Strings.skipSpaceshipDescription,
+                    GetValueFunc = () => SpaceshipSkip.isEnabled,
+                    SetValueAction = value => SpaceshipSkip.isEnabled = value,
+                    RMSName = "isskipspaceship"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
+                {
+                    ID = "NotifyBoss_Toggle",
+                    Title = Strings.notifyBossTitle,
+                    Description = Strings.notifyBossDescription,
+                    GetValueFunc = () => Boss.isEnabled,
+                    SetValueAction = Boss.setState,
+                    RMSName = "sanboss",
+                    GetIsDisabled = () => true,
+                    GetDisabledReason = () => "This feature is currently in development state"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
+                {
+                    ID = "PickMob_Toggle",
+                    Title = Strings.pickMobTitle,
+                    Description = Strings.pickMobDescription,
+                    GetValueFunc = () => Pk9rPickMob.IsTanSat,
+                    SetValueAction = value => Pk9rPickMob.IsTanSat = value,
+                    GetIsDisabled = () => AutoTrainNewAccount.isEnabled,
+                    GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.autoTrainForNewbieTitle)
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
+                {
+                    ID = "PickMob_AvoidSuperMob_Toggle",
+                    Title = Strings.avoidSuperMobTitle,
+                    Description = Strings.avoidSuperMobDescription,
+                    GetValueFunc = () => Pk9rPickMob.IsNeSieuQuai,
+                    SetValueAction = value => Pk9rPickMob.IsNeSieuQuai = value,
+                    RMSName = "isnesieuquaits"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
+                {
+                    ID = "PickMob_VDH_Toggle",
+                    Title = Strings.vdhTitle,
+                    Description = Strings.vdhDescription,
+                    GetValueFunc = () => Pk9rPickMob.IsVuotDiaHinh,
+                    SetValueAction = value => Pk9rPickMob.IsVuotDiaHinh = value,
+                    RMSName = "isvuotdiahinh"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "PickMob_AutoPickItem_Toggle",
+                    Title = Strings.autoPickItemTitle,
+                    Description = Strings.autoPickItemDescription,
+                    GetValueFunc = () => Pk9rPickMob.IsAutoPickItems,
+                    SetValueAction = value => Pk9rPickMob.IsAutoPickItems = value,
+                    RMSName = "isautopick",
+                    GetIsDisabled = () => AutoTrainNewAccount.isEnabled,
+                    GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.autoTrainForNewbieTitle)
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "PickMob_PickMyItemOnly_Toggle",
+                    Title = Strings.pickMyItemOnlyTitle,
+                    Description = Strings.pickMyItemOnlyDescription,
+                    GetValueFunc = () => Pk9rPickMob.IsItemMe,
+                    SetValueAction = value => Pk9rPickMob.IsItemMe = value,
+                    RMSName = "ispickmyitemonly"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "PickMob_LimitPickTimes_Toggle",
+                    Title = Strings.limitPickTimesTitle,
+                    Description = Strings.limitPickTimesDescription,
+                    GetValueFunc = () => Pk9rPickMob.IsLimitTimesPickItem,
+                    SetValueAction = value => Pk9rPickMob.IsLimitTimesPickItem = value,
+                    RMSName = "islimitpicktimes"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
+                {
+                    ID = "AutoAskForPeans_Toggle",
+                    Title = Strings.autoAskForPeansTitle,
+                    Description = Strings.autoAskForPeansDescription,
+                    GetValueFunc = () => AutoPean.isAutoRequest,
+                    SetValueAction = value => AutoPean.isAutoRequest = value,
+                    RMSName = "autoaskforpeans",
+                    GetIsDisabled = () => Char.myCharz().clan == null,
+                    GetDisabledReason = () => Strings.youAreNotInAClan + '!'
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "AutoDonatePeans_Toggle",
+                    Title = Strings.autoDonatePeansTitle,
+                    Description = Strings.autoDonatePeansDescription,
+                    GetValueFunc = () => AutoPean.isAutoDonate,
+                    SetValueAction = value => AutoPean.isAutoDonate = value,
+                    RMSName = "autodonatepeans",
+                    GetIsDisabled = () => Char.myCharz().clan == null,
+                    GetDisabledReason = () => Strings.youAreNotInAClan + '!'
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
+                {
+                    ID = "AutoHarvestPeans_Toggle",
+                    Title = Strings.autoHarvestPeansTitle,
+                    Description = Strings.autoHarvestPeansDescription,
+                    GetValueFunc = () => AutoPean.isAutoHarvest,
+                    SetValueAction = value => AutoPean.isAutoHarvest = value,
+                    RMSName = "autoharvestpeans"
+                }),
                 //new ModMenuItemBoolean("Hiện khoảng cách bom", "Hiển thị người, quái, boss... trong tầm bom", SuicideRange.setState, false, "isshowsuiciderange")
-                new ModMenuItemBoolean(
-                    "CustomBg_Toggle",
-                    Strings.customBackgroundTitle,
-                    Strings.customBackgroundDescription,
-                    () => CustomBackground.isEnabled,
-                    CustomBackground.setState,
-                    "iscustombackground",
-                    () => GraphicsReducer.level > ReduceGraphicsLevel.None,
-                    () => string.Format(Strings.functionShouldBeDisabled, Strings.setReduceGraphicsTitle)),
                 //new ModMenuItemBoolean("Logo tùy chỉnh", "Bật/tắt hiển thị logo tùy chỉnh trên màn hình game", CustomLogo.setState, false, "isshowlogo"),
-                new ModMenuItemBoolean(
-                    "NotifyBoss_Toggle",
-                    Strings.notifyBossTitle,
-                    Strings.notifyBossDescription,
-                    () => Boss.isEnabled,
-                    Boss.setState,
-                    "sanboss"),
                 //new ModMenuItemBoolean("EHVN_CustomCursor_Toggle", "Con trỏ tùy chỉnh", "Thay con trỏ chuột mặc định thành con trỏ chuột tùy chỉnh", CustomCursor.setState, false, "customcusor"),
-                // Slaughter
-                new ModMenuItemBoolean(
-                    "PickMob_Toggle",
-                    Strings.pickMobTitle,
-                    Strings.pickMobDescription,
-                    () => Pk9rPickMob.IsTanSat,
-                    value => Pk9rPickMob.IsTanSat = value,
-                    "",
-                    () => AutoTrainNewAccount.isEnabled,
-                    () => string.Format(Strings.functionShouldBeDisabled, Strings.autoTrainForNewbieTitle)),
-                new ModMenuItemBoolean(
-                    "PickMob_AvoidSuperMob_Toogle",
-                    Strings.avoidSuperMobTitle,
-                    Strings.avoidSuperMobDescription,
-                    () => Pk9rPickMob.IsNeSieuQuai,
-                    value => Pk9rPickMob.IsNeSieuQuai = value,
-                    "isnesieuquaits"),
-                new ModMenuItemBoolean(
-                    "PickMob_VDH_Toggle",
-                    Strings.vdhTitle,
-                    Strings.vdhDescription,
-                    () => Pk9rPickMob.IsVuotDiaHinh,
-                    value => Pk9rPickMob.IsVuotDiaHinh = value,
-                    "isvuotdiahinh"),
-                new ModMenuItemBoolean(
-                    "PickMob_AutoPickItem_Toogle",
-                    Strings.autoPickItemTitle,
-                    Strings.autoPickItemDescription,
-                    () => Pk9rPickMob.IsAutoPickItems,
-                    value => Pk9rPickMob.IsAutoPickItems = value,
-                    "isautopick",
-                    () => AutoTrainNewAccount.isEnabled,
-                    () => string.Format(Strings.functionShouldBeDisabled, Strings.autoTrainForNewbieTitle)),
-                new ModMenuItemBoolean(
-                    "PickMob_PickMyItemOnly_Toogle",
-                    Strings.pickMyItemOnlyTitle,
-                    Strings.pickMyItemOnlyDescription,
-                    () => Pk9rPickMob.IsItemMe,
-                    value => Pk9rPickMob.IsItemMe = value,
-                    "ispickmyitemonly"),
-                new ModMenuItemBoolean(
-                    "PickMob_LimitPickTimes_Toogle",
-                    Strings.limitPickTimesTitle,
-                    Strings.limitPickTimesDescription,
-                    () => Pk9rPickMob.IsLimitTimesPickItem,
-                    value => Pk9rPickMob.IsLimitTimesPickItem = value,
-                    "islimitpicktimes"),
-                // Auto Pean
-                new ModMenuItemBoolean(
-                    "AutoAskForPeans_Toggle",
-                    Strings.autoAskForPeansTitle,
-                    Strings.autoAskForPeansDescription,
-                    () => AutoPean.isAutoRequest,
-                    value => AutoPean.isAutoRequest = value,
-                    "autoaskforpeans",
-                    () => Char.myCharz().clan == null,
-                    () => Strings.youAreNotInAClan + '!'),
-                new ModMenuItemBoolean(
-                    "AutoDonatePeans_Toggle",
-                    Strings.autoDonatePeansTitle,
-                    Strings.autoDonatePeansDescription,
-                    () => AutoPean.isAutoDonate,
-                    value => AutoPean.isAutoDonate = value,
-                    "autodonatepeans",
-                    () => Char.myCharz().clan == null,
-                    () => Strings.youAreNotInAClan + '!'),
-                new ModMenuItemBoolean(
-                    "AutoHarvestPeans_Toggle",
-                    Strings.autoHarvestPeansTitle,
-                    Strings.autoHarvestPeansDescription,
-                    () => AutoPean.isAutoHarvest,
-                    value => AutoPean.isAutoHarvest = value,
-                    "autoharvestpeans")
             };
             modMenuItemValues = new ModMenuItemValues[]
             {
-                new ModMenuItemValues(
-                    "Set_FPS",
-                    "FPS",
-                    () => Application.targetFrameRate,
-                    value =>
+                new ModMenuItemValues(new ModMenuItemValuesConfig()
+                {
+                    ID = "Set_FPS",
+                    Title = "FPS",
+                    Description = Strings.setFPSDescription,
+                    GetValueFunc = () => Application.targetFrameRate,
+                    SetValueAction = value =>
                     {
                         if (value > 5 && value <= Screen.currentResolution.refreshRateRatio.value)
                             Application.targetFrameRate = value;
                     },
-                    null,
-                    Strings.setFPSDescription,
-                    "targetfps",
-                    () => QualitySettings.vSyncCount == 1,
-                    () => string.Format(Strings.functionShouldBeDisabled, "VSync")),
-                new ModMenuItemValues(
-                    "Set_ReduceGraphics",
-                    Strings.setReduceGraphicsTitle,
-                    () => (int)GraphicsReducer.level,
-                    level => GraphicsReducer.level = (ReduceGraphicsLevel)level,
-                    Strings.setReduceGraphicsChoices,
-                    "",
-                    "levelreducegraphics"),
-                new ModMenuItemValues(
-                    "Set_GoBack",
-                    "GoBack",
-                    () => (int)AutoGoback.mode,
-                    AutoGoback.setState,
-                    Strings.setGoBackChoices,
-                    "",
-                    "",
-                    () => AutoTrainNewAccount.isEnabled,
-                    () => string.Format(Strings.functionShouldBeDisabled, Strings.autoTrainForNewbieTitle)),
-                new ModMenuItemValues(
-                    "Set_AutoTrainPet",
-                    Strings.setAutoTrainPetTitle,
-                    () => (int)AutoPet.mode,
-                    AutoPet.setState,
-                    Strings.setAutoTrainPetChoices,
-                    "",
-                    "",
-                    () => !Char.myCharz().havePet || AutoTrainNewAccount.isEnabled,
-                    () =>
+                    RMSName = "targetfps",
+                    GetIsDisabled = () => QualitySettings.vSyncCount == 1,
+                    GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, "VSync"),
+                    TextFieldTitle = Strings.inputFPS,
+                    TextFieldHint = "FPS",
+                }),
+                new ModMenuItemValues(new ModMenuItemValuesConfig()
+                { 
+                    ID = "Set_ReduceGraphics",
+                    Title = Strings.setReduceGraphicsTitle,
+                    Values = Strings.setReduceGraphicsChoices,
+                    GetValueFunc = () => (int)GraphicsReducer.level,
+                    SetValueAction = level => GraphicsReducer.level = (ReduceGraphicsLevel)level,
+                    RMSName = "levelreducegraphics",
+                    GetIsDisabled = () => true,
+                    GetDisabledReason = () => "This feature is currently in development state"
+                }),
+                new ModMenuItemValues(new ModMenuItemValuesConfig()
+                {
+                    ID = "Set_GoBack",
+                    Title = "GoBack",
+                    Values = Strings.setGoBackChoices,
+                    GetValueFunc = () => (int)AutoGoback.mode,
+                    SetValueAction = AutoGoback.setState,
+                    GetIsDisabled = () => AutoTrainNewAccount.isEnabled,
+                    GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.autoTrainForNewbieTitle)
+                }),
+                new ModMenuItemValues(new ModMenuItemValuesConfig()
+                {
+                    ID = "Set_AutoTrainPet",
+                    Title = Strings.setAutoTrainPetTitle,
+                    Values = Strings.setAutoTrainPetChoices,
+                    GetValueFunc = () => (int)AutoPet.mode,
+                    SetValueAction = AutoPet.setState,
+                    GetIsDisabled = () => !Char.myCharz().havePet || AutoTrainNewAccount.isEnabled,
+                    GetDisabledReason = () =>
                     {
                         if (!Char.myCharz().havePet)
                             return Strings.youDontHaveDisciple + '!';
@@ -264,55 +325,104 @@ namespace Mod.ModMenu
                             return string.Format(Strings.functionShouldBeDisabled, Strings.autoTrainForNewbieTitle);
                         else
                             return string.Empty;
-                    }),
-                new ModMenuItemValues(
-                    "Set_AutoAttackWhenDiscipleNeed",
-                    Strings.setAutoAttackWhenDiscipleNeededTitle,
-                    () => (int)AutoPet.modeAttackWhenNeeded,
-                    AutoPet.setAttackState,
-                    Strings.setAutoAttackWhenDiscipleNeededChoices,
-                    "",
-                    "modeautopet",
-                    () => AutoPet.mode <= AutoPet.AutoPetMode.Disabled,
-                    () => string.Format(Strings.functionShouldBeEnabled, Strings.setAutoTrainPetTitle)),
-                new ModMenuItemValues(
-                    "Set_AutoRescue",
-                        Strings.setAutoRescueTitle,
-                        () => (int)AutoSkill.targetMode,
-                        AutoSkill.setReviveTargetMode,
-                        Strings.setAutoRescueChoices,
-                        "",
-                        "",
-                        () => Char.myCharz().cgender != 1,
-                        () => Strings.youAreNotNamekian + '!'),
-                new ModMenuItemValues(
-                    "Set_TimeChangeBg",
-                    Strings.setTimeChangeCustomBgTitle,
-                    () => CustomBackground.intervalChangeBackgroundWallpaper / 1000,
-                    value => CustomBackground.intervalChangeBackgroundWallpaper = value * 1000,
-                    null,
-                    Strings.setTimeChangeCustomBgDescription,
-                    "backgroundinveral"),
+                    }
+                }),
+                new ModMenuItemValues(new ModMenuItemValuesConfig()
+                {
+                    ID = "Set_AutoAttackWhenDiscipleNeed",
+                    Title = Strings.setAutoAttackWhenDiscipleNeededTitle,
+                    Values = Strings.setAutoAttackWhenDiscipleNeededChoices,
+                    GetValueFunc = () => (int)AutoPet.modeAttackWhenNeeded,
+                    SetValueAction = AutoPet.setAttackState,
+                    RMSName = "modeautopet",
+                    GetIsDisabled = () => AutoPet.mode <= AutoPet.AutoPetMode.Disabled,
+                    GetDisabledReason = () => string.Format(Strings.functionShouldBeEnabled, Strings.setAutoTrainPetTitle)
+                }),
+                new ModMenuItemValues(new ModMenuItemValuesConfig()
+                {
+                    ID = "Set_AutoRescue",
+                    Title = Strings.setAutoRescueTitle,
+                    Values = Strings.setAutoRescueChoices,
+                    GetValueFunc = () => (int)AutoSkill.targetMode,
+                    SetValueAction = AutoSkill.setReviveTargetMode,
+                    GetIsDisabled = () => Char.myCharz().cgender != 1 || ((Skill)Char.myCharz().vSkillFight.elementAt(2)) != null && ((Skill)Char.myCharz().vSkillFight.elementAt(2)).template.isBuffToPlayer(),
+                    GetDisabledReason = () => 
+                    {
+                        if (Char.myCharz().cgender != 1)
+                            return Strings.youAreNotNamekian + '!';
+                        Skill skill = (Skill)Char.myCharz().vSkillFight.elementAt(2);
+                        if (skill == null)
+                            return Strings.setAutoRescueSkill3Null + '!'; 
+                        if (!skill.template.isBuffToPlayer())
+                            return Strings.setAutoRescueSkill3BuffInvalid + '!';
+                        return "";
+                    }
+                }),
+                new ModMenuItemValues(new ModMenuItemValuesConfig()
+                {
+                    ID = "Set_TimeChangeBg",
+                    Title = Strings.setTimeChangeCustomBgTitle,
+                    Description = Strings.setTimeChangeCustomBgDescription,
+                    GetValueFunc = () => CustomBackground.intervalChangeBackgroundWallpaper / 1000,
+                    SetValueAction = value => CustomBackground.intervalChangeBackgroundWallpaper = value * 1000,
+                    RMSName = "backgroundinveral",
+                    TextFieldTitle = Strings.inputTimeChangeBg,
+                    TextFieldHint = Strings.inputTimeChangeBgHint
+                }),
                 //new ModMenuItemInt("Thời gian đổi logo", null, "Điều chỉnh thời gian thay đổi logo (giây)", 30, CustomLogo.setState, "logoinveral", false),
                 //new ModMenuItemInt("Chiều cao của logo", null, "Điều chỉnh chiều cao của logo", 80, CustomLogo.setLogoHeight, "logoheight"),
             };
             modMenuItemFunctions = new ModMenuItemFunction[]
             {
-                new ModMenuItemFunction("OpenXmapMenu", Strings.openXmapMenuTitle, Strings.openXmapMenuDescription, Pk9rXmap.showXmapMenu),
-                new ModMenuItemFunction("OpenPickMobMenu", Strings.openPickMobMenuTitle, Strings.openPickMobMenuDescription, Pk9rPickMob.ShowMenu),
+                new ModMenuItemFunction(new ModMenuItemFunctionConfig()
+                {
+                    ID = "OpenXmapMenu",
+                    Title = Strings.openXmapMenuTitle,
+                    Description = Strings.openXmapMenuDescription, 
+                    Action = Pk9rXmap.showXmapMenu,
+                    GetIsDisabled = () => true,
+                    GetDisabledReason = () => "This feature is currently in development state"
+                }),
+                new ModMenuItemFunction(new ModMenuItemFunctionConfig()
+                {
+                    ID = "OpenPickMobMenu",
+                    Title = Strings.openPickMobMenuTitle,
+                    Description = Strings.openPickMobMenuDescription, 
+                    Action = Pk9rPickMob.ShowMenu
+                }),
+                new ModMenuItemFunction(new ModMenuItemFunctionConfig()
+                {
+                    ID = "OpenTeleportMenu",
+                    Title = Strings.openTeleportMenuTitle,
+                    Description = Strings.openTeleportMenuDescription, 
+                    Action = TeleportMenuMain.ShowMenu,
+                    GetIsDisabled = () => true,
+                    GetDisabledReason = () => "This feature is currently in development state"
+                }),
+                new ModMenuItemFunction(new ModMenuItemFunctionConfig()
+                {
+                    ID = "OpenCustomBackgroundMenu",
+                    Title = Strings.openCustomBackgroundMenuTitle,
+                    Description = Strings.openCustomBackgroundMenuDescription, 
+                    Action = CustomBackground.ShowMenu
+                }),
+                new ModMenuItemFunction(new ModMenuItemFunctionConfig()
+                {
+                    ID = "OpenSetsMenu",
+                    Title = Strings.openSetsMenuTitle,
+                    Description = Strings.openSetsMenuDescription, 
+                    Action = SetDo.ShowMenu,
+                    GetIsDisabled = () => true,
+                    GetDisabledReason = () => "This feature is currently in development state"
+                }),
                 //new ModMenuItemFunction("Menu AutoItem", "Mở menu AutoItem (lệnh \"item\" hoặc bấm nút I)", AutoItem.ShowMenu),
-                new ModMenuItemFunction("OpenTeleportMenu", Strings.openTeleportMenuTitle, Strings.openTeleportMenuDescription, TeleportMenu.TeleportMenuMain.ShowMenu),
-                new ModMenuItemFunction("OpenCustomBackgroundMenu", Strings.openCustomBackgroundMenuTitle, Strings.openCustomBackgroundMenuDescription, CustomBackground.ShowMenu),
                 //new ModMenuItemFunction("Menu Custom Logo", "Mở menu logo tùy chỉnh", CustomLogo.ShowMenu),
                 //new ModMenuItemFunction("Menu Custom Cursor", "Mở menu con trỏ tùy chỉnh", CustomCursor.ShowMenu),
-                new ModMenuItemFunction("OpenSetsMenu", Strings.openSetsMenuTitle, Strings.openSetsMenuDescription, SetDo.ShowMenu),
             };
         }
 
         internal static void Paint(mGraphics g)
         {
-            if (InfoDlg.isShow)
-                return;
             if (Char.isLoadingMap)
                 return;
             if (ChatTextField.gI().isShow)
@@ -324,7 +434,7 @@ namespace Mod.ModMenu
             if (GameCanvas.panel2 != null && GameCanvas.panel2.isShow)
                 return;
             cmdOpenModMenu?.paint(g);
-            if (cmdOpenModMenu != null && GameCanvas.isMouseFocus(cmdOpenModMenu.x, cmdOpenModMenu.y, cmdOpenModMenu.w, cmdOpenModMenu.h))
+            if (cmdOpenModMenu != null && (GameCanvas.isMouseFocus(cmdOpenModMenu.x, cmdOpenModMenu.y, cmdOpenModMenu.w, cmdOpenModMenu.h) || (GameCanvas.isMouseFocus((int)(cmdOpenModMenu.x - cmdOpenModMenu.w * 1.5), cmdOpenModMenu.y, (int)(cmdOpenModMenu.w * 2.5), cmdOpenModMenu.h) && GameCanvas.isPointerDown)))
                 g.drawImage(ItemMap.imageFlare, cmdOpenModMenu.x + 4, cmdOpenModMenu.y + 15, mGraphics.VCENTER | mGraphics.HCENTER);
         }
 
@@ -332,12 +442,11 @@ namespace Mod.ModMenu
         {
             if (cmdOpenModMenu == null)
                 return;
-            if (GameCanvas.isPointerHoldIn(cmdOpenModMenu.x, cmdOpenModMenu.y, cmdOpenModMenu.w, cmdOpenModMenu.h))
+            if (GameCanvas.isPointerHoldIn((int)(cmdOpenModMenu.x - cmdOpenModMenu.w * 1.5), cmdOpenModMenu.y, (int)(cmdOpenModMenu.w * 2.5), cmdOpenModMenu.h) && GameCanvas.isPointerClick)
             {
                 GameCanvas.isPointerJustDown = false;
                 GameScr.gI().isPointerDowning = false;
-                if (GameCanvas.isPointerClick)
-                    cmdOpenModMenu.performAction();
+                cmdOpenModMenu.performAction();
                 Char.myCharz().currentMovePoint = null;
                 GameCanvas.clearAllPointerEvent();
                 return;
@@ -362,9 +471,11 @@ namespace Mod.ModMenu
 
         static void DoFireModMenuFunctions(Panel panel)
         {
-            panel.hideNow();
-            if (modMenuItemFunctions[panel.selected].Callback != null)
-                modMenuItemFunctions[panel.selected].Callback();
+            if (!modMenuItemFunctions[panel.selected].IsDisabled)
+            {
+                panel.hide();
+                modMenuItemFunctions[panel.selected].Action?.Invoke();
+            }
         }
 
         static void DoFireModMenuBools(Panel panel)
@@ -388,15 +499,7 @@ namespace Mod.ModMenu
             if (modMenuItemValues[selected].Values != null)
                 modMenuItemValues[selected].SwitchSelection();
             else
-            {
-                panel.chatTField = new ChatTextField();
-                panel.chatTField.tfChat.y = GameCanvas.h - 35 - ChatTextField.gI().tfChat.height;
-                panel.chatTField.initChatTextField();
-                panel.chatTField.strChat = string.Empty;
-                panel.chatTField.tfChat.name = inputModMenuItemInts[selected][1];
-                panel.chatTField.tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
-                panel.chatTField.startChat2(instance, inputModMenuItemInts[selected][0]);
-            }
+                modMenuItemValues[selected].StartChat(currentPanel.chatTField = new ChatTextField());
         }
 
         static void NotifySelectDisabledItem(Panel panel)
@@ -426,6 +529,8 @@ namespace Mod.ModMenu
 
         internal static void PaintModMenu(Panel panel, mGraphics g)
         {
+            g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);
+            g.translate(0, -panel.cmy);
             if (panel.currentTabIndex == 0)
                 PaintModMenuBools(panel, g);
             else if (panel.currentTabIndex == 1)
@@ -434,65 +539,15 @@ namespace Mod.ModMenu
                 PaintModMenuFunctions(panel, g);
         }
 
-        static void PaintModMenuFunctions(Panel panel, mGraphics g)
-        {
-            g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);
-            g.translate(0, -panel.cmy);
-            g.setColor(0);
-            if (modMenuItemFunctions == null || modMenuItemFunctions.Length != panel.currentListLength) 
-                return;
-            bool isReset = true;
-            string descriptionTextInfo = string.Empty;
-            int x = 0, y = 0;
-            for (int i = 0; i < panel.currentListLength; i++)
-            {
-                int num = panel.xScroll;
-                int num2 = panel.yScroll + i * panel.ITEM_HEIGHT;
-                int num3 = panel.wScroll;
-                int num4 = panel.ITEM_HEIGHT - 1;
-                ModMenuItemFunction modMenuItem = modMenuItemFunctions[i];
-                if (!modMenuItem.IsDisabled)
-                    g.setColor((i != panel.selected) ? 0xE7DFD2 : 0xF9FF4A);
-                else 
-                    g.setColor((i != panel.selected) ? 0xb7afa2 : 0xd0d73b);
-                g.fillRect(num, num2, num3, num4);
-                if (modMenuItem != null)
-                {
-                    mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + modMenuItem.Title, num + 5, num2, 0);
-                    string description = Utils.TrimUntilFit(modMenuItem.Description, new GUIStyle() { font = mFont.tahoma_7_blue.myFont }, panel.wScroll - 5);
-                    if (i == panel.selected && mFont.tahoma_7_blue.getWidth(modMenuItem.Description) > panel.wScroll - 5 && !panel.isClose)
-                    {
-                        isReset = false;
-                        descriptionTextInfo = modMenuItem.Description;
-                        x = num + 5;
-                        y = num2 + 11;
-                    }
-                    else 
-                        mFont.tahoma_7_blue.drawString(g, description, num + 5, num2 + 11, 0);
-                }
-            }
-            if (isReset) 
-                TextInfo.reset();
-            else
-            {
-                TextInfo.paint(g, descriptionTextInfo, x, y, panel.wScroll - 5, 15, mFont.tahoma_7_blue);
-                g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);
-                g.translate(0, -panel.cmy);
-            }
-            panel.paintScrollArrow(g);
-        }
-
         static void PaintModMenuBools(Panel panel, mGraphics g)
         {
-            g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);
-            g.translate(0, -panel.cmy);
-            g.setColor(0);
             if (modMenuItemBools == null || modMenuItemBools.Length != panel.currentListLength) 
                 return;
+            int offset = Math.Max(panel.cmy / panel.ITEM_HEIGHT, 0);
             bool isReset = true;
             string descriptionTextInfo = string.Empty;
             int x = 0, y = 0;
-            for (int i = 0; i < panel.currentListLength; i++)
+            for (int i = offset; i < Mathf.Clamp(offset + panel.hScroll / panel.ITEM_HEIGHT + 2, 0, panel.currentListLength); i++)
             {
                 int xScroll = panel.xScroll;
                 int yScroll = panel.yScroll + i * panel.ITEM_HEIGHT;
@@ -504,29 +559,21 @@ namespace Mod.ModMenu
                 else
                     g.setColor((i != panel.selected) ? 0xb7afa2 : 0xd0d73b);
                 g.fillRect(xScroll, yScroll, wScroll, itemHeight);
-                if (modMenuItem != null)
+                mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + modMenuItem.Title, xScroll + 7, yScroll, 0);
+                if (i == panel.selected && mFont.tahoma_7_blue.getWidth(modMenuItem.Description) > panel.wScroll - 20 && !panel.isClose)
                 {
-                    mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + modMenuItem.Title, xScroll + 7, yScroll, 0);
-                    string description = Utils.TrimUntilFit(modMenuItem.Description, new GUIStyle() { font = mFont.tahoma_7_blue.myFont }, panel.wScroll - 5);
-                    if (i == panel.selected && mFont.tahoma_7_blue.getWidth(modMenuItem.Description) > panel.wScroll - 20 && !panel.isClose)
-                    {
-                        isReset = false;
-                        descriptionTextInfo = modMenuItem.Description;
-                        x = xScroll + 7;
-                        y = yScroll + 11;
-                    }
-                    else
-                        mFont.tahoma_7_blue.drawString(g, description, xScroll + 7, yScroll + 11, 0);
-                    //mFont mf = mFont.tahoma_7_grey;
-                    //if (modMenuItem.Value)
-                        //mf = mFont.tahoma_7b_red;
-                    //mf.drawString(g, status, num + num3 - 2, num2 + panel.ITEM_HEIGHT - 14, mFont.RIGHT);
-                    if (modMenuItem.Value)
-                        g.setColor(0x00b000);
-                    else 
-                        g.setColor(0xe00000);
-                    g.fillRect(xScroll, yScroll, 2, itemHeight);
+                    isReset = false;
+                    descriptionTextInfo = modMenuItem.Description;
+                    x = xScroll + 7;
+                    y = yScroll + 11;
                 }
+                else
+                    mFont.tahoma_7_blue.drawString(g, Utils.TrimUntilFit(modMenuItem.Description, style, panel.wScroll - 5), xScroll + 7, yScroll + 11, 0);
+                if (modMenuItem.Value)
+                    g.setColor(0x00b000);
+                else 
+                    g.setColor(0xe00000);
+                g.fillRect(xScroll, yScroll, 2, itemHeight);
             }
             if (isReset)
                 TextInfo.reset();
@@ -541,15 +588,13 @@ namespace Mod.ModMenu
 
         static void PaintModMenuValues(Panel panel, mGraphics g)
         {
-            g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);
-            g.translate(0, -panel.cmy);
-            g.setColor(0);
             if (modMenuItemValues == null || modMenuItemValues.Length != panel.currentListLength)
                 return;
+            int offset = Math.Max(panel.cmy / panel.ITEM_HEIGHT, 0);
             bool isReset = true;
             string descriptionTextInfo = string.Empty;
             int x = 0, y = 0, currSelectedValue = 0;
-            for (int i = 0; i < panel.currentListLength; i++)
+            for (int i = offset; i < Mathf.Clamp(offset + panel.hScroll / panel.ITEM_HEIGHT + 2, 0, panel.currentListLength); i++)
             {
                 int num = panel.xScroll;
                 int num2 = panel.yScroll + i * panel.ITEM_HEIGHT;
@@ -561,38 +606,78 @@ namespace Mod.ModMenu
                 else
                     g.setColor((i != panel.selected) ? 0xb7afa2 : 0xd0d73b);
                 g.fillRect(num, num2, num3, num4);
-                if (modMenuItem != null)
+                string str;
+                mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + modMenuItem.Title, num + 5, num2, 0);
+                int descWidth;
+                if (modMenuItem.Values != null)
                 {
-                    string description, str;
-                    mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + modMenuItem.Title, num + 5, num2, 0);
-                    if (modMenuItem.Values != null)
-                    {
-                        str = modMenuItem.getSelectedValue();
-                        description = Utils.TrimUntilFit(str, new GUIStyle() { font = mFont.tahoma_7_blue.myFont }, panel.wScroll - 5);
-                    }
-                    else
-                    {
-                        str = modMenuItem.Description;
-                        description = Utils.TrimUntilFit(str, new GUIStyle() { font = mFont.tahoma_7_blue.myFont }, panel.wScroll - 5 - mFont.tahoma_7_blue.getWidth(modMenuItem.SelectedValue.ToString()));
-                        mFont.tahoma_7b_red.drawString(g, modMenuItem.SelectedValue.ToString(), num + num3 - 2, num2 + panel.ITEM_HEIGHT - 14, mFont.RIGHT);
-                    }
-                    if (i == panel.selected && mFont.tahoma_7_blue.getWidth(str) > panel.wScroll - 5 - mFont.tahoma_7_blue.getWidth(modMenuItem.SelectedValue.ToString()) && !panel.isClose)
-                    {
-                        isReset = false;
-                        descriptionTextInfo = modMenuItem.Description;
-                        currSelectedValue = modMenuItem.SelectedValue;
-                        x = num + 5;
-                        y = num2 + 11;
-                    }
-                    else
-                        mFont.tahoma_7_blue.drawString(g, description, num + 5, num2 + 11, 0);
+                    str = modMenuItem.getSelectedValue();
+                    descWidth = panel.wScroll - 5;
                 }
+                else
+                {
+                    str = modMenuItem.Description;
+                    descWidth = panel.wScroll - 5 - mFont.tahoma_7_blue.getWidth(modMenuItem.SelectedValue.ToString());
+                    mFont.tahoma_7b_red.drawString(g, modMenuItem.SelectedValue.ToString(), num + num3 - 2, num2 + panel.ITEM_HEIGHT - 14, mFont.RIGHT);
+                }
+                if (i == panel.selected && mFont.tahoma_7_blue.getWidth(str) > descWidth && !panel.isClose)
+                {
+                    isReset = false;
+                    descriptionTextInfo = str;
+                    currSelectedValue = modMenuItem.SelectedValue;
+                    x = num + 5;
+                    y = num2 + 11;
+                }
+                else
+                    mFont.tahoma_7_blue.drawString(g, Utils.TrimUntilFit(str, style, descWidth), num + 5, num2 + 11, 0);
             }
             if (isReset)
                 TextInfo.reset();
             else
             {
                 TextInfo.paint(g, descriptionTextInfo, x, y, panel.wScroll - 10 - mFont.tahoma_7b_red.getWidth(currSelectedValue.ToString()), 15, mFont.tahoma_7_blue);
+                g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);
+                g.translate(0, -panel.cmy);
+            }
+            panel.paintScrollArrow(g);
+        }
+
+        static void PaintModMenuFunctions(Panel panel, mGraphics g)
+        {
+            if (modMenuItemFunctions == null || modMenuItemFunctions.Length != panel.currentListLength) 
+                return;
+            int offset = Math.Max(panel.cmy / panel.ITEM_HEIGHT, 0);
+            bool isReset = true;
+            string descriptionTextInfo = string.Empty;
+            int x = 0, y = 0;
+            for (int i = offset; i < Mathf.Clamp(offset + panel.hScroll / panel.ITEM_HEIGHT + 2, 0, panel.currentListLength); i++)
+            {
+                int num = panel.xScroll;
+                int num2 = panel.yScroll + i * panel.ITEM_HEIGHT;
+                int num3 = panel.wScroll;
+                int num4 = panel.ITEM_HEIGHT - 1;
+                ModMenuItemFunction modMenuItem = modMenuItemFunctions[i];
+                if (!modMenuItem.IsDisabled)
+                    g.setColor((i != panel.selected) ? 0xE7DFD2 : 0xF9FF4A);
+                else 
+                    g.setColor((i != panel.selected) ? 0xb7afa2 : 0xd0d73b);
+                g.fillRect(num, num2, num3, num4);
+                mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + modMenuItem.Title, num + 5, num2, 0);
+                if (i == panel.selected && mFont.tahoma_7_blue.getWidth(modMenuItem.Description) > panel.wScroll - 5 && !panel.isClose)
+                {
+                    isReset = false;
+                    descriptionTextInfo = modMenuItem.Description;
+                    x = num + 5;
+                    y = num2 + 11;
+                }
+                else 
+                    mFont.tahoma_7_blue.drawString(g, Utils.TrimUntilFit(modMenuItem.Description, style, panel.wScroll - 5), num + 5, num2 + 11, 0);
+            }
+            if (isReset) 
+                TextInfo.reset();
+            else
+            {
+                TextInfo.paint(g, descriptionTextInfo, x, y, panel.wScroll - 5, 15, mFont.tahoma_7_blue);
                 g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);
                 g.translate(0, -panel.cmy);
             }
@@ -668,89 +753,6 @@ namespace Mod.ModMenu
                         return item as T;
                 }
             return null;
-        }
-
-        public void onChatFromMe(string text, string to)
-        {
-            if (!string.IsNullOrEmpty(text))
-            {
-                if (to == inputModMenuItemInts[0][0])
-                {
-                    try
-                    {
-                        int value = int.Parse(text);
-                        if (value > Screen.currentResolution.refreshRateRatio.value || value < 5) 
-                            throw new Exception();
-                        GetModMenuItem<ModMenuItemValues>("Set_FPS").SelectedValue = value;
-                        GameScr.info1.addInfo("Đã thay đổi mức FPS!", 0);
-                    }
-                    catch 
-                    {
-                        GameCanvas.startOKDlg("Mức FPS không hợp lệ!");
-                    }
-                }
-                else if (to == inputModMenuItemInts[6][0])
-                {
-                    try
-                    {
-                        int value = int.Parse(text);
-                        if (value < 10) 
-                            throw new Exception();
-                        GetModMenuItem<ModMenuItemValues>("Set_TimeChangeBg").SelectedValue = value;
-                        GameScr.info1.addInfo("Đã thay đổi thời gian đổi hình nền!", 0);
-                    }
-                    catch
-                    {
-                        GameCanvas.startOKDlg("Thời gian không hợp lệ!");
-                    }
-                }
-                //else if (to == inputModMenuItemInts[7][0])
-                //{
-                //    try
-                //    {
-                //        int value = int.Parse(text);
-                //        if (value < 10) throw new Exception();
-                //        modMenuItemInts[7].setValue(value);
-                //        GameScr.info1.addInfo("Đã thay đổi thời gian đổi logo!", 0);
-                //    }
-                //    catch
-                //    {
-                //        GameCanvas.startOKDlg("Thời gian không hợp lệ!");
-                //    }
-                //}
-                //else if (to == inputModMenuItemInts[8][0])
-                //{
-                //    try
-                //    {
-                //        int value = int.Parse(text);
-                //        if (value < 25 || value > Screen.height * 30 / 100) throw new Exception();
-                //        modMenuItemInts[8].setValue(value);
-                //        GameScr.info1.addInfo("Đã thay đổi chiều cao logo!", 0);
-                //        CustomLogo.LoadData();
-                //    }
-                //    catch
-                //    {
-                //        GameCanvas.startOKDlg("Chiều cao không hợp lệ!");
-                //    }
-                //}
-            }
-            else
-                currentPanel.chatTField.isShow = false;
-            currentPanel.chatTField.ResetTF();
-        }
-
-        public void onCancelChat() => currentPanel.chatTField.ResetTF();
-
-        public void perform(int idAction, object p)
-        {
-            if (idAction == 1)
-            {
-                if (currentPanel == null)
-                    currentPanel = new Panel();
-                CustomPanelMenu.show(SetTabModMenu, DoFireModMenu, null, PaintModMenu, currentPanel);
-                currentPanel.cmdClose.x = GameCanvas.w - currentPanel.cmdClose.img.getWidth() - 1;
-                currentPanel.cmdClose.y = 1;
-            }
         }
     }
 }

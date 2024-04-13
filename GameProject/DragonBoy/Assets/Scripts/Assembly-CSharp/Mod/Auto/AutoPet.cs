@@ -36,7 +36,7 @@ namespace Mod.Auto
 
         internal static void setAttackState(int value) => modeAttackWhenNeeded = (AttackMode)value;
 
-        internal static void update()
+        internal static void Update()
         {
             if (mode == AutoPetMode.Disabled)
                 return;

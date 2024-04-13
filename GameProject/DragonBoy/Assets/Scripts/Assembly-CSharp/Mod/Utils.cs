@@ -1,19 +1,18 @@
 ﻿using System;
-using Mod.CustomPanel;
 using System.IO;
 using System.Linq;
 using System.Text;
-using UnityEngine;
-using Newtonsoft.Json.Linq;
 using Mod.ModHelper.CommandMod.Chat;
 using Mod.ModHelper.CommandMod.Hotkey;
 using Mod.ModHelper.Menu;
+using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 namespace Mod
 {
     internal static class Utils
     {
-        internal static readonly string dataPath = Path.Combine(Rms.GetiPhoneDocumentsPath().Replace('/', Path.DirectorySeparatorChar), "CommonModData");
+        internal static readonly string dataPath = Path.Combine(GetRootDataPath(), "CommonModData");
 
         internal static readonly string PathAutoChat = Path.Combine(dataPath, "autochat.txt");
         internal static readonly string PathChatCommand = Path.Combine(dataPath, "chatCommands.json");
@@ -287,7 +286,7 @@ namespace Mod
             waypointMiddle = waypoint;
         }
 
-        internal static void updateWaypointChangeMap()
+        internal static void UpdateWaypointChangeMap()
         {
             waypointLeft = waypointMiddle = waypointRight = null;
 
@@ -892,5 +891,58 @@ namespace Mod
             return $"{scaled:0.##}{prefix[degree]}";
         }
 
+        internal static void ResetTextField(ChatTextField chatTextField)
+        {
+            if (chatTextField == null)
+                return;
+            chatTextField.left = new Command(mResources.OK, chatTextField, 8000, null, 1, GameCanvas.h - mScreen.cmdH + 1);
+            chatTextField.right = new Command(mResources.DELETE, chatTextField, 8001, null, GameCanvas.w - 70, GameCanvas.h - mScreen.cmdH + 1);
+            chatTextField.center = null;
+            chatTextField.w = chatTextField.tfChat.width + 20;
+            chatTextField.h = chatTextField.tfChat.height + 26;
+            chatTextField.x = GameCanvas.w / 2 - chatTextField.w / 2;
+            chatTextField.tfChat.y = GameCanvas.h - 40 - chatTextField.tfChat.height;
+            chatTextField.y = chatTextField.tfChat.y - 18;
+            if (Main.isPC && chatTextField.w > 320)
+                chatTextField.w = 320;
+            chatTextField.left.x = chatTextField.x;
+            chatTextField.right.x = chatTextField.x + chatTextField.w - 68;
+            if (GameCanvas.isTouch)
+            {
+                //tfChat.y -= 5;
+                chatTextField.y -= 15;
+                chatTextField.h += 30;
+                chatTextField.left.x = GameCanvas.w / 2 - 68 - 5;
+                chatTextField.right.x = GameCanvas.w / 2 + 5;
+                chatTextField.left.y = GameCanvas.h - 30;
+                chatTextField.right.y = GameCanvas.h - 30;
+            }
+            chatTextField.yBegin = chatTextField.tfChat.y;
+            chatTextField.yUp = GameCanvas.h / 2 - 2 * chatTextField.tfChat.height;
+            if (Main.isWindowsPhone)
+                chatTextField.tfChat.showSubTextField = false;
+            if (Main.isIPhone)
+                chatTextField.tfChat.isPaintMouse = false;
+            chatTextField.tfChat.name = "chat";
+            if (Main.isWindowsPhone)
+                chatTextField.tfChat.strInfo = chatTextField.tfChat.name;
+            chatTextField.tfChat.width = GameCanvas.w - 6;
+            if (Main.isPC && chatTextField.tfChat.width > 250)
+                chatTextField.tfChat.width = 250;
+            chatTextField.tfChat.height = mScreen.ITEM_HEIGHT + 2;
+            chatTextField.tfChat.x = GameCanvas.w / 2 - chatTextField.tfChat.width / 2;
+            chatTextField.tfChat.isFocus = true;
+            chatTextField.tfChat.setMaxTextLenght(80);
+        }
+
+        internal static string GetRootDataPath()
+        {
+            string result = Application.persistentDataPath;
+            if (IsLinuxBuild())
+                result = Path.Combine(Application.persistentDataPath, Application.companyName, Application.productName);
+            if (IsAndroidBuild())
+                result = Application.persistentDataPath;
+            return result;
+        }
     }
 }

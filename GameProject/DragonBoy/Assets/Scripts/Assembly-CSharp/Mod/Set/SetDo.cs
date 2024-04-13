@@ -648,16 +648,20 @@ namespace Mod.Set
             }
         }
 
-        internal static void UpdateScrollMouse(ref int pXYScrollMouse)
+        internal static void UpdateScrollMouse(Panel panel, ref int pXYScrollMouse)
         {
+            if (panel != GameCanvas.panel)
+                return;
             if (!IsCurrentPanelIsSetDoPanel)
                 return;
             if (GameCanvas.isMouseFocus(GameCanvas.panel.X, GameCanvas.panel.Y + 50, GameCanvas.panel.W, 28) && pXYScrollMouse != 0)
                 pXYScrollMouse = 0;
         }
 
-        internal static void UpdateTouch()
+        internal static void UpdateTouch(Panel panel)
         {
+            if (panel != GameCanvas.panel)
+                return;
             if (!IsCurrentPanelIsSetDoPanel)
                 return;
             if (offset < setDos.Count - 3 && GameCanvas.isPointerHoldIn(GameCanvas.panel.wScroll - 7, 61, 6, 9))
@@ -762,7 +766,7 @@ namespace Mod.Set
             {
                 setDos = JsonConvert.DeserializeObject<List<SetDo>>(Utils.LoadDataString($"setdo_{Utils.username}_{Utils.server["ip"]}_{Utils.server["port"]}"));
             }
-            catch (Exception ex) { Debug.LogException(ex); }
+            catch { }
         }
 
         internal static void SaveData()
@@ -771,7 +775,7 @@ namespace Mod.Set
             {
                 Utils.SaveData($"setdo_{Utils.username}_{Utils.server["ip"]}_{Utils.server["port"]}", JsonConvert.SerializeObject(setDos));
             }
-            catch (Exception ex) { Debug.LogException(ex); }
+            catch { }
         }
 
         public void onChatFromMe(string text, string to)

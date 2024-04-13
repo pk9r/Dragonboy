@@ -5,56 +5,43 @@ namespace Mod
 {
     internal class ClanUtils
     {
-        private static DateTime lastRequestedPean = DateTime.MinValue;
-        private const sbyte PeanRequestInterval = 5;
+        static DateTime lastRequestedPean = DateTime.MinValue;
+        const sbyte PeanRequestInterval = 5;
 
-        public static bool CanAskForPeans()
-        {
-            TimeSpan timeSinceLastRequest = DateTime.Now - lastRequestedPean;
+        internal static bool CanAskForPeans() => (DateTime.Now - lastRequestedPean).TotalMinutes >= PeanRequestInterval;
 
-            return timeSinceLastRequest.TotalMinutes >= PeanRequestInterval;
-        }
-
-        public static bool CanDonatePeans()
+        internal static bool CanDonatePeans()
         {
             for (int i = 0; i < ClanMessage.vMessage.size(); i++)
             {
                 ClanMessage msg = (ClanMessage)ClanMessage.vMessage.elementAt(i);
-
                 if (msg.type == 1 && msg.recieve < msg.maxCap && msg.playerId != Char.myCharz().charID)
                     return true;
             }
-
             return false;
         }
 
-        public static void RequestPeans()
+        internal static void RequestPeans()
         {
             Service.gI().clanMessage(1, null, -1);
             lastRequestedPean = DateTime.Now;
         }
 
-        public static void DonatePeans()
+        internal static void DonatePeans()
         {
-            var msgs = GetDonationMsgs();
-            foreach (var msg in msgs)
+            foreach (var msg in GetDonationMsgs())
                 Service.gI().clanDonate(msg.id);
         }
 
-        private static List<ClanMessage> GetDonationMsgs()
+        static List<ClanMessage> GetDonationMsgs()
         {
             List<ClanMessage> clanMessages = new List<ClanMessage>();
-
             for (int i = 0; i < ClanMessage.vMessage.size(); i++)
             {
                 ClanMessage msg = (ClanMessage)ClanMessage.vMessage.elementAt(i);
-
                 if (msg.type == 1 && msg.recieve < msg.maxCap && msg.playerId != Char.myCharz().charID)
-                {
                     clanMessages.Add(msg);
-                }
             }
-
             return clanMessages;
         }
     }
