@@ -1,3 +1,4 @@
+#if !UNITY_STANDALONE_WIN
 using System;
 
 namespace SFB {
@@ -15,13 +16,7 @@ namespace SFB {
         private static IStandaloneFileBrowser _platformWrapper = null;
 
         static StandaloneFileBrowser() {
-#if UNITY_EDITOR
-            _platformWrapper = new StandaloneFileBrowserEditor();
-#elif UNITY_STANDALONE_WIN
-            _platformWrapper = new StandaloneFileBrowserWindows();
-#elif UNITY_STANDALONE_LINUX
             _platformWrapper = new StandaloneFileBrowserLinux();
-#endif
         }
 
         /// <summary>
@@ -149,3 +144,4 @@ namespace SFB {
         }
     }
 }
+#endif

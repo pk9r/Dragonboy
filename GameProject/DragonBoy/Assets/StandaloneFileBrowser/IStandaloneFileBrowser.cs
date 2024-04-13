@@ -1,3 +1,4 @@
+#if !UNITY_STANDALONE_WIN
 using System;
 
 namespace SFB {
@@ -11,3 +12,4 @@ namespace SFB {
         void SaveFilePanelAsync(string title, string directory, string defaultName, ExtensionFilter[] extensions, Action<string> cb);
     }
 }
+#endif
