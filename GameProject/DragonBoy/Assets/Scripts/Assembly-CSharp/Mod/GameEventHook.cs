@@ -212,7 +212,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Service_chat_original(Service _this, string text)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Rms_saveRMSString_hook(string filename, string data)
@@ -223,7 +223,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Rms_saveRMSString_original(string filename, string data)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void GameScr_updateKey_hook(GameScr _this)
@@ -251,7 +251,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void GameScr_updateKey_original(GameScr _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void ChatTextField_paint_hook(ChatTextField _this, mGraphics g)
@@ -262,7 +262,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void ChatTextField_paint_original(ChatTextField _this, mGraphics g)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void ChatTextField_startChat_hook_1(ChatTextField _this, int firstCharacter, IChatable parentScreen, string to)
@@ -273,7 +273,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void ChatTextField_startChat_original_1(ChatTextField _this, int firstCharacter, IChatable parentScreen, string to)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void ChatTextField_startChat_hook_2(ChatTextField _this, IChatable parentScreen, string to)
@@ -284,7 +284,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void ChatTextField_startChat_original_2(ChatTextField _this, IChatable parentScreen, string to)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static string Rms_GetiPhoneDocumentsPath_hook()
@@ -296,7 +296,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static string Rms_GetiPhoneDocumentsPath_original()
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
             return null;
         }
 
@@ -308,7 +308,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Teleport_update_original(Teleport _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void ChatTextField_update_hook(ChatTextField _this)
@@ -320,7 +320,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void ChatTextField_update_original(ChatTextField _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Rms_clearAll_hook()
@@ -331,7 +331,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Rms_clearAll_original()
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void GameScr_update_hook(GameScr _this)
@@ -342,7 +342,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void GameScr_update_original(GameScr _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Service_login_hook(Service _this, string username, string pass, string version, sbyte type)
@@ -353,7 +353,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Service_login_original(Service _this, string username, string pass, string version, sbyte type)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void ServerListScreen_switchToMe_hook(ServerListScreen _this)
@@ -364,7 +364,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void ServerListScreen_switchToMe_original(ServerListScreen _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Session_ME_connect_hook(Session_ME _this, string host, int port)
@@ -375,7 +375,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Session_ME_connect_original(Session_ME _this, string host, int port)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void ServerListScreen_show2_hook(ServerListScreen _this)
@@ -386,7 +386,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void ServerListScreen_show2_original(ServerListScreen _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void MotherCanvas_checkZoomLevel_hook(MotherCanvas _this, int w, int h)
@@ -397,7 +397,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void MotherCanvas_checkZoomLevel_original(MotherCanvas _this, int w, int h)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void GameCanvas_keyPressedz_hook(GameCanvas _this, int keyCode)
@@ -408,7 +408,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void GameCanvas_keyPressedz_original(GameCanvas _this, int keyCode)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void GameCanvas_keyReleasedz_hook(GameCanvas _this, int keyCode)
@@ -419,7 +419,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void GameCanvas_keyReleasedz_original(GameCanvas _this, int keyCode)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void ChatPopup_addChatPopupMultiLine_hook(string chat, int howLong, Npc c)
@@ -430,7 +430,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void ChatPopup_addChatPopupMultiLine_original(string chat, int howLong, Npc c)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
         
         static void ChatPopup_addBigMessage_hook(string chat, int howLong, Npc c)
@@ -441,7 +441,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void ChatPopup_addBigMessage_original(string chat, int howLong, Npc c)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Controller_loadInfoMap_hook(Controller _this, Message msg)
@@ -452,7 +452,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Controller_loadInfoMap_original(Controller _this, Message msg)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void GameScr_paint_hook(GameScr _this, mGraphics g)
@@ -463,7 +463,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void GameScr_paint_original(GameScr _this, mGraphics g)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Char_setSkillPaint_hook(Char _this, SkillPaint skillPaint, int sType)
@@ -474,7 +474,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Char_setSkillPaint_original(Char _this, SkillPaint skillPaint, int sType)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void InfoMe_addInfo_hook(InfoMe _this, string s, int Type)
@@ -485,7 +485,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void InfoMe_addInfo_original(InfoMe _this, string s, int Type)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Panel_updateKey_hook(Panel _this)
@@ -499,7 +499,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Panel_updateKey_original(Panel _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void ItemMap_setPoint_hook(ItemMap _this, int xEnd, int yEnd)
@@ -510,7 +510,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void ItemMap_setPoint_original(ItemMap _this, int xEnd, int yEnd)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Menu_startAt_hook(Menu _this, MyVector menuItems, int pos)
@@ -521,7 +521,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Menu_startAt_original(Menu _this, MyVector menuItems, int pos)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Char_addInfo_hook(Char _this, string info)
@@ -532,7 +532,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Char_addInfo_original(Char _this, string info)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void GameCanvas_paintBGGameScr_hook(mGraphics g)
@@ -543,7 +543,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void GameCanvas_paintBGGameScr_original(mGraphics g)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Mob_startDie_hook(Mob _this)
@@ -554,7 +554,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Mob_startDie_original(Mob _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Mob_update_hook(Mob _this)
@@ -565,7 +565,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Mob_update_original(Mob _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static Image Image_createImage_hook(string filename)
@@ -577,7 +577,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static Image Image_createImage_original(string filename)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
             return null;
         }
 
@@ -589,7 +589,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void GameScr_chatVip_original(GameScr _this, string chatVip)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Panel_updateScroolMouse_hook(Panel _this, int a)
@@ -600,7 +600,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Panel_updateScroolMouse_original(Panel _this, int a)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Panel_hide_hook(Panel _this)
@@ -612,7 +612,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Panel_hide_original(Panel _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Panel_hideNow_hook(Panel _this)
@@ -624,7 +624,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Panel_hideNow_original(Panel _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void GameScr_paintTouchControl_hook(GameScr _this, mGraphics g)
@@ -635,7 +635,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void GameScr_paintTouchControl_original(GameScr _this, mGraphics g)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void GameScr_paintGamePad_hook(GameScr _this, mGraphics g)
@@ -646,7 +646,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void GameScr_paintGamePad_original(GameScr _this, mGraphics g)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void SoundMn_getStrOption_hook(SoundMn _this)
@@ -657,7 +657,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void SoundMn_getStrOption_original(SoundMn _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Panel_doFireOption_hook(Panel _this)
@@ -668,7 +668,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Panel_doFireOption_original(Panel _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void GamePad_paint_hook(GamePad _this, mGraphics g)
@@ -679,7 +679,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void GamePad_paint_original(GamePad _this, mGraphics g)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void GamePad__ctor_hook(GamePad _this)
@@ -690,7 +690,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void GamePad__ctor_original(GamePad _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void GameScr_setSkillBarPosition_hook()
@@ -701,7 +701,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void GameScr_setSkillBarPosition_original()
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void GameScr_paintSelectedSkill_hook(GameScr _this, mGraphics g)
@@ -714,7 +714,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void GameScr_paintSelectedSkill_original(GameScr _this, mGraphics g)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Panel_paintToolInfo_hook(Panel _this, mGraphics g)
@@ -725,7 +725,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Panel_paintToolInfo_original(Panel _this, mGraphics g)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void mResources_loadLanguague_hook(sbyte newLanguage)
@@ -736,7 +736,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void mResources_loadLanguague_original(sbyte newLanguage)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void ServerListScreen_saveIP_hook()
@@ -761,7 +761,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void LoginScr_switchToMe_original(LoginScr _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Skill_paint_hook(Skill _this, int x, int y, mGraphics g)
@@ -772,7 +772,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Skill_paint_original(Skill _this, int x, int y, mGraphics g)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Service_gotoPlayer_hook(Service _this, int id)
@@ -783,7 +783,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         internal static void Service_gotoPlayer_original(Service _this, int id)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Panel_updateKeyInTabBar_hook(Panel _this)
@@ -794,7 +794,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Panel_updateKeyInTabBar_original(Panel _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Panel_paint_hook(Panel _this, mGraphics g)
@@ -805,7 +805,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Panel_paint_original(Panel _this, mGraphics g)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Panel_update_hook(Panel _this)
@@ -816,7 +816,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Panel_update_original(Panel _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void GameCanvas_paint_hook(GameCanvas _this, mGraphics g)
@@ -827,7 +827,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void GameCanvas_paint_original(GameCanvas _this, mGraphics g)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Char_setHoldMob_hook(Char _this, Mob r)
@@ -838,7 +838,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Char_setHoldMob_original(Char _this, Mob r)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Char_setHoldChar_hook(Char _this, Char r)
@@ -849,7 +849,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Char_setHoldChar_original(Char _this, Char r)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Char_removeHoleEff_hook(Char _this)
@@ -860,7 +860,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Char_removeHoleEff_original(Char _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Char_update_hook(Char _this)
@@ -871,7 +871,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Char_update_original(Char _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void GameScr_paintImageBar_hook(GameScr _this, mGraphics g, bool isLeft, Char c)
@@ -882,7 +882,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void GameScr_paintImageBar_original(GameScr _this, mGraphics g, bool isLeft, Char c)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
         static void Panel_ctor_hook(Panel _this)
@@ -940,7 +940,7 @@ namespace Mod
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Panel__ctor_original(Panel _this)
         {
-            Debug.Log("Gọi hàm này để gọi đến hàm gốc vì hàm gốc đã bị hook sang hàm khác.");
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
         #endregion
     }
