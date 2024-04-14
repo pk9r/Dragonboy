@@ -862,6 +862,8 @@ namespace Mod
 
         internal static bool HasActivateOption(Item item)
         {
+            if (item.itemOption == null)
+                return false;
             for (int i = 0; i < item.itemOption.Length; i++)
             {
                 if (item.itemOption[i].optionTemplate.id >= 127 && item.itemOption[i].optionTemplate.id <= 144)
