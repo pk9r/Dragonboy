@@ -1,21 +1,20 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Threading;
 using Mod.Auto;
+using Mod.Auto.AutoChat;
 using Mod.CustomPanel;
 using Mod.Graphics;
 using Mod.ModHelper;
 using Mod.ModMenu;
-using Mod.R;
-using UnityEngine;
 using Mod.PickMob;
+using Mod.R;
 using Mod.Set;
 using Mod.TeleportMenu;
 using Mod.Xmap;
-using Mod.ModHelper.CommandMod.Chat;
-using Mod.Auto.AutoChat;
-using Mod.ModHelper.CommandMod.Hotkey;
+using UnityEngine;
 
 #if !UNITY_EDITOR && UNITY_ANDROID 
 using EHVN;
@@ -1331,6 +1330,299 @@ namespace Mod
         internal static void OnLoadIP()
         {
             ServerListScreen.getServerList(Strings.DEFAULT_IP_SERVERS);
+        }
+
+        internal static void OnAfterPaintPanel(Panel panel, mGraphics g)
+        {
+            bool GetInventorySelect_isbody(int select, int subSelect, Item[] arrItem) => subSelect == 0 && select - 1 + subSelect * 20 < arrItem.Length;
+            int GetInventorySelect_body(int select, int subSelect) => select - 1 + subSelect * 20;
+            int GetInventorySelect_bag(int select, int subSelect, Item[] arrItem) => select - 1 + subSelect * 20 - arrItem.Length;
+            if (GameCanvas.panel.combineSuccess != -1)
+                return;
+            g.translate(0, -panel.cmy);
+            if (panel.type == 13)   //trade
+            {
+                bool? isMe = null;
+                if (panel.currentTabIndex == 0 && panel != GameCanvas.panel)
+                    isMe = false;
+                if (panel.currentTabIndex == 2)
+                    isMe = false;
+                if (panel.currentTabIndex == 1)
+                    isMe = true;
+                if (isMe != null)
+                {
+                    MyVector myVector = isMe.Value ? panel.vMyGD : panel.vFriendGD;
+                    if (myVector.size() <= 0)
+                        return;
+                    int offset = Math.Max(panel.cmy / panel.ITEM_HEIGHT, 0);
+                    for (int i = offset; i < Mathf.Clamp(offset + panel.hScroll / panel.ITEM_HEIGHT + 2, 0, myVector.size()); i++)
+                    {
+                        Item item = (Item)myVector.elementAt(i);
+                        if (item == null)
+                            continue;
+                        int y = panel.yScroll + i * panel.ITEM_HEIGHT;
+                        if (item.itemOption != null)
+                        {
+                            CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 17, y + 11, 34, panel.ITEM_HEIGHT - 1, item);
+                            ItemOption itemOption = item.GetBestItemOption();
+                            if (itemOption == null)
+                                goto Label;
+                            //redraw the item icon because it's overlayed by g.fillRect
+                            int param = itemOption.param;
+                            int id = itemOption.optionTemplate.id;
+                            if (param > 7 || (id >= 127 && id <= 135))
+                                param = 7;
+                            if (id == 107)
+                            {
+                                if (param > 1)
+                                    param = (int)Math.Ceiling((double)param / 2);
+                                else if (param == 1)
+                                    goto Label;
+                            }
+                            if (param <= 0)
+                                goto Label;
+                            if (param >= 4 && param <= 7 && (id > 36 || id < 34))
+                                SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 34 / 2, panel.yScroll + i * panel.ITEM_HEIGHT + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
+                        }
+                    Label:;
+                        CustomGraphics.PaintItemOptions(g, panel, item, y);
+                    }
+                }
+            }
+            else if (panel.type == 1 || panel.type == 17)   //shop
+            {
+                if (panel.type == 1 && panel.currentTabIndex == panel.currentTabName.Length - 1 && GameCanvas.panel2 == null && panel.typeShop != 2)
+                    return;
+                if (panel.typeShop == 2 && panel == GameCanvas.panel)
+                {
+                    if (Char.myCharz().arrItemShop[panel.currentTabIndex].Length == 0 && panel.type != 17)
+                        return;
+                }
+                Item[] array = Char.myCharz().arrItemShop[panel.currentTabIndex];
+                if (panel.typeShop == 2 && (panel.currentTabIndex == 4 || panel.type == 17))
+                {
+                    array = Char.myCharz().arrItemShop[4];
+                    if (array.Length == 0)
+                        return;
+                }
+                for (int i = 0; i < array.Length; i++)
+                {
+                    int y = panel.yScroll + i * panel.ITEM_HEIGHT;
+                    if (y - panel.cmy > panel.yScroll + panel.hScroll || y - panel.cmy < panel.yScroll - panel.ITEM_HEIGHT)
+                        continue;
+                    Item item = array[i];
+                    if (item == null)
+                        continue;
+                    if (item.itemOption != null)
+                    {
+                        CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 12, y + 11, 24, panel.ITEM_HEIGHT - 1, item);
+                        ItemOption itemOption = item.GetBestItemOption();
+                        if (itemOption == null)
+                            goto Label;
+                        int param = itemOption.param;
+                        int id = itemOption.optionTemplate.id;
+                        if (param > 7 || (id >= 127 && id <= 135))
+                            param = 7;
+                        if (id == 107)
+                        {
+                            if (param > 1)
+                                param = (int)Math.Ceiling((double)param / 2);
+                            else if (param == 1)
+                                goto Label;
+                        }
+                        if (param <= 0)
+                            goto Label;
+                        if (param >= 4 && param <= 7 && (id > 36 || id < 34))
+                            SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 24 / 2, panel.yScroll + i * panel.ITEM_HEIGHT + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
+                    }
+                Label:;
+                    if (panel.type == Panel.TYPE_KIGUI)
+                        CustomGraphics.PaintItemOptions(g, panel, item, y + mFont.tahoma_7b_blue.getHeight() + 1);
+                    else if (panel.type == Panel.TYPE_SHOP)
+                    {
+                        if (!string.IsNullOrEmpty(item.nameNguoiKyGui))
+                        {
+                            if (GameCanvas.gameTick % 120 > 60 && (Utils.HasStarOption(item, out _, out _) || Utils.HasActivateOption(item)))
+                            {
+                                int w = mFont.tahoma_7b_green.getWidth(item.nameNguoiKyGui) + 5;
+                                g.setColor(i != panel.selected ? 0xE7DFD2 : 0xF9FF4A);
+                                g.fillRect(panel.X + Panel.WIDTH_PANEL - 2 - w, y + mFont.tahoma_7b_blue.getHeight() + 1, w, mFont.tahoma_7b_green.getHeight());
+                                CustomGraphics.PaintItemOptions(g, panel, item, y + mFont.tahoma_7b_blue.getHeight() + 1);
+                            }
+                        }
+                        else 
+                            CustomGraphics.PaintItemOptions(g, panel, item, y + mFont.tahoma_7b_blue.getHeight() + 1);
+                    }
+                    else
+                        CustomGraphics.PaintItemOptions(g, panel, item, y);
+                }
+            }
+            else if (panel.type == 21 && panel.currentTabIndex == 0)    //pet inventory
+            {
+                Item[] arrItemBody = Char.myPetz().arrItemBody;
+                for (int i = 0; i < arrItemBody.Length; i++)
+                {
+                    int y = panel.yScroll + i * panel.ITEM_HEIGHT;
+                    if (y - panel.cmy > panel.yScroll + panel.hScroll || y - panel.cmy < panel.yScroll - panel.ITEM_HEIGHT)
+                        continue;
+                    Item item = arrItemBody[i];
+                    if (item == null)
+                        continue;
+                    if (item.itemOption != null)
+                    {
+                        CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 17, y + 14, 34, panel.ITEM_HEIGHT - 1, item);
+                        ItemOption itemOption = item.GetBestItemOption();
+                        if (itemOption == null)
+                            goto Label;
+                        int param = itemOption.param;
+                        int id = itemOption.optionTemplate.id;
+                        if (param > 7 || (id >= 127 && id <= 135))
+                            param = 7;
+                        if (id == 107)
+                        {
+                            if (param > 1)
+                                param = (int)Math.Ceiling((double)param / 2);
+                            else if (param == 1)
+                                goto Label;
+                        }
+                        if (param <= 0)
+                            goto Label;
+                        if (param >= 4 && param <= 7 && (id > 36 || id < 34))
+                            SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 34 / 2, panel.yScroll + i * panel.ITEM_HEIGHT + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
+                    }
+                Label:;
+                    CustomGraphics.PaintItemOptions(g, panel, item, y);
+                }
+            }
+            else if (panel.type == 2 && panel.currentTabIndex == 0) //box
+            {
+                Item[] arrItemBox = Char.myCharz().arrItemBox;
+                int offset = Math.Max(panel.cmy / panel.ITEM_HEIGHT, 0);
+                for (int i = offset; i < Mathf.Clamp(offset + panel.hScroll / panel.ITEM_HEIGHT + 2, 0, arrItemBox.Length); i++)
+                {
+                    int y = panel.yScroll + (i + 1) * panel.ITEM_HEIGHT;
+                    if (y - panel.cmy > panel.yScroll + panel.hScroll || y - panel.cmy < panel.yScroll - panel.ITEM_HEIGHT)
+                        continue;
+                    if (i == 0)
+                        continue;
+                    Item item = arrItemBox[i];
+                    if (item == null)
+                        continue;
+                    if (item.itemOption != null)
+                    {
+                        CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 17, y + 11, 34, panel.ITEM_HEIGHT - 1, item);
+                        ItemOption itemOption = item.GetBestItemOption();
+                        if (itemOption == null)
+                            goto Label;
+                        int param = itemOption.param;
+                        int id = itemOption.optionTemplate.id;
+                        if (param > 7 || (id >= 127 && id <= 135))
+                            param = 7;
+                        if (id == 107)
+                        {
+                            if (param > 1)
+                                param = (int)Math.Ceiling((double)param / 2);
+                            else if (param == 1)
+                                goto Label;
+                        }
+                        if (param <= 0)
+                            goto Label;
+                        if (param >= 4 && param <= 7 && (id > 36 || id < 34))
+                            SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 34 / 2, panel.yScroll + i * panel.ITEM_HEIGHT + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
+                    }
+                Label:;
+                    CustomGraphics.PaintItemOptions(g, panel, item, y);
+                }
+            }
+            else if (panel.type == 12 && panel.currentTabIndex == 0)    //combine
+            {
+                if (panel.vItemCombine.size() == 0)
+                    return;
+                int offset = Math.Max(panel.cmy / panel.ITEM_HEIGHT, 0);
+                for (int i = offset; i < Mathf.Clamp(offset + panel.hScroll / panel.ITEM_HEIGHT + 2, 0, panel.vItemCombine.size() + 1); i++)
+                {
+                    int y = panel.yScroll + i * panel.ITEM_HEIGHT;
+                    if (y - panel.cmy > panel.yScroll + panel.hScroll || y - panel.cmy < panel.yScroll - panel.ITEM_HEIGHT)
+                        continue;
+                    if (i == panel.vItemCombine.size())
+                        continue;
+                    Item item = (Item)panel.vItemCombine.elementAt(i);
+                    if (item == null)
+                        continue;
+                    if (item.itemOption != null)
+                    {
+                        CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 17, y + 11, 34, panel.ITEM_HEIGHT - 1, item);
+                        ItemOption itemOption = item.GetBestItemOption();
+                        if (itemOption == null)
+                            goto Label;
+                        int param = itemOption.param;
+                        int id = itemOption.optionTemplate.id;
+                        if (param > 7 || (id >= 127 && id <= 135))
+                            param = 7;
+                        if (id == 107)
+                        {
+                            if (param > 1)
+                                param = (int)Math.Ceiling((double)param / 2);
+                            else if (param == 1)
+                                goto Label;
+                        }
+                        if (param <= 0)
+                            goto Label;
+                        if (param >= 4 && param <= 7 && (id > 36 || id < 34))
+                            SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 34 / 2, panel.yScroll + i * panel.ITEM_HEIGHT + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
+                    }
+                Label:;
+                    CustomGraphics.PaintItemOptions(g, panel, item, y);
+                }
+            }
+            else if ((panel.type == 21 && panel.currentTabIndex == 2) || 
+                (panel.type == 0 && panel.currentTabIndex == 1) || 
+                (panel.type == 2 && panel.currentTabIndex == 1) || 
+                panel.type == 7 || 
+                (panel.type == 12 && panel.currentTabIndex == 1) || 
+                (panel.type == 13 && panel.currentTabIndex == 0 && panel == GameCanvas.panel) || 
+                (panel.type == 1 && panel.currentTabIndex == panel.currentTabName.Length - 1 && GameCanvas.panel2 == null && panel.typeShop != 2))  //my inventory
+            {
+                Item[] arrItemBody = Char.myCharz().arrItemBody;
+                Item[] arrItemBag = Char.myCharz().arrItemBag;
+                int offset = Math.Max(panel.cmy / panel.ITEM_HEIGHT, 1);
+                for (int i = offset; i < Mathf.Clamp(offset + panel.hScroll / panel.ITEM_HEIGHT + 2, 0, panel.currentListLength); i++)
+                {
+                    int y = panel.yScroll + i * panel.ITEM_HEIGHT;
+                    if (y - panel.cmy > panel.yScroll + panel.hScroll || y - panel.cmy < panel.yScroll - panel.ITEM_HEIGHT)
+                        continue;
+                    bool inventorySelect_isbody = GetInventorySelect_isbody(i, panel.newSelected, arrItemBody);
+                    int inventorySelect_body = GetInventorySelect_body(i, panel.newSelected);
+                    int inventorySelect_bag = GetInventorySelect_bag(i, panel.newSelected, arrItemBody);
+                    Item item = (!inventorySelect_isbody) ? arrItemBag[inventorySelect_bag] : arrItemBody[inventorySelect_body];
+                    if (item == null)
+                        continue;
+                    if (item.itemOption != null)
+                    {
+                        CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 17, y + 11, 34, panel.ITEM_HEIGHT - 1, item);
+                        ItemOption itemOption = item.GetBestItemOption();
+                        if (itemOption == null)
+                            goto Label;
+                        int param = itemOption.param;
+                        int id = itemOption.optionTemplate.id;
+                        if (param > 7 || (id >= 127 && id <= 135))
+                            param = 7;
+                        if (id == 107)
+                        {
+                            if (param > 1)
+                                param = (int)Math.Ceiling((double)param / 2);
+                            else if (param == 1)
+                                goto Label;
+                        }
+                        if (param <= 0)
+                            goto Label;
+                        if (param >= 4 && param <= 7 && (id > 36 || id < 34))
+                            SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 34 / 2, panel.yScroll + i * panel.ITEM_HEIGHT + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
+                    }
+                Label:;
+                    CustomGraphics.PaintItemOptions(g, panel, item, y);
+                }
+            }
         }
     }
 }

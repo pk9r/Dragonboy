@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Mod.R;
-using UnityHook;
 using UnityEngine;
+using UnityHook;
 
 namespace Mod
 {
@@ -800,7 +799,19 @@ namespace Mod
         static void Panel_paint_hook(Panel _this, mGraphics g)
         {
             if (!GameEvents.OnPaintPanel(_this, g))
+            {
                 Panel_paint_original(_this, g);
+                GameEvents.OnAfterPaintPanel(_this, g);
+                GameScr.resetTranslate(g);
+                _this.paintDetail(g);
+                if (_this.cmx == _this.cmtoX && !GameCanvas.menu.showMenu)
+                    _this.cmdClose.paint(g);
+                if (_this.tabIcon != null && _this.tabIcon.isShow)
+                    _this.tabIcon.paint(g);
+                g.translate(-g.getTranslateX(), -g.getTranslateY());
+                g.translate(_this.X, _this.Y);
+                g.translate(-_this.cmx, 0);
+            }
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Panel_paint_original(Panel _this, mGraphics g)

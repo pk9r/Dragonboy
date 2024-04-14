@@ -492,5 +492,31 @@ namespace Mod
         internal static bool isCharDead(this Char ch) => ch.isDie || ch.cHP <= 0 || ch.statusMe == 14;
 
         internal static int getPetId(this Char ch) => -ch.charID;
+
+        internal static ItemOption GetBestItemOption(this Item item)
+        {
+            ItemOption itemOption = null;
+            for (int i = 0; i < item.itemOption.Length; i++)
+            {
+                ItemOption iOption = item.itemOption[i];
+                if (iOption.optionTemplate == null)
+                    continue;
+                if (iOption.optionTemplate.id >= 127 && iOption.optionTemplate.id <= 135)   //Set kích hoạt
+                {
+                    itemOption = iOption;
+                    break;
+                }
+                else if (iOption.optionTemplate.id <= 36 && iOption.optionTemplate.id >= 34)    //tinh ấn/nguyệt ấn/nhật ấn
+                    itemOption = iOption;
+                else if (itemOption == null || itemOption.optionTemplate == null || itemOption.optionTemplate.id > 36 || itemOption.optionTemplate.id < 34)
+                {
+                    if (iOption.optionTemplate.id == 72)   //cấp #
+                        itemOption = iOption;
+                    else if ((itemOption == null || itemOption.optionTemplate == null || (itemOption != null && itemOption.optionTemplate != null && itemOption.optionTemplate.id == 72 && itemOption.param < (int)Math.Ceiling((double)iOption.param / 2))) && iOption.optionTemplate.id == 107) //đồ sao
+                        itemOption = iOption;
+                }
+            }
+            return itemOption;
+        }
     }
 }

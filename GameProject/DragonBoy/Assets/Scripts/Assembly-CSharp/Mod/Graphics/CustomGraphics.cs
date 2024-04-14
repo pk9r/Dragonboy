@@ -234,41 +234,19 @@ namespace Mod.Graphics
         {
             if (item.itemOption == null)
                 return;
-            ItemOption itemOption = null;
-            for (int i = 0; i < item.itemOption.Length; i++)
-            {
-                ItemOption iOption = item.itemOption[i];
-                if (iOption.optionTemplate == null)
-                    continue;
-                if (iOption.optionTemplate.id >= 127 && iOption.optionTemplate.id <= 135)   //Set kích hoạt
-                {
-                    itemOption = iOption;
-                    break;
-                }
-                else if (iOption.optionTemplate.id <= 36 && iOption.optionTemplate.id >= 34)    //tinh ấn/nguyệt ấn/nhật ấn
-                    itemOption = iOption;
-                else if (itemOption == null || itemOption.optionTemplate == null || itemOption.optionTemplate.id > 36 || itemOption.optionTemplate.id < 34)
-                {
-                    if (iOption.optionTemplate.id == 72)   //cấp #
-                        itemOption = iOption;
-                    else if ((itemOption == null || itemOption.optionTemplate == null || (itemOption != null && itemOption.optionTemplate != null && itemOption.optionTemplate.id == 72 && itemOption.param < (int)Math.Ceiling((double)iOption.param / 2))) && iOption.optionTemplate.id == 107) //đồ sao
-                        itemOption = iOption;
-                }
-            }
+            ItemOption itemOption = item.GetBestItemOption();
             if (itemOption == null)
                 return;
             int id = itemOption.optionTemplate.id;
             if ((id > 36 || id < 34) && id != 72 && (id < 127 || id > 135) && id != 107)
                 return;
             int param = itemOption.param;
-            if (param > 7)
-                param = 7;
-            if (id >= 127 && id <= 135)
+            if (param > 7 || (id >= 127 && id <= 135))
                 param = 7;
             if (id == 107)
             {
                 if (param > 1)
-                    param = (int)System.Math.Ceiling((double)param / 2);
+                    param = (int)Math.Ceiling((double)param / 2);
                 else if (param == 1)
                     return;
             }

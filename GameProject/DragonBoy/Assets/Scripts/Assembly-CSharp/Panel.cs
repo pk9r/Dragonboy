@@ -3452,15 +3452,16 @@ public class Panel : IActionListener, IChatable
 			paintAuto(g);
 			break;
 		}
-		GameScr.resetTranslate(g);
-		paintDetail(g);
-		if (cmx == cmtoX && !GameCanvas.menu.showMenu)
-			cmdClose.paint(g);
-		if (tabIcon != null && tabIcon.isShow)
-			tabIcon.paint(g);
-		g.translate(-g.getTranslateX(), -g.getTranslateY());
-		g.translate(X, Y);
-		g.translate(-cmx, 0);
+		//moved to Panel_paint_hook
+		//GameScr.resetTranslate(g);
+		//paintDetail(g);
+		//if (cmx == cmtoX && !GameCanvas.menu.showMenu)
+		//	cmdClose.paint(g);
+		//if (tabIcon != null && tabIcon.isShow)
+		//	tabIcon.paint(g);
+		//g.translate(-g.getTranslateX(), -g.getTranslateY());
+		//g.translate(X, Y);
+		//g.translate(-cmx, 0);
 	}
 
 	private void paintShop(mGraphics g)
