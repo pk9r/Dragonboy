@@ -9,6 +9,7 @@ using UnityEngine;
 
 namespace Mod.Xmap
 {
+    //KNOWN PROBLEM: update() must be executed in main thread
     internal class XmapController : ThreadActionUpdate<XmapController>
     {
         internal override int Interval => 100;

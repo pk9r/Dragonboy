@@ -306,8 +306,10 @@ namespace Mod.ModMenu
                     Values = Strings.setGoBackChoices,
                     GetValueFunc = () => (int)AutoGoback.mode,
                     SetValueAction = AutoGoback.setState,
-                    GetIsDisabled = () => AutoTrainNewAccount.isEnabled,
-                    GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.autoTrainForNewbieTitle)
+                    //GetIsDisabled = () => AutoTrainNewAccount.isEnabled,
+                    //GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.autoTrainForNewbieTitle)
+                    GetIsDisabled = () => true,
+                    GetDisabledReason = () => "This feature is currently in development state"
                 }),
                 new ModMenuItemValues(new ModMenuItemValuesConfig()
                 {
