@@ -183,7 +183,7 @@ namespace Mod.ModMenu
                     Title = Strings.pickMobTitle,
                     Description = Strings.pickMobDescription,
                     GetValueFunc = () => Pk9rPickMob.IsTanSat,
-                    SetValueAction = value => Pk9rPickMob.IsTanSat = value,
+                    SetValueAction = Pk9rPickMob.SetSlaughter,
                     GetIsDisabled = () => AutoTrainNewAccount.isEnabled,
                     GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.autoTrainForNewbieTitle)
                 }),
@@ -193,7 +193,7 @@ namespace Mod.ModMenu
                     Title = Strings.avoidSuperMobTitle,
                     Description = Strings.avoidSuperMobDescription,
                     GetValueFunc = () => Pk9rPickMob.IsNeSieuQuai,
-                    SetValueAction = value => Pk9rPickMob.IsNeSieuQuai = value,
+                    SetValueAction = Pk9rPickMob.SetAvoidSuperMonster,
                     RMSName = "isnesieuquaits"
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
@@ -202,7 +202,7 @@ namespace Mod.ModMenu
                     Title = Strings.vdhTitle,
                     Description = Strings.vdhDescription,
                     GetValueFunc = () => Pk9rPickMob.IsVuotDiaHinh,
-                    SetValueAction = value => Pk9rPickMob.IsVuotDiaHinh = value,
+                    SetValueAction = Pk9rPickMob.SetCrossTerrain,
                     RMSName = "isvuotdiahinh"
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
@@ -211,7 +211,7 @@ namespace Mod.ModMenu
                     Title = Strings.autoPickItemTitle,
                     Description = Strings.autoPickItemDescription,
                     GetValueFunc = () => Pk9rPickMob.IsAutoPickItems,
-                    SetValueAction = value => Pk9rPickMob.IsAutoPickItems = value,
+                    SetValueAction = Pk9rPickMob.SetAutoPickItems,
                     RMSName = "isautopick",
                     GetIsDisabled = () => AutoTrainNewAccount.isEnabled,
                     GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.autoTrainForNewbieTitle)
@@ -222,7 +222,7 @@ namespace Mod.ModMenu
                     Title = Strings.pickMyItemOnlyTitle,
                     Description = Strings.pickMyItemOnlyDescription,
                     GetValueFunc = () => Pk9rPickMob.IsItemMe,
-                    SetValueAction = value => Pk9rPickMob.IsItemMe = value,
+                    SetValueAction = Pk9rPickMob.SetAutoPickItemsFromOthers,
                     RMSName = "ispickmyitemonly"
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
@@ -231,7 +231,7 @@ namespace Mod.ModMenu
                     Title = Strings.limitPickTimesTitle,
                     Description = Strings.limitPickTimesDescription,
                     GetValueFunc = () => Pk9rPickMob.IsLimitTimesPickItem,
-                    SetValueAction = value => Pk9rPickMob.IsLimitTimesPickItem = value,
+                    SetValueAction = Pk9rPickMob.SetPickUpLimited,
                     RMSName = "islimitpicktimes"
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
