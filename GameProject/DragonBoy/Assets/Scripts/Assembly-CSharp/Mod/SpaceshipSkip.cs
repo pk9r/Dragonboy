@@ -13,6 +13,7 @@
                 if (teleport.type == 0) //fly up
                 {
                     Controller.isStopReadMessage = false;
+                    Char.ischangingMap = true;
                     Teleport.vTeleport.removeElement(teleport);
                 }
                 else //fly down
