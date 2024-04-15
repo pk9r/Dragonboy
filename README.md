@@ -1,4 +1,4 @@
-# Dragonboy Unity Project- [EN](../../tree/Unity-project/README_EN.md) | VI
+# Dragonboy Unity Project - [EN](../../tree/Unity-project/README_EN.md) | VI
 Project Unity Mod Cộng Đồng (Dự án đang trong giai đoạn phát triển).
 
 Hướng dẫn xây dựng thêm tính năng cho bản mod: https://youtu.be/9sCof2eQH3Q
