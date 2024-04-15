@@ -15,6 +15,7 @@ using Mod.Set;
 using Mod.TeleportMenu;
 using Mod.Xmap;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 #if !UNITY_EDITOR && UNITY_ANDROID 
 using EHVN;
@@ -1337,9 +1338,46 @@ namespace Mod
             bool GetInventorySelect_isbody(int select, int subSelect, Item[] arrItem) => subSelect == 0 && select - 1 + subSelect * 20 < arrItem.Length;
             int GetInventorySelect_body(int select, int subSelect) => select - 1 + subSelect * 20;
             int GetInventorySelect_bag(int select, int subSelect, Item[] arrItem) => select - 1 + subSelect * 20 - arrItem.Length;
+            sbyte GetColor_Item_Upgrade(int lv)
+            {
+                if (lv < 8)
+                    return 0;
+                if (lv == 9)
+                    return 4;
+                if (lv == 10)
+                    return 1;
+                if (lv == 11)
+                    return 5;
+                if (lv == 12)
+                    return 3;
+                if (lv == 13)
+                    return 2;
+                return 6;
+            }
+            int GetColor_ItemBg(int id)
+            {
+                switch (id)
+                {
+                    case 4:
+                        return 1269146;
+                    case 1:
+                        return 2786816;
+                    case 5:
+                        return 13279744;
+                    case 3:
+                        return 12537346;
+                    case 2:
+                        return 7078041;
+                    case 6:
+                        return 11599872;
+                    default:
+                        return -1;
+                }
+            }
+
             if (GameCanvas.panel.combineSuccess != -1)
                 return;
-            g.translate(0, -panel.cmy);
+            g.translate(-(panel.cmx - panel.cmtoX), -panel.cmy);
             if (panel.type == 13)   //trade
             {
                 bool? isMe = null;
@@ -1363,11 +1401,9 @@ namespace Mod
                         int y = panel.yScroll + i * panel.ITEM_HEIGHT;
                         if (item.itemOption != null)
                         {
-                            CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 17, y + 11, 34, panel.ITEM_HEIGHT - 1, item);
                             ItemOption itemOption = item.GetBestItemOption();
                             if (itemOption == null)
                                 goto Label;
-                            //redraw the item icon because it's overlayed by g.fillRect
                             int param = itemOption.param;
                             int id = itemOption.optionTemplate.id;
                             if (param > 7 || (id >= 127 && id <= 135))
@@ -1381,8 +1417,19 @@ namespace Mod
                             }
                             if (param <= 0)
                                 goto Label;
-                            if (param >= 4 && param <= 7 && (id > 36 || id < 34))
-                                SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 34 / 2, panel.yScroll + i * panel.ITEM_HEIGHT + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
+                            g.setColor(i == panel.selected ? 0x919600 : 0x987B55);
+                            for (int j = 0; j < item.itemOption.Length; j++)
+                            {
+                                if (item.itemOption[j].optionTemplate.id == 72 && item.itemOption[j].param > 0)
+                                {
+                                    byte id_ = (byte)GetColor_Item_Upgrade(item.itemOption[j].param);
+                                    if (GetColor_ItemBg(id_) != -1)
+                                        g.setColor(GetColor_ItemBg(id_));
+                                }
+                            }
+                            g.fillRect(panel.xScroll, y, 34, panel.ITEM_HEIGHT - 1);
+                            CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 17, y + 11, 34, panel.ITEM_HEIGHT - 1, item);
+                            SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 34 / 2, panel.yScroll + i * panel.ITEM_HEIGHT + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
                         }
                     Label:;
                         CustomGraphics.PaintItemOptions(g, panel, item, y);
@@ -1415,7 +1462,6 @@ namespace Mod
                         continue;
                     if (item.itemOption != null)
                     {
-                        CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 12, y + 11, 24, panel.ITEM_HEIGHT - 1, item);
                         ItemOption itemOption = item.GetBestItemOption();
                         if (itemOption == null)
                             goto Label;
@@ -1432,8 +1478,19 @@ namespace Mod
                         }
                         if (param <= 0)
                             goto Label;
-                        if (param >= 4 && param <= 7 && (id > 36 || id < 34))
-                            SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 24 / 2, panel.yScroll + i * panel.ITEM_HEIGHT + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
+                        g.setColor(i == panel.selected ? 0x919600 : 0x987B55);
+                        for (int j = 0; j < item.itemOption.Length; j++)
+                        {
+                            if (item.itemOption[j].optionTemplate.id == 72 && item.itemOption[j].param > 0)
+                            {
+                                byte id_ = (byte)GetColor_Item_Upgrade(item.itemOption[j].param);
+                                if (GetColor_ItemBg(id_) != -1)
+                                    g.setColor(GetColor_ItemBg(id_));
+                            }
+                        }
+                        g.fillRect(panel.xScroll, y, 24, panel.ITEM_HEIGHT - 1);
+                        CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 12, y + 11, 24, panel.ITEM_HEIGHT - 1, item);
+                        SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 24 / 2, panel.yScroll + i * panel.ITEM_HEIGHT + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
                     }
                 Label:;
                     if (panel.type == Panel.TYPE_KIGUI)
@@ -1470,7 +1527,6 @@ namespace Mod
                         continue;
                     if (item.itemOption != null)
                     {
-                        CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 17, y + 14, 34, panel.ITEM_HEIGHT - 1, item);
                         ItemOption itemOption = item.GetBestItemOption();
                         if (itemOption == null)
                             goto Label;
@@ -1487,8 +1543,19 @@ namespace Mod
                         }
                         if (param <= 0)
                             goto Label;
-                        if (param >= 4 && param <= 7 && (id > 36 || id < 34))
-                            SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 34 / 2, panel.yScroll + i * panel.ITEM_HEIGHT + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
+                        g.setColor(i == panel.selected ? 0x919600 : 0x987B55);
+                        for (int j = 0; j < item.itemOption.Length; j++)
+                        {
+                            if (item.itemOption[j].optionTemplate.id == 72 && item.itemOption[j].param > 0)
+                            {
+                                byte id_ = (byte)GetColor_Item_Upgrade(item.itemOption[j].param);
+                                if (GetColor_ItemBg(id_) != -1)
+                                    g.setColor(GetColor_ItemBg(id_));
+                            }
+                        }
+                        g.fillRect(panel.xScroll, y, 34, panel.ITEM_HEIGHT - 1);
+                        CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 17, y + 14, 34, panel.ITEM_HEIGHT - 1, item);
+                        SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 34 / 2, panel.yScroll + i * panel.ITEM_HEIGHT + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
                     }
                 Label:;
                     CustomGraphics.PaintItemOptions(g, panel, item, y);
@@ -1510,7 +1577,6 @@ namespace Mod
                         continue;
                     if (item.itemOption != null)
                     {
-                        CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 17, y + 11, 34, panel.ITEM_HEIGHT - 1, item);
                         ItemOption itemOption = item.GetBestItemOption();
                         if (itemOption == null)
                             goto Label;
@@ -1527,8 +1593,19 @@ namespace Mod
                         }
                         if (param <= 0)
                             goto Label;
-                        if (param >= 4 && param <= 7 && (id > 36 || id < 34))
-                            SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 34 / 2, panel.yScroll + i * panel.ITEM_HEIGHT + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
+                        g.setColor(i == panel.selected ? 0x919600 : 0x987B55);
+                        for (int j = 0; j < item.itemOption.Length; j++)
+                        {
+                            if (item.itemOption[j].optionTemplate.id == 72 && item.itemOption[j].param > 0)
+                            {
+                                byte id_ = (byte)GetColor_Item_Upgrade(item.itemOption[j].param);
+                                if (GetColor_ItemBg(id_) != -1)
+                                    g.setColor(GetColor_ItemBg(id_));
+                            }
+                        }
+                        g.fillRect(panel.xScroll, y, 34, panel.ITEM_HEIGHT - 1);
+                        CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 17, y + 11, 34, panel.ITEM_HEIGHT - 1, item);
+                        SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 34 / 2, y + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
                     }
                 Label:;
                     CustomGraphics.PaintItemOptions(g, panel, item, y);
@@ -1551,7 +1628,6 @@ namespace Mod
                         continue;
                     if (item.itemOption != null)
                     {
-                        CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 17, y + 11, 34, panel.ITEM_HEIGHT - 1, item);
                         ItemOption itemOption = item.GetBestItemOption();
                         if (itemOption == null)
                             goto Label;
@@ -1568,8 +1644,19 @@ namespace Mod
                         }
                         if (param <= 0)
                             goto Label;
-                        if (param >= 4 && param <= 7 && (id > 36 || id < 34))
-                            SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 34 / 2, panel.yScroll + i * panel.ITEM_HEIGHT + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
+                        g.setColor(i == panel.selected ? 0x919600 : 0x987B55);
+                        for (int j = 0; j < item.itemOption.Length; j++)
+                        {
+                            if (item.itemOption[j].optionTemplate.id == 72 && item.itemOption[j].param > 0)
+                            {
+                                byte id_ = (byte)GetColor_Item_Upgrade(item.itemOption[j].param);
+                                if (GetColor_ItemBg(id_) != -1)
+                                    g.setColor(GetColor_ItemBg(id_));
+                            }
+                        }
+                        g.fillRect(panel.xScroll, y, 34, panel.ITEM_HEIGHT - 1);
+                        CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 17, y + 11, 34, panel.ITEM_HEIGHT - 1, item);
+                        SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 34 / 2, panel.yScroll + i * panel.ITEM_HEIGHT + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
                     }
                 Label:;
                     CustomGraphics.PaintItemOptions(g, panel, item, y);
@@ -1599,7 +1686,6 @@ namespace Mod
                         continue;
                     if (item.itemOption != null)
                     {
-                        CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 17, y + 11, 34, panel.ITEM_HEIGHT - 1, item);
                         ItemOption itemOption = item.GetBestItemOption();
                         if (itemOption == null)
                             goto Label;
@@ -1616,8 +1702,24 @@ namespace Mod
                         }
                         if (param <= 0)
                             goto Label;
-                        if (param >= 4 && param <= 7 && (id > 36 || id < 34))
-                            SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 34 / 2, panel.yScroll + i * panel.ITEM_HEIGHT + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
+                        if (i == panel.selected)
+                            g.setColor(0x919600);
+                        else if (inventorySelect_isbody)
+                            g.setColor(0x987B55);
+                        else
+                            g.setColor(0xB49F84);
+                        for (int j = 0; j < item.itemOption.Length; j++)
+                        {
+                            if (item.itemOption[j].optionTemplate.id == 72 && item.itemOption[j].param > 0)
+                            {
+                                byte id_ = (byte)GetColor_Item_Upgrade(item.itemOption[j].param);
+                                if (GetColor_ItemBg(id_) != -1)
+                                    g.setColor(GetColor_ItemBg(id_));
+                            }
+                        }
+                        g.fillRect(panel.xScroll, y, 34, panel.ITEM_HEIGHT - 1);
+                        CustomGraphics.PaintItemEffectInPanel(g, panel.xScroll + 17 + (panel == GameCanvas.panel2 ? 2 : 0), y + 11, 34, panel.ITEM_HEIGHT - 1, item);
+                        SmallImage.drawSmallImage(g, item.template.iconID, panel.xScroll + 34 / 2, panel.yScroll + i * panel.ITEM_HEIGHT + (panel.ITEM_HEIGHT - 1) / 2, 0, 3);
                     }
                 Label:;
                     CustomGraphics.PaintItemOptions(g, panel, item, y);
