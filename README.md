@@ -4,7 +4,7 @@ Hướng dẫn xây dựng thêm tính năng cho bản mod: https://youtu.be/9sC
 
 Discord hỏi đáp: https://discord.gg/zdvBdVxRh6
 
-## Game đang được update, các tính năng sẽ được thêm hướng dẫn chi tiết sau.
+## Dự án này đang trong quá trình xây dựng lại thành dự án Unity! [Nhấn vào đây](../../tree/Unity-project) để biết thêm thông tin.
 <!-- ## Các tính năng trong game
 ### Lệnh chat
 ***Các lệnh chat phải bắt đầu bằng dấu gạch chéo (/)***
