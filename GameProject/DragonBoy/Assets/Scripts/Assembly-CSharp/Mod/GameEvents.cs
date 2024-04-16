@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Reflection.Emit;
 using System.Threading;
 using Mod.Auto;
 using Mod.Auto.AutoChat;
@@ -15,7 +14,6 @@ using Mod.Set;
 using Mod.TeleportMenu;
 using Mod.Xmap;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 #if !UNITY_EDITOR && UNITY_ANDROID 
 using EHVN;
