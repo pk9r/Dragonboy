@@ -16,5 +16,9 @@ namespace Mod.ModMenu
         internal string TextFieldTitle { get; set; }
         /// <summary>Gợi ý cho trường nhập liệu <see cref="ChatTextField"/></summary>
         internal string TextFieldHint { get; set; }
+        /// <summary>Giá trị tối thiểu của <see cref="ModMenuItemValues"/>, chỉ có hiệu lực khi nhập giá trị bằng <see cref="ChatTextField"/></summary>
+        internal int MinValue { get; set; }
+        /// <summary>Giá trị tối đa của <see cref="ModMenuItemValues"/>, chỉ có hiệu lực khi nhập giá trị bằng <see cref="ChatTextField"/></summary>
+        internal int MaxValue { get; set; }
     }
 }

@@ -95,7 +95,7 @@ namespace Mod.ModMenu
                     Description = Strings.vSyncDescription,
                     GetValueFunc = () => QualitySettings.vSyncCount == 1,
                     SetValueAction = value => QualitySettings.vSyncCount = value ? 1 : 0,
-                    RMSName = "isvsync"
+                    RMSName = "enable_vsync"
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
                 {
@@ -104,7 +104,7 @@ namespace Mod.ModMenu
                     Description = Strings.showTargetInfoDescription,
                     GetValueFunc = () => CharEffect.isEnabled,
                     SetValueAction = CharEffect.setState,
-                    RMSName = "isshowinfochar"
+                    RMSName = "show_target_info"
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
@@ -121,7 +121,7 @@ namespace Mod.ModMenu
                     Description = Strings.showCharListDescription,
                     GetValueFunc =  () => ListCharsInMap.isEnabled,
                     SetValueAction = ListCharsInMap.setState,
-                    RMSName = "isshowlistchar",
+                    RMSName = "show_char_list",
                     GetIsDisabled = () => true,
                     GetDisabledReason = () => "This feature is currently in development state"
                 }),
@@ -132,7 +132,7 @@ namespace Mod.ModMenu
                     Description = Strings.showPetInCharListDescription,
                     GetValueFunc = () => ListCharsInMap.isShowPet,
                     SetValueAction = ListCharsInMap.setStatePet,
-                    RMSName = "isshowlistpet",
+                    RMSName = "show_pets_in_char_list",
                     GetIsDisabled = () => !ListCharsInMap.isEnabled,
                     GetDisabledReason = () => string.Format(Strings.functionShouldBeEnabled, Strings.showCharListTitle)
                 }),
@@ -148,23 +148,12 @@ namespace Mod.ModMenu
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
-                    ID = "CustomBg_Toggle",
-                    Title = Strings.customBackgroundTitle,
-                    Description = Strings.customBackgroundDescription,
-                    GetValueFunc = () => CustomBackground.isEnabled,
-                    SetValueAction = CustomBackground.SetState,
-                    RMSName = "iscustombackground",
-                    GetIsDisabled = () => GraphicsReducer.level > ReduceGraphicsLevel.None,
-                    GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.setReduceGraphicsTitle)
-                }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
-                {
                     ID = "SkipSpaceship_Toggle",
                     Title = Strings.skipSpaceshipTitle,
                     Description = Strings.skipSpaceshipDescription,
                     GetValueFunc = () => SpaceshipSkip.isEnabled,
                     SetValueAction = value => SpaceshipSkip.isEnabled = value,
-                    RMSName = "isskipspaceship"
+                    RMSName = "skip_spaceship"
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
                 {
@@ -173,9 +162,29 @@ namespace Mod.ModMenu
                     Description = Strings.notifyBossDescription,
                     GetValueFunc = () => Boss.isEnabled,
                     SetValueAction = Boss.setState,
-                    RMSName = "sanboss",
+                    RMSName = "notify_boss",
                     GetIsDisabled = () => true,
                     GetDisabledReason = () => "This feature is currently in development state"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "CustomBg_Toggle",
+                    Title = Strings.customBackgroundTitle,
+                    Description = Strings.customBackgroundDescription,
+                    GetValueFunc = () => CustomBackground.isEnabled,
+                    SetValueAction = CustomBackground.SetState,
+                    RMSName = "custom_bg",
+                    GetIsDisabled = () => GraphicsReducer.level > ReduceGraphicsLevel.None,
+                    GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.setReduceGraphicsTitle)
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "Intro_Toggle",
+                    Title = Strings.introTitle,
+                    Description = Strings.introDescription,
+                    GetValueFunc = () => IntroPlayer.isEnabled,
+                    SetValueAction = value => IntroPlayer.isEnabled = value,
+                    RMSName = "intro_enabled"
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
                 {
@@ -194,7 +203,7 @@ namespace Mod.ModMenu
                     Description = Strings.avoidSuperMobDescription,
                     GetValueFunc = () => Pk9rPickMob.IsNeSieuQuai,
                     SetValueAction = Pk9rPickMob.SetAvoidSuperMonster,
-                    RMSName = "isnesieuquaits"
+                    RMSName = "pickmob_avoid_super_mob"
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
                 {
@@ -203,7 +212,7 @@ namespace Mod.ModMenu
                     Description = Strings.vdhDescription,
                     GetValueFunc = () => Pk9rPickMob.IsVuotDiaHinh,
                     SetValueAction = Pk9rPickMob.SetCrossTerrain,
-                    RMSName = "isvuotdiahinh"
+                    RMSName = "pickmob_cross_terrain"
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
@@ -212,7 +221,7 @@ namespace Mod.ModMenu
                     Description = Strings.autoPickItemDescription,
                     GetValueFunc = () => Pk9rPickMob.IsAutoPickItems,
                     SetValueAction = Pk9rPickMob.SetAutoPickItems,
-                    RMSName = "isautopick",
+                    RMSName = "pickmob_auto_pick",
                     GetIsDisabled = () => AutoTrainNewAccount.isEnabled,
                     GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.autoTrainForNewbieTitle)
                 }),
@@ -223,7 +232,7 @@ namespace Mod.ModMenu
                     Description = Strings.pickMyItemOnlyDescription,
                     GetValueFunc = () => Pk9rPickMob.IsItemMe,
                     SetValueAction = Pk9rPickMob.SetAutoPickItemsFromOthers,
-                    RMSName = "ispickmyitemonly"
+                    RMSName = "pickmob_pick_my_item_only"
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
@@ -232,7 +241,7 @@ namespace Mod.ModMenu
                     Description = Strings.limitPickTimesDescription,
                     GetValueFunc = () => Pk9rPickMob.IsLimitTimesPickItem,
                     SetValueAction = Pk9rPickMob.SetPickUpLimited,
-                    RMSName = "islimitpicktimes"
+                    RMSName = "pickmob_limit_pick_item_times"
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
                 {
@@ -241,7 +250,7 @@ namespace Mod.ModMenu
                     Description = Strings.autoAskForPeansDescription,
                     GetValueFunc = () => AutoPean.isAutoRequest,
                     SetValueAction = value => AutoPean.isAutoRequest = value,
-                    RMSName = "autoaskforpeans",
+                    RMSName = "auto_ask_for_peans",
                     GetIsDisabled = () => Char.myCharz().clan == null,
                     GetDisabledReason = () => Strings.youAreNotInAClan + '!'
                 }),
@@ -252,7 +261,7 @@ namespace Mod.ModMenu
                     Description = Strings.autoDonatePeansDescription,
                     GetValueFunc = () => AutoPean.isAutoDonate,
                     SetValueAction = value => AutoPean.isAutoDonate = value,
-                    RMSName = "autodonatepeans",
+                    RMSName = "auto_donate_peans",
                     GetIsDisabled = () => Char.myCharz().clan == null,
                     GetDisabledReason = () => Strings.youAreNotInAClan + '!'
                 }),
@@ -263,7 +272,7 @@ namespace Mod.ModMenu
                     Description = Strings.autoHarvestPeansDescription,
                     GetValueFunc = () => AutoPean.isAutoHarvest,
                     SetValueAction = value => AutoPean.isAutoHarvest = value,
-                    RMSName = "autoharvestpeans"
+                    RMSName = "auto_harvest_peans"
                 }),
                 //new ModMenuItemBoolean("Hiện khoảng cách bom", "Hiển thị người, quái, boss... trong tầm bom", SuicideRange.setState, false, "isshowsuiciderange")
                 //new ModMenuItemBoolean("Logo tùy chỉnh", "Bật/tắt hiển thị logo tùy chỉnh trên màn hình game", CustomLogo.setState, false, "isshowlogo"),
@@ -282,7 +291,7 @@ namespace Mod.ModMenu
                         if (value > 5 && value <= Screen.currentResolution.refreshRateRatio.value)
                             Application.targetFrameRate = value;
                     },
-                    RMSName = "targetfps",
+                    RMSName = "target_fps",
                     GetIsDisabled = () => QualitySettings.vSyncCount == 1,
                     GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, "VSync"),
                     TextFieldTitle = Strings.inputFPS,
@@ -295,7 +304,7 @@ namespace Mod.ModMenu
                     Values = Strings.setReduceGraphicsChoices,
                     GetValueFunc = () => (int)GraphicsReducer.level,
                     SetValueAction = level => GraphicsReducer.level = (ReduceGraphicsLevel)level,
-                    RMSName = "levelreducegraphics",
+                    RMSName = "reduce_graphics",
                     GetIsDisabled = () => true,
                     GetDisabledReason = () => "This feature is currently in development state"
                 }),
@@ -336,7 +345,7 @@ namespace Mod.ModMenu
                     Values = Strings.setAutoAttackWhenDiscipleNeededChoices,
                     GetValueFunc = () => (int)AutoPet.modeAttackWhenNeeded,
                     SetValueAction = AutoPet.setAttackState,
-                    RMSName = "modeautopet",
+                    RMSName = "auto_pet_mode",
                     GetIsDisabled = () => AutoPet.mode <= AutoPet.AutoPetMode.Disabled,
                     GetDisabledReason = () => string.Format(Strings.functionShouldBeEnabled, Strings.setAutoTrainPetTitle)
                 }),
@@ -365,11 +374,24 @@ namespace Mod.ModMenu
                     ID = "Set_TimeChangeBg",
                     Title = Strings.setTimeChangeCustomBgTitle,
                     Description = Strings.setTimeChangeCustomBgDescription,
-                    GetValueFunc = () => CustomBackground.intervalChangeBackgroundWallpaper / 1000,
-                    SetValueAction = value => CustomBackground.intervalChangeBackgroundWallpaper = value * 1000,
-                    RMSName = "backgroundinveral",
+                    GetValueFunc = () => CustomBackground.intervalChangeBg / 1000,
+                    SetValueAction = value => CustomBackground.intervalChangeBg = value * 1000,
+                    RMSName = "custom_bg_interval",
                     TextFieldTitle = Strings.inputTimeChangeBg,
                     TextFieldHint = Strings.inputTimeChangeBgHint
+                }),
+                new ModMenuItemValues(new ModMenuItemValuesConfig()
+                {
+                    ID = "Set_IntroVolume",
+                    Title = Strings.setIntroVolumeTitle,
+                    Description = Strings.setIntroVolumeDescription,
+                    GetValueFunc = () => (int)(IntroPlayer.volume * 100),
+                    SetValueAction = value => IntroPlayer.volume = value / 100f,
+                    RMSName = "intro_volume",
+                    TextFieldTitle = Strings.introInputVolume,
+                    TextFieldHint = Strings.introInputVolumeHint,
+                    MinValue = 0,
+                    MaxValue = 100
                 }),
                 //new ModMenuItemInt("Thời gian đổi logo", null, "Điều chỉnh thời gian thay đổi logo (giây)", 30, CustomLogo.setState, "logoinveral", false),
                 //new ModMenuItemInt("Chiều cao của logo", null, "Điều chỉnh chiều cao của logo", 80, CustomLogo.setLogoHeight, "logoheight"),
@@ -407,6 +429,13 @@ namespace Mod.ModMenu
                     Title = Strings.openCustomBackgroundMenuTitle,
                     Description = Strings.openCustomBackgroundMenuDescription, 
                     Action = CustomBackground.ShowMenu
+                }), 
+                new ModMenuItemFunction(new ModMenuItemFunctionConfig()
+                {
+                    ID = "OpenIntroMenu",
+                    Title = Strings.openIntroMenuTitle,
+                    Description = Strings.openIntroMenuDescription, 
+                    Action = IntroPlayer.ShowMenu,
                 }),
                 new ModMenuItemFunction(new ModMenuItemFunctionConfig()
                 {

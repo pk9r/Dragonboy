@@ -23,6 +23,10 @@ namespace Mod.ModMenu
         internal string TextFieldName => _config.TextFieldTitle;
         /// <summary>Gợi ý cho trường nhập liệu <see cref="ChatTextField"/></summary>
         internal string TextFieldHint => _config.TextFieldHint;
+        /// <summary>Giá trị tối thiểu của <see cref="ModMenuItemValues"/>, chỉ có hiệu lực khi nhập giá trị bằng <see cref="ChatTextField"/></summary>
+        internal int MinValue => _config.MinValue;
+        /// <summary>Giá trị tối đa của <see cref="ModMenuItemValues"/>, chỉ có hiệu lực khi nhập giá trị bằng <see cref="ChatTextField"/></summary>
+        internal int MaxValue => _config.MaxValue;
 
         ModMenuItemValuesConfig _config;
         ChatTextField currentCTF;
@@ -61,24 +65,28 @@ namespace Mod.ModMenu
             textField.tfChat.name = TextFieldHint;
             textField.tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
             textField.startChat2(this, TextFieldName);
+            textField.tfChat.setText(SelectedValue.ToString());
         }
 
         public void onChatFromMe(string text, string to)
         {
-            if (string.IsNullOrEmpty(text))
-                return;
-            if (to == TextFieldName)
+            if (string.IsNullOrEmpty(text) || to != TextFieldName)
             {
-                if (int.TryParse(text, out int value))
+                onCancelChat();
+                return;
+            }
+            if (int.TryParse(text, out int value))
+            {
+                if (MinValue != MaxValue && (value < MinValue || value > MaxValue))
+                    GameCanvas.startOKDlg(string.Format(Strings.inputNumberOutOfRange, MinValue, MaxValue) + '!');
+                else
                 {
                     SelectedValue = value;
                     GameScr.info1.addInfo(string.Format(Strings.valueChanged, Title, SelectedValue) + '!', 0);
                 }
-                else 
-                    GameScr.info1.addInfo(Strings.invalidValue + '!', 0);
             }
             else
-                currentCTF.isShow = false;
+                GameCanvas.startOKDlg(Strings.invalidValue + '!');
             onCancelChat();
         }
 

@@ -115,60 +115,72 @@ namespace Mod.R
         internal static string customBgGifSpeed = "";
         internal static string inputNumberMustBeBiggerThanOrEqual = "";
         internal static string imageVideoFile = "";
+        internal static string videoFile = "";
         internal static string allFileTypes = "";
         internal static string customBgSelectBgFiles = "";
         internal static string skipSpaceshipTitle = "";
         internal static string skipSpaceshipDescription = "";
         internal static string setAutoRescueSkill3BuffInvalid = "";
         internal static string setAutoRescueSkill3Null = "";
-        internal static string pickMobMonsterAdded;
-        internal static string pickMobMonsterRemoved;
-        internal static string pickMobMonsterTypeAdded;
-        internal static string pickMobMonsterTypeRemoved;
-        internal static string pickMobAutoPickItemListRemoved;
-        internal static string pickMobAutoPickItemListAdded;
-        internal static string pickMobAutoPickItemTypesListRemoved;
-        internal static string pickMobAutoPickItemTypesListAdded;
-        internal static string pickMobPlsFocusOnMonsterOrItem;
-        internal static string pickMobMonsterListCleared;
-        internal static string pickMobItemListResetToDefault;
-        internal static string pickMobConfiguredPickGemsOnly;
-        internal static string pickMobSkillListRemoved;
-        internal static string pickMobSkillListAdded;
-        internal static string pickMobSkillListResetToDefault;
-        internal static string pickMobDontPickItemListRemoved;
-        internal static string pickMobDontPickItemListAdded;
-        internal static string pickMobPlsFocusOnItem;
-        internal static string pickMobDontPickItemTypeListAdded;
-        internal static string pickMobDontPickItemTypeListRemoved;
-        internal static string pickMobFocusedMob;
-        internal static string pickMobFocusedItem;
-        internal static string pickMobRemoveMobIdFromList;
-        internal static string pickMobAddMobIdToList;
-        internal static string pickMobRemoveFromList;
-        internal static string pickMobAddToList;
-        internal static string pickMobAddItemTypeToList;
-        internal static string pickMobRemoveItemTypeFromList;
-        internal static string pickMobRemoveFromDontPickList;
-        internal static string pickMobAddToDontPickList;
-        internal static string pickMobRemoveItemTypeFromDontPickList;
-        internal static string pickMobAddItemTypeToDontPickList;
-        internal static string pickMobClearMonsterList;
-        internal static string pickMobAddToSkillList;
-        internal static string pickMobRemoveFromSkillList;
-        internal static string pickMobResetSkillListToDefault;
-        internal static string pickMobResetItemListToDefault;
-        internal static string pickMobViewMonsterList;
-        internal static string empty;
-        internal static string pickMobMonsterIdList;
-        internal static string pickMobMonsterTypeList;
-        internal static string pickMobViewItemList;
-        internal static string pickMobAutoPickItemList;
-        internal static object pickMobAutoPickItemTypeList;
-        internal static object pickMobDontPickItemList;
-        internal static object pickMobDontPickItemTypeList;
-        internal static string pickMobViewSkillList;
-        internal static string pickMobSkillList;
+        internal static string pickMobMonsterAdded = "";
+        internal static string pickMobMonsterRemoved = "";
+        internal static string pickMobMonsterTypeAdded = "";
+        internal static string pickMobMonsterTypeRemoved = "";
+        internal static string pickMobAutoPickItemListRemoved = "";
+        internal static string pickMobAutoPickItemListAdded = "";
+        internal static string pickMobAutoPickItemTypesListRemoved = "";
+        internal static string pickMobAutoPickItemTypesListAdded = "";
+        internal static string pickMobPlsFocusOnMonsterOrItem = "";
+        internal static string pickMobMonsterListCleared = "";
+        internal static string pickMobItemListResetToDefault = "";
+        internal static string pickMobConfiguredPickGemsOnly = "";
+        internal static string pickMobSkillListRemoved = "";
+        internal static string pickMobSkillListAdded = "";
+        internal static string pickMobSkillListResetToDefault = "";
+        internal static string pickMobDontPickItemListRemoved = "";
+        internal static string pickMobDontPickItemListAdded = "";
+        internal static string pickMobPlsFocusOnItem = "";
+        internal static string pickMobDontPickItemTypeListAdded = "";
+        internal static string pickMobDontPickItemTypeListRemoved = "";
+        internal static string pickMobFocusedMob = "";
+        internal static string pickMobFocusedItem = "";
+        internal static string pickMobRemoveMobIdFromList = "";
+        internal static string pickMobAddMobIdToList = "";
+        internal static string pickMobRemoveFromList = "";
+        internal static string pickMobAddToList = "";
+        internal static string pickMobAddItemTypeToList = "";
+        internal static string pickMobRemoveItemTypeFromList = "";
+        internal static string pickMobRemoveFromDontPickList = "";
+        internal static string pickMobAddToDontPickList = "";
+        internal static string pickMobRemoveItemTypeFromDontPickList = "";
+        internal static string pickMobAddItemTypeToDontPickList = "";
+        internal static string pickMobClearMonsterList = "";
+        internal static string pickMobAddToSkillList = "";
+        internal static string pickMobRemoveFromSkillList = "";
+        internal static string pickMobResetSkillListToDefault = "";
+        internal static string pickMobResetItemListToDefault = "";
+        internal static string pickMobViewMonsterList = "";
+        internal static string empty = "";
+        internal static string pickMobMonsterIdList = "";
+        internal static string pickMobMonsterTypeList = "";
+        internal static string pickMobViewItemList = "";
+        internal static string pickMobAutoPickItemList = "";
+        internal static object pickMobAutoPickItemTypeList = "";
+        internal static object pickMobDontPickItemList = "";
+        internal static object pickMobDontPickItemTypeList = "";
+        internal static string pickMobViewSkillList = "";
+        internal static string pickMobSkillList = "";
+        internal static string introCurrentPath = "";
+        internal static string introChangeVideoPath = "";
+        internal static string setIntroVolumeTitle = "";
+        internal static string introInputVolume = "";
+        internal static string introInputVolumeHint = "";
+        internal static string introTitle = "";
+        internal static string introDescription = "";
+        internal static string openIntroMenuTitle = "";
+        internal static string openIntroMenuDescription = "";
+        internal static string setIntroVolumeDescription = "";
+        internal static string introNoVideo = "";
         #endregion
 
         internal static void LoadLanguage(sbyte newLanguage)
@@ -236,6 +248,7 @@ namespace Mod.R
             customBgAutoChangeBg = "Tự động chuyển hình nền";
             customBgSetTimeChange = "Thay đổi thời gian chuyển hình nền";
             imageVideoFile = "Tệp ảnh/video";
+            videoFile = "Tệp video";
             allFileTypes = "Tất cả";
             customBgSelectBgFiles = "Chọn hình nền";
             customBgChangeGifSpeed = "Thay đổi tốc độ ảnh động";
@@ -294,6 +307,11 @@ namespace Mod.R
             pickMobDontPickItemTypeList = "Danh sách loại vật phẩm không tự động nhặt";
             pickMobViewSkillList = "Xem danh sách kỹ năng";
             pickMobSkillList = "Danh sách kỹ năng dùng để đánh quái";
+            introCurrentPath = "Đường dẫn video hiện tại";
+            introChangeVideoPath = "Chọn đường dẫn video";
+            introInputVolume = "Nhập âm lượng intro";
+            introInputVolumeHint = "Âm lượng";
+            introNoVideo = "Đường dẫn video intro chưa được đặt";
             //---------------------------------------------------
             vSyncDescription = "Tự động giới hạn FPS theo tốc độ khung hình của màn hình";
             showTargetInfoTitle = "Thông tin đối thủ";
@@ -312,6 +330,8 @@ namespace Mod.R
             skipSpaceshipDescription = "Bỏ qua hoạt ảnh tàu vũ trụ";
             notifyBossTitle = "Thông báo Boss";
             notifyBossDescription = "Hiển thị danh sách thông báo boss";
+            introTitle = "Video intro";
+            introDescription = "Phát một đoạn video ngắn khi mở game";
             pickMobTitle = "Tàn sát";
             pickMobDescription = "Tự động đánh quái";
             avoidSuperMobTitle = "Né siêu quái khi tàn sát";
@@ -376,6 +396,8 @@ namespace Mod.R
             setAutoRescueSkill3BuffInvalid = "Skill 3 của bạn không phải kỹ năng Trị thương";
             setTimeChangeCustomBgTitle = "Thời gian đổi hình nền";
             setTimeChangeCustomBgDescription = "Điều chỉnh thời gian thay đổi hình nền (giây)";
+            setIntroVolumeTitle = "Âm lượng intro";
+            setIntroVolumeDescription = "Điều chỉnh âm lượng video phát khi mở game";
             openXmapMenuTitle = "Menu Xmap";
             openXmapMenuDescription = "Mở menu Xmap (lệnh \"xmp\" hoặc nút \'x\')";
             openPickMobMenuTitle = "Menu PickMob";
@@ -386,6 +408,8 @@ namespace Mod.R
             openCustomBackgroundMenuDescription = "Mở menu hình nền tùy chỉnh";
             openSetsMenuTitle = "Menu Set đồ";
             openSetsMenuDescription = "Mở menu set đồ (lệnh \"set\" hoặc nút \'`\')";
+            openIntroMenuTitle = "Menu Intro";
+            openIntroMenuDescription = "Mở menu intro video";
         }
 
         static void LoadLanguageEN()
@@ -436,6 +460,7 @@ namespace Mod.R
             customBgSetTimeChange = "Change background interval";
             customBgChangeGifSpeed = "Change animated background speed";
             imageVideoFile = "Image/video file";
+            videoFile = "Video file";
             allFileTypes = "All file types";
             customBgSelectBgFiles = "Select background files";
             customBgInputGifSpeed = "Input animated background speed";
@@ -493,6 +518,11 @@ namespace Mod.R
             pickMobDontPickItemTypeList = "Don't auto pick item type list";
             pickMobViewSkillList = "View skill list";
             pickMobSkillList = "Skill list used to attack monsters";
+            introCurrentPath = "Current video path";
+            introChangeVideoPath = "Change video path";
+            introInputVolume = "Input intro volume";
+            introInputVolumeHint = "Volume";
+            introNoVideo = "Intro video path has not been set";
             //---------------------------------------------------
             vSyncDescription = "Automatically limit the FPS according to the monitor's refresh rate";
             showTargetInfoTitle = "Target's effect information";
@@ -511,6 +541,8 @@ namespace Mod.R
             skipSpaceshipDescription = "Skip spaceship animation";
             notifyBossTitle = "Boss notification";
             notifyBossDescription = "Show boss notification list";
+            introTitle = "Intro video";
+            introDescription = "Play a short video when opening the game";
             pickMobTitle = "Slaughter";
             pickMobDescription = "Auto attack monsters";
             avoidSuperMobTitle = "Avoid super monsters";
@@ -575,6 +607,8 @@ namespace Mod.R
             setAutoRescueSkill3BuffInvalid = "Your third skill is not Rescue";
             setTimeChangeCustomBgTitle = "Background duration";
             setTimeChangeCustomBgDescription = "Adjust the time to switch background (seconds)";
+            setIntroVolumeTitle = "Change intro volume";
+            setIntroVolumeDescription = "Adjust the volume of the video played when opening the game";
             openXmapMenuTitle = "Xmap menu";
             openXmapMenuDescription = "Open the Xmap menu (\"xmp\" chat command or \'x\' key)";
             openPickMobMenuTitle = "PickMob menu";
@@ -585,6 +619,8 @@ namespace Mod.R
             openCustomBackgroundMenuDescription = "Open the Custom Background menu";
             openSetsMenuTitle = "Sets menu";
             openSetsMenuDescription = "Open the Sets menu (\"set\" command or \'`\' key)";
+            openIntroMenuTitle = "Intro menu";
+            openIntroMenuDescription = "Open the intro video menu";
         }
 
         //static void LoadLanguageID()

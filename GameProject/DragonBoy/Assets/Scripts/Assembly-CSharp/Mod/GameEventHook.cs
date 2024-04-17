@@ -24,6 +24,7 @@ namespace Mod
         /// </summary>
         public static void InstallAll()
         {
+            Main main = new Main();
             MotherCanvas motherCanvas = new MotherCanvas(_);
             ChatTextField chatTextField = new ChatTextField(_);
             Teleport teleport = new Teleport(_);
@@ -40,6 +41,7 @@ namespace Mod
             LoginScr loginScr = new LoginScr(_);
             Skill skill = new Skill();
 
+            //Hook as soon as possible
             TryInstallHook<Action<int, int>, Action<MotherCanvas, int, int>>(motherCanvas.checkZoomLevel, MotherCanvas_checkZoomLevel_hook, MotherCanvas_checkZoomLevel_original);
             TryInstallHook<Func<string, Image>, Func<string, Image>>(Image.createImage, Image_createImage_hook, Image_createImage_original);
             TryInstallHook<Func<string>, Func<string>>(Rms.GetiPhoneDocumentsPath, Rms_GetiPhoneDocumentsPath_hook, Rms_GetiPhoneDocumentsPath_original);
@@ -47,7 +49,13 @@ namespace Mod
             TryInstallHook(new Action(ServerListScreen.saveIP).Method, new Action(ServerListScreen_saveIP_hook).Method, null);
             TryInstallHook(new Action(ServerListScreen.loadIP).Method, new Action(ServerListScreen_loadIP_hook).Method, null);
             TryInstallHook(typeof(Panel).GetConstructor(new Type[0]), new Action<Panel>(Panel_ctor_hook).Method, new Action<Panel>(Panel__ctor_original).Method);
+            TryInstallHook<Action, Action<Main>>(main.Start, Main_Start_hook, Main_Start_original);
+            TryInstallHook<Action, Action<Main>>(main.Update, Main_Update_hook, Main_Update_original);
+            TryInstallHook<Action, Action<Main>>(main.FixedUpdate, Main_FixedUpdate_hook, Main_FixedUpdate_original);
+            TryInstallHook<Action<bool>, Action<Main, bool>>(main.OnApplicationPause, Main_OnApplicationPause_hook, Main_OnApplicationPause_original);
+            TryInstallHook<Action, Action<Main>>(main.OnApplicationQuit, Main_OnApplicationQuit_hook, Main_OnApplicationQuit_original);
 
+            //Can be installed later
             TryInstallHook<Action, Action<GameScr>>(gameScr.updateKey, GameScr_updateKey_hook, GameScr_updateKey_original);
             TryInstallHook<Action<mGraphics>, Action<ChatTextField, mGraphics>>(chatTextField.paint, ChatTextField_paint_hook, ChatTextField_paint_original);
             TryInstallHook<Action<int, IChatable, string>, Action<ChatTextField, int, IChatable, string>>(chatTextField.startChat, ChatTextField_startChat_hook_1, ChatTextField_startChat_original_1);
@@ -950,6 +958,61 @@ namespace Mod
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Panel__ctor_original(Panel _this)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Main_Update_hook(Main _this)
+        {
+            GameEvents.OnUpdateMain();
+            Main_Update_original(_this);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Main_Update_original(Main _this)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Main_FixedUpdate_hook(Main _this)
+        {
+            GameEvents.OnFixedUpdateMain();
+            Main_FixedUpdate_original(_this);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Main_FixedUpdate_original(Main _this)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Main_Start_hook(Main _this)
+        {
+            GameEvents.OnMainStart();
+            Main_Start_original(_this);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Main_Start_original(Main _this)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Main_OnApplicationQuit_hook(Main _this)
+        {
+            GameEvents.OnGameClosing();
+            Main_OnApplicationQuit_original(_this);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Main_OnApplicationQuit_original(Main _this)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Main_OnApplicationPause_hook(Main _this, bool paused)
+        {
+            GameEvents.OnGamePause(paused);
+            Main_OnApplicationPause_original(_this, paused);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Main_OnApplicationPause_original(Main _this, bool paused)
         {
             Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }

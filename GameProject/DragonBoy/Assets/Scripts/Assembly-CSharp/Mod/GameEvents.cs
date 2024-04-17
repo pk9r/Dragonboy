@@ -39,24 +39,12 @@ namespace Mod
         static GUIStyle style;
 
         /// <summary>
-        /// Kích hoạt khi người chơi chat.
-        /// </summary>
-        /// <param name="text">Nội dung chat.</param>
-        /// <returns></returns>
-        internal static bool OnSendChat(string text)
-        {
-            //HistoryChat.gI.append(text);
-            //return ChatCommandHandler.handleChatText(text);
-            return false;
-        }
-
-        /// <summary>
         /// Kích hoạt sau khi game khởi động.
         /// </summary>
-        internal static bool OnGameStarted()
+        internal static void OnGameStart()
         {
-            QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
+            QualitySettings.vSyncCount = 1;
             if (Utils.IsAndroidBuild())
             {
                 Screen.sleepTimeout = SleepTimeout.NeverSleep;
@@ -69,13 +57,10 @@ namespace Mod
             }
             OnCheckZoomLevel(Screen.width, Screen.height);
             GameEventHook.InstallAll();
-            //TestHook.Install();
             if (!Directory.Exists(Utils.dataPath))
                 Directory.CreateDirectory(Utils.dataPath);
-            UIImage.OnStart();
             CustomBackground.LoadData();
             CharEffect.Init();
-            
             Setup.loadFile();
             //ChatCommandHandler.loadDefault();
             //HotkeyCommandHandler.loadDefault();
@@ -88,14 +73,39 @@ namespace Mod
             //UIReportersManager.AddReporter(Boss.Paint);
             //UIReportersManager.AddReporter(ListCharsInMap.Paint);
             //ShareInfo.gI.toggle(true);
+            OnSetResolution();
+        }
+
+        /// <summary>
+        /// Kích hoạt khi người chơi chat.
+        /// </summary>
+        /// <param name="text">Nội dung chat.</param>
+        /// <returns></returns>
+        internal static bool OnSendChat(string text)
+        {
+            //HistoryChat.gI.append(text);
+            //return ChatCommandHandler.handleChatText(text);
+            return false;
+        }
+
+        /// <summary>
+        /// Kích hoạt sau khi <see cref="MonoBehaviour"/> <see cref="Main"/> được kích hoạt.
+        /// </summary>
+        internal static void OnMainStart()
+        {
+            if (Main.started)
+                return;
+            if (Thread.CurrentThread.Name != "Main")
+                Thread.CurrentThread.Name = "Main";
+            Main.mainThreadName = Thread.CurrentThread.Name;
+            Main.isPC = true;
+            Main.started = true;
+            UIImage.OnStart();
             if (Rms.loadRMSInt("svselect") == -1)
             {
                 ServerListScreen.linkDefault = Strings.DEFAULT_IP_SERVERS;
                 ServerListScreen.getServerList(Strings.DEFAULT_IP_SERVERS);
             }
-            if (OnSetResolution())
-                return true;
-            return false;
         }
 
         internal static void OnGamePause(bool paused)
@@ -151,6 +161,8 @@ namespace Mod
 
         internal static void OnUpdateMain()
         {
+            if (!Main.started)
+                return;
             if (_previousWidth != Screen.width || _previousHeight != Screen.height)
             {
                 _previousWidth = Screen.width;
@@ -187,10 +199,10 @@ namespace Mod
         /// Kích hoạt khi cài đăt kích thước màn hình.
         /// </summary>
         /// <returns></returns>
-        internal static bool OnSetResolution()
+        internal static void OnSetResolution()
         {
             if (Utils.IsAndroidBuild())
-                return true;
+                return;
             if (Utils.sizeData != null)
             {
                 int width = (int)Utils.sizeData["width"];
@@ -206,9 +218,7 @@ namespace Mod
                         Thread.Sleep(100);
                     }
                 }).Start();
-                return true;
             }
-            return false;
         }
 
         /// <summary>
@@ -233,7 +243,7 @@ namespace Mod
         internal static void OnPaintChatTextField(ChatTextField instance, mGraphics g)
         {
             //if (instance == ChatTextField.gI() && instance.strChat.Replace(" ", "") == "Chat" && instance.tfChat.name == "chat")
-                //HistoryChat.gI.paint(g);
+            //HistoryChat.gI.paint(g);
         }
 
         /// <summary>
@@ -242,10 +252,10 @@ namespace Mod
         internal static bool OnStartChatTextField(ChatTextField sender, IChatable parentScreen)
         {
             sender.parentScreen = parentScreen;
-            if (sender.strChat.Replace(" ", "") != "Chat" || sender.tfChat.name != "chat") 
+            if (sender.strChat.Replace(" ", "") != "Chat" || sender.tfChat.name != "chat")
                 return false;
             //if (sender == ChatTextField.gI())
-                //HistoryChat.gI.show();
+            //HistoryChat.gI.show();
             return false;
         }
 
@@ -464,7 +474,7 @@ namespace Mod
         {
             if (npc.avatar == 1139 || AutoTrainNewAccount.isEnabled)
             {
-                if (!new string[] { "NGOCRONGONLINE.COM", "Hack, Mod" }.Any(s => chat.Contains(s)))
+                if (new string[] { "NGOCRONGONLINE.COM", "Hack, Mod" }.Any(s => chat.Contains(s)))
                     GameScr.info1.addInfo(chat, 0);
                 return true;
             }
@@ -608,9 +618,9 @@ namespace Mod
         {
             if (xEnd == Char.myCharz().cx && yEnd == Char.myCharz().cy - 10)
             {
-                if (AutoTrainNewAccount.isEnabled) 
+                if (AutoTrainNewAccount.isEnabled)
                     AutoTrainNewAccount.isPicking = false;
-                if (ModMenuMain.GetModMenuItem<ModMenuItemValues>("Set_AutoTrainPet").SelectedValue != 0) 
+                if (ModMenuMain.GetModMenuItem<ModMenuItemValues>("Set_AutoTrainPet").SelectedValue != 0)
                     AutoPet.isPicking = false;
             }
         }
@@ -634,13 +644,13 @@ namespace Mod
 
         internal static void OnAddInfoChar(Char c, string info)
         {
-            if (LocalizedString.saoMayLuoiThe.ContainsReversed(info.ToLower()) && ModMenuMain.GetModMenuItem<ModMenuItemValues>("Set_AutoTrainPet").SelectedValue > 0 && c.charID == -Char.myCharz().charID) 
+            if (LocalizedString.saoMayLuoiThe.ContainsReversed(info.ToLower()) && ModMenuMain.GetModMenuItem<ModMenuItemValues>("Set_AutoTrainPet").SelectedValue > 0 && c.charID == -Char.myCharz().charID)
                 AutoPet.saoMayLuoiThe = true;
         }
 
         internal static bool OnPaintBgGameScr(mGraphics g)
         {
-            if (CustomBackground.isEnabled && CustomBackground.backgroundWallpapers.Count > 0 && !ModMenuMain.GetModMenuItem<ModMenuItemBoolean>("CustomBg_Toggle").IsDisabled)
+            if (CustomBackground.isEnabled && CustomBackground.customBgs.Count > 0 && !ModMenuMain.GetModMenuItem<ModMenuItemBoolean>("CustomBg_Toggle").IsDisabled)
             {
                 CustomBackground.Paint(g);
                 return true;
@@ -1008,8 +1018,8 @@ namespace Mod
 
         internal static bool OnGotoPlayer(int id, bool isAutoUseYardrat = true)
         {
-            if (isAutoUseYardrat) 
-            { 
+            if (isAutoUseYardrat)
+            {
                 new Thread(delegate ()
                 {
                     int previousDisguiseId = -1;
@@ -1051,7 +1061,7 @@ namespace Mod
                         }
                     }
                 }).Start();
-                return true; 
+                return true;
             }
             else
                 return false;
@@ -1289,7 +1299,7 @@ namespace Mod
                 SoundMn.gI().panelClick();
                 CustomPanelMenu.setTabCustomPanelMenu(instance);
                 instance.selected = instance.lastSelect[instance.currentTabIndex];
-                
+
                 return true;
             }
             return false;
@@ -1505,7 +1515,7 @@ namespace Mod
                                 CustomGraphics.PaintItemOptions(g, panel, item, y + mFont.tahoma_7b_blue.getHeight() + 1);
                             }
                         }
-                        else 
+                        else
                             CustomGraphics.PaintItemOptions(g, panel, item, y + mFont.tahoma_7b_blue.getHeight() + 1);
                     }
                     else
@@ -1660,18 +1670,18 @@ namespace Mod
                     CustomGraphics.PaintItemOptions(g, panel, item, y);
                 }
             }
-            else if ((panel.type == 21 && panel.currentTabIndex == 2) || 
-                (panel.type == 0 && panel.currentTabIndex == 1) || 
-                (panel.type == 2 && panel.currentTabIndex == 1) || 
-                panel.type == 7 || 
-                (panel.type == 12 && panel.currentTabIndex == 1) || 
-                (panel.type == 13 && panel.currentTabIndex == 0 && panel == GameCanvas.panel) || 
+            else if ((panel.type == 21 && panel.currentTabIndex == 2) ||
+                (panel.type == 0 && panel.currentTabIndex == 1) ||
+                (panel.type == 2 && panel.currentTabIndex == 1) ||
+                panel.type == 7 ||
+                (panel.type == 12 && panel.currentTabIndex == 1) ||
+                (panel.type == 13 && panel.currentTabIndex == 0 && panel == GameCanvas.panel) ||
                 (panel.type == 1 && panel.currentTabIndex == panel.currentTabName.Length - 1 && GameCanvas.panel2 == null && panel.typeShop != 2))  //my inventory
             {
                 Item[] arrItemBody = Char.myCharz().arrItemBody;
                 Item[] arrItemBag = Char.myCharz().arrItemBag;
                 int offset = Math.Max(panel.cmy / panel.ITEM_HEIGHT, 1);
-                for (int i = offset; i < Mathf.Clamp(offset + panel.hScroll / panel.ITEM_HEIGHT + 2, 0, panel.currentListLength); i++)
+                for (int i = offset; i < Mathf.Clamp(offset + (panel.hScroll - 21) / panel.ITEM_HEIGHT + 2, 0, panel.currentListLength); i++)
                 {
                     int y = panel.yScroll + i * panel.ITEM_HEIGHT;
                     if (y - panel.cmy > panel.yScroll + panel.hScroll || y - panel.cmy < panel.yScroll - panel.ITEM_HEIGHT)

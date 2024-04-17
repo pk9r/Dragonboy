@@ -83,7 +83,7 @@ public class Main : MonoBehaviour
 
 	public static bool isCompactDevice = true;
 
-	private void Start()
+	internal void Start()
 	{
 		if (started)
 			return;
@@ -92,16 +92,14 @@ public class Main : MonoBehaviour
 		mainThreadName = Thread.CurrentThread.Name;
 		isPC = true;
 		started = true;
-		if (GameEvents.OnGameStarted())
-			return;
-        if (isPC)
-		{
-			level = Rms.loadRMSInt("levelScreenKN");
-			if (level == 1)
-				Screen.SetResolution(720, 320, false);
-			else
-				Screen.SetResolution(1024, 600, false);
-        }
+  //      if (isPC)
+		//{
+		//	level = Rms.loadRMSInt("levelScreenKN");
+		//	if (level == 1)
+		//		Screen.SetResolution(720, 320, false);
+		//	else
+		//		Screen.SetResolution(1024, 600, false);
+  //      }
 	}
 
 	private void SetInit()
@@ -223,7 +221,7 @@ public class Main : MonoBehaviour
 		}
 	}
 
-	private void FixedUpdate()
+	internal void FixedUpdate()
 	{
 		Rms.update();
 		count++;
@@ -246,7 +244,6 @@ public class Main : MonoBehaviour
 			DataInputStream.update();
 			//SMS.update();
 			Net.update();
-            GameEvents.OnFixedUpdateMain();
             f++;
 			if (f > 8)
 				f = 0;
@@ -257,9 +254,9 @@ public class Main : MonoBehaviour
 		}
 	}
 
-	private void Update()
+	internal void Update()
 	{
-        GameEvents.OnUpdateMain();
+		Res.outz("Some dummy code here");
     }
 
     private void checkInput()
@@ -325,9 +322,8 @@ public class Main : MonoBehaviour
 		//}
 	}
 
-	private void OnApplicationQuit()
+    internal void OnApplicationQuit()
 	{
-        GameEvents.OnGameClosing();
         Debug.LogWarning("APP QUIT");
 		GameCanvas.bRun = false;
 		Session_ME.gI().close();
@@ -342,9 +338,8 @@ public class Main : MonoBehaviour
 		}
 	}
 
-	private void OnApplicationPause(bool paused)
+	internal void OnApplicationPause(bool paused)
 	{
-        GameEvents.OnGamePause(paused);
         isResume = false;
 		if (paused)
 		{
