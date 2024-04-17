@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Assets.src.e;
 using Assets.src.g;
 using UnityEngine;
@@ -2036,7 +2037,8 @@ public class GameCanvas : IActionListener
 		}
 	}
 
-	public void keyReleasedz(int keyCode)
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public void keyReleasedz(int keyCode)
 	{
 		keyAsciiPress = 0;
 		mapKeyRelease(keyCode);

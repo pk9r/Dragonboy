@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using Assets.src.g;
 
 public class Mob : IMapObject
@@ -1281,7 +1282,8 @@ public class Mob : IMapObject
 		return 16711680;
 	}
 
-	public void startDie()
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public void startDie()
 	{
 		hp = 0;
 		injureThenDie = true;

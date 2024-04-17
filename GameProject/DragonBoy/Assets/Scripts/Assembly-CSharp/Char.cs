@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using Assets.src.e;
 using Assets.src.g;
 using Mod;
@@ -1407,7 +1408,8 @@ public class Char : IMapObject
 		lastS = (currS = mSystem.currentTimeMillis());
 	}
 
-	public void addInfo(string info)
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public void addInfo(string info)
 	{
 		if (chatInfo == null)
 			chatInfo = new Info();
@@ -6016,7 +6018,8 @@ public class Char : IMapObject
 		return cTypePk == 4 || cTypePk == 3;
 	}
 
-	public void setHoldChar(Char r)
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public void setHoldChar(Char r)
 	{
 		if (cx < r.cx)
 			cdir = 1;
@@ -6026,7 +6029,8 @@ public class Char : IMapObject
 		holder = true;
 	}
 
-	public void setHoldMob(Mob r)
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public void setHoldMob(Mob r)
 	{
 		if (cx < r.x)
 			cdir = 1;
@@ -6492,7 +6496,8 @@ public class Char : IMapObject
 		}
 	}
 
-	public void removeHoleEff()
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public void removeHoleEff()
 	{
 		if (holder)
 		{

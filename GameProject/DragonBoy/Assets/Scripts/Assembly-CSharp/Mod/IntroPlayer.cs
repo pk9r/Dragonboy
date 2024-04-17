@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
 using System.Threading;
-using static UnityEngine.Networking.UnityWebRequest;
 
 #if UNITY_EDITOR || UNITY_STANDALONE
 using SFB;

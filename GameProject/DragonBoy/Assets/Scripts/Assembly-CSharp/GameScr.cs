@@ -6406,7 +6406,7 @@ public class GameScr : mScreen, IChatable
 		}
 	}
 
-	internal void paintGamePad(mGraphics g)
+    internal void paintGamePad(mGraphics g)
 	{
 		if (isAnalog != 0 && Char.myCharz().statusMe != 14)
 		{

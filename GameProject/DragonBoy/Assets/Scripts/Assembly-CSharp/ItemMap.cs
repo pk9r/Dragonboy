@@ -1,4 +1,6 @@
-﻿public class ItemMap : IMapObject
+﻿using System.Runtime.CompilerServices;
+
+public class ItemMap : IMapObject
 {
     /// <summary>
     /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
@@ -94,7 +96,8 @@
 		}
 	}
 
-	public void setPoint(int xEnd, int yEnd)
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public void setPoint(int xEnd, int yEnd)
 	{
 		this.xEnd = xEnd;
 		this.yEnd = yEnd;

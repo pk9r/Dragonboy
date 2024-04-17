@@ -475,8 +475,10 @@ namespace Mod
             if (npc.avatar == 1139 || AutoTrainNewAccount.isEnabled)
             {
                 if (new string[] { "NGOCRONGONLINE.COM", "Hack, Mod" }.Any(s => chat.Contains(s)))
+                {
                     GameScr.info1.addInfo(chat, 0);
-                return true;
+                    return true;
+                }
             }
             return false;
         }

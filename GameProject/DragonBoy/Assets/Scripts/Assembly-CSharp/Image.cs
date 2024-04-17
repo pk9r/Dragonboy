@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using UnityEngine;
 
@@ -41,7 +42,8 @@ public class Image
 		return __createEmptyImage();
 	}
 
-	public static Image createImage(string filename)
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public static Image createImage(string filename)
 	{
 		return __createImage(filename);
 	}

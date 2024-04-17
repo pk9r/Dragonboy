@@ -26,20 +26,6 @@ namespace Mod
         {
             Main main = new Main();
             MotherCanvas motherCanvas = new MotherCanvas(_);
-            ChatTextField chatTextField = new ChatTextField(_);
-            Teleport teleport = new Teleport(_);
-            ServerListScreen serverListScreen = new ServerListScreen(_);
-            GameCanvas gameCanvas = new GameCanvas(_);
-            GameScr gameScr = new GameScr(_);
-            Panel panel = new Panel(_);
-            Char ch = new Char();
-            ItemMap itemMap = new ItemMap(_);
-            Menu menu = new Menu();
-            Mob mob = new Mob();
-            SoundMn soundMn = new SoundMn();
-            GamePad gamePad = new GamePad(_);
-            LoginScr loginScr = new LoginScr(_);
-            Skill skill = new Skill();
 
             //Hook as soon as possible
             TryInstallHook<Action<int, int>, Action<MotherCanvas, int, int>>(motherCanvas.checkZoomLevel, MotherCanvas_checkZoomLevel_hook, MotherCanvas_checkZoomLevel_original);
@@ -55,6 +41,25 @@ namespace Mod
             TryInstallHook<Action<bool>, Action<Main, bool>>(main.OnApplicationPause, Main_OnApplicationPause_hook, Main_OnApplicationPause_original);
             TryInstallHook<Action, Action<Main>>(main.OnApplicationQuit, Main_OnApplicationQuit_hook, Main_OnApplicationQuit_original);
 
+            ChatTextField chatTextField = new ChatTextField(_);
+            Teleport teleport = new Teleport(_);
+            ServerListScreen serverListScreen = new ServerListScreen(_);
+            GameCanvas gameCanvas = new GameCanvas(_);
+            GameScr gameScr = new GameScr(_);
+            Panel panel = new Panel(_);
+            Char ch = new Char();
+            ItemMap itemMap = new ItemMap(_);
+            Menu menu = new Menu();
+            Mob mob = new Mob();
+            SoundMn soundMn = new SoundMn();
+            GamePad gamePad = new GamePad(_);
+            LoginScr loginScr = new LoginScr(_);
+            Skill skill = new Skill();
+            Service service = Service.gI();
+            Session_ME session_ME = Session_ME.gI();
+            Controller controller = Controller.gI();
+            InfoMe infoMe = InfoMe.gI();
+
             //Can be installed later
             TryInstallHook<Action, Action<GameScr>>(gameScr.updateKey, GameScr_updateKey_hook, GameScr_updateKey_original);
             TryInstallHook<Action<mGraphics>, Action<ChatTextField, mGraphics>>(chatTextField.paint, ChatTextField_paint_hook, ChatTextField_paint_original);
@@ -64,18 +69,18 @@ namespace Mod
             TryInstallHook<Action, Action<ChatTextField>>(chatTextField.update, ChatTextField_update_hook, ChatTextField_update_original);
             TryInstallHook<Action, Action>(Rms.clearAll, Rms_clearAll_hook, Rms_clearAll_original);
             TryInstallHook<Action, Action<GameScr>>(gameScr.update, GameScr_update_hook, GameScr_update_original);
-            TryInstallHook<Action<string, string, string, sbyte>, Action<Service, string, string, string, sbyte>>(Service.gI().login, Service_login_hook, Service_login_original);
+            TryInstallHook<Action<string, string, string, sbyte>, Action<Service, string, string, string, sbyte>>(service.login, Service_login_hook, Service_login_original);
             TryInstallHook<Action, Action<ServerListScreen>>(serverListScreen.switchToMe, ServerListScreen_switchToMe_hook, ServerListScreen_switchToMe_original);
-            TryInstallHook<Action<string, int>, Action<Session_ME, string, int>>(Session_ME.gI().connect, Session_ME_connect_hook, Session_ME_connect_original);
+            TryInstallHook<Action<string, int>, Action<Session_ME, string, int>>(session_ME.connect, Session_ME_connect_hook, Session_ME_connect_original);
             TryInstallHook<Action, Action<ServerListScreen>>(serverListScreen.show2, ServerListScreen_show2_hook, ServerListScreen_show2_original);
             TryInstallHook<Action<int>, Action<GameCanvas, int>>(gameCanvas.keyPressedz, GameCanvas_keyPressedz_hook, GameCanvas_keyPressedz_original);
             TryInstallHook<Action<int>, Action<GameCanvas, int>>(gameCanvas.keyReleasedz, GameCanvas_keyReleasedz_hook, GameCanvas_keyReleasedz_original);
             TryInstallHook<Action<string, int, Npc>, Action<string, int, Npc>>(ChatPopup.addChatPopupMultiLine, ChatPopup_addChatPopupMultiLine_hook, ChatPopup_addChatPopupMultiLine_original);
             TryInstallHook<Action<string, int, Npc>, Action<string, int, Npc>>(ChatPopup.addBigMessage, ChatPopup_addBigMessage_hook, ChatPopup_addBigMessage_original);
-            TryInstallHook<Action<Message>, Action<Controller, Message>>(Controller.gI().loadInfoMap, Controller_loadInfoMap_hook, Controller_loadInfoMap_original);
+            TryInstallHook<Action<Message>, Action<Controller, Message>>(controller.loadInfoMap, Controller_loadInfoMap_hook, Controller_loadInfoMap_original);
             TryInstallHook<Action<mGraphics>, Action<GameScr, mGraphics>>(gameScr.paint, GameScr_paint_hook, GameScr_paint_original);
             TryInstallHook<Action<SkillPaint, int>, Action<Char, SkillPaint, int>>(ch.setSkillPaint, Char_setSkillPaint_hook, Char_setSkillPaint_original);
-            TryInstallHook<Action<string, int>, Action<InfoMe, string, int>>(InfoMe.gI().addInfo, InfoMe_addInfo_hook, InfoMe_addInfo_original);
+            TryInstallHook<Action<string, int>, Action<InfoMe, string, int>>(infoMe.addInfo, InfoMe_addInfo_hook, InfoMe_addInfo_original);
             TryInstallHook<Action, Action<Panel>>(panel.updateKey, Panel_updateKey_hook, Panel_updateKey_original);
             TryInstallHook<Action<int, int>, Action<ItemMap, int, int>>(itemMap.setPoint, ItemMap_setPoint_hook, ItemMap_setPoint_original);
             TryInstallHook<Action<MyVector, int>, Action<Menu, MyVector, int>>(menu.startAt, Menu_startAt_hook, Menu_startAt_original);
@@ -99,8 +104,8 @@ namespace Mod
             TryInstallHook<Action<sbyte>, Action<sbyte>>(mResources.loadLanguague, mResources_loadLanguague_hook, mResources_loadLanguague_original);
             TryInstallHook<Action, Action<LoginScr>>(loginScr.switchToMe, LoginScr_switchToMe_hook, LoginScr_switchToMe_original);
             TryInstallHook<Action<int, int, mGraphics>, Action<Skill, int, int, mGraphics>>(skill.paint, Skill_paint_hook, Skill_paint_original);
-            TryInstallHook<Action<string>, Action<Service, string>>(Service.gI().chat, Service_chat_hook, Service_chat_original);
-            TryInstallHook<Action<int>, Action<Service, int>>(Service.gI().gotoPlayer, Service_gotoPlayer_hook, Service_gotoPlayer_original);
+            TryInstallHook<Action<string>, Action<Service, string>>(service.chat, Service_chat_hook, Service_chat_original);
+            TryInstallHook<Action<int>, Action<Service, int>>(service.gotoPlayer, Service_gotoPlayer_hook, Service_gotoPlayer_original);
             TryInstallHook<Action, Action<Panel>>(panel.updateKeyInTabBar, Panel_updateKeyInTabBar_hook, Panel_updateKeyInTabBar_original);
             TryInstallHook<Action<mGraphics>, Action<Panel, mGraphics>>(panel.paint, Panel_paint_hook, Panel_paint_original);
             TryInstallHook<Action, Action<Panel>>(panel.update, Panel_update_hook, Panel_update_original);

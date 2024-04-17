@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using UnityEngine;
 
@@ -154,7 +155,8 @@ public class Rms
 		}
 	}
 
-	public static string GetiPhoneDocumentsPath()
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public static string GetiPhoneDocumentsPath()
 	{
 		return Application.persistentDataPath;
 	}
