@@ -1,4 +1,3 @@
-#if !UNITY_EDITOR && UNITY_STANDALONE_LINUX
 using System;
 
 namespace SFB {
@@ -12,4 +11,3 @@ namespace SFB {
         void SaveFilePanelAsync(string title, string directory, string defaultName, ExtensionFilter[] extensions, Action<string> cb);
     }
 }
-#endif

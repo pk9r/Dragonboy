@@ -131,12 +131,12 @@ public class IntroPlayer : MonoBehaviour
 #if UNITY_EDITOR || UNITY_STANDALONE
             ExtensionFilter[] extensions = new[]
             {
-                    new ExtensionFilter(Strings.videoFile, "mp4" ),
-                    new ExtensionFilter(Strings.allFileTypes, "*" ),
-                };
-            paths = StandaloneFileBrowser.OpenFilePanel(Strings.customBgSelectBgFiles, "", extensions, false);
+                new ExtensionFilter(Strings.videoFile, "mp4" ),
+                new ExtensionFilter(Strings.allFileTypes, "*" ),
+            };
+            paths = StandaloneFileBrowser.OpenFilePanel(Strings.introSelectFile, "", extensions, false);
 #elif UNITY_ANDROID
-                paths = FileChooser.Open(new string[] { "video/mp4" });
+            paths = FileChooser.Open(new string[] { "video/mp4" });
 #endif
             if (paths.Length == 0)
                 return;

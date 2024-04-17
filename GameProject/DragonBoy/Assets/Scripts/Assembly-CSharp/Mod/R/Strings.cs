@@ -181,6 +181,7 @@ namespace Mod.R
         internal static string openIntroMenuDescription = "";
         internal static string setIntroVolumeDescription = "";
         internal static string introNoVideo = "";
+        internal static string introSelectFile = "";
         #endregion
 
         internal static void LoadLanguage(sbyte newLanguage)
@@ -410,6 +411,7 @@ namespace Mod.R
             openSetsMenuDescription = "Mở menu set đồ (lệnh \"set\" hoặc nút \'`\')";
             openIntroMenuTitle = "Menu Intro";
             openIntroMenuDescription = "Mở menu intro video";
+            introSelectFile = "Chọn tệp video";
         }
 
         static void LoadLanguageEN()
@@ -621,6 +623,7 @@ namespace Mod.R
             openSetsMenuDescription = "Open the Sets menu (\"set\" command or \'`\' key)";
             openIntroMenuTitle = "Intro menu";
             openIntroMenuDescription = "Open the intro video menu";
+            introSelectFile = "Select video file";
         }
 
         //static void LoadLanguageID()
