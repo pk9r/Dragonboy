@@ -46,19 +46,19 @@ namespace Mod.R
         {
             "thách đấu thần mèo",
             "challenge with karin",
-            ""  //I don't know what this string is in Indonaga server
+            "tantang karin"
         };
         internal static LocalizedString acceptChallenge = new string[3]
         {
             "đồng ý giao đấu",
             "accept fight",
-            ""  //I don't know what this string is in Indonaga server
+            "accept fight"
         };
         internal static LocalizedString mercenaryTao = new string[3]
         {
             "Tàu Pảy Pảy",
             "Taopaipai",
-            ""  //I don't know what this string is in Indonaga server
+            "Taopaipai"
         };  
         internal static LocalizedString saoMayLuoiThe = new string[3]
         {
@@ -76,25 +76,25 @@ namespace Mod.R
         {
             "Về nhà",
             "Go home",
-            ""
+            "Pulang"
         };
         internal static LocalizedString spaceshipStation = new string[3]
         {
             "Trạm tàu vũ trụ",
             "Spaceship station",
-            ""
+            "Spaceship station"
         };
         internal static LocalizedString backTo = new string[3]
         {
             "Về chỗ cũ",
             "Back to",
-            ""
+            "Kembali ke"
         };
         internal static LocalizedString stoneForest = new string[3]
         {
             "Rừng đá",
             "Stone forest",
-            ""
+            "Stone forest"
         };
 
         #region Methods and fields
