@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading;
 using UnityEngine;
 using Mod.R;
-#if UNITY_EDITOR || UNITY_STANDALONE
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE
 using SFB;
 #elif UNITY_ANDROID
 using EHVN;
@@ -79,7 +79,7 @@ namespace Mod.Graphics
             string[] paths = null;
             new Thread(delegate ()
             {
-#if UNITY_EDITOR || UNITY_STANDALONE
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE
                 ExtensionFilter[] extensions = new[]
                 {
                     new ExtensionFilter(Strings.imageVideoFile, "png", "jpg", "jpeg", "gif", "mp4" ),
