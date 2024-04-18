@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Video;
 using System.Threading;
 
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_EDITOR || UNITY_STANDALONE
 using SFB;
 #elif UNITY_ANDROID
 using EHVN;
@@ -127,7 +127,7 @@ public class IntroPlayer : MonoBehaviour
         string[] paths = null;
         new Thread(delegate ()
         {
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_EDITOR || UNITY_STANDALONE
             ExtensionFilter[] extensions = new[]
             {
                 new ExtensionFilter(Strings.videoFile, "mp4" ),

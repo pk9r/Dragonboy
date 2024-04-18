@@ -15,7 +15,7 @@ namespace SFB {
         private static IStandaloneFileBrowser _platformWrapper = null;
 
         static StandaloneFileBrowser() {
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+#if UNITY_STANDALONE_WIN
             _platformWrapper = new StandaloneFileBrowserWindows();
 #elif UNITY_STANDALONE_LINUX
             _platformWrapper = new StandaloneFileBrowserLinux();
