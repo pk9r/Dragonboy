@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using Mod.ModHelper;
 using UnityEngine;
 
 namespace Assets.GifAssets.PowerGif
 {
-	/// <summary>
-	/// Implements converting data from SimpleGif library (Texture2D and Color32).
-	/// </summary>
-	internal static class Converter
+    /// <summary>
+    /// Implements converting data from SimpleGif library (Texture2D and Color32).
+    /// </summary>
+    internal static class Converter
 	{
 		/// <summary>
 		/// Convert GIF frames from SimpleGif to PowerGif.
