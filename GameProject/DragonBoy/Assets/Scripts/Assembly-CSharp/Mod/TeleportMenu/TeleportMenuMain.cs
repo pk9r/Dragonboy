@@ -320,7 +320,7 @@ namespace Mod.TeleportMenu
 
         private static void showTeleportCharListPanel()
         {
-            CustomPanelMenu.show(setTabTeleportListPanel, doFireTeleportListPanel, paintTabHeader, paintTeleportListPanel);
+            CustomPanelMenu.Show(setTabTeleportListPanel, doFireTeleportListPanel, paintTabHeader, paintTeleportListPanel);
         }
 
         public static void Update()
@@ -506,12 +506,12 @@ namespace Mod.TeleportMenu
 
         private static void paintTabHeader(Panel panel, mGraphics g)
         {
-            PaintPanelTemplates.paintTabHeaderTemplate(panel, g, "Danh sách nhân vật");
+            PaintPanelTemplates.PaintTabHeaderTemplate(panel, g, "Danh sách nhân vật");
         }
 
         public static void paintTeleportListPanel(Panel panel, mGraphics g)
         {
-            PaintPanelTemplates.paintCollectionCaptionAndDescriptionTemplate(panel, g, listTeleportChars,
+            PaintPanelTemplates.PaintCollectionCaptionAndDescriptionTemplate(panel, g, listTeleportChars,
                 c => c.cName, c => $"CharID: {c.charID}");
 
             //g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);

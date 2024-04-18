@@ -1089,9 +1089,9 @@ namespace Mod
                 mFont.tahoma_7_yellow.drawString(g, mResources.account + " " + mResources.account_server.ToLower() + " " + ServerListScreen.nameServer[ServerListScreen.ipSelect], panel.X + 60, 38, mFont.LEFT, mFont.tahoma_7_grey);
 
                 panel.paintBottomMoneyInfo(g);
-                if (!CustomPanelMenu.paintTabHeader(panel, g))
+                if (!CustomPanelMenu.PaintTabHeader(panel, g))
                     panel.paintTab(g);
-                CustomPanelMenu.paintModMenuMain(panel, g);
+                CustomPanelMenu.PaintCustomMenuMain(panel, g);
                 GameScr.resetTranslate(g);
                 panel.paintDetail(g);
                 if (panel.cmx == panel.cmtoX)
@@ -1143,7 +1143,7 @@ namespace Mod
                     {
                         instance.waitToPerform--;
                         instance.lastSelect[instance.currentTabIndex] = instance.selected;
-                        CustomPanelMenu.doFireCustomPanelMenu(instance);
+                        CustomPanelMenu.DoFireCustomPanelMenu(instance);
                     }
                 }
             }
@@ -1299,7 +1299,7 @@ namespace Mod
                     return true;
                 instance.size_tab = 0;
                 SoundMn.gI().panelClick();
-                CustomPanelMenu.setTabCustomPanelMenu(instance);
+                CustomPanelMenu.SetTabCustomPanelMenu(instance);
                 instance.selected = instance.lastSelect[instance.currentTabIndex];
 
                 return true;

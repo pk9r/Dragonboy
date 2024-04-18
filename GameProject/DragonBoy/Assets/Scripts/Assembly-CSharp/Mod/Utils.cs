@@ -23,13 +23,6 @@ namespace Mod
         internal static readonly short ID_ICON_ITEM_TDLT = 4387;
         internal static readonly short ID_NPC_MOD_FACE = 7333;    // Doraemon
 
-        internal static readonly short ID_ITEM_CAPSULE_VIP = 194;
-        internal static readonly short ID_ITEM_CAPSULE_NORMAL = 193;
-
-        internal static readonly int ID_MAP_HOME_BASE = 21;
-        internal static readonly int ID_MAP_LANG_BASE = 7;
-        internal static readonly int ID_MAP_TTVT_BASE = 24;
-
         internal static string status = "Đã kết nối";
 
         internal static int speedRun = 8;
@@ -44,8 +37,6 @@ namespace Mod
         public static JObject sizeData = null;
 
         internal static int channelSyncKey = -1;
-
-        internal static int mapCapsuleReturn = -1;
 
         internal static System.Random random = new System.Random();
 
@@ -223,22 +214,6 @@ namespace Mod
             }
 
             Service.gI().requestChangeMap();
-        }
-
-        internal static Waypoint findWaypoint(int idMap)
-        {
-            Waypoint waypoint;
-            string textPopup;
-            for (int i = 0; i < TileMap.vGo.size(); i++)
-            {
-                waypoint = (Waypoint)TileMap.vGo.elementAt(i);
-                textPopup = getTextPopup(waypoint.popup);
-                if (textPopup.Equals(TileMap.mapNames[idMap]))
-                {
-                    return waypoint;
-                }
-            }
-            return null;
         }
 
         internal static void setWaypointChangeMap(Waypoint waypoint)
@@ -751,59 +726,10 @@ namespace Mod
 
         internal static void DoDoubleClickToObj(IMapObject mapObject) => GameScr.gI().doDoubleClickToObj(mapObject);
 
-        internal static bool isMyCharDied()
-        {
-            Char myChar = Char.myCharz();
-            return myChar.statusMe == 14 || myChar.cHP <= 0;
-        }
-
-        internal static bool hasItemCapsuleVip()
-        {
-            Item[] items = Char.myCharz().arrItemBag;
-            for (int i = 0; i < items.Length; i++)
-                if (items[i] != null && items[i].template.id == ID_ITEM_CAPSULE_VIP)
-                    return true;
-            return false;
-        }
-
-        internal static bool hasItemCapsuleNormal()
-        {
-            Item[] items = Char.myCharz().arrItemBag;
-            for (int i = 0; i < items.Length; i++)
-                if (items[i] != null && items[i].template.id == ID_ITEM_CAPSULE_NORMAL)
-                    return true;
-            return false;
-        }
-
         internal static bool canNextMap()
         {
             return !Char.isLoadingMap && !Char.ischangingMap && !Controller.isStopReadMessage;
         }
-
-        internal static int getMapIdFromName(string mapName)
-        {
-            int offset = Char.myCharz().cgender;
-            if (mapName.Equals("Về nhà"))
-                return ID_MAP_HOME_BASE + offset;
-            if (mapName.Equals("Trạm tàu vũ trụ"))
-                return ID_MAP_TTVT_BASE + offset;
-            if (mapName.Contains("Về chỗ cũ: "))
-            {
-                mapName = mapName.Replace("Về chỗ cũ: ", "");
-                if (TileMap.mapNames[mapCapsuleReturn].Equals(mapName)) 
-                    return mapCapsuleReturn;
-                if (mapName.Equals("Rừng đá")) 
-                    return -1;
-            }
-            for (int i = 0; i < TileMap.mapNames.Length; i++)
-                if (mapName.Equals(TileMap.mapNames[i]))
-                    return i;
-            return -1;
-        }
-
-        internal static int getIdMapHome(int cgender) => ID_MAP_HOME_BASE + cgender;
-
-        internal static int getIdMapLang(int cgender) => ID_MAP_LANG_BASE * cgender;
 
         internal static bool HasStarOption(Item item, out uint star, out uint starE)
         {
@@ -939,10 +865,8 @@ namespace Mod
 
         internal static string GetRootDataPath()
         {
-            string result = Application.persistentDataPath;
-            if (IsLinuxBuild())
-                result = Path.Combine(Application.persistentDataPath, Application.companyName, Application.productName);
-            if (IsAndroidBuild())
+            string result = Path.Combine(Path.GetDirectoryName(Application.dataPath), "Data");
+            if (IsEditor() || IsAndroidBuild())
                 result = Application.persistentDataPath;
             return result;
         }

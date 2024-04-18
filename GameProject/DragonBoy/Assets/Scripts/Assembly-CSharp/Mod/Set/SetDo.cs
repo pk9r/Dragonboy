@@ -334,7 +334,7 @@ namespace Mod.Set
                             tabName[i - offset] = new string[] { "Set đồ", string.IsNullOrEmpty(setDos[i].Name) ? (i + 1).ToString() : setDos[i].Name };
                     }
                     GameCanvas.panel.tabName[CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU] = tabName;
-                    CustomPanelMenu.show(setTabSetPanel, doFireSetPanel, null, paintSetPanel);
+                    CustomPanelMenu.Show(setTabSetPanel, doFireSetPanel, null, paintSetPanel);
                 }))
                 .addItem(ifCondition: setDos.Count > 0,
                 "Xoá hết\nset đồ\nđã lưu", new(() =>

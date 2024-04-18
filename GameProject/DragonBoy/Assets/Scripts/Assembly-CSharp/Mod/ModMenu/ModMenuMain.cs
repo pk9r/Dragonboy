@@ -22,7 +22,7 @@ namespace Mod.ModMenu
                 {
                     if (currentPanel == null)
                         currentPanel = new Panel();
-                    CustomPanelMenu.show(SetTabModMenu, DoFireModMenu, null, PaintModMenu, currentPanel);
+                    CustomPanelMenu.Show(SetTabModMenu, DoFireModMenu, null, PaintModMenu, currentPanel);
                     currentPanel.cmdClose.x = GameCanvas.w - currentPanel.cmdClose.img.getWidth() - 1;
                     currentPanel.cmdClose.y = 1;
                 }
@@ -403,9 +403,7 @@ namespace Mod.ModMenu
                     ID = "OpenXmapMenu",
                     Title = Strings.openXmapMenuTitle,
                     Description = Strings.openXmapMenuDescription, 
-                    Action = Pk9rXmap.showXmapMenu,
-                    GetIsDisabled = () => true,
-                    GetDisabledReason = () => "This feature is currently in development state"
+                    Action = Pk9rXmap.showXmapMenu
                 }),
                 new ModMenuItemFunction(new ModMenuItemFunctionConfig()
                 {

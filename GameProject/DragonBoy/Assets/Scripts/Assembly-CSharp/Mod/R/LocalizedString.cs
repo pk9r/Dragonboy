@@ -8,6 +8,34 @@ namespace Mod.R
     /// </summary>
     internal class LocalizedString
     {
+        internal static LocalizedString[] xmapCantGoHereKeywords = new LocalizedString[]
+        {
+            new string[3]
+            {
+                "Bạn chưa thể đến khu vực này",
+                "",
+                ""
+            },
+            new string[3]
+            {
+
+                "Bang hội phải có từ 5 thành viên mới được tham gia",
+                "",
+                ""
+            },
+            new string[3]
+            {
+                "Chỉ tiếp các bang hội, miễn tiếp khách vãng lai",
+                "",
+                ""
+            },
+            new string[3]
+            {
+                "Gia nhập bang hội trên 2 ngày mới được tham gia",
+                "",
+                ""
+            },
+        };
         internal static LocalizedString free1hCharm = new string[3]
         {
              "thưởng bùa 1h ngẫu nhiên",
@@ -38,9 +66,53 @@ namespace Mod.R
             "",  //I don't know what this string is in World server
             ""  //I don't know what this string is in Indonaga server
         };
+        internal static LocalizedString errorOccurred = new string[3]
+        {
+            "Có lỗi xảy ra vui lòng thử lại sau.",
+            "",
+            ""
+        };
+        internal static LocalizedString goHome = new string[3]
+        {
+            "Về nhà",
+            "Go home",
+            ""
+        };
+        internal static LocalizedString spaceshipStation = new string[3]
+        {
+            "Trạm tàu vũ trụ",
+            "Spaceship station",
+            ""
+        };
+        internal static LocalizedString backTo = new string[3]
+        {
+            "Về chỗ cũ",
+            "Back to",
+            ""
+        };
+        internal static LocalizedString stoneForest = new string[3]
+        {
+            "Rừng đá",
+            "Stone forest",
+            ""
+        };
 
+        #region Methods and fields
         string[] strings;
+
         LocalizedString(string[] strings) => this.strings = strings;
+
+        /// <summary>
+        /// Thay thế tất cả <see langword="this"/> xuất hiện trong <paramref name="original"/> thành <paramref name="newValue"/>
+        /// </summary>
+        /// <param name="original">Chuỗi cần thay thế</param>
+        /// <param name="newValue">Chuỗi để thay thế</param>
+        internal string Replace(string original, string newValue)
+        {
+            foreach (string item in strings)
+                original = original.Replace(item, newValue);
+            return original;
+        }
 
         /// <summary>
         /// Kiểm tra xem <see langword="this"/> có chứa chuỗi <paramref name="str"/> không
@@ -88,5 +160,6 @@ namespace Mod.R
             return obj is LocalizedString @string && EqualityComparer<string[]>.Default.Equals(strings, @string.strings);
         }
         public override int GetHashCode() => System.HashCode.Combine(strings);
+        #endregion
     }
 }

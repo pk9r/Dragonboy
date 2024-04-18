@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Mod.Xmap
 {
-    public class XmapAlgorithm
+    internal class XmapAlgorithm
     {
-        public static XmapData xmapData;
+        internal static XmapData xmapData;
 
-        public static List<MapNext> findWay(int mapStart, int mapEnd)
+        internal static List<MapNext> findWay(int mapStart, int mapEnd)
         {
             LogMod.writeLine($"[xmap][dbg] Bắt đầu tìm đường từ {mapStart} tới {mapEnd}");
             if (xmapData == null)

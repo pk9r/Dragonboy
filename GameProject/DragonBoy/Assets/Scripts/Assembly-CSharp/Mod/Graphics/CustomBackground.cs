@@ -35,7 +35,7 @@ namespace Mod.Graphics
         {
             new MenuBuilder()
                 .setChatPopup(Strings.customBgChatPopup)
-                .addItem(customBgs.Count > 0, Strings.customBgOpenBgList, new MenuAction(() => CustomPanelMenu.show(SetTabCustomBackgroundPanel, DoFireCustomBackgroundListPanel, PaintTabHeader, PaintCustomBackgroundPanel)))
+                .addItem(customBgs.Count > 0, Strings.customBgOpenBgList, new MenuAction(() => CustomPanelMenu.Show(SetTabCustomBackgroundPanel, DoFireCustomBackgroundListPanel, PaintTabHeader, PaintCustomBackgroundPanel)))
                 .addItem(Strings.customBgAddNewBg, new MenuAction(SelectBackgrounds))
                 .addItem(customBgs.Count > 0, Strings.customBgRemoveAll, new MenuAction(() =>
                     {
@@ -202,7 +202,7 @@ namespace Mod.Graphics
             GameCanvas.panel.paintScrollArrow(g);
         }
 
-        internal static void PaintTabHeader(Panel panel, mGraphics g) => PaintPanelTemplates.paintTabHeaderTemplate(panel, g, Strings.customBgList);
+        internal static void PaintTabHeader(Panel panel, mGraphics g) => PaintPanelTemplates.PaintTabHeaderTemplate(panel, g, Strings.customBgList);
 
         internal static void SetTabCustomBackgroundPanel(Panel panel) => SetTabPanelTemplates.setTabListTemplate(panel, customBgs);
 

@@ -182,6 +182,13 @@ namespace Mod.R
         internal static string setIntroVolumeDescription = "";
         internal static string introNoVideo = "";
         internal static string introSelectFile = "";
+        internal static string xmapUseSpecialCapsule;
+        internal static string xmapUseNormalCapsule;
+        internal static string xmapCanceled;
+        internal static string xmapChatPopup;
+        internal static string goTo;
+        internal static string xmapCantFindWay;
+        internal static string xmapDestinationReached;
         #endregion
 
         internal static void LoadLanguage(sbyte newLanguage)
@@ -194,9 +201,6 @@ namespace Mod.R
                 default:
                     LoadLanguageEN();
                     break;
-                //case 2:
-                //    LoadLanguageID();
-                //    break;
             }
         }
 
@@ -313,6 +317,13 @@ namespace Mod.R
             introInputVolume = "Nhập âm lượng intro";
             introInputVolumeHint = "Âm lượng";
             introNoVideo = "Đường dẫn video intro chưa được đặt";
+            xmapUseSpecialCapsule = "Sử dụng capsule đặc biệt để Xmap";
+            xmapUseNormalCapsule = "Sử dụng capsule thường để Xmap";
+            xmapCanceled = "Đã huỷ Xmap";
+            xmapChatPopup = "XmapNRO by Phucprotein\nMap hiện tại: {0}, ID: {1}\nVui lòng chọn nơi muốn đến";
+            goTo = "Đi đến";
+            xmapCantFindWay = "Không thể tìm thấy đường đi";
+            xmapDestinationReached = "Đã đến nơi";
             //---------------------------------------------------
             vSyncDescription = "Tự động giới hạn FPS theo tốc độ khung hình của màn hình";
             showTargetInfoTitle = "Thông tin đối thủ";
@@ -525,6 +536,13 @@ namespace Mod.R
             introInputVolume = "Input intro volume";
             introInputVolumeHint = "Volume";
             introNoVideo = "Intro video path has not been set";
+            xmapUseSpecialCapsule = "Use special capsule to Xmap";
+            xmapUseNormalCapsule = "Use normal capsule to Xmap";
+            xmapCanceled = "Xmap canceled";
+            xmapChatPopup = "XmapNRO by Phucprotein\nCurrent map: {0}, ID: {1}\nPlease select the destination";
+            goTo = "Go to";
+            xmapCantFindWay = "No possible way was found";
+            xmapDestinationReached = "Destination reached";
             //---------------------------------------------------
             vSyncDescription = "Automatically limit the FPS according to the monitor's refresh rate";
             showTargetInfoTitle = "Target's effect information";
@@ -625,66 +643,5 @@ namespace Mod.R
             openIntroMenuDescription = "Open the intro video menu";
             introSelectFile = "Select video file";
         }
-
-        //static void LoadLanguageID()
-        //{
-        //    communityMod = "Mod Komunitas DBO";
-        //    gameVersion = "Versi game";
-        //    registered = "Terdaftar";
-        //    arbitration = "Penyelenggara";
-        //    autoChatDisabled = "Auto Chat dinonaktifkan";
-        //    inputContent = "Masukkan konten";
-        //    delaySeconds = "Penundaan:\n{0} detik";
-        //    viewContent = "Lihat konten";
-        //    autoChatContent = "Konten Auto Chat";
-        //    inputDelay = "Masukkan waktu penundaan";
-        //    timeMilliseconds = "Waktu (ms)";
-        //    errorOccurred = "Terjadi kesalahan";
-        //    contentSaved = "Konten disimpan";
-        //    delayChanged = "Mengubah penundaan menjadi {0} detik";
-        //    autoAttack = "Serangan otomatis";
-        //    gobackTo = "Kembali ke peta: {0}, zona: {1}, koordinat: ({2}, {3})";
-        //    youAreNotNamekian = "Anda bukan karakter Namekian";
-        //    completed = "Selesai";
-        //    modMenuPanelTabName = new string[][]
-        //    {
-        //        new string[]{ "Beralih", "" },
-        //        new string[]{ "Menyes-", "uaikan" },
-        //        new string[]{ "fungsi", "" },
-        //    };
-        //    someonePet = $" [<color=cyan>{mResources.pet}</color> {{0}}]";
-        //    petLostMaster = $" [<color=cyan>{mResources.pet}</color> itu kehilangan gurunya]";
-        //    zone = "zona";
-        //    functionShouldBeDisabled = "Anda perlu menonaktifkan fitur \"{0}\"!";
-        //    functionShouldBeEnabled = "Anda harus mengaktifkan fitur \"{0}\"!";
-        //    valueChanged = "Berubah {0} menjadi {1}";
-        //    invalidValue = "Nilai tidak valid";
-        //    inputFPS = "Masukkan jumlah frame per detik";
-        //    inputTimeChangeBg = "Masukkan waktu untuk mengganti wallpaper latar belakang";
-        //    inputTimeChangeBgHint = "Waktu (detik)";
-        //    customBgChatPopup = "Jenis latar belakang yang didukung: gambar statis (*.jpg, *.png), gambar animasi (*.gif), video (*.mp4).\nGambar animasi dan video mengonsumsi banyak sumber daya, jadi pertimbangkan itu sebelum menggunakannya.";
-        //    customBgOpenBgList = "Buka daftar latar belakang";
-        //    customBgAddNewBg = "Tambahkan latar belakang baru";
-        //    customBgRemoveAll = "Hapus semua latar belakang";
-        //    customBgAllBgRemoved = "Semua latar belakang telah dihapus dari daftar";
-        //    customBgAutoChangeBg = "Ganti latar belakang otomatis";
-        //    //---------------------------------------------------
-        //    vSyncDescription = "Secara otomatis membatasi FPS sesuai dengan kecepatan refresh layar";
-        //    showTargetInfoTitle = "Informasi sasaran";
-        //    showTargetInfoDescription = "Menampilkan waktu bola naga bintang hitam, perisai energi, transformasi, peluit... hampir seakurat mungkin untuk karakter sasaran";
-        //    autoSendAttackDescription = "Secara otomatis mengirim perintah serangan ke sasaran tanpa memindahkan karakter";
-        //    showCharListTitle = "Daftar karakter";
-        //    showCharListDescription = "Menampilkan daftar karakter di zona saat ini";
-        //    showPetInCharListTitle = "Sertakan murid dalam daftar karakter";
-        //    showPetInCharListDescription = "Sertakan murid dalam daftar karakter di zona saat ini";
-        //    autoTrainForNewbieTitle = "Latih akun baru secara otomatis";
-        //    autoTrainForNewbieDescription = "Latih otomatis akun baru ke misi klan";
-        //    noLongerNewAccount = "Anda telah melewati misi klan";
-        //    customBackgroundTitle = "Wallpaper khusus";
-        //    customBackgroundDescription = "Ganti latar belakang game dengan wallpaper khusus";
-        //    notifyBossTitle = "Pemberitahuan Boss";
-        //    //someone pls translate this
-        //    notifyBossDescription = "";
-        //}
     }
 }

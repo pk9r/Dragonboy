@@ -20,13 +20,13 @@ namespace Mod.Xmap
 
     public struct GroupMap
     {
-        public string nameGroup;
+        public string[] names;
 
         public List<int> maps;
 
-        public GroupMap(string nameGroup, List<int> maps)
+        public GroupMap(string[] nameGroup, List<int> maps)
         {
-            this.nameGroup = nameGroup;
+            names = nameGroup;
             this.maps = maps;
         }
     }

@@ -6,14 +6,14 @@ namespace Mod.CustomPanel
 {
     internal static class PaintPanelTemplates
     {
-        internal static void paintTabHeaderTemplate(Panel panel, mGraphics g, string header)
+        internal static void PaintTabHeaderTemplate(Panel panel, mGraphics g, string header)
         {
             g.setColor(0xCE5E0C);
             g.fillRect(panel.X + 1, 78, panel.W - 2, 1);
             mFont.tahoma_7b_dark.drawString(g, header, panel.xScroll + panel.wScroll / 2, 59, mFont.CENTER);
         }
 
-        internal static void paintCollectionCaptionAndDescriptionTemplate<T>(Panel panel, mGraphics g, ICollection<T> collection,
+        internal static void PaintCollectionCaptionAndDescriptionTemplate<T>(Panel panel, mGraphics g, ICollection<T> collection,
             Func<T, string> getCaption, Func<T, string> getDescription, bool captionIndex = true)
         {
             g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);
