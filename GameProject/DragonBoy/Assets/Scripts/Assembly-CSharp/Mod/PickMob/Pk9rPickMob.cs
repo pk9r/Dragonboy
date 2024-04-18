@@ -105,7 +105,7 @@ namespace Mod.PickMob
             Mob mob = Char.myCharz().mobFocus;
             ItemMap itemMap = Char.myCharz().itemFocus;
             if (mob != null)
-                AddOrRemoveMonsterTypeAutoAttack(mob.getTemplate().type);
+                AddOrRemoveMonsterTypeAutoAttack(mob.getTemplate().mobTemplateId);
             else if (itemMap != null)
                 AddOrRemoveItemTypeAutoPick(itemMap.template.type);
             else
@@ -545,7 +545,7 @@ namespace Mod.PickMob
                 menuBuilder.addItem(menuDesc, new MenuAction(ToggleSelectedMob));
                 if (mobFocus != null)
                 {
-                    if (TypeMobsTanSat.Contains(mobFocus.templateId))
+                    if (TypeMobsTanSat.Contains(mobFocus.getTemplate().mobTemplateId))
                         menuDesc = string.Format(Strings.pickMobRemoveFromList, mobFocus.getTemplate().name);
                     else
                         menuDesc = string.Format(Strings.pickMobAddToList, mobFocus.getTemplate().name);

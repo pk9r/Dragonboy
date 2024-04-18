@@ -263,7 +263,7 @@ namespace Mod
             {
                 if (!ch.me)
                 {
-                    switch (ch.mobMe.templateId)
+                    switch (ch.mobMe.getTemplate().mobTemplateId)
                     {
                         case 8:
                             num = 60;
