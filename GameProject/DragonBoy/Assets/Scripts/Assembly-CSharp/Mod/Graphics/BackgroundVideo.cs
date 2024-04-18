@@ -10,7 +10,9 @@ namespace Mod.Graphics
         static VideoPlayer[] videoPlayers = GameObject.Find("Main Camera").GetComponents<VideoPlayer>();
         internal bool isPreparing;
         internal string url;
+        long lastTimeCheckTime;
         int videoPlayerIndex;
+        double lastTime;
 
         internal BackgroundVideo(string path)
         {
@@ -21,6 +23,17 @@ namespace Mod.Graphics
 
         public void Paint(mGraphics g, int x, int y)
         {
+            if (mSystem.currentTimeMillis() - lastTimeCheckTime > 5000)
+            {
+                lastTimeCheckTime = mSystem.currentTimeMillis();
+                if (videoPlayers[videoPlayerIndex].time == lastTime)
+                {
+                    videoPlayers[videoPlayerIndex].Stop();
+                    videoPlayers[videoPlayerIndex].Play();
+                    videoPlayers[videoPlayerIndex].time = lastTime;
+                }
+            }
+            lastTime = videoPlayers[videoPlayerIndex].time;
             if (videoPlayers[videoPlayerIndex].texture != null)
                 GUI.DrawTexture(new Rect(x, y, Screen.width, Screen.height), videoPlayers[videoPlayerIndex].texture, ScaleMode.ScaleToFit);
         }
