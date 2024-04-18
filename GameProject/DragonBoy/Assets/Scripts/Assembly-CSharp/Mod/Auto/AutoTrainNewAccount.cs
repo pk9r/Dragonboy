@@ -46,84 +46,88 @@ namespace Mod.Auto
         {
             if (!isEnabled)
 				return;
-            if (Char.myCharz().taskMaint.taskId > 11)
+            try
             {
-                GameScr.info1.addInfo(Strings.completed + '!', 0);
-                isEnabled = false;
-                return;
-            }
-            if (Char.myCharz().taskMaint.taskId < 9)
-            {
-                for (int i = GameScr.vNpc.size() - 1; i >= 0; i--)
-                    if (string.IsNullOrEmpty(((Npc)GameScr.vNpc.elementAt(i)).template.name))
-                        GameScr.vNpc.removeElementAt(i);
-                GameScr.vCharInMap.removeAllElements();
-            }
-            if (isNhapCodeTanThu && GameCanvas.gameTick % (60f * Time.timeScale) == 0f)
-            {
-                TField tField = new TField();
-                tField.setText("tan thu nro");
-                Service.gI().sendClientInput(new TField[1] { tField });
-                GameScr.gI().switchToMe();
-                ClientInput.instance = null;
-                Char.chatPopup = null;
-                isNhapCodeTanThu = false;
-            }
-            if (isNeedMorePean && (Char.myCharz().cgender != 1 && GameScr.hpPotion >= 10 || Char.myCharz().cgender == 1 && GameScr.hpPotion >= 20))
-                isNeedMorePean = false;
-            if (GameScr.hpPotion == 0 && (Char.myCharz().cMP < 15 || Char.myCharz().cHP < 15))
-            {
-                if (!isHarvestingPean)
-                    isHarvestingPean = true;
-                IsTanSat = false;
-                if (!XmapController.gI.IsActing)
-                    XmapController.start(Char.myCharz().cgender + 21);
-            }
-            if ((Char.myCharz().cMP < myMinMP || Char.myCharz().cHP < myMinHP) && !isHarvestingPean && (TileMap.mapID != Char.myCharz().cgender + 21 || Char.myCharz().taskMaint.taskId < 3) && mSystem.currentTimeMillis() - lastTimeEatPean > 2000)
-            {
-                lastTimeEatPean = mSystem.currentTimeMillis();
-                GameScr.gI().doUseHP();
-            }
-            if ((Char.myCharz().isDie || Char.myCharz().cHP <= 0) && GameCanvas.gameTick % (30f * Time.timeScale) == 0f)
-                Service.gI().returnTownFromDead();
-            if (TileMap.mapID == Char.myCharz().cgender + 21)
-            {
-                if (GameScr.vItemMap.size() > 0)
+                if (Char.myCharz().taskMaint.taskId > 11)
                 {
-                    ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(0);
-                    if (mSystem.currentTimeMillis() - lastTimePickedItem >= 550)
+                    GameScr.info1.addInfo(Strings.completed + '!', 0);
+                    isEnabled = false;
+                    return;
+                }
+                if (Char.myCharz().taskMaint.taskId < 9)
+                {
+                    for (int i = GameScr.vNpc.size() - 1; i >= 0; i--)
+                        if (string.IsNullOrEmpty(((Npc)GameScr.vNpc.elementAt(i)).template.name))
+                            GameScr.vNpc.removeElementAt(i);
+                    GameScr.vCharInMap.removeAllElements();
+                }
+                if (isNhapCodeTanThu && GameCanvas.gameTick % (60f * Time.timeScale) == 0f)
+                {
+                    TField tField = new TField();
+                    tField.setText("tan thu nro");
+                    Service.gI().sendClientInput(new TField[1] { tField });
+                    GameScr.gI().switchToMe();
+                    ClientInput.instance = null;
+                    Char.chatPopup = null;
+                    isNhapCodeTanThu = false;
+                }
+                if (isNeedMorePean && (Char.myCharz().cgender != 1 && GameScr.hpPotion >= 10 || Char.myCharz().cgender == 1 && GameScr.hpPotion >= 20))
+                    isNeedMorePean = false;
+                if (GameScr.hpPotion == 0 && (Char.myCharz().cMP < 15 || Char.myCharz().cHP < 15))
+                {
+                    if (!isHarvestingPean)
+                        isHarvestingPean = true;
+                    IsTanSat = false;
+                    if (!XmapController.gI.IsActing)
+                        XmapController.start(Char.myCharz().cgender + 21);
+                }
+                if ((Char.myCharz().cMP < myMinMP || Char.myCharz().cHP < myMinHP) && !isHarvestingPean && (TileMap.mapID != Char.myCharz().cgender + 21 || Char.myCharz().taskMaint.taskId < 3) && mSystem.currentTimeMillis() - lastTimeEatPean > 2000)
+                {
+                    lastTimeEatPean = mSystem.currentTimeMillis();
+                    GameScr.gI().doUseHP();
+                }
+                if ((Char.myCharz().isDie || Char.myCharz().cHP <= 0) && GameCanvas.gameTick % (30f * Time.timeScale) == 0f)
+                    Service.gI().returnTownFromDead();
+                if (TileMap.mapID == Char.myCharz().cgender + 21)
+                {
+                    if (GameScr.vItemMap.size() > 0)
                     {
-                        lastTimePickedItem = mSystem.currentTimeMillis();
-                        Service.gI().pickItem(itemMap.itemMapID);
+                        ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(0);
+                        if (mSystem.currentTimeMillis() - lastTimePickedItem >= 550)
+                        {
+                            lastTimePickedItem = mSystem.currentTimeMillis();
+                            Service.gI().pickItem(itemMap.itemMapID);
+                        }
                     }
+                    if (GameScr.gI().magicTree.currPeas == 0 || Char.myCharz().cgender == 1 && GameScr.hpPotion >= 20 || Char.myCharz().cgender != 1 && GameScr.hpPotion >= 10)
+                        isHarvestingPean = false;
+                    if (Char.myCharz().taskMaint.taskId >= 2 && GameScr.gI().magicTree.currPeas > 0 && (Char.myCharz().cgender == 1 && GameScr.hpPotion < 20 || Char.myCharz().cgender != 1 && GameScr.hpPotion < 10) && GameCanvas.gameTick % (30f * Time.timeScale) == 0f)
+                    {
+                        Service.gI().openMenu(4);
+                        Service.gI().confirmMenu(4, 0);
+                    }
+                    if (Char.myCharz().xu >= 5000 && GameScr.gI().magicTree.level == 1 && !GameScr.gI().magicTree.isUpdateTree && GameCanvas.gameTick % (30f * Time.timeScale) == 0f)
+                    {
+                        Service.gI().openMenu(4);
+                        Service.gI().confirmMenu(4, 1);
+                        Service.gI().confirmMenu(5, 0);
+                        isHarvestingPean = false;
+                    }
+                    if (GameCanvas.menu.showMenu)
+                        GameCanvas.menu.doCloseMenu();
                 }
-                if (GameScr.gI().magicTree.currPeas == 0 || Char.myCharz().cgender == 1 && GameScr.hpPotion >= 20 || Char.myCharz().cgender != 1 && GameScr.hpPotion >= 10)
-                    isHarvestingPean = false;
-                if (Char.myCharz().taskMaint.taskId >= 2 && GameScr.gI().magicTree.currPeas > 0 && (Char.myCharz().cgender == 1 && GameScr.hpPotion < 20 || Char.myCharz().cgender != 1 && GameScr.hpPotion < 10) && GameCanvas.gameTick % (30f * Time.timeScale) == 0f)
-                {
-                    Service.gI().openMenu(4);
-                    Service.gI().confirmMenu(4, 0);
-                }
-                if (Char.myCharz().xu >= 5000 && GameScr.gI().magicTree.level == 1 && !GameScr.gI().magicTree.isUpdateTree && GameCanvas.gameTick % (30f * Time.timeScale) == 0f)
-                {
-                    Service.gI().openMenu(4);
-                    Service.gI().confirmMenu(4, 1);
-                    Service.gI().confirmMenu(5, 0);
-                    isHarvestingPean = false;
-                }
-                if (GameCanvas.menu.showMenu)
-                    GameCanvas.menu.doCloseMenu();
+                if (!isNhapCodeTanThu && !isNeedMorePean && !isHarvestingPean && !isPicking && GameCanvas.gameTick % (30 * (int)Time.timeScale) == 0 && Char.myCharz().cHP > 1 && !GameScr.gI().isBagFull() && stepXuLyDo > 1 && Char.myCharz().taskMaint.taskId <= 11)
+                    AutoNV();
+                if (Char.myCharz().taskMaint.taskId > 3 && Char.myCharz().taskMaint.taskId <= 11)
+                    AutoPoint();
+                if (GameScr.gI().isBagFull())
+                    stepXuLyDo = 0;
+                if (stepXuLyDo < 2)
+                    XuLyDo();
+                if (IsTanSat && !AutoPick())
+                    TanSat();
             }
-            if (!isNhapCodeTanThu && !isNeedMorePean && !isHarvestingPean && !isPicking && GameCanvas.gameTick % (30 * (int)Time.timeScale) == 0 && Char.myCharz().cHP > 1 && !GameScr.gI().isBagFull() && stepXuLyDo > 1 && Char.myCharz().taskMaint.taskId <= 11)
-				AutoNV();
-            if (Char.myCharz().taskMaint.taskId > 3 && Char.myCharz().taskMaint.taskId <= 11)
-				AutoPoint();
-            if (GameScr.gI().isBagFull())
-				stepXuLyDo = 0;
-            if (stepXuLyDo < 2)
-				XuLyDo();
-            if (IsTanSat && !AutoPick())
-				TanSat();
+            catch (Exception ex) { Debug.LogException(ex); }
         }
 
         static bool isItemVip(Item item)
@@ -328,7 +332,8 @@ namespace Mod.Auto
                 }
                 else
                 {
-                    Char.myCharz().cy = mob.y + Res.random(-3, 3);
+                    Char.myCharz().cx = mob.x + Res.random(-5, 5);
+                    Char.myCharz().cy = mob.y + Res.random(-5, 5);
                     Service.gI().charMove();
                 }
             }
