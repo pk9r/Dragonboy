@@ -10,6 +10,7 @@ namespace Mod.Auto
         internal static bool isGoingBack = false;
         internal static GoBackMode mode { get; set; }
         static long lastTimeGoBack;
+        static long lastTimeUpdate;
 
         internal static bool isEnabled => mode != GoBackMode.Disabled;
 
@@ -38,22 +39,28 @@ namespace Mod.Auto
 
         internal static void update()
         {
-            if (!isEnabled || GameCanvas.gameTick % (60 * Time.timeScale) == 0 || XmapController.gI.IsActing)
+            if (!isEnabled || XmapController.gI.IsActing)
                 return;
-            if (isGoingBack)
-                handleGoingBack();
-            else if (Char.myCharz().isCharDead())
+            if (mSystem.currentTimeMillis() - lastTimeUpdate < 1000)
+                return;
+            lastTimeUpdate = mSystem.currentTimeMillis();
+            if (Char.myCharz().isCharDead())
                 handleDeath();
+            else if (isGoingBack)
+                handleGoingBack();
         }
 
         static void handleGoingBack()
         {
             if (Utils.isMyCharHome())
             {
-                if (hasChicken()) 
-                    Service.gI().pickItem(-1);
-                else if (Char.myCharz().cHP <= 1)
-                    GameScr.gI().doUseHP();
+                if (Char.myCharz().cHP <= 1)
+                {
+                    if (Char.myCharz().taskMaint.taskId > 2)
+                        Service.gI().pickItem(-1);
+                    else
+                        GameScr.gI().doUseHP();
+                }
                 else
                     XmapController.start(goingBackTo.mapID);
             }
