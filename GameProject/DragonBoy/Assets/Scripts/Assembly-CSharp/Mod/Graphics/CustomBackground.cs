@@ -22,6 +22,21 @@ namespace Mod.Graphics
         internal static bool isEnabled;
 
         internal static Dictionary<string, IImage> customBgs = new Dictionary<string, IImage>();
+        static ScaleMode _defaultScaleMode = ScaleMode.StretchToFill;
+        internal static ScaleMode DefaultScaleMode
+        {
+            get => _defaultScaleMode;
+            set
+            {
+                _defaultScaleMode = value;
+                if (_defaultScaleMode > ScaleMode.ScaleToFit)
+                    _defaultScaleMode = 0;
+                foreach (var customBg in customBgs.Where(cBG => !overrideScaleMode.ContainsKey(cBG.Key)))
+                    customBg.Value.ScaleMode = _defaultScaleMode;
+
+            }
+        }
+        internal static Dictionary<string, ScaleMode> overrideScaleMode = new Dictionary<string, ScaleMode>();
 
         internal static int intervalChangeBg = 30000;
         static int bgIndex;
@@ -49,6 +64,11 @@ namespace Mod.Graphics
                     isChangeBg = !isChangeBg;
                     lastTimeChangedBg = mSystem.currentTimeMillis();
                     GameScr.info1.addInfo(Strings.customBgAutoChangeBg + ": " + Strings.OnOffStatus(isChangeBg), 0); 
+                }))
+                .addItem(Strings.customBgDefaultScaleModeTitle + ": " + DefaultScaleMode.GetName(), new MenuAction(() => 
+                {
+                    DefaultScaleMode++;
+                    GameScr.info1.addInfo(Strings.customBgDefaultScaleModeTitle + ": " + DefaultScaleMode.GetName(), 0); 
                 }))
                 .addItem(Strings.customBgSetTimeChange, new MenuAction(() =>
                 { 
@@ -79,7 +99,7 @@ namespace Mod.Graphics
             string[] paths = null;
             new Thread(delegate ()
             {
-#if UNITY_EDITOR || UNITY_STANDALONE
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE
                 ExtensionFilter[] extensions = new[]
                 {
                     new ExtensionFilter(Strings.imageVideoFile, "png", "jpg", "jpeg", "gif", "mp4" ),
@@ -116,6 +136,10 @@ namespace Mod.Graphics
                             customBgs[path] = new BackgroundVideo(path);
                         else
                             customBgs[path] = new StaticImage(path);
+                        if (overrideScaleMode.ContainsKey(path))
+                            customBgs[path].ScaleMode = overrideScaleMode[path];
+                        else
+                            customBgs[path].ScaleMode = DefaultScaleMode;
                     }
                     catch (FileNotFoundException)
                     {
@@ -211,9 +235,8 @@ namespace Mod.Graphics
             int selected = panel.selected;
             if (selected < 0)
                 return;
-            string fileName = Path.GetFileName(customBgs.ElementAt(selected).Key);
-
-            new MenuBuilder()
+            KeyValuePair<string, IImage> customBg = customBgs.ElementAt(selected);
+            MenuBuilder menuBuilder = new MenuBuilder()
                 .addItem(bgIndex != selected, Strings.customBgSwitchToThisBg, new MenuAction(() =>
                 {
                     StopAllBackgroundVideo();
@@ -222,10 +245,10 @@ namespace Mod.Graphics
                 }))
                 .addItem(Strings.delete, new MenuAction(() =>
                 {
-                    if (customBgs.ElementAt(selected).Value is BackgroundVideo videoBackground && videoBackground.isPlaying)
+                    if (customBg.Value is BackgroundVideo videoBackground && videoBackground.isPlaying)
                         videoBackground.Stop();
-                    string bgFileName = customBgs.ElementAt(selected).Key;
-                    customBgs.Remove(customBgs.ElementAt(selected).Key);
+                    string bgFileName = customBg.Key;
+                    customBgs.Remove(customBg.Key);
                     if (selected < bgIndex)
                     {
                         bgIndex--;
@@ -236,18 +259,38 @@ namespace Mod.Graphics
                         bgIndex = 0;
                         lastTimeChangedBg = mSystem.currentTimeMillis();
                     }
-                    GameScr.info1.addInfo(string.Format(Strings.customBgRemovedBg, bgFileName) + '!', 0); SetTabCustomBackgroundPanel(panel); SaveData();
+                    GameScr.info1.addInfo(string.Format(Strings.customBgRemovedBg, bgFileName) + '!', 0);
+                    SetTabCustomBackgroundPanel(panel);
+                    SaveData();
                 }))
-                .setPos(panel.X, (selected + 1) * panel.ITEM_HEIGHT - panel.cmy + panel.yScroll)
-                .start();
-
+                .addItem(Strings.customBgScaleMode + ": " + customBg.Value.ScaleMode.GetName(), new MenuAction(() =>
+                {
+                    if (overrideScaleMode.ContainsKey(customBg.Key))
+                        overrideScaleMode[customBg.Key]++;
+                    else
+                        overrideScaleMode.Add(customBg.Key, customBg.Value.ScaleMode + 1);
+                    if (overrideScaleMode[customBg.Key] > ScaleMode.ScaleToFit)
+                        overrideScaleMode[customBg.Key] = 0;
+                    customBg.Value.ScaleMode = overrideScaleMode[customBg.Key];
+                    GameScr.info1.addInfo(Strings.customBgScaleMode + ": " + overrideScaleMode[customBg.Key].GetName(), 0);
+                }))
+                .setPos(panel.X, (selected + 1) * panel.ITEM_HEIGHT - panel.cmy + panel.yScroll);
+            if (overrideScaleMode.ContainsKey(customBg.Key))
+                menuBuilder.addItem(Strings.customBgResetScaleModeToDefault, new MenuAction(() =>
+                {
+                    if (overrideScaleMode.ContainsKey(customBg.Key))
+                        overrideScaleMode.Remove(customBg.Key);
+                    customBg.Value.ScaleMode = DefaultScaleMode;
+                }));
+            menuBuilder.start();
+            string fileName = Path.GetFileName(customBg.Key);
             panel.cp = new ChatPopup();
             panel.cp.isClip = false;
             panel.cp.sayWidth = 180;
             panel.cp.cx = 3 + panel.X;
             if (panel.X != 0)
                 panel.cp.cx -= Res.abs(panel.cp.sayWidth - panel.W) + 8;
-            panel.cp.says = mFont.tahoma_7_red.splitFontArray("|0|2|" + fileName + "\n--\n|6|" + Strings.fullPath + ": " + customBgs.ElementAt(selected).Key, panel.cp.sayWidth - 10);
+            panel.cp.says = mFont.tahoma_7_red.splitFontArray("|0|2|" + fileName + "\n--\n|6|" + Strings.fullPath + ": " + customBg.Key, panel.cp.sayWidth - 10);
             panel.cp.delay = 10000000;
             panel.cp.c = null;
             panel.cp.sayRun = 7;
@@ -275,6 +318,14 @@ namespace Mod.Graphics
         {
             try
             {
+                if (Utils.TryLoadDataString("custom_bg_override_scale_modes", out string str))
+                {
+                    foreach (string item in str.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        string[] data = item.Split('|');
+                        overrideScaleMode.Add(data[0], Enum.Parse<ScaleMode>(data[1]));
+                    }
+                }
                 foreach (string path in Utils.LoadDataString("custom_bg_paths").Split('|'))
                 {
                     if (!string.IsNullOrEmpty(path))
@@ -283,10 +334,12 @@ namespace Mod.Graphics
                 isAllBgsLoaded = false;
                 Utils.TryLoadDataBool("custom_bg_change", out isChangeBg);
                 Utils.TryLoadDataInt("custom_bg_index", out bgIndex);
+                if (Utils.TryLoadDataInt("custom_bg_default_scale_mode", out int value))
+                    DefaultScaleMode = (ScaleMode)value;
                 if (bgIndex >= customBgs.Count)
                     bgIndex = 0;
-                if (Utils.TryLoadDataFloat("custom_bg_gif_speed", out float gifbackgroundspeed))
-                    speed = Mathf.Clamp(gifbackgroundspeed, 0, 100);
+                if (Utils.TryLoadDataFloat("custom_bg_gif_speed", out float value2))
+                    speed = Mathf.Clamp(value2, 0, 100);
             }
             catch (Exception)
             { }
@@ -299,6 +352,8 @@ namespace Mod.Graphics
             Utils.SaveData("custom_bg_change", isChangeBg);
             Utils.SaveData("custom_bg_index", bgIndex);
             Utils.SaveData("custom_bg_gif_speed", speed);
+            Utils.SaveData("custom_bg_default_scale_mode", (int)DefaultScaleMode);
+            Utils.SaveData("custom_bg_override_scale_modes", string.Join(Environment.NewLine, overrideScaleMode.Select(kVP => kVP.Key + '|' + kVP.Value)));
         }
 
         internal static void SetState(bool value)

@@ -13,5 +13,7 @@ namespace Mod.Graphics
         Texture2D[] Textures { get; }
 
         bool IsLoaded { get; }
+
+        ScaleMode ScaleMode { get; set; }
     }
 }

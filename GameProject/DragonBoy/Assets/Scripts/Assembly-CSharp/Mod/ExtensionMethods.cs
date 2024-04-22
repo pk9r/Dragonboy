@@ -518,5 +518,20 @@ namespace Mod
             }
             return itemOption;
         }
+
+        internal static string GetName(this ScaleMode scaleMode)
+        {
+            switch (scaleMode)
+            {
+                case ScaleMode.StretchToFill:
+                    return Strings.scaleModeStretchToFill;
+                case ScaleMode.ScaleAndCrop:
+                    return Strings.scaleModeScaleAndCrop;
+                case ScaleMode.ScaleToFit:
+                    return Strings.scaleModeScaleToFit;
+                default:
+                    return "Unknown";
+            }
+        }
     }
 }

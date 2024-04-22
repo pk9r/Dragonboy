@@ -13,6 +13,12 @@ namespace Mod.Graphics
         long lastTimeCheckTime;
         int videoPlayerIndex;
         double lastTime;
+        ScaleMode _scaleMode = ScaleMode.StretchToFill;
+        public ScaleMode ScaleMode
+        {
+            get => _scaleMode;
+            set => _scaleMode = value;
+        }
 
         internal BackgroundVideo(string path)
         {
@@ -35,7 +41,7 @@ namespace Mod.Graphics
             }
             lastTime = videoPlayers[videoPlayerIndex].time;
             if (videoPlayers[videoPlayerIndex].texture != null)
-                GUI.DrawTexture(new Rect(x, y, Screen.width, Screen.height), videoPlayers[videoPlayerIndex].texture, ScaleMode.ScaleToFit);
+                GUI.DrawTexture(new Rect(x, y, Screen.width, Screen.height), videoPlayers[videoPlayerIndex].texture, _scaleMode);
         }
 
         internal void Stop() =>

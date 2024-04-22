@@ -369,6 +369,20 @@ namespace Mod.ModMenu
                 }),
                 new ModMenuItemValues(new ModMenuItemValuesConfig()
                 {
+                    ID = "Set_BgScaleMode",
+                    Title = Strings.customBgDefaultScaleModeTitle,
+                    Values = new string[3]
+                    {
+                        ScaleMode.StretchToFill.GetName(),
+                        ScaleMode.ScaleAndCrop.GetName(),
+                        ScaleMode.ScaleToFit.GetName()
+                    },
+                    GetValueFunc = () => (int)CustomBackground.DefaultScaleMode,
+                    SetValueAction = value => CustomBackground.DefaultScaleMode = (ScaleMode)value,
+                    RMSName = "custom_bg_default_scale_mode"
+                }),
+                new ModMenuItemValues(new ModMenuItemValuesConfig()
+                {
                     ID = "Set_TimeChangeBg",
                     Title = Strings.setTimeChangeCustomBgTitle,
                     Description = Strings.setTimeChangeCustomBgDescription,

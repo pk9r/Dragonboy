@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
-using Assets.GifAssets.PowerGif;
 using Mod.ModHelper;
 using UnityEngine;
 
@@ -10,41 +8,43 @@ namespace Mod.Graphics
 {
     internal class GifImage : IImage
     {
-        internal float[] delays => gif.Frames.Select(f => f.Delay).ToArray();
+        internal List<float> delays = new List<float>();
         internal int paintFrameIndex;
         long lastTimePaintAFrame;
-        int frameIndex;
         internal bool isLoaded;
         internal float speed = 1f;
-        Gif gif;
-        int frameCount;
 
-        public Texture2D[] Textures => gif.Frames.Select(f => f.Texture).ToArray();
+        public Texture2D[] Textures => frames.ToArray();
+        List<Texture2D> frames = new List<Texture2D>();
 
         public bool IsLoaded => isLoaded;
+        ScaleMode _scaleMode = ScaleMode.StretchToFill;
+        public ScaleMode ScaleMode 
+        { 
+            get => _scaleMode; 
+            set => _scaleMode = value; 
+        }
 
         internal GifImage(string path)
         {
-            byte[] data = File.ReadAllBytes(path);
-            frameCount = SimpleGif.Gif.GetDecodeIteratorSize(data);
             ThreadPool.QueueUserWorkItem(_ =>
             {
-                List<GifFrame> frames = new List<GifFrame>();
-                foreach (SimpleGif.Data.GifFrame gifFrame in SimpleGif.Gif.DecodeIterator(data))
+                byte[] data = File.ReadAllBytes(path);
+                using var decoder = new MG.GIF.Decoder(data);
+                var img = decoder.NextImage();
+                do
                 {
                     bool completed = false;
                     MainThreadDispatcher.dispatch(() =>
                     {
-                        GifFrame convertedFrame = new GifFrame(Converter.ConvertTexture(gifFrame.Texture), gifFrame.Delay);
-                        frames.Add(convertedFrame);
-                        convertedFrame.Texture.filterMode = FilterMode.Point;
-                        frameIndex++;
+                        frames.Add(img.CreateTexture());
+                        delays.Add(img.Delay);
                         completed = true;
                     });
                     while (!completed)
-                        Thread.Sleep(100);
-                }
-                gif = new Gif(frames);
+                        Thread.Sleep(10);
+                    img = decoder.NextImage();
+                } while (img != null);
                 isLoaded = true;
             });
         }
@@ -53,13 +53,13 @@ namespace Mod.Graphics
         {
             if (!isLoaded)
             {
-                mFont.tahoma_7b_red.drawString(g, $"Đang tải... ({frameIndex}/{frameCount})", GameCanvas.w / 2, y, mFont.CENTER);
+                GUI.DrawTexture(new Rect(x, y, Screen.width, Screen.height), Texture2D.blackTexture);
                 return;
             }
-            if (paintFrameIndex >= gif.Frames.Count)
+            if (paintFrameIndex >= frames.Count)
                 paintFrameIndex = 0;
-            GUI.DrawTexture(new Rect(x, y, Screen.width, Screen.height), gif.Frames[paintFrameIndex].Texture, ScaleMode.ScaleToFit);
-            if (mSystem.currentTimeMillis() - lastTimePaintAFrame > gif.Frames[paintFrameIndex].Delay * 1000f / speed)
+            GUI.DrawTexture(new Rect(x, y, Screen.width, Screen.height), frames[paintFrameIndex], _scaleMode);
+            if (mSystem.currentTimeMillis() - lastTimePaintAFrame > delays[paintFrameIndex] / speed)
             {
                 lastTimePaintAFrame = mSystem.currentTimeMillis();
                 paintFrameIndex++;

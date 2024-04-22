@@ -80,6 +80,7 @@ namespace Mod.R
         internal static string setAutoRescueTitle = "";
         internal static string[] setAutoRescueChoices = new string[0];
         internal static string setTimeChangeCustomBgTitle = "";
+        internal static string customBgDefaultScaleModeTitle = "";
         internal static string setTimeChangeCustomBgDescription = "";
         internal static string openXmapMenuTitle = "";
         internal static string openXmapMenuDescription = "";
@@ -102,6 +103,8 @@ namespace Mod.R
         internal static string customBgRemoveAll = "";
         internal static string customBgAllBgRemoved = "";
         internal static string customBgAutoChangeBg = "";
+        internal static string customBgScaleMode = "";
+        internal static string customBgResetScaleModeToDefault = "";
         internal static string customBgSetTimeChange = "";
         internal static string customBgChangeGifSpeed = "";
         internal static string customBgInputGifSpeed = "";
@@ -189,6 +192,9 @@ namespace Mod.R
         internal static string goTo;
         internal static string xmapCantFindWay;
         internal static string xmapDestinationReached;
+        internal static string scaleModeStretchToFill;
+        internal static string scaleModeScaleAndCrop;
+        internal static string scaleModeScaleToFit;
         #endregion
 
         internal static void LoadLanguage(sbyte newLanguage)
@@ -241,7 +247,10 @@ namespace Mod.R
             inputNumberOutOfRange = "Số đã nhập phải trong khoảng {0} và {1}";
             inputNumberMustBeBiggerThanOrEqual = "Số đã nhập phải lớn hơn hoặc bằng {0}";
             empty = "Rỗng";
-
+            scaleModeStretchToFill = "Dãn ra vừa màn hình";
+            scaleModeScaleAndCrop = "Thu nhỏ vừa màn hình";
+            scaleModeScaleToFit = "Phóng to vừa màn hình";
+            //---------------------------------------------------
             inputFPS = "Nhập số khung hình trên giây";
             inputTimeChangeBg = "Nhập thời gian thay đổi hình nền";
             inputTimeChangeBgHint = "Thời gian (giây)";
@@ -251,6 +260,8 @@ namespace Mod.R
             customBgRemoveAll = "Xóa hết hình nền";
             customBgAllBgRemoved = "Đã xóa hết hình nền trong danh sách";
             customBgAutoChangeBg = "Tự động chuyển hình nền";
+            customBgScaleMode = "Chế độ vẽ ảnh nền";
+            customBgResetScaleModeToDefault = "Đặt lại chế độ vẽ ảnh nền về mặc định";
             customBgSetTimeChange = "Thay đổi thời gian chuyển hình nền";
             imageVideoFile = "Tệp ảnh/video";
             videoFile = "Tệp video";
@@ -406,6 +417,7 @@ namespace Mod.R
             };
             setAutoRescueSkill3Null = "Bạn chưa có kỹ năng Trị thương";
             setAutoRescueSkill3BuffInvalid = "Skill 3 của bạn không phải kỹ năng Trị thương";
+            customBgDefaultScaleModeTitle = "Chế độ vẽ ảnh nền mặc định";
             setTimeChangeCustomBgTitle = "Thời gian đổi hình nền";
             setTimeChangeCustomBgDescription = "Điều chỉnh thời gian thay đổi hình nền (giây)";
             setIntroVolumeTitle = "Âm lượng intro";
@@ -460,7 +472,10 @@ namespace Mod.R
             inputNumberOutOfRange = "The number entered must be between {0} and {1}";
             inputNumberMustBeBiggerThanOrEqual = "The number entered must be bigger than or equal to {0}";
             empty = "Empty";
-
+            scaleModeStretchToFill = "Stretch to fill";
+            scaleModeScaleAndCrop = "Scale and crop";
+            scaleModeScaleToFit = "Scale to fit";
+            //---------------------------------------------------
             inputFPS = "Input the number of frames per second";
             inputTimeChangeBg = "Input the background interval";
             inputTimeChangeBgHint = "Time (seconds)";
@@ -470,6 +485,8 @@ namespace Mod.R
             customBgRemoveAll = "Remove all backgrounds";
             customBgAllBgRemoved = "All backgrounds have been removed from the list";
             customBgAutoChangeBg = "Auto change background";
+            customBgScaleMode = "Background scale mode";
+            customBgResetScaleModeToDefault = "Reset background scale mode to default";
             customBgSetTimeChange = "Change background interval";
             customBgChangeGifSpeed = "Change animated background speed";
             imageVideoFile = "Image/video file";
@@ -625,6 +642,7 @@ namespace Mod.R
             };
             setAutoRescueSkill3Null = "You don't have Rescue skill";
             setAutoRescueSkill3BuffInvalid = "Your third skill is not Rescue";
+            customBgDefaultScaleModeTitle = "Default background scale mode";
             setTimeChangeCustomBgTitle = "Background duration";
             setTimeChangeCustomBgDescription = "Adjust the time to switch background (seconds)";
             setIntroVolumeTitle = "Change intro volume";

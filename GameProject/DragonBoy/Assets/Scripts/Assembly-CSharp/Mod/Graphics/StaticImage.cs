@@ -11,6 +11,12 @@ namespace Mod.Graphics
     {
         Texture2D texture = new Texture2D(1, 1);
         bool isLoaded;
+        ScaleMode _scaleMode = ScaleMode.StretchToFill;
+        public ScaleMode ScaleMode
+        {
+            get => _scaleMode;
+            set => _scaleMode = value;
+        }
 
         internal StaticImage(string path)
         {
@@ -33,7 +39,7 @@ namespace Mod.Graphics
 
         public void Paint(mGraphics g, int x, int y)
         {
-            GUI.DrawTexture(new Rect(x, y, Screen.width, Screen.height), texture, ScaleMode.ScaleToFit);
+            GUI.DrawTexture(new Rect(x, y, Screen.width, Screen.height), texture, _scaleMode);
         }
     }
 }
