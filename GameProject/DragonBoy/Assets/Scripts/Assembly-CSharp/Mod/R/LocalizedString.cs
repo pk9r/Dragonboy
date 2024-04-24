@@ -96,6 +96,12 @@ namespace Mod.R
             "Stone forest",
             "Stone forest"
         };
+        internal static LocalizedString arbitration = new string[3]
+        {
+            "Trọng tài",
+            "Arbitration",
+            "Arbitration"
+        };
 
         #region Methods and fields
         string[] strings;

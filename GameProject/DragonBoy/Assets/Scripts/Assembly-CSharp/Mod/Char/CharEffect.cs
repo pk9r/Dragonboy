@@ -173,7 +173,9 @@ namespace Mod
             Char focus = Char.myCharz().charFocus;
             if (focus == null)
                 return;
-            string str = focus.cName + " [" + NinjaUtil.getMoneys(focus.cHP) + "/" + NinjaUtil.getMoneys(focus.cHPFull) + "]";
+            string str = $"{focus.cName} - {Utils.FormatWithSIPrefix(focus.cHP)}/{Utils.FormatWithSIPrefix(focus.cHPFull)}";
+            if (focus.charID > 0)
+                str += $" [{focus.charID}]";
             g.setColor(new Color(0f, 0f, 0f, 0.4f));
             g.fillRect(GameCanvas.w / 2 - mFont.tahoma_7b_red.getWidth(str) / 2 - 5, 50 + 1, mFont.tahoma_7b_red.getWidth(str) + 8, 10);
             mFont.tahoma_7b_red.drawString(g, str, GameCanvas.w / 2, 50, mFont.CENTER);

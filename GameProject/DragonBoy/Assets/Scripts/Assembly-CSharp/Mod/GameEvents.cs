@@ -1023,7 +1023,8 @@ namespace Mod
                     int previousDisguiseId = -1;
                     if (Char.myCharz().arrItemBody[5] == null || (Char.myCharz().arrItemBody[5] != null && (Char.myCharz().arrItemBody[5].template.id < 592 || Char.myCharz().arrItemBody[5].template.id > 594)))
                     {
-                        if (Char.myCharz().arrItemBody[5] != null) previousDisguiseId = Char.myCharz().arrItemBody[5].template.id;
+                        if (Char.myCharz().arrItemBody[5] != null)
+                            previousDisguiseId = Char.myCharz().arrItemBody[5].template.id;
                         for (int i = 0; i < Char.myCharz().arrItemBag.Length; i++)
                         {
                             Item item = Char.myCharz().arrItemBag[i];

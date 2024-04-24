@@ -360,7 +360,7 @@ namespace Mod
 
         internal static bool isNormalChar(this Char ch, bool isIncludeBoss = false, bool isIncludePet = false)
         {
-            bool result = !string.IsNullOrEmpty(ch.cName) && ch.cName != Strings.arbitration;
+            bool result = !string.IsNullOrEmpty(ch.cName) && ch.cName != LocalizedString.arbitration;
             if (!string.IsNullOrEmpty(ch.cName))
             {
                 if (!isIncludeBoss)
@@ -371,7 +371,7 @@ namespace Mod
             return result;
         }
 
-        internal static bool isBoss(this Char ch) => !ch.IsPet() && ch.cName != Strings.arbitration && char.IsUpper(getNameWithoutClanTag(ch)[0]);
+        internal static bool isBoss(this Char ch) => !ch.IsPet() && ch.cName != LocalizedString.arbitration && char.IsUpper(getNameWithoutClanTag(ch)[0]);
 
         internal static bool IsPet(this Char ch) => ch.isPet || ch.isMiniPet || ch.cName.StartsWith("#") || ch.cName.StartsWith("$");
 

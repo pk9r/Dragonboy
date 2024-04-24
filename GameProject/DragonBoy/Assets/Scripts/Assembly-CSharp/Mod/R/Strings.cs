@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mod.TeleportMenu;
 
 namespace Mod.R
 {
@@ -13,7 +14,6 @@ namespace Mod.R
         internal static string communityMod = "";
         internal static string gameVersion = "";
         internal static string registered = "";
-        internal static string arbitration = "";
         internal static string autoChatDisabled = "";
         internal static string inputContent = "";
         internal static string delaySeconds = "";
@@ -185,16 +185,38 @@ namespace Mod.R
         internal static string setIntroVolumeDescription = "";
         internal static string introNoVideo = "";
         internal static string introSelectFile = "";
-        internal static string xmapUseSpecialCapsule;
-        internal static string xmapUseNormalCapsule;
-        internal static string xmapCanceled;
-        internal static string xmapChatPopup;
-        internal static string goTo;
-        internal static string xmapCantFindWay;
-        internal static string xmapDestinationReached;
-        internal static string scaleModeStretchToFill;
-        internal static string scaleModeScaleAndCrop;
-        internal static string scaleModeScaleToFit;
+        internal static string xmapUseSpecialCapsule = "";
+        internal static string xmapUseNormalCapsule = "";
+        internal static string xmapCanceled = "";
+        internal static string xmapChatPopup = "";
+        internal static string goTo = "";
+        internal static string xmapCantFindWay = "";
+        internal static string xmapDestinationReached = "";
+        internal static string scaleModeStretchToFill = "";
+        internal static string scaleModeScaleAndCrop = "";
+        internal static string scaleModeScaleToFit = "";
+        internal static string teleportMenuOpenSavedCharList;
+        internal static string add;
+        internal static string teleportMenuCharacterAdded;
+        internal static string teleportMenuCantRemoveTargetChar;
+        internal static string teleportMenuCharacterRemoved;
+        internal static string teleportMenuStopTeleporting;
+        internal static string teleportMenuSelectTarget;
+        internal static string teleportMenuStopTeleportToTarget;
+        internal static string teleportMenuAddCharacterByID;
+        internal static string teleportMenuAddEveryoneInZone;
+        internal static string teleportMenuEveryoneAdded;
+        internal static string teleportMenuRemoveCharacter;
+        internal static string deleteAll;
+        internal static string teleportMenuCleared;
+        internal static string teleportMenuTeleportingToCharacter;
+        internal static string more;
+        internal static string teleportMenuNoRemovableChar;
+        internal static string teleportMenuAutoTeleportTo;
+        internal static string teleportMenuCharacterList;
+        internal static string teleportMenuInputCharIDTextFieldName;
+        internal static string teleportMenuInputCharIDTextFieldHint;
+        internal static string teleportMenuAddedCharacterWithID;
         #endregion
 
         internal static void LoadLanguage(sbyte newLanguage)
@@ -214,31 +236,27 @@ namespace Mod.R
 
         static void LoadLanguageVI()
         {
+            //uncategorized
+            someonePet = $" [<color=cyan>{mResources.pet}</color> của {{0}}]";
+            petLostMaster = $" [<color=cyan>{mResources.pet}</color> bị lạc sư phụ]";
+            autoChatDisabled = "Đã tắt Auto Chat";
+            delaySeconds = "Delay:\n{0} giây";
+            autoChatContent = "Nội dung Auto Chat";
+            inputDelay = "Nhập thời gian delay";
+            gobackTo = "Goback đến map: {0}, khu: {1}, tọa độ: ({2}, {3})";
+            //---------------------------------------------------
+            //common strings
             communityMod = "NRO Mod Cộng đồng";
             gameVersion = "Phiên bản game";
             registered = "Đã đăng ký";
-            arbitration = "Trọng tài";
-            autoChatDisabled = "Đã tắt Auto Chat";
             inputContent = "Nhập nội dung";
-            delaySeconds = "Delay:\n{0} giây";
             viewContent = "Xem nội dung";
-            autoChatContent = "Nội dung Auto Chat";
-            inputDelay = "Nhập thời gian delay";
             timeMilliseconds = "Thời gian (ms)";
             errorOccurred = "Có lỗi xảy ra";
             contentSaved = "Đã lưu nội dung";
             autoAttack = "Tự đánh";
-            gobackTo = "Goback đến map: {0}, khu: {1}, tọa độ: ({2}, {3})";
             youAreNotNamekian = "Bạn không phải là Namek";
             completed = "Đã hoàn thành";
-            modMenuPanelTabName = new string[][]
-            {
-                new string[]{ "Bật/tắt", "" },
-                new string[]{ "Điều", "chỉnh" },
-                new string[]{ "Chức", "năng" },
-            };
-            someonePet = $" [<color=cyan>{mResources.pet}</color> của {{0}}]";
-            petLostMaster = $" [<color=cyan>{mResources.pet}</color> bị lạc sư phụ]";
             zone = "khu";
             functionShouldBeDisabled = "Bạn cần tắt chức năng \"{0}\"!";
             functionShouldBeEnabled = "Bạn cần bật chức năng \"{0}\"!";
@@ -250,6 +268,17 @@ namespace Mod.R
             scaleModeStretchToFill = "Dãn ra vừa màn hình";
             scaleModeScaleAndCrop = "Thu nhỏ vừa màn hình";
             scaleModeScaleToFit = "Phóng to vừa màn hình";
+            add = "Thêm";
+            deleteAll = "Xóa tất cả";
+            more = "Thêm";
+            imageVideoFile = "Tệp ảnh/video";
+            videoFile = "Tệp video";
+            allFileTypes = "Tất cả";
+            speed = "Tốc độ";
+            delete = "Xóa";
+            fullPath = "Đường dẫn đầy đủ";
+            goTo = "Đi đến";
+            level = "Mức";
             //---------------------------------------------------
             inputFPS = "Nhập số khung hình trên giây";
             inputTimeChangeBg = "Nhập thời gian thay đổi hình nền";
@@ -263,17 +292,11 @@ namespace Mod.R
             customBgScaleMode = "Chế độ vẽ ảnh nền";
             customBgResetScaleModeToDefault = "Đặt lại chế độ vẽ ảnh nền về mặc định";
             customBgSetTimeChange = "Thay đổi thời gian chuyển hình nền";
-            imageVideoFile = "Tệp ảnh/video";
-            videoFile = "Tệp video";
-            allFileTypes = "Tất cả";
             customBgSelectBgFiles = "Chọn hình nền";
             customBgChangeGifSpeed = "Thay đổi tốc độ ảnh động";
             customBgInputGifSpeed = "Nhập tốc độ ảnh động";
-            speed = "Tốc độ";
             customBgSwitchToThisBg = "Chuyển sang hình nền này";
-            delete = "Xóa";
             customBgRemovedBg = "Đã xóa hình nền \"{0}\"";
-            fullPath = "Đường dẫn đầy đủ";
             customBgList = "Danh sách hình nền tùy chỉnh";
             customBgGifSpeed = "Tốc độ ảnh động";
             pickMobMonsterAdded = "Đã thêm quái id {0} vào danh sách";
@@ -332,10 +355,35 @@ namespace Mod.R
             xmapUseNormalCapsule = "Sử dụng capsule thường để Xmap";
             xmapCanceled = "Đã huỷ Xmap";
             xmapChatPopup = "XmapNRO by Phucprotein\nMap hiện tại: {0}, ID: {1}\nVui lòng chọn nơi muốn đến";
-            goTo = "Đi đến";
             xmapCantFindWay = "Không thể tìm thấy đường đi";
             xmapDestinationReached = "Đã đến nơi";
+            teleportMenuOpenSavedCharList = "Nhân vật đã lưu";
+            teleportMenuCharacterAdded = "Đã thêm {0} vào danh sách";
+            teleportMenuCantRemoveTargetChar = "Không thể xóa nhân vật đang auto dịch chuyển tới";
+            teleportMenuCharacterRemoved = "Đã xóa {0} khỏi danh sách";
+            teleportMenuStopTeleporting = "Dừng auto dịch chuyển";
+            teleportMenuSelectTarget = "Chọn nhân vật mục tiêu";
+            teleportMenuStopTeleportToTarget = "Dừng auto dịch chuyển đến {0}";
+            teleportMenuAddCharacterByID = "Thêm nhân vật bằng ID";
+            teleportMenuAddEveryoneInZone = "Thêm tất cả người trong khu";
+            teleportMenuEveryoneAdded = "Đã thêm tất cả người trong khu vào danh sách";
+            teleportMenuRemoveCharacter = "Xóa nhân vật đã lưu";
+            teleportMenuCleared = "Đã xóa toàn bộ nhân vật đã lưu";
+            teleportMenuTeleportingToCharacter = "Dịch chuyển đến {0}";
+            teleportMenuNoRemovableChar = "Không có nhân vật nào xóa được trong danh sách";
+            teleportMenuAutoTeleportTo = "Auto dịch chuyển đến";
+            teleportMenuCharacterList = "Danh sách nhân vật";
+            teleportMenuInputCharIDTextFieldName = "Nhập ID nhân vật";
+            teleportMenuInputCharIDTextFieldHint = "ID";
+            teleportMenuAddedCharacterWithID = "Đã thêm nhân vật với ID {0}";
             //---------------------------------------------------
+            //mod menu
+            modMenuPanelTabName = new string[][]
+            {
+                new string[]{ "Bật/tắt", "" },
+                new string[]{ "Điều", "chỉnh" },
+                new string[]{ "Chức", "năng" },
+            };
             vSyncDescription = "Tự động giới hạn FPS theo tốc độ khung hình của màn hình";
             showTargetInfoTitle = "Thông tin đối thủ";
             showTargetInfoDescription = "Hiện gần chính xác thời gian NRD, khiên, khỉ, huýt sáo... của đối thủ";
@@ -376,7 +424,6 @@ namespace Mod.R
             autoHarvestPeansDescription = "Tự động thu hoạch đậu thần từ cây đậu thần ở nhà";
             setFPSDescription = "Điều chỉnh số lượng khung hình trên giây của game";
             setReduceGraphicsTitle = "Giảm đồ họa";
-            level = "Mức";
             setReduceGraphicsChoices = new string[]
             {
                 "Đang tắt",
@@ -439,31 +486,27 @@ namespace Mod.R
 
         static void LoadLanguageEN()
         {
+            //uncategorized
+            someonePet = $" [{{0}}'s <color=cyan>{mResources.pet}</color>]";
+            petLostMaster = $" [<color=cyan>{mResources.pet}</color> lost master]";
+            gobackTo = "Goback to map: {0}, zone: {1}, coordinates: ({2}, {3})";
+            autoChatDisabled = "Auto Chat disabled";
+            delaySeconds = "Delay:\n{0} seconds";
+            autoChatContent = "Auto Chat contents";
+            //---------------------------------------------------
+            //common strings
             communityMod = "DBO Community Mod";
             gameVersion = "Game version";
             registered = "Registered";
-            arbitration = "Arbitration";
-            autoChatDisabled = "Auto Chat disabled";
             inputContent = "Input content";
-            delaySeconds = "Delay:\n{0} seconds";
             viewContent = "View content";
-            autoChatContent = "Auto Chat contents";
             inputDelay = "Input delay time";
             timeMilliseconds = "Time (ms)";
             errorOccurred = "Error occurred";
             contentSaved = "Content saved";
             autoAttack = "Auto attack";
-            gobackTo = "Goback to map: {0}, zone: {1}, coordinates: ({2}, {3})";
             youAreNotNamekian = "You are not a Namekian character";
             completed = "Completed";
-            modMenuPanelTabName = new string[][]
-            {
-                new string[]{ "Toggle", "" },
-                new string[]{ "Adjust", "" },
-                new string[]{ "Func-", "tions" },
-            };
-            someonePet = $" [{{0}}'s <color=cyan>{mResources.pet}</color>]";
-            petLostMaster = $" [<color=cyan>{mResources.pet}</color> lost master]";
             zone = "zone";
             functionShouldBeDisabled = "You need to disable the \"{0}\" feature!";
             functionShouldBeEnabled = "You need to enable the \"{0}\" feature!";
@@ -475,6 +518,17 @@ namespace Mod.R
             scaleModeStretchToFill = "Stretch to fill";
             scaleModeScaleAndCrop = "Scale and crop";
             scaleModeScaleToFit = "Scale to fit";
+            add = "Add";
+            deleteAll = "Delete all";
+            more = "More";
+            imageVideoFile = "Image/video file";
+            videoFile = "Video file";
+            allFileTypes = "All file types";
+            speed = "Speed";
+            delete = "Delete";
+            fullPath = "Full path";
+            goTo = "Go to";
+            level = "Level";
             //---------------------------------------------------
             inputFPS = "Input the number of frames per second";
             inputTimeChangeBg = "Input the background interval";
@@ -489,16 +543,10 @@ namespace Mod.R
             customBgResetScaleModeToDefault = "Reset background scale mode to default";
             customBgSetTimeChange = "Change background interval";
             customBgChangeGifSpeed = "Change animated background speed";
-            imageVideoFile = "Image/video file";
-            videoFile = "Video file";
-            allFileTypes = "All file types";
             customBgSelectBgFiles = "Select background files";
             customBgInputGifSpeed = "Input animated background speed";
-            speed = "Speed";
             customBgSwitchToThisBg = "Switch to this background";
-            delete = "Delete";
             customBgRemovedBg = "Background \"{0}\" has been removed";
-            fullPath = "Full path";
             customBgList = "Custom background list";
             customBgGifSpeed = "Animated background speed";
             pickMobMonsterAdded = "Monster with id {0} has been added to the list";
@@ -557,10 +605,35 @@ namespace Mod.R
             xmapUseNormalCapsule = "Use normal capsule to Xmap";
             xmapCanceled = "Xmap canceled";
             xmapChatPopup = "XmapNRO by Phucprotein\nCurrent map: {0}, ID: {1}\nPlease select the destination";
-            goTo = "Go to";
             xmapCantFindWay = "No possible way was found";
             xmapDestinationReached = "Destination reached";
+            teleportMenuOpenSavedCharList = "Saved characters";
+            teleportMenuCharacterAdded = "{0} has been added to the list";
+            teleportMenuCantRemoveTargetChar = "Can't remove the character that you are auto teleporting to";
+            teleportMenuCharacterRemoved = "{0} has been removed from the list";
+            teleportMenuStopTeleporting = "Stop auto teleporting";
+            teleportMenuSelectTarget = "Select target character";
+            teleportMenuStopTeleportToTarget = "Stopped auto teleporting to {0}";
+            teleportMenuAddCharacterByID = "Add character by ID";
+            teleportMenuAddEveryoneInZone = "Add everyone in the current zone";
+            teleportMenuEveryoneAdded = "Everyone in the current zone has been added to the list";
+            teleportMenuRemoveCharacter = "Remove saved character";
+            teleportMenuCleared = "All saved characters have been removed";
+            teleportMenuTeleportingToCharacter = "Teleporting to {0}";
+            teleportMenuNoRemovableChar = "No character that can be removed in the list";
+            teleportMenuAutoTeleportTo = "Auto teleport";
+            teleportMenuCharacterList = "Character list";
+            teleportMenuInputCharIDTextFieldName = "Input character ID";
+            teleportMenuInputCharIDTextFieldHint = "ID";
+            teleportMenuAddedCharacterWithID = "Character with ID {0} has been added to the list";
             //---------------------------------------------------
+            //mod menu
+            modMenuPanelTabName = new string[][]
+            {
+                new string[]{ "Toggle", "" },
+                new string[]{ "Adjust", "" },
+                new string[]{ "Func-", "tions" },
+            };
             vSyncDescription = "Automatically limit the FPS according to the monitor's refresh rate";
             showTargetInfoTitle = "Target's effect information";
             showTargetInfoDescription = "Show the near-accurate duration of Black Star Dragonball, Energy Shield, Super Monkey, Whistle, etc. of the target character";
@@ -601,7 +674,6 @@ namespace Mod.R
             autoHarvestPeansDescription = "Automatically harvest Senzu beans from the Senzu tree at home";
             setFPSDescription = "Adjust the number of frames per second of the game";
             setReduceGraphicsTitle = "Reduce graphics quality";
-            level = "Level";
             setReduceGraphicsChoices = new string[]
             {
                 "Disabled",

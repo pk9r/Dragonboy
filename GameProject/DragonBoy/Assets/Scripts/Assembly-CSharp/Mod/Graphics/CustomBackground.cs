@@ -240,7 +240,7 @@ namespace Mod.Graphics
             if (selected < 0)
                 return;
             KeyValuePair<string, IImage> customBg = customBgs.ElementAt(selected);
-            MenuBuilder menuBuilder = new MenuBuilder()
+            new MenuBuilder()
                 .addItem(bgIndex != selected, Strings.customBgSwitchToThisBg, new MenuAction(() =>
                 {
                     StopAllBackgroundVideo();
@@ -278,15 +278,14 @@ namespace Mod.Graphics
                     customBg.Value.ScaleMode = overrideScaleMode[customBg.Key];
                     GameScr.info1.addInfo(Strings.customBgScaleMode + ": " + overrideScaleMode[customBg.Key].GetName(), 0);
                 }))
-                .setPos(panel.X, (selected + 1) * panel.ITEM_HEIGHT - panel.cmy + panel.yScroll);
-            if (overrideScaleMode.ContainsKey(customBg.Key))
-                menuBuilder.addItem(Strings.customBgResetScaleModeToDefault, new MenuAction(() =>
-                {
-                    if (overrideScaleMode.ContainsKey(customBg.Key))
-                        overrideScaleMode.Remove(customBg.Key);
-                    customBg.Value.ScaleMode = DefaultScaleMode;
-                }));
-            menuBuilder.start();
+                .addItem(overrideScaleMode.ContainsKey(customBg.Key), Strings.customBgResetScaleModeToDefault, new MenuAction(() =>
+                    {
+                        if (overrideScaleMode.ContainsKey(customBg.Key))
+                            overrideScaleMode.Remove(customBg.Key);
+                        customBg.Value.ScaleMode = DefaultScaleMode;
+                    }))
+                .setPos(panel.X, (selected + 1) * panel.ITEM_HEIGHT - panel.cmy + panel.yScroll)
+                .start();
             string fileName = Path.GetFileName(customBg.Key);
             panel.cp = new ChatPopup();
             panel.cp.isClip = false;

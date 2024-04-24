@@ -1,59 +1,57 @@
-﻿using System.Collections.Generic;
-
-namespace Mod.TeleportMenu
+﻿namespace Mod.TeleportMenu
 {
-    public class TeleportChar
+    internal class TeleportChar
     {
-        public int charID { get; set; }
+        internal int ID { get; set; }
 
-        public string cName { get; set; }
+        internal string Name { get; set; }
 
-        public long lastTimeTeleportTo { get; set; }
+        internal long LastTimeTeleportTo { get; set; }
 
-        public TeleportChar(int charId)
+        internal TeleportChar(int charId)
         {
-            cName = "Không tên";
-            charID = charId;
-            lastTimeTeleportTo = mSystem.currentTimeMillis();
+            Name = "no name";
+            ID = charId;
+            LastTimeTeleportTo = mSystem.currentTimeMillis();
         }
 
-        public TeleportChar(string cName, int charId)
+        internal TeleportChar(string name, int charId)
         {
-            charID = charId;
-            this.cName = cName;
-            lastTimeTeleportTo = mSystem.currentTimeMillis();
+            ID = charId;
+            Name = name;
+            LastTimeTeleportTo = mSystem.currentTimeMillis();
         }
-        public TeleportChar(Char ch)
+        internal TeleportChar(Char ch)
         {
-            cName = ch.getNameWithoutClanTag();
-            charID = ch.charID;
-            lastTimeTeleportTo = mSystem.currentTimeMillis();
+            Name = ch.getNameWithoutClanTag();
+            ID = ch.charID;
+            LastTimeTeleportTo = mSystem.currentTimeMillis();
         }
 
-        public TeleportChar(string cName, int charID, long lastTimeTeleportTo)
+        internal TeleportChar(string name, int charID, long lastTimeTeleportTo)
         {
-            this.cName = cName;
-            this.charID = charID;
-            this.lastTimeTeleportTo = lastTimeTeleportTo;
+            Name = name;
+            ID = charID;
+            LastTimeTeleportTo = lastTimeTeleportTo;
         }
 
         public override string ToString()
         {
-            return cName + " [" + charID + "]";
+            return $"{Name} [{ID}]";
         }
 
         public override bool Equals(object obj)
         {
             if (obj is TeleportChar teleportChar)
             {
-                return teleportChar.cName == cName && teleportChar.charID == charID;
+                return teleportChar.Name == Name && teleportChar.ID == ID;
             }
             return false;
         }
 
         public override int GetHashCode()
         {
-            return System.HashCode.Combine(charID, cName);
+            return System.HashCode.Combine(ID, Name);
         }
     }
 }

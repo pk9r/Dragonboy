@@ -8,6 +8,7 @@ using Mod.TeleportMenu;
 using Mod.Xmap;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Mod.ModMenu
@@ -434,9 +435,7 @@ namespace Mod.ModMenu
                     ID = "OpenTeleportMenu",
                     Title = Strings.openTeleportMenuTitle,
                     Description = Strings.openTeleportMenuDescription, 
-                    Action = TeleportMenuMain.ShowMenu,
-                    GetIsDisabled = () => true,
-                    GetDisabledReason = () => "This feature is currently in development state"
+                    Action = TeleportMenuMain.ShowMenu
                 }),
                 new ModMenuItemFunction(new ModMenuItemFunctionConfig()
                 {
