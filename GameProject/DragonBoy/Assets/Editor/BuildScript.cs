@@ -80,7 +80,7 @@ namespace UnityBuilderAction
                     PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
                     break;
             }
-#if UNITY_2023 && !UNITY_STANDALONE_LINUX
+#if UNITY_2023 && UNITY_STANDALONE_WIN
             // ARM64
             if (osArchitecture == OSArchitecture.ARM64 && (buildTarget == BuildTarget.StandaloneWindows || buildTarget == BuildTarget.StandaloneWindows64))
             {
