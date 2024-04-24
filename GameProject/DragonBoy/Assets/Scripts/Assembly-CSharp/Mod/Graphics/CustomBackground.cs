@@ -11,8 +11,6 @@ using UnityEngine;
 using Mod.R;
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE
 using SFB;
-#elif UNITY_ANDROID
-using EHVN;
 #endif
 
 namespace Mod.Graphics
@@ -107,7 +105,7 @@ namespace Mod.Graphics
                 };
                 paths = StandaloneFileBrowser.OpenFilePanel(Strings.customBgSelectBgFiles, "", extensions, true);
 #elif UNITY_ANDROID
-                paths = FileChooser.Open(new string[] { "image/*", "video/mp4" });
+                paths = EHVN.FileChooser.Open(new string[] { "image/*", "video/mp4" });
 #endif
                 if (paths.Length == 0)
                     return;

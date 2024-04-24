@@ -15,10 +15,6 @@ using Mod.TeleportMenu;
 using Mod.Xmap;
 using UnityEngine;
 
-#if !UNITY_EDITOR && UNITY_ANDROID 
-using EHVN;
-#endif
-
 namespace Mod
 {
     /// <summary>
@@ -176,8 +172,8 @@ namespace Mod
                     GameCanvas.panel2.EmulateSetTypePanel(1);
                 ModMenuMain.UpdatePosition();
             }
-#if !UNITY_EDITOR && UNITY_ANDROID
-            FileChooser.Update();
+#if UNITY_ANDROID
+            EHVN.FileChooser.Update();
 #endif
             MainThreadDispatcher.update();
             //CustomCursor.Update();

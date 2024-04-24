@@ -80,7 +80,7 @@ namespace UnityBuilderAction
                     PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
                     break;
             }
-#if UNITY_2023
+#if UNITY_2023 && !UNITY_STANDALONE_LINUX
             // ARM64
             if (osArchitecture == OSArchitecture.ARM64 && (buildTarget == BuildTarget.StandaloneWindows || buildTarget == BuildTarget.StandaloneWindows64))
             {
@@ -217,10 +217,10 @@ namespace UnityBuilderAction
                 $"#      Build results      #{Eol}" +
                 $"###########################{Eol}" +
                 $"{Eol}" +
-                $"Duration: {summary.totalTime.ToString()}{Eol}" +
-                $"Warnings: {summary.totalWarnings.ToString()}{Eol}" +
-                $"Errors: {summary.totalErrors.ToString()}{Eol}" +
-                $"Size: {summary.totalSize.ToString()} bytes{Eol}" +
+                $"Duration: {summary.totalTime}{Eol}" +
+                $"Warnings: {summary.totalWarnings}{Eol}" +
+                $"Errors: {summary.totalErrors}{Eol}" +
+                $"Size: {summary.totalSize} bytes{Eol}" +
                 $"{Eol}"
             );
         }
@@ -249,6 +249,7 @@ namespace UnityBuilderAction
             }
         }
 
+#pragma warning disable 618
         static BuildTargetGroup ConvertBuildTarget(BuildTarget buildTarget)
         {
             switch (buildTarget)
@@ -291,5 +292,6 @@ namespace UnityBuilderAction
                     return BuildTargetGroup.Standalone;
             }
         }
+#pragma warning restore 618
     }
 }
