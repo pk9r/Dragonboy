@@ -73,9 +73,12 @@ namespace Mod.Set
                 if (!currentTabName[0][0].Contains("Set") && !currentTabName[0][1].Contains("Set"))
                     return false;
 
+                /*
                 var action = CustomPanelMenu.customPanel.setTab;
 
                 return action != null && action.Method == typeof(SetDo).GetMethod("setTabSetPanel");
+                */
+                return true;
             }
         }
 
@@ -334,7 +337,12 @@ namespace Mod.Set
                             tabName[i - offset] = new string[] { "Set đồ", string.IsNullOrEmpty(setDos[i].Name) ? (i + 1).ToString() : setDos[i].Name };
                     }
                     GameCanvas.panel.tabName[CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU] = tabName;
-                    CustomPanelMenu.Show(setTabSetPanel, doFireSetPanel, null, paintSetPanel);
+                    CustomPanelMenu.Show(new CustomPanelMenuConfig()
+                    {
+                        SetTabAction = SetTabSetPanel, 
+                        DoFireItemAction = DoFireSetPanel, 
+                        PaintAction = PaintSetPanel
+                    });
                 }))
                 .addItem(ifCondition: setDos.Count > 0,
                 "Xoá hết\nset đồ\nđã lưu", new(() =>
@@ -367,7 +375,7 @@ namespace Mod.Set
                 .start();
         }
 
-        internal static void setTabSetPanel(Panel panel)
+        internal static void SetTabSetPanel(Panel panel)
         {
             SetTabPanelTemplates.setTabListTemplate(panel, getItemCount());
 
@@ -381,7 +389,7 @@ namespace Mod.Set
             //if (GameCanvas.panel.cmy > GameCanvas.panel.cmyLim) GameCanvas.panel.cmy = GameCanvas.panel.cmtoY = GameCanvas.panel.cmyLim;
         }
 
-        internal static void paintSetPanel(Panel panel, mGraphics g)
+        internal static void PaintSetPanel(Panel panel, mGraphics g)
         {
             g.setColor(16711680);
             if (offset > 0)
@@ -484,7 +492,7 @@ namespace Mod.Set
             GameCanvas.panel.paintScrollArrow(g);
         }
 
-        internal static void doFireSetPanel(Panel panel)
+        internal static void DoFireSetPanel(Panel panel)
         {
             if (!IsCurrentPanelIsSetDoPanel)
                 return;

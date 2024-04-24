@@ -1067,36 +1067,28 @@ namespace Mod
 
         internal static bool OnPaintPanel(Panel panel, mGraphics g)
         {
-            if (panel.type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
-            {
-                g.translate(-g.getTranslateX(), -g.getTranslateY());
-                g.translate(-panel.cmx, 0);
-                g.translate(panel.X, panel.Y);
-                GameCanvas.paintz.paintFrameSimple(panel.X, panel.Y, panel.W, panel.H, g);
-                g.setClip(panel.X + 1, panel.Y, panel.W - 2, panel.yScroll - 2);
-                g.setColor(0x987B55);
-                g.fillRect(panel.X, panel.Y, panel.W - 2, 50);
-                SmallImage.drawSmallImage(g, Utils.ID_NPC_MOD_FACE, panel.X + 25, 50, 0, 33);
-                //panel.paintCharInfo(g, Char.myCharz());
-                mFont.tahoma_7b_white.drawString(g, Strings.communityMod, panel.X + 60, 4, mFont.LEFT, mFont.tahoma_7b_dark);
-                mFont.tahoma_7_yellow.drawString(g, Strings.gameVersion + ": v" + GameMidlet.VERSION, panel.X + 60, 16, mFont.LEFT, mFont.tahoma_7_grey);
-                g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
-                mFont.tahoma_7_yellow.drawString(g, mResources.character + ": " + Char.myCharz().cName, panel.X + 60, 27, mFont.LEFT, mFont.tahoma_7_grey);
-                mFont.tahoma_7_yellow.drawString(g, mResources.account + " " + mResources.account_server.ToLower() + " " + ServerListScreen.nameServer[ServerListScreen.ipSelect], panel.X + 60, 38, mFont.LEFT, mFont.tahoma_7_grey);
-
-                panel.paintBottomMoneyInfo(g);
-                if (!CustomPanelMenu.PaintTabHeader(panel, g))
-                    panel.paintTab(g);
-                CustomPanelMenu.PaintCustomMenuMain(panel, g);
-                GameScr.resetTranslate(g);
-                panel.paintDetail(g);
-                if (panel.cmx == panel.cmtoX)
-                    panel.cmdClose.paint(g);
-                if (panel.tabIcon != null && panel.tabIcon.isShow)
-                    panel.tabIcon.paint(g);
-                return true;
-            }
-            return false;
+            if (panel.type != CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
+                return false;
+            g.translate(-g.getTranslateX(), -g.getTranslateY());
+            g.translate(-panel.cmx, 0);
+            g.translate(panel.X, panel.Y);
+            GameCanvas.paintz.paintFrameSimple(panel.X, panel.Y, panel.W, panel.H, g);
+            g.setClip(panel.X + 1, panel.Y, panel.W - 2, panel.yScroll - 2);
+            g.setColor(0x987B55);
+            g.fillRect(panel.X, panel.Y, panel.W - 2, 50);
+            //panel.paintCharInfo(g, Char.myCharz());
+            CustomPanelMenu.PaintTopInfo(panel, g);
+            panel.paintBottomMoneyInfo(g);
+            if (!CustomPanelMenu.PaintTabHeader(panel, g))
+                panel.paintTab(g);
+            CustomPanelMenu.Paint(panel, g);
+            GameScr.resetTranslate(g);
+            panel.paintDetail(g);
+            if (panel.cmx == panel.cmtoX)
+                panel.cmdClose.paint(g);
+            if (panel.tabIcon != null && panel.tabIcon.isShow)
+                panel.tabIcon.paint(g);
+            return true;
         }
 
         internal static void OnPaintGameCanvas(GameCanvas instance, mGraphics g)
@@ -1139,7 +1131,7 @@ namespace Mod
                     {
                         instance.waitToPerform--;
                         instance.lastSelect[instance.currentTabIndex] = instance.selected;
-                        CustomPanelMenu.DoFireCustomPanelMenu(instance);
+                        CustomPanelMenu.DoFire(instance);
                     }
                 }
             }
@@ -1295,7 +1287,7 @@ namespace Mod
                     return true;
                 instance.size_tab = 0;
                 SoundMn.gI().panelClick();
-                CustomPanelMenu.SetTabCustomPanelMenu(instance);
+                CustomPanelMenu.SetTab(instance);
                 instance.selected = instance.lastSelect[instance.currentTabIndex];
 
                 return true;

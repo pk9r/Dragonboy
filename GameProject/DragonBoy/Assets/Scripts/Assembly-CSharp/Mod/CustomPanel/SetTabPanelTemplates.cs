@@ -30,7 +30,7 @@ namespace Mod.CustomPanel
 
         internal static void setTabListTemplate(Panel panel, params ICollection[] collections)
         {
-            var lengths = (from x in collections select x.Count).ToArray();
+            var lengths = collections.Select(x => x.Count).ToArray();
             setTabListTemplate(panel, lengths);
         }
     }

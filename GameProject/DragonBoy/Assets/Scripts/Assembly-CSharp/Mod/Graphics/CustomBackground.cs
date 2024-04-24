@@ -48,7 +48,13 @@ namespace Mod.Graphics
         {
             new MenuBuilder()
                 .setChatPopup(Strings.customBgChatPopup)
-                .addItem(customBgs.Count > 0, Strings.customBgOpenBgList, new MenuAction(() => CustomPanelMenu.Show(SetTabCustomBackgroundPanel, DoFireCustomBackgroundListPanel, PaintTabHeader, PaintCustomBackgroundPanel)))
+                .addItem(customBgs.Count > 0, Strings.customBgOpenBgList, new MenuAction(() => CustomPanelMenu.Show(new CustomPanelMenuConfig()
+                {
+                    SetTabAction = SetTabCustomBackgroundPanel,
+                    DoFireItemAction = DoFireCustomBackgroundListPanel, 
+                    PaintTabHeaderAction = PaintTabHeader,
+                    PaintAction = PaintCustomBackgroundPanel
+                })))
                 .addItem(Strings.customBgAddNewBg, new MenuAction(SelectBackgrounds))
                 .addItem(customBgs.Count > 0, Strings.customBgRemoveAll, new MenuAction(() =>
                     {

@@ -10,7 +10,13 @@ namespace Mod.Xmap
         internal static void Show(List<int> maps)
         {
             currentMaps = maps;
-            CustomPanelMenu.Show(SetTab, DoFire, PaintTabHeader, Paint);
+            CustomPanelMenu.Show(new CustomPanelMenuConfig()
+            {
+                SetTabAction = SetTab, 
+                DoFireItemAction = DoFire,
+                PaintTabHeaderAction = PaintTabHeader,
+                PaintAction = Paint
+            });
         }
 
         static void Paint(Panel panel, mGraphics g)

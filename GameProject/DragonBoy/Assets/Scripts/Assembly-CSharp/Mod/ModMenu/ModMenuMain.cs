@@ -22,7 +22,12 @@ namespace Mod.ModMenu
                 {
                     if (currentPanel == null)
                         currentPanel = new Panel();
-                    CustomPanelMenu.Show(SetTabModMenu, DoFireModMenu, null, PaintModMenu, currentPanel);
+                    CustomPanelMenu.Show(new CustomPanelMenuConfig()
+                    {
+                        SetTabAction = SetTabModMenu,
+                        DoFireItemAction = DoFireModMenu,
+                        PaintAction = PaintModMenu
+                    }, currentPanel);
                     currentPanel.cmdClose.x = GameCanvas.w - currentPanel.cmdClose.img.getWidth() - 1;
                     currentPanel.cmdClose.y = 1;
                 }
