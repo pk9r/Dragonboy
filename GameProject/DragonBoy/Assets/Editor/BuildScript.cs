@@ -82,10 +82,15 @@ namespace UnityBuilderAction
             }
 #if UNITY_2023 && UNITY_STANDALONE_WIN
             // ARM64
-            if (osArchitecture == OSArchitecture.ARM64 && (buildTarget == BuildTarget.StandaloneWindows || buildTarget == BuildTarget.StandaloneWindows64))
+            if (buildTarget == BuildTarget.StandaloneWindows || buildTarget == BuildTarget.StandaloneWindows64)
             {
+                if (osArchitecture == OSArchitecture.ARM64)
+                    UnityEditor.WindowsStandalone.UserBuildSettings.architecture = osArchitecture;
+                else if (buildTarget == BuildTarget.StandaloneWindows64)
+                    UnityEditor.WindowsStandalone.UserBuildSettings.architecture = OSArchitecture.x64;
+                else if (buildTarget == BuildTarget.StandaloneWindows)
+                    UnityEditor.WindowsStandalone.UserBuildSettings.architecture = OSArchitecture.x86;
                 buildTargetGroup = BuildTargetGroup.Standalone;
-                UnityEditor.WindowsStandalone.UserBuildSettings.architecture = osArchitecture;
             }
 #endif
             // Determine subtarget
