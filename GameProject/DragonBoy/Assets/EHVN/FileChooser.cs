@@ -10,7 +10,7 @@ namespace EHVN
     /// <summary>
     /// Class chứa các hàm để chọn tệp trên Android.
     /// </summary>
-    internal static class FileChooser
+    public static class FileChooser
     {
         static AndroidJavaObject unityActivity;
 
@@ -21,7 +21,7 @@ namespace EHVN
         /// </summary>
         /// <param name="mimeTypes">Loại MIME của tệp</param>
         /// <returns>Danh sách đường dẫn các tệp đã chọn hoặc mảng rỗng nếu người dùng hủy chọn tệp.</returns>
-        internal static string[] Open(string[] mimeTypes)
+        public static string[] Open(string[] mimeTypes)
         {
             if (Application.platform != RuntimePlatform.Android)
                 return null;
@@ -63,7 +63,7 @@ namespace EHVN
         /// <summary>
         /// Gọi hàm này trong hàm Update của <see cref="MonoBehaviour"/> để chạy các hàm java trên thread chính của game.
         /// </summary>
-        internal static void Update()
+        public static void Update()
         {
             while (runOnMainThreadActions.Count > 0)
                 runOnMainThreadActions.Dequeue()();
