@@ -1,4 +1,4 @@
-#if UNITY_STANDALONE || UNITY_EDITOR_WIN
+#if UNITY_STANDALONE || UNITY_EDITOR
 using System;
 
 namespace SFB {
