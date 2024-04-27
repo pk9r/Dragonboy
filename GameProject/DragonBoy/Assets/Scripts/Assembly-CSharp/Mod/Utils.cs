@@ -652,7 +652,8 @@ namespace Mod
                 y += 24;
                 if (TileMap.tileTypeAt(x, y, 2))
                 {
-                    if (y % 24 != 0) y -= y % 24;
+                    if (y % 24 != 0)
+                        y -= y % 24;
                     return y;
                 }
             }
