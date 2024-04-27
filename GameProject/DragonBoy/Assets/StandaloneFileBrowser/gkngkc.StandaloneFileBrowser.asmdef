@@ -4,8 +4,8 @@
     "references": [],
     "includePlatforms": [
         "Editor",
+        "EmbeddedLinux",
         "LinuxStandalone64",
-        "LinuxStandalone64Server",
         "CloudRendering",
         "WSA",
         "WindowsStandalone32",
