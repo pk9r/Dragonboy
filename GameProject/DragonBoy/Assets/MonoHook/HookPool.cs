@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace UnityHook
+namespace MonoHook
 {
     /// <summary>
     /// Hook 池，防止重复 Hook

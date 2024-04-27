@@ -1,17 +1,17 @@
 ﻿using System;
-using DotNetDetour;
+using MonoHook.DotNetDetour;
 
-namespace UnityHook
+namespace MonoHook
 {
-    public unsafe abstract class CodePatcher
+    internal unsafe abstract class CodePatcher
     {
-        public bool isValid { get; protected set; }
+        internal bool isValid { get; private set; }
 
         protected void*     _pTarget, _pReplace, _pProxy;
         protected int       _jmpCodeSize;
         protected byte[]    _targetHeaderBackup;
 
-        public CodePatcher(IntPtr target, IntPtr replace, IntPtr proxy, int jmpCodeSize)
+        internal CodePatcher(IntPtr target, IntPtr replace, IntPtr proxy, int jmpCodeSize)
         {
             _pTarget        = target.ToPointer();
             _pReplace       = replace.ToPointer();
@@ -19,7 +19,7 @@ namespace UnityHook
             _jmpCodeSize    = jmpCodeSize;
         }
 
-        public void ApplyPatch()
+        internal void ApplyPatch()
         {
             BackupHeader();
             EnableAddrModifiable();
@@ -28,7 +28,7 @@ namespace UnityHook
             FlushICache();
         }
 
-        public void RemovePatch()
+        internal void RemovePatch()
         {
             if (_targetHeaderBackup == null)
                 return;
@@ -103,14 +103,14 @@ namespace UnityHook
         }
     }
 
-    public unsafe class CodePatcher_x86 : CodePatcher
+    internal unsafe class CodePatcher_x86 : CodePatcher
     {
         protected static readonly byte[] s_jmpCode = new byte[] // 5 bytes
         {
             0xE9, 0x00, 0x00, 0x00, 0x00,                     // jmp $val   ; $val = $dst - $src - 5 
         };
 
-        public CodePatcher_x86(IntPtr target, IntPtr replace, IntPtr proxy) : base(target, replace, proxy, s_jmpCode.Length) { }
+        internal CodePatcher_x86(IntPtr target, IntPtr replace, IntPtr proxy) : base(target, replace, proxy, s_jmpCode.Length) { }
 
         protected override unsafe byte[] GenJmpCode(void* jmpFrom, void* jmpTo)
         {
@@ -131,15 +131,15 @@ namespace UnityHook
     /// <summary>
     /// x64下2G 内的跳转
     /// </summary>
-    public unsafe class CodePatcher_x64_near : CodePatcher_x86 // x64_near pathcer code is same to x86
+    internal unsafe class CodePatcher_x64_near : CodePatcher_x86 // x64_near pathcer code is same to x86
     {
-        public CodePatcher_x64_near(IntPtr target, IntPtr replace, IntPtr proxy) : base(target, replace, proxy) { }
+        internal CodePatcher_x64_near(IntPtr target, IntPtr replace, IntPtr proxy) : base(target, replace, proxy) { }
     }
 
     /// <summary>
     /// x64下距离超过2G的跳转
     /// </summary>
-    public unsafe class CodePatcher_x64_far : CodePatcher
+    internal unsafe class CodePatcher_x64_far : CodePatcher
     {
         protected static readonly byte[] s_jmpCode = new byte[] // 12 bytes
         {
@@ -155,7 +155,7 @@ namespace UnityHook
         //    0xFF, 0x25, 0xF2, 0xFF, 0xFF, 0xFF                    // jmp [rip - 0xe]
         //};
 
-        public CodePatcher_x64_far(IntPtr target, IntPtr replace, IntPtr proxy) : base(target, replace, proxy, s_jmpCode.Length) { }
+        internal CodePatcher_x64_far(IntPtr target, IntPtr replace, IntPtr proxy) : base(target, replace, proxy, s_jmpCode.Length) { }
         protected override unsafe byte[] GenJmpCode(void* jmpFrom, void* jmpTo)
         {
             byte[] ret = new byte[s_jmpCode.Length];
@@ -174,14 +174,14 @@ namespace UnityHook
         }
     }
 
-    public unsafe class CodePatcher_arm32_near : CodePatcher
+    internal unsafe class CodePatcher_arm32_near : CodePatcher
     {
         private static readonly byte[] s_jmpCode = new byte[]    // 4 bytes
         {
             0x00, 0x00, 0x00, 0xEA,                         // B $val   ; $val = (($dst - $src) / 4 - 2) & 0x1FFFFFF
         };
 
-        public CodePatcher_arm32_near(IntPtr target, IntPtr replace, IntPtr proxy) : base(target, replace, proxy, s_jmpCode.Length)
+        internal CodePatcher_arm32_near(IntPtr target, IntPtr replace, IntPtr proxy) : base(target, replace, proxy, s_jmpCode.Length)
         {
             if (Math.Abs((long)target - (long)replace) >= ((1 << 25) - 1))
                 throw new ArgumentException("address offset of target and replace must less than ((1 << 25) - 1)");
@@ -208,7 +208,7 @@ namespace UnityHook
         }
     }
 
-    public unsafe class CodePatcher_arm32_far : CodePatcher
+    internal unsafe class CodePatcher_arm32_far : CodePatcher
     {
         private static readonly byte[] s_jmpCode = new byte[]    // 8 bytes
         {
@@ -216,7 +216,7 @@ namespace UnityHook
             0x00, 0x00, 0x00, 0x00,                         // $val
         };
 
-        public CodePatcher_arm32_far(IntPtr target, IntPtr replace, IntPtr proxy) : base(target, replace, proxy, s_jmpCode.Length)
+        internal CodePatcher_arm32_far(IntPtr target, IntPtr replace, IntPtr proxy) : base(target, replace, proxy, s_jmpCode.Length)
         {
             if (Math.Abs((long)target - (long)replace) < ((1 << 25) - 1))
                 throw new ArgumentException("address offset of target and replace must larger than ((1 << 25) - 1), please use InstructionModifier_arm32_near instead");
@@ -243,7 +243,7 @@ namespace UnityHook
     /// <summary>
     /// arm64 下 ±128MB 范围内的跳转
     /// </summary>
-    public unsafe class CodePatcher_arm64_near : CodePatcher
+    internal unsafe class CodePatcher_arm64_near : CodePatcher
     {
         private static readonly byte[] s_jmpCode = new byte[]    // 4 bytes
         {
@@ -255,7 +255,7 @@ namespace UnityHook
             0x00, 0x00, 0x00, 0x14,                         //  B $val   ; $val = (($dst - $src)/4) & 7FFFFFF
         };
 
-        public CodePatcher_arm64_near(IntPtr target, IntPtr replace, IntPtr proxy) : base(target, replace, proxy, s_jmpCode.Length)
+        internal CodePatcher_arm64_near(IntPtr target, IntPtr replace, IntPtr proxy) : base(target, replace, proxy, s_jmpCode.Length)
         {
             if (Math.Abs((long)target - (long)replace) >= ((1 << 26) - 1) * 4)
                 throw new ArgumentException("address offset of target and replace must less than (1 << 26) - 1) * 4");
@@ -290,7 +290,7 @@ namespace UnityHook
     /// <summary>
     /// arm64 远距离跳转
     /// </summary>
-    public unsafe class CodePatcher_arm64_far : CodePatcher
+    internal unsafe class CodePatcher_arm64_far : CodePatcher
     {
         private static readonly byte[] s_jmpCode = new byte[]    // 20 bytes(字节数过多，太危险了，不建议使用)
         {
@@ -304,7 +304,7 @@ namespace UnityHook
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  // $dst
         };
 
-        public CodePatcher_arm64_far(IntPtr target, IntPtr replace, IntPtr proxy, int jmpCodeSize) : base(target, replace, proxy, jmpCodeSize)
+        internal CodePatcher_arm64_far(IntPtr target, IntPtr replace, IntPtr proxy, int jmpCodeSize) : base(target, replace, proxy, jmpCodeSize)
         {
         }
 

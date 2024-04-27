@@ -4,7 +4,7 @@
  Github: https://github.com/Misaka-Mikoto-Tech/MonoHook
  */
 
-using DotNetDetour;
+using MonoHook.DotNetDetour;
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -58,7 +58,7 @@ il2cpp:00000000003DE728 A2 56 47 F9                             LDR             
 il2cpp:00000000003DE72C F3 03 01 2A                             MOV             W19, W1                                             |
  */
 
-namespace UnityHook
+namespace MonoHook
 {
     /// <summary>
     /// Hook 类，用来 Hook 某个 C# 方法

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace DotNetDetour
+namespace MonoHook.DotNetDetour
 {
     /// <summary>
     /// 用于计算汇编指令长度，使用的是BlackBone的LDasm.c中的算法，我把他翻译成C#了
     /// </summary>
-    public unsafe class LDasm
+    internal unsafe class LDasm
     {
         const int F_INVALID = 0x01;
         const int F_PREFIX = 0x02;

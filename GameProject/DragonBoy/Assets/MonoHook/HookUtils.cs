@@ -4,9 +4,9 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace UnityHook
+namespace MonoHook
 {
-    public static unsafe class HookUtils
+    internal static unsafe class HookUtils
     {
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         delegate void DelegateFlushICache(void* code, int size); // delegate * unmanaged[Cdecl] <void, byte, uint> native_flush_cache_fun_ptr; // unsupported at C# 8.0
@@ -23,7 +23,7 @@ namespace UnityHook
             SetupFlushICacheFunc();
         }
 
-        public static void MemCpy(void* pDst, void* pSrc, int len)
+        internal static void MemCpy(void* pDst, void* pSrc, int len)
         {
             byte* pDst_ = (byte*)pDst;
             byte* pSrc_ = (byte*)pSrc;
@@ -32,7 +32,7 @@ namespace UnityHook
                 *pDst_++ = *pSrc_++;
         }
 
-        public static void MemCpy_Jit(void* pDst, byte[] src)
+        internal static void MemCpy_Jit(void* pDst, byte[] src)
         {
             fixed (void* p = &src[0])
             {
@@ -43,7 +43,7 @@ namespace UnityHook
         /// <summary>
         /// set flags of address to `read write execute`
         /// </summary>
-        public static void SetAddrFlagsToRWX(IntPtr ptr, int size)
+        internal static void SetAddrFlagsToRWX(IntPtr ptr, int size)
         {
             if (ptr == IntPtr.Zero)
                 return;
@@ -57,7 +57,7 @@ namespace UnityHook
 #endif
         }
 
-        public static void FlushICache(void* code, int size)
+        internal static void FlushICache(void* code, int size)
         {
             if (code == null)
                 return;
@@ -69,7 +69,7 @@ namespace UnityHook
 #endif
         }
 
-        public static KeyValuePair<long, long> GetPageAlignedAddr(long code, int size)
+        internal static KeyValuePair<long, long> GetPageAlignedAddr(long code, int size)
         {
             long pagesize   = _Pagesize;
             long startPage  = (code) & ~(pagesize - 1);
@@ -80,7 +80,7 @@ namespace UnityHook
 
         const int PRINT_SPLIT = 4;
         const int PRINT_COL_SIZE = PRINT_SPLIT * 4;
-        public static string HexToString(void* ptr, int size, int offset = 0)
+        internal static string HexToString(void* ptr, int size, int offset = 0)
         {
             Func<IntPtr, string> formatAddr = (IntPtr addr__) => IntPtr.Size == 4 ? $"0x{(uint)addr__:x}" : $"0x{(ulong)addr__:x}";
 
@@ -224,7 +224,7 @@ namespace UnityHook
 
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
         [Flags]
-        public enum Protection
+        internal enum Protection
         {
             PAGE_NOACCESS = 0x01,
             PAGE_READONLY = 0x02,
@@ -240,11 +240,11 @@ namespace UnityHook
         }
 
         [DllImport("kernel32")]
-        public static extern bool VirtualProtect(IntPtr lpAddress, uint dwSize, Protection flNewProtect, out uint lpflOldProtect);
+        internal static extern bool VirtualProtect(IntPtr lpAddress, uint dwSize, Protection flNewProtect, out uint lpflOldProtect);
 
 #else
         [Flags]
-        public enum MmapProts : int {
+        internal enum MmapProts : int {
             PROT_READ       = 0x1,
             PROT_WRITE      = 0x2,
             PROT_EXEC       = 0x4,
@@ -256,7 +256,7 @@ namespace UnityHook
         [DllImport("libc", SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
         private static extern int mprotect(IntPtr start, IntPtr len, MmapProts prot);
     
-        public static unsafe void SetMemPerms(IntPtr start, ulong len, MmapProts prot) {
+        internal static unsafe void SetMemPerms(IntPtr start, ulong len, MmapProts prot) {
             var requiredAddr = GetPageAlignedAddr(start.ToInt64(), (int)len);
             long startPage = requiredAddr.Key;
             long endPage = requiredAddr.Value;
