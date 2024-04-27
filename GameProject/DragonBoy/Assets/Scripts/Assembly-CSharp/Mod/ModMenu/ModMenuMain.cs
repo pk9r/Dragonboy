@@ -1,4 +1,5 @@
 ﻿using Mod.Auto;
+using Mod.Auto;
 using Mod.CustomPanel;
 using Mod.Graphics;
 using Mod.PickMob;
@@ -329,8 +330,8 @@ namespace Mod.ModMenu
                     ID = "Set_AutoTrainPet",
                     Title = Strings.setAutoTrainPetTitle,
                     Values = Strings.setAutoTrainPetChoices,
-                    GetValueFunc = () => (int)AutoPet.mode,
-                    SetValueAction = AutoPet.setState,
+                    GetValueFunc = () => (int)AutoTrainPet.Mode,
+                    SetValueAction = AutoTrainPet.SetState,
                     GetIsDisabled = () => !Char.myCharz().havePet || AutoTrainNewAccount.isEnabled,
                     GetDisabledReason = () =>
                     {
@@ -347,10 +348,10 @@ namespace Mod.ModMenu
                     ID = "Set_AutoAttackWhenDiscipleNeed",
                     Title = Strings.setAutoAttackWhenDiscipleNeededTitle,
                     Values = Strings.setAutoAttackWhenDiscipleNeededChoices,
-                    GetValueFunc = () => (int)AutoPet.modeAttackWhenNeeded,
-                    SetValueAction = AutoPet.setAttackState,
+                    GetValueFunc = () => (int)AutoTrainPet.ModeAttackWhenNeeded,
+                    SetValueAction = AutoTrainPet.SetAttackState,
                     RMSName = "auto_pet_mode",
-                    GetIsDisabled = () => AutoPet.mode <= AutoPet.AutoPetMode.Disabled,
+                    GetIsDisabled = () => AutoTrainPet.Mode <= AutoTrainPetMode.Disabled,
                     GetDisabledReason = () => string.Format(Strings.functionShouldBeEnabled, Strings.setAutoTrainPetTitle)
                 }),
                 new ModMenuItemValues(new ModMenuItemValuesConfig()

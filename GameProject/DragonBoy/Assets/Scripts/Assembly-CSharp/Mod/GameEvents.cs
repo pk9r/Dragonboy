@@ -335,6 +335,7 @@ namespace Mod
             AutoTrainNewAccount.Update();
             //AutoItem.update();
             AutoPet.Update();
+            AutoTrainPet.Update();
             //SuicideRange.update();
             //if (!AutoSS.isAutoSS && !AutoT77.isAutoT77)
             if (!AutoTrainNewAccount.isEnabled && !AutoGoback.isGoingBack)
@@ -385,6 +386,7 @@ namespace Mod
             //GameCanvas.startWaitDlg();
             TeleportMenuMain.LoadData();
             AutoPet.isFirstTimeCheckPet = true;
+            AutoTrainPet.isFirstTimeCheckPet = true;
         }
 
         /// <summary>
@@ -618,8 +620,8 @@ namespace Mod
             {
                 if (AutoTrainNewAccount.isEnabled)
                     AutoTrainNewAccount.isPicking = false;
-                if (ModMenuMain.GetModMenuItem<ModMenuItemValues>("Set_AutoTrainPet").SelectedValue != 0)
-                    AutoPet.isPicking = false;
+                if (AutoTrainPet.Mode > AutoTrainPetMode.Disabled)
+                    AutoTrainPet.isPicking = false;
             }
         }
 
@@ -642,8 +644,8 @@ namespace Mod
 
         internal static void OnAddInfoChar(Char c, string info)
         {
-            if (LocalizedString.saoMayLuoiThe.ContainsReversed(info.ToLower()) && ModMenuMain.GetModMenuItem<ModMenuItemValues>("Set_AutoTrainPet").SelectedValue > 0 && c.charID == -Char.myCharz().charID)
-                AutoPet.saoMayLuoiThe = true;
+            if (LocalizedString.saoMayLuoiThe.ContainsReversed(info.ToLower()) && AutoTrainPet.Mode > AutoTrainPetMode.Disabled && c.charID == -Char.myCharz().charID)
+                AutoTrainPet.saoMayLuoiThe = true;
         }
 
         internal static bool OnPaintBgGameScr(mGraphics g)

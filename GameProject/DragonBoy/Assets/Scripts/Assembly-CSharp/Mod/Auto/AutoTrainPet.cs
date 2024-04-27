@@ -4,7 +4,22 @@ using UnityEngine;
 
 namespace Mod.Auto
 {
-    internal class AutoPet
+    internal enum AutoTrainPetMode
+    {
+        Disabled,
+        Normal,
+        AvoidSuperMob,
+        Kaioken
+    }
+
+    internal enum AutoTrainPetAttackMode
+    {
+        AttackClosestMob,
+        AttackMyPet,
+        AttackMyself
+    }
+
+    internal class AutoTrainPet
     {
         internal static List<int> mobTemplateIdList = new List<int>();
 
@@ -29,16 +44,16 @@ namespace Mod.Auto
         static bool isTTNL;
 
         internal static bool saoMayLuoiThe;
-        internal static AutoPetMode mode { get; set; }
-        internal static AttackMode modeAttackWhenNeeded { get; set; }
+        internal static AutoTrainPetMode Mode { get; set; }
+        internal static AutoTrainPetAttackMode ModeAttackWhenNeeded { get; set; }
 
-        internal static void setState(int value) => mode = (AutoPetMode)value;
+        internal static void SetState(int value) => Mode = (AutoTrainPetMode)value;
 
-        internal static void setAttackState(int value) => modeAttackWhenNeeded = (AttackMode)value;
+        internal static void SetAttackState(int value) => ModeAttackWhenNeeded = (AutoTrainPetAttackMode)value;
 
         internal static void Update()
         {
-            if (mode == AutoPetMode.Disabled)
+            if (Mode == AutoTrainPetMode.Disabled)
                 return;
             if (isFirstTimeCheckPet)
             {
@@ -118,7 +133,7 @@ namespace Mod.Auto
                 Utils.teleportMyChar(Char.myCharz().cx);
                 return;
             }
-            if (mode == AutoPetMode.Normal)
+            if (Mode == AutoTrainPetMode.Normal)
             {
                 //up đệ thường
                 if (Char.myPetz().petStatus != 2) 
@@ -128,7 +143,7 @@ namespace Mod.Auto
             {
                 if (isTTNL)
                     return;
-                if (mode == AutoPetMode.AvoidSuperMob)
+                if (Mode == AutoTrainPetMode.AvoidSuperMob)
                 {
                     //up đệ né siêu quái
                     if (Char.myPetz().petStatus != 1) 
@@ -137,7 +152,7 @@ namespace Mod.Auto
                     if (closestMob != null && closestMob.x > 50 && closestMob.y > 50)
                         Char.myCharz().currentMovePoint = new MovePoint(closestMob.x + Res.random(-5, 5), closestMob.y);
                 }
-                else if (mode == AutoPetMode.Kaioken)
+                else if (Mode == AutoTrainPetMode.Kaioken)
                 {
                     //up đệ kaioken
                     if (Char.myPetz().petStatus != 2)
@@ -292,20 +307,20 @@ namespace Mod.Auto
             {
                 saoMayLuoiThe = false;
                 Service.gI().selectSkill(skill1.template.id);
-                switch (modeAttackWhenNeeded)
+                switch (ModeAttackWhenNeeded)
                 {
-                    case AttackMode.AttackClosestMob:
+                    case AutoTrainPetAttackMode.AttackClosestMob:
                         MyVector vecMob = new MyVector();
                         vecMob.addElement(ClosestMob());
                         Service.gI().sendPlayerAttack(vecMob, new MyVector(), 1);
                         break;
-                    case AttackMode.AttackMyPet:
+                    case AutoTrainPetAttackMode.AttackMyPet:
                         if (Char.myCharz().cFlag != 8) Service.gI().getFlag(1, 8);
                         MyVector vecPet = new MyVector();
                         vecPet.addElement(GameScr.findCharInMap(-Char.myCharz().charID));
                         Service.gI().sendPlayerAttack(new MyVector(), vecPet, 2);
                         break;
-                    case AttackMode.AttackMyself:
+                    case AutoTrainPetAttackMode.AttackMyself:
                         if (Char.myCharz().cFlag != 8) Service.gI().getFlag(1, 8);
                         Service.gI().sendPlayerAttack(new MyVector(), Utils.getMyVectorMe(), 2);
                         break;
@@ -386,21 +401,6 @@ namespace Mod.Auto
                 }
             }
 
-        }
-
-        internal enum AutoPetMode
-        {
-            Disabled,
-            Normal,
-            AvoidSuperMob,
-            Kaioken
-        }
-
-        internal enum AttackMode
-        {
-            AttackClosestMob,
-            AttackMyPet,
-            AttackMyself
         }
     }
 }
