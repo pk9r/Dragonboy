@@ -32,7 +32,7 @@ namespace Mod.Xmap
 
                 LogMod.writeLine($"[xmap][dbg] Đang tạo dữ liệu map");
                 XmapAlgorithm.xmapData = new XmapData();
-                MainThreadDispatcher.dispatch(() => XmapAlgorithm.xmapData.Load());
+                MainThreadDispatcher.dispatch(XmapAlgorithm.xmapData.Load);
                 while (!XmapAlgorithm.xmapData.isLoaded)
                     Thread.Sleep(100);
                 XmapAlgorithm.xmapData.LoadLinkMapCapsule();
