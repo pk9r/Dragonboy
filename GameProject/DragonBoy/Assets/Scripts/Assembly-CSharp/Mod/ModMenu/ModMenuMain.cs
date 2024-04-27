@@ -167,7 +167,7 @@ namespace Mod.ModMenu
                     SetValueAction = value => SpaceshipSkip.isEnabled = value,
                     RMSName = "skip_spaceship"
                 }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
                     ID = "NotifyBoss_Toggle",
                     Title = Strings.notifyBossTitle,
@@ -196,7 +196,7 @@ namespace Mod.ModMenu
                     SetValueAction = value => IntroPlayer.isEnabled = value,
                     RMSName = "intro_enabled"
                 }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
                     ID = "PickMob_Toggle",
                     Title = Strings.pickMobTitle,
@@ -206,7 +206,7 @@ namespace Mod.ModMenu
                     GetIsDisabled = () => AutoTrainNewAccount.isEnabled,
                     GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.autoTrainForNewbieTitle)
                 }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
                     ID = "PickMob_AvoidSuperMob_Toggle",
                     Title = Strings.avoidSuperMobTitle,
@@ -215,7 +215,7 @@ namespace Mod.ModMenu
                     SetValueAction = Pk9rPickMob.SetAvoidSuperMonster,
                     RMSName = "pickmob_avoid_super_mob"
                 }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
                     ID = "PickMob_VDH_Toggle",
                     Title = Strings.vdhTitle,
@@ -253,7 +253,7 @@ namespace Mod.ModMenu
                     SetValueAction = Pk9rPickMob.SetPickUpLimited,
                     RMSName = "pickmob_limit_pick_item_times"
                 }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
                     ID = "AutoAskForPeans_Toggle",
                     Title = Strings.autoAskForPeansTitle,
@@ -275,7 +275,7 @@ namespace Mod.ModMenu
                     GetIsDisabled = () => Char.myCharz().clan == null,
                     GetDisabledReason = () => Strings.youAreNotInAClan + '!'
                 }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
                     ID = "AutoHarvestPeans_Toggle",
                     Title = Strings.autoHarvestPeansTitle,
@@ -308,15 +308,13 @@ namespace Mod.ModMenu
                     TextFieldHint = "FPS",
                 }),
                 new ModMenuItemValues(new ModMenuItemValuesConfig()
-                { 
+                {
                     ID = "Set_ReduceGraphics",
                     Title = Strings.setReduceGraphicsTitle,
                     Values = Strings.setReduceGraphicsChoices,
-                    GetValueFunc = () => (int)GraphicsReducer.level,
-                    SetValueAction = level => GraphicsReducer.level = (ReduceGraphicsLevel)level,
+                    GetValueFunc = () => (int)GraphicsReducer.Level,
+                    SetValueAction = level => GraphicsReducer.Level = (ReduceGraphicsLevel)level,
                     RMSName = "reduce_graphics",
-                    GetIsDisabled = () => true,
-                    GetDisabledReason = () => "This feature is currently in development state"
                 }),
                 new ModMenuItemValues(new ModMenuItemValuesConfig()
                 {
@@ -364,14 +362,22 @@ namespace Mod.ModMenu
                     Values = Strings.setAutoRescueChoices,
                     GetValueFunc = () => (int)AutoSkill.targetMode,
                     SetValueAction = AutoSkill.setReviveTargetMode,
-                    GetIsDisabled = () => Char.myCharz().cgender != 1 || ((Skill)Char.myCharz().vSkillFight.elementAt(2)) != null && ((Skill)Char.myCharz().vSkillFight.elementAt(2)).template.isBuffToPlayer(),
-                    GetDisabledReason = () => 
+                    GetIsDisabled = () =>
+                    {
+                        if (Char.myCharz().cgender != 1)
+                            return true;
+                        Skill skill = (Skill)Char.myCharz().vSkillFight.elementAt(2);
+                        if (skill == null)
+                            return true;
+                        return !skill.template.isBuffToPlayer();
+                    },
+                    GetDisabledReason = () =>
                     {
                         if (Char.myCharz().cgender != 1)
                             return Strings.youAreNotNamekian + '!';
                         Skill skill = (Skill)Char.myCharz().vSkillFight.elementAt(2);
                         if (skill == null)
-                            return Strings.setAutoRescueSkill3Null + '!'; 
+                            return Strings.setAutoRescueSkill3Null + '!';
                         if (!skill.template.isBuffToPlayer())
                             return Strings.setAutoRescueSkill3BuffInvalid + '!';
                         return "";
@@ -424,42 +430,42 @@ namespace Mod.ModMenu
                 {
                     ID = "OpenXmapMenu",
                     Title = Strings.openXmapMenuTitle,
-                    Description = Strings.openXmapMenuDescription, 
+                    Description = Strings.openXmapMenuDescription,
                     Action = Pk9rXmap.showXmapMenu
                 }),
                 new ModMenuItemFunction(new ModMenuItemFunctionConfig()
                 {
                     ID = "OpenPickMobMenu",
                     Title = Strings.openPickMobMenuTitle,
-                    Description = Strings.openPickMobMenuDescription, 
+                    Description = Strings.openPickMobMenuDescription,
                     Action = Pk9rPickMob.ShowMenu
                 }),
                 new ModMenuItemFunction(new ModMenuItemFunctionConfig()
                 {
                     ID = "OpenTeleportMenu",
                     Title = Strings.openTeleportMenuTitle,
-                    Description = Strings.openTeleportMenuDescription, 
+                    Description = Strings.openTeleportMenuDescription,
                     Action = TeleportMenuMain.ShowMenu
                 }),
                 new ModMenuItemFunction(new ModMenuItemFunctionConfig()
                 {
                     ID = "OpenCustomBackgroundMenu",
                     Title = Strings.openCustomBackgroundMenuTitle,
-                    Description = Strings.openCustomBackgroundMenuDescription, 
+                    Description = Strings.openCustomBackgroundMenuDescription,
                     Action = CustomBackground.ShowMenu
-                }), 
+                }),
                 new ModMenuItemFunction(new ModMenuItemFunctionConfig()
                 {
                     ID = "OpenIntroMenu",
                     Title = Strings.openIntroMenuTitle,
-                    Description = Strings.openIntroMenuDescription, 
+                    Description = Strings.openIntroMenuDescription,
                     Action = IntroPlayer.ShowMenu,
                 }),
                 new ModMenuItemFunction(new ModMenuItemFunctionConfig()
                 {
                     ID = "OpenSetsMenu",
                     Title = Strings.openSetsMenuTitle,
-                    Description = Strings.openSetsMenuDescription, 
+                    Description = Strings.openSetsMenuDescription,
                     Action = SetDo.ShowMenu,
                     GetIsDisabled = () => true,
                     GetDisabledReason = () => "This feature is currently in development state"

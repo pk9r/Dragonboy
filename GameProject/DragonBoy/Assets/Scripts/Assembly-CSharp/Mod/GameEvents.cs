@@ -5,6 +5,7 @@ using System.Threading;
 using Mod.Auto;
 using Mod.Auto.AutoChat;
 using Mod.Background;
+using Mod.CharEffect;
 using Mod.CustomPanel;
 using Mod.Graphics;
 using Mod.ModHelper;
@@ -57,7 +58,7 @@ namespace Mod
             if (!Directory.Exists(Utils.dataPath))
                 Directory.CreateDirectory(Utils.dataPath);
             CustomBackground.LoadData();
-            CharEffect.Init();
+            CharEffectMain.Init();
             Setup.loadFile();
             //ChatCommandHandler.loadDefault();
             //HotkeyCommandHandler.loadDefault();
@@ -66,7 +67,7 @@ namespace Mod
             //CustomLogo.LoadData();
             //CustomCursor.LoadData();
             SetDo.LoadData();
-            CustomGraphics.InitializeTileMap(true);
+            GraphicsReducer.InitializeTileMap(true);
             //UIReportersManager.AddReporter(Boss.Paint);
             //UIReportersManager.AddReporter(ListCharsInMap.Paint);
             //ShareInfo.gI.toggle(true);
@@ -329,13 +330,12 @@ namespace Mod
             }
             Char.myCharz().cspeed = Utils.speedRun;
 
-            CharEffect.Update();
+            CharEffectMain.Update();
             TeleportMenuMain.Update();
             //ListCharsInMap.Update();
             AutoGoback.update();
             AutoTrainNewAccount.Update();
             //AutoItem.update();
-            AutoPet.Update();
             AutoTrainPet.Update();
             //SuicideRange.update();
             //if (!AutoSS.isAutoSS && !AutoT77.isAutoT77)
@@ -386,7 +386,6 @@ namespace Mod
             //Service.gI().login("", "", GameMidlet.VERSION, 0);
             //GameCanvas.startWaitDlg();
             TeleportMenuMain.LoadData();
-            AutoPet.isFirstTimeCheckPet = true;
             AutoTrainPet.isFirstTimeCheckPet = true;
         }
 
@@ -490,14 +489,14 @@ namespace Mod
         internal static void OnPaintGameScr(mGraphics g)
         {
             ModMenuMain.Paint(g);
-            CharEffect.Paint(g);
+            CharEffectMain.Paint(g);
             //UIReportersManager.handlePaintGameScr(g);
         }
 
         internal static bool OnUseSkill(Char ch)
         {
             if (ch.me)
-                CharEffect.AddEffectCreatedByMe(ch.myskill);
+                CharEffectMain.AddEffectCreatedByMe(ch.myskill);
             return false;
         }
 
@@ -732,22 +731,22 @@ namespace Mod
 
         internal static void OnUpdateChar(Char ch)
         {
-            CharEffect.UpdateChar(ch);
+            CharEffectMain.UpdateChar(ch);
         }
 
         internal static void OnCharRemoveHoldEff(Char ch)
         {
-            CharEffect.RemoveHold(ch);
+            CharEffectMain.RemoveHold(ch);
         }
 
         internal static void OnCharSetHoldChar(Char ch, Char r)
         {
-            CharEffect.AddCharHoldChar(ch, r);
+            CharEffectMain.AddCharHoldChar(ch, r);
         }
 
         internal static void OnCharSetHoldMob(Char ch)
         {
-            CharEffect.AddCharHoldMob(ch);
+            CharEffectMain.AddCharHoldMob(ch);
         }
 
         internal static bool OnPaintTouchControl(GameScr instance, mGraphics g)
@@ -1504,7 +1503,7 @@ namespace Mod
                     }
                 Label:;
                     if (panel.type == Panel.TYPE_KIGUI)
-                        CustomGraphics.PaintItemOptions(g, panel, item, y + mFont.tahoma_7b_blue.getHeight() + 1);
+                        CustomGraphics.PaintItemOptions(g, panel, item, y + mFont.tahoma_7b_blue.getHeight() + 2);
                     else if (panel.type == Panel.TYPE_SHOP)
                     {
                         if (!string.IsNullOrEmpty(item.nameNguoiKyGui))
@@ -1513,12 +1512,12 @@ namespace Mod
                             {
                                 int w = mFont.tahoma_7b_green.getWidth(item.nameNguoiKyGui) + 5;
                                 g.setColor(i != panel.selected ? 0xE7DFD2 : 0xF9FF4A);
-                                g.fillRect(panel.X + Panel.WIDTH_PANEL - 2 - w, y + mFont.tahoma_7b_blue.getHeight() + 1, w, mFont.tahoma_7b_green.getHeight());
-                                CustomGraphics.PaintItemOptions(g, panel, item, y + mFont.tahoma_7b_blue.getHeight() + 1);
+                                g.fillRect(panel.X + Panel.WIDTH_PANEL - 2 - w, y + mFont.tahoma_7b_blue.getHeight() + 2, w, mFont.tahoma_7b_green.getHeight());
+                                CustomGraphics.PaintItemOptions(g, panel, item, y + mFont.tahoma_7b_blue.getHeight() + 2);
                             }
                         }
                         else
-                            CustomGraphics.PaintItemOptions(g, panel, item, y + mFont.tahoma_7b_blue.getHeight() + 1);
+                            CustomGraphics.PaintItemOptions(g, panel, item, y + mFont.tahoma_7b_blue.getHeight() + 2);
                     }
                     else
                         CustomGraphics.PaintItemOptions(g, panel, item, y);

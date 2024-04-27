@@ -4,13 +4,13 @@ public class BackgroudEffect
 {
 	public static MyVector vBgEffect = new MyVector();
 
-	private int[] x;
+	internal int[] x;
 
-	private int[] y;
+	internal int[] y;
 
-	private int[] vx;
+	internal int[] vx;
 
-	private int[] vy;
+	internal int[] vy;
 
 	public static int[] wP;
 
@@ -52,9 +52,9 @@ public class BackgroudEffect
 
 	private static Image imgFire2;
 
-	private int[] type;
+    internal int[] type;
 
-	private int sum;
+	internal int sum;
 
 	public int typeEff;
 
@@ -62,13 +62,13 @@ public class BackgroudEffect
 
 	public int waterY;
 
-	private bool[] isRainEffect;
+    internal bool[] isRainEffect;
 
-	private int[] frame;
+    internal int[] frame;
 
-	private int[] t;
+    internal int[] t;
 
-	private bool[] activeEff;
+    internal bool[] activeEff;
 
 	private int yWater;
 

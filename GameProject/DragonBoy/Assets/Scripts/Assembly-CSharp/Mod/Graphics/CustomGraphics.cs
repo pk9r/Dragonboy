@@ -19,9 +19,6 @@ namespace Mod.Graphics
             { 13500671, 12058853, 10682572, 9371827, 7995545, 6684800 },
             { 16711705, 15007767, 13369364, 11730962, 10027023, 8388621 }
         };
-        static Image mapTile;
-
-        static bool lastIsFill;
 
         static float avgR = 0;
         static float avgG = 0;
@@ -285,55 +282,6 @@ namespace Mod.Graphics
                 fy = y - h / 2 + 1 + upgradeEffectY(GameCanvas.gameTick + 48 - j * 4, h - 2);
                 g.fillRect(fx - size[j] / 2, fy - size[j] / 2, size[j], size[j]);
             }
-        }
-
-        //internal static void PaintTileMap(mGraphics g)
-        //{
-        //    for (int i = GameScr.gssx; i < GameScr.gssxe; i++)
-        //    {
-        //        for (int j = GameScr.gssy; j < GameScr.gssye; j++)
-        //        {
-        //            if (TileMap.maps[j * TileMap.tmw + i] != 0)
-        //            {
-        //                //if ((!TileMap.tileTypeAt(i * 24, (j + 1) * 24, 2) && !TileMap.tileTypeAt(i * 24, (j + 2) * 24, 2) && !TileMap.tileTypeAt(i * 24, j * 24, 2)) || TileMap.tileTypeAt(i * 24, j * 24, 2))
-        //                if (TileMap.tileTypeAtPixel(i * 24, j * 24) != 0)
-        //                {
-        //                    InitializeTileMap(ModMenuMain.GetModMenuItem<ModMenuItemInt>("EHVN_ReduceGraphics").SelectedValue != 2);
-        //                    g.drawImage(mapTile, i * TileMap.size, j * TileMap.size + 8);
-        //                }
-        //                //mFont.tahoma_7_white.drawString(g, TileMap.tileTypeAtPixel(i * 24, j * 24).ToString(), i * TileMap.size + 12, j * TileMap.size + 12, mFont.CENTER);
-        //                //mFont.tahoma_7_blue.drawString(g, TileMap.maps[j * TileMap.tmw + i].ToString(), i * TileMap.size + 12, j * TileMap.size + 17, mFont.CENTER);
-        //            }
-        //        }
-        //    }
-        //}
-
-        internal static void InitializeTileMap(bool isFill)
-        {
-            if (isFill == lastIsFill && mapTile != null)
-                return;
-            lastIsFill = isFill;
-            mapTile = GameCanvas.loadImage($"TileMapReduceGraphics{(isFill ? "_Fill" : "")}.png");
-
-            //mapTile.w = mapTile.h = 24 * mGraphics.zoomLevel;
-            //mapTile.texture = new Texture2D(24 * mGraphics.zoomLevel, 24 * mGraphics.zoomLevel);
-            //for (int i = 0; i < mapTile.texture.width; i++) 
-            //    for (int j = 0; j < mapTile.texture.height; j++)
-            //        mapTile.texture.SetPixel(i, j, isFill ? colorMap : Color.clear);
-            //if (!isFill)
-            //{
-            //    for (int i = 0; i < mapTile.texture.width; i++)
-            //    {
-            //        for (int j = 0; j < mGraphics.zoomLevel; j++)
-            //        {
-            //            mapTile.texture.SetPixel(i, j, colorMap);    
-            //            mapTile.texture.SetPixel(j, i, colorMap);
-            //            mapTile.texture.SetPixel(mapTile.texture.width - j, i, colorMap);    
-            //            mapTile.texture.SetPixel(i, mapTile.texture.height - j, colorMap);    
-            //        }
-            //    }
-            //}
-            //mapTile.texture.Apply();
         }
 
         internal static void DrawAPartOfImage(Image image, float x, float y, float w, float h, int imageX, int imageY, float degAngle, bool scale = true)

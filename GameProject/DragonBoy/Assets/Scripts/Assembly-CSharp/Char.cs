@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using Assets.src.e;
 using Assets.src.g;
 using Mod;
+using Mod.CharEffect;
 
 public class Char : IMapObject
 {
@@ -845,7 +846,7 @@ public class Char : IMapObject
 
 	public int lastFrame;
 
-	private Effect eProtect;
+    private Effect eProtect;
 
 	private Effect eDanhHieu;
 
@@ -4829,7 +4830,7 @@ public class Char : IMapObject
 		}
 	}
 
-	private void paint_map_line(mGraphics g)
+	internal void paint_map_line(mGraphics g)
 	{
 		if (isPaintNewSkill || x_hint == 0 || y_hint == 0 || statusMe == 14)
 			return;
@@ -4872,7 +4873,7 @@ public class Char : IMapObject
 		}
 	}
 
-	private void paintEff_Pet(mGraphics g)
+	internal void paintEff_Pet(mGraphics g)
 	{
 		for (int i = 0; i < vEffChar.size(); i++)
 		{
@@ -4881,8 +4882,8 @@ public class Char : IMapObject
 				effect.paint(g);
 		}
 	}
-
-	private void paintSuperEffBehind(mGraphics g)
+		
+	internal void paintSuperEffBehind(mGraphics g)
 	{
 		if ((me && !isPaintAura2) || idAuraEff > -1 || (statusMe != 1 && statusMe != 6) || mSystem.currentTimeMillis() - timeBlue <= 0 || isCopy || clevel < 16)
 			return;
@@ -4907,7 +4908,7 @@ public class Char : IMapObject
 		}
 	}
 
-	private void paintSuperEffFront(mGraphics g)
+	internal void paintSuperEffFront(mGraphics g)
 	{
 		if (!isPaintAura2)
 			return;
@@ -4992,7 +4993,7 @@ public class Char : IMapObject
 		}
 	}
 
-	private void paintEffect(mGraphics g)
+	internal void paintEffect(mGraphics g)
 	{
 		if (effPaints != null)
 		{

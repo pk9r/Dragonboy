@@ -1,8 +1,13 @@
-using System;
+﻿using System;
 
 public class MagicTree : Npc, IActionListener
 {
-	public static Image imgMagicTree;
+    /// <summary>
+    /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
+    /// </summary>
+    internal MagicTree(HookObj _) : base(_) { }
+
+    public static Image imgMagicTree;
 
 	public static Image pea = GameCanvas.loadImage("/mainImage/myTexture2dhatdau.png");
 

@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Mod.Graphics;
+using MonoHook;
 using UnityEngine;
-using UnityHook;
 
 namespace Mod
 {
@@ -16,7 +15,6 @@ namespace Mod
     /// </remarks>
     public static class GameEventHook
     {
-        static List<MethodHook> _hooks = new List<MethodHook>();
         static HookObj _ = new HookObj();
 
         /// <summary>
@@ -59,6 +57,12 @@ namespace Mod
             Session_ME session_ME = Session_ME.gI();
             Controller controller = Controller.gI();
             InfoMe infoMe = InfoMe.gI();
+            BgItem bgItem = new BgItem();
+            Effect effect = new Effect();
+            mGraphics g = new mGraphics();
+            MagicTree magicTree = new MagicTree(_);
+            Npc npc = new Npc(_);
+            ServerEffect serverEffect = new ServerEffect();
 
             //Can be installed later
             TryInstallHook<Action, Action<GameScr>>(gameScr.updateKey, GameScr_updateKey_hook, GameScr_updateKey_original);
@@ -114,108 +118,433 @@ namespace Mod
             TryInstallHook<Action, Action<Char>>(ch.removeHoleEff, Char_removeHoleEff_hook, Char_removeHoleEff_original);
             TryInstallHook<Action<Char>, Action<Char, Char>>(ch.setHoldChar, Char_setHoldChar_hook, Char_setHoldChar_original);
             TryInstallHook<Action<Mob>, Action<Char, Mob>>(ch.setHoldMob, Char_setHoldMob_hook, Char_setHoldMob_original);
-            TryInstallHook<Action<mGraphics, bool, Char>, Action<GameScr, mGraphics, bool, Char>> (gameScr.paintImageBar, GameScr_paintImageBar_hook, GameScr_paintImageBar_original);
-
+            TryInstallHook<Action<mGraphics, bool, Char>, Action<GameScr, mGraphics, bool, Char>>(gameScr.paintImageBar, GameScr_paintImageBar_hook, GameScr_paintImageBar_original);
+            TryInstallHook(typeof(BackgroudEffect).GetConstructors()[0], new Action<BackgroudEffect, int>(BackgroundEffect__ctor_hook).Method, new Action<BackgroudEffect, int>(BackgroundEffect__ctor_original).Method);
+            TryInstallHook<Action, Action>(BackgroudEffect.initCloud, BackgroudEffect_initCloud_hook, BackgroudEffect_initCloud_original);
+            TryInstallHook<Action, Action>(BackgroudEffect.updateCloud2, BackgroudEffect_updateCloud2_hook, BackgroudEffect_updateCloud2_original);
+            TryInstallHook<Action, Action>(BackgroudEffect.updateFog, BackgroudEffect_updateFog_hook, BackgroudEffect_updateFog_original);
+            TryInstallHook<Action<mGraphics>, Action<mGraphics>>(BackgroudEffect.paintCloud2, BackgroudEffect_paintCloud2_hook, BackgroudEffect_paintCloud2_original);
+            TryInstallHook<Action<mGraphics>, Action<mGraphics>>(BackgroudEffect.paintFog, BackgroudEffect_paintFog_hook, BackgroudEffect_paintFog_original);
+            TryInstallHook<Action<int>, Action<int>>(BackgroudEffect.addEffect, BackgroudEffect_addEffect_hook, BackgroudEffect_addEffect_original);
+            TryInstallHook<Action<mGraphics>, Action<BgItem, mGraphics>>(bgItem.paint, BgItem_paint_hook, BgItem_paint_original);
+            TryInstallHook<Action, Action<Char>>(ch.updateSuperEff, Char_updateSuperEff_hook, Char_updateSuperEff_original);
+            TryInstallHook<Action<mGraphics>, Action<Char, mGraphics>>(ch.paint, Char_paint_hook, Char_paint_original);
+            TryInstallHook<Action<mGraphics>, Action<Char, mGraphics>>(ch.paintMount1, Char_paintMount1_hook, Char_paintMount1_original);
+            TryInstallHook<Action<mGraphics>, Action<Char, mGraphics>>(ch.paintMount2, Char_paintMount2_hook, Char_paintMount2_original);
+            TryInstallHook<Action<mGraphics>, Action<Char, mGraphics>>(ch.paintSuperEffFront, Char_paintSuperEffFront_hook, Char_paintSuperEffFront_original);
+            TryInstallHook<Action<mGraphics>, Action<Char, mGraphics>>(ch.paintSuperEffBehind, Char_paintSuperEffBehind_hook, Char_paintSuperEffBehind_original);
+            TryInstallHook<Action<mGraphics>, Action<Char, mGraphics>>(ch.paintAuraFront, Char_paintAuraFront_hook, Char_paintAuraFront_original);
+            TryInstallHook<Action<mGraphics>, Action<Char, mGraphics>>(ch.paintAuraBehind, Char_paintAuraBehind_hook, Char_paintAuraBehind_original);
+            TryInstallHook<Action<mGraphics>, Action<Char, mGraphics>>(ch.paintEffFront, Char_paintEffFront_hook, Char_paintEffFront_original);
+            TryInstallHook<Action<mGraphics>, Action<Char, mGraphics>>(ch.paintEffBehind, Char_paintEffBehind_hook, Char_paintEffBehind_original);
+            TryInstallHook<Action<mGraphics>, Action<Char, mGraphics>>(ch.paintEff_Lvup_front, Char_paintEff_Lvup_front_hook, Char_paintEff_Lvup_front_original);
+            TryInstallHook<Action<mGraphics>, Action<Char, mGraphics>>(ch.paintEff_Lvup_behind, Char_paintEff_Lvup_behind_hook, Char_paintEff_Lvup_behind_original);
+            TryInstallHook<Action<mGraphics>, Action<Char, mGraphics>>(ch.paintEff_Pet, Char_paintEff_Pet_hook, Char_paintEff_Pet_original);
+            TryInstallHook<Action<mGraphics>, Action<Char, mGraphics>>(ch.paintEffect, Char_paintEffect_hook, Char_paintEffect_original);
+            TryInstallHook<Action<mGraphics>, Action<Char, mGraphics>>(ch.paint_map_line, Char_paint_map_line_hook, Char_paint_map_line_original);
+            TryInstallHook<Action<mGraphics, int, int, int, int, bool>, Action<Char, mGraphics, int, int, int, int, bool>>(ch.paintCharBody, Char_paintCharBody_hook, Char_paintCharBody_original);
+            TryInstallHook<Action<mGraphics>, Action<Effect, mGraphics>>(effect.paint, Effect_paint_hook, Effect_paint_original);
+            TryInstallHook<Action<mGraphics>, Action<GameScr, mGraphics>>(gameScr.paintEffect, GameScr_paintEffect_hook, GameScr_paintEffect_original);
+            TryInstallHook<Action<mGraphics, int>, Action<GameScr, mGraphics, int>>(gameScr.paintBgItem, GameScr_paintBgItem_hook, GameScr_paintBgItem_original);
+            TryInstallHook<Action<Image, int, int, int>, Action<mGraphics, Image, int, int, int>>(g.drawImage, mGraphics_drawImage_hook, mGraphics_drawImage_original);
+            TryInstallHook<Action<mGraphics>, Action<InfoMe, mGraphics>>(infoMe.paint, InfoMe_paint_hook, InfoMe_paint_original);
+            TryInstallHook<Action<mGraphics>, Action<ItemMap, mGraphics>>(itemMap.paint, ItemMap_paint_hook, ItemMap_paint_original);
+            TryInstallHook<Action<mGraphics>, Action<MagicTree, mGraphics>>(magicTree.paint, MagicTree_paint_hook, MagicTree_paint_original);
+            TryInstallHook<Action<mGraphics>, Action<Mob, mGraphics>>(mob.paint, Mob_paint_hook, Mob_paint_original);
+            TryInstallHook<Action<mGraphics>, Action<mGraphics>>(TileMap.paintTilemap, TileMap_paintTilemap_hook, TileMap_paintTilemap_original);
+            TryInstallHook<Action<mGraphics>, Action<mGraphics>>(TileMap.paintOutTilemap, TileMap_paintOutTilemap_hook, TileMap_paintOutTilemap_original);
+            TryInstallHook<Action<mGraphics>, Action<Npc, mGraphics>>(npc.paint, Npc_paint_hook, Npc_paint_original);
+            TryInstallHook<Action<mGraphics>, Action<ServerEffect, mGraphics>>(serverEffect.paint, ServerEffect_paint_hook, ServerEffect_paint_original);
+            
             //TryInstallHook<Action, Action>(, _hook, _original);
         }
 
-        #region Hook methods
-        /// <summary>
-        /// Thử cài đặt 1 hook.
-        /// </summary>
-        /// <typeparam name="T1">Loại <see cref="Delegate"/> của <paramref name="hookTargetMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
-        /// <typeparam name="T2">Loại <see cref="Delegate"/> của <paramref name="hookMethod"/> và <paramref name="originalProxyMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
-        /// <param name="hookTargetMethod">Hàm để hook vào.</param>
-        /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
-        /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
-        static void TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod, T2 originalProxyMethod) where T1 : Delegate where T2 : Delegate => TryInstallHook<T1, T2, T2>(hookTargetMethod, hookMethod, originalProxyMethod);
-
-        /// <summary>
-        /// Thử cài đặt 1 hook.
-        /// </summary>
-        /// <typeparam name="T1">Loại <see cref="Delegate"/> của <paramref name="hookTargetMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
-        /// <typeparam name="T2">Loại <see cref="Delegate"/> của <paramref name="hookMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
-        /// <typeparam name="T3">Loại <see cref="Delegate"/> của <paramref name="originalProxyMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
-        /// <param name="hookTargetMethod">Hàm để hook vào.</param>
-        /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
-        /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
-        static void TryInstallHook<T1, T2, T3>(T1 hookTargetMethod, T2 hookMethod, T3 originalProxyMethod) where T1 : Delegate where T2 : Delegate where T3 : Delegate => TryInstallHook(hookTargetMethod.Method, hookMethod.Method, originalProxyMethod.Method);
-
-        /// <summary>
-        /// Cài đặt 1 hook.
-        /// </summary>
-        /// <typeparam name="T1">Loại <see cref="Delegate"/> của <paramref name="hookTargetMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
-        /// <typeparam name="T2">Loại <see cref="Delegate"/> của <paramref name="hookMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
-        /// <typeparam name="T3">Loại <see cref="Delegate"/> của <paramref name="originalProxyMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
-        /// <param name="hookTargetMethod">Hàm để hook vào.</param>
-        /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
-        /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
-        static void InstallHook<T1, T2, T3>(T1 hookTargetMethod, T2 hookMethod, T3 originalProxyMethod) where T1 : Delegate where T2 : Delegate where T3 : Delegate => InstallHook(hookTargetMethod.Method, hookMethod.Method, originalProxyMethod.Method);
-
-        /// <summary>
-        /// Thử cài đặt 1 hook.
-        /// </summary>
-        /// <param name="hookTargetMethod">Hàm để hook vào.</param>
-        /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
-        /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
-        static void TryInstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
-        {
-            try
-            {
-                InstallHook(hookTargetMethod, hookMethod, originalProxyMethod);
-            }
-            catch (Exception ex) { Debug.LogException(ex); }
-        }
-
-        /// <summary>
-        /// Cài đặt 1 hook.
-        /// </summary>
-        /// <param name="hookTargetMethod">Hàm để hook vào.</param>
-        /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
-        /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
-        static void InstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
-        {
-            if (_hooks.Any(mH => mH.targetMethod == hookTargetMethod))
-                throw new Exception("Hook already installed");
-            Debug.Log($"Hooking {hookTargetMethod.Name} to {hookMethod.Name}...");
-            MethodHook hook = new MethodHook(hookTargetMethod, hookMethod, originalProxyMethod);
-            _hooks.Add(hook);
-            hook.Install();
-        }
-
-        /// <summary>
-        /// Gỡ bỏ tất cả hook.
-        /// </summary>
-        public static void UninstallAll()
-        {
-            foreach (MethodHook hook in _hooks)
-                hook.Uninstall();
-            _hooks.Clear();
-        }
-
-        /// <summary>
-        /// Gỡ bỏ 1 hook.
-        /// </summary>
-        /// <typeparam name="T1">Loại <see cref="Delegate"/> của <paramref name="hookTargetMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
-        /// <param name="hookTargetMethod">Hàm cần gỡ bỏ hook.</param>
-        static void UninstallHook<T1>(T1 hookTargetMethod) where T1 : Delegate => UninstallHook(hookTargetMethod.Method);
-
-        /// <summary>
-        /// Gỡ bỏ 1 hook.
-        /// </summary>
-        /// <param name="hookTargetMethod">Hàm cần gỡ bỏ hook.</param>
-        static void UninstallHook(MethodInfo hookTargetMethod)
-        {
-            MethodHook hook = _hooks.Find(mH => mH.targetMethod == hookTargetMethod);
-            if (hook != null)
-            {
-                hook.Uninstall();
-                _hooks.Remove(hook);
-            }
-        }
-        #endregion
-
         #region Hooks
+        static void ServerEffect_paint_hook(ServerEffect _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnServerEffectPaint())
+                ServerEffect_paint_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void ServerEffect_paint_original(ServerEffect _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+        
+        static void Npc_paint_hook(Npc _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnNpcPaint(_this, g))
+                Npc_paint_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Npc_paint_original(Npc _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void TileMap_paintOutTilemap_hook(mGraphics g)
+        {
+            if (!GraphicsReducer.OnTileMapPaintOutTile())
+                TileMap_paintOutTilemap_original(g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void TileMap_paintOutTilemap_original(mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+        
+        static void TileMap_paintTilemap_hook(mGraphics g)
+        {
+            if (!GraphicsReducer.OnTileMapPaintTile(g))
+                TileMap_paintTilemap_original(g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void TileMap_paintTilemap_original(mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+        
+        static void Mob_paint_hook(Mob _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnMobPaint(_this, g))
+                Mob_paint_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Mob_paint_original(Mob _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+        
+        static void MagicTree_paint_hook(MagicTree _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnMagicTreePaint(_this, g))
+                MagicTree_paint_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void MagicTree_paint_original(MagicTree _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+        
+        static void ItemMap_paint_hook(ItemMap _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnItemMapPaint(_this, g))
+                ItemMap_paint_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void ItemMap_paint_original(ItemMap _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+        
+        static void InfoMe_paint_hook(InfoMe _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnInfoMePaint(_this, g))
+                InfoMe_paint_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void InfoMe_paint_original(InfoMe _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void mGraphics_drawImage_hook(mGraphics g, Image image, int x, int y, int anchor)
+        {
+            if (!GraphicsReducer.OnmGraphicsDrawImage(image))
+                mGraphics_drawImage_original(g, image, x, y, anchor);   
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void mGraphics_drawImage_original(mGraphics g, Image image, int x, int y, int anchor)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void GameScr_paintBgItem_hook(GameScr _this, mGraphics g, int layer)
+        {
+            if (!GraphicsReducer.OnGameScrPaintBgItem())
+                GameScr_paintBgItem_original(_this, g, layer);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void GameScr_paintBgItem_original(GameScr _this, mGraphics g, int layer)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+        
+        static void GameScr_paintEffect_hook(GameScr _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnGameScrPaintEffect())
+                GameScr_paintEffect_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void GameScr_paintEffect_original(GameScr _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+        
+        static void Effect_paint_hook(Effect _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnEffectPaint())
+                Effect_paint_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Effect_paint_original(Effect _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Char_paintCharBody_hook(Char _this, mGraphics g, int cx, int cy, int cdir, int cf, bool isPaintBag)
+        {
+            if (!GraphicsReducer.OnCharPaintCharBody(_this, g, cx, cy, cdir, isPaintBag))
+                Char_paintCharBody_original(_this, g, cx, cy, cdir, cf, isPaintBag);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_paintCharBody_original(Char _this, mGraphics g, int cx, int cy, int cdir, int cf, bool isPaintBag)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Char_paint_map_line_hook(Char _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnCharPaintMapLine())
+                Char_paint_map_line_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_paint_map_line_original(Char _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Char_paintEffect_hook(Char _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnCharPaintEffect())
+                Char_paintEffect_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_paintEffect_original(Char _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Char_paintEff_Pet_hook(Char _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnCharPaintEff_Pet())
+                Char_paintEff_Pet_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_paintEff_Pet_original(Char _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Char_paintEff_Lvup_front_hook(Char _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnCharPaintEff_LvUp_Front())
+                Char_paintEff_Lvup_front_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_paintEff_Lvup_front_original(Char _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Char_paintEff_Lvup_behind_hook(Char _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnCharPaintEff_LvUp_Behind())
+                Char_paintEff_Lvup_behind_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_paintEff_Lvup_behind_original(Char _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Char_paintEffFront_hook(Char _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnCharPaintEffFront())
+                Char_paintEffFront_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_paintEffFront_original(Char _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Char_paintEffBehind_hook(Char _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnCharPaintEffBehind())
+                Char_paintEffBehind_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_paintEffBehind_original(Char _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Char_paintAuraFront_hook(Char _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnCharPaintAuraFront())
+                Char_paintAuraFront_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_paintAuraFront_original(Char _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Char_paintAuraBehind_hook(Char _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnCharPaintAuraBehind())
+                Char_paintAuraBehind_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_paintAuraBehind_original(Char _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Char_paintSuperEffFront_hook(Char _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnCharPaintSuperEffFront())
+                Char_paintSuperEffFront_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_paintSuperEffFront_original(Char _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Char_paintSuperEffBehind_hook(Char _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnCharPaintSuperEffBehind())
+                Char_paintSuperEffBehind_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_paintSuperEffBehind_original(Char _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Char_paintMount2_hook(Char _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnCharPaintMount2())
+                Char_paintMount2_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_paintMount2_original(Char _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Char_paintMount1_hook(Char _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnCharPaintMount1(_this, g))
+                Char_paintMount1_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_paintMount1_original(Char _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Char_paint_hook(Char _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnCharPaint())
+                Char_paint_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_paint_original(Char _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Char_updateSuperEff_hook(Char _this)
+        {
+            if (!GraphicsReducer.OnCharUpdateSuperEff())
+                Char_updateSuperEff_original(_this);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Char_updateSuperEff_original(Char _this)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void BgItem_paint_hook(BgItem _this, mGraphics g)
+        {
+            if (!GraphicsReducer.OnBgItemPaint())
+                BgItem_paint_original(_this, g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void BgItem_paint_original(BgItem _this, mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void BackgroudEffect_addEffect_hook(int id)
+        {
+            if (!GraphicsReducer.OnBackgroundEffectAddEffect())
+                BackgroudEffect_addEffect_original(id);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void BackgroudEffect_addEffect_original(int id)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void BackgroudEffect_paintFog_hook(mGraphics g)
+        {
+            if (!GraphicsReducer.OnBackgroundEffectPaintFog())
+                BackgroudEffect_paintFog_original(g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void BackgroudEffect_paintFog_original(mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void BackgroudEffect_paintCloud2_hook(mGraphics g)
+        {
+            if (!GraphicsReducer.OnBackgroundEffectPaintCloud2())
+                BackgroudEffect_paintCloud2_original(g);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void BackgroudEffect_paintCloud2_original(mGraphics g)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void BackgroudEffect_updateFog_hook()
+        {
+            if (!GraphicsReducer.OnBackgroundEffectUpdateFog())
+                BackgroudEffect_updateFog_original();
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void BackgroudEffect_updateFog_original()
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void BackgroudEffect_updateCloud2_hook()
+        {
+            if (!GraphicsReducer.OnBackgroundEffectUpdateCloud2())
+                BackgroudEffect_updateCloud2_original();
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void BackgroudEffect_updateCloud2_original()
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void BackgroudEffect_initCloud_hook()
+        {
+            if (!GraphicsReducer.OnBackgroundEffectInitCloud())
+                BackgroudEffect_initCloud_original();
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void BackgroudEffect_initCloud_original()
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
         static void Service_chat_hook(Service _this, string text)
         {
             if (!GameEvents.OnSendChat(text))
@@ -444,7 +773,7 @@ namespace Mod
         {
             Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
-        
+
         static void ChatPopup_addBigMessage_hook(string chat, int howLong, Npc c)
         {
             if (!GameEvents.OnAddBigMessage(chat, c))
@@ -492,7 +821,7 @@ namespace Mod
         static void InfoMe_addInfo_hook(InfoMe _this, string s, int Type)
         {
             InfoMe_addInfo_original(_this, s, Type);
-            GameEvents.OnAddInfoMe(s);   
+            GameEvents.OnAddInfoMe(s);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void InfoMe_addInfo_original(InfoMe _this, string s, int Type)
@@ -606,8 +935,8 @@ namespace Mod
 
         static void Panel_updateScroolMouse_hook(Panel _this, int a)
         {
-            if (!GameEvents.OnUpdateScrollMousePanel(_this, ref a));
-                Panel_updateScroolMouse_original(_this, a);
+            if (!GameEvents.OnUpdateScrollMousePanel(_this, ref a)) ;
+            Panel_updateScroolMouse_original(_this, a);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void Panel_updateScroolMouse_original(Panel _this, int a)
@@ -1020,6 +1349,132 @@ namespace Mod
         static void Main_OnApplicationPause_original(Main _this, bool paused)
         {
             Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void BackgroundEffect__ctor_hook(BackgroudEffect _this, int typeS)
+        {
+            BackgroundEffect__ctor_original(_this, typeS);
+            if (typeS == 0 || typeS == 12)
+            {
+                _this.sum = Res.random(10, 20); //limit rain effect
+                _this.x = new int[_this.sum];
+                _this.y = new int[_this.sum];
+                _this.vx = new int[_this.sum];
+                _this.vy = new int[_this.sum];
+                _this.type = new int[_this.sum];
+                _this.t = new int[_this.sum];
+                _this.frame = new int[_this.sum];
+                _this.isRainEffect = new bool[_this.sum];
+                _this.activeEff = new bool[_this.sum];
+                for (int k = 0; k < _this.sum; k++)
+                {
+                    _this.y[k] = Res.random(-10, GameCanvas.h + 100) + GameScr.cmy;
+                    _this.x[k] = Res.random(-10, GameCanvas.w + 300) + GameScr.cmx;
+                    _this.t[k] = Res.random(0, 1);
+                    _this.vx[k] = -12;
+                    _this.vy[k] = 12;
+                    _this.type[k] = Res.random(1, 3);
+                    _this.isRainEffect[k] = false;
+                    if (_this.type[k] == 2 && k % 2 == 0)
+                        _this.isRainEffect[k] = true;
+                    _this.activeEff[k] = false;
+                    _this.frame[k] = Res.random(1, 2);
+                }
+            }
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void BackgroundEffect__ctor_original(BackgroudEffect _this, int typeS)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+        #endregion
+
+        #region Hook methods
+        /// <summary>
+        /// Thử cài đặt 1 hook.
+        /// </summary>
+        /// <typeparam name="T1">Loại <see cref="Delegate"/> của <paramref name="hookTargetMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
+        /// <typeparam name="T2">Loại <see cref="Delegate"/> của <paramref name="hookMethod"/> và <paramref name="originalProxyMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
+        /// <param name="hookTargetMethod">Hàm để hook vào.</param>
+        /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
+        /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
+        static void TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod, T2 originalProxyMethod) where T1 : Delegate where T2 : Delegate => TryInstallHook<T1, T2, T2>(hookTargetMethod, hookMethod, originalProxyMethod);
+
+        /// <summary>
+        /// Thử cài đặt 1 hook.
+        /// </summary>
+        /// <typeparam name="T1">Loại <see cref="Delegate"/> của <paramref name="hookTargetMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
+        /// <typeparam name="T2">Loại <see cref="Delegate"/> của <paramref name="hookMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
+        /// <typeparam name="T3">Loại <see cref="Delegate"/> của <paramref name="originalProxyMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
+        /// <param name="hookTargetMethod">Hàm để hook vào.</param>
+        /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
+        /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
+        static void TryInstallHook<T1, T2, T3>(T1 hookTargetMethod, T2 hookMethod, T3 originalProxyMethod) where T1 : Delegate where T2 : Delegate where T3 : Delegate => TryInstallHook(hookTargetMethod.Method, hookMethod.Method, originalProxyMethod.Method);
+
+        /// <summary>
+        /// Cài đặt 1 hook.
+        /// </summary>
+        /// <typeparam name="T1">Loại <see cref="Delegate"/> của <paramref name="hookTargetMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
+        /// <typeparam name="T2">Loại <see cref="Delegate"/> của <paramref name="hookMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
+        /// <typeparam name="T3">Loại <see cref="Delegate"/> của <paramref name="originalProxyMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
+        /// <param name="hookTargetMethod">Hàm để hook vào.</param>
+        /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
+        /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
+        static void InstallHook<T1, T2, T3>(T1 hookTargetMethod, T2 hookMethod, T3 originalProxyMethod) where T1 : Delegate where T2 : Delegate where T3 : Delegate => InstallHook(hookTargetMethod.Method, hookMethod.Method, originalProxyMethod.Method);
+
+        /// <summary>
+        /// Thử cài đặt 1 hook.
+        /// </summary>
+        /// <param name="hookTargetMethod">Hàm để hook vào.</param>
+        /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
+        /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
+        static void TryInstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
+        {
+            try
+            {
+                InstallHook(hookTargetMethod, hookMethod, originalProxyMethod);
+            }
+            catch (Exception ex) { Debug.LogException(ex); }
+        }
+
+        /// <summary>
+        /// Cài đặt 1 hook.
+        /// </summary>
+        /// <param name="hookTargetMethod">Hàm để hook vào.</param>
+        /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
+        /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
+        static void InstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
+        {
+            if (HookPool.GetHook(hookTargetMethod) != null)
+                throw new Exception("Hook already installed");
+            Debug.Log($"Hooking {hookTargetMethod.Name} to {hookMethod.Name}...");
+            MethodHook hook = new MethodHook(hookTargetMethod, hookMethod, originalProxyMethod);
+            hook.Install();
+        }
+
+        /// <summary>
+        /// Gỡ bỏ tất cả hook.
+        /// </summary>
+        public static void UninstallAll()
+        {
+            HookPool.UninstallAll();
+        }
+
+        /// <summary>
+        /// Gỡ bỏ 1 hook.
+        /// </summary>
+        /// <typeparam name="T1">Loại <see cref="Delegate"/> của <paramref name="hookTargetMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
+        /// <param name="hookTargetMethod">Hàm cần gỡ bỏ hook.</param>
+        static void UninstallHook<T1>(T1 hookTargetMethod) where T1 : Delegate => UninstallHook(hookTargetMethod.Method);
+
+        /// <summary>
+        /// Gỡ bỏ 1 hook.
+        /// </summary>
+        /// <param name="hookTargetMethod">Hàm cần gỡ bỏ hook.</param>
+        static void UninstallHook(MethodInfo hookTargetMethod)
+        {
+            MethodHook hook = HookPool.GetHook(hookTargetMethod);
+            hook?.Uninstall();
         }
         #endregion
     }

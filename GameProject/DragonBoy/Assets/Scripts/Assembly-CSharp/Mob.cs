@@ -217,7 +217,7 @@ public class Mob : IMapObject
 
 	public Image imgHPtem;
 
-	private int offset;
+	internal int offset;
 
 	public bool isHide;
 
@@ -472,7 +472,7 @@ public class Mob : IMapObject
 		}
 	}
 
-	private void paintShadow(mGraphics g)
+	internal void paintShadow(mGraphics g)
 	{
 		int num = TileMap.size;
 		if (TileMap.tileTypeAt(xSd + num / 2, ySd + 1, 4))
