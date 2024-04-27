@@ -105,7 +105,7 @@ namespace Mod.Background
             string[] paths = null;
             new Thread(delegate ()
             {
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_STANDALONE || UNITY_EDITOR
                 ExtensionFilter[] extensions = new[]
                 {
                     new ExtensionFilter(Strings.imageVideoFile, "png", "jpg", "jpeg", "gif", "mp4" ),

@@ -174,7 +174,7 @@ namespace Mod
                     GameCanvas.panel2.EmulateSetTypePanel(1);
                 ModMenuMain.UpdatePosition();
             }
-#if !UNITY_EDITOR && UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
             EHVN.FileChooser.Update();
 #endif
             MainThreadDispatcher.update();

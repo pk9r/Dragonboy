@@ -127,15 +127,15 @@ namespace Mod
             string[] paths = null;
             new Thread(delegate ()
             {
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_STANDALONE || UNITY_EDITOR
                 ExtensionFilter[] extensions = new[]
                 {
-                new ExtensionFilter(Strings.videoFile, "mp4" ),
-                new ExtensionFilter(Strings.allFileTypes, "*" ),
+                    new ExtensionFilter(Strings.videoFile, "mp4" ),
+                    new ExtensionFilter(Strings.allFileTypes, "*" ),
                 };
                 paths = StandaloneFileBrowser.OpenFilePanel(Strings.introSelectFile, "", extensions, false);
 #elif UNITY_ANDROID
-            paths = EHVN.FileChooser.Open(new string[] { "video/mp4" });
+                paths = EHVN.FileChooser.Open(new string[] { "video/mp4" });
 #endif
                 if (paths.Length == 0)
                     return;
