@@ -284,9 +284,6 @@ namespace Mod.ModMenu
                     SetValueAction = value => AutoPean.isAutoHarvest = value,
                     RMSName = "auto_harvest_peans"
                 }),
-                //new ModMenuItemBoolean("Hiện khoảng cách bom", "Hiển thị người, quái, boss... trong tầm bom", SuicideRange.setState, false, "isshowsuiciderange")
-                //new ModMenuItemBoolean("Logo tùy chỉnh", "Bật/tắt hiển thị logo tùy chỉnh trên màn hình game", CustomLogo.setState, false, "isshowlogo"),
-                //new ModMenuItemBoolean("EHVN_CustomCursor_Toggle", "Con trỏ tùy chỉnh", "Thay con trỏ chuột mặc định thành con trỏ chuột tùy chỉnh", CustomCursor.setState, false, "customcusor"),
             };
             modMenuItemValues = new ModMenuItemValues[]
             {
@@ -421,8 +418,6 @@ namespace Mod.ModMenu
                     MinValue = 0,
                     MaxValue = 100
                 }),
-                //new ModMenuItemInt("Thời gian đổi logo", null, "Điều chỉnh thời gian thay đổi logo (giây)", 30, CustomLogo.setState, "logoinveral", false),
-                //new ModMenuItemInt("Chiều cao của logo", null, "Điều chỉnh chiều cao của logo", 80, CustomLogo.setLogoHeight, "logoheight"),
             };
             modMenuItemFunctions = new ModMenuItemFunction[]
             {
