@@ -1,6 +1,6 @@
 {
     "name": "gkngkc.StandaloneFileBrowser",
-    "rootNamespace": "",
+    "rootNamespace": "SFB",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [
