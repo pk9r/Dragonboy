@@ -4,9 +4,9 @@ using System.Threading;
 using Mod.ModHelper;
 using UnityEngine;
 
-namespace Mod.Graphics
+namespace Mod.Background
 {
-    internal class GifImage : IImage
+    internal class GifImage : IBackground
     {
         internal List<float> delays = new List<float>();
         internal int paintFrameIndex;

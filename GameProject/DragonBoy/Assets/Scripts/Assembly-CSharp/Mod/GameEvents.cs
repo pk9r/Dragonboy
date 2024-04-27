@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using Mod.Auto;
 using Mod.Auto.AutoChat;
+using Mod.Background;
 using Mod.CustomPanel;
 using Mod.Graphics;
 using Mod.ModHelper;
@@ -650,12 +651,20 @@ namespace Mod
 
         internal static bool OnPaintBgGameScr(mGraphics g)
         {
-            if (CustomBackground.isEnabled && CustomBackground.customBgs.Count > 0 && !ModMenuMain.GetModMenuItem<ModMenuItemBoolean>("CustomBg_Toggle").IsDisabled)
+            bool result = false;
+            if (GraphicsReducer.Level > ReduceGraphicsLevel.Off || (CustomBackground.isEnabled && CustomBackground.customBgs.Count > 0))
+            {
+                //GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), Texture2D.blackTexture, ScaleMode.StretchToFill);
+                g.setColor(0);
+                g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
+                result = true;
+            }
+            if (CustomBackground.isEnabled && CustomBackground.customBgs.Count > 0)
             {
                 CustomBackground.Paint(g);
-                return true;
+                result = true;
             }
-            return false;
+            return result;
         }
 
         internal static void OnMobStartDie(Mob mob)

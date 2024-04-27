@@ -3,9 +3,9 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Video;
 
-namespace Mod.Graphics
+namespace Mod.Background
 {
-    internal class BackgroundVideo : IImage
+    internal class BackgroundVideo : IBackground
     {
         static VideoPlayer[] videoPlayers = GameObject.Find("Main Camera").GetComponents<VideoPlayer>();
         internal bool isPreparing;

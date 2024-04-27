@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Mod.Graphics
+namespace Mod.Background
 {
-    public interface IImage
+    public interface IBackground
     {
         void Paint(mGraphics g, int x, int y);
 

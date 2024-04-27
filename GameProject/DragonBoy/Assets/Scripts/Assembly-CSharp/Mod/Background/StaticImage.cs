@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Mod.Graphics
+namespace Mod.Background
 {
-    internal class StaticImage : IImage
+    internal class StaticImage : IBackground
     {
         Texture2D texture = new Texture2D(1, 1);
         bool isLoaded;

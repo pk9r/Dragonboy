@@ -1,5 +1,6 @@
 ﻿using Mod.Auto;
 using Mod.Auto;
+using Mod.Background;
 using Mod.CustomPanel;
 using Mod.Graphics;
 using Mod.PickMob;
@@ -71,6 +72,7 @@ namespace Mod.ModMenu
             cmdOpenModMenu.w = cmdOpenModMenu.img.w / mGraphics.zoomLevel;
             cmdOpenModMenu.h = cmdOpenModMenu.img.h / mGraphics.zoomLevel;
             UpdatePosition();
+            LoadModMenuItems();
             LoadData();
         }
 
@@ -93,6 +95,11 @@ namespace Mod.ModMenu
             if (newLanguage == lastLanguage)
                 return;
             lastLanguage = newLanguage;
+            LoadModMenuItems();
+        }
+
+        static void LoadModMenuItems()
+        {
             modMenuItemBools = new ModMenuItemBoolean[]
             {
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
@@ -180,9 +187,7 @@ namespace Mod.ModMenu
                     Description = Strings.customBackgroundDescription,
                     GetValueFunc = () => CustomBackground.isEnabled,
                     SetValueAction = CustomBackground.SetState,
-                    RMSName = "custom_bg",
-                    GetIsDisabled = () => GraphicsReducer.level > ReduceGraphicsLevel.None,
-                    GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.setReduceGraphicsTitle)
+                    RMSName = "custom_bg"
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {

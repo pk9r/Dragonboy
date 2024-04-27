@@ -13,13 +13,13 @@ using Mod.R;
 using SFB;
 #endif
 
-namespace Mod.Graphics
+namespace Mod.Background
 {
     internal class CustomBackground : IChatable
     {
         internal static bool isEnabled;
 
-        internal static Dictionary<string, IImage> customBgs = new Dictionary<string, IImage>();
+        internal static Dictionary<string, IBackground> customBgs = new Dictionary<string, IBackground>();
         static ScaleMode _defaultScaleMode = ScaleMode.StretchToFill;
         internal static ScaleMode DefaultScaleMode
         {
@@ -43,6 +43,8 @@ namespace Mod.Graphics
         static bool isChangeBg = true;
         static float speed = 1f;
         static CustomBackground instance = new CustomBackground();
+
+        internal static IBackground CurrentBg => customBgs.ElementAt(bgIndex).Value;
 
         internal static void ShowMenu()
         {
@@ -167,11 +169,9 @@ namespace Mod.Graphics
                 return;
             try
             {
-                g.setColor(0);
-                g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
                 if (bgIndex >= customBgs.Count)
                     bgIndex = 0;
-                IImage background = customBgs.ElementAt(bgIndex).Value;
+                IBackground background = customBgs.ElementAt(bgIndex).Value;
                 if (background == null)
                     return;
                 if (background is BackgroundVideo backgroundVideo && !backgroundVideo.isPlaying)
@@ -239,7 +239,7 @@ namespace Mod.Graphics
             int selected = panel.selected;
             if (selected < 0)
                 return;
-            KeyValuePair<string, IImage> customBg = customBgs.ElementAt(selected);
+            KeyValuePair<string, IBackground> customBg = customBgs.ElementAt(selected);
             new MenuBuilder()
                 .addItem(bgIndex != selected, Strings.customBgSwitchToThisBg, new MenuAction(() =>
                 {
@@ -404,7 +404,7 @@ namespace Mod.Graphics
                         GameCanvas.startOKDlg(string.Format(Strings.inputNumberMustBeBiggerThanOrEqual, 10) + '!');
                     else
                     {
-                        ModMenuMain.GetModMenuItem<ModMenuItemValues>("Set_TimeChangeBg").SelectedValue = value;
+                        intervalChangeBg = value;
                         GameScr.info1.addInfo(string.Format(Strings.valueChanged, Strings.setTimeChangeCustomBgTitle.ToLower(), value) + '!', 0);
                         SaveData();
                     }
