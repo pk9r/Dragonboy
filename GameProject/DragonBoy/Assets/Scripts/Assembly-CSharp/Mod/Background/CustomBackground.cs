@@ -1,6 +1,5 @@
 ﻿using Mod.CustomPanel;
 using Mod.ModHelper.Menu;
-using Mod.ModMenu;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using UnityEngine;
 using Mod.R;
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_EDITOR || UNITY_STANDALONE
 using SFB;
 #endif
 
@@ -106,7 +105,7 @@ namespace Mod.Background
             new Thread(delegate ()
             {
 #if UNITY_STANDALONE || UNITY_EDITOR
-                ExtensionFilter[] extensions = new[]
+                ExtensionFilter[] extensions = new ExtensionFilter[]
                 {
                     new ExtensionFilter(Strings.imageVideoFile, "png", "jpg", "jpeg", "gif", "mp4" ),
                     new ExtensionFilter(Strings.allFileTypes, "*" ),

@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Video;
 using System.Threading;
 
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_EDITOR || UNITY_STANDALONE
 using SFB;
 #endif
 
@@ -128,7 +128,7 @@ namespace Mod
             new Thread(delegate ()
             {
 #if UNITY_STANDALONE || UNITY_EDITOR
-                ExtensionFilter[] extensions = new[]
+                ExtensionFilter[] extensions = new ExtensionFilter[]
                 {
                     new ExtensionFilter(Strings.videoFile, "mp4" ),
                     new ExtensionFilter(Strings.allFileTypes, "*" ),
