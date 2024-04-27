@@ -275,7 +275,7 @@ namespace Mod.Graphics
             if (_this.protectEff)
             {
                 g.setColor(Color.green);
-                g.drawRect(cx - 50, cy - 50, 100, 100);
+                g.drawRect(cx - 35, cy - 55, 70, 70);
             }
             if (_this.cFlag != 0 && _this.cFlag != -1)
                 SmallImage.drawSmallImage(g, _this.flagImage, cx - (cdir == 1 ? 10 : 0), cy - _this.ch - 30 + ((GameCanvas.gameTick % 20 > 10) ? (GameCanvas.gameTick % 4 / 2) : 0), 0, 0);
@@ -477,7 +477,7 @@ namespace Mod.Graphics
 
             InitializeTileMap(_level == ReduceGraphicsLevel.Level1);
             //vertical
-            for (int x = 1; x < TileMap.tmw; x++)
+            for (int x = 2; x < TileMap.tmw - 2; x++)
             {
                 for (int y = 0; y < TileMap.tmh - 1; y++)
                 {
