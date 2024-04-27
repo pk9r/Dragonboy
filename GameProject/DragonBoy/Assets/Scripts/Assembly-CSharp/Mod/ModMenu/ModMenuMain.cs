@@ -1,6 +1,7 @@
-﻿using Mod.Auto;
+﻿using System;
 using Mod.Auto;
 using Mod.Background;
+using Mod.CharEffect;
 using Mod.CustomPanel;
 using Mod.Graphics;
 using Mod.PickMob;
@@ -8,9 +9,6 @@ using Mod.R;
 using Mod.Set;
 using Mod.TeleportMenu;
 using Mod.Xmap;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Mod.ModMenu
@@ -111,13 +109,13 @@ namespace Mod.ModMenu
                     SetValueAction = value => QualitySettings.vSyncCount = value ? 1 : 0,
                     RMSName = "enable_vsync"
                 }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig() 
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
                     ID = "ShowTargetInfo_Toggle",
                     Title = Strings.showTargetInfoTitle,
                     Description = Strings.showTargetInfoDescription,
-                    GetValueFunc = () => CharEffect.isEnabled,
-                    SetValueAction = CharEffect.setState,
+                    GetValueFunc = () => CharEffectMain.isEnabled,
+                    SetValueAction = CharEffectMain.setState,
                     RMSName = "show_target_info"
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Mod
+namespace Mod.CharEffect
 {
     internal class CharEffectTime
     {

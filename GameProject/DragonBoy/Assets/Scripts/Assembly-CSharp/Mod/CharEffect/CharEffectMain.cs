@@ -2,9 +2,9 @@
 using System.Linq;
 using UnityEngine;
 
-namespace Mod
+namespace Mod.CharEffect
 {
-    internal class CharEffect
+    internal class CharEffectMain
     {
         internal static bool isEnabled;
 
