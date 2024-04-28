@@ -641,7 +641,7 @@ public class TField : IActionListener
 		}
 		g.setClip(x + 3, y + 1, w - 4, h);
 
-        if (textEditor.hasSelection)
+        if (!Utils.IsPC() && textEditor.hasSelection)
         {
             g.setColor(new Color(0, 0, 0, .4f));
             string selectedText = textEditor.SelectedText;
