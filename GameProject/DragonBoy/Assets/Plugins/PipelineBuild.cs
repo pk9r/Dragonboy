@@ -1,0 +1,234 @@
+﻿#if UNITY_EDITOR
+using System;
+using System.IO;
+using Mono.Cecil.Cil;
+using Mono.Cecil;
+using UnityEditor;
+using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
+using UnityEngine;
+using System.Linq;
+using System.Reflection;
+using System.Collections.Generic;
+using ParameterAttributes = Mono.Cecil.ParameterAttributes;
+
+public class PipelineBuild : IPreprocessBuildWithReport, IPostBuildPlayerScriptDLLs, IPostprocessBuildWithReport
+{
+    public int callbackOrder => 0;
+
+    public void OnPostBuildPlayerScriptDLLs(BuildReport report)
+    {
+        if (BuildPipeline.isBuildingPlayer && !EditorApplication.isPlayingOrWillChangePlaymode)
+        {
+            EditorApplication.LockReloadAssemblies();
+            string path = GetAssemblyLocation("Assembly-CSharp.dll");
+            if (File.Exists(path))
+                ModifyInstallAll(path);
+            EditorApplication.UnlockReloadAssemblies();
+        }
+    }
+
+    /// <summary>
+    /// Tối ưu mã IL của hàm <see cref="Mod.GameEventHook.InstallAll"/>.
+    /// </summary>
+    /// <param name="assemblyCSharpPath">Đường dẫn tệp Asembly-CSharp.dll</param>
+    /// <remarks>
+    /// Mã IL được tạo sẽ tương tự như sau:
+    /// <code>
+    /// ldtoken     [target method]
+    /// call        class System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(valuetype System.RuntimeMethodHandle)
+    /// ldtoken     [hook method]
+    /// call        class System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(valuetype System.RuntimeMethodHandle)
+    /// ldtoken     [trampoline method]
+    /// call        class System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(valuetype System.RuntimeMethodHandle)
+    /// call        void Mod.GameEventHook::TryInstallHook(class System.Reflection.MethodBase, class System.Reflection.MethodBase, class System.Reflection.MethodBase)
+    /// ...
+    /// ret
+    /// </code>
+    /// </remarks>
+    static void ModifyInstallAll(string assemblyCSharpPath)
+    {
+        byte[] data = File.ReadAllBytes(assemblyCSharpPath);
+
+        AssemblyDefinition assemblyCSharp = AssemblyDefinition.ReadAssembly(new MemoryStream(data));
+        ((DefaultAssemblyResolver)assemblyCSharp.MainModule.AssemblyResolver).AddSearchDirectory(Path.GetDirectoryName(assemblyCSharpPath));
+        TypeDefinition gameEventHook = assemblyCSharp.MainModule.GetType("Mod.GameEventHook");
+        MethodDefinition installAll = gameEventHook.Methods.First(m => m.Name == "InstallAll");
+        TypeReference methodBase = new TypeReference("System.Reflection", nameof(MethodBase), assemblyCSharp.MainModule, assemblyCSharp.MainModule.TypeSystem.CoreLibrary);
+        TypeReference runtimeMethodHandle = new TypeReference("System", nameof(RuntimeMethodHandle), assemblyCSharp.MainModule, assemblyCSharp.MainModule.TypeSystem.CoreLibrary, true);
+        MethodReference getMethodFromHandle = new MethodReference(nameof(MethodBase.GetMethodFromHandle), methodBase, methodBase)
+        {
+            HasThis = false,
+            ExplicitThis = false,
+            CallingConvention = MethodCallingConvention.Default,
+        };
+        getMethodFromHandle.Parameters.Add(new ParameterDefinition("handle", ParameterAttributes.None, runtimeMethodHandle));
+
+        MethodDefinition tryInstallHookGenericDef = gameEventHook.Methods.First(m => m.Name == "TryInstallHook" && m.GenericParameters.Count == 2);    //TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod, T2 originalProxyMethod)
+        MethodDefinition tryInstallHookDef = gameEventHook.Methods.First(m => m.Name == "TryInstallHook" && m.GenericParameters.Count == 0);    //TryInstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
+
+        List<Instruction> instructions = new List<Instruction>();
+        int paramCount = 0;
+        for (int i = 0; i < installAll.Body.Instructions.Count; i++)
+        {
+            Instruction instruction = installAll.Body.Instructions[i];
+            if (instruction.OpCode == OpCodes.Ldftn)
+            {
+                if (instruction.Operand is MethodDefinition methodDef)    //ldftn <target/hook/trampoline method>
+                {
+                    instructions.Add(Instruction.Create(OpCodes.Ldtoken, methodDef));
+                    instructions.Add(Instruction.Create(OpCodes.Call, getMethodFromHandle));
+                    paramCount++;
+                }
+            }
+            if (instruction.OpCode == OpCodes.Ldvirtftn)
+            {
+                if (i >= 2 && instruction.Operand is MethodDefinition methodDef)    //ldvirtftn <target/hook/trampoline method (virtual)>
+                {
+                    Instruction instruction1 = installAll.Body.Instructions[i - 1];
+                    Instruction instruction2 = installAll.Body.Instructions[i - 2];
+                    if (instruction1.OpCode == OpCodes.Dup && instruction2.IsLdloc())
+                    {
+                        VariableDefinition local = installAll.Body.Variables[instruction2.GetLdlocIndex()];
+                        instructions.Add(Instruction.Create(OpCodes.Ldtoken, local.VariableType.Resolve().Methods.First(m => m.Name == methodDef.Name)));
+                        instructions.Add(Instruction.Create(OpCodes.Call, getMethodFromHandle));
+                        paramCount++;
+                    }
+                }
+            }
+            if (instruction.OpCode == OpCodes.Ldtoken)
+            {
+                if (i + 4 < installAll.Body.Instructions.Count && instruction.Operand is TypeDefinition typeToGetConstructor)    //ldtoken <Type>
+                {
+                    Instruction instruction2 = installAll.Body.Instructions[i + 1];
+                    Instruction instruction3 = installAll.Body.Instructions[i + 2];
+                    Instruction instruction4 = installAll.Body.Instructions[i + 3];
+                    Instruction instruction5 = installAll.Body.Instructions[i + 4];
+                    if (instruction2.OpCode == OpCodes.Call && instruction2.Operand is MethodReference getTypeFromHandle && getTypeFromHandle.Name == nameof(Type.GetTypeFromHandle))
+                    {
+                        if (instruction3.IsLdcI4() && instruction4.OpCode == OpCodes.Newarr && instruction4.Operand is TypeReference typeReference && typeReference.Name == nameof(Type) && instruction5.OpCode == OpCodes.Call && instruction5.Operand is MethodReference getConstructor && getConstructor.Name == nameof(Type.GetConstructor)) //typeof(<Type>).GetConstructor(new Type[?])
+                        {
+                            instructions.Add(Instruction.Create(OpCodes.Ldtoken, typeToGetConstructor.Methods.First(m => m.IsConstructor && m.Parameters.Count == instruction3.GetLdcI4Value())));
+                            instructions.Add(Instruction.Create(OpCodes.Call, getMethodFromHandle));
+                            paramCount++;
+                        }
+                        else if (instruction3.OpCode == OpCodes.Call && instruction3.Operand is MethodReference getConstructors && getConstructors.Name == nameof(Type.GetConstructors) && instruction4.OpCode == OpCodes.Ldc_I4_0 && instruction5.OpCode == OpCodes.Ldelem_Ref)    //typeof(<Type>).GetConstructors()[0]
+                        {
+                            instructions.Add(Instruction.Create(OpCodes.Ldtoken, typeToGetConstructor.Methods.First(m => m.IsConstructor)));
+                            instructions.Add(Instruction.Create(OpCodes.Call, getMethodFromHandle));
+                            paramCount++;
+                        }
+                    }
+                }
+            }
+            if (instruction.OpCode == OpCodes.Call)
+            {
+                if (instruction.Operand is MethodSpecification methodSpec && methodSpec.Resolve() == tryInstallHookGenericDef)    //call <TryInstallHook<T1, T2>>
+                {
+                    instructions.Add(Instruction.Create(OpCodes.Call, tryInstallHookDef));
+                    paramCount = 0; //param count always equals 3 so no need to check
+                }
+                else if (instruction.Operand is MethodDefinition methodDefinition && methodDefinition == tryInstallHookDef)    //call <TryInstallHook>
+                {
+                    while (paramCount < 3)
+                    {
+                        instructions.Add(Instruction.Create(OpCodes.Ldnull));
+                        paramCount++;
+                    }
+                    instructions.Add(Instruction.Create(OpCodes.Call, tryInstallHookDef));
+                    paramCount = 0;
+                }
+            }
+        }
+        instructions.Add(Instruction.Create(OpCodes.Ret));
+        installAll.Body.Instructions.Clear();
+        instructions.ForEach(i => installAll.Body.Instructions.Add(i));
+
+        assemblyCSharp.Write(assemblyCSharpPath);
+    }
+
+    public void OnPostprocessBuild(BuildReport report)
+    {
+
+    }
+
+    public void OnPreprocessBuild(BuildReport report)
+    {
+    }
+
+    static string GetAssemblyLocation(string assembly)
+    {
+        if (File.Exists(assembly) && assembly.EndsWith(".dll"))
+            return assembly;
+        if (!assembly.EndsWith(".dll"))
+            assembly += ".dll";
+        if (GetAssemblyLocationInTempStagingArea(assembly, out string path))
+            return path;
+        return null;
+    }
+
+    static bool GetAssemblyLocationInTempStagingArea(string assemblyName, out string assemblyLocation)
+    {
+        string tempStagingAreaDirectory = Path.GetDirectoryName(Application.dataPath);
+        tempStagingAreaDirectory = Path.Combine(tempStagingAreaDirectory, "Temp");
+        tempStagingAreaDirectory = Path.Combine(tempStagingAreaDirectory, "StagingArea");
+        tempStagingAreaDirectory = Path.Combine(tempStagingAreaDirectory, "Data");
+        tempStagingAreaDirectory = Path.Combine(tempStagingAreaDirectory, "Managed");
+        string asmPath = Path.Combine(tempStagingAreaDirectory, assemblyName);
+        if (File.Exists(asmPath))
+        {
+            assemblyLocation = asmPath;
+            return true;
+        }
+        assemblyLocation = null;
+        return false;
+    }
+}
+
+internal static class ExtensionMethods
+{
+    internal static bool IsLdcI4(this Instruction instruction) => instruction.OpCode.Code - 21 <= Code.Stloc_1;
+
+    internal static bool IsLdloc(this Instruction instruction) => instruction.OpCode == OpCodes.Ldloc || instruction.OpCode == OpCodes.Ldloc_0 || instruction.OpCode == OpCodes.Ldloc_1 || instruction.OpCode == OpCodes.Ldloc_2 || instruction.OpCode == OpCodes.Ldloc_3 || instruction.OpCode == OpCodes.Ldloc_S;
+
+    internal static int GetLdcI4Value(this Instruction instruction)
+    {
+        return instruction.OpCode.Code switch
+        {
+            Code.Ldc_I4_M1 => -1,
+            Code.Ldc_I4_0 => 0,
+            Code.Ldc_I4_1 => 1,
+            Code.Ldc_I4_2 => 2,
+            Code.Ldc_I4_3 => 3,
+            Code.Ldc_I4_4 => 4,
+            Code.Ldc_I4_5 => 5,
+            Code.Ldc_I4_6 => 6,
+            Code.Ldc_I4_7 => 7,
+            Code.Ldc_I4_8 => 8,
+            Code.Ldc_I4_S => (sbyte)instruction.Operand,
+            Code.Ldc_I4 => (int)instruction.Operand,
+            _ => throw new InvalidOperationException($"Not a ldc.i4 instruction: {instruction}"),
+        };
+    }
+
+    internal static int GetLdlocIndex(this Instruction instruction)
+    {
+        switch (instruction.OpCode.Code)
+        {
+            case Code.Ldloc_0:
+                return 0;
+            case Code.Ldloc_1:
+                return 1;
+            case Code.Ldloc_2:
+                return 2;
+            case Code.Ldloc_3:
+                return 3;
+            case Code.Ldloc_S:
+            case Code.Ldloc:
+                return ((VariableReference)instruction.Operand).Index;
+            default:
+                throw new InvalidOperationException($"Not a ldloc instruction: {instruction}");
+        }
+    }
+}
+#endif

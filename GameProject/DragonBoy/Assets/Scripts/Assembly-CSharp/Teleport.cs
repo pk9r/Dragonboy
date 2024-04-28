@@ -1,10 +1,5 @@
 ﻿public class Teleport
 {
-    /// <summary>
-    /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
-	/// </summary>
-    internal Teleport(HookObj _) { }
-
     public static MyVector vTeleport = new MyVector();
 
 	public int x;

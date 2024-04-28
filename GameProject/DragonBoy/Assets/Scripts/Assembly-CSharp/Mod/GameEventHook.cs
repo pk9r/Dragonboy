@@ -5,6 +5,15 @@ using Mod.Graphics;
 using MonoHook;
 using UnityEngine;
 
+#if UNITY_EDITOR 
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+using System.Linq;
+using System.Reflection.Emit;
+using OpCodes = Mono.Cecil.Cil.OpCodes;
+using ROpCodes = System.Reflection.Emit.OpCodes;
+#endif
+
 namespace Mod
 {
     /// <summary>
@@ -13,17 +22,24 @@ namespace Mod
     /// <remarks>
     /// Vấn đề đã biết: trên Android scripting backend Mono, 1 số hàm thỉnh thoảng sẽ không hook được do vị trí của các hàm trong bộ nhớ sau khi JIT quá xa.
     /// </remarks>
-    public static class GameEventHook
+    internal static class GameEventHook
     {
-        static HookObj _ = new HookObj();
+        internal static void Start()
+        {
+#if UNITY_EDITOR 
+            CreateDynamicInstallAllMethod().CreateDelegate(typeof(Action)).DynamicInvoke();
+#else
+            InstallAll();
+#endif
+        }
 
         /// <summary>
         /// Cài đặt tất cả hook.
         /// </summary>
-        public static void InstallAll()
+        static void InstallAll()
         {
-            Main main = new Main();
-            MotherCanvas motherCanvas = new MotherCanvas(_);
+            Main main = null;
+            MotherCanvas motherCanvas = null;
 
             //Hook as soon as possible
             TryInstallHook<Action<int, int>, Action<MotherCanvas, int, int>>(motherCanvas.checkZoomLevel, MotherCanvas_checkZoomLevel_hook, MotherCanvas_checkZoomLevel_original);
@@ -39,30 +55,30 @@ namespace Mod
             TryInstallHook<Action<bool>, Action<Main, bool>>(main.OnApplicationPause, Main_OnApplicationPause_hook, Main_OnApplicationPause_original);
             TryInstallHook<Action, Action<Main>>(main.OnApplicationQuit, Main_OnApplicationQuit_hook, Main_OnApplicationQuit_original);
 
-            ChatTextField chatTextField = new ChatTextField(_);
-            Teleport teleport = new Teleport(_);
-            ServerListScreen serverListScreen = new ServerListScreen(_);
-            GameCanvas gameCanvas = new GameCanvas(_);
-            GameScr gameScr = new GameScr(_);
-            Panel panel = new Panel(_);
-            Char ch = new Char();
-            ItemMap itemMap = new ItemMap(_);
-            Menu menu = new Menu();
-            Mob mob = new Mob();
-            SoundMn soundMn = new SoundMn();
-            GamePad gamePad = new GamePad(_);
-            LoginScr loginScr = new LoginScr(_);
-            Skill skill = new Skill();
-            Service service = Service.gI();
-            Session_ME session_ME = Session_ME.gI();
-            Controller controller = Controller.gI();
-            InfoMe infoMe = InfoMe.gI();
-            BgItem bgItem = new BgItem();
-            Effect effect = new Effect();
-            mGraphics g = new mGraphics();
-            MagicTree magicTree = new MagicTree(_);
-            Npc npc = new Npc(_);
-            ServerEffect serverEffect = new ServerEffect();
+            ChatTextField chatTextField = null;
+            Teleport teleport = null;
+            ServerListScreen serverListScreen = null;
+            GameCanvas gameCanvas = null;
+            GameScr gameScr = null;
+            Panel panel = null;
+            Char ch = null;
+            ItemMap itemMap = null;
+            Menu menu = null;
+            Mob mob = null;
+            SoundMn soundMn = null;
+            GamePad gamePad = null;
+            LoginScr loginScr = null;
+            Skill skill = null;
+            Service service = null;
+            Session_ME session_ME = null;
+            Controller controller = null;
+            InfoMe infoMe = null;
+            BgItem bgItem = null;
+            Effect effect = null;
+            mGraphics g = null;
+            MagicTree magicTree = null;
+            Npc npc = null;
+            ServerEffect serverEffect = null;
 
             //Can be installed later
             TryInstallHook<Action, Action<GameScr>>(gameScr.updateKey, GameScr_updateKey_hook, GameScr_updateKey_original);
@@ -155,10 +171,121 @@ namespace Mod
             TryInstallHook<Action<mGraphics>, Action<mGraphics>>(TileMap.paintOutTilemap, TileMap_paintOutTilemap_hook, TileMap_paintOutTilemap_original);
             TryInstallHook<Action<mGraphics>, Action<Npc, mGraphics>>(npc.paint, Npc_paint_hook, Npc_paint_original);
             TryInstallHook<Action<mGraphics>, Action<ServerEffect, mGraphics>>(serverEffect.paint, ServerEffect_paint_hook, ServerEffect_paint_original);
-            
+
             //TryInstallHook<Action, Action>(, _hook, _original);
         }
 
+#if UNITY_EDITOR
+        /// <summary>
+        /// Tạo 1 hàm InstallAll động từ hàm <see cref="InstallAll"/> gốc với mã IL đã tối ưu.
+        /// </summary>
+        /// <returns><see cref="DynamicMethod"/> đã được tạo.</returns>
+        /// <remarks>
+        /// Mã IL được tạo sẽ tương tự như sau:
+        /// <code>
+        /// ldtoken     [target method]
+        /// call        class System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(valuetype System.RuntimeMethodHandle)
+        /// ldtoken     [hook method]
+        /// call        class System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(valuetype System.RuntimeMethodHandle)
+        /// ldtoken     [trampoline method]
+        /// call        class System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(valuetype System.RuntimeMethodHandle)
+        /// call        void Mod.GameEventHook::TryInstallHook(class System.Reflection.MethodBase, class System.Reflection.MethodBase, class System.Reflection.MethodBase)
+        /// ...
+        /// ret
+        /// </code>
+        /// </remarks>
+        static DynamicMethod CreateDynamicInstallAllMethod()
+        {
+            AssemblyDefinition assemblyCSharp = AssemblyDefinition.ReadAssembly(typeof(GameEventHook).Assembly.Location);
+            Module assemblyCSharpModule = typeof(GameEventHook).Module;
+            TypeDefinition gameEventHook = assemblyCSharp.MainModule.GetType(typeof(GameEventHook).FullName);
+            MethodDefinition installAll = gameEventHook.Methods.First(m => m.Name == nameof(InstallAll));
+            MethodDefinition tryInstallHookGenericDef = gameEventHook.Methods.First(m => m.Name == nameof(TryInstallHook) && m.GenericParameters.Count == 2);    //TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod, T2 originalProxyMethod)
+            MethodDefinition tryInstallHookDef = gameEventHook.Methods.First(m => m.Name == nameof(TryInstallHook) && m.GenericParameters.Count == 0);    //TryInstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
+            MethodInfo tryInstallHook = new Action<MethodBase, MethodBase, MethodBase>(TryInstallHook).Method;  //TryInstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
+            MethodInfo getMethodFromHandle = new Func<RuntimeMethodHandle, MethodBase>(MethodBase.GetMethodFromHandle).Method;
+            DynamicMethod installAllDynamic = new DynamicMethod("InstallAllDynamic", typeof(void), new Type[0], typeof(GameEventHook), true);
+            ILGenerator il = installAllDynamic.GetILGenerator();
+            int paramCount = 0;
+            for (int i = 0; i < installAll.Body.Instructions.Count; i++)
+            {
+                Instruction instruction = installAll.Body.Instructions[i];
+                if (instruction.OpCode == OpCodes.Ldftn)
+                {
+                    if (instruction.Operand is MethodDefinition methodDef)    //ldftn <target/hook/trampoline method>
+                    {
+                        MethodInfo method = (MethodInfo)assemblyCSharpModule.ResolveMethod(methodDef.MetadataToken.ToInt32());
+                        il.Emit(ROpCodes.Ldtoken, method);
+                        il.Emit(ROpCodes.Call, getMethodFromHandle);
+                        paramCount++;
+                    }
+                }
+                if (instruction.OpCode == OpCodes.Ldvirtftn)
+                {
+                    if (i >= 2 && instruction.Operand is MethodDefinition methodDef)    //ldvirtftn <target/hook/trampoline method (virtual)>
+                    {
+                        Instruction instruction1 = installAll.Body.Instructions[i - 1];
+                        Instruction instruction2 = installAll.Body.Instructions[i - 2];
+                        if (instruction1.OpCode == OpCodes.Dup && instruction2.IsLdloc())
+                        {
+                            VariableDefinition local = installAll.Body.Variables[instruction2.GetLdlocIndex()];
+                            MethodInfo method = (MethodInfo)assemblyCSharpModule.ResolveMethod(local.VariableType.Resolve().Methods.First(m => m.Name == methodDef.Name).MetadataToken.ToInt32());
+                            il.Emit(ROpCodes.Ldtoken, method);
+                            il.Emit(ROpCodes.Call, getMethodFromHandle);
+                            paramCount++;
+                        }
+                    }
+                }
+                if (instruction.OpCode == OpCodes.Ldtoken)
+                {
+                    if (i + 4 < installAll.Body.Instructions.Count && instruction.Operand is TypeDefinition typeToGetConstructor)    //ldtoken <Type>
+                    {
+                        Instruction instruction2 = installAll.Body.Instructions[i + 1];
+                        Instruction instruction3 = installAll.Body.Instructions[i + 2];
+                        Instruction instruction4 = installAll.Body.Instructions[i + 3];
+                        Instruction instruction5 = installAll.Body.Instructions[i + 4];
+                        if (instruction2.OpCode == OpCodes.Call && instruction2.Operand is MethodReference getTypeFromHandle && getTypeFromHandle.Name == nameof(Type.GetTypeFromHandle))
+                        {
+                            if (instruction3.IsLdcI4() && instruction4.OpCode == OpCodes.Newarr && instruction4.Operand is TypeReference typeReference && typeReference.Name == nameof(Type) && instruction5.OpCode == OpCodes.Call && instruction5.Operand is MethodReference getConstructor && getConstructor.Name == nameof(Type.GetConstructor)) //typeof(<Type>).GetConstructor(new Type[?])
+                            {
+                                ConstructorInfo _ctor = (ConstructorInfo)assemblyCSharpModule.ResolveMethod(typeToGetConstructor.Methods.First(m => m.IsConstructor && m.Parameters.Count == instruction3.GetLdcI4Value()).MetadataToken.ToInt32());
+                                il.Emit(ROpCodes.Ldtoken, _ctor);
+                                il.Emit(ROpCodes.Call, getMethodFromHandle);
+                                paramCount++;
+                            }
+                            else if (instruction3.OpCode == OpCodes.Call && instruction3.Operand is MethodReference getConstructors && getConstructors.Name == nameof(Type.GetConstructors) && instruction4.OpCode == OpCodes.Ldc_I4_0 && instruction5.OpCode == OpCodes.Ldelem_Ref)    //typeof(<Type>).GetConstructors()[0]
+                            {
+                                ConstructorInfo _ctor = (ConstructorInfo)assemblyCSharpModule.ResolveMethod(typeToGetConstructor.Methods.First(m => m.IsConstructor).MetadataToken.ToInt32());
+                                il.Emit(ROpCodes.Ldtoken, _ctor);
+                                il.Emit(ROpCodes.Call, getMethodFromHandle);
+                                paramCount++;
+                            }
+                        }
+                    }
+                }
+                if (instruction.OpCode == OpCodes.Call)
+                {
+                    if (instruction.Operand is MethodSpecification methodSpec && methodSpec.Resolve() == tryInstallHookGenericDef)    //call <TryInstallHook<T1, T2>>
+                    {
+                        il.Emit(ROpCodes.Call, tryInstallHook);
+                        paramCount = 0; //param count always equals 3 so no need to check
+                    }
+                    else if (instruction.Operand is MethodDefinition methodDefinition && methodDefinition == tryInstallHookDef)    //call <TryInstallHook>
+                    {
+                        while (paramCount < 3)
+                        {
+                            il.Emit(ROpCodes.Ldnull);
+                            paramCount++;
+                        }
+                        il.Emit(ROpCodes.Call, tryInstallHook);
+                        paramCount = 0;
+                    }
+                }
+            }
+            il.Emit(ROpCodes.Ret);
+            return installAllDynamic;
+        }
+#endif
         #region Hooks
         static void ServerEffect_paint_hook(ServerEffect _this, mGraphics g)
         {
@@ -170,7 +297,7 @@ namespace Mod
         {
             Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
-        
+
         static void Npc_paint_hook(Npc _this, mGraphics g)
         {
             if (!GraphicsReducer.OnNpcPaint(_this, g))
@@ -192,7 +319,7 @@ namespace Mod
         {
             Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
-        
+
         static void TileMap_paintTilemap_hook(mGraphics g)
         {
             if (!GraphicsReducer.OnTileMapPaintTile(g))
@@ -203,7 +330,7 @@ namespace Mod
         {
             Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
-        
+
         static void Mob_paint_hook(Mob _this, mGraphics g)
         {
             if (!GraphicsReducer.OnMobPaint(_this, g))
@@ -214,7 +341,7 @@ namespace Mod
         {
             Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
-        
+
         static void MagicTree_paint_hook(MagicTree _this, mGraphics g)
         {
             if (!GraphicsReducer.OnMagicTreePaint(_this, g))
@@ -225,7 +352,7 @@ namespace Mod
         {
             Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
-        
+
         static void ItemMap_paint_hook(ItemMap _this, mGraphics g)
         {
             if (!GraphicsReducer.OnItemMapPaint(_this, g))
@@ -236,7 +363,7 @@ namespace Mod
         {
             Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
-        
+
         static void InfoMe_paint_hook(InfoMe _this, mGraphics g)
         {
             if (!GraphicsReducer.OnInfoMePaint(_this, g))
@@ -251,7 +378,7 @@ namespace Mod
         static void mGraphics_drawImage_hook(mGraphics g, Image image, int x, int y, int anchor)
         {
             if (!GraphicsReducer.OnmGraphicsDrawImage(image))
-                mGraphics_drawImage_original(g, image, x, y, anchor);   
+                mGraphics_drawImage_original(g, image, x, y, anchor);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void mGraphics_drawImage_original(mGraphics g, Image image, int x, int y, int anchor)
@@ -269,7 +396,7 @@ namespace Mod
         {
             Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
-        
+
         static void GameScr_paintEffect_hook(GameScr _this, mGraphics g)
         {
             if (!GraphicsReducer.OnGameScrPaintEffect())
@@ -280,7 +407,7 @@ namespace Mod
         {
             Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
-        
+
         static void Effect_paint_hook(Effect _this, mGraphics g)
         {
             if (!GraphicsReducer.OnEffectPaint())
@@ -1398,8 +1525,10 @@ namespace Mod
         /// <param name="hookTargetMethod">Hàm để hook vào.</param>
         /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
         /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
-        static void TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod, T2 originalProxyMethod) where T1 : Delegate where T2 : Delegate => TryInstallHook<T1, T2, T2>(hookTargetMethod, hookMethod, originalProxyMethod);
+        static void TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod, T2 originalProxyMethod) where T1 : Delegate where T2 : Delegate => TryInstallHook(hookTargetMethod.Method, hookMethod.Method, originalProxyMethod.Method);
+        //static void TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod, T2 originalProxyMethod) where T1 : Delegate where T2 : Delegate => TryInstallHook<T1, T2, T2>(hookTargetMethod, hookMethod, originalProxyMethod);
 
+#if FALSE
         /// <summary>
         /// Thử cài đặt 1 hook.
         /// </summary>
@@ -1410,7 +1539,6 @@ namespace Mod
         /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
         /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
         static void TryInstallHook<T1, T2, T3>(T1 hookTargetMethod, T2 hookMethod, T3 originalProxyMethod) where T1 : Delegate where T2 : Delegate where T3 : Delegate => TryInstallHook(hookTargetMethod.Method, hookMethod.Method, originalProxyMethod.Method);
-
         /// <summary>
         /// Cài đặt 1 hook.
         /// </summary>
@@ -1421,6 +1549,7 @@ namespace Mod
         /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
         /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
         static void InstallHook<T1, T2, T3>(T1 hookTargetMethod, T2 hookMethod, T3 originalProxyMethod) where T1 : Delegate where T2 : Delegate where T3 : Delegate => InstallHook(hookTargetMethod.Method, hookMethod.Method, originalProxyMethod.Method);
+#endif
 
         /// <summary>
         /// Thử cài đặt 1 hook.
@@ -1445,8 +1574,9 @@ namespace Mod
         /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
         static void InstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
         {
-            if (HookPool.GetHook(hookTargetMethod) != null)
-                throw new Exception("Hook already installed");
+            MethodHook methodHook = HookPool.GetHook(hookTargetMethod);
+            if (methodHook != null)
+                throw new Exception($"Hook already installed: [{methodHook.targetMethod}, {methodHook.replacementMethod}, {methodHook.proxyMethod}] >< [{hookTargetMethod}, {hookMethod}, {originalProxyMethod}]");
             Debug.Log($"Hooking {hookTargetMethod.Name} to {hookMethod.Name}...");
             MethodHook hook = new MethodHook(hookTargetMethod, hookMethod, originalProxyMethod);
             hook.Install();
@@ -1455,7 +1585,7 @@ namespace Mod
         /// <summary>
         /// Gỡ bỏ tất cả hook.
         /// </summary>
-        public static void UninstallAll()
+        internal static void UninstallAll()
         {
             HookPool.UninstallAll();
         }
@@ -1479,4 +1609,3 @@ namespace Mod
         #endregion
     }
 }
-internal class HookObj { }

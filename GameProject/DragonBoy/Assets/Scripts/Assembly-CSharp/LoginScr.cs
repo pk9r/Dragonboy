@@ -3,11 +3,6 @@ using UnityEngine;
 
 public class LoginScr : mScreen, IActionListener
 {
-    /// <summary>
-    /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
-    /// </summary>
-    internal LoginScr(HookObj _) { }
-
     public TField tfUser;
 
 	public TField tfPass;

@@ -1,10 +1,5 @@
 ﻿public class Npc : Char
 {
-    /// <summary>
-    /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
-    /// </summary>
-    internal Npc(HookObj _) { }
-
     public const sbyte BINH_KHI = 0;
 
 	public const sbyte PHONG_CU = 1;

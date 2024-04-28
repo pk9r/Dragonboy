@@ -2,11 +2,6 @@
 
 public class GamePad
 {
-    /// <summary>
-    /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
-    /// </summary>
-    internal GamePad(HookObj _) { }
-
     bool isResetKeyHold = true;
 
     internal int xC;

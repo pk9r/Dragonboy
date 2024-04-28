@@ -1,10 +1,5 @@
 ﻿public class ChatTextField : IActionListener
 {
-    /// <summary>
-    /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
-    /// </summary>
-    internal ChatTextField(HookObj _) { }
-
     private static ChatTextField instance;
 
 	public TField tfChat;

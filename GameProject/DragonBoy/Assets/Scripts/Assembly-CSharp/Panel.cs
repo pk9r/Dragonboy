@@ -5,11 +5,6 @@ using UnityEngine;
 
 public class Panel : IActionListener, IChatable
 {
-    /// <summary>
-    /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
-    /// </summary>
-    internal Panel(HookObj _) { }
-
     public class PlayerChat
 	{
 		public string name;

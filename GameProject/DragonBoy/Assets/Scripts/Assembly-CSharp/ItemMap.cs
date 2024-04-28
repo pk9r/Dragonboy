@@ -2,11 +2,7 @@
 
 public class ItemMap : IMapObject
 {
-    /// <summary>
-    /// Constructor này chỉ được gọi từ <see cref="Mod.GameEventHook.InstallAll()"/>
-    /// </summary>
-    internal ItemMap(HookObj _) { }
-    public int countAutoPick;
+	public int countAutoPick;
 
     public int x;
 
