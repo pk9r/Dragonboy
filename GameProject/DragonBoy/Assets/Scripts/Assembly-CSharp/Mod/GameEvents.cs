@@ -54,7 +54,7 @@ namespace Mod
                 Screen.autorotateToPortraitUpsideDown = false;
             }
             OnCheckZoomLevel(Screen.width, Screen.height);
-            GameEventHook.Start();
+            GameEventHook.InstallAllHooks();
             if (!Directory.Exists(Utils.dataPath))
                 Directory.CreateDirectory(Utils.dataPath);
             CustomBackground.LoadData();
