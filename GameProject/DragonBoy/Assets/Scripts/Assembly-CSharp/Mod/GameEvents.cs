@@ -822,7 +822,7 @@ namespace Mod
 
         internal static bool OnSetSkillBarPosition()
         {
-            Skill[] skills = GameCanvas.isTouch ? GameScr.onScreenSkill : GameScr.keySkill;
+            Skill[] skills = /*GameCanvas.isTouch ? GameScr.onScreenSkill : */GameScr.keySkill;
             GameScr.xS = new int[skills.Length];
             GameScr.yS = new int[skills.Length];
             if (GameCanvas.isTouchControlSmallScreen && GameScr.isUseTouch)
