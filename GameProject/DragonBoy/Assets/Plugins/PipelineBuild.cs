@@ -12,7 +12,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using ParameterAttributes = Mono.Cecil.ParameterAttributes;
 
-public class PipelineBuild : IPreprocessBuildWithReport, IPostBuildPlayerScriptDLLs, IPostprocessBuildWithReport
+public class PipelineBuild : IPostBuildPlayerScriptDLLs
 {
     public int callbackOrder => 0;
 
@@ -64,8 +64,10 @@ public class PipelineBuild : IPreprocessBuildWithReport, IPostBuildPlayerScriptD
         };
         getMethodFromHandle.Parameters.Add(new ParameterDefinition("handle", ParameterAttributes.None, runtimeMethodHandle));
 
-        MethodDefinition tryInstallHookGenericDef = gameEventHook.Methods.First(m => m.Name == "TryInstallHook" && m.GenericParameters.Count == 2);    //TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod, T2 originalProxyMethod)
-        MethodDefinition tryInstallHookDef = gameEventHook.Methods.First(m => m.Name == "TryInstallHook" && m.GenericParameters.Count == 0);    //TryInstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
+        //TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod, T2 originalProxyMethod)
+        MethodDefinition tryInstallHookGeneric = gameEventHook.Methods.First(m => m.Name == "TryInstallHook" && m.GenericParameters.Count == 2);    
+        //TryInstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
+        MethodDefinition tryInstallHook = gameEventHook.Methods.First(m => m.Name == "TryInstallHook" && m.GenericParameters.Count == 0);    
 
         List<Instruction> instructions = new List<Instruction>();
         int paramCount = 0;
@@ -74,16 +76,19 @@ public class PipelineBuild : IPreprocessBuildWithReport, IPostBuildPlayerScriptD
             Instruction instruction = installAll.Body.Instructions[i];
             if (instruction.OpCode == OpCodes.Ldftn)
             {
-                if (instruction.Operand is MethodDefinition methodDef)    //ldftn <target/hook/trampoline method>
+                //ldftn     <target/hook/trampoline method>
+                if (instruction.Operand is MethodDefinition methodDef)    
                 {
                     instructions.Add(Instruction.Create(OpCodes.Ldtoken, methodDef));
                     instructions.Add(Instruction.Create(OpCodes.Call, getMethodFromHandle));
+                    //MethodBase.GetMethodFromHandle(methodof(<some method here>).MethodHandle
                     paramCount++;
                 }
             }
-            if (instruction.OpCode == OpCodes.Ldvirtftn)
+            else if (instruction.OpCode == OpCodes.Ldvirtftn)
             {
-                if (i >= 2 && instruction.Operand is MethodDefinition methodDef)    //ldvirtftn <target/hook/trampoline method (virtual)>
+                //ldvirtftn     <target method (virtual)>
+                if (i >= 2 && instruction.Operand is MethodDefinition methodDef)    
                 {
                     Instruction instruction1 = installAll.Body.Instructions[i - 1];
                     Instruction instruction2 = installAll.Body.Instructions[i - 2];
@@ -92,13 +97,15 @@ public class PipelineBuild : IPreprocessBuildWithReport, IPostBuildPlayerScriptD
                         VariableDefinition local = installAll.Body.Variables[instruction2.GetLdlocIndex()];
                         instructions.Add(Instruction.Create(OpCodes.Ldtoken, local.VariableType.Resolve().Methods.First(m => m.Name == methodDef.Name)));
                         instructions.Add(Instruction.Create(OpCodes.Call, getMethodFromHandle));
+                        //MethodBase.GetMethodFromHandle(methodof(<some method here>).MethodHandle
                         paramCount++;
                     }
                 }
             }
-            if (instruction.OpCode == OpCodes.Ldtoken)
+            else if (instruction.OpCode == OpCodes.Ldtoken)
             {
-                if (i + 4 < installAll.Body.Instructions.Count && instruction.Operand is TypeDefinition typeToGetConstructor)    //ldtoken <Type>
+                //ldtoken       <some type>
+                if (i + 4 < installAll.Body.Instructions.Count && instruction.Operand is TypeDefinition typeToGetConstructor)    
                 {
                     Instruction instruction2 = installAll.Body.Instructions[i + 1];
                     Instruction instruction3 = installAll.Body.Instructions[i + 2];
@@ -106,54 +113,58 @@ public class PipelineBuild : IPreprocessBuildWithReport, IPostBuildPlayerScriptD
                     Instruction instruction5 = installAll.Body.Instructions[i + 4];
                     if (instruction2.OpCode == OpCodes.Call && instruction2.Operand is MethodReference getTypeFromHandle && getTypeFromHandle.Name == nameof(Type.GetTypeFromHandle))
                     {
-                        if (instruction3.IsLdcI4() && instruction4.OpCode == OpCodes.Newarr && instruction4.Operand is TypeReference typeReference && typeReference.Name == nameof(Type) && instruction5.OpCode == OpCodes.Call && instruction5.Operand is MethodReference getConstructor && getConstructor.Name == nameof(Type.GetConstructor)) //typeof(<Type>).GetConstructor(new Type[?])
+                        //typeof(<some type>).GetConstructor(new Type[<some number>])
+                        if (instruction3.IsLdcI4() && 
+                            instruction4.OpCode == OpCodes.Newarr && instruction4.Operand is TypeReference typeReference && typeReference.Name == nameof(Type) &&
+                            instruction5.OpCode == OpCodes.Call && instruction5.Operand is MethodReference getConstructor && getConstructor.Name == nameof(Type.GetConstructor))
                         {
                             instructions.Add(Instruction.Create(OpCodes.Ldtoken, typeToGetConstructor.Methods.First(m => m.IsConstructor && m.Parameters.Count == instruction3.GetLdcI4Value())));
                             instructions.Add(Instruction.Create(OpCodes.Call, getMethodFromHandle));
+                            //MethodBase.GetMethodFromHandle(methodof(<constructor (.ctor) with x parameter(s)>).MethodHandle
                             paramCount++;
                         }
-                        else if (instruction3.OpCode == OpCodes.Call && instruction3.Operand is MethodReference getConstructors && getConstructors.Name == nameof(Type.GetConstructors) && instruction4.OpCode == OpCodes.Ldc_I4_0 && instruction5.OpCode == OpCodes.Ldelem_Ref)    //typeof(<Type>).GetConstructors()[0]
+                        //typeof(<some type>).GetConstructors()[0]
+                        else if (instruction3.OpCode == OpCodes.Call && instruction3.Operand is MethodReference getConstructors && getConstructors.Name == nameof(Type.GetConstructors) && 
+                            instruction4.OpCode == OpCodes.Ldc_I4_0 && 
+                            instruction5.OpCode == OpCodes.Ldelem_Ref)    
                         {
                             instructions.Add(Instruction.Create(OpCodes.Ldtoken, typeToGetConstructor.Methods.First(m => m.IsConstructor)));
                             instructions.Add(Instruction.Create(OpCodes.Call, getMethodFromHandle));
+                            //MethodBase.GetMethodFromHandle(methodof(<constructor (.ctor)>).MethodHandle
                             paramCount++;
                         }
                     }
                 }
             }
-            if (instruction.OpCode == OpCodes.Call)
+            else if (instruction.OpCode == OpCodes.Call)
             {
-                if (instruction.Operand is MethodSpecification methodSpec && methodSpec.Resolve() == tryInstallHookGenericDef)    //call <TryInstallHook<T1, T2>>
+                //call      TryInstallHook<T1, T2>(.....)
+                if (instruction.Operand is MethodSpecification methodSpec && methodSpec.Resolve() == tryInstallHookGeneric)    
                 {
-                    instructions.Add(Instruction.Create(OpCodes.Call, tryInstallHookDef));
+                    instructions.Add(Instruction.Create(OpCodes.Call, tryInstallHook));
                     paramCount = 0; //param count always equals 3 so no need to check
                 }
-                else if (instruction.Operand is MethodDefinition methodDefinition && methodDefinition == tryInstallHookDef)    //call <TryInstallHook>
+                //call      TryInstallHook(.....)
+                else if (instruction.Operand is MethodDefinition methodDefinition && methodDefinition == tryInstallHook)   
                 {
+                    //trampoline method can be null
                     while (paramCount < 3)
                     {
                         instructions.Add(Instruction.Create(OpCodes.Ldnull));
                         paramCount++;
                     }
-                    instructions.Add(Instruction.Create(OpCodes.Call, tryInstallHookDef));
+                    instructions.Add(Instruction.Create(OpCodes.Call, tryInstallHook));
                     paramCount = 0;
                 }
             }
+            //The final result will be:
+            //GameEventHook.TryInstallHook(MethodBase.GetMethodFromHandle(methodof(<some method/constructor (target)>).MethodHandle), MethodBase.GetMethodFromHandle(methodof(<some method/constructor (hook)>).MethodHandle), MethodBase.GetMethodFromHandle(methodof(<some method/constructor (trampoline)>).MethodHandle));
         }
         instructions.Add(Instruction.Create(OpCodes.Ret));
         installAll.Body.Instructions.Clear();
         instructions.ForEach(i => installAll.Body.Instructions.Add(i));
 
         assemblyCSharp.Write(assemblyCSharpPath);
-    }
-
-    public void OnPostprocessBuild(BuildReport report)
-    {
-
-    }
-
-    public void OnPreprocessBuild(BuildReport report)
-    {
     }
 
     static string GetAssemblyLocation(string assembly)
@@ -169,12 +180,7 @@ public class PipelineBuild : IPreprocessBuildWithReport, IPostBuildPlayerScriptD
 
     static bool GetAssemblyLocationInTempStagingArea(string assemblyName, out string assemblyLocation)
     {
-        string tempStagingAreaDirectory = Path.GetDirectoryName(Application.dataPath);
-        tempStagingAreaDirectory = Path.Combine(tempStagingAreaDirectory, "Temp");
-        tempStagingAreaDirectory = Path.Combine(tempStagingAreaDirectory, "StagingArea");
-        tempStagingAreaDirectory = Path.Combine(tempStagingAreaDirectory, "Data");
-        tempStagingAreaDirectory = Path.Combine(tempStagingAreaDirectory, "Managed");
-        string asmPath = Path.Combine(tempStagingAreaDirectory, assemblyName);
+        string asmPath = Path.Combine(Path.GetDirectoryName(Application.dataPath), "Temp", "StagingArea", "Data", "Managed", assemblyName);
         if (File.Exists(asmPath))
         {
             assemblyLocation = asmPath;
