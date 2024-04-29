@@ -19,6 +19,9 @@ namespace UnityBuilderAction
 
         public static void Build()
         {
+#if UNITY_STANDALONE_WIN
+            UnityEditor.WindowsStandalone.UserBuildSettings.copyPDBFiles = true;
+#endif
             // Gather values from args
             Dictionary<string, string> options = GetValidatedOptions();
             var buildTarget = Enum.Parse<BuildTarget>(options["buildTarget"]);
