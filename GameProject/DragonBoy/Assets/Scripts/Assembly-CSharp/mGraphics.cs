@@ -5,7 +5,13 @@ using UnityEngine;
 
 public class mGraphics
 {
-	public static int HCENTER = 1;
+    public static int addYWhenOpenKeyBoard
+    {
+        get => 0;
+        set { }
+    }
+
+    public static int HCENTER = 1;
 
 	public static int VCENTER = 2;
 
@@ -71,11 +77,7 @@ public class mGraphics
 
 	public static Hashtable cachedTextures = new Hashtable();
 
-	public static int addYWhenOpenKeyBoard
-	{
-		get => 0;
-		set { }
-	}
+	//public static int addYWhenOpenKeyBoard;
 
 	private int clipTX;
 
