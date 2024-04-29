@@ -324,7 +324,7 @@ public class Main : MonoBehaviour
 
     internal void OnApplicationQuit()
 	{
-        Debug.LogWarning("APP QUIT");
+        //Debug.LogWarning("APP QUIT");
 		GameCanvas.bRun = false;
 		Session_ME.gI().close();
 		Session_ME2.gI().close();
