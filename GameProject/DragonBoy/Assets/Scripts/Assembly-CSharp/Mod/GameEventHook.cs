@@ -26,7 +26,6 @@ namespace Mod
     {
         internal static void InstallAllHooks()
         {
-            Debug.Log(typeof(GameEventHook).Assembly.Location);
 #if UNITY_EDITOR 
             CreateDynamicInstallAllMethod().CreateDelegate(typeof(Action)).DynamicInvoke();
 #else
