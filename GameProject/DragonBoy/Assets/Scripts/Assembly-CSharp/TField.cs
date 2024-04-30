@@ -1010,14 +1010,14 @@ public class TField : IActionListener
                     }
                     char c = Event.current.character;
                     if (c == '\0')
-                        break;
+                        return;
                     if (c == '\n' && !multiline && !Event.current.alt)
-                        break;
+                        return;
                     Font font = mFont.tahoma_7b_focus.myFont;
                     if (!font)
                         font = GUI.skin.font;
                     if (!font.HasCharacter(c) && c != '\n')
-                        break;
+                        return;
                     if (selectStartIndex < 0)
                     {
                         text = text.Substring(0, caretPos) + c + text.Substring(caretPos);
