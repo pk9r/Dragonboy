@@ -52,7 +52,7 @@ namespace Mod.Auto
 
         static void handleGoingBack()
         {
-            if (Utils.isMyCharHome())
+            if (Utils.IsMyCharHome())
             {
                 if (Char.myCharz().cHP <= 1)
                 {

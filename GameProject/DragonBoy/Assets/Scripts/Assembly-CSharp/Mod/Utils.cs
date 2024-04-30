@@ -33,14 +33,12 @@ namespace Mod
 
         internal static string username = "";
         internal static string password = "";
-        public static JObject server = null;
-        public static JObject sizeData = null;
+        internal static JObject server = null;
+        internal static JObject sizeData = null;
 
         internal static int channelSyncKey = -1;
 
         internal static System.Random random = new System.Random();
-
-        internal static AndroidJavaObject unityActivity;
 
         /// <summary>
         /// Kiểm tra xem game đang chạy trên Android hay không.
@@ -799,7 +797,7 @@ namespace Mod
             return false;
         }
 
-        internal static Char findCharInMap(string name)
+        internal static Char FindCharInMap(string name)
         {
             for (int i = 0; i < GameScr.vCharInMap.size(); i++)
             {
@@ -810,7 +808,7 @@ namespace Mod
             return null;
         }
 
-        internal static bool isMyCharHome() => TileMap.mapID == Char.myCharz().cgender + 21;
+        internal static bool IsMyCharHome() => TileMap.mapID == Char.myCharz().cgender + 21;
 
         internal static string FormatWithSIPrefix(double number)
         {

@@ -9,7 +9,7 @@ namespace Mod.R
 {
     internal static class Strings
     {
-        internal static readonly string DEFAULT_IP_SERVERS = "Vũ trụ 1:dragon1.teamobi.com:14445:0:0:0,Vũ trụ 2:dragon2.teamobi.com:14445:0:0:0,Vũ trụ 3:dragon3.teamobi.com:14445:0:0:0,Vũ trụ 4:dragon4.teamobi.com:14445:0:0:0,Vũ trụ 5:dragon5.teamobi.com:14445:0:0:0,Vũ trụ 6:dragon6.teamobi.com:14445:0:0:0,Vũ trụ 7:dragon7.teamobi.com:14445:0:0:0,Vũ trụ 8:dragon10.teamobi.com:14446:0:0:0,Vũ trụ 9:dragon10.teamobi.com:14447:0:0:0,Vũ trụ 10:dragon10.teamobi.com:14445:0:0:0,Vũ trụ 11:dragon11.teamobi.com:14445:0:0:0,Vũ trụ 12:dragon12.teamobi.com:14445:0:0:0,Võ đài liên vũ trụ:dragonwar.teamobi.com:20000:0:0:0,Universe 1:dragon.indonaga.com:14445:1:0:0,Naga:dragon.indonaga.com:14446:2:0:0,Super 1:dragon11.teamobi.com:14446:0:1:1,0,0";
+        internal static readonly string DEFAULT_IP_SERVERS = "Vũ trụ 1:dragon1.teamobi.com:14445:0:0:0,Vũ trụ 2:dragon2.teamobi.com:14445:0:0:0,Vũ trụ 3:dragon3.teamobi.com:14445:0:0:0,Vũ trụ 4:dragon4.teamobi.com:14445:0:0:0,Vũ trụ 5:dragon5.teamobi.com:14445:0:0:0,Vũ trụ 6:dragon6.teamobi.com:14445:0:0:0,Vũ trụ 7:dragon7.teamobi.com:14445:0:0:0,Vũ trụ 8:dragon10.teamobi.com:14446:0:0:0,Vũ trụ 9:dragon10.teamobi.com:14447:0:0:0,Vũ trụ 10:dragon10.teamobi.com:14445:0:0:0,Vũ trụ 11:dragon11.teamobi.com:14445:0:0:0,Vũ trụ 12:dragon12.teamobi.com:14445:0:0:0,Võ đài liên vũ trụ:dragonwar.teamobi.com:20000:0:0:0,Universe 1:dragon.indonaga.com:14445:1:0:0,Naga:dragon.indonaga.com:14446:2:0:0,Super 1:dragon11.teamobi.com:14446:0:1:1,Super 2:dragon11.teamobi.com:17001:0:1:1,0,0";
         #region Fields
         internal static string communityMod = "";
         internal static string gameVersion = "";
@@ -195,28 +195,34 @@ namespace Mod.R
         internal static string scaleModeStretchToFill = "";
         internal static string scaleModeScaleAndCrop = "";
         internal static string scaleModeScaleToFit = "";
-        internal static string teleportMenuOpenSavedCharList;
-        internal static string add;
-        internal static string teleportMenuCharacterAdded;
-        internal static string teleportMenuCantRemoveTargetChar;
-        internal static string teleportMenuCharacterRemoved;
-        internal static string teleportMenuStopTeleporting;
-        internal static string teleportMenuSelectTarget;
-        internal static string teleportMenuStopTeleportToTarget;
-        internal static string teleportMenuAddCharacterByID;
-        internal static string teleportMenuAddEveryoneInZone;
-        internal static string teleportMenuEveryoneAdded;
-        internal static string teleportMenuRemoveCharacter;
-        internal static string deleteAll;
-        internal static string teleportMenuCleared;
-        internal static string teleportMenuTeleportingToCharacter;
-        internal static string more;
-        internal static string teleportMenuNoRemovableChar;
-        internal static string teleportMenuAutoTeleportTo;
-        internal static string teleportMenuCharacterList;
-        internal static string teleportMenuInputCharIDTextFieldName;
-        internal static string teleportMenuInputCharIDTextFieldHint;
-        internal static string teleportMenuAddedCharacterWithID;
+        internal static string teleportMenuOpenSavedCharList = "";
+        internal static string add = "";
+        internal static string teleportMenuCharacterAdded = "";
+        internal static string teleportMenuCantRemoveTargetChar = "";
+        internal static string teleportMenuCharacterRemoved = "";
+        internal static string teleportMenuStopTeleporting = "";
+        internal static string teleportMenuSelectTarget = "";
+        internal static string teleportMenuStopTeleportToTarget = "";
+        internal static string teleportMenuAddCharacterByID = "";
+        internal static string teleportMenuAddEveryoneInZone = "";
+        internal static string teleportMenuEveryoneAdded = "";
+        internal static string teleportMenuRemoveCharacter = "";
+        internal static string deleteAll = "";
+        internal static string teleportMenuCleared = "";
+        internal static string teleportMenuTeleportingToCharacter = "";
+        internal static string more = "";
+        internal static string teleportMenuNoRemovableChar = "";
+        internal static string teleportMenuAutoTeleportTo = "";
+        internal static string teleportMenuCharacterList = "";
+        internal static string teleportMenuInputCharIDTextFieldName = "";
+        internal static string teleportMenuInputCharIDTextFieldHint = "";
+        internal static string teleportMenuAddedCharacterWithID = "";
+        internal static string openVietnameseInputMenuTitle = "";
+        internal static string openVietnameseInputMenuDescription = "";
+        internal static string vnInputInputMethod = "";
+        internal static string vnInputDiacritics = "";
+        internal static string vnInputConsumeRepeatKey = "";
+        internal static string vnInputEnable = "";
         #endregion
 
         internal static void LoadLanguage(sbyte newLanguage)
@@ -376,6 +382,10 @@ namespace Mod.R
             teleportMenuInputCharIDTextFieldName = "Nhập ID nhân vật";
             teleportMenuInputCharIDTextFieldHint = "ID";
             teleportMenuAddedCharacterWithID = "Đã thêm nhân vật với ID {0}";
+            vnInputEnable = "Chế độ gõ tiếng Việt";
+            vnInputDiacritics = "Kiểu đặt dấu";
+            vnInputInputMethod = "Kiểu gõ";
+            vnInputConsumeRepeatKey = "Bỏ qua phím đặt dấu lặp";
             //---------------------------------------------------
             //mod menu
             modMenuPanelTabName = new string[][]
@@ -477,11 +487,13 @@ namespace Mod.R
             openTeleportMenuDescription = "Mở menu dịch chuyển (lệnh \"tele\" hoặc nút \'z\')";
             openCustomBackgroundMenuTitle = "Menu Custom Background";
             openCustomBackgroundMenuDescription = "Mở menu hình nền tùy chỉnh";
-            openSetsMenuTitle = "Menu Set đồ";
-            openSetsMenuDescription = "Mở menu set đồ (lệnh \"set\" hoặc nút \'`\')";
             openIntroMenuTitle = "Menu Intro";
             openIntroMenuDescription = "Mở menu intro video";
             introSelectFile = "Chọn tệp video";
+            openSetsMenuTitle = "Menu Set đồ";
+            openSetsMenuDescription = "Mở menu set đồ (lệnh \"set\" hoặc nút \'`\')";
+            openVietnameseInputMenuTitle = "Menu gõ tiếng Việt";
+            openVietnameseInputMenuDescription = "Mở menu gõ tiếng Việt, sử dụng khi có vấn đề với trình gõ tiếng Việt bên ngoài (UniKey, VietKey, ...)";
         }
 
         static void LoadLanguageEN()
@@ -727,11 +739,17 @@ namespace Mod.R
             openTeleportMenuDescription = "Open the Teleport menu (\"tele\" chat command or \'z\' key)";
             openCustomBackgroundMenuTitle = "Custom Background menu";
             openCustomBackgroundMenuDescription = "Open the Custom Background menu";
-            openSetsMenuTitle = "Sets menu";
-            openSetsMenuDescription = "Open the Sets menu (\"set\" command or \'`\' key)";
             openIntroMenuTitle = "Intro menu";
             openIntroMenuDescription = "Open the intro video menu";
             introSelectFile = "Select video file";
+            openSetsMenuTitle = "Sets menu";
+            openSetsMenuDescription = "Open the Sets menu (\"set\" command or \'`\' key)";
+            openVietnameseInputMenuTitle = "Vietnamese input menu";
+            openVietnameseInputMenuDescription = "Open the Vietnamese input menu, use when having issues with external Vietnamese input programs (UniKey, VietKey, etc.)";
+            vnInputEnable = "Vietnamese input mode";
+            vnInputDiacritics = "Diacritics type";
+            vnInputInputMethod = "Input method";
+            vnInputConsumeRepeatKey = "Consume repeat key";
         }
     }
 }

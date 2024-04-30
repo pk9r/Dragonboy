@@ -60,7 +60,7 @@ namespace Mod.Auto
         internal static void HarvestMagicTree()
         {
             var magicTree = GameScr.gI().magicTree;
-            if (!Utils.isMyCharHome() || magicTree.isUpdate || magicTree.isPeasEffect || magicTree.currPeas == 0)
+            if (!Utils.IsMyCharHome() || magicTree.isUpdate || magicTree.isPeasEffect || magicTree.currPeas == 0)
                 return;
             Service.gI().openMenu(4);
             Service.gI().confirmMenu(4, 0);

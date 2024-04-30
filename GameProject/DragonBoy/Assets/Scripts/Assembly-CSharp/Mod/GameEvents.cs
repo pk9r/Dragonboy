@@ -71,6 +71,7 @@ namespace Mod
             //UIReportersManager.AddReporter(Boss.Paint);
             //UIReportersManager.AddReporter(ListCharsInMap.Paint);
             //ShareInfo.gI.toggle(true);
+            VietnameseInput.LoadData();
             OnSetResolution();
         }
 
@@ -133,6 +134,7 @@ namespace Mod
             //CustomLogo.SaveData();
             //CustomCursor.SaveData();
             SetDo.SaveData();
+            VietnameseInput.SaveData();
             //UIReportersManager.ClearReporters();
         }
 

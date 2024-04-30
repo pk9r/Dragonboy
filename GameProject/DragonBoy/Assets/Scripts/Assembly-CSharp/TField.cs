@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Mod;
 using UnityEngine;
@@ -14,12 +16,24 @@ public class TField : IActionListener
         set
         {
             if (!value)
+            {
                 selectStartIndex = -1;
+                undoQueue.Clear();
+                undoIndex = -1;
+            }
             else
                 currentTField = this;
             _isFocus = value;
         }
     }
+
+    List<string> undoQueue = new List<string>();
+
+    int undoIndex = -1;
+
+    bool isVisible;
+
+    long lastTimeCheckVisible;
 
     //public bool isFocus;
 
@@ -446,77 +460,76 @@ public class TField : IActionListener
 
     public bool keyPressed(int keyCode)
     {
-        if (/*textEditor != null && */Utils.IsPC())
-            return false;
-        if (Main.isPC && keyCode == -8)
-        {
-            clearKeyWhenPutText(-8);
-            return true;
-        }
-        if (keyCode == 8 || keyCode == -8 || keyCode == 204)
-        {
-            clear();
-            return true;
-        }
-        if (isQwerty && keyCode >= 32)
-        {
-            keyPressedAscii(keyCode);
-            return false;
-        }
-        if (keyCode == changeDau && inputType == INPUT_TYPE_ANY)
-        {
-            setDau();
-            return false;
-        }
-        if (keyCode == 42)
-            keyCode = 58;
-        if (keyCode == 35)
-            keyCode = 59;
-        if (keyCode >= 48 && keyCode <= 59)
-        {
-            if (inputType == INPUT_TYPE_ANY || inputType == INPUT_TYPE_PASSWORD || inputType == INPUT_ALPHA_NUMBER_ONLY)
-                keyPressedAny(keyCode);
-            else if (inputType == INPUT_TYPE_NUMERIC)
-            {
-                keyPressedAscii(keyCode);
-                keyInActiveState = 1;
-            }
-        }
-        else
-        {
-            indexOfActiveChar = 0;
-            lastKey = -1984;
-            if (keyCode == 14 && !lockArrow)
-            {
-                if (caretPos > 0)
-                {
-                    caretPos--;
-                    setOffset(0);
-                    showCaretCounter = MAX_SHOW_CARET_COUNER;
-                    return false;
-                }
-            }
-            else if (keyCode == 15 && !lockArrow)
-            {
-                if (caretPos < text.Length)
-                {
-                    caretPos++;
-                    setOffset(0);
-                    showCaretCounter = MAX_SHOW_CARET_COUNER;
-                    return false;
-                }
-            }
-            else
-            {
-                if (keyCode == 19)
-                {
-                    clear();
-                    return false;
-                }
-                lastKey = keyCode;
-            }
-        }
-        return true;
+        return false;
+        //if (Main.isPC && keyCode == -8)
+        //{
+        //    clearKeyWhenPutText(-8);
+        //    return true;
+        //}
+        //if (keyCode == 8 || keyCode == -8 || keyCode == 204)
+        //{
+        //    clear();
+        //    return true;
+        //}
+        //if (isQwerty && keyCode >= 32)
+        //{
+        //    keyPressedAscii(keyCode);
+        //    return false;
+        //}
+        //if (keyCode == changeDau && inputType == INPUT_TYPE_ANY)
+        //{
+        //    setDau();
+        //    return false;
+        //}
+        //if (keyCode == 42)
+        //    keyCode = 58;
+        //if (keyCode == 35)
+        //    keyCode = 59;
+        //if (keyCode >= 48 && keyCode <= 59)
+        //{
+        //    if (inputType == INPUT_TYPE_ANY || inputType == INPUT_TYPE_PASSWORD || inputType == INPUT_ALPHA_NUMBER_ONLY)
+        //        keyPressedAny(keyCode);
+        //    else if (inputType == INPUT_TYPE_NUMERIC)
+        //    {
+        //        keyPressedAscii(keyCode);
+        //        keyInActiveState = 1;
+        //    }
+        //}
+        //else
+        //{
+        //    indexOfActiveChar = 0;
+        //    lastKey = -1984;
+        //    if (keyCode == 14 && !lockArrow)
+        //    {
+        //        if (caretPos > 0)
+        //        {
+        //            caretPos--;
+        //            setOffset(0);
+        //            showCaretCounter = MAX_SHOW_CARET_COUNER;
+        //            return false;
+        //        }
+        //    }
+        //    else if (keyCode == 15 && !lockArrow)
+        //    {
+        //        if (caretPos < text.Length)
+        //        {
+        //            caretPos++;
+        //            setOffset(0);
+        //            showCaretCounter = MAX_SHOW_CARET_COUNER;
+        //            return false;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (keyCode == 19)
+        //        {
+        //            clear();
+        //            return false;
+        //        }
+        //        lastKey = keyCode;
+        //    }
+        //}
+        //return true;
     }
 
     public void setOffset(int index)
@@ -597,6 +610,8 @@ public class TField : IActionListener
 
     public void paint(mGraphics g)
     {
+        lastTimeCheckVisible = mSystem.currentTimeMillis();
+        isVisible = true;
         g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
         bool flag = isFocused();
         if (inputType == INPUT_TYPE_PASSWORD)
@@ -815,12 +830,19 @@ public class TField : IActionListener
 
     internal void HandleInputText(bool multiline)
     {
-        if (!Utils.IsPC())
+        if (mSystem.currentTimeMillis() - lastTimeCheckVisible > 300)
+            isVisible = false;
+        if (!isVisible)
             return;
         bool changed = false;
         if (Event.current.type == EventType.KeyDown)
         {
-            Debug.LogError(Event.current);
+            if (undoQueue.Count == 0 || undoQueue.ElementAt(undoIndex) != text)
+            {
+                undoQueue.RemoveRange(undoIndex + 1, undoQueue.Count - undoIndex - 1);
+                undoQueue.Add(text);
+                undoIndex++;
+            }
             switch (Event.current.keyCode)
             {
                 case KeyCode.Tab:
@@ -833,7 +855,15 @@ public class TField : IActionListener
                     }
                     else
                         selectStartIndex = -1;
-                    if (caretPos > 0)
+                    if (Event.current.control)
+                    {
+                        if (caretPos > 0 && text[caretPos - 1] == ' ')
+                            caretPos--;
+                        else
+                            while (caretPos > 0 && text[caretPos - 1] != ' ')
+                                caretPos--;
+                    }
+                    else if (caretPos > 0)
                         caretPos--;
                     break;
                 case KeyCode.RightArrow:
@@ -844,7 +874,15 @@ public class TField : IActionListener
                     }
                     else
                         selectStartIndex = -1;
-                    if (caretPos < text.Length)
+                    if (Event.current.control)
+                    {
+                        if (caretPos < text.Length && text[caretPos] == ' ')
+                            caretPos++;
+                        else
+                            while (caretPos < text.Length && text[caretPos] != ' ')
+                                caretPos++;
+                    }
+                    else if (caretPos < text.Length)
                         caretPos++;
                     break;
                 case KeyCode.Backspace:
@@ -899,7 +937,7 @@ public class TField : IActionListener
                             selectStartIndex = 0;
                             break;
                         }
-                        if ((Event.current.keyCode == KeyCode.C || Event.current.keyCode == KeyCode.Insert) && inputType != INPUT_TYPE_PASSWORD)
+                        else if ((Event.current.keyCode == KeyCode.C || Event.current.keyCode == KeyCode.Insert) && inputType != INPUT_TYPE_PASSWORD)
                         {
                             if (selectStartIndex < 0)
                                 GUIUtility.systemCopyBuffer = text;
@@ -907,7 +945,7 @@ public class TField : IActionListener
                                 GUIUtility.systemCopyBuffer = text.Substring(Math.Min(caretPos, selectStartIndex), Math.Abs(caretPos - selectStartIndex));
                             break;
                         }
-                        if (Event.current.keyCode == KeyCode.V)
+                        else if (Event.current.keyCode == KeyCode.V)
                         {
                             if (selectStartIndex < 0)
                             {
@@ -923,6 +961,34 @@ public class TField : IActionListener
                             selectStartIndex = -1;
                             changed = true;
                             break;
+                        }
+                        else if (Event.current.keyCode == KeyCode.Z)
+                        {
+                            if (undoQueue.Count > 0)
+                            {
+                                int index = undoIndex - 1;
+                                if (index < undoQueue.Count && index >= 0)
+                                {
+                                    text = undoQueue.ElementAt(index);
+                                    undoIndex = index;
+                                }
+                                caretPos = text.Length;
+                                changed = true;
+                            }
+                        }
+                        else if (Event.current.keyCode == KeyCode.Y)
+                        {
+                            if (undoQueue.Count > 0)
+                            {
+                                int index = undoIndex + 1;
+                                if (index < undoQueue.Count && index >= 0)
+                                {
+                                    text = undoQueue.ElementAt(index);
+                                    undoIndex = index;
+                                }
+                                caretPos = text.Length;
+                                changed = true;
+                            }
                         }
                     }
                     if (Event.current.shift && Event.current.keyCode == KeyCode.Insert)
@@ -961,9 +1027,11 @@ public class TField : IActionListener
                     {
                         int newCaretPos = Math.Min(caretPos, selectStartIndex);
                         text = text.Substring(0, Math.Min(caretPos, selectStartIndex)) + c + text.Substring(Math.Max(caretPos, selectStartIndex));
-                        caretPos = newCaretPos;
+                        caretPos = ++newCaretPos;
                     }
                     selectStartIndex = -1;
+                    if (VietnameseInput.ToVietnamese(text, out string result, ref caretPos, inputType))
+                        text = result;
                     changed = true;
                     break;
             }

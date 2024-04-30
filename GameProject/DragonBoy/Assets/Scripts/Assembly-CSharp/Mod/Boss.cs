@@ -213,7 +213,7 @@ namespace Mod
             {
                 colorName = "orange";
                 colorMap = "red";
-                if (Utils.findCharInMap(name) != null)
+                if (Utils.FindCharInMap(name) != null)
                     colorName = "red";
             }
             string result = $"<color={colorName}>{name}</color> - ";

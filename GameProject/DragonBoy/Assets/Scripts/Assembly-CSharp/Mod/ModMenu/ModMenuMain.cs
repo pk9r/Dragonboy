@@ -465,6 +465,13 @@ namespace Mod.ModMenu
                     GetIsDisabled = () => true,
                     GetDisabledReason = () => "This feature is currently in development state"
                 }),
+                new ModMenuItemFunction(new ModMenuItemFunctionConfig()
+                {
+                    ID = "OpenVietnameseInputMenu",
+                    Title = Strings.openVietnameseInputMenuTitle,
+                    Description = Strings.openVietnameseInputMenuDescription,
+                    Action = VietnameseInput.ShowMenu,
+                }),
                 //new ModMenuItemFunction("Menu AutoItem", "Mở menu AutoItem (lệnh \"item\" hoặc bấm nút I)", AutoItem.ShowMenu),
                 //new ModMenuItemFunction("Menu Custom Logo", "Mở menu logo tùy chỉnh", CustomLogo.ShowMenu),
                 //new ModMenuItemFunction("Menu Custom Cursor", "Mở menu con trỏ tùy chỉnh", CustomCursor.ShowMenu),
