@@ -11,6 +11,8 @@ namespace Mod
         public static bool isFromMyClan(Char @char)
         {
             @char = @char.isPet() ? GameScr.findCharInMap(-@char.charID) : @char;
+            
+            if (@char == null) return false;
 
             return @char.clanID == Char.myCharz().clan.ID;
         }

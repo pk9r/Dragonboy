@@ -4777,6 +4777,12 @@ public class GameScr : mScreen, IChatable
 			if (@char.charID == charId)
 				return @char;
 		}
+		
+		var myChar = Char.myCharz();
+		if (myChar.charID == charId) {
+			return myChar;
+		}
+
 		return null;
 	}
 
