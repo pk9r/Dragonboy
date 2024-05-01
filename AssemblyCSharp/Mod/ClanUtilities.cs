@@ -12,9 +12,16 @@ namespace Mod
         {
             @char = @char.isPet() ? GameScr.findCharInMap(-@char.charID) : @char;
 
-            if (@char == null || @char.clan == null) return false;
-            
-            return @char.clan.ID == Char.myCharz().clan.ID;
+            if (@char == null) return false;
+
+            var myClainID = Char.myCharz().clan.ID;
+
+            if (@char.clanID == myClainID) {
+                return true;
+            }
+
+            // i don't know why but `clainID` can be different with `.clain.ID`
+            return @char.clan != null && @char.clan.ID == myClainID;
         }
 
         public static bool CanAskForPeans()
