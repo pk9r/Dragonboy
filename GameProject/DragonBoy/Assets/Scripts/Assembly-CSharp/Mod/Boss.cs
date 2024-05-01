@@ -450,7 +450,7 @@ namespace Mod
                                         if (Char.myCharz().charFocus != ch)
                                             Char.myCharz().charFocus = ch;
                                         else
-                                            Utils.teleportMyChar(ch);
+                                            Utils.TeleportMyChar(ch);
                                         break;
                                     }
                                 }

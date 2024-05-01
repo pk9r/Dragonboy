@@ -20,18 +20,7 @@ namespace Mod.ModMenu
             public void perform(int idAction, object p)
             {
                 if (idAction == 1)
-                {
-                    if (currentPanel == null)
-                        currentPanel = new Panel();
-                    CustomPanelMenu.Show(new CustomPanelMenuConfig()
-                    {
-                        SetTabAction = SetTabModMenu,
-                        DoFireItemAction = DoFireModMenu,
-                        PaintAction = PaintModMenu
-                    }, currentPanel);
-                    currentPanel.cmdClose.x = GameCanvas.w - currentPanel.cmdClose.img.getWidth() - 1;
-                    currentPanel.cmdClose.y = 1;
-                }
+                    ShowPanel();
             }
         }
 
@@ -476,6 +465,20 @@ namespace Mod.ModMenu
                 //new ModMenuItemFunction("Menu Custom Logo", "Mở menu logo tùy chỉnh", CustomLogo.ShowMenu),
                 //new ModMenuItemFunction("Menu Custom Cursor", "Mở menu con trỏ tùy chỉnh", CustomCursor.ShowMenu),
             };
+        }
+
+        internal static void ShowPanel()
+        {
+            if (currentPanel == null)
+                currentPanel = new Panel();
+            CustomPanelMenu.Show(new CustomPanelMenuConfig()
+            {
+                SetTabAction = SetTabModMenu,
+                DoFireItemAction = DoFireModMenu,
+                PaintAction = PaintModMenu
+            }, currentPanel);
+            currentPanel.cmdClose.x = GameCanvas.w - currentPanel.cmdClose.img.getWidth() - 1;
+            currentPanel.cmdClose.y = 1;
         }
 
         internal static void Paint(mGraphics g)

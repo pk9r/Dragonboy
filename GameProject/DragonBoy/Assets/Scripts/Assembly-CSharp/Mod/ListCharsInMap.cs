@@ -330,7 +330,7 @@ namespace Mod
                             if (Char.myCharz().charFocus != listChars[i])
                                 Char.myCharz().charFocus = listChars[i];
                             else 
-                                Utils.teleportMyChar(listChars[i]);
+                                Utils.TeleportMyChar(listChars[i]);
                         }
                         Char.myCharz().currentMovePoint = null;
                         GameCanvas.clearAllPointerEvent();

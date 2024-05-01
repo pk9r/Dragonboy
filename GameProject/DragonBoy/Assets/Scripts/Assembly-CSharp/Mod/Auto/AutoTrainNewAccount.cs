@@ -165,11 +165,11 @@ namespace Mod.Auto
                 else
                 {
                     if (Char.myCharz().cgender == 0 && (Math.Abs(Char.myCharz().cx - 85) > 10 || Math.Abs(Char.myCharz().cy - 336) > 10))
-						Utils.teleportMyChar(85, 336);
+						Utils.TeleportMyChar(85, 336);
                     if (Char.myCharz().cgender == 2 && (Math.Abs(Char.myCharz().cx - 94) > 10 || Math.Abs(Char.myCharz().cy - 336) > 10))
-						Utils.teleportMyChar(94, 336);
+						Utils.TeleportMyChar(94, 336);
                     if (Char.myCharz().cgender == 1 && (Math.Abs(Char.myCharz().cx - 638) > 10 || Math.Abs(Char.myCharz().cy - 336) > 10))
-						Utils.teleportMyChar(638, 336);
+						Utils.TeleportMyChar(638, 336);
                 }
                 if (mSystem.currentTimeMillis() - lastTimeXuLyDo > 750)
                 {
@@ -200,15 +200,15 @@ namespace Mod.Auto
             if (TileMap.mapID == 24)
             {
                 if (Char.myCharz().cx != 389 || Char.myCharz().cy != 336)
-					Utils.teleportMyChar(389, 336);
+					Utils.TeleportMyChar(389, 336);
             }
             else if (TileMap.mapID == 25)
             {
                 if (Char.myCharz().cx != 508 || Char.myCharz().cy != 336)
-					Utils.teleportMyChar(508, 336);
+					Utils.TeleportMyChar(508, 336);
             }
             else if (TileMap.mapID == 26 && (Char.myCharz().cx != 511 || Char.myCharz().cy != 336))
-					Utils.teleportMyChar(511, 336);
+					Utils.TeleportMyChar(511, 336);
             if (!GameCanvas.panel.isShow)
 					Service.gI().openMenu(16);
             else
@@ -284,7 +284,7 @@ namespace Mod.Auto
                         if (distance > 60 && distance < 100)
 						    Char.myCharz().currentMovePoint = new MovePoint(itemMap.x, itemMap.y);
                         if (distance >= 100)
-						    Utils.teleportMyChar(itemMap.x, itemMap.y);
+						    Utils.TeleportMyChar(itemMap.x, itemMap.y);
                         Service.gI().pickItem(itemMap.itemMapID);
                         lastTimePickedItem = mSystem.currentTimeMillis();
                         continue;
@@ -320,14 +320,14 @@ namespace Mod.Auto
             {
                 lastTimeCheckTN = mSystem.currentTimeMillis();
                 if (Char.myCharz().cTiemNang == lastTN)
-                    Utils.teleportMyChar(Char.myCharz());
+                    Utils.TeleportMyChar(Char.myCharz());
                 lastTN = Char.myCharz().cTiemNang;
             }
             if (mob.getTemplate().type == 4)    //quái bay
             {
                 if (Math.Abs(Char.myCharz().cx - mob.x) > 100)    
                 {
-                    Utils.teleportMyChar(mob.x);
+                    Utils.TeleportMyChar(mob.x);
                     return;
                 }
                 else
@@ -410,7 +410,7 @@ namespace Mod.Auto
             if (TileMap.mapID >= 39 && TileMap.mapID <= 41)
             {
                 Waypoint waypoint = (Waypoint)TileMap.vGo.elementAt(0);
-                Utils.teleportMyChar(waypoint.maxX - 20, waypoint.maxY);
+                Utils.TeleportMyChar(waypoint.maxX - 20, waypoint.maxY);
             }
             else if (TileMap.mapID >= 21 && TileMap.mapID <= 23)
             {
@@ -430,21 +430,21 @@ namespace Mod.Auto
                         if (Math.Abs(Char.myCharz().cx - 85) <= 10 && Math.Abs(Char.myCharz().cy - 336) <= 10)
 						    Service.gI().getItem(0, 0);
                         else
-                            Utils.teleportMyChar(85, 336);
+                            Utils.TeleportMyChar(85, 336);
                     }
                     if (Char.myCharz().cgender == 2)
                     {
                         if (Math.Abs(Char.myCharz().cx - 94) <= 10 && Math.Abs(Char.myCharz().cy - 336) <= 10)
 						    Service.gI().getItem(0, 0);
                         else
-                            Utils.teleportMyChar(94, 336);
+                            Utils.TeleportMyChar(94, 336);
                     }
                     if (Char.myCharz().cgender == 1)
                     {
                         if (Math.Abs(Char.myCharz().cx - 638) <= 10 && Math.Abs(Char.myCharz().cy - 336) <= 10)
 						    Service.gI().getItem(0, 0);
                         else
-                            Utils.teleportMyChar(638, 336);
+                            Utils.TeleportMyChar(638, 336);
                     }
                 }
                 else if (Char.myCharz().taskMaint.index == 4)
@@ -553,11 +553,11 @@ namespace Mod.Auto
                 if (TileMap.mapID == Char.myCharz().cgender + 42)
                 {
                     if (Char.myCharz().cgender == 0)
-						Utils.teleportMyChar(149, 288);
+						Utils.TeleportMyChar(149, 288);
                     if (Char.myCharz().cgender == 1)
-						Utils.teleportMyChar(126, 264);
+						Utils.TeleportMyChar(126, 264);
                     if (Char.myCharz().cgender == 2)
-						Utils.teleportMyChar(156, 288);
+						Utils.TeleportMyChar(156, 288);
                     AutoPick();
                 }
                 else if (!XmapController.gI.IsActing)
@@ -678,7 +678,7 @@ namespace Mod.Auto
                     else
                     {
                         Npc npc = (Npc)GameScr.vNpc.elementAt(0);
-                        Utils.teleportMyChar(npc.cx);
+                        Utils.TeleportMyChar(npc.cx);
                         if (Res.distance(Char.myCharz().cx, Char.myCharz().cy, npc.cx, npc.cy)
 						<= 50)
                         {
@@ -829,7 +829,7 @@ namespace Mod.Auto
                 if (TileMap.mapID != 47 && !XmapController.gI.IsActing)
 					XmapController.start(47);
                 else if (Math.Abs(Char.myCharz().cx - 600) >= 20)
-					Utils.teleportMyChar(600, 336);
+					Utils.TeleportMyChar(600, 336);
                 else if (Char.myCharz().currentMovePoint != null && Char.myCharz().currentMovePoint.xEnd != 600 && Char.myCharz().currentMovePoint.yEnd != 10)
 					Char.myCharz().currentMovePoint = new MovePoint(600, 10);
             }
@@ -840,7 +840,7 @@ namespace Mod.Auto
                 else if (TileMap.mapID == 47)
                 {
                     if (Math.Abs(Char.myCharz().cx - 600) >= 20)
-						Utils.teleportMyChar(600, 336);
+						Utils.TeleportMyChar(600, 336);
                     else if (Char.myCharz().currentMovePoint != null && Char.myCharz().currentMovePoint.xEnd != 600 && Char.myCharz().currentMovePoint.yEnd != 10)
 						Char.myCharz().currentMovePoint = new MovePoint(600, 10);
                 }
@@ -863,7 +863,7 @@ namespace Mod.Auto
                     if (GameScr.findNPCInMap(18) == null || GameScr.findNPCInMap(18) != null && GameScr.findNPCInMap(18).isHide)
 						PKThanMeo();
                     if (Char.myCharz().cx != 421 || Char.myCharz().cy != 408)
-						Utils.teleportMyChar(421, 408);
+						Utils.TeleportMyChar(421, 408);
                     if (!GameCanvas.menu.showMenu)
 						Service.gI().openMenu(18);
                     if (GameCanvas.menu.menuItems.size() == 4 && ((Command)GameCanvas.menu.menuItems.elementAt(3)).caption.Replace('\n', ' ').ToLower() == LocalizedString.challengeKarin)
@@ -876,7 +876,7 @@ namespace Mod.Auto
                     if (TileMap.mapID == 47)
                     {
                         if (Math.Abs(Char.myCharz().cx - 600) >= 20)
-						Utils.teleportMyChar(600, 336);
+						Utils.TeleportMyChar(600, 336);
                         else if (Char.myCharz().currentMovePoint != null && Char.myCharz().currentMovePoint.xEnd != 600 && Char.myCharz().currentMovePoint.yEnd != 10)
 						Char.myCharz().currentMovePoint = new MovePoint(600, 10);
                     }
@@ -889,7 +889,7 @@ namespace Mod.Auto
                 if (TileMap.mapID == 47)
                 {
                     if (isTeleT77 && (Char.myCharz().cx != 371 || Char.myCharz().cy != 336))
-						Utils.teleportMyChar(371, 336);
+						Utils.TeleportMyChar(371, 336);
                     else PKT77();
                 }
                 else if (!isTeleT77)

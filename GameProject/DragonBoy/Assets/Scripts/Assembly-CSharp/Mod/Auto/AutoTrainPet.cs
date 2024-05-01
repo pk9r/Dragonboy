@@ -124,13 +124,13 @@ namespace Mod.Auto
             else if (isAssignedLastXPet)
             {
                 isAssignedLastXPet = false;
-                Utils.teleportMyChar(lastXPet);
+                Utils.TeleportMyChar(lastXPet);
             }
             if (mSystem.currentTimeMillis() - lastTimePetFollow > 600000 || GameScr.findCharInMap(-Char.myCharz().charID) != null && Utils.getDistance(Char.myCharz(), GameScr.findCharInMap(-Char.myCharz().charID)) > 400)
             {
                 lastTimePetFollow = mSystem.currentTimeMillis();
                 Service.gI().petStatus(0);
-                Utils.teleportMyChar(Char.myCharz().cx);
+                Utils.TeleportMyChar(Char.myCharz().cx);
                 return;
             }
             if (Mode == AutoTrainPetMode.Normal)
@@ -189,7 +189,7 @@ namespace Mod.Auto
                                 isAssignedLastXPet = true;
                                 lastXPet = Char.myCharz().cx;
                             }
-                            Utils.teleportMyChar(50);
+                            Utils.TeleportMyChar(50);
                         }
                     }
                     else if (isMyPetDied) 
@@ -207,7 +207,7 @@ namespace Mod.Auto
                                 isAssignedLastXPet = true;
                                 lastXPet = Char.myCharz().cx;
                             }
-                            Utils.teleportMyChar(50);
+                            Utils.TeleportMyChar(50);
                         }
                     }
                     else if (isMyPetDied) 
@@ -379,7 +379,7 @@ namespace Mod.Auto
                             lastX = Char.myCharz().cx;
                         }
                         if (distance > 60)
-                            Utils.teleportMyChar(itemMap.x);
+                            Utils.TeleportMyChar(itemMap.x);
                         else
                             Char.myCharz().currentMovePoint = new MovePoint(itemMap.x, itemMap.y);
                         Service.gI().pickItem(itemMap.itemMapID);
@@ -393,10 +393,10 @@ namespace Mod.Auto
                     if (lastX <= 50 && lastXPet > 50) 
                         lastX = lastXPet;
                     isPicking = false;
-                    if (Res.distance(Char.myCharz().cx, Char.myCharz().cy, lastX, Utils.getYGround(lastX)) > 60)
-                        Utils.teleportMyChar(lastX);
+                    if (Res.distance(Char.myCharz().cx, Char.myCharz().cy, lastX, Utils.GetYGround(lastX)) > 60)
+                        Utils.TeleportMyChar(lastX);
                     else
-                        Char.myCharz().currentMovePoint = new MovePoint(lastX, Utils.getYGround(lastX));
+                        Char.myCharz().currentMovePoint = new MovePoint(lastX, Utils.GetYGround(lastX));
                     isAssignedLastX = false;
                 }
             }

@@ -266,7 +266,7 @@ namespace Mod.CharEffect
                 {
                     for (int i = 0; i < clanImage.idImage.Length; i++)
                     {
-                        if (clanImage.idImage[i] == 2322 && Utils.isMeInNRDMap())
+                        if (clanImage.idImage[i] == 2322 && Utils.IsMeInNRDMap())
                         {
                             ch.charEffectTime.hasBlackStarDragonBall = true;
                             isResetNRD = false;

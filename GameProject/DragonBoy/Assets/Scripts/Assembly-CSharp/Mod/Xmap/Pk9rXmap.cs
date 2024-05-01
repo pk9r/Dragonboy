@@ -65,7 +65,7 @@ namespace Mod.Xmap
                     GameScr.info1.addInfo(Strings.xmapCanceled, 0);
                 }
                 else if (text == LocalizedString.errorOccurred)
-                    Utils.teleportMyChar(XmapUtils.getX(2), XmapUtils.getY(2));
+                    Utils.TeleportMyChar(XmapUtils.getX(2), XmapUtils.getY(2));
             }
         }
 
@@ -116,7 +116,7 @@ namespace Mod.Xmap
         internal static void nextMapAutoWaypoint(MapNext mapNext)
         {
             var waypoint = XmapUtils.findWaypoint(mapNext.to);
-            Utils.changeMap(waypoint);
+            Utils.ChangeMap(waypoint);
         }
 
         internal static void nextMapNpcMenu(MapNext mapNext)
@@ -148,7 +148,7 @@ namespace Mod.Xmap
                             waypoint = XmapUtils.findWaypoint(29);
                     }
 
-                    Utils.changeMap(waypoint);
+                    Utils.ChangeMap(waypoint);
                     return;
                 }
             }
@@ -175,7 +175,7 @@ namespace Mod.Xmap
         {
             var xPos = mapNext.info[0];
             var yPos = mapNext.info[1];
-            Utils.teleportMyChar(xPos, yPos);
+            Utils.TeleportMyChar(xPos, yPos);
             Service.gI().requestChangeMap();
             Service.gI().getMapOffline();
         }

@@ -36,6 +36,11 @@ namespace Mod
         static bool isFirstPause = true;
         static GUIStyle style;
 
+        internal static void OnAwake()
+        {
+            ControllerInput.OnAwake();
+        }
+
         /// <summary>
         /// Kích hoạt sau khi game khởi động.
         /// </summary>
@@ -180,6 +185,7 @@ namespace Mod
             EHVN.FileChooser.Update();
 #endif
             MainThreadDispatcher.update();
+            ControllerInput.OnUpdate();
             //CustomCursor.Update();
         }
 

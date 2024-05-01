@@ -199,7 +199,7 @@ namespace Mod
         /// <param name="npc">Npc cần dịch chuyển tới</param>
         internal static void teleToNpc(Npc npc)
         {
-            teleportMyChar(npc.cx, npc.ySd - npc.ySd % 24);
+            TeleportMyChar(npc.cx, npc.ySd - npc.ySd % 24);
             Char.myCharz().npcFocus = npc;
         }
 
@@ -219,26 +219,26 @@ namespace Mod
             int cMapID = TileMap.mapID;
             var textPopup = getTextPopup(waypoint.popup);
 
-            if (cMapID == 27 && textPopup == "Tường thành 1")
+            if (cMapID == 27 && textPopup == TileMap.mapNames[53])
                 return;
 
-            if (cMapID == 70 && textPopup == "Vực cấm" ||
-                cMapID == 73 && textPopup == "Vực chết" ||
-                cMapID == 110 && textPopup == "Rừng tuyết")
+            if (cMapID == 70 && textPopup == TileMap.mapNames[69] ||
+                cMapID == 73 && textPopup == TileMap.mapNames[67] ||
+                cMapID == 110 && textPopup == TileMap.mapNames[106])
             {
                 waypointLeft = waypoint;
                 return;
             }
 
-            if (((cMapID == 106 || cMapID == 107) && textPopup == "Hang băng") ||
-                ((cMapID == 105 || cMapID == 108) && textPopup == "Rừng băng") ||
-                (cMapID == 109 && textPopup == "Cánh đồng tuyết"))
+            if (((cMapID == 106 || cMapID == 107) && textPopup == TileMap.mapNames[110]) ||
+                ((cMapID == 105 || cMapID == 108) && textPopup == TileMap.mapNames[109]) ||
+                (cMapID == 109 && textPopup == TileMap.mapNames[105]))
             {
                 waypointMiddle = waypoint;
                 return;
             }
 
-            if (cMapID == 70 && textPopup == "Căn cứ Raspberry")
+            if (cMapID == 70 && textPopup == TileMap.mapNames[71])
             {
                 waypointRight = waypoint;
                 return;
@@ -263,7 +263,15 @@ namespace Mod
         {
             waypointLeft = waypointMiddle = waypointRight = null;
 
+            if (TileMap.mapID == 46)
+                waypointRight = new Waypoint(570, 576, 570, 576, true, false, TileMap.mapNames[47]);
+
             var vGoSize = TileMap.vGo.size();
+            if (vGoSize == 0)
+            {
+                if (TileMap.mapID == 45)
+                    waypointMiddle = new Waypoint(570, 576, 570, 576, true, false, TileMap.mapNames[46]);
+            }
             for (int i = 0; i < vGoSize; i++)
             {
                 Waypoint waypoint = (Waypoint)TileMap.vGo.elementAt(i);
@@ -316,7 +324,7 @@ namespace Mod
         /// </summary>
         /// <param name="x">Toạ độ x.</param>
         /// <param name="y">Toạ độ y.</param>
-        internal static void teleportMyChar(int x, int y)
+        internal static void TeleportMyChar(int x, int y)
         {
             Char.myCharz().currentMovePoint = null;
             Char.myCharz().cx = x;
@@ -389,12 +397,6 @@ namespace Mod
             Service.gI().useItem(0, 1, index, -1);
         }
 
-        [ChatCommand("test")]
-        internal static void test()
-        {
-
-        }
-
         [ChatCommand("skey")]
         internal static void syncKey(int channel)
         {
@@ -409,13 +411,67 @@ namespace Mod
         }
 
         [HotkeyCommand('j')]
-        internal static void changeMapLeft() => changeMap(waypointLeft);
+        internal static void ChangeMapLeft()
+        {
+            if (IsMeInNRDMap() || waypointLeft == null)
+                TeleportMyChar(60);
+            else 
+                ChangeMap(waypointLeft);
+        }
 
         [HotkeyCommand('k')]
-        internal static void changeMapMiddle() => changeMap(waypointMiddle);
+        internal static void ChangeMapMiddle()
+        {
+            if (IsMeInNRDMap())
+            {
+                if (Char.myCharz().bag >= 0 && ClanImage.idImages.containsKey(Char.myCharz().bag.ToString()))
+                {
+                    ClanImage clanImage = (ClanImage)ClanImage.idImages.get(Char.myCharz().bag.ToString());
+                    if (clanImage.idImage != null)
+                    {
+                        for (int i = 0; i < clanImage.idImage.Length; i++)
+                        {
+                            if (clanImage.idImage[i] == 2322)
+                            {
+                                for (int j = 0; j < GameScr.vNpc.size(); j++)
+                                {
+                                    Npc npc = (Npc)GameScr.vNpc.elementAt(j);
+                                    if (npc.template.npcTemplateId >= 30 && npc.template.npcTemplateId <= 36)
+                                    {
+                                        Char.myCharz().npcFocus = npc;
+                                        TeleportMyChar(npc.cx, npc.cy - 3);
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                for (int k = 0; k < GameScr.vItemMap.size(); k++)
+                {
+                    ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(k);
+                    if (itemMap != null && itemMap.IsNRD())
+                    {
+                        Char.myCharz().itemFocus = itemMap;
+                        TeleportMyChar(itemMap.x, itemMap.y);
+                        return;
+                    }
+                }
+            }
+            else if (waypointMiddle == null)
+                TeleportMyChar(TileMap.pxw / 2);
+            else 
+                ChangeMap(waypointMiddle);
+        }
 
         [HotkeyCommand('l')]
-        internal static void changeMapRight() => changeMap(waypointRight);
+        internal static void ChangeMapRight()
+        {
+            if (IsMeInNRDMap() || waypointRight == null)
+                TeleportMyChar(TileMap.pxw - 60);
+            else 
+                ChangeMap(waypointRight);
+        }
 
         [HotkeyCommand('g')]
         internal static void sendGiaoDichToCharFocusing()
@@ -445,19 +501,16 @@ namespace Mod
             GameCanvas.panel.show();
         }
 
-        internal static void changeMap(Waypoint waypoint)
+        internal static void ChangeMap(Waypoint waypoint)
         {
             if (waypoint != null)
             {
-                teleportMyChar(getXWayPoint(waypoint), getYWayPoint(waypoint));
+                TeleportMyChar(getXWayPoint(waypoint), getYWayPoint(waypoint));
                 requestChangeMap(waypoint);
             }
         }
 
-        internal static bool isMeInNRDMap()
-        {
-            return TileMap.mapID >= 85 && TileMap.mapID <= 91;
-        }
+        internal static bool IsMeInNRDMap() => TileMap.mapID >= 85 && TileMap.mapID <= 91;
 
         internal static int LoadDataInt(string name, bool isCommon = true)
         {
@@ -613,18 +666,18 @@ namespace Mod
         /// Dịch chuyển đến đối tượng trong map
         /// </summary>
         /// <param name="obj">Đối tượng cần dịch chuyển tới</param>
-        internal static void teleportMyChar(IMapObject obj)
+        internal static void TeleportMyChar(IMapObject obj)
         {
-            teleportMyChar(obj.getX(), obj.getY());
+            TeleportMyChar(obj.getX(), obj.getY());
         }
 
         /// <summary>
         /// Dịch chuyển đến vị trí trên mặt đất có hoành độ x
         /// </summary>
         /// <param name="x">Hoành độ</param>
-        internal static void teleportMyChar(int x)
+        internal static void TeleportMyChar(int x)
         {
-            teleportMyChar(x, getYGround(x));
+            TeleportMyChar(x, GetYGround(x));
         }
 
         internal static int getWidth(GUIStyle gUIStyle, string s)
@@ -642,7 +695,7 @@ namespace Mod
         /// </summary>
         /// <param name="x">Hoành độ x</param>
         /// <returns>Tung độ y thỏa mãn (x, y) là mặt đất</returns>
-        internal static int getYGround(int x)
+        internal static int GetYGround(int x)
         {
             int y = 50;
             for (int i = 0; i < 30; i++)
@@ -652,10 +705,10 @@ namespace Mod
                 {
                     if (y % 24 != 0)
                         y -= y % 24;
-                    return y;
+                    break;
                 }
             }
-            return -1;
+            return y;
         }
 
         internal static int getDistance(IMapObject mapObject1, IMapObject mapObject2)
@@ -693,7 +746,7 @@ namespace Mod
 
         internal static short getNRSDId()
         {
-            if (isMeInNRDMap()) return (short)(2400 - TileMap.mapID);
+            if (IsMeInNRDMap()) return (short)(2400 - TileMap.mapID);
             return 0;
         }
 

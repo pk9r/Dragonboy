@@ -534,6 +534,8 @@ namespace Mod
             }
         }
 
+        internal static bool IsNRD(this ItemMap item) => item.template.id >= 372 && item.template.id <= 378;
+
 #if UNITY_EDITOR
         internal static bool IsLdcI4(this Instruction instruction) => instruction.OpCode.Code - 21 <= Code.Stloc_1;
 

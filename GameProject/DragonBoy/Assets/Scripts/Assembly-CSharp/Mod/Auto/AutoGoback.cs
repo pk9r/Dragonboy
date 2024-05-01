@@ -71,7 +71,7 @@ namespace Mod.Auto
                 else 
                 {
                     if (mode != GoBackMode.GoBackToWhereIDied && Char.myCharz().cx != goingBackTo.x || Char.myCharz().cy != goingBackTo.y)
-                        Utils.teleportMyChar(goingBackTo.x, goingBackTo.y);
+                        Utils.TeleportMyChar(goingBackTo.x, goingBackTo.y);
                     else
                         isGoingBack = false;
                 }
@@ -113,14 +113,14 @@ namespace Mod.Auto
                 mapID = mapId;
                 zoneID = zoneId;
                 this.x = x;
-                this.y = TileMap.tileTypeAt(x, y, 2) ? y : Utils.getYGround(x);
+                this.y = TileMap.tileTypeAt(x, y, 2) ? y : Utils.GetYGround(x);
             }
             internal InfoGoBack(int mapId, int zoneId, IMapObject mapObject)
             {
                 mapID = mapId;
                 zoneID = zoneId;
                 x = mapObject.getX();
-                y = TileMap.tileTypeAt(x, mapObject.getY(), 2) ? mapObject.getY() : Utils.getYGround(x);
+                y = TileMap.tileTypeAt(x, mapObject.getY(), 2) ? mapObject.getY() : Utils.GetYGround(x);
             }
         }
 

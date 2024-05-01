@@ -55,6 +55,7 @@ namespace Mod
 
         void Awake()
         {
+            GameEvents.OnAwake();
             videoPlayer = GameObject.Find("Main Camera").GetComponent<VideoPlayer>();
             Utils.TryLoadDataBool("intro_enabled", out isEnabled);
             Utils.TryLoadDataString("intro_path", out path);

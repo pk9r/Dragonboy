@@ -1,5 +1,6 @@
 using System;
 using Assets.src.g;
+using UnityEngine;
 
 public class GameScr : mScreen, IChatable
 {
