@@ -217,6 +217,13 @@ namespace Mod.Xmap
                 }
             }
             Service.gI().openMenu(npcId);
+            
+            // Làm nhiệm vụ kuku thì luôn chọn option đầu tiên
+            if (Char.myCharz().taskMaint.taskId == 23 && npcId == 12) {
+                Service.gI().confirmMenu((short)npcId, (sbyte)0);
+                return;
+            }
+
             for (int i = 1; i < mapNext.info.Length; i++)
             {
                 int select = mapNext.info[i];
