@@ -4,8 +4,12 @@ using System.Runtime.CompilerServices;
 using Mod.Graphics;
 using MonoHook;
 using UnityEngine;
+using Mod.R;
+using Mod.AccountManager;
 
-#if UNITY_EDITOR 
+
+
+#if UNITY_EDITOR
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System.Linq;
@@ -27,6 +31,7 @@ namespace Mod
         internal static void InstallAllHooks()
         {
 #if UNITY_EDITOR 
+            Debug.Log("Assembly-CSharp location: " + typeof(GameEventHook).Assembly.Location);
             CreateDynamicInstallAllMethod().CreateDelegate(typeof(Action)).DynamicInvoke();
 #else
             InstallAll();
@@ -66,6 +71,7 @@ namespace Mod
             MagicTree magicTree = null;
             Npc npc = null;
             ServerEffect serverEffect = null;
+            Command command = null;
             #endregion
 
             TryInstallHook<Action<int, int>, Action<MotherCanvas, int, int>>(motherCanvas.checkZoomLevel, MotherCanvas_checkZoomLevel_hook, MotherCanvas_checkZoomLevel_original);
@@ -171,6 +177,8 @@ namespace Mod
             TryInstallHook<Action<mGraphics>, Action<mGraphics>>(TileMap.paintOutTilemap, TileMap_paintOutTilemap_hook, TileMap_paintOutTilemap_original);
             TryInstallHook<Action<mGraphics>, Action<Npc, mGraphics>>(npc.paint, Npc_paint_hook, Npc_paint_original);
             TryInstallHook<Action<mGraphics>, Action<ServerEffect, mGraphics>>(serverEffect.paint, ServerEffect_paint_hook, ServerEffect_paint_original);
+            TryInstallHook(typeof(Command).GetConstructor(new Type[] { typeof(string), typeof(IActionListener), typeof(int), typeof(object) }), new Action<Command, string, IActionListener, int, object>(Command__ctor_hook).Method, new Action<Command, string, IActionListener, int, object>(Command__ctor_original).Method);
+            TryInstallHook<Action, Action<ServerListScreen>>(serverListScreen.switchToMe2, ServerListScreen_switchToMe2_hook, ServerListScreen_switchToMe2_original);
 
             //TryInstallHook<Action, Action>(, _hook, _original);
         }
@@ -199,14 +207,19 @@ namespace Mod
             AssemblyDefinition assemblyCSharp_d = AssemblyDefinition.ReadAssembly(typeof(GameEventHook).Assembly.Location);
             TypeDefinition gameEventHook_d = assemblyCSharp_d.MainModule.GetType(typeof(GameEventHook).FullName);
             MethodDefinition installAll_d = gameEventHook_d.Methods.First(m => m.Name == nameof(InstallAll));
+
             //TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod, T2 originalProxyMethod)
-            MethodDefinition tryInstallHookGeneric_d = gameEventHook_d.Methods.First(m => m.Name == nameof(TryInstallHook) && m.GenericParameters.Count == 2);    
+            MethodDefinition tryInstallHookGeneric_d = gameEventHook_d.Methods.First(m => m.Name == nameof(TryInstallHook) && m.GenericParameters.Count == 2);   
+            
             //TryInstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
             MethodDefinition tryInstallHook_d = gameEventHook_d.Methods.First(m => m.Name == nameof(TryInstallHook) && m.GenericParameters.Count == 0);   
             
-            Module assemblyCSharp = typeof(GameEventHook).Module;
+            //----------------------------------------------------------------------------------------------
+
             //TryInstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
             MethodInfo tryInstallHook = new Action<MethodBase, MethodBase, MethodBase>(TryInstallHook).Method;
+
+            Module assemblyCSharp = typeof(GameEventHook).Module;
             MethodInfo getMethodFromHandle = new Func<RuntimeMethodHandle, MethodBase>(MethodBase.GetMethodFromHandle).Method;
             DynamicMethod installAllDynamic = new DynamicMethod("InstallAllDynamic", typeof(void), new Type[0], typeof(GameEventHook), true);
             ILGenerator il = installAllDynamic.GetILGenerator();
@@ -256,15 +269,33 @@ namespace Mod
                         Instruction instruction5 = installAll_d.Body.Instructions[i + 4];
                         if (instruction2.OpCode == OpCodes.Call && instruction2.Operand is MethodReference getTypeFromHandle && getTypeFromHandle.Name == nameof(Type.GetTypeFromHandle))
                         {
-                            //typeof(<some type>).GetConstructor(new Type[<some number>])
+                            //typeof(<some type>).GetConstructor(new Type[<some number>] {typeof(...), ... })
                             if (instruction3.IsLdcI4() && 
-                                instruction4.OpCode == OpCodes.Newarr && instruction4.Operand is TypeReference typeReference && typeReference.Name == nameof(Type) && 
-                                instruction5.OpCode == OpCodes.Call && instruction5.Operand is MethodReference getConstructor && getConstructor.Name == nameof(Type.GetConstructor))
+                                instruction4.OpCode == OpCodes.Newarr && instruction4.Operand is TypeReference typeReference2 && typeReference2.Name == nameof(Type))
                             {
-                                ConstructorInfo _ctor = (ConstructorInfo)assemblyCSharp.ResolveMethod(typeToGetConstructor.Methods.First(m => m.IsConstructor && m.Parameters.Count == instruction3.GetLdcI4Value()).MetadataToken.ToInt32());
+                                //ldc.i4     <number of types>
+                                //newarr     [System.Type]
+                                //...
+                                //dup
+                                //ldc.i4     <index>
+                                //ldtoken    <some type>
+                                //call       class System.Type System.Type::GetTypeFromHandle(valuetype System.RuntimeTypeHandle)
+                                //stelem.ref
+                                //...
+                                //call       class System.Reflection.ConstructorInfo System.Type::GetConstructors(class System.Type[])
+                                int typesCount = instruction3.GetLdcI4Value();
+                                TypeReference[] paramTypes = new TypeReference[typesCount];
+                                for (int j = 0; j < typesCount; j++)
+                                {
+                                    int index = installAll_d.Body.Instructions[i + 5 * (j + 1)].GetLdcI4Value();
+                                    Instruction ldTokenTypeParam = installAll_d.Body.Instructions[i + 5 * (j + 1) + 1];
+                                    if (ldTokenTypeParam.Operand is TypeReference typeRefParam)
+                                        paramTypes[index] = typeRefParam;
+                                }
+                                ConstructorInfo _ctor = (ConstructorInfo)assemblyCSharp.ResolveMethod(typeToGetConstructor.Methods.First(m => m.IsConstructor && m.Parameters.Select(p => p.ParameterType.FullName).SequenceEqual(paramTypes.Select(p => p.FullName))).MetadataToken.ToInt32());
                                 il.Emit(ROpCodes.Ldtoken, _ctor);
                                 il.Emit(ROpCodes.Call, getMethodFromHandle);
-                                //MethodBase.GetMethodFromHandle(methodof(<constructor (.ctor) with x parameter(s)>).MethodHandle
+                                //MethodBase.GetMethodFromHandle(methodof(<constructor (.ctor) with x parameters>).MethodHandle
                                 paramCount++;
                             }
                             //typeof(<some type>).GetConstructors()[0]
@@ -310,6 +341,30 @@ namespace Mod
         }
 #endif
         #region Hooks
+        static void ServerListScreen_switchToMe2_hook(ServerListScreen _this)
+        {
+            ServerListScreen_switchToMe2_original(_this);
+            //_this.cmd[1 + _this.nCmdPlay].caption = Strings.accounts;
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void ServerListScreen_switchToMe2_original(ServerListScreen _this)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Command__ctor_hook(Command _this, string caption, IActionListener actionListener, int action, object p)
+        {
+            if (caption == mResources.change_account)
+                ;// Command__ctor_original(_this, Strings.accounts, new InGameAccountManager.ActionListener(), action, p);
+            else
+                Command__ctor_original(_this, caption, actionListener, action, p);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Command__ctor_original(Command _this, string caption, IActionListener actionListener, int action, object p)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
         static void ServerEffect_paint_hook(ServerEffect _this, mGraphics g)
         {
             if (!GraphicsReducer.OnServerEffectPaint())
@@ -850,6 +905,7 @@ namespace Mod
         static void ServerListScreen_switchToMe_hook(ServerListScreen _this)
         {
             ServerListScreen_switchToMe_original(_this);
+            _this.cmd[1 + _this.nCmdPlay].caption = Strings.accounts;
             GameEvents.OnServerListScreenLoaded();
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]

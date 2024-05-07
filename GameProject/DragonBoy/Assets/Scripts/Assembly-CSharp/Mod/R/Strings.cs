@@ -223,6 +223,13 @@ namespace Mod.R
         internal static string vnInputDiacritics = "";
         internal static string vnInputConsumeRepeatKey = "";
         internal static string vnInputEnable = "";
+        internal static string accounts;
+        internal static string lastLogin;
+        internal static string justNow;
+        internal static string minutesAgo;
+        internal static string hoursAgo;
+        internal static string todayAt;
+        internal static string yesterdayAt;
         #endregion
 
         internal static void LoadLanguage(sbyte newLanguage)
@@ -285,6 +292,13 @@ namespace Mod.R
             fullPath = "Đường dẫn đầy đủ";
             goTo = "Đi đến";
             level = "Mức";
+            accounts = "Tài khoản";
+            lastLogin = "Lần đăng nhập cuối";
+            justNow = "Vài giây trước";
+            minutesAgo = "{0} phút trước";
+            hoursAgo = "{0} giờ trước";
+            todayAt = "Hôm nay lúc {0}";
+            yesterdayAt = "Hôm qua lúc {0}";
             //---------------------------------------------------
             inputFPS = "Nhập số khung hình trên giây";
             inputTimeChangeBg = "Nhập thời gian thay đổi hình nền";
@@ -541,6 +555,13 @@ namespace Mod.R
             fullPath = "Full path";
             goTo = "Go to";
             level = "Level";
+            accounts = "Accounts";
+            lastLogin = "Last login";
+            justNow = "Just now";
+            minutesAgo = "{0} minute(s) ago";
+            hoursAgo = "{0} hour(s) ago";
+            todayAt = "Today at {0}";
+            yesterdayAt = "Yesterday at {0}";
             //---------------------------------------------------
             inputFPS = "Input the number of frames per second";
             inputTimeChangeBg = "Input the background interval";

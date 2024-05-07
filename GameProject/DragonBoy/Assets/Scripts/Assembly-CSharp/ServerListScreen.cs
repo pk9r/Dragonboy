@@ -24,11 +24,11 @@ public class ServerListScreen : mScreen, IActionListener
 
 	public static sbyte[] isNew;
 
-	private Command[] cmd;
+	internal Command[] cmd;
 
 	private Command cmdCallHotline;
 
-	private int nCmdPlay;
+	internal int nCmdPlay;
 
 	public static Command cmdDeleteRMS;
 

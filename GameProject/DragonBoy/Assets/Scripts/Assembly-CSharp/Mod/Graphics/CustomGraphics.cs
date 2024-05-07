@@ -475,5 +475,35 @@ namespace Mod.Graphics
             newTexture.Apply();
             return newTexture;
         }
+
+        internal static Texture2D Resize(Texture2D texture2D, int width, int height)
+        {
+            RenderTexture rt = new RenderTexture(width, height, 24);
+            RenderTexture.active = rt;
+            UnityEngine.Graphics.Blit(texture2D, rt);
+            Texture2D result = new Texture2D(width, height);
+            result.ReadPixels(new Rect(0f, 0f, width, height), 0, 0);
+            result.Apply();
+            return result;
+        }
+
+        internal static void DrawOutline(Rect r, string t, GUIStyle style, int strength, Color outlineColor)
+        {
+            Color oldColor = style.normal.textColor;
+            style.normal.textColor = style.hover.textColor = outlineColor;
+            int i;
+            for (i = -strength; i <= strength; i++)
+            {
+                GUI.Label(new Rect(r.x - strength, r.y + i, r.width, r.height), t, style);
+                GUI.Label(new Rect(r.x + strength, r.y + i, r.width, r.height), t, style);
+            }
+            for (i = -strength + 1; i <= strength - 1; i++)
+            {
+                GUI.Label(new Rect(r.x + i, r.y - strength, r.width, r.height), t, style);
+                GUI.Label(new Rect(r.x + i, r.y + strength, r.width, r.height), t, style);
+            }
+            style.normal.textColor = style.hover.textColor = oldColor;
+            GUI.Label(r, t, style);
+        }
     }
 }

@@ -66,6 +66,7 @@ public class PipelineBuild : IPostBuildPlayerScriptDLLs
 
         //TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod, T2 originalProxyMethod)
         MethodDefinition tryInstallHookGeneric = gameEventHook.Methods.First(m => m.Name == "TryInstallHook" && m.GenericParameters.Count == 2);    
+
         //TryInstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
         MethodDefinition tryInstallHook = gameEventHook.Methods.First(m => m.Name == "TryInstallHook" && m.GenericParameters.Count == 0);    
 
@@ -113,14 +114,33 @@ public class PipelineBuild : IPostBuildPlayerScriptDLLs
                     Instruction instruction5 = installAll.Body.Instructions[i + 4];
                     if (instruction2.OpCode == OpCodes.Call && instruction2.Operand is MethodReference getTypeFromHandle && getTypeFromHandle.Name == nameof(Type.GetTypeFromHandle))
                     {
-                        //typeof(<some type>).GetConstructor(new Type[<some number>])
+                        //typeof(<some type>).GetConstructor(new Type[<some number>] {typeof(...), ... })
                         if (instruction3.IsLdcI4() && 
-                            instruction4.OpCode == OpCodes.Newarr && instruction4.Operand is TypeReference typeReference && typeReference.Name == nameof(Type) &&
-                            instruction5.OpCode == OpCodes.Call && instruction5.Operand is MethodReference getConstructor && getConstructor.Name == nameof(Type.GetConstructor))
+                            instruction4.OpCode == OpCodes.Newarr && instruction4.Operand is TypeReference typeReference2 && typeReference2.Name == nameof(Type))
                         {
-                            instructions.Add(Instruction.Create(OpCodes.Ldtoken, typeToGetConstructor.Methods.First(m => m.IsConstructor && m.Parameters.Count == instruction3.GetLdcI4Value())));
+                            //ldc.i4     <number of types>
+                            //newarr     [System.Type]
+                            //...
+                            //dup
+                            //ldc.i4     <index>
+                            //ldtoken    <some type>
+                            //call       class System.Type System.Type::GetTypeFromHandle(valuetype System.RuntimeTypeHandle)
+                            //stelem.ref
+                            //...
+                            //call       class System.Reflection.ConstructorInfo System.Type::GetConstructor(class System.Type[])
+                            int typesCount = instruction3.GetLdcI4Value();
+                            TypeReference[] paramTypes = new TypeReference[typesCount];
+                            for (int j = 0; j < typesCount; j++)
+                            {
+                                int index = installAll.Body.Instructions[i + 5 * (j + 1)].GetLdcI4Value();
+                                Instruction ldTokenTypeParam = installAll.Body.Instructions[i + 5 * (j + 1) + 1];
+                                if (ldTokenTypeParam.Operand is TypeReference typeRefParam)
+                                    paramTypes[index] = typeRefParam;
+                            }
+                            MethodDefinition _ctor = typeToGetConstructor.Methods.First(m => m.IsConstructor && m.Parameters.Select(p => p.ParameterType.FullName).SequenceEqual(paramTypes.Select(p => p.FullName)));
+                            instructions.Add(Instruction.Create(OpCodes.Ldtoken, _ctor));
                             instructions.Add(Instruction.Create(OpCodes.Call, getMethodFromHandle));
-                            //MethodBase.GetMethodFromHandle(methodof(<constructor (.ctor) with x parameter(s)>).MethodHandle
+                            //MethodBase.GetMethodFromHandle(methodof(<constructor (.ctor) with x parameters>).MethodHandle
                             paramCount++;
                         }
                         //typeof(<some type>).GetConstructors()[0]

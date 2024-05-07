@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Mod.AccountManager;
 using Mod.Auto;
 using Mod.Auto.AutoChat;
 using Mod.Background;
@@ -58,6 +59,7 @@ namespace Mod
                 Screen.autorotateToPortrait = false;
                 Screen.autorotateToPortraitUpsideDown = false;
             }
+            OnSetResolution();
             OnCheckZoomLevel(Screen.width, Screen.height);
             GameEventHook.InstallAllHooks();
             if (!Directory.Exists(Utils.dataPath))
@@ -77,7 +79,6 @@ namespace Mod
             //UIReportersManager.AddReporter(ListCharsInMap.Paint);
             //ShareInfo.gI.toggle(true);
             VietnameseInput.LoadData();
-            OnSetResolution();
         }
 
         /// <summary>
