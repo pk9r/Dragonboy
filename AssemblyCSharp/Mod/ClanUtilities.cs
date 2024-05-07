@@ -10,18 +10,15 @@ namespace Mod
 
         public static bool isFromMyClan(Char @char)
         {
-            @char = @char.isPet() ? GameScr.findCharInMap(-@char.charID) : @char;
-
-            if (@char == null) return false;
-
-            var myClainID = Char.myCharz().clan.ID;
-
-            if (@char.clanID == myClainID) {
+            if (@char.charID == Char.myCharz().charID)
                 return true;
+            else if (@char.isPet())
+            {
+                @char = GameScr.findCharInMap(-@char.charID);
+                if (@char == null)
+                    return false;
             }
-
-            // i don't know why but `clainID` can be different with `.clain.ID`
-            return @char.clan != null && @char.clan.ID == myClainID;
+            return @char.clanID == Char.myCharz().clan.ID;
         }
 
         public static bool CanAskForPeans()
