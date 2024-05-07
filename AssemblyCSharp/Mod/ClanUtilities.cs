@@ -12,6 +12,8 @@ namespace Mod
         {
             if (@char.charID == Char.myCharz().charID)
                 return true;
+            else if (@char.charID == -Char.myCharz().charID)
+                return true;
             else if (@char.isPet())
             {
                 @char = GameScr.findCharInMap(-@char.charID);
