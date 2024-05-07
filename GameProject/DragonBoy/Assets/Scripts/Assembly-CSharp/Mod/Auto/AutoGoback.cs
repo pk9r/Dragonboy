@@ -44,7 +44,7 @@ namespace Mod.Auto
             if (mSystem.currentTimeMillis() - lastTimeUpdate < 1000)
                 return;
             lastTimeUpdate = mSystem.currentTimeMillis();
-            if (Char.myCharz().isCharDead())
+            if (Char.myCharz().IsCharDead())
                 handleDeath();
             else if (isGoingBack)
                 handleGoingBack();

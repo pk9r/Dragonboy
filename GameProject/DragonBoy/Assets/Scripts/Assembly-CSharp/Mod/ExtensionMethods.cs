@@ -170,13 +170,22 @@ namespace Mod
             }
         }
 
-        internal static bool isFromMyClan(this Char ch)
+        internal static bool IsFromMyClan(this Char ch)
         {
-            ch = ch.IsPet() ? GameScr.findCharInMap(-ch.charID) : ch;
+            if (ch.charID == Char.myCharz().charID)
+                return true;
+            else if (ch.charID == -Char.myCharz().charID)
+                return true;
+            if (ch.IsPet())
+            {
+                ch = GameScr.findCharInMap(-ch.charID);
+                if (ch == null)
+                    return false;
+            }
             return ch.clanID == Char.myCharz().clan.ID;
         }
 
-        internal static int getTimeHold(this Char ch)
+        internal static int GetTimeHold(this Char ch)
         {
             int num = 35;
             try
@@ -197,7 +206,7 @@ namespace Mod
             return num;
         }
 
-        internal static int getTimeMonkey(this Char ch)
+        internal static int GetTimeMonkey(this Char ch)
         {
             int num = 60;
             try
@@ -239,7 +248,7 @@ namespace Mod
             return num;
         }
 
-        internal static int getTimeShield(this Char ch)
+        internal static int GetTimeShield(this Char ch)
         {
             int num;
             try
@@ -256,7 +265,7 @@ namespace Mod
             return num;
         }
 
-        internal static int getTimeMobMe(this Char ch)
+        internal static int GetTimeMobMe(this Char ch)
         {
             int num = 60;
             try
@@ -298,7 +307,7 @@ namespace Mod
             return num;
         }
 
-        internal static int getTimeHypnotize(this Char ch)
+        internal static int GetTimeHypnotize(this Char ch)
         {
             int num = 12;
             try
@@ -319,17 +328,17 @@ namespace Mod
             return num;
         }
 
-        internal static int getTimeStone(this Char ch) => 5;
+        internal static int GetTimeStone(this Char ch) => 5;
 
-        internal static int getTimeHuytSao(this Char ch) => 31;
+        internal static int GetTimeWhistle(this Char ch) => 31;
 
-        internal static int getTimeChocolate(this Char ch) => 31;
+        internal static int GetTimeChocolate(this Char ch) => 31;
 
-        internal static int getTimeSelfExplode(this Char ch) => 3;
+        internal static int GetTimeSelfExplode(this Char ch) => 3;
 
-        internal static int getTimeQCKK(this Char ch) => 3;
+        internal static int GetTimeQCKK(this Char ch) => 3;
 
-        internal static int getTimeTDHS(this Char ch)
+        internal static int GetTimeBlind(this Char ch)
         {
             if (ch.me && ch.cgender == 0)
             {
@@ -341,14 +350,14 @@ namespace Mod
             return ch.freezSeconds - 1;
         }
 
-        internal static string getNameWithoutClanTag(this Char ch, bool enableRichText = false)
+        internal static string GetNameWithoutClanTag(this Char ch, bool enableRichText = false)
         {
             string name = ch.cName.Remove(0, ch.cName.IndexOf(']') + 1).TrimStart(' ', '#', '$');
             if (enableRichText)
             {
                 if (ch.IsPet())
                     name = $"<color=cyan>{name}</color>";
-                else if (ch.isBoss())
+                else if (ch.IsBoss())
                     name = $"<color=red><size={7 * mGraphics.zoomLevel}>{name}</size></color>";
                 else
                     name = $"<color=yellow>{name}</color>";
@@ -356,22 +365,22 @@ namespace Mod
             return name;
         }
 
-        internal static string getClanTag(this Char ch) => ch.cName.Substring(0, ch.cName.IndexOf(']') + 1);
+        internal static string GetClanTag(this Char ch) => ch.cName.Substring(0, ch.cName.IndexOf(']') + 1);
 
-        internal static bool isNormalChar(this Char ch, bool isIncludeBoss = false, bool isIncludePet = false)
+        internal static bool IsNormalChar(this Char ch, bool isIncludeBoss = false, bool isIncludePet = false)
         {
             bool result = !string.IsNullOrEmpty(ch.cName) && ch.cName != LocalizedString.arbitration;
             if (!string.IsNullOrEmpty(ch.cName))
             {
                 if (!isIncludeBoss)
-                    result = result && !char.IsUpper(getNameWithoutClanTag(ch)[0]);
+                    result = result && !char.IsUpper(GetNameWithoutClanTag(ch)[0]);
                 if (!isIncludePet)
                     result = result && !ch.IsPet();
             }
             return result;
         }
 
-        internal static bool isBoss(this Char ch) => !ch.IsPet() && ch.cName != LocalizedString.arbitration && char.IsUpper(getNameWithoutClanTag(ch)[0]);
+        internal static bool IsBoss(this Char ch) => !ch.IsPet() && ch.cName != LocalizedString.arbitration && char.IsUpper(GetNameWithoutClanTag(ch)[0]);
 
         internal static bool IsPet(this Char ch) => ch.isPet || ch.isMiniPet || ch.cName.StartsWith("#") || ch.cName.StartsWith("$");
 
@@ -386,7 +395,7 @@ namespace Mod
                 Char c = (Char)GameScr.vCharInMap.elementAt(i);
                 if (c == ch)
                     continue;
-                if (isNormalCharOnly && !c.isNormalChar(false, false))
+                if (isNormalCharOnly && !c.IsNormalChar(false, false))
                     continue;
                 int distance = Res.distance(ch.cx, ch.cy, c.cx, c.cy);
                 if (!c.me && distance < smallestDistance)
@@ -400,7 +409,7 @@ namespace Mod
             return result;
         }
 
-        internal static string getGender(this Char ch, bool enableRichText = false)
+        internal static string GetGender(this Char ch, bool enableRichText = false)
         {
             if (enableRichText)
             {
@@ -423,7 +432,7 @@ namespace Mod
                 return "BĐ";
         }
 
-        internal static Color getFlagColor(this Char ch)
+        internal static Color GetFlagColor(this Char ch)
         {
             switch (ch.cFlag)
             {
@@ -471,14 +480,14 @@ namespace Mod
         //    return result;
         //}
 
-        internal static bool canUse(this Skill skill)
+        internal static bool CanUse(this Skill skill)
         {
             var now = mSystem.currentTimeMillis();
             var isOutOfCooldown = now - skill.lastTimeUseThisSkill > skill.coolDown;
-            return isOutOfCooldown && hasManaToUseSkill(skill);
+            return isOutOfCooldown && HasManaToUseSkill(skill);
         }
 
-        internal static bool hasManaToUseSkill(this Skill skill)
+        internal static bool HasManaToUseSkill(this Skill skill)
         {
             switch (skill.template.manaUseType)
             {
@@ -489,9 +498,9 @@ namespace Mod
             }
         }
 
-        internal static bool isCharDead(this Char ch) => ch.isDie || ch.cHP <= 0 || ch.statusMe == 14;
+        internal static bool IsCharDead(this Char ch) => ch.isDie || ch.cHP <= 0 || ch.statusMe == 14;
 
-        internal static int getPetId(this Char ch) => -ch.charID;
+        internal static int GetPetId(this Char ch) => -ch.charID;
 
         internal static ItemOption GetBestItemOption(this Item item)
         {

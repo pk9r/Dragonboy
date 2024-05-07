@@ -27,7 +27,7 @@ namespace Mod.Auto
                 return;
             var deadChar = getDeadCharInMap();
             var skillRescue = Char.myCharz().getSkill(new SkillTemplate { id = Ability.Rescue });
-            if (deadChar == null || !skillRescue.canUse())
+            if (deadChar == null || !skillRescue.CanUse())
                 return;
             if (canHealChar(deadChar) && skillRescue.point <= 1)
                 useSkillOn(deadChar, skillRescue);
@@ -42,11 +42,11 @@ namespace Mod.Auto
                 case TargetMode.Everyone:
                     return true;
                 case TargetMode.OnlyClanMembers:
-                    return target.isFromMyClan();
+                    return target.IsFromMyClan();
                 case TargetMode.OnlyPet:
                     return target.IsPet();
                 case TargetMode.OnlyMyPet:
-                    return target.IsPet() && Char.myCharz().getPetId() == target.charID;
+                    return target.IsPet() && Char.myCharz().GetPetId() == target.charID;
                 default:
                     return false;
             }
@@ -54,12 +54,15 @@ namespace Mod.Auto
 
         static Char getDeadCharInMap()
         {
-            for (int i = 0; i < GameScr.vCharInMap.size(); i++)
+            int i = 0;
+            for (; i < GameScr.vCharInMap.size(); i++)
             {
                 var ch = (Char)GameScr.vCharInMap.elementAt(i);
-                if (isValidTarget(ch) && ch.isCharDead()) 
+                if (isValidTarget(ch) && ch.IsCharDead()) 
                     return ch;
             }
+            if (i == GameScr.vCharInMap.size() && isValidTarget(Char.myCharz()) && Char.myCharz().IsCharDead())
+                return Char.myCharz();
             return null;
         }
 

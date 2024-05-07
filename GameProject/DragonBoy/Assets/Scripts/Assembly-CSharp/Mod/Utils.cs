@@ -855,7 +855,7 @@ namespace Mod
             for (int i = 0; i < GameScr.vCharInMap.size(); i++)
             {
                 Char ch = (Char)GameScr.vCharInMap.elementAt(i);
-                if (ch.getNameWithoutClanTag() == name)
+                if (ch.GetNameWithoutClanTag() == name)
                     return ch;
             }
             return null;

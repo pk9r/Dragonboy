@@ -56,7 +56,7 @@ namespace Mod.CharEffect
                     if (Utils.isMeWearingPikkoroDaimaoSet())
                         Char.vItemTime.addElement(new ItemTime(722, true));
                     else
-                        Char.vItemTime.addElement(new ItemTime(722, Char.myCharz().getTimeMobMe()));
+                        Char.vItemTime.addElement(new ItemTime(722, Char.myCharz().GetTimeMobMe()));
                 }
             }
             else if (isMobMeAdded)
@@ -99,9 +99,9 @@ namespace Mod.CharEffect
                 {
                     isMonkeyAdded = true;
                     if (Utils.isMeWearingCadicSet())
-                        Char.vItemTime.addElement(new ItemTime(718, Char.myCharz().getTimeMonkey() * 5));
+                        Char.vItemTime.addElement(new ItemTime(718, Char.myCharz().GetTimeMonkey() * 5));
                     else
-                        Char.vItemTime.addElement(new ItemTime(718, Char.myCharz().getTimeMonkey()));
+                        Char.vItemTime.addElement(new ItemTime(718, Char.myCharz().GetTimeMonkey()));
                 }
             }
             else if (isMonkeyAdded)
@@ -233,7 +233,7 @@ namespace Mod.CharEffect
                     Char.myCharz().charFocus.charEffectTime.isTiedByMe = true;
             }
             if (skill.template.id == 6 && mSystem.currentTimeMillis() - skill.lastTimeUseThisSkill > skill.coolDown)
-                Char.vItemTime.addElement(new ItemTime(717, Char.myCharz().getTimeTDHS() - 1));
+                Char.vItemTime.addElement(new ItemTime(717, Char.myCharz().GetTimeBlind() - 1));
         }
 
         internal static void setState(bool value) => isEnabled = value;
@@ -249,7 +249,7 @@ namespace Mod.CharEffect
                 {
                     ch.charEffectTime.isChocolate = true;
                     ch.charEffectTime.lastTimeChocolated = mSystem.currentTimeMillis();
-                    ch.charEffectTime.timeChocolate = ch.getTimeChocolate() + 1;
+                    ch.charEffectTime.timeChocolate = ch.GetTimeChocolate() + 1;
                 }
             }
             else
@@ -293,7 +293,7 @@ namespace Mod.CharEffect
                     ch.charEffectTime.isHypnotized = true;
                     ch.charEffectTime.lastTimeHypnotized = mSystem.currentTimeMillis();
                     if (ch.charEffectTime.timeHypnotized <= 0)
-                        ch.charEffectTime.timeHypnotized = ch.getTimeHypnotize() + 1;
+                        ch.charEffectTime.timeHypnotized = ch.GetTimeHypnotize() + 1;
                 }
             }
             else
@@ -308,7 +308,7 @@ namespace Mod.CharEffect
                     ch.charEffectTime.hasMonkey = true;
                     ch.charEffectTime.lastTimeMonkey = mSystem.currentTimeMillis();
                     if (ch.charEffectTime.timeMonkey <= 0)
-                        ch.charEffectTime.timeMonkey = ch.getTimeMonkey();
+                        ch.charEffectTime.timeMonkey = ch.GetTimeMonkey();
                 }
             }
             else
@@ -323,7 +323,7 @@ namespace Mod.CharEffect
                     ch.charEffectTime.hasHuytSao = true;
                     ch.charEffectTime.lastTimeHuytSao = mSystem.currentTimeMillis();
                     if (ch.charEffectTime.timeHuytSao <= 0)
-                        ch.charEffectTime.timeHuytSao = ch.getTimeHuytSao() + 1;
+                        ch.charEffectTime.timeHuytSao = ch.GetTimeWhistle() + 1;
                 }
             }
             if (ch.blindEff)
@@ -348,7 +348,7 @@ namespace Mod.CharEffect
                     ch.charEffectTime.hasShield = true;
                     ch.charEffectTime.lastTimeShield = mSystem.currentTimeMillis();
                     if (ch.charEffectTime.timeShield <= 0)
-                        ch.charEffectTime.timeShield = ch.getTimeShield() + 1;
+                        ch.charEffectTime.timeShield = ch.GetTimeShield() + 1;
                 }
             }
             else
@@ -363,7 +363,7 @@ namespace Mod.CharEffect
                     ch.charEffectTime.isStone = true;
                     ch.charEffectTime.lastTimeStoned = mSystem.currentTimeMillis();
                     if (ch.charEffectTime.timeStone <= 0)
-                        ch.charEffectTime.timeStone = ch.getTimeStone() + 1;
+                        ch.charEffectTime.timeStone = ch.GetTimeStone() + 1;
                 }
             }
             else
@@ -400,7 +400,7 @@ namespace Mod.CharEffect
                     ch.charEffectTime.hasMobMe = true;
                     ch.charEffectTime.lastTimeMobMe = mSystem.currentTimeMillis();
                     if (ch.charEffectTime.timeMobMe <= 0)
-                        ch.charEffectTime.timeMobMe = ch.getTimeMobMe() + 1;
+                        ch.charEffectTime.timeMobMe = ch.GetTimeMobMe() + 1;
                 }
             }
             else
@@ -418,7 +418,7 @@ namespace Mod.CharEffect
                     ch.charEffectTime.isSelfExplode = true;
                     ch.charEffectTime.lastTimeSelfExplode = mSystem.currentTimeMillis();
                     if (ch.charEffectTime.timeSelfExplode <= 0)
-                        ch.charEffectTime.timeSelfExplode = ch.getTimeSelfExplode();
+                        ch.charEffectTime.timeSelfExplode = ch.GetTimeSelfExplode();
                 }
             }
             else
@@ -433,7 +433,7 @@ namespace Mod.CharEffect
                     ch.charEffectTime.isQCKK = true;
                     ch.charEffectTime.lastTimeQCKK = mSystem.currentTimeMillis();
                     if (ch.charEffectTime.timeQCKK <= 0)
-                        ch.charEffectTime.timeQCKK = ch.getTimeQCKK();
+                        ch.charEffectTime.timeQCKK = ch.GetTimeQCKK();
                 }
             }
             else
@@ -446,15 +446,15 @@ namespace Mod.CharEffect
         internal static void AddCharHoldChar(Char ch, Char r)
         {
             r.charEffectTime.isTied = true;
-            r.charEffectTime.timeTied = r.getTimeHold() + 1;
+            r.charEffectTime.timeTied = r.GetTimeHold() + 1;
             if (ch.me)
-                Char.vItemTime.addElement(new ItemTime(3779, ch.getTimeHold()));
+                Char.vItemTime.addElement(new ItemTime(3779, ch.GetTimeHold()));
         }
 
         internal static void AddCharHoldMob(Char ch)
         {
             if (ch.me)
-                Char.vItemTime.addElement(new ItemTime(3779, ch.getTimeHold()));
+                Char.vItemTime.addElement(new ItemTime(3779, ch.GetTimeHold()));
         }
 
         internal static void RemoveHold(Char ch)

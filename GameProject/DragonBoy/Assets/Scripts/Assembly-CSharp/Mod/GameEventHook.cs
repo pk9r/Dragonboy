@@ -28,16 +28,6 @@ namespace Mod
     /// </remarks>
     internal static class GameEventHook
     {
-        internal static void InstallAllHooks()
-        {
-#if UNITY_EDITOR 
-            Debug.Log("Assembly-CSharp location: " + typeof(GameEventHook).Assembly.Location);
-            CreateDynamicInstallAllMethod().CreateDelegate(typeof(Action)).DynamicInvoke();
-#else
-            InstallAll();
-#endif
-        }
-
         /// <summary>
         /// Cài đặt tất cả hook.
         /// </summary>
@@ -183,163 +173,6 @@ namespace Mod
             //TryInstallHook<Action, Action>(, _hook, _original);
         }
 
-#if UNITY_EDITOR
-        /// <summary>
-        /// Tạo 1 hàm InstallAllDynamic động từ hàm <see cref="InstallAll"/> gốc với mã IL đã tối ưu.
-        /// </summary>
-        /// <returns><see cref="DynamicMethod"/> đã được tạo.</returns>
-        /// <remarks>
-        /// Mã IL được tạo sẽ tương tự như sau:
-        /// <code>
-        /// ldtoken     [target method]
-        /// call        class System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(valuetype System.RuntimeMethodHandle)
-        /// ldtoken     [hook method]
-        /// call        class System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(valuetype System.RuntimeMethodHandle)
-        /// ldtoken     [trampoline method]
-        /// call        class System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(valuetype System.RuntimeMethodHandle)
-        /// call        void Mod.GameEventHook::TryInstallHook(class System.Reflection.MethodBase, class System.Reflection.MethodBase, class System.Reflection.MethodBase)
-        /// ...
-        /// ret
-        /// </code>
-        /// </remarks>
-        static DynamicMethod CreateDynamicInstallAllMethod()
-        {
-            AssemblyDefinition assemblyCSharp_d = AssemblyDefinition.ReadAssembly(typeof(GameEventHook).Assembly.Location);
-            TypeDefinition gameEventHook_d = assemblyCSharp_d.MainModule.GetType(typeof(GameEventHook).FullName);
-            MethodDefinition installAll_d = gameEventHook_d.Methods.First(m => m.Name == nameof(InstallAll));
-
-            //TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod, T2 originalProxyMethod)
-            MethodDefinition tryInstallHookGeneric_d = gameEventHook_d.Methods.First(m => m.Name == nameof(TryInstallHook) && m.GenericParameters.Count == 2);   
-            
-            //TryInstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
-            MethodDefinition tryInstallHook_d = gameEventHook_d.Methods.First(m => m.Name == nameof(TryInstallHook) && m.GenericParameters.Count == 0);   
-            
-            //----------------------------------------------------------------------------------------------
-
-            //TryInstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
-            MethodInfo tryInstallHook = new Action<MethodBase, MethodBase, MethodBase>(TryInstallHook).Method;
-
-            Module assemblyCSharp = typeof(GameEventHook).Module;
-            MethodInfo getMethodFromHandle = new Func<RuntimeMethodHandle, MethodBase>(MethodBase.GetMethodFromHandle).Method;
-            DynamicMethod installAllDynamic = new DynamicMethod("InstallAllDynamic", typeof(void), new Type[0], typeof(GameEventHook), true);
-            ILGenerator il = installAllDynamic.GetILGenerator();
-
-            int paramCount = 0;
-            for (int i = 0; i < installAll_d.Body.Instructions.Count; i++)
-            {
-                Instruction instruction = installAll_d.Body.Instructions[i];
-                if (instruction.OpCode == OpCodes.Ldftn)
-                {
-                    //ldftn     <target/hook/trampoline method>
-                    if (instruction.Operand is MethodDefinition methodDef)    
-                    {
-                        MethodInfo method = (MethodInfo)assemblyCSharp.ResolveMethod(methodDef.MetadataToken.ToInt32());
-                        il.Emit(ROpCodes.Ldtoken, method);
-                        il.Emit(ROpCodes.Call, getMethodFromHandle);
-                        //MethodBase.GetMethodFromHandle(methodof(<some method here>).MethodHandle
-                        paramCount++;
-                    }
-                }
-                else if (instruction.OpCode == OpCodes.Ldvirtftn)
-                {
-                    //ldvirtftn     <target method (virtual)>
-                    if (i >= 2 && instruction.Operand is MethodDefinition methodDef)
-                    {
-                        Instruction instruction1 = installAll_d.Body.Instructions[i - 1];
-                        Instruction instruction2 = installAll_d.Body.Instructions[i - 2];
-                        if (instruction1.OpCode == OpCodes.Dup && instruction2.IsLdloc())
-                        {
-                            VariableDefinition local = installAll_d.Body.Variables[instruction2.GetLdlocIndex()];
-                            MethodInfo method = (MethodInfo)assemblyCSharp.ResolveMethod(local.VariableType.Resolve().Methods.First(m => m.Name == methodDef.Name).MetadataToken.ToInt32());
-                            il.Emit(ROpCodes.Ldtoken, method);
-                            il.Emit(ROpCodes.Call, getMethodFromHandle);
-                            //MethodBase.GetMethodFromHandle(methodof(<some method here>).MethodHandle
-                            paramCount++;
-                        }
-                    }
-                }
-                else if (instruction.OpCode == OpCodes.Ldtoken)
-                {
-                    //ldtoken       <some type>
-                    if (i + 4 < installAll_d.Body.Instructions.Count && instruction.Operand is TypeDefinition typeToGetConstructor)
-                    {
-                        Instruction instruction2 = installAll_d.Body.Instructions[i + 1];
-                        Instruction instruction3 = installAll_d.Body.Instructions[i + 2];
-                        Instruction instruction4 = installAll_d.Body.Instructions[i + 3];
-                        Instruction instruction5 = installAll_d.Body.Instructions[i + 4];
-                        if (instruction2.OpCode == OpCodes.Call && instruction2.Operand is MethodReference getTypeFromHandle && getTypeFromHandle.Name == nameof(Type.GetTypeFromHandle))
-                        {
-                            //typeof(<some type>).GetConstructor(new Type[<some number>] {typeof(...), ... })
-                            if (instruction3.IsLdcI4() && 
-                                instruction4.OpCode == OpCodes.Newarr && instruction4.Operand is TypeReference typeReference2 && typeReference2.Name == nameof(Type))
-                            {
-                                //ldc.i4     <number of types>
-                                //newarr     [System.Type]
-                                //...
-                                //dup
-                                //ldc.i4     <index>
-                                //ldtoken    <some type>
-                                //call       class System.Type System.Type::GetTypeFromHandle(valuetype System.RuntimeTypeHandle)
-                                //stelem.ref
-                                //...
-                                //call       class System.Reflection.ConstructorInfo System.Type::GetConstructors(class System.Type[])
-                                int typesCount = instruction3.GetLdcI4Value();
-                                TypeReference[] paramTypes = new TypeReference[typesCount];
-                                for (int j = 0; j < typesCount; j++)
-                                {
-                                    int index = installAll_d.Body.Instructions[i + 5 * (j + 1)].GetLdcI4Value();
-                                    Instruction ldTokenTypeParam = installAll_d.Body.Instructions[i + 5 * (j + 1) + 1];
-                                    if (ldTokenTypeParam.Operand is TypeReference typeRefParam)
-                                        paramTypes[index] = typeRefParam;
-                                }
-                                ConstructorInfo _ctor = (ConstructorInfo)assemblyCSharp.ResolveMethod(typeToGetConstructor.Methods.First(m => m.IsConstructor && m.Parameters.Select(p => p.ParameterType.FullName).SequenceEqual(paramTypes.Select(p => p.FullName))).MetadataToken.ToInt32());
-                                il.Emit(ROpCodes.Ldtoken, _ctor);
-                                il.Emit(ROpCodes.Call, getMethodFromHandle);
-                                //MethodBase.GetMethodFromHandle(methodof(<constructor (.ctor) with x parameters>).MethodHandle
-                                paramCount++;
-                            }
-                            //typeof(<some type>).GetConstructors()[0]
-                            else if (instruction3.OpCode == OpCodes.Call && instruction3.Operand is MethodReference getConstructors && getConstructors.Name == nameof(Type.GetConstructors) && 
-                                instruction4.OpCode == OpCodes.Ldc_I4_0 && 
-                                instruction5.OpCode == OpCodes.Ldelem_Ref)    
-                            {
-                                ConstructorInfo _ctor = (ConstructorInfo)assemblyCSharp.ResolveMethod(typeToGetConstructor.Methods.First(m => m.IsConstructor).MetadataToken.ToInt32());
-                                il.Emit(ROpCodes.Ldtoken, _ctor);
-                                il.Emit(ROpCodes.Call, getMethodFromHandle);
-                                //MethodBase.GetMethodFromHandle(methodof(<constructor (.ctor)>).MethodHandle
-                                paramCount++;
-                            }
-                        }
-                    }
-                }
-                else if (instruction.OpCode == OpCodes.Call)
-                {
-                    //call      TryInstallHook<T1, T2>(.....)
-                    if (instruction.Operand is MethodSpecification methodSpec && methodSpec.Resolve() == tryInstallHookGeneric_d)
-                    {
-                        il.Emit(ROpCodes.Call, tryInstallHook);
-                        paramCount = 0; //param count always equals 3 so no need to check
-                    }
-                    //call      TryInstallHook(.....)
-                    else if (instruction.Operand is MethodDefinition methodDefinition && methodDefinition == tryInstallHook_d)
-                    {
-                        //trampoline method can be null
-                        while (paramCount < 3)
-                        {
-                            il.Emit(ROpCodes.Ldnull);
-                            paramCount++;
-                        }
-                        il.Emit(ROpCodes.Call, tryInstallHook);
-                        paramCount = 0;
-                    }
-                }
-                //The final result will be:
-                //GameEventHook.TryInstallHook(MethodBase.GetMethodFromHandle(methodof(<some method/constructor (target)>).MethodHandle), MethodBase.GetMethodFromHandle(methodof(<some method/constructor (hook)>).MethodHandle), MethodBase.GetMethodFromHandle(methodof(<some method/constructor (trampoline)>).MethodHandle));
-            }
-            il.Emit(ROpCodes.Ret);
-            return installAllDynamic;
-        }
-#endif
         #region Hooks
         static void ServerListScreen_switchToMe2_hook(ServerListScreen _this)
         {
@@ -1253,7 +1086,7 @@ namespace Mod
 
         static void GameScr_paintSelectedSkill_hook(GameScr _this, mGraphics g)
         {
-            if (Char.myCharz().isCharDead())
+            if (Char.myCharz().IsCharDead())
                 return;
             GameEvents.OnGameScrPaintSelectedSkill(_this, g);
             GameScr_paintSelectedSkill_original(_this, g);
@@ -1595,7 +1428,175 @@ namespace Mod
         }
         #endregion
 
+        internal static void InstallAllHooks()
+        {
+#if UNITY_EDITOR 
+            Debug.Log("Assembly-CSharp location: " + typeof(GameEventHook).Assembly.Location);
+            CreateDynamicInstallAllMethod().CreateDelegate(typeof(Action)).DynamicInvoke();
+#else
+            InstallAll();
+#endif
+        }
+
         #region Hook methods
+#if UNITY_EDITOR
+        /// <summary>
+        /// Tạo 1 hàm InstallAllDynamic động từ hàm <see cref="InstallAll"/> gốc với mã IL đã tối ưu.
+        /// </summary>
+        /// <returns><see cref="DynamicMethod"/> đã được tạo.</returns>
+        /// <remarks>
+        /// Mã IL được tạo sẽ tương tự như sau:
+        /// <code>
+        /// ldtoken     [target method]
+        /// call        class System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(valuetype System.RuntimeMethodHandle)
+        /// ldtoken     [hook method]
+        /// call        class System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(valuetype System.RuntimeMethodHandle)
+        /// ldtoken     [trampoline method]
+        /// call        class System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(valuetype System.RuntimeMethodHandle)
+        /// call        void Mod.GameEventHook::TryInstallHook(class System.Reflection.MethodBase, class System.Reflection.MethodBase, class System.Reflection.MethodBase)
+        /// ...
+        /// ret
+        /// </code>
+        /// </remarks>
+        static DynamicMethod CreateDynamicInstallAllMethod()
+        {
+            AssemblyDefinition assemblyCSharp_d = AssemblyDefinition.ReadAssembly(typeof(GameEventHook).Assembly.Location);
+            TypeDefinition gameEventHook_d = assemblyCSharp_d.MainModule.GetType(typeof(GameEventHook).FullName);
+            MethodDefinition installAll_d = gameEventHook_d.Methods.First(m => m.Name == nameof(InstallAll));
+
+            //TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod, T2 originalProxyMethod)
+            MethodDefinition tryInstallHookGeneric_d = gameEventHook_d.Methods.First(m => m.Name == nameof(TryInstallHook) && m.GenericParameters.Count == 2);
+
+            //TryInstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
+            MethodDefinition tryInstallHook_d = gameEventHook_d.Methods.First(m => m.Name == nameof(TryInstallHook) && m.GenericParameters.Count == 0);
+
+            //----------------------------------------------------------------------------------------------
+
+            //TryInstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
+            MethodInfo tryInstallHook = new Action<MethodBase, MethodBase, MethodBase>(TryInstallHook).Method;
+
+            Module assemblyCSharp = typeof(GameEventHook).Module;
+            MethodInfo getMethodFromHandle = new Func<RuntimeMethodHandle, MethodBase>(MethodBase.GetMethodFromHandle).Method;
+            DynamicMethod installAllDynamic = new DynamicMethod("InstallAllDynamic", typeof(void), new Type[0], typeof(GameEventHook), true);
+            ILGenerator il = installAllDynamic.GetILGenerator();
+
+            int paramCount = 0;
+            for (int i = 0; i < installAll_d.Body.Instructions.Count; i++)
+            {
+                Instruction instruction = installAll_d.Body.Instructions[i];
+                if (instruction.OpCode == OpCodes.Ldftn)
+                {
+                    //ldftn     <target/hook/trampoline method>
+                    if (instruction.Operand is MethodDefinition methodDef)
+                    {
+                        MethodInfo method = (MethodInfo)assemblyCSharp.ResolveMethod(methodDef.MetadataToken.ToInt32());
+                        il.Emit(ROpCodes.Ldtoken, method);
+                        il.Emit(ROpCodes.Call, getMethodFromHandle);
+                        //MethodBase.GetMethodFromHandle(methodof(<some method here>).MethodHandle
+                        paramCount++;
+                    }
+                }
+                else if (instruction.OpCode == OpCodes.Ldvirtftn)
+                {
+                    //ldvirtftn     <target method (virtual)>
+                    if (i >= 2 && instruction.Operand is MethodDefinition methodDef)
+                    {
+                        Instruction instruction1 = installAll_d.Body.Instructions[i - 1];
+                        Instruction instruction2 = installAll_d.Body.Instructions[i - 2];
+                        if (instruction1.OpCode == OpCodes.Dup && instruction2.IsLdloc())
+                        {
+                            VariableDefinition local = installAll_d.Body.Variables[instruction2.GetLdlocIndex()];
+                            MethodInfo method = (MethodInfo)assemblyCSharp.ResolveMethod(local.VariableType.Resolve().Methods.First(m => m.Name == methodDef.Name).MetadataToken.ToInt32());
+                            il.Emit(ROpCodes.Ldtoken, method);
+                            il.Emit(ROpCodes.Call, getMethodFromHandle);
+                            //MethodBase.GetMethodFromHandle(methodof(<some method here>).MethodHandle
+                            paramCount++;
+                        }
+                    }
+                }
+                else if (instruction.OpCode == OpCodes.Ldtoken)
+                {
+                    //ldtoken       <some type>
+                    if (i + 4 < installAll_d.Body.Instructions.Count && instruction.Operand is TypeDefinition typeToGetConstructor)
+                    {
+                        Instruction instruction2 = installAll_d.Body.Instructions[i + 1];
+                        Instruction instruction3 = installAll_d.Body.Instructions[i + 2];
+                        Instruction instruction4 = installAll_d.Body.Instructions[i + 3];
+                        Instruction instruction5 = installAll_d.Body.Instructions[i + 4];
+                        if (instruction2.OpCode == OpCodes.Call && instruction2.Operand is MethodReference getTypeFromHandle && getTypeFromHandle.Name == nameof(Type.GetTypeFromHandle))
+                        {
+                            //typeof(<some type>).GetConstructor(new Type[<some number>] {typeof(...), ... })
+                            if (instruction3.IsLdcI4() &&
+                                instruction4.OpCode == OpCodes.Newarr && instruction4.Operand is TypeReference typeReference2 && typeReference2.Name == nameof(Type))
+                            {
+                                //ldc.i4     <number of types>
+                                //newarr     [System.Type]
+                                //...
+                                //dup
+                                //ldc.i4     <index>
+                                //ldtoken    <some type>
+                                //call       class System.Type System.Type::GetTypeFromHandle(valuetype System.RuntimeTypeHandle)
+                                //stelem.ref
+                                //...
+                                //call       class System.Reflection.ConstructorInfo System.Type::GetConstructors(class System.Type[])
+                                int typesCount = instruction3.GetLdcI4Value();
+                                TypeReference[] paramTypes = new TypeReference[typesCount];
+                                for (int j = 0; j < typesCount; j++)
+                                {
+                                    int index = installAll_d.Body.Instructions[i + 5 * (j + 1)].GetLdcI4Value();
+                                    Instruction ldTokenTypeParam = installAll_d.Body.Instructions[i + 5 * (j + 1) + 1];
+                                    if (ldTokenTypeParam.Operand is TypeReference typeRefParam)
+                                        paramTypes[index] = typeRefParam;
+                                }
+                                ConstructorInfo _ctor = (ConstructorInfo)assemblyCSharp.ResolveMethod(typeToGetConstructor.Methods.First(m => m.IsConstructor && m.Parameters.Select(p => p.ParameterType.FullName).SequenceEqual(paramTypes.Select(p => p.FullName))).MetadataToken.ToInt32());
+                                il.Emit(ROpCodes.Ldtoken, _ctor);
+                                il.Emit(ROpCodes.Call, getMethodFromHandle);
+                                //MethodBase.GetMethodFromHandle(methodof(<constructor (.ctor) with x parameters>).MethodHandle
+                                paramCount++;
+                            }
+                            //typeof(<some type>).GetConstructors()[0]
+                            else if (instruction3.OpCode == OpCodes.Call && instruction3.Operand is MethodReference getConstructors && getConstructors.Name == nameof(Type.GetConstructors) &&
+                                instruction4.OpCode == OpCodes.Ldc_I4_0 &&
+                                instruction5.OpCode == OpCodes.Ldelem_Ref)
+                            {
+                                ConstructorInfo _ctor = (ConstructorInfo)assemblyCSharp.ResolveMethod(typeToGetConstructor.Methods.First(m => m.IsConstructor).MetadataToken.ToInt32());
+                                il.Emit(ROpCodes.Ldtoken, _ctor);
+                                il.Emit(ROpCodes.Call, getMethodFromHandle);
+                                //MethodBase.GetMethodFromHandle(methodof(<constructor (.ctor)>).MethodHandle
+                                paramCount++;
+                            }
+                        }
+                    }
+                }
+                else if (instruction.OpCode == OpCodes.Call)
+                {
+                    //call      TryInstallHook<T1, T2>(.....)
+                    if (instruction.Operand is MethodSpecification methodSpec && methodSpec.Resolve() == tryInstallHookGeneric_d)
+                    {
+                        il.Emit(ROpCodes.Call, tryInstallHook);
+                        paramCount = 0; //param count always equals 3 so no need to check
+                    }
+                    //call      TryInstallHook(.....)
+                    else if (instruction.Operand is MethodDefinition methodDefinition && methodDefinition == tryInstallHook_d)
+                    {
+                        //trampoline method can be null
+                        while (paramCount < 3)
+                        {
+                            il.Emit(ROpCodes.Ldnull);
+                            paramCount++;
+                        }
+                        il.Emit(ROpCodes.Call, tryInstallHook);
+                        paramCount = 0;
+                    }
+                }
+                //The final result will be:
+                //GameEventHook.TryInstallHook(MethodBase.GetMethodFromHandle(methodof(<some method/constructor (target)>).MethodHandle), MethodBase.GetMethodFromHandle(methodof(<some method/constructor (hook)>).MethodHandle), MethodBase.GetMethodFromHandle(methodof(<some method/constructor (trampoline)>).MethodHandle));
+            }
+            il.Emit(ROpCodes.Ret);
+            return installAllDynamic;
+        }
+#endif
+
         /// <summary>
         /// Thử cài đặt 1 hook.
         /// </summary>
@@ -1605,30 +1606,6 @@ namespace Mod
         /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
         /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
         static void TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod, T2 originalProxyMethod) where T1 : Delegate where T2 : Delegate => TryInstallHook(hookTargetMethod.Method, hookMethod.Method, originalProxyMethod.Method);
-        //static void TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod, T2 originalProxyMethod) where T1 : Delegate where T2 : Delegate => TryInstallHook<T1, T2, T2>(hookTargetMethod, hookMethod, originalProxyMethod);
-
-#if FALSE
-        /// <summary>
-        /// Thử cài đặt 1 hook.
-        /// </summary>
-        /// <typeparam name="T1">Loại <see cref="Delegate"/> của <paramref name="hookTargetMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
-        /// <typeparam name="T2">Loại <see cref="Delegate"/> của <paramref name="hookMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
-        /// <typeparam name="T3">Loại <see cref="Delegate"/> của <paramref name="originalProxyMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
-        /// <param name="hookTargetMethod">Hàm để hook vào.</param>
-        /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
-        /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
-        static void TryInstallHook<T1, T2, T3>(T1 hookTargetMethod, T2 hookMethod, T3 originalProxyMethod) where T1 : Delegate where T2 : Delegate where T3 : Delegate => TryInstallHook(hookTargetMethod.Method, hookMethod.Method, originalProxyMethod.Method);
-        /// <summary>
-        /// Cài đặt 1 hook.
-        /// </summary>
-        /// <typeparam name="T1">Loại <see cref="Delegate"/> của <paramref name="hookTargetMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
-        /// <typeparam name="T2">Loại <see cref="Delegate"/> của <paramref name="hookMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
-        /// <typeparam name="T3">Loại <see cref="Delegate"/> của <paramref name="originalProxyMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
-        /// <param name="hookTargetMethod">Hàm để hook vào.</param>
-        /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
-        /// <param name="originalProxyMethod">Hàm có cùng signature với hàm gốc, có chức năng làm hàm thay thế để gọi đến hàm gốc mà không bị thay thế (hàm trampoline). Hàm này phải có attribute <code>[MethodImpl(MethodImplOptions.NoOptimization)]</code> để tránh bị tối ưu hóa mất khi biên dịch.</param>
-        static void InstallHook<T1, T2, T3>(T1 hookTargetMethod, T2 hookMethod, T3 originalProxyMethod) where T1 : Delegate where T2 : Delegate where T3 : Delegate => InstallHook(hookTargetMethod.Method, hookMethod.Method, originalProxyMethod.Method);
-#endif
 
         /// <summary>
         /// Thử cài đặt 1 hook.

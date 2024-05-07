@@ -78,12 +78,12 @@ namespace Mod.Xmap
 
         internal static bool canUseCapsuleNormal()
         {
-            return isUseCapsuleNormal && !Char.myCharz().isCharDead() && XmapUtils.hasItemCapsuleNormal();
+            return isUseCapsuleNormal && !Char.myCharz().IsCharDead() && XmapUtils.hasItemCapsuleNormal();
         }
 
         internal static bool canUseCapsuleVip()
         {
-            return isUseCapsuleVip && !Char.myCharz().isCharDead() && XmapUtils.hasItemCapsuleVip();
+            return isUseCapsuleVip && !Char.myCharz().IsCharDead() && XmapUtils.hasItemCapsuleVip();
         }
 
         internal static int GetMapIdFromPanelXmap(string mapName)

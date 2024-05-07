@@ -57,7 +57,7 @@ namespace Mod.Xmap
                 }
             }
 
-            if (TileMap.mapID == way[way.Count - 1].to && !Char.myCharz().isCharDead())
+            if (TileMap.mapID == way[way.Count - 1].to && !Char.myCharz().IsCharDead())
             {
                 MainThreadDispatcher.dispatch(() =>
                     GameScr.info1.addInfo(Strings.xmapDestinationReached + '!', 0));
@@ -67,7 +67,7 @@ namespace Mod.Xmap
 
             if (TileMap.mapID == way[indexWay].mapStart)
             {
-                if (Char.myCharz().isCharDead())
+                if (Char.myCharz().IsCharDead())
                 {
                     Service.gI().returnTownFromDead();
                     isNextMapFailed = true;

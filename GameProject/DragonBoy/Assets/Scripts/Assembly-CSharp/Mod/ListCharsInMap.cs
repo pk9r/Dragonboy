@@ -31,7 +31,7 @@ namespace Mod
             for (int i = 0; i < GameScr.vCharInMap.size(); i++)
             {
                 Char ch = (Char)GameScr.vCharInMap.elementAt(i);
-                if (ch.isNormalChar(true))
+                if (ch.IsNormalChar(true))
                 {
                     listChars.Add(ch);
                     if (isShowPet && ch.charID > 0)
@@ -46,7 +46,7 @@ namespace Mod
                 for (int i = 0; i < GameScr.vCharInMap.size(); i++)
                 {
                     Char ch = (Char)GameScr.vCharInMap.elementAt(i);
-                    if (ch.isNormalChar(false, true) && !listChars.Contains(ch))
+                    if (ch.IsNormalChar(false, true) && !listChars.Contains(ch))
                         listChars.Add(ch);
                 }
             if (offset >= listChars.Count - MAX_CHAR)
@@ -130,20 +130,20 @@ namespace Mod
                 };
                 #region Format
                 Char ch = listChars[i];
-                string charDesc = $"<color=orange>{ch.getClanTag()}</color>{ch.getNameWithoutClanTag(true)} {formatHP(ch)}";
-                if (ch.isNormalChar())
-                    charDesc += $" - {ch.getGender(true)} [{ch.charID}]";
+                string charDesc = $"<color=orange>{ch.GetClanTag()}</color>{ch.GetNameWithoutClanTag(true)} {formatHP(ch)}";
+                if (ch.IsNormalChar())
+                    charDesc += $" - {ch.GetGender(true)} [{ch.charID}]";
                 if (ch.IsPet())
                 {
-                    charDesc += $" - {ch.getGender(true)}";
+                    charDesc += $" - {ch.GetGender(true)}";
                     Char chMaster = GameScr.findCharInMap(-ch.charID);
                     if (chMaster != null)
-                        charDesc += string.Format(Strings.someonePet, chMaster.getNameWithoutClanTag(true));
+                        charDesc += string.Format(Strings.someonePet, chMaster.GetNameWithoutClanTag(true));
                     else
                         charDesc += Strings.petLostMaster;
                     skippedCharCount++;
                 }
-                else if (!ch.isBoss())
+                else if (!ch.IsBoss())
                     charDesc = i + 1 - skippedCharCount + ". " + charDesc;
                 else
                     skippedCharCount++;
@@ -154,7 +154,7 @@ namespace Mod
                 //    else
                 //        charDesc += " - <color=yellow>Trong tầm</color>";
                 //}
-                if (ch.charEffectTime.hasBlackStarDragonBall || ch.isBoss())
+                if (ch.charEffectTime.hasBlackStarDragonBall || ch.IsBoss())
                     charDesc = $"<color=red>{charDesc}</color>";
                 else if (ch.IsPet())
                     charDesc = $"<color=cyan>{charDesc}</color>";
@@ -186,7 +186,7 @@ namespace Mod
                         if (ch.cFlag == 10)
                             g.drawString("M", -(x + offsetX), mGraphics.zoomLevel - 3 + y + distanceBetweenLines * (i - start + offset), flagStyle);
                     }
-                    g.setColor(ch.getFlagColor());
+                    g.setColor(ch.GetFlagColor());
                     g.fillRect(GameCanvas.w - (x + offsetX) - distanceBetweenLines + 1, y + 1 + distanceBetweenLines * (i - start + offset), distanceBetweenLines - 1, distanceBetweenLines - 1);
                 }
                 g.setColor(new Color(0.2f, 0.2f, 0.2f, 0.4f));
@@ -214,7 +214,7 @@ namespace Mod
                     g.fillRect(GameCanvas.w - (x + offsetX) - length - offsetPaint + 1, y + distanceBetweenLines * (i - start + offset) + 7, (int)(ratio * (length - 2)), 1);
                 }
                 int offset2 = 0;
-                if (ch.isBoss())
+                if (ch.IsBoss())
                     offset2 = -1;
                 g.drawString(charDescriptions[i - start + offset].Key, -(x + offsetX) - offsetPaint, mGraphics.zoomLevel - 3 + y + distanceBetweenLines * (i - start + offset) + offset2, charDescriptions[i - start + offset].Value);
             }
@@ -260,7 +260,7 @@ namespace Mod
                 scrollBarWidth = 0;
             int w = maxLength + 5 + (scrollBarWidth > 0 ? (scrollBarWidth + 2) : 0);
             int h = distanceBetweenLines * Math.Min(MAX_CHAR, listChars.Count) + 7;
-            int count = listChars.Where(c => c.isNormalChar()).Count();
+            int count = listChars.Where(c => c.IsNormalChar()).Count();
             float ratio = count / (float)GameScr.gI().maxPlayer[TileMap.zoneID];
             Color color = new Color(Mathf.Clamp(ratio * 2, 0, 1), Mathf.Clamp(2 - ratio * 2, 0, 1), 0);
             string hexColor = $"#{(int)(color.r * 255):x2}{(int)(color.g * 255):x2}{(int)(color.b * 255):x2}{(int)(color.a * 255):x2}";

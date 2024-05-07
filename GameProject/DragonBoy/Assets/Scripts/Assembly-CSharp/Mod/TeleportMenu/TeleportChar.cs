@@ -23,7 +23,7 @@
         }
         internal TeleportChar(Char ch)
         {
-            Name = ch.getNameWithoutClanTag();
+            Name = ch.GetNameWithoutClanTag();
             ID = ch.charID;
             LastTimeTeleportTo = mSystem.currentTimeMillis();
         }

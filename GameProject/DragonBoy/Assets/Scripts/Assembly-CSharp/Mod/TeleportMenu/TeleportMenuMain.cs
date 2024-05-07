@@ -64,7 +64,7 @@ namespace Mod.TeleportMenu
                     Strings.teleportMenuOpenSavedCharList, new MenuAction(() => ShowListChars(TeleportStatus.TeleportTo)));
             Char ch;
             Char focus = Char.myCharz().charFocus;
-            if (focus != null && focus.isNormalChar())
+            if (focus != null && focus.IsNormalChar())
                 ch = focus;
             else
                 ch = Char.myCharz().ClosestChar(70, true);
@@ -81,7 +81,7 @@ namespace Mod.TeleportMenu
                     }));
             }
 
-            if (focus != null && focus.isNormalChar())
+            if (focus != null && focus.IsNormalChar())
             {
                 var teleportChar = new TeleportChar(focus);
                 menuBuilder.addItem(listTeleportChars.Contains(teleportChar) && ((isAutoTeleportTo && charAutoTeleportTo != teleportChar) || !isAutoTeleportTo),
@@ -122,7 +122,7 @@ namespace Mod.TeleportMenu
                     for (int i = 0; i < GameScr.vCharInMap.size(); i++)
                     {
                         Char ch = (Char)GameScr.vCharInMap.elementAt(i);
-                        if (ch.isNormalChar(false, false))
+                        if (ch.IsNormalChar(false, false))
                         {
                             TeleportChar teleportChar1 = new TeleportChar(ch);
                             if (!listTeleportChars.Contains(teleportChar1))

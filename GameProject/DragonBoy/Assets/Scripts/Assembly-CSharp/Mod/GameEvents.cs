@@ -560,7 +560,7 @@ namespace Mod
                 ;
             else if (GameScr.isHaveSelectSkill)
             {
-                if (Char.myCharz().isCharDead())
+                if (Char.myCharz().IsCharDead())
                     return false;
                 if (!instance.isCharging())
                 {

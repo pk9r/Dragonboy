@@ -74,6 +74,7 @@ StyleCopReport.xml
 *_p.c
 *_h.h
 *.ilk
+*.meta
 *.obj
 *.iobj
 *.pch
@@ -360,18 +361,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-
-*.mdb
-Game/Game_Data/output_log.txt
-Game/ModData/chat.txt
-Game/ModData/Accounts.json
-Game/ModData/chatCommands.json
-Game/ModData/log_socket_client.txt
-Game/asset/
-Game/ModData/hotkeyCommands.json
-Game/ModData/settings.json
-Game/ModData/log.txt
-Game/ModData/Servers.txt
-
-# Crash Reports
-*-*-*_*/
