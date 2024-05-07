@@ -718,9 +718,9 @@ public class Char : IMapObject
 		36
 	};
 
-	private static Char myChar;
+	internal static Char myChar;
 
-	private static Char myPet;
+	internal static Char myPet;
 
 	public static int[] listAttack;
 
@@ -728,7 +728,7 @@ public class Char : IMapObject
 
 	public int cvyJump;
 
-	private int indexUseSkill = -1;
+	internal int indexUseSkill = -1;
 
 	public int cxSend;
 
@@ -842,15 +842,15 @@ public class Char : IMapObject
 
 	public int delayFall;
 
-	private bool isSoundJump;
+	internal bool isSoundJump;
 
 	public int lastFrame;
 
-    private Effect eProtect;
+	internal Effect eProtect;
 
-	private Effect eDanhHieu;
+	internal Effect eDanhHieu;
 
-	private int twHp;
+	internal int twHp;
 
 	public bool isInjureHp;
 
@@ -858,9 +858,9 @@ public class Char : IMapObject
 
 	public bool isHide;
 
-	private int count;
+	internal int count;
 
-	private bool wy;
+	internal bool wy;
 
 	public int wt;
 
@@ -868,9 +868,9 @@ public class Char : IMapObject
 
 	public int ty;
 
-	private int t;
+	internal int t;
 
-	private int fM;
+	internal int fM;
 
 	public int[] move = new int[15]
 	{
@@ -878,7 +878,7 @@ public class Char : IMapObject
 		3, 3, 2, 2, 2
 	};
 
-	private string strMount = "mount_";
+	internal string strMount = "mount_";
 
 	public int headICON = -1;
 
@@ -948,69 +948,69 @@ public class Char : IMapObject
 
 	public bool isStandAndCharge;
 
-	private bool isFlying;
+	internal bool isFlying;
 
 	public int posDisY;
 
-	private int chargeCount;
+	internal int chargeCount;
 
-	private bool hasSendAttack;
+	internal bool hasSendAttack;
 
 	public bool isMabuHold;
 
-	private long timeBlue;
+	internal long timeBlue;
 
-	private int tBlue;
+	internal int tBlue;
 
-	private bool IsAddDust1;
+	internal bool IsAddDust1;
 
-	private bool IsAddDust2;
+	internal bool IsAddDust2;
 
 	public int len = 24;
 
 	public int w_hp_bar = 24;
 
-	private int per = 100;
+	internal int per = 100;
 
-	private int per_tem = 100;
+	internal int per_tem = 100;
 
-	private Image imgHPtem;
+	internal Image imgHPtem;
 
 	internal bool isPet;
 
 	internal bool isMiniPet;
 
-	private int iiii;
+	internal int iiii;
 
-	private int danhHieuFramme;
+	internal int danhHieuFramme;
 
 	public int xSd;
 
 	public int ySd;
 
-	private bool isOutMap;
+	internal bool isOutMap;
 
-	private int fBag;
+	internal int fBag;
 
-	private Part ph;
+	internal Part ph;
 
-	private Part pl;
+	internal Part pl;
 
-	private Part pb;
+	internal Part pb;
 
 	public int cH_new = 32;
 
-	private int statusBeforeNothing;
+	internal int statusBeforeNothing;
 
-	private int timeFocusToMob;
+	internal int timeFocusToMob;
 
 	public static bool isManualFocus = false;
 
 	internal Char charHold;
 
-	private Mob mobHold;
+	internal Mob mobHold;
 
-	private int nInjure;
+	internal int nInjure;
 
 	public short wdx;
 
@@ -1052,7 +1052,7 @@ public class Char : IMapObject
 
 	public bool isWaitMonkey;
 
-	private bool isFeetEff;
+	internal bool isFeetEff;
 
 	public bool meDead;
 
@@ -1064,17 +1064,17 @@ public class Char : IMapObject
 
 	public bool danhHieuEff = true;
 
-	private bool isSetPos;
+	internal bool isSetPos;
 
-	private int tpos;
+	internal int tpos;
 
-	private short xPos;
+	internal short xPos;
 
-	private short yPos;
+	internal short yPos;
 
-	private sbyte typePos;
+	internal sbyte typePos;
 
-	private bool isMyFusion;
+	internal bool isMyFusion;
 
 	public bool isFusion;
 
@@ -1108,13 +1108,13 @@ public class Char : IMapObject
 
 	public static FrameImage fraRedEye;
 
-	private int fChopmat;
+	internal int fChopmat;
 
-	private bool isAddChopMat;
+	internal bool isAddChopMat;
 
-	private long timeAddChopmat;
+	internal long timeAddChopmat;
 
-	private int[] frChopNhanh = new int[34]
+	internal int[] frChopNhanh = new int[34]
 	{
 		-1, -1, -1, -1, 0, 0, 1, 1, 0, 0,
 		1, 1, 0, 0, 1, 1, 0, 0, 1, 1,
@@ -1122,14 +1122,14 @@ public class Char : IMapObject
 		-1, -1, -1, -1
 	};
 
-	private int[] frChopCham = new int[23]
+	internal int[] frChopCham = new int[23]
 	{
 		-1, -1, -1, -1, 0, 0, 1, 1, 1, 0,
 		0, 1, 1, 1, 0, 0, 1, 1, 1, -1,
 		-1, -1, -1
 	};
 
-	private int[] frEye = new int[30]
+	internal int[] frEye = new int[30]
 	{
 		-1, -1, 0, 0, 1, 1, 0, 0, 1, 1,
 		0, 0, 1, 1, 0, 0, 1, 1, 0, 0,
@@ -1138,9 +1138,9 @@ public class Char : IMapObject
 
 	public static int[][] Arr_Head_2Fr = new int[1][] { new int[2] { 542, 543 } };
 
-	private int fHead;
+	internal int fHead;
 
-	private string strEffAura = "aura_";
+	internal string strEffAura = "aura_";
 
 	public short idAuraEff = -1;
 
@@ -1148,27 +1148,27 @@ public class Char : IMapObject
 
 	public static bool isPaintAura2 = true;
 
-	private FrameImage fraEff;
+	internal FrameImage fraEff;
 
-	private FrameImage fraEffSub;
+	internal FrameImage fraEffSub;
 
-	private string strEff_Set_Item = "set_eff_";
+	internal string strEff_Set_Item = "set_eff_";
 
 	public short idEff_Set_Item = -1;
 
-	private FrameImage fraHat_behind;
+	internal FrameImage fraHat_behind;
 
-	private FrameImage fraHat_font;
+	internal FrameImage fraHat_font;
 
-	private FrameImage fraHat_behind_2;
+	internal FrameImage fraHat_behind_2;
 
-	private FrameImage fraHat_font_2;
+	internal FrameImage fraHat_font_2;
 
-	private string strHat_behind = "hat_sau_";
+	internal string strHat_behind = "hat_sau_";
 
-	private string strHat_font = "hat_truoc_";
+	internal string strHat_font = "hat_truoc_";
 
-	private string strNgang = "ngang_";
+	internal string strNgang = "ngang_";
 
 	public short idHat = -1;
 
@@ -1220,37 +1220,37 @@ public class Char : IMapObject
 
 	public bool isPaintNewSkill;
 
-	private bool isFly;
+	internal bool isFly;
 
-	private long timeReset_newSkill;
+	internal long timeReset_newSkill;
 
-	private sbyte typeFrame;
+	internal sbyte typeFrame;
 
-	private short idskillPaint;
+	internal short idskillPaint;
 
-	private byte[] fr_start;
+	internal byte[] fr_start;
 
-	private byte[] fr_atk;
+	internal byte[] fr_atk;
 
-	private byte[] fr_end;
+	internal byte[] fr_end;
 
-	private int count_NEW;
+	internal int count_NEW;
 
-	private int stt;
+	internal int stt;
 
-	private short rangeDame;
+	internal short rangeDame;
 
-	private sbyte typePaint;
+	internal sbyte typePaint;
 
-	private sbyte typeItem;
+	internal sbyte typeItem;
 
-	private Point targetDame;
+	internal Point targetDame;
 
-	private long timeDame;
+	internal long timeDame;
 
 	public bool isMafuba;
 
-	private short countMafuba;
+	internal short countMafuba;
 
 	public int xMFB;
 
@@ -1258,9 +1258,9 @@ public class Char : IMapObject
 
 	public int timeGongSkill;
 
-	private FrameImage fraDanhHieu;
+	internal FrameImage fraDanhHieu;
 
-	private MainImage mainImg;
+	internal MainImage mainImg;
 
     public Char()
 	{
@@ -2714,7 +2714,7 @@ public class Char : IMapObject
 		}
 	}
 
-	private void updateEffect()
+	internal void updateEffect()
 	{
 		if (effPaints != null)
 		{
@@ -2769,7 +2769,7 @@ public class Char : IMapObject
 		}
 	}
 
-	private void checkPerformEndMovePointAction()
+	internal void checkPerformEndMovePointAction()
 	{
 		if (endMovePointCommand != null)
 		{
@@ -2779,7 +2779,7 @@ public class Char : IMapObject
 		}
 	}
 
-	private void checkHideCharName()
+	internal void checkHideCharName()
 	{
 		if (GameCanvas.gameTick % 20 != 0 || charID < 0)
 			return;
@@ -2812,7 +2812,7 @@ public class Char : IMapObject
 		}
 	}
 
-	private void updateMobMe()
+	internal void updateMobMe()
 	{
 		if (tMobMeBorn != 0)
 			tMobMeBorn--;
@@ -2828,7 +2828,7 @@ public class Char : IMapObject
 		}
 	}
 
-	private void updateSkillPaint()
+	internal void updateSkillPaint()
 	{
 		if (statusMe == 14 || statusMe == 5)
 			return;
@@ -2999,7 +2999,7 @@ public class Char : IMapObject
 		myCharz().cySend = y;
 	}
 
-	private void updateCharDeadFly()
+	internal void updateCharDeadFly()
 	{
 		isFreez = false;
 		if (isCharge)
@@ -3028,7 +3028,7 @@ public class Char : IMapObject
 		cf = 23;
 	}
 
-	private void updateResetPoint()
+	internal void updateResetPoint()
 	{
 		InfoDlg.hide();
 		GameCanvas.clearAllPointerEvent();
@@ -3461,7 +3461,7 @@ public class Char : IMapObject
 		addDustEff(2);
 	}
 
-	private void stop()
+	internal void stop()
 	{
 		statusMe = 6;
 		cp3 = 0;
@@ -3888,7 +3888,7 @@ public class Char : IMapObject
 			Service.gI().charMove();
 	}
 
-	private bool isHead_Fly(int head2)
+	internal bool isHead_Fly(int head2)
 	{
 		if (Arr_Head_FlyMove.Length > 0)
 		{
@@ -4269,7 +4269,7 @@ public class Char : IMapObject
 		return result;
 	}
 
-	private void checkDelayFallIfTooHigh()
+	internal void checkDelayFallIfTooHigh()
 	{
 		bool flag = true;
 		for (int i = 0; i < 150; i += 24)
@@ -4882,7 +4882,7 @@ public class Char : IMapObject
 				effect.paint(g);
 		}
 	}
-		
+	
 	internal void paintSuperEffBehind(mGraphics g)
 	{
 		if ((me && !isPaintAura2) || idAuraEff > -1 || (statusMe != 1 && statusMe != 6) || mSystem.currentTimeMillis() - timeBlue <= 0 || isCopy || clevel < 16)
@@ -5024,7 +5024,7 @@ public class Char : IMapObject
 			SmallImage.drawSmallImage(g, effTask.arrEfInfo[indexEffTask].idImg, cx + effTask.arrEfInfo[indexEffTask].dx, cy + effTask.arrEfInfo[indexEffTask].dy, 0, mGraphics.VCENTER | mGraphics.HCENTER);
 	}
 
-	private void paintArrowAttack(mGraphics g)
+	internal void paintArrowAttack(mGraphics g)
 	{
 	}
 
@@ -5093,7 +5093,7 @@ public class Char : IMapObject
 		}
 	}
 
-	private void paintCharName_HP_MP_Overhead(mGraphics g)
+	internal void paintCharName_HP_MP_Overhead(mGraphics g)
 	{
 		Part part = GameScr.parts[getFHead(head)];
 		int num = CharInfo[cf][0][2] - part.pi[CharInfo[cf][0][0]].dy + 5;
@@ -5239,7 +5239,7 @@ public class Char : IMapObject
 		}
 	}
 
-	private void paintCharWithoutSkill(mGraphics g)
+	internal void paintCharWithoutSkill(mGraphics g)
 	{
 		try
 		{
@@ -6484,7 +6484,7 @@ public class Char : IMapObject
 		return result;
 	}
 
-	private void paintPKFlag(mGraphics g)
+	internal void paintPKFlag(mGraphics g)
 	{
 		if (cdir == 1)
 		{
@@ -6732,7 +6732,7 @@ public class Char : IMapObject
 			fChopmat = 0;
 	}
 
-	private void paintRedEye(mGraphics g, int xx, int yy, int trans, int anchor)
+	internal void paintRedEye(mGraphics g, int xx, int yy, int trans, int anchor)
 	{
 		if (head != 934 || (statusMe != 1 && statusMe != 6))
 			return;
@@ -6758,7 +6758,7 @@ public class Char : IMapObject
 		return false;
 	}
 
-	private void updateFHead()
+	internal void updateFHead()
 	{
 		if (isHead_2Fr(head))
 		{
@@ -6770,7 +6770,7 @@ public class Char : IMapObject
 			fHead = 0;
 	}
 
-	private int getFHead(int idHead)
+	internal int getFHead(int idHead)
 	{
 		for (int i = 0; i < Arr_Head_2Fr.Length; i++)
 		{

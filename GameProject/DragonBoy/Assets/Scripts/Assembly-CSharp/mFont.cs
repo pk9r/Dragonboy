@@ -32,13 +32,13 @@ public class mFont
 
 	public static int MP = 10;
 
-	private int space;
+	internal int space;
 
-	private Image imgFont;
+	internal Image imgFont;
 
-	private string strFont;
+	internal string strFont;
 
-	private int[][] fImages;
+	internal int[][] fImages;
 
 	public static int yAddFont;
 
@@ -136,9 +136,9 @@ public class mFont
 
 	public Font myFont;
 
-	private int height;
+	internal int height;
 
-	private int wO;
+	internal int wO;
 
 	public Color color1 = Color.white;
 
@@ -154,9 +154,9 @@ public class mFont
 
 	public const string str = " 0123456789+-*='_?.,<>/[]{}!@#$%^&*():aáàảãạâấầẩẫậăắằẳẵặbcdđeéèẻẽẹêếềểễệfghiíìỉĩịjklmnoóòỏõọôốồổỗộơớờởỡợpqrstuúùủũụưứừửữựvxyýỳỷỹỵzwAÁÀẢÃẠĂẰẮẲẴẶÂẤẦẨẪẬBCDĐEÉÈẺẼẸÊẾỀỂỄỆFGHIÍÌỈĨỊJKLMNOÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢPQRSTUÚÙỦŨỤƯỨỪỬỮỰVXYÝỲỶỸỴZW";
 
-	private int yAdd;
+	internal int yAdd;
 
-	private string pathImage;
+	internal string pathImage;
 
 	public mFont(string strFont, string pathImage, string pathData, int space)
 	{

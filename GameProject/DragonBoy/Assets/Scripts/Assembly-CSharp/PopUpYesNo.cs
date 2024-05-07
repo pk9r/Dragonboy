@@ -6,19 +6,19 @@ public class PopUpYesNo : IActionListener
 
 	public string[] info;
 
-	private int X;
+	internal int X;
 
-	private int Y;
+	internal int Y;
 
-	private int W = 120;
+	internal int W = 120;
 
-	private int H;
+	internal int H;
 
-	private int dem;
+	internal int dem;
 
-	private long last;
+	internal long last;
 
-	private long curr;
+	internal long curr;
 
 	public void setPopUp(string info, Command cmdYes, Command cmdNo)
 	{

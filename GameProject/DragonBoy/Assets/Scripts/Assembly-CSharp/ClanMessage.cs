@@ -18,7 +18,7 @@ public class ClanMessage : IActionListener
 
 	public sbyte role;
 
-	private int timeAgo;
+	internal int timeAgo;
 
 	public int recieve;
 

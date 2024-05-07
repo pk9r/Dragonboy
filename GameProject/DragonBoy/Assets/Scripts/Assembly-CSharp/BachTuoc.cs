@@ -14,55 +14,55 @@ public class BachTuoc : Mob, IMapObject
 
 	public bool change;
 
-	private Mob mob1;
+	internal Mob mob1;
 
 	public new int xSd;
 
 	public new int ySd;
 
-	private bool isOutMap;
+	internal new bool isOutMap;
 
-	private int wCount;
+	internal new int wCount;
 
 	public new bool isShadown = true;
 
-	private int tick;
+	internal new int tick;
 
-	private int frame;
+	internal new int frame;
 
 	public new static Image imgHP = GameCanvas.loadImage("/mainImage/myTexture2dmobHP.png");
 
-	private bool wy;
+	internal new bool wy;
 
-	private int wt;
+	internal new int wt;
 
-	private int fy;
+	internal new int fy;
 
-	private int ty;
+	internal new int ty;
 
 	public new int typeSuperEff;
 
-	private Char focus;
+	internal Char focus;
 
-	private bool flyUp;
+	internal bool flyUp;
 
-	private bool flyDown;
+	internal bool flyDown;
 
-	private int dy;
+	internal int dy;
 
 	public bool changePos;
 
-	private int tShock;
+	internal int tShock;
 
 	public new bool isBusyAttackSomeOne = true;
 
-	private int tA;
+	internal int tA;
 
-	private Char[] charAttack;
+	internal Char[] charAttack;
 
-	private int[] dameHP;
+	internal int[] dameHP;
 
-	private sbyte type;
+	internal sbyte type;
 
 	public new int[] stand = new int[12]
 	{
@@ -90,9 +90,9 @@ public class BachTuoc : Mob, IMapObject
 
 	public new int[] hurt = new int[4] { 1, 1, 7, 7 };
 
-	private bool shock;
+	internal bool shock;
 
-	private sbyte[] cou = new sbyte[2] { -1, 1 };
+	internal new sbyte[] cou = new sbyte[2] { -1, 1 };
 
 	public new Char injureBy;
 
@@ -171,7 +171,7 @@ public class BachTuoc : Mob, IMapObject
 		frame = array[tick];
 	}
 
-	private void updateShadown()
+	internal new void updateShadown()
 	{
 		int num = TileMap.size;
 		xSd = x;
@@ -199,7 +199,7 @@ public class BachTuoc : Mob, IMapObject
 		}
 	}
 
-	private void paintShadow(mGraphics g)
+	internal new void paintShadow(mGraphics g)
 	{
 		int num = TileMap.size;
 		g.drawImage(shadowBig, xSd, yFirst, 3);
@@ -250,7 +250,7 @@ public class BachTuoc : Mob, IMapObject
 		}
 	}
 
-	private void updateDead()
+	internal void updateDead()
 	{
 		checkFrameTick(stand);
 		if (GameCanvas.gameTick % 5 == 0)
@@ -290,18 +290,18 @@ public class BachTuoc : Mob, IMapObject
 			p3 = 1;
 	}
 
-	private bool isSpecial()
+	internal new bool isSpecial()
 	{
 		if ((templateId >= 58 && templateId <= 65) || templateId == 67 || templateId == 68)
 			return true;
 		return false;
 	}
 
-	private void updateInjure()
+	internal new void updateInjure()
 	{
 	}
 
-	private void updateMobStandWait()
+	internal new void updateMobStandWait()
 	{
 		checkFrameTick(stand);
 		if (x != xTo || y != yTo)

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class MyKeyMap
 {
-	private static Hashtable h;
+	internal static Hashtable h;
 
 	static MyKeyMap()
 	{

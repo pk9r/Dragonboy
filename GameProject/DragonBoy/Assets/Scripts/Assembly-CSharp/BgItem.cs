@@ -28,7 +28,7 @@ public class BgItem
 
 	public static MyVector vKeysLast = new MyVector();
 
-	private bool isBlur;
+	internal bool isBlur;
 
 	public int transX;
 

@@ -2,25 +2,25 @@ public class ServerEffect : Effect2
 {
 	public EffectCharPaint eff;
 
-	private int i0;
+	internal int i0;
 
-	private int dx0;
+	internal int dx0;
 
-	private int dy0;
+	internal int dy0;
 
-	private int x;
+	internal int x;
 
-	private int y;
+	internal int y;
 
-	private Char c;
+	internal Char c;
 
-	private Mob m;
+	internal Mob m;
 
-	private short loopCount;
+	internal short loopCount;
 
-	private long endTime;
+	internal long endTime;
 
-	private int trans;
+	internal int trans;
 
 	public static void addServerEffect(int id, int cx, int cy, int loopCount)
 	{

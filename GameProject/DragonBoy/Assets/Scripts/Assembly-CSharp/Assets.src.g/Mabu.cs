@@ -8,15 +8,15 @@ namespace Assets.src.g
 
 		public static EffectData data2;
 
-		private new int tick;
+		internal new int tick;
 
-		private int lastDir;
+		internal int lastDir;
 
-		private bool addFoot;
+		internal bool addFoot;
 
-		private Effect effEat;
+		internal Effect effEat;
 
-		private new Char focus;
+		internal new Char focus;
 
 		public int xTo;
 
@@ -26,11 +26,11 @@ namespace Assets.src.g
 
 		public bool change;
 
-		private Char[] charAttack;
+		internal Char[] charAttack;
 
-		private int[] damageAttack;
+		internal int[] damageAttack;
 
-		private int dx;
+		internal int dx;
 
 		public static int[] skill1 = new int[30]
 		{
@@ -58,9 +58,9 @@ namespace Assets.src.g
 
 		public sbyte skillID = -1;
 
-		private int frame;
+		internal int frame;
 
-		private int pIndex;
+		internal int pIndex;
 
 		public Mabu()
 		{

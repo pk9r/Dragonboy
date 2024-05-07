@@ -28,7 +28,7 @@ public class Command
 
 	public int hw;
 
-	private int lenCaption;
+	internal int lenCaption;
 
 	public bool isFocus;
 

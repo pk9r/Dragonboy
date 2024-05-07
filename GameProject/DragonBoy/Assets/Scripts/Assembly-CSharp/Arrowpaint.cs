@@ -126,7 +126,7 @@ public class Arrowpaint
 			endMe();
 	}
 
-	private void endMe()
+	internal void endMe()
 	{
 		charBelong.arr = null;
 		ax = (ay = (axTo = (ayTo = (avx = (avy = (adx = (ady = 0)))))));

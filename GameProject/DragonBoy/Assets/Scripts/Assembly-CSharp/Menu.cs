@@ -28,11 +28,11 @@ public class Menu
 
 	public static int xc;
 
-	private Command left = new Command(mResources.SELECT, 0);
+	internal Command left = new Command(mResources.SELECT, 0);
 
-	private Command right = new Command(mResources.CLOSE, 0, GameCanvas.w - 71, GameCanvas.h - mScreen.cmdH + 1);
+	internal Command right = new Command(mResources.CLOSE, 0, GameCanvas.w - 71, GameCanvas.h - mScreen.cmdH + 1);
 
-	private Command center;
+	internal Command center;
 
 	public static Image imgMenu1;
 
@@ -44,33 +44,33 @@ public class Menu
 
 	public int w;
 
-	private int pa;
+	internal int pa;
 
-	private bool trans;
+	internal bool trans;
 
-	private int pointerDownTime;
+	internal int pointerDownTime;
 
-	private int pointerDownFirstX;
+	internal int pointerDownFirstX;
 
-	private int[] pointerDownLastX = new int[3];
+	internal int[] pointerDownLastX = new int[3];
 
-	private bool pointerIsDowning;
+	internal bool pointerIsDowning;
 
-	private bool isDownWhenRunning;
+	internal bool isDownWhenRunning;
 
-	private bool wantUpdateList;
+	internal bool wantUpdateList;
 
-	private int waitToPerform;
+	internal int waitToPerform;
 
-	private int cmRun;
+	internal int cmRun;
 
-	private bool touch;
+	internal bool touch;
 
-	private bool close;
+	internal bool close;
 
-	private int cmvx;
+	internal int cmvx;
 
-	private int cmdx;
+	internal int cmdx;
 
 	internal bool isClose;
 

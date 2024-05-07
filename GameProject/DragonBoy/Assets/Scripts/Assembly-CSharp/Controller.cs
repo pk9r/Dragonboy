@@ -22,11 +22,11 @@ public class Controller : IMessageHandler
 
 	public static bool isMain;
 
-	private float demCount;
+	internal float demCount;
 
-	private int move;
+	internal int move;
 
-	private int total;
+	internal int total;
 
 	public static bool isStopReadMessage;
 
@@ -2777,7 +2777,7 @@ public class Controller : IMessageHandler
 					gameInfo.main = msg.reader().readUTF();
 					gameInfo.content = msg.reader().readUTF();
 					Panel.vGameInfo.addElement(gameInfo);
-					gameInfo.hasRead = ((Rms.loadRMSInt(gameInfo.id + string.Empty) != -1) ? true : false);
+					gameInfo.hasRead = Rms.loadRMSInt(gameInfo.id + string.Empty) != -1;
 				}
 				break;
 			}
@@ -3995,7 +3995,7 @@ public class Controller : IMessageHandler
 		}
 	}
 
-	private void readLogin(Message msg)
+	internal void readLogin(Message msg)
 	{
 		sbyte b = msg.reader().readByte();
 		ChooseCharScr.playerData = new PlayerData[b];
@@ -4014,7 +4014,7 @@ public class Controller : IMessageHandler
 		GameCanvas.chooseCharScr.updateChooseCharacter((byte)b);
 	}
 
-	private void createItem(myReader d)
+	internal void createItem(myReader d)
 	{
 		GameScr.vcItem = d.readByte();
 		ItemTemplates.itemTemplates.clear();
@@ -4033,7 +4033,7 @@ public class Controller : IMessageHandler
 		}
 	}
 
-	private void createSkill(myReader d)
+	internal void createSkill(myReader d)
 	{
 		GameScr.vcSkill = d.readByte();
 		GameScr.gI().sOptionTemplates = new SkillOptionTemplate[d.readByte()];
@@ -4086,7 +4086,7 @@ public class Controller : IMessageHandler
 		}
 	}
 
-	private void createMap(myReader d)
+	internal void createMap(myReader d)
 	{
 		GameScr.vcMap = d.readByte();
 		TileMap.mapNames = new string[d.readUnsignedByte()];
@@ -4127,7 +4127,7 @@ public class Controller : IMessageHandler
 		}
 	}
 
-	private void createData(myReader d, bool isSaveRMS)
+	internal void createData(myReader d, bool isSaveRMS)
 	{
 		GameScr.vcData = d.readByte();
 		if (isSaveRMS)
@@ -4142,7 +4142,7 @@ public class Controller : IMessageHandler
 		}
 	}
 
-	private Image createImage(sbyte[] arr)
+	internal Image createImage(sbyte[] arr)
 	{
 		try
 		{
@@ -5501,7 +5501,7 @@ public class Controller : IMessageHandler
 		}
 	}
 
-	private void useSkill(Skill skill)
+	internal void useSkill(Skill skill)
 	{
 		if (Char.myCharz().myskill == null)
 			Char.myCharz().myskill = skill;
@@ -5572,7 +5572,7 @@ public class Controller : IMessageHandler
 		return false;
 	}
 
-	private void readGetImgByName(Message msg)
+	internal void readGetImgByName(Message msg)
 	{
 		try
 		{
@@ -5589,7 +5589,7 @@ public class Controller : IMessageHandler
 		}
 	}
 
-	private void createItemNew(myReader d)
+	internal void createItemNew(myReader d)
 	{
 		try
 		{
@@ -5600,7 +5600,7 @@ public class Controller : IMessageHandler
 		}
 	}
 
-	private void loadItemNew(myReader d, sbyte type, bool isSave)
+	internal void loadItemNew(myReader d, sbyte type, bool isSave)
 	{
 		try
 		{
@@ -5713,7 +5713,7 @@ public class Controller : IMessageHandler
 		}
 	}
 
-	private void readFrameBoss(Message msg, int mobTemplateId)
+	internal void readFrameBoss(Message msg, int mobTemplateId)
 	{
 		try
 		{
@@ -5735,7 +5735,7 @@ public class Controller : IMessageHandler
 		}
 	}
 
-	private int[][] readArrHead(myReader d)
+	internal int[][] readArrHead(myReader d)
 	{
 		int[][] array = new int[1][] { new int[2] { 542, 543 } };
 		try
@@ -5770,7 +5770,7 @@ public class Controller : IMessageHandler
 		}
 	}
 
-	private void readPhuBan_CHIENTRUONGNAMEK(Message msg, int type_PB)
+	internal void readPhuBan_CHIENTRUONGNAMEK(Message msg, int type_PB)
 	{
 		try
 		{

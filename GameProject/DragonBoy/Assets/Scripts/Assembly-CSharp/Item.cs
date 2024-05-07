@@ -198,13 +198,13 @@ public class Item
 
 	public string nameNguoiKyGui = string.Empty;
 
-	private int[] color = new int[18]
+	internal int[] color = new int[18]
 	{
 		0, 0, 0, 0, 600841, 600841, 667658, 667658, 3346944, 3346688,
 		4199680, 5052928, 3276851, 3932211, 4587571, 5046280, 6684682, 3359744
 	};
 
-	private int[][] colorBorder = new int[5][]
+	internal int[][] colorBorder = new int[5][]
 	{
 		new int[6] { 18687, 16869, 15052, 13235, 11161, 9344 },
 		new int[6] { 45824, 39168, 32768, 26112, 19712, 13056 },
@@ -213,7 +213,7 @@ public class Item
 		new int[6] { 16711705, 15007767, 13369364, 11730962, 10027023, 8388621 }
 	};
 
-	private int[] size = new int[6] { 2, 1, 1, 1, 1, 1 };
+	internal int[] size = new int[6] { 2, 1, 1, 1, 1, 1 };
 
 	public void getCompare()
 	{
@@ -292,7 +292,7 @@ public class Item
 		}
 	}
 
-	private int upgradeEffectY(int tick)
+	internal int upgradeEffectY(int tick)
 	{
 		int num = GameScr.indexSize - 2;
 		int num2 = tick % (4 * num);
@@ -305,7 +305,7 @@ public class Item
 		return num - num2 % num;
 	}
 
-	private int upgradeEffectX(int tick)
+	internal int upgradeEffectX(int tick)
 	{
 		int num = GameScr.indexSize - 2;
 		int num2 = tick % (4 * num);

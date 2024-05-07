@@ -5,7 +5,7 @@ public class CreateCharScr : mScreen, IActionListener
 {
 	public static CreateCharScr instance;
 
-	private PopUp p;
+	internal PopUp p;
 
 	public static bool isCreateChar = false;
 
@@ -28,25 +28,25 @@ public class CreateCharScr : mScreen, IActionListener
 
 	public static int[] defaultBody = new int[3] { 1, 12, 7 };
 
-	private int yButton;
+	internal int yButton;
 
-	private int disY;
+	internal int disY;
 
-	private int[] bgID = new int[3] { 0, 4, 8 };
+	internal int[] bgID = new int[3] { 0, 4, 8 };
 
 	public int yBegin;
 
-	private int curIndex;
+	internal int curIndex;
 
-	private int cx = 168;
+	internal int cx = 168;
 
-	private int cy = 350;
+	internal int cy = 350;
 
-	private int dy = 45;
+	internal int dy = 45;
 
-	private int cp1;
+	internal int cp1;
 
-	private int cf;
+	internal int cf;
 
 	public CreateCharScr()
 	{

@@ -59,17 +59,17 @@ public class TField : IActionListener
 
     public static int typeXpeed = 2;
 
-    private static readonly int[] MAX_TIME_TO_CONFIRM_KEY = new int[7] { 30, 14, 11, 9, 6, 4, 2 };
+    internal static readonly int[] MAX_TIME_TO_CONFIRM_KEY = new int[7] { 30, 14, 11, 9, 6, 4, 2 };
 
-    private static int CARET_HEIGHT = 0;
+    internal static int CARET_HEIGHT = 0;
 
-    private static readonly int CARET_WIDTH = 1;
+    internal static readonly int CARET_WIDTH = 1;
 
-    private static readonly int CARET_SHOWING_TIME = 5;
+    internal static readonly int CARET_SHOWING_TIME = 5;
 
-    private static readonly int TEXT_GAP_X = 4;
+    internal static readonly int TEXT_GAP_X = 4;
 
-    private static readonly int MAX_SHOW_CARET_COUNER = 10;
+    internal static readonly int MAX_SHOW_CARET_COUNER = 10;
 
     public static readonly int INPUT_TYPE_ANY = 0;
 
@@ -79,47 +79,47 @@ public class TField : IActionListener
 
     public static readonly int INPUT_ALPHA_NUMBER_ONLY = 3;
 
-    private static string[] print = new string[12]
+    internal static string[] print = new string[12]
     {
         " 0", ".,@?!_1\"/$-():*+<=>;%&~#%^&*{}[];'/1", "abc2áàảãạâấầẩẫậăắằẳẵặ2", "def3đéèẻẽẹêếềểễệ3", "ghi4íìỉĩị4", "jkl5", "mno6óòỏõọôốồổỗộơớờởỡợ6", "pqrs7", "tuv8úùủũụưứừửữự8", "wxyz9ýỳỷỹỵ9",
         "*", "#"
     };
 
-    private static string[] printA = new string[12]
+    internal static string[] printA = new string[12]
     {
         "0", "1", "abc2", "def3", "ghi4", "jkl5", "mno6", "pqrs7", "tuv8", "wxyz9",
         "0", "0"
     };
 
-    private static string[] printBB = new string[17]
+    internal static string[] printBB = new string[17]
     {
         " 0", "er1", "ty2", "ui3", "df4", "gh5", "jk6", "cv7", "bn8", "m9",
         "0", "0", "qw!", "as?", "zx", "op.", "l,"
     };
 
-    private string text = string.Empty;
+    internal string text = string.Empty;
 
-    private string passwordText = string.Empty;
+    internal string passwordText = string.Empty;
 
-    private string paintedText = string.Empty;
+    internal string paintedText = string.Empty;
 
-    private int caretPos;
+    internal int caretPos;
 
-    private int counter;
+    internal int counter;
 
-    private int maxTextLenght = 500;
+    internal int maxTextLenght = 500;
 
-    private int offsetX;
+    internal int offsetX;
 
-    private static int lastKey = -1984;
+    internal static int lastKey = -1984;
 
-    private int keyInActiveState;
+    internal int keyInActiveState;
 
-    private int indexOfActiveChar;
+    internal int indexOfActiveChar;
 
-    private int showCaretCounter = MAX_SHOW_CARET_COUNER;
+    internal int showCaretCounter = MAX_SHOW_CARET_COUNER;
 
-    private int inputType = INPUT_TYPE_ANY;
+    internal int inputType = INPUT_TYPE_ANY;
 
     public static bool isQwerty = true;
 
@@ -165,23 +165,23 @@ public class TField : IActionListener
 
     public Command cmdDoneAction;
 
-    private mScreen parentScr;
+    internal mScreen parentScr;
 
-    private int timeDelayKyCode;
+    internal int timeDelayKyCode;
 
-    private int holdCount;
+    internal int holdCount;
 
     public static int changeDau;
 
-    private int indexDau = -1;
+    internal int indexDau = -1;
 
-    private int indexTemplate;
+    internal int indexTemplate;
 
-    private int indexCong;
+    internal int indexCong;
 
-    private long timeDau;
+    internal long timeDau;
 
-    private static string printDau = "aáàảãạâấầẩẫậăắằẳẵặeéèẻẽẹêếềểễệiíìỉĩịoóòỏõọôốồổỗộơớờởỡợuúùủũụưứừửữựyýỳỷỹỵ";
+    internal static string printDau = "aáàảãạâấầẩẫậăắằẳẵặeéèẻẽẹêếềểễệiíìỉĩịoóòỏõọôốồổỗộơớờởỡợuúùủũụưứừửữựyýỳỷỹỵ";
 
     public static Image imgTf;
 
@@ -365,7 +365,7 @@ public class TField : IActionListener
         }
     }
 
-    private void keyPressedAny(int keyCode)
+    internal void keyPressedAny(int keyCode)
     {
         string[] array = ((inputType != INPUT_TYPE_PASSWORD && inputType != INPUT_ALPHA_NUMBER_ONLY) ? print : printA);
         if (keyCode == lastKey)
@@ -399,7 +399,7 @@ public class TField : IActionListener
         lastKey = keyCode;
     }
 
-    private void keyPressedAscii(int keyCode)
+    internal void keyPressedAscii(int keyCode)
     {
         if ((inputType == INPUT_TYPE_PASSWORD || inputType == INPUT_ALPHA_NUMBER_ONLY) && (keyCode < 48 || keyCode > 57) && (keyCode < 65 || keyCode > 90) && (keyCode < 97 || keyCode > 122))
             return;
@@ -426,7 +426,7 @@ public class TField : IActionListener
         timeChangeMode = Environment.TickCount / 1000;
     }
 
-    private void setDau()
+    internal void setDau()
     {
         timeDau = Environment.TickCount / 100;
         if (indexDau == -1)
@@ -634,7 +634,7 @@ public class TField : IActionListener
         }
     }
 
-    private bool isFocused()
+    internal bool isFocused()
     {
         return isFocus;
     }
@@ -653,7 +653,7 @@ public class TField : IActionListener
         return text;
     }
 
-    private void setPasswordTest()
+    internal void setPasswordTest()
     {
         if (inputType == INPUT_TYPE_PASSWORD)
         {

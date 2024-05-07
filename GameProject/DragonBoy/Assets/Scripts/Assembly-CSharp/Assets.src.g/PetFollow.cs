@@ -38,9 +38,9 @@ namespace Assets.src.g
 
 		public int himg;
 
-		private int[] frame = new int[4] { 0, 1, 2, 1 };
+		internal int[] frame = new int[4] { 0, 1, 2, 1 };
 
-		private int count;
+		internal int count;
 
 		public PetFollow()
 		{

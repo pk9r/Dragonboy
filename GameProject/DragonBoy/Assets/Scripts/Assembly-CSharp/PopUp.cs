@@ -26,7 +26,7 @@ public class PopUp
 
 	public int tDelay;
 
-	private int timeDelay;
+	internal int timeDelay;
 
 	public Command command;
 
@@ -204,7 +204,7 @@ public class PopUp
 		}
 	}
 
-	private void update()
+	internal void update()
 	{
 		if (Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId == 0)
 		{

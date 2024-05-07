@@ -103,7 +103,7 @@ public class Session_ME2 : ISession
 				cleanNetwork();
 		}
 
-		private void getKey(Message message)
+		internal void getKey(Message message)
 		{
 			try
 			{
@@ -130,7 +130,7 @@ public class Session_ME2 : ISession
 			}
 		}
 
-		private Message readMessage2(sbyte cmd)
+		internal Message readMessage2(sbyte cmd)
 		{
 			int num = readKey(dis.ReadSByte()) + 128;
 			int num2 = readKey(dis.ReadSByte()) + 128;
@@ -152,7 +152,7 @@ public class Session_ME2 : ISession
 			return new Message(cmd, array);
 		}
 
-		private Message readMessage()
+		internal Message readMessage()
 		{
 			try
 			{
@@ -196,23 +196,23 @@ public class Session_ME2 : ISession
 
 	protected static Session_ME2 instance = new Session_ME2();
 
-	private static NetworkStream dataStream;
+	internal static NetworkStream dataStream;
 
-	private static BinaryReader dis;
+	internal static BinaryReader dis;
 
-	private static BinaryWriter dos;
+	internal static BinaryWriter dos;
 
 	public static IMessageHandler messageHandler;
 
 	public static bool isMainSession = true;
 
-	private static TcpClient sc;
+	internal static TcpClient sc;
 
 	public static bool connected;
 
 	public static bool connecting;
 
-	private static Sender sender = new Sender();
+	internal static Sender sender = new Sender();
 
 	public static Thread initThread;
 
@@ -224,27 +224,27 @@ public class Session_ME2 : ISession
 
 	public static int recvByteCount;
 
-	private static bool getKeyComplete;
+	internal static bool getKeyComplete;
 
 	public static sbyte[] key = null;
 
-	private static sbyte curR;
+	internal static sbyte curR;
 
-	private static sbyte curW;
+	internal static sbyte curW;
 
-	private static int timeConnected;
+	internal static int timeConnected;
 
-	private long lastTimeConn;
+	internal long lastTimeConn;
 
 	public static string strRecvByteCount = string.Empty;
 
 	public static bool isCancel;
 
-	private string host;
+	internal string host;
 
-	private int port;
+	internal int port;
 
-	private long timeWaitConnect;
+	internal long timeWaitConnect;
 
 	public static MyVector recieveMsg = new MyVector();
 
@@ -292,7 +292,7 @@ public class Session_ME2 : ISession
 		}
 	}
 
-	private void NetworkInit()
+	internal void NetworkInit()
 	{
 		isCancel = false;
 		connecting = true;
@@ -337,7 +337,7 @@ public class Session_ME2 : ISession
 		sender.AddMessage(message);
 	}
 
-	private static void doSendMessage(Message m)
+	internal static void doSendMessage(Message m)
 	{
 		sbyte[] data = m.getData();
 		try
@@ -445,7 +445,7 @@ public class Session_ME2 : ISession
 		cleanNetwork();
 	}
 
-	private static void cleanNetwork()
+	internal static void cleanNetwork()
 	{
 		key = null;
 		curR = 0;

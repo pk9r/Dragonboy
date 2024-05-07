@@ -4,11 +4,11 @@ public class MsgDlg : Dialog
 
 	public bool isWait;
 
-	private int h;
+	internal int h;
 
-	private int padLeft;
+	internal int padLeft;
 
-	private long time = -1L;
+	internal long time = -1L;
 
 	public MsgDlg()
 	{

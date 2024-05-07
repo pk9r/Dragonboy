@@ -8,23 +8,23 @@ public class ItemTime
 
 	public int minute;
 
-	private long curr;
+	internal long curr;
 
-	private long last;
+	internal long last;
 
-	private bool isText;
+	internal bool isText;
 
-	private bool dontClear;
+	internal bool dontClear;
 
-	private string text;
+	internal string text;
 
-	private bool isPaint_coolDownBar;
+	internal bool isPaint_coolDownBar;
 
 	public int time;
 
 	public int coutTime;
 
-	private int per = 100;
+	internal int per = 100;
 
     internal bool isEquivalence;
 

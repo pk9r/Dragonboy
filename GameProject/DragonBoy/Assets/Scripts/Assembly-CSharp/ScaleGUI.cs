@@ -9,7 +9,7 @@ public class ScaleGUI
 
 	public static float HEIGHT;
 
-	private static List<Matrix4x4> stack = new List<Matrix4x4>();
+	internal static List<Matrix4x4> stack = new List<Matrix4x4>();
 
 	public static void initScaleGUI()
 	{

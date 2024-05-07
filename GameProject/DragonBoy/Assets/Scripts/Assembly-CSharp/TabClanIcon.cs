@@ -1,24 +1,24 @@
 public class TabClanIcon : IActionListener
 {
-	private int x;
+	internal int x;
 
-	private int y;
+	internal int y;
 
-	private int w;
+	internal int w;
 
-	private int h;
+	internal int h;
 
-	private Command left;
+	internal Command left;
 
-	private Command right;
+	internal Command right;
 
-	private Command center;
+	internal Command center;
 
-	private int WIDTH = 24;
+	internal int WIDTH = 24;
 
 	public int nItem;
 
-	private int disStart = 50;
+	internal int disStart = 50;
 
 	public static Scroll scrMain;
 
@@ -36,19 +36,19 @@ public class TabClanIcon : IActionListener
 
 	public string text;
 
-	private bool isRequest;
+	internal bool isRequest;
 
-	private bool isUpdate;
+	internal bool isUpdate;
 
 	public MyVector vItems = new MyVector();
 
-	private int msgID;
+	internal int msgID;
 
-	private int select;
+	internal int select;
 
-	private int lastSelect;
+	internal int lastSelect;
 
-	private ScrollResult sr;
+	internal ScrollResult sr;
 
 	public TabClanIcon()
 	{

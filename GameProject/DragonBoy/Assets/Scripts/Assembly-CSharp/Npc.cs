@@ -26,7 +26,7 @@
 
 	public new bool isHide;
 
-	private int duaHauIndex;
+	internal int duaHauIndex;
 
 	internal int dyEff;
 
@@ -34,9 +34,9 @@
 
 	public static int tMabuEff;
 
-	private static int[] shock_x = new int[4] { 1, -1, 1, -1 };
+	internal static int[] shock_x = new int[4] { 1, -1, 1, -1 };
 
-	private static int[] shock_y = new int[4] { 1, -1, -1, 1 };
+	internal static int[] shock_y = new int[4] { 1, -1, -1, 1 };
 
 	public static int shock_scr;
 

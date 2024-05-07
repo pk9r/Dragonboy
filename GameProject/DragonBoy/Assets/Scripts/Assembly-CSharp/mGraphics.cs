@@ -23,13 +23,13 @@ public class mGraphics
 
 	public static int BOTTOM = 32;
 
-	private float r;
+	internal float r;
 
-	private float g;
+	internal float g;
 
-	private float b;
+	internal float b;
 
-	private float a;
+	internal float a;
 
 	public int clipX;
 
@@ -39,17 +39,17 @@ public class mGraphics
 
 	public int clipH;
 
-	private bool isClip;
+	internal bool isClip;
 
-	private bool isTranslate = true;
+	internal bool isTranslate = true;
 
-	private int translateX;
+	internal int translateX;
 
-	private int translateY;
+	internal int translateY;
 
-	private float translateXf;
+	internal float translateXf;
 
-	private float translateYf;
+	internal float translateYf;
 
 	public static int zoomLevel = 1;
 
@@ -79,19 +79,19 @@ public class mGraphics
 
 	//public static int addYWhenOpenKeyBoard;
 
-	private int clipTX;
+	internal int clipTX;
 
-	private int clipTY;
+	internal int clipTY;
 
-	private int currentBGColor;
+	internal int currentBGColor;
 
-	private Vector2 pos = new Vector2(0f, 0f);
+	internal Vector2 pos = new Vector2(0f, 0f);
 
-	private Rect rect;
+	internal Rect rect;
 
-	private Matrix4x4 matrixBackup;
+	internal Matrix4x4 matrixBackup;
 
-	private Vector2 pivot;
+	internal Vector2 pivot;
 
 	public Vector2 size = new Vector2(128f, 128f);
 
@@ -101,9 +101,9 @@ public class mGraphics
 
 	public static Color transParentColor = new Color(1f, 1f, 1f, 0f);
 
-	private Material lineMaterial;
+	internal Material lineMaterial;
 
-	private void cache(string key, Texture value)
+	internal void cache(string key, Texture value)
 	{
 		if (cachedTextures.Count > 400)
 			cachedTextures.Clear();
@@ -440,7 +440,7 @@ public class mGraphics
 			GUI.EndGroup();
 	}
 
-	private void UpdatePos(int anchor)
+	internal void UpdatePos(int anchor)
 	{
 		Vector2 vector = new Vector2(0f, 0f);
 		switch (anchor)

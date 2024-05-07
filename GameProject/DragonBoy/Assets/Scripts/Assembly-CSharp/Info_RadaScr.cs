@@ -32,11 +32,11 @@ public class Info_RadaScr
 
 	public ItemOption[] itemOption;
 
-	private int[] f = new int[10] { 0, 0, 0, 0, 0, 1, 1, 1, 1, 1 };
+	internal int[] f = new int[10] { 0, 0, 0, 0, 0, 1, 1, 1, 1, 1 };
 
-	private int count;
+	internal int count;
 
-	private long timeRequest;
+	internal long timeRequest;
 
 	public ChatPopup cp;
 

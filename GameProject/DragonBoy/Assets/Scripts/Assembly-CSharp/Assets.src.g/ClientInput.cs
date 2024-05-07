@@ -6,21 +6,21 @@ namespace Assets.src.g
 
 		public TField[] tf;
 
-		private int x;
+		internal int x;
 
-		private int y;
+		internal int y;
 
-		private int w;
+		internal int w;
 
-		private int h;
+		internal int h;
 
-		private string[] strPaint;
+		internal string[] strPaint;
 
-		private int focus;
+		internal int focus;
 
-		private int nTf;
+		internal int nTf;
 
-		private void init(string t)
+		internal void init(string t)
 		{
 			w = GameCanvas.w - 20;
 			if (w > 320)

@@ -26,13 +26,13 @@ public class ServerListScreen : mScreen, IActionListener
 
 	internal Command[] cmd;
 
-	private Command cmdCallHotline;
+	internal Command cmdCallHotline;
 
 	internal int nCmdPlay;
 
 	public static Command cmdDeleteRMS;
 
-	private int lY;
+	internal int lY;
 
 	public static string smartPhoneVN = "Vũ trụ 1:dragon1.teamobi.com:14445:0:0:0,Vũ trụ 2:dragon2.teamobi.com:14445:0:0:0,Vũ trụ 3:dragon3.teamobi.com:14445:0:0:0,Vũ trụ 4:dragon4.teamobi.com:14445:0:0:0,Vũ trụ 5:dragon5.teamobi.com:14445:0:0:0,Vũ trụ 6:dragon6.teamobi.com:14445:0:0:0,Vũ trụ 7:dragon7.teamobi.com:14445:0:0:0,Vũ trụ 8:dragon10.teamobi.com:14446:0:0:0,Vũ trụ 9:dragon10.teamobi.com:14447:0:0:0,Vũ trụ 10:dragon10.teamobi.com:14445:0:0:0,Vũ trụ 11:dragon11.teamobi.com:14445:0:0:0,Võ đài liên vũ trụ:dragonwar.teamobi.com:20000:0:0:0,Universe 1:dragon.indonaga.com:14445:1:0:0,Naga:dragon.indonaga.com:14446:2:0:0,0,0";
 
@@ -54,7 +54,7 @@ public class ServerListScreen : mScreen, IActionListener
 
 	public new int keyTouch = -1;
 
-	private int tam;
+	internal int tam;
 
 	public static bool stopDownload;
 
@@ -92,7 +92,7 @@ public class ServerListScreen : mScreen, IActionListener
 
 	public static Command cmdDownload;
 
-	private Command cmdStart;
+	internal Command cmdStart;
 
 	public string dataSize;
 
@@ -174,7 +174,7 @@ public class ServerListScreen : mScreen, IActionListener
 		}
 	}
 
-	private void initCommand()
+	internal void initCommand()
 	{
 		nCmdPlay = 0;
 		string text = Rms.loadRMSString("acc");
@@ -472,7 +472,7 @@ public class ServerListScreen : mScreen, IActionListener
 		}
 	}
 
-	private void processInput()
+	internal void processInput()
 	{
 		if (loadScreen)
 			center = new Command(string.Empty, this, cmd[selected].idAction, null);

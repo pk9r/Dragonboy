@@ -3,113 +3,113 @@ using UnityEngine;
 
 public class ServerScr : mScreen, IActionListener
 {
-	private int mainSelect;
+	internal int mainSelect;
 
-	private MyVector vecServer = new MyVector();
+	internal MyVector vecServer = new MyVector();
 
-	private Command cmdCheck;
+	internal Command cmdCheck;
 
 	public const int icmd = 100;
 
-	private int wc;
+	internal int wc;
 
-	private int hc;
+	internal int hc;
 
-	private int w2c;
+	internal int w2c;
 
-	private int numw;
+	internal int numw;
 
-	private int numh;
+	internal int numh;
 
-	private Command cmdGlobal;
+	internal Command cmdGlobal;
 
-	private Command cmdVietNam;
+	internal Command cmdVietNam;
 
-	private const string RMS_SELECT_AREA = "area_select";
+	internal const string RMS_SELECT_AREA = "area_select";
 
 	public bool isChooseArea;
 
 	public bool isPaintNewUi;
 
-	private ListNew list;
+	internal ListNew list;
 
-	private sbyte select_Area;
+	internal sbyte select_Area;
 
-	private sbyte select_Lang;
+	internal sbyte select_Lang;
 
-	private sbyte select_typeSv;
+	internal sbyte select_typeSv;
 
-	private Command cmdChooseArea;
+	internal Command cmdChooseArea;
 
-	private bool isPaint_select_area;
+	internal bool isPaint_select_area;
 
-	private bool isPaint_select_lang;
+	internal bool isPaint_select_lang;
 
-	private int x;
+	internal int x;
 
-	private int y;
+	internal int y;
 
-	private int w;
+	internal int w;
 
-	private int h;
+	internal int h;
 
-	private int xName;
+	internal int xName;
 
-	private int yName;
+	internal int yName;
 
-	private int xsub;
+	internal int xsub;
 
-	private int ysub;
+	internal int ysub;
 
-	private int wsub;
+	internal int wsub;
 
-	private int hsub;
+	internal int hsub;
 
-	private int xsubpaint;
+	internal int xsubpaint;
 
-	private int ysubpaint;
+	internal int ysubpaint;
 
-	private int xPop;
+	internal int xPop;
 
-	private int yPop;
+	internal int yPop;
 
-	private int wPop;
+	internal int wPop;
 
-	private int hPop;
+	internal int hPop;
 
-	private int xinfo;
+	internal int xinfo;
 
-	private int yinfo;
+	internal int yinfo;
 
-	private int winfo;
+	internal int winfo;
 
-	private int hinfo;
+	internal int hinfo;
 
-	private int yBox;
+	internal int yBox;
 
-	private int wBox;
+	internal int wBox;
 
-	private int hBox;
+	internal int hBox;
 
-	private int ntypeSv;
+	internal int ntypeSv;
 
-	private int xPopUp_Area;
+	internal int xPopUp_Area;
 
-	private int yPopUp_Area;
+	internal int yPopUp_Area;
 
-	private int xPopUp_Lang;
+	internal int xPopUp_Lang;
 
-	private int yPopUp_Lang;
+	internal int yPopUp_Lang;
 
-	private int htext = 15;
+	internal int htext = 15;
 
-	private string[] strLang = new string[3] { "Tiếng Việt", "English", "Indo" };
+	internal string[] strLang = new string[3] { "Tiếng Việt", "English", "Indo" };
 
-	private string[] strArea = new string[2] { "VIỆT NAM", "GLOBAL" };
+	internal string[] strArea = new string[2] { "VIỆT NAM", "GLOBAL" };
 
-	private string[] strTypeSV = new string[2] { "Máy chủ tiêu chuẩn", "Máy chủ theo mùa" };
+	internal string[] strTypeSV = new string[2] { "Máy chủ tiêu chuẩn", "Máy chủ theo mùa" };
 
-	private string[] strTypeSV_info = new string[2] { "Máy chủ tiêu chuẩn:\n-Không reset.\nTiến trình game bình thường.", "Máy chủ theo mùa:\n -Reset toàn bộ server và phát thưởng vào cuối mùa.\n x3 Sức mạnh\n x3 Tiềm năng\n x3 Vàng\n x3 Vật phẩm khác" };
+	internal string[] strTypeSV_info = new string[2] { "Máy chủ tiêu chuẩn:\n-Không reset.\nTiến trình game bình thường.", "Máy chủ theo mùa:\n -Reset toàn bộ server và phát thưởng vào cuối mùa.\n x3 Sức mạnh\n x3 Tiềm năng\n x3 Vàng\n x3 Vật phẩm khác" };
 
 	public int cmy;
 
@@ -144,7 +144,7 @@ public class ServerScr : mScreen, IActionListener
 		}
 	}
 
-	private void sort()
+	internal void sort()
 	{
 		mainSelect = ServerListScreen.ipSelect;
 		w2c = 5;
@@ -168,7 +168,7 @@ public class ServerScr : mScreen, IActionListener
 		}
 	}
 
-	private void sort_newUI()
+	internal void sort_newUI()
 	{
 		mainSelect = ServerListScreen.ipSelect;
 		w2c = 5;
@@ -254,8 +254,8 @@ public class ServerScr : mScreen, IActionListener
 	public override void updateKey()
 	{
 		base.updateKey();
-		int num = mainSelect % (numw == 0 ? 1 : numw);
-		int num2 = mainSelect / (numw == 0 ? 1 : numw);
+		int num = mainSelect % numw;
+		int num2 = mainSelect / numw;
 		if (GameCanvas.keyPressed[4])
 		{
 			if (num > 0)
@@ -344,7 +344,7 @@ public class ServerScr : mScreen, IActionListener
 		}
 	}
 
-	private void SetNewSelectMenu(int area, int typeSv)
+	internal void SetNewSelectMenu(int area, int typeSv)
 	{
 		isChooseArea = false;
 		isPaintNewUi = true;
@@ -377,7 +377,7 @@ public class ServerScr : mScreen, IActionListener
 		GetVecTypeSv((sbyte)area, (sbyte)typeSv);
 	}
 
-	private void GetVecTypeSv(sbyte area, sbyte typeSv)
+	internal void GetVecTypeSv(sbyte area, sbyte typeSv)
 	{
 		vecServer.removeAllElements();
 		ntypeSv = 1;
@@ -430,7 +430,7 @@ public class ServerScr : mScreen, IActionListener
 		sort_newUI();
 	}
 
-	private void paintChooseArea(mGraphics g)
+	internal void paintChooseArea(mGraphics g)
 	{
 		if (isChooseArea)
 		{
@@ -440,7 +440,7 @@ public class ServerScr : mScreen, IActionListener
 		}
 	}
 
-	private void paintNewSelectMenu(mGraphics g)
+	internal void paintNewSelectMenu(mGraphics g)
 	{
 		if (!isPaintNewUi)
 			return;
@@ -480,7 +480,7 @@ public class ServerScr : mScreen, IActionListener
 		GameCanvas.resetTrans(g);
 	}
 
-	private void paint_Area(mGraphics g, int x, int y)
+	internal void paint_Area(mGraphics g, int x, int y)
 	{
 		xPopUp_Area = x;
 		PopUp.paintPopUp(g, x, y, wBox, hBox, 0, true);
@@ -502,11 +502,11 @@ public class ServerScr : mScreen, IActionListener
 		}
 	}
 
-	private void paint_Lang(mGraphics g, int x, int y)
+	internal void paint_Lang(mGraphics g, int x, int y)
 	{
 	}
 
-	private void UpdTouch_NewUI()
+	internal void UpdTouch_NewUI()
 	{
 		if (!isPaintNewUi)
 			return;
@@ -546,7 +546,7 @@ public class ServerScr : mScreen, IActionListener
 		}
 	}
 
-	private void UpdTouch_NewUI_Popup()
+	internal void UpdTouch_NewUI_Popup()
 	{
 		if (GameCanvas.isPointer(xPopUp_Area, yBox, wBox, hBox) && GameCanvas.isPointerJustRelease)
 		{
@@ -571,7 +571,7 @@ public class ServerScr : mScreen, IActionListener
 		}
 	}
 
-	private void Load_NewUI()
+	internal void Load_NewUI()
 	{
 		if (GameCanvas.isTouch)
 		{
@@ -596,12 +596,12 @@ public class ServerScr : mScreen, IActionListener
 		}
 	}
 
-	private void Save_RMS_Area()
+	internal void Save_RMS_Area()
 	{
 		Rms.saveRMS("area_select", new sbyte[2] { select_Area, select_Lang });
 	}
 
-	private void Load_RMS_Area()
+	internal void Load_RMS_Area()
 	{
 		sbyte[] array = Rms.loadRMS("area_select");
 		try

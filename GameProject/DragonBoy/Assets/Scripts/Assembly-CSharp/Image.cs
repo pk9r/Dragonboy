@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class Image
 {
-	private const int INTERVAL = 5;
+	internal const int INTERVAL = 5;
 
-	private const int MAXTIME = 500;
+	internal const int MAXTIME = 500;
 
 	public Texture2D texture = new Texture2D(1, 1);
 
@@ -161,7 +161,7 @@ public class Image
 		}
 	}
 
-	private static Image _createEmptyImage()
+	internal static Image _createEmptyImage()
 	{
 		if (status != 0)
 		{
@@ -185,7 +185,7 @@ public class Image
 		return imgTemp;
 	}
 
-	private static Image _createImage(string filename)
+	internal static Image _createImage(string filename)
 	{
 		if (status != 0)
 		{
@@ -210,7 +210,7 @@ public class Image
 		return imgTemp;
 	}
 
-	private static Image _createImage(byte[] imageData)
+	internal static Image _createImage(byte[] imageData)
 	{
 		if (status != 0)
 		{
@@ -235,7 +235,7 @@ public class Image
 		return imgTemp;
 	}
 
-	private static Image _createImage(Image src, int x, int y, int w, int h, int transform)
+	internal static Image _createImage(Image src, int x, int y, int w, int h, int transform)
 	{
 		if (status != 0)
 		{
@@ -265,7 +265,7 @@ public class Image
 		return imgTemp;
 	}
 
-	private static Image _createImage(int w, int h)
+	internal static Image _createImage(int w, int h)
 	{
 		if (status != 0)
 		{
@@ -301,7 +301,7 @@ public class Image
 		return textAsset.bytes;
 	}
 
-	private static Image __createImage(string filename)
+	internal static Image __createImage(string filename)
 	{
 		Image image = new Image();
 		Texture2D texture2D = Resources.Load(filename) as Texture2D;
@@ -314,7 +314,7 @@ public class Image
 		return image;
 	}
 
-	private static Image __createImage(byte[] imageData)
+	internal static Image __createImage(byte[] imageData)
 	{
 		if (imageData == null || imageData.Length == 0)
 		{
@@ -336,7 +336,7 @@ public class Image
 		return image;
 	}
 
-	private static Image __createImage(Image src, int x, int y, int w, int h, int transform)
+	internal static Image __createImage(Image src, int x, int y, int w, int h, int transform)
 	{
 		Image image = new Image();
 		image.texture = new Texture2D(w, h);
@@ -358,7 +358,7 @@ public class Image
 		return image;
 	}
 
-	private static Image __createEmptyImage()
+	internal static Image __createEmptyImage()
 	{
 		return new Image();
 	}
@@ -394,7 +394,7 @@ public class Image
 		return h / mGraphics.zoomLevel;
 	}
 
-	private static void setTextureQuality(Image img)
+	internal static void setTextureQuality(Image img)
 	{
 		setTextureQuality(img.texture);
 	}

@@ -20,11 +20,11 @@ public class PlayerDart
 
 	public int z;
 
-	private int life;
+	internal int life;
 
-	private int dx;
+	internal int dx;
 
-	private int dy;
+	internal int dy;
 
 	public bool isActive = true;
 
@@ -110,7 +110,7 @@ public class PlayerDart
 		}
 	}
 
-	private void endMe()
+	internal void endMe()
 	{
 		if (!charBelong.isUseSkillAfterCharge && x >= GameScr.cmx && x <= GameScr.cmx + GameCanvas.w)
 			SoundMn.gI().explode_1();

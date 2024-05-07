@@ -6,19 +6,19 @@ public class ChooseCharScr : mScreen, IActionListener
 
 	public static PlayerData[] playerData;
 
-	private int cf;
+	internal int cf;
 
-	private int[] cx = new int[2]
+	internal int[] cx = new int[2]
 	{
 		GameCanvas.w / 2 - 100,
 		GameCanvas.w / 2 - 100
 	};
 
-	private int focus;
+	internal int focus;
 
-	private int[] cy = new int[2];
+	internal int[] cy = new int[2];
 
-	private int[] rectPanel = new int[4]
+	internal int[] rectPanel = new int[4]
 	{
 		GameCanvas.w / 2 - 150,
 		GameCanvas.h / 2 - 100,
@@ -26,9 +26,9 @@ public class ChooseCharScr : mScreen, IActionListener
 		200
 	};
 
-	private int offsetY = -35;
+	internal int offsetY = -35;
 
-	private int offsetX = -35;
+	internal int offsetX = -35;
 
 	public override void switchToMe()
 	{

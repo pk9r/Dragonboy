@@ -1,6 +1,6 @@
 public class DataOutputStream
 {
-	private myWriter w = new myWriter();
+	internal myWriter w = new myWriter();
 
 	public DataOutputStream()
 	{

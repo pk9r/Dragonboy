@@ -2,7 +2,7 @@ public class InfoItem
 {
 	public string s;
 
-	private mFont f;
+	internal mFont f;
 
 	public int speed = 70;
 

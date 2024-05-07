@@ -20,47 +20,47 @@ namespace Assets.src.g
 
 		public new int ySd;
 
-		private bool isOutMap;
+		internal new bool isOutMap;
 
-		private int wCount;
+		internal new int wCount;
 
 		public new bool isShadown = true;
 
-		private int tick;
+		internal new int tick;
 
-		private int frame;
+		internal new int frame;
 
-		private bool wy;
+		internal new bool wy;
 
-		private int wt;
+		internal new int wt;
 
-		private int fy;
+		internal new int fy;
 
-		private int ty;
+		internal new int ty;
 
 		public new int typeSuperEff;
 
-		private Char focus;
+		internal Char focus;
 
-		private bool flyUp;
+		internal bool flyUp;
 
-		private bool flyDown;
+		internal bool flyDown;
 
-		private int dy;
+		internal int dy;
 
 		public bool changePos;
 
-		private int tShock;
+		internal int tShock;
 
 		public new bool isBusyAttackSomeOne = true;
 
-		private int tA;
+		internal int tA;
 
-		private Char[] charAttack;
+		internal Char[] charAttack;
 
-		private int[] dameHP;
+		internal int[] dameHP;
 
-		private sbyte type;
+		internal sbyte type;
 
 		public new int[] stand = new int[12]
 		{
@@ -124,9 +124,9 @@ namespace Assets.src.g
 			2, 2, 1, 1
 		};
 
-		private bool shock;
+		internal bool shock;
 
-		private sbyte[] cou = new sbyte[2] { -1, 1 };
+		internal new sbyte[] cou = new sbyte[2] { -1, 1 };
 
 		public new Char injureBy;
 
@@ -231,7 +231,7 @@ namespace Assets.src.g
 			frame = array[tick];
 		}
 
-		private void updateShadown()
+		internal new void updateShadown()
 		{
 			int num = TileMap.size;
 			xSd = x;
@@ -259,7 +259,7 @@ namespace Assets.src.g
 			}
 		}
 
-		private void paintShadow(mGraphics g)
+		internal new void paintShadow(mGraphics g)
 		{
 			g.drawImage(shadowBig, xSd, yFirst, 3);
 			g.setClip(GameScr.cmx, GameScr.cmy - GameCanvas.transY, GameScr.gW, GameScr.gH + 2 * GameCanvas.transY);
@@ -311,7 +311,7 @@ namespace Assets.src.g
 			}
 		}
 
-		private void updateDead()
+		internal void updateDead()
 		{
 			checkFrameTick((!haftBody) ? stand : stand_1);
 			if (GameCanvas.gameTick % 5 == 0)
@@ -323,7 +323,7 @@ namespace Assets.src.g
 			}
 		}
 
-		private void updateMobFly()
+		internal void updateMobFly()
 		{
 			if (flyUp)
 			{
@@ -383,18 +383,18 @@ namespace Assets.src.g
 				p3 = 1;
 		}
 
-		private bool isSpecial()
+		internal new bool isSpecial()
 		{
 			if ((templateId >= 58 && templateId <= 65) || templateId == 67 || templateId == 68)
 				return true;
 			return false;
 		}
 
-		private void updateInjure()
+		internal new void updateInjure()
 		{
 		}
 
-		private void updateMobStandWait()
+		internal new void updateMobStandWait()
 		{
 			checkFrameTick((!haftBody) ? stand : stand_1);
 			if (x != xFirst || y != yFirst)

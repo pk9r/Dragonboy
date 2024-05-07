@@ -24,29 +24,29 @@ namespace Assets.src.g
 
 		public static bool isContinueToLogin = false;
 
-		private int focus;
+		internal int focus;
 
-		private int wC;
+		internal int wC;
 
-		private int yL;
+		internal int yL;
 
-		private int defYL;
+		internal int defYL;
 
 		public bool isCheck;
 
 		public bool isRes;
 
-		private Command cmdLogin;
+		internal Command cmdLogin;
 
-		private Command cmdCheck;
+		internal Command cmdCheck;
 
-		private Command cmdFogetPass;
+		internal Command cmdFogetPass;
 
-		private Command cmdRes;
+		internal Command cmdRes;
 
-		private Command cmdMenu;
+		internal Command cmdMenu;
 
-		private Command cmdBackFromRegister;
+		internal Command cmdBackFromRegister;
 
 		public string listFAQ = string.Empty;
 
@@ -54,11 +54,11 @@ namespace Assets.src.g
 
 		public string subtitleFAQ;
 
-		private string numSupport = string.Empty;
+		internal string numSupport = string.Empty;
 
-		private string strUser;
+		internal string strUser;
 
-		private string strPass;
+		internal string strPass;
 
 		public static bool isLocal = false;
 
@@ -100,39 +100,39 @@ namespace Assets.src.g
 
 		public static long currTimeLogin;
 
-		private int yt;
+		internal int yt;
 
-		private Command cmdSelect;
+		internal Command cmdSelect;
 
-		private Command cmdOK;
+		internal Command cmdOK;
 
-		private int xLog;
+		internal int xLog;
 
-		private int yLog;
+		internal int yLog;
 
-		private int xP;
+		internal int xP;
 
-		private int yP;
+		internal int yP;
 
-		private int wP;
+		internal int wP;
 
-		private int hP;
+		internal int hP;
 
-		private string passRe = string.Empty;
+		internal string passRe = string.Empty;
 
 		public bool isFAQ;
 
-		private int tipid = -1;
+		internal int tipid = -1;
 
 		public bool isLogin2;
 
-		private int v = 2;
+		internal int v = 2;
 
-		private int g;
+		internal int g;
 
-		private int ylogo = -40;
+		internal int ylogo = -40;
 
-		private int dir = 1;
+		internal int dir = 1;
 
 		public static bool isLoggingIn;
 
@@ -466,7 +466,7 @@ namespace Assets.src.g
 			}
 		}
 
-		private void doChangeTip()
+		internal void doChangeTip()
 		{
 			tipid++;
 			if (tipid >= mResources.tips.Length)
@@ -614,7 +614,7 @@ namespace Assets.src.g
 			base.paint(g);
 		}
 
-		private void turnOffFocus()
+		internal void turnOffFocus()
 		{
 			tfUser.isFocus = false;
 			tfNgay.isFocus = false;
@@ -627,7 +627,7 @@ namespace Assets.src.g
 			tfSodt.isFocus = false;
 		}
 
-		private void processFocus()
+		internal void processFocus()
 		{
 			turnOffFocus();
 			switch (focus)

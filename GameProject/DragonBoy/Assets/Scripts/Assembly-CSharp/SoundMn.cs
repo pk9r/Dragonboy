@@ -22,7 +22,7 @@ public class SoundMn
 
 	public static float volume = 0.5f;
 
-	private static int MAX_VOLUME = 10;
+	internal static int MAX_VOLUME = 10;
 
 	public static MediaPlayer[] music;
 

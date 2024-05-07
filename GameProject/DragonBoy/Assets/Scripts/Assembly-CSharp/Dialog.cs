@@ -6,7 +6,7 @@ public abstract class Dialog
 
 	public Command right;
 
-	private int lenCaption;
+	internal int lenCaption;
 
 	public virtual void paint(mGraphics g)
 	{

@@ -16,59 +16,59 @@ public class NewBoss : Mob, IMapObject
 
 	public new int ySd;
 
-	private int wCount;
+	internal new int wCount;
 
 	public new bool isShadown = true;
 
-	private int tick;
+	internal new int tick;
 
-	private int frame;
+	internal new int frame;
 
 	public new static Image imgHP = mSystem.loadImage("/mainImage/myTexture2dmobHP.png");
 
-	private bool wy;
+	internal new bool wy;
 
-	private int wt;
+	internal new int wt;
 
-	private int fy;
+	internal new int fy;
 
-	private int ty;
+	internal new int ty;
 
 	public new int typeSuperEff;
 
-	private Char focus;
+	internal Char focus;
 
-	private bool flyUp;
+	internal bool flyUp;
 
-	private bool flyDown;
+	internal bool flyDown;
 
-	private int dy;
+	internal int dy;
 
 	public bool changePos;
 
-	private int tShock;
+	internal int tShock;
 
 	public new bool isBusyAttackSomeOne = true;
 
-	private int tA;
+	internal int tA;
 
-	private Char[] charAttack;
+	internal Char[] charAttack;
 
-	private int[] dameHP;
+	internal int[] dameHP;
 
-	private sbyte type;
+	internal sbyte type;
 
-	private int ff;
+	internal int ff;
 
-	private int offset;
+	internal new int offset;
 
-	private int xTempRight = -1;
+	internal int xTempRight = -1;
 
-	private int xTempLeft = -1;
+	internal int xTempLeft = -1;
 
-	private int yTemp = -1;
+	internal int yTemp = -1;
 
-	private sbyte[] cou = new sbyte[2] { -1, 1 };
+	internal new sbyte[] cou = new sbyte[2] { -1, 1 };
 
 	public new Char injureBy;
 
@@ -82,7 +82,7 @@ public class NewBoss : Mob, IMapObject
 
 	public new bool sleepEff;
 
-	private int[][] frameArr = new int[17][]
+	internal new int[][] frameArr = new int[17][]
 	{
 		new int[8] { 0, 0, 0, 0, 1, 1, 1, 1 },
 		new int[8] { 0, 0, 0, 0, 1, 1, 1, 1 },
@@ -186,7 +186,7 @@ public class NewBoss : Mob, IMapObject
 		frame = array[tick];
 	}
 
-	public void updateShadown()
+	public new void updateShadown()
 	{
 		int num = 0;
 		xSd = x;
@@ -209,7 +209,7 @@ public class NewBoss : Mob, IMapObject
 		}
 	}
 
-	private void paintShadow(mGraphics g)
+	internal new void paintShadow(mGraphics g)
 	{
 		int num = TileMap.size;
 		if ((TileMap.mapID < 114 || TileMap.mapID > 120) && TileMap.mapID != 127 && TileMap.mapID != 128)
@@ -281,7 +281,7 @@ public class NewBoss : Mob, IMapObject
 		}
 	}
 
-	private void updateDead()
+	internal void updateDead()
 	{
 		tick++;
 		if (tick > frameArr[13].Length - 1)
@@ -294,7 +294,7 @@ public class NewBoss : Mob, IMapObject
 		}
 	}
 
-	private void updateMobFly()
+	internal void updateMobFly()
 	{
 	}
 
@@ -321,11 +321,11 @@ public class NewBoss : Mob, IMapObject
 			p3 = 1;
 	}
 
-	private void updateInjure()
+	internal new void updateInjure()
 	{
 	}
 
-	private void updateMobStandWait()
+	internal new void updateMobStandWait()
 	{
 		checkFrameTick(frameArr[0]);
 		if (x != xTo || y != yTo)

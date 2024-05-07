@@ -24,15 +24,15 @@ public class ChatPopup : Effect2, IActionListener
 
 	public Npc c;
 
-	private bool outSide;
+	internal bool outSide;
 
 	public static long curr;
 
 	public static long last;
 
-	private int currentLine;
+	internal int currentLine;
 
-	private string[] lines;
+	internal string[] lines;
 
 	public Command cmdNextLine;
 
@@ -68,35 +68,35 @@ public class ChatPopup : Effect2, IActionListener
 
 	public int second;
 
-	private Point[] saoPoint = new Point[14];
+	internal Point[] saoPoint = new Point[14];
 
-	private int indexStar;
+	internal int indexStar;
 
-	private int indexStar2;
+	internal int indexStar2;
 
 	public bool[] starCuongHoa = new bool[20];
 
 	public static int numSlot = 7;
 
-	private int nMaxslot_duoi;
+	internal int nMaxslot_duoi;
 
-	private int nMaxslot_tren;
+	internal int nMaxslot_tren;
 
-	private int nslot_duoi;
+	internal int nslot_duoi;
 
-	private Image imgStar;
+	internal Image imgStar;
 
 	public int strY;
 
-	private int iconID;
+	internal int iconID;
 
 	public bool isClip;
 
 	public static int cmyText;
 
-	private int pxx;
+	internal int pxx;
 
-	private int pyy;
+	internal int pyy;
 
 	public static void addNextPopUpMultiLine(string strNext, Npc next)
 	{
@@ -541,7 +541,7 @@ public class ChatPopup : Effect2, IActionListener
 		g.translate(num5, num6);
 	}
 
-	private void doKeyText(int type)
+	internal void doKeyText(int type)
 	{
 		cmyText += 12 * type;
 		if (cmyText < 0)

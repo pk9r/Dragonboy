@@ -28,23 +28,23 @@
 
 	public bool isDown;
 
-	private bool createShip;
+	internal bool createShip;
 
 	public bool paintFire;
 
-	private bool painHead;
+	internal bool painHead;
 
-	private int tPrepare;
+	internal int tPrepare;
 
-	private int vy = 1;
+	internal int vy = 1;
 
-	private int tFire;
+	internal int tFire;
 
-	private int tDelayHole;
+	internal int tDelayHole;
 
-	private bool tHole;
+	internal bool tHole;
 
-	private bool isShock;
+	internal bool isShock;
 
 	public Teleport(int x, int y, int headId, int dir, int type, bool isMe, int planet)
 	{

@@ -98,7 +98,7 @@ public class Effect
 
 	public int tLoopCount;
 
-	private bool isPaint = true;
+	internal bool isPaint = true;
 
 	public int layer;
 
@@ -116,19 +116,19 @@ public class Effect
 
 	public static MyVector dowloadEff = new MyVector();
 
-	private int[] khangia1 = new int[10] { 0, 0, 0, 0, 0, 1, 1, 1, 1, 1 };
+	internal int[] khangia1 = new int[10] { 0, 0, 0, 0, 0, 1, 1, 1, 1, 1 };
 
-	private int[] khangia2 = new int[10] { 2, 2, 2, 2, 2, 3, 3, 3, 3, 3 };
+	internal int[] khangia2 = new int[10] { 2, 2, 2, 2, 2, 3, 3, 3, 3, 3 };
 
-	private int[] khangia3 = new int[10] { 4, 4, 4, 4, 4, 5, 5, 5, 5, 5 };
+	internal int[] khangia3 = new int[10] { 4, 4, 4, 4, 4, 5, 5, 5, 5, 5 };
 
-	private int[] khangia4 = new int[10] { 6, 6, 6, 6, 6, 7, 7, 7, 7, 7 };
+	internal int[] khangia4 = new int[10] { 6, 6, 6, 6, 6, 7, 7, 7, 7, 7 };
 
-	private int[] khangia5 = new int[10] { 8, 8, 8, 8, 8, 9, 9, 9, 9, 9 };
+	internal int[] khangia5 = new int[10] { 8, 8, 8, 8, 8, 9, 9, 9, 9, 9 };
 
-	private bool isGetTime;
+	internal bool isGetTime;
 
-	private short[] data;
+	internal short[] data;
 
 	public int cLastStatusMe;
 

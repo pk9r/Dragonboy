@@ -130,7 +130,7 @@ public class Arrow
 			endMe();
 	}
 
-	private void endMe()
+	internal void endMe()
 	{
 		charBelong.arr = null;
 		ax = (ay = (axTo = (ayTo = (avx = (avy = (adx = (ady = 0)))))));

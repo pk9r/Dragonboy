@@ -18,9 +18,9 @@ public class TransportScr : mScreen, IActionListener
 
 	public int[] posY2;
 
-	private int cmx;
+	internal int cmx;
 
-	private int n = 20;
+	internal int n = 20;
 
 	public short time;
 
@@ -30,11 +30,11 @@ public class TransportScr : mScreen, IActionListener
 
 	public long curr;
 
-	private bool isSpeed;
+	internal bool isSpeed;
 
-	private bool transNow;
+	internal bool transNow;
 
-	private int currSpeed;
+	internal int currSpeed;
 
 	public TransportScr()
 	{

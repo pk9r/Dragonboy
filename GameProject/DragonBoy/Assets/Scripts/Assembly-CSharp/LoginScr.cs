@@ -9,13 +9,13 @@ public class LoginScr : mScreen, IActionListener
 
 	public static bool isContinueToLogin = false;
 
-	private int focus;
+	internal int focus;
 
-	private int wC;
+	internal int wC;
 
-	private int yL;
+	internal int yL;
 
-	private int defYL;
+	internal int defYL;
 
 	public bool isCheck;
 
@@ -39,7 +39,7 @@ public class LoginScr : mScreen, IActionListener
 
 	public string subtitleFAQ;
 
-	private string numSupport = string.Empty;
+	internal string numSupport = string.Empty;
 
 	public static bool isLocal = false;
 
@@ -81,51 +81,51 @@ public class LoginScr : mScreen, IActionListener
 
 	public static long currTimeLogin;
 
-	private int yt;
+	internal int yt;
 
-	private Command cmdSelect;
+	internal Command cmdSelect;
 
-	private Command cmdOK;
+	internal Command cmdOK;
 
-	private int xLog;
+	internal int xLog;
 
-	private int yLog;
+	internal int yLog;
 
 	public static GameMidlet m;
 
-	private int yy = GameCanvas.hh - mScreen.ITEM_HEIGHT - 5;
+	internal int yy = GameCanvas.hh - mScreen.ITEM_HEIGHT - 5;
 
-	private int freeAreaHeight;
+	internal int freeAreaHeight;
 
-	private int xP;
+	internal int xP;
 
-	private int yP;
+	internal int yP;
 
-	private int wP;
+	internal int wP;
 
-	private int hP;
+	internal int hP;
 
-	private int t = 20;
+	internal int t = 20;
 
-	private bool isRegistering;
+	internal bool isRegistering;
 
-	private string passRe = string.Empty;
+	internal string passRe = string.Empty;
 
 	public bool isFAQ;
 
-	private int tipid = -1;
+	internal int tipid = -1;
 
 	public bool isLogin2;
 
-	private int v = 2;
+	internal int v = 2;
 
-	private int g;
+	internal int g;
 
-	private int ylogo = -40;
+	internal int ylogo = -40;
 
-	private int dir = 1;
+	internal int dir = 1;
 
-	private Command cmdCallHotline;
+	internal Command cmdCallHotline;
 
 	public static bool isLoggingIn;
 
@@ -584,7 +584,7 @@ public class LoginScr : mScreen, IActionListener
 		updateTfWhenOpenKb();
 	}
 
-	private void doChangeTip()
+	internal void doChangeTip()
 	{
 		tipid++;
 		if (tipid >= mResources.tips.Length)

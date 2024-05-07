@@ -30,17 +30,17 @@ public class Scroll
 
 	public static Scroll gI;
 
-	private int pointerDownTime;
+	internal int pointerDownTime;
 
-	private int pointerDownFirstX;
+	internal int pointerDownFirstX;
 
-	private int[] pointerDownLastX = new int[3];
+	internal int[] pointerDownLastX = new int[3];
 
 	public bool pointerIsDowning;
 
 	public bool isDownWhenRunning;
 
-	private int cmRun;
+	internal int cmRun;
 
 	public int selectedItem;
 
@@ -82,7 +82,7 @@ public class Scroll
 		return updateKeyScrollLeftRight();
 	}
 
-	private ScrollResult updateKeyScrollUpDown(bool isGetNow)
+	internal ScrollResult updateKeyScrollUpDown(bool isGetNow)
 	{
 		int num = xPos;
 		int num2 = yPos;
@@ -192,7 +192,7 @@ public class Scroll
 		return scrollResult;
 	}
 
-	private ScrollResult updateKeyScrollLeftRight()
+	internal ScrollResult updateKeyScrollLeftRight()
 	{
 		int num = xPos;
 		int y = yPos;

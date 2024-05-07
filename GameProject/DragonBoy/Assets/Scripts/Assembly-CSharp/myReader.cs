@@ -6,13 +6,13 @@ public class myReader
 {
 	public sbyte[] buffer;
 
-	private int posRead;
+	internal int posRead;
 
-	private int posMark;
+	internal int posMark;
 
-	private static string fileName;
+	internal static string fileName;
 
-	private static int status;
+	internal static int status;
 
 	public myReader()
 	{
@@ -103,12 +103,12 @@ public class myReader
 
 	public bool readBool()
 	{
-		return (readSByte() > 0) ? true : false;
+		return readSByte() > 0;
 	}
 
 	public bool readBoolean()
 	{
-		return (readSByte() > 0) ? true : false;
+		return readSByte() > 0;
 	}
 
 	public string readString()

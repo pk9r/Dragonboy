@@ -4,9 +4,9 @@ public class myWriter
 {
 	public sbyte[] buffer = new sbyte[2048];
 
-	private int posWrite;
+	internal int posWrite;
 
-	private int lenght = 2048;
+	internal int lenght = 2048;
 
 	public myWriter()
 	{

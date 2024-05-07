@@ -48,7 +48,7 @@ public class Effect_End
 
 	public const short End_Skill_MaFuBa = 26;
 
-	private MyVector VecEffEnd = new MyVector("EffectEnd VecEffEnd");
+	internal MyVector VecEffEnd = new MyVector("EffectEnd VecEffEnd");
 
 	public FrameImage fraImgEff;
 
@@ -194,23 +194,23 @@ public class Effect_End
 		6, 6, 6, 2
 	};
 
-	private int rS;
+	internal int rS;
 
-	private int angleS;
+	internal int angleS;
 
-	private int angleO;
+	internal int angleO;
 
-	private int iAngleS;
+	internal int iAngleS;
 
-	private int iDotS;
+	internal int iDotS;
 
-	private int[] xArgS;
+	internal int[] xArgS;
 
-	private int[] yArgS;
+	internal int[] yArgS;
 
-	private int[] xDotS;
+	internal int[] xDotS;
 
-	private int[] yDotS;
+	internal int[] yDotS;
 
 	public static int[][] colorStar = new int[3][]
 	{
@@ -219,15 +219,15 @@ public class Effect_End
 		new int[3] { 2407423, 11987199, 16777215 }
 	};
 
-	private int[] colorpaint;
+	internal int[] colorpaint;
 
-	private int indexColorStar;
+	internal int indexColorStar;
 
-	private int xline;
+	internal int xline;
 
-	private int yline;
+	internal int yline;
 
-	private FrameImage[] fra_skill;
+	internal FrameImage[] fra_skill;
 
 	public Effect_End(int type, int typeSub, int x, int y, int levelPaint, int dir, short timeRemove, Point[] listObj)
 	{
@@ -771,7 +771,7 @@ public class Effect_End
 		}
 	}
 
-	private void set_End_String(int typeEffect)
+	internal void set_End_String(int typeEffect)
 	{
 		if (typeEffect != 0)
 		{
@@ -792,7 +792,7 @@ public class Effect_End
 		isAddSub = false;
 	}
 
-	private void upd_End_String()
+	internal void upd_End_String()
 	{
 		x = GameCanvas.hw;
 		y = y1000;
@@ -815,13 +815,13 @@ public class Effect_End
 		}
 	}
 
-	private void pnt_End_String(mGraphics g)
+	internal void pnt_End_String(mGraphics g)
 	{
 		if (fraImgEff != null)
 			fraImgEff.drawFrame(f / 5 % fraImgEff.nFrame, x, y, 0, 33, g);
 	}
 
-	private void set_FireWork()
+	internal void set_FireWork()
 	{
 		int num = 0;
 		num = Res.random(3, 5);
@@ -845,7 +845,7 @@ public class Effect_End
 		}
 	}
 
-	private void upd_FireWork()
+	internal void upd_FireWork()
 	{
 		for (int i = 0; i < VecEffEnd.size(); i++)
 		{
@@ -870,7 +870,7 @@ public class Effect_End
 			removeEff();
 	}
 
-	private void pnt_FireWork(mGraphics g)
+	internal void pnt_FireWork(mGraphics g)
 	{
 		for (int i = 0; i < VecEffEnd.size(); i++)
 		{
@@ -880,7 +880,7 @@ public class Effect_End
 		}
 	}
 
-	private void set_Skill_Kamex10()
+	internal void set_Skill_Kamex10()
 	{
 		w = fra_skill[0].frameWidth;
 		h = fra_skill[0].frameHeight;
@@ -890,7 +890,7 @@ public class Effect_End
 		SoundMn.playSound(x, y, SoundMn.KAMEX10_1, SoundMn.volume);
 	}
 
-	private void upd_Skill_Kamex10()
+	internal void upd_Skill_Kamex10()
 	{
 		fSpeed++;
 		w += 20;
@@ -915,7 +915,7 @@ public class Effect_End
 		}
 	}
 
-	private void pnt_Skill_Kamex10(mGraphics g)
+	internal void pnt_Skill_Kamex10(mGraphics g)
 	{
 		if (fra_skill != null)
 		{
@@ -927,7 +927,7 @@ public class Effect_End
 		}
 	}
 
-	private void set_Skill_Destroy()
+	internal void set_Skill_Destroy()
 	{
 		x = charUse.cx + 20 * charUse.cdir;
 		int num = 15;
@@ -971,7 +971,7 @@ public class Effect_End
 			removeEff();
 	}
 
-	private void upd_Skill_Destroy()
+	internal void upd_Skill_Destroy()
 	{
 		int num = 0;
 		for (int i = 0; i < VecEffEnd.size(); i++)
@@ -1010,7 +1010,7 @@ public class Effect_End
 			removeEff();
 	}
 
-	private void pnt_Skill_Destroy(mGraphics g)
+	internal void pnt_Skill_Destroy(mGraphics g)
 	{
 		for (int i = 0; i < VecEffEnd.size(); i++)
 		{
@@ -1025,7 +1025,7 @@ public class Effect_End
 		}
 	}
 
-	private void set_Skill_MaFuba()
+	internal void set_Skill_MaFuba()
 	{
 		nFrame = new byte[9] { 0, 0, 0, 1, 1, 1, 2, 2, 2 };
 		isAddSub = false;
@@ -1059,7 +1059,7 @@ public class Effect_End
 		SoundMn.playSound(x, y, SoundMn.MAFUBA_0, SoundMn.volume);
 	}
 
-	private void changeAngleStar()
+	internal void changeAngleStar()
 	{
 		if (vMax < 40)
 			vMax += 2;
@@ -1072,7 +1072,7 @@ public class Effect_End
 		angleO = angleS;
 	}
 
-	private void setDotStar()
+	internal void setDotStar()
 	{
 		for (int i = 0; i < yArgS.Length; i++)
 		{
@@ -1106,7 +1106,7 @@ public class Effect_End
 		}
 	}
 
-	private void upd_Skill_MaFuba()
+	internal void upd_Skill_MaFuba()
 	{
 		if (stt == 0)
 		{
@@ -1213,7 +1213,7 @@ public class Effect_End
 		}
 	}
 
-	private void pnt_Skill_MaFuba(mGraphics g)
+	internal void pnt_Skill_MaFuba(mGraphics g)
 	{
 		if (fra_skill == null)
 			return;
@@ -1232,7 +1232,7 @@ public class Effect_End
 		}
 	}
 
-	private void Fill_Rect_Img(mGraphics g, FrameImage head, FrameImage body, FrameImage foot, int frame, int x, int y, int w)
+	internal void Fill_Rect_Img(mGraphics g, FrameImage head, FrameImage body, FrameImage foot, int frame, int x, int y, int w)
 	{
 		int num = 0;
 		int num2 = w;
@@ -1276,7 +1276,7 @@ public class Effect_End
 		}
 	}
 
-	private void set_LINE_IN()
+	internal void set_LINE_IN()
 	{
 		indexColorStar = typeSub;
 		x1000 = x * 1000;
@@ -1288,7 +1288,7 @@ public class Effect_End
 		create_Star_Line_In(vMax, xline, yline, 0);
 	}
 
-	private void upd_LINE_IN()
+	internal void upd_LINE_IN()
 	{
 		for (int i = 0; i < VecEffEnd.size(); i++)
 		{
@@ -1316,7 +1316,7 @@ public class Effect_End
 		}
 	}
 
-	private void create_Star_Line_In(int vline, int minline, int maxline, int numpoint)
+	internal void create_Star_Line_In(int vline, int minline, int maxline, int numpoint)
 	{
 		if (f == -1)
 			VecEffEnd.removeAllElements();
@@ -1357,7 +1357,7 @@ public class Effect_End
 		}
 	}
 
-	private void pnt_LINE_IN(mGraphics g)
+	internal void pnt_LINE_IN(mGraphics g)
 	{
 		for (int i = 0; i < VecEffEnd.size(); i++)
 		{
@@ -1375,7 +1375,7 @@ public class Effect_End
 		}
 	}
 
-	private void set_End_Rock()
+	internal void set_End_Rock()
 	{
 		fraImgEff = new FrameImage(8);
 		fRemove = Res.random(23, 27);
@@ -1402,7 +1402,7 @@ public class Effect_End
 		}
 	}
 
-	private void upd_End_Rock()
+	internal void upd_End_Rock()
 	{
 		for (int i = 0; i < VecEffEnd.size(); i++)
 		{
@@ -1418,7 +1418,7 @@ public class Effect_End
 			removeEff();
 	}
 
-	private void pnt_End_Rock(mGraphics g)
+	internal void pnt_End_Rock(mGraphics g)
 	{
 		for (int i = 0; i < VecEffEnd.size(); i++)
 		{
@@ -1428,7 +1428,7 @@ public class Effect_End
 		}
 	}
 
-	private void updListObj_Mafuba(bool ismafuba)
+	internal void updListObj_Mafuba(bool ismafuba)
 	{
 		if (listObj == null)
 			return;
@@ -1460,7 +1460,7 @@ public class Effect_End
 		}
 	}
 
-	private void hideListObj_Mafuba(bool ishide)
+	internal void hideListObj_Mafuba(bool ishide)
 	{
 		if (listObj == null)
 			return;
@@ -1482,7 +1482,7 @@ public class Effect_End
 		}
 	}
 
-	private void get_Img_Skill()
+	internal void get_Img_Skill()
 	{
 		int num = 0;
 		int[] array = null;
@@ -1585,7 +1585,7 @@ public class Effect_End
 		}
 	}
 
-	private void set_Gong()
+	internal void set_Gong()
 	{
 		if (charUse != null)
 		{
@@ -1615,7 +1615,7 @@ public class Effect_End
 		}
 	}
 
-	private void upd_Gong()
+	internal void upd_Gong()
 	{
 		if (charUse != null)
 		{
@@ -1651,13 +1651,13 @@ public class Effect_End
 		}
 	}
 
-	private void pnt_Gong(mGraphics g, int anchor)
+	internal void pnt_Gong(mGraphics g, int anchor)
 	{
 		if (fra_skill[0] != null)
 			fra_skill[0].drawFrame(f / n_frame % fra_skill[0].nFrame, x, y, dir_nguoc, anchor, g);
 	}
 
-	private void set_Pow()
+	internal void set_Pow()
 	{
 		nFrame = null;
 		n_frame = 3;
@@ -1674,7 +1674,7 @@ public class Effect_End
 		}
 	}
 
-	private void upd_Pow()
+	internal void upd_Pow()
 	{
 		if (charUse != null)
 		{
@@ -1697,7 +1697,7 @@ public class Effect_End
 		}
 	}
 
-	private void pnt_Pow(mGraphics g, int anchor)
+	internal void pnt_Pow(mGraphics g, int anchor)
 	{
 		if (fra_skill[0] != null)
 		{
@@ -1708,13 +1708,13 @@ public class Effect_End
 		}
 	}
 
-	private void set_Sub()
+	internal void set_Sub()
 	{
 		if (typeEffect == 17)
 			x += ((dir != 0) ? (-fra_skill[0].frameWidth) : 0);
 	}
 
-	private void upd_Sub()
+	internal void upd_Sub()
 	{
 		if (timeRemove > 0)
 		{
@@ -1727,20 +1727,20 @@ public class Effect_End
 		}
 	}
 
-	private void pnt_Sub(mGraphics g, int anchor)
+	internal void pnt_Sub(mGraphics g, int anchor)
 	{
 		fra_skill[0].drawFrame(f / n_frame % fra_skill[0].nFrame, x, y, dir, anchor, g);
 	}
 
-	private void set_()
+	internal void set_()
 	{
 	}
 
-	private void upd_()
+	internal void upd_()
 	{
 	}
 
-	private void pnt_(mGraphics g)
+	internal void pnt_(mGraphics g)
 	{
 	}
 }

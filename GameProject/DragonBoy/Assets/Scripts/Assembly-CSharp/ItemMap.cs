@@ -177,7 +177,7 @@ public class ItemMap : IMapObject
 		}
 	}
 
-	private bool isAuraItem()
+	internal bool isAuraItem()
 	{
 		bool flag = false;
 		if (template.type == 22)
@@ -185,7 +185,7 @@ public class ItemMap : IMapObject
 		return false;
 	}
 
-	private void setAuraItem()
+	internal void setAuraItem()
 	{
 		xO = x;
 		yO = y;
@@ -202,7 +202,7 @@ public class ItemMap : IMapObject
 		}
 	}
 
-	private void updateAuraItemEff()
+	internal void updateAuraItemEff()
 	{
 		count++;
 		countAura++;
@@ -230,7 +230,7 @@ public class ItemMap : IMapObject
 		}
 	}
 
-	private void setDotPosition()
+	internal void setDotPosition()
 	{
 		if (GameCanvas.lowGraphic)
 			return;

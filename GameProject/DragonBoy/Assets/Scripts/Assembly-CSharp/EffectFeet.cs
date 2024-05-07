@@ -1,14 +1,14 @@
 public class EffectFeet : Effect2
 {
-	private int x;
+	internal int x;
 
-	private int y;
+	internal int y;
 
-	private int trans;
+	internal int trans;
 
-	private long endTime;
+	internal long endTime;
 
-	private bool isF;
+	internal bool isF;
 
 	public static Image imgFeet1 = GameCanvas.loadImage("/mainImage/myTexture2dmove-1.png");
 

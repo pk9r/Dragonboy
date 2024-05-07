@@ -8,15 +8,15 @@
 
 	public Image imgCache;
 
-	private int[] imgRGBCache;
+	internal int[] imgRGBCache;
 
-	private int newWidth;
+	internal int newWidth;
 
-	private int newHeight;
+	internal int newHeight;
 
-	private int[] output;
+	internal int[] output;
 
-	private int OUTPUTSIZE = 20;
+	internal int OUTPUTSIZE = 20;
 
 	public MotherCanvas()
 	{

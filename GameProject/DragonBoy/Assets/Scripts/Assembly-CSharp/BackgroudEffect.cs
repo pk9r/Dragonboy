@@ -14,25 +14,25 @@ public class BackgroudEffect
 
 	public static int[] wP;
 
-	private int num;
+	internal int num;
 
-	private int xShip;
+	internal int xShip;
 
-	private int yShip;
+	internal int yShip;
 
-	private int way;
+	internal int way;
 
-	private int trans;
+	internal int trans;
 
-	private int frameFire;
+	internal int frameFire;
 
-	private int tFire;
+	internal int tFire;
 
-	private int tStart;
+	internal int tStart;
 
-	private int speed;
+	internal int speed;
 
-	private bool isFly;
+	internal bool isFly;
 
 	public static Image imgSnow;
 
@@ -44,13 +44,13 @@ public class BackgroudEffect
 
 	public static Image imgSao;
 
-	private static Image imgLacay;
+	internal static Image imgLacay;
 
-	private static Image imgShip;
+	internal static Image imgShip;
 
-	private static Image imgFire1;
+	internal static Image imgFire1;
 
-	private static Image imgFire2;
+	internal static Image imgFire2;
 
     internal int[] type;
 
@@ -62,17 +62,17 @@ public class BackgroudEffect
 
 	public int waterY;
 
-    internal bool[] isRainEffect;
+	internal bool[] isRainEffect;
 
-    internal int[] frame;
+	internal int[] frame;
 
-    internal int[] t;
+	internal int[] t;
 
-    internal bool[] activeEff;
+	internal bool[] activeEff;
 
-	private int yWater;
+	internal int yWater;
 
-	private int colorWater;
+	internal int colorWater;
 
 	public const int TYPE_MUA = 0;
 
@@ -140,9 +140,9 @@ public class BackgroudEffect
 
 	public static int fogw;
 
-	private int[] dem = new int[6] { 0, 1, 2, 1, 0, 0 };
+	internal int[] dem = new int[6] { 0, 1, 2, 1, 0, 0 };
 
-	private int[] tick;
+	internal int[] tick;
 
 	public BackgroudEffect(int typeS)
 	{
@@ -472,7 +472,7 @@ public class BackgroudEffect
 		}
 	}
 
-	private void reloadShip()
+	internal void reloadShip()
 	{
 		int cmx = GameScr.cmx;
 		int cmy = GameScr.cmy;

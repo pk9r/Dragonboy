@@ -22,17 +22,17 @@ public class Firework
 
 	public int cl = 16711680;
 
-	private float a;
+	internal float a;
 
-	private long last;
+	internal long last;
 
-	private long delay = 150L;
+	internal long delay = 150L;
 
-	private bool act = true;
+	internal bool act = true;
 
-	private int[] arr_x = new int[2];
+	internal int[] arr_x = new int[2];
 
-	private int[] arr_y = new int[2];
+	internal int[] arr_y = new int[2];
 
 	public Firework(int x0, int y0, int v, int angle, int cl)
 	{

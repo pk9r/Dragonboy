@@ -6,25 +6,25 @@ public class MoneyCharge : mScreen, IActionListener
 
 	public TField tfCode;
 
-	private int x;
+	internal int x;
 
-	private int y;
+	internal int y;
 
-	private int w;
+	internal int w;
 
-	private int h;
+	internal int h;
 
-	private string[] strPaint;
+	internal string[] strPaint;
 
-	private int focus;
+	internal int focus;
 
-	private int yt;
+	internal int yt;
 
-	private int freeAreaHeight;
+	internal int freeAreaHeight;
 
-	private int yy = GameCanvas.hh - mScreen.ITEM_HEIGHT - 5;
+	internal int yy = GameCanvas.hh - mScreen.ITEM_HEIGHT - 5;
 
-	private int yP;
+	internal int yP;
 
 	public MoneyCharge()
 	{

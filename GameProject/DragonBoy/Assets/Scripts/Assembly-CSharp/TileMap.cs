@@ -82,13 +82,13 @@ public class TileMap
 
 	public static sbyte size = 24;
 
-	private static int bx;
+	internal static int bx;
 
-	private static int dbx;
+	internal static int dbx;
 
-	private static int fx;
+	internal static int fx;
 
-	private static int dfx;
+	internal static int dfx;
 
 	public static string[] instruction;
 
@@ -202,7 +202,7 @@ public class TileMap
 
 	public static int county;
 
-	private static int[] colorMini = new int[2] { 5257738, 8807192 };
+	internal static int[] colorMini = new int[2] { 5257738, 8807192 };
 
 	public static int yWater = 0;
 

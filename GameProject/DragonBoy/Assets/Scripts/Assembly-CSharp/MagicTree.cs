@@ -32,7 +32,7 @@ public class MagicTree : Npc, IActionListener
 
 	public int[] peaPostionY;
 
-	private int num;
+	internal int num;
 
 	public PopUp p;
 
@@ -48,11 +48,11 @@ public class MagicTree : Npc, IActionListener
 
 	public new long cur;
 
-	private int wPopUp;
+	internal int wPopUp;
 
-	private bool waitToUpdate;
+	internal bool waitToUpdate;
 
-	private int delay;
+	internal int delay;
 
 	public MagicTree(int npcId, int status, int cx, int cy, int templateId, int iconId)
 		: base(npcId, status, cx, cy, templateId, iconId)

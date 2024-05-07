@@ -2,7 +2,7 @@ public class MonsterDart : Effect2
 {
 	public int va;
 
-	private DartInfo info;
+	internal DartInfo info;
 
 	public static MyRandom r = new MyRandom();
 
@@ -22,7 +22,7 @@ public class MonsterDart : Effect2
 
 	public int yTo;
 
-	private int life;
+	internal int life;
 
 	public bool isSpeedUp;
 
@@ -36,9 +36,9 @@ public class MonsterDart : Effect2
 
 	public MyVector darts = new MyVector();
 
-	private int dx;
+	internal int dx;
 
-	private int dy;
+	internal int dy;
 
 	public static int[] ARROWINDEX = new int[18]
 	{

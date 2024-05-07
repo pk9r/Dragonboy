@@ -4,7 +4,7 @@ public class InputDlg : Dialog
 
 	public TField tfInput;
 
-	private int padLeft;
+	internal int padLeft;
 
 	public InputDlg()
 	{

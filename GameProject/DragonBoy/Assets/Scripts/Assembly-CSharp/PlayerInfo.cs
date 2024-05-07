@@ -8,7 +8,7 @@ public class PlayerInfo
 
 	public int IDDB;
 
-	private int exp;
+	internal int exp;
 
 	public bool isReady;
 

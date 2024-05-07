@@ -23,35 +23,35 @@ public class RadarScr : mScreen
 
 	public static FrameImage fraEff;
 
-	private static Image imgUI;
+	internal static Image imgUI;
 
-	private static Image imgUIText;
+	internal static Image imgUIText;
 
-	private static Image imgArrow_Left;
+	internal static Image imgArrow_Left;
 
-	private static Image imgArrow_Right;
+	internal static Image imgArrow_Right;
 
-	private static Image imgArrow_Down;
+	internal static Image imgArrow_Down;
 
-	private static Image imgLock;
+	internal static Image imgLock;
 
-	private static Image imgUse_0;
+	internal static Image imgUse_0;
 
-	private static Image imgUse;
+	internal static Image imgUse;
 
-	private static Image imgBack;
+	internal static Image imgBack;
 
-	private static Image imgChange;
+	internal static Image imgChange;
 
-	private static Image imgBar_0;
+	internal static Image imgBar_0;
 
-	private static Image imgBar_1;
+	internal static Image imgBar_1;
 
-	private static Image imgPro_0;
+	internal static Image imgPro_0;
 
-	private static Image imgPro_1;
+	internal static Image imgPro_1;
 
-	private static Image[] imgRank;
+	internal static Image[] imgRank;
 
 	public static int xUi;
 
@@ -81,43 +81,43 @@ public class RadarScr : mScreen
 
 	public static int[] dxCmd = new int[0];
 
-	private static int[][] xyArrow;
+	internal static int[][] xyArrow;
 
-	private static int[][] xyItem;
+	internal static int[][] xyItem;
 
-	private static int[] index = new int[5] { -2, -1, 0, 1, 2 };
+	internal static int[] index = new int[5] { -2, -1, 0, 1, 2 };
 
-	private int dyArrow;
+	internal int dyArrow;
 
-	private int[] dxArrow;
+	internal int[] dxArrow;
 
-	private int page;
+	internal int page;
 
-	private int maxpage;
+	internal int maxpage;
 
-	private int indexFocus;
+	internal int indexFocus;
 
 	public static MyVector list;
 
 	public static MyVector listUse;
 
-	private static int num;
+	internal static int num;
 
-	private static int numMax;
+	internal static int numMax;
 
-	private Info_RadaScr focus_card;
+	internal Info_RadaScr focus_card;
 
-	private int pxx;
+	internal int pxx;
 
-	private int pyy;
+	internal int pyy;
 
-	private int xClip;
+	internal int xClip;
 
-	private int wClip;
+	internal int wClip;
 
-	private int yClip;
+	internal int yClip;
 
-	private int hClip;
+	internal int hClip;
 
 	public RadarScr()
 	{
@@ -359,7 +359,7 @@ public class RadarScr : mScreen
 		}
 	}
 
-	private void doChangeUI()
+	internal void doChangeUI()
 	{
 		TYPE_UI = !TYPE_UI;
 		page = 1;
@@ -371,7 +371,7 @@ public class RadarScr : mScreen
 		listIndex();
 	}
 
-	private void updateKeyTouchControl()
+	internal void updateKeyTouchControl()
 	{
 		if (GameCanvas.isPointerClick)
 		{
@@ -446,7 +446,7 @@ public class RadarScr : mScreen
 		}
 	}
 
-	private void doClickUse(int i)
+	internal void doClickUse(int i)
 	{
 		if (i == 0)
 			doChangeUI();
@@ -462,7 +462,7 @@ public class RadarScr : mScreen
 		SoundMn.gI().radarClick();
 	}
 
-	private void doClickArrow(int dir)
+	internal void doClickArrow(int dir)
 	{
 		if (TYPE_UI)
 			maxpage = list.size() / 5 + ((list.size() % 5 > 0) ? 1 : 0);
@@ -492,13 +492,13 @@ public class RadarScr : mScreen
 		}
 	}
 
-	private void doClickItem(int focus)
+	internal void doClickItem(int focus)
 	{
 		indexFocus = focus;
 		listIndex();
 	}
 
-	private void doKeyText(int type)
+	internal void doKeyText(int type)
 	{
 		cmyText += 12 * type;
 		if (cmyText < 0)
@@ -507,7 +507,7 @@ public class RadarScr : mScreen
 			cmyText = focus_card.cp.lim;
 	}
 
-	private void doKeyItem(int type)
+	internal void doKeyItem(int type)
 	{
 		int num = indexFocus;
 		int num2 = page;

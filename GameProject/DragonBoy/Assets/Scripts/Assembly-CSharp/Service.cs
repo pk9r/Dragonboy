@@ -3,7 +3,7 @@ using Assets.src.g;
 
 public class Service
 {
-	private ISession session = Session_ME.gI();
+	internal ISession session = Session_ME.gI();
 
 	protected static Service instance;
 

@@ -5,87 +5,87 @@ public class CrackBallScr : mScreen
 {
 	public static CrackBallScr instance;
 
-	private BallInfo[] listBall;
+	internal BallInfo[] listBall;
 
-	private byte step;
+	internal byte step;
 
-	private byte typePrice;
+	internal byte typePrice;
 
-	private int rO;
+	internal int rO;
 
-	private int xO;
+	internal int xO;
 
-	private int yO;
+	internal int yO;
 
-	private int angle;
+	internal int angle;
 
-	private int iAngle;
+	internal int iAngle;
 
-	private int iDot;
+	internal int iDot;
 
-	private int yTo;
+	internal int yTo;
 
-	private int indexSelect;
+	internal int indexSelect;
 
-	private int indexSkillSelect;
+	internal int indexSkillSelect;
 
-	private int numTicket;
+	internal int numTicket;
 
-	private int xP;
+	internal int xP;
 
-	private int yP;
+	internal int yP;
 
-	private int wP;
+	internal int wP;
 
-	private int hP;
+	internal int hP;
 
-	private int price;
+	internal int price;
 
-	private int cost;
+	internal int cost;
 
-	private int countFr;
+	internal int countFr;
 
-	private int countKame;
+	internal int countKame;
 
-	private int frame;
+	internal int frame;
 
-	private int vp;
+	internal int vp;
 
-	private int[] xArg;
+	internal int[] xArg;
 
-	private int[] yArg;
+	internal int[] yArg;
 
-	private int[] xDot;
+	internal int[] xDot;
 
-	private int[] yDot;
+	internal int[] yDot;
 
-	private short[] idItem;
+	internal short[] idItem;
 
-	private long timeStart;
+	internal long timeStart;
 
-	private long timeKame;
+	internal long timeKame;
 
-	private bool isKame;
+	internal bool isKame;
 
-	private bool isCanSkill;
+	internal bool isCanSkill;
 
-	private bool isSendSv;
+	internal bool isSendSv;
 
-	private short idTicket;
+	internal short idTicket;
 
-	private static int ySkill;
+	internal static int ySkill;
 
-	private static int[] xSkill;
+	internal static int[] xSkill;
 
-	private static FrameImage fraImgKame;
+	internal static FrameImage fraImgKame;
 
-	private static FrameImage fraImgKame_1;
+	internal static FrameImage fraImgKame_1;
 
-	private static FrameImage fraImgKame_2;
+	internal static FrameImage fraImgKame_2;
 
-	private static Image imgX;
+	internal static Image imgX;
 
-	private static Image imgReplay;
+	internal static Image imgReplay;
 
 	public static bool isAutoCrackBall;
 
@@ -93,14 +93,14 @@ public class CrackBallScr : mScreen
 
 	public static bool isContinue;
 
-	private byte[] fr = new byte[21]
+	internal byte[] fr = new byte[21]
 	{
 		19, 19, 19, 19, 19, 19, 19, 19, 19, 19,
 		19, 19, 19, 19, 19, 19, 19, 19, 19, 19,
 		20
 	};
 
-	private byte[] nFrame = new byte[12]
+	internal byte[] nFrame = new byte[12]
 	{
 		0, 0, 0, 1, 1, 1, 2, 2, 2, 3,
 		3, 3
@@ -174,7 +174,7 @@ public class CrackBallScr : mScreen
 		}
 	}
 
-	private void setAuraItem()
+	internal void setAuraItem()
 	{
 		rO = GameCanvas.hh / 3 + 10;
 		if (rO > 50)
@@ -192,7 +192,7 @@ public class CrackBallScr : mScreen
 		setDotPosition();
 	}
 
-	private void setDotPosition()
+	internal void setDotPosition()
 	{
 		if (GameCanvas.lowGraphic)
 			return;
@@ -424,7 +424,7 @@ public class CrackBallScr : mScreen
 		GameCanvas.clearKeyPressed();
 	}
 
-	private void updateKeyTouchControl()
+	internal void updateKeyTouchControl()
 	{
 		if (step == 1 && GameCanvas.isPointerClick)
 		{
@@ -447,7 +447,7 @@ public class CrackBallScr : mScreen
 		}
 	}
 
-	private void doClickBall(int index)
+	internal void doClickBall(int index)
 	{
 		if (!listBall[index].isDone)
 		{
@@ -466,7 +466,7 @@ public class CrackBallScr : mScreen
 		}
 	}
 
-	private void doClickSkill(int index)
+	internal void doClickSkill(int index)
 	{
 		indexSkillSelect = index;
 		if (indexSkillSelect == 2)
@@ -611,7 +611,7 @@ public class CrackBallScr : mScreen
 		base.switchToMe();
 	}
 
-	private byte checkTicket()
+	internal byte checkTicket()
 	{
 		byte b = 0;
 		for (int i = 0; i < listBall.Length; i++)
@@ -624,7 +624,7 @@ public class CrackBallScr : mScreen
 		return b;
 	}
 
-	private byte checkNum()
+	internal byte checkNum()
 	{
 		byte b = 0;
 		for (int i = 0; i < listBall.Length; i++)
@@ -638,7 +638,7 @@ public class CrackBallScr : mScreen
 		return b;
 	}
 
-	private void checkNumTicket()
+	internal void checkNumTicket()
 	{
 		for (int i = 0; i < Char.myCharz().arrItemBag.Length; i++)
 		{
@@ -650,7 +650,7 @@ public class CrackBallScr : mScreen
 		}
 	}
 
-	private void useSkillCrackBall()
+	internal void useSkillCrackBall()
 	{
 		if (step < 2)
 		{

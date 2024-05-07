@@ -159,25 +159,25 @@ public class Mob : IMapObject
 
 	public int ySd;
 
-	private bool isOutMap;
+	internal bool isOutMap;
 
-	private int wCount;
+	internal int wCount;
 
 	public bool isShadown = true;
 
-	private int tick;
+	internal int tick;
 
-	private int frame;
+	internal int frame;
 
 	public static Image imgHP = GameCanvas.loadImage("/mainImage/myTexture2dmobHP.png");
 
-	private bool wy;
+	internal bool wy;
 
-	private int wt;
+	internal int wt;
 
-	private int fy;
+	internal int fy;
 
-	private int ty;
+	internal int ty;
 
 	public int typeSuperEff;
 
@@ -203,7 +203,7 @@ public class Mob : IMapObject
 
 	public int[] hurt = new int[1];
 
-	private int color = 8421504;
+	internal int color = 8421504;
 
 	public int len = 24;
 
@@ -221,7 +221,7 @@ public class Mob : IMapObject
 
 	public bool isHide;
 
-	private sbyte[] cou = new sbyte[2] { -1, 1 };
+	internal sbyte[] cou = new sbyte[2] { -1, 1 };
 
 	public Char injureBy;
 
@@ -235,7 +235,7 @@ public class Mob : IMapObject
 
 	public bool sleepEff;
 
-	private int[][] frameArr = new int[6][]
+	internal int[][] frameArr = new int[6][]
 	{
 		new int[8] { 0, 0, 0, 0, 1, 1, 1, 1 },
 		new int[8] { 0, 0, 0, 0, 1, 1, 1, 1 },
@@ -245,7 +245,7 @@ public class Mob : IMapObject
 		new int[8] { 0, 0, 0, 0, 1, 1, 1, 1 }
 	};
 
-	private bool isGetFr = true;
+	internal bool isGetFr = true;
 
 	public Mob()
 	{
@@ -444,7 +444,7 @@ public class Mob : IMapObject
 		tick++;
 	}
 
-	private void updateShadown()
+	internal void updateShadown()
 	{
 		int num = TileMap.size;
 		xSd = x;
@@ -817,26 +817,26 @@ public class Mob : IMapObject
 			p3 = 1;
 	}
 
-	private bool isSpecial()
+	internal bool isSpecial()
 	{
 		if ((templateId >= 58 && templateId <= 65) || templateId == 67 || templateId == 68)
 			return true;
 		return false;
 	}
 
-	private bool isNewModStand()
+	internal bool isNewModStand()
 	{
 		return templateId == 76;
 	}
 
-	private bool isNewMod()
+	internal bool isNewMod()
 	{
 		if (templateId >= 73 && !isNewModStand())
 			return true;
 		return false;
 	}
 
-	private void updateInjure()
+	internal void updateInjure()
 	{
 		if (!isBusyAttackSomeOne && GameCanvas.gameTick % 4 == 0)
 		{
@@ -901,7 +901,7 @@ public class Mob : IMapObject
 		}
 	}
 
-	private void updateMobStandWait()
+	internal void updateMobStandWait()
 	{
 		checkFrameTick(stand);
 		switch (arrMobTemplate[templateId].type)
@@ -1385,7 +1385,7 @@ public class Mob : IMapObject
 		}
 	}
 
-	private bool isTypeNewMod()
+	internal bool isTypeNewMod()
 	{
 		if (arrMobTemplate[templateId].data != null && arrMobTemplate[templateId].data.typeData == 2)
 			return true;

@@ -6,15 +6,15 @@ public class DataInputStream
 {
 	public myReader r;
 
-	private const int INTERVAL = 5;
+	internal const int INTERVAL = 5;
 
-	private const int MAXTIME = 500;
+	internal const int MAXTIME = 500;
 
 	public static DataInputStream istemp;
 
-	private static int status;
+	internal static int status;
 
-	private static string filenametemp;
+	internal static string filenametemp;
 
 	public DataInputStream(string filename)
 	{
@@ -41,7 +41,7 @@ public class DataInputStream
 		return __getResourceAsStream(filename);
 	}
 
-	private static DataInputStream _getResourceAsStream(string filename)
+	internal static DataInputStream _getResourceAsStream(string filename)
 	{
 		if (status != 0)
 		{
@@ -76,7 +76,7 @@ public class DataInputStream
 		return istemp;
 	}
 
-	private static DataInputStream __getResourceAsStream(string filename)
+	internal static DataInputStream __getResourceAsStream(string filename)
 	{
 		try
 		{

@@ -43,29 +43,29 @@ public class Main : MonoBehaviour
 
 	public const sbyte WINDOWSPHONE = 6;
 
-	private int level;
+	internal int level;
 
 	public const sbyte IP_JB = 3;
 
-	private int updateCount;
+	internal int updateCount;
 
-	private int paintCount;
+	internal int paintCount;
 
-	private int count;
+	internal int count;
 
-	private int fps;
+	internal int fps;
 
-	private int max;
+	internal int max;
 
-	private int up;
+	internal int up;
 
-	private int upmax;
+	internal int upmax;
 
-	private long timefps;
+	internal long timefps;
 
-	private long timeup;
+	internal long timeup;
 
-	private bool isRun;
+	internal bool isRun;
 
 	public static int waitTick;
 
@@ -77,7 +77,7 @@ public class Main : MonoBehaviour
 
 	public static bool isQuitApp;
 
-	private Vector2 lastMousePos = default(Vector2);
+	internal Vector2 lastMousePos = default(Vector2);
 
 	public static int a = 1;
 
@@ -102,12 +102,12 @@ public class Main : MonoBehaviour
   //      }
 	}
 
-	private void SetInit()
+	internal void SetInit()
 	{
 		base.enabled = true;
 	}
-		
-	private void OnHideUnity(bool isGameShown)
+
+	internal void OnHideUnity(bool isGameShown)
 	{
 		if (!isGameShown)
 			Time.timeScale = 0f;
@@ -115,7 +115,7 @@ public class Main : MonoBehaviour
 			Time.timeScale = 1f;
 	}
 
-	private void OnGUI()
+	internal void OnGUI()
 	{
 		if (count >= 10)
 		{
@@ -242,7 +242,6 @@ public class Main : MonoBehaviour
 			GameMidlet.gameCanvas.update();
 			Image.update();
 			DataInputStream.update();
-			//SMS.update();
 			Net.update();
             f++;
 			if (f > 8)
@@ -259,7 +258,7 @@ public class Main : MonoBehaviour
 		Res.outz("Some dummy code here");
     }
 
-    private void checkInput()
+	internal void checkInput()
 	{
 		if (Input.GetMouseButtonDown(0))
 		{
@@ -322,7 +321,7 @@ public class Main : MonoBehaviour
 		//}
 	}
 
-    internal void OnApplicationQuit()
+	internal void OnApplicationQuit()
 	{
         //Debug.LogWarning("APP QUIT");
 		GameCanvas.bRun = false;

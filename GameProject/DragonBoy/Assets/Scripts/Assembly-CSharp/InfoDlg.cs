@@ -2,9 +2,9 @@ public class InfoDlg
 {
 	public static bool isShow;
 
-	private static string title;
+	internal static string title;
 
-	private static string subtitke;
+	internal static string subtitke;
 
 	public static int delay;
 

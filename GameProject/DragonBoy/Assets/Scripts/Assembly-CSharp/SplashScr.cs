@@ -2,9 +2,9 @@ public class SplashScr : mScreen
 {
 	public static int splashScrStat;
 
-	private bool isCheckConnect;
+	internal bool isCheckConnect;
 
-	private bool isSwitchToLogin;
+	internal bool isSwitchToLogin;
 
 	public static int nData = -1;
 
@@ -14,7 +14,7 @@ public class SplashScr : mScreen
 
 	public static Image imgLogo;
 
-	private int timeLoading = 10;
+	internal int timeLoading = 10;
 
 	public long TIMEOUT;
 

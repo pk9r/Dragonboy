@@ -916,7 +916,7 @@ namespace Assets.src.f
 			}
 		}
 
-		private static void readLuckyRound(Message msg)
+		internal static void readLuckyRound(Message msg)
 		{
 			try
 			{
@@ -950,7 +950,7 @@ namespace Assets.src.f
 			}
 		}
 
-		private static void readInfoRada(Message msg)
+		internal static void readInfoRada(Message msg)
 		{
 			try
 			{
@@ -1065,7 +1065,7 @@ namespace Assets.src.f
 			}
 		}
 
-		private static void readInfoEffChar(Message msg)
+		internal static void readInfoEffChar(Message msg)
 		{
 			try
 			{
@@ -1097,7 +1097,7 @@ namespace Assets.src.f
 			}
 		}
 
-		private static void readActionBoss(Message msg, int actionBoss)
+		internal static void readActionBoss(Message msg, int actionBoss)
 		{
 			try
 			{

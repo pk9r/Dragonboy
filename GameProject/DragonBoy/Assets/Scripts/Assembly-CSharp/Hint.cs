@@ -34,7 +34,7 @@ public class Hint
 
 	public static bool isPaintArrow;
 
-	private int s = 2;
+	internal int s = 2;
 
 	public static bool isOnTask(int tastId, int index)
 	{

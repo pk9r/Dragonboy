@@ -2,43 +2,43 @@ using System;
 
 public class FireWorkEff
 {
-	private static int w;
+	internal static int w;
 
-	private static int h;
+	internal static int h;
 
-	private static MyRandom r = new MyRandom();
+	internal static MyRandom r = new MyRandom();
 
-	private static MyVector mg = new MyVector();
+	internal static MyVector mg = new MyVector();
 
-	private static int f = 17;
+	internal static int f = 17;
 
-	private static int x;
+	internal static int x;
 
-	private static int y;
+	internal static int y;
 
-	private static int ag;
+	internal static int ag;
 
-	private static int x0;
+	internal static int x0;
 
-	private static int y0;
+	internal static int y0;
 
-	private static int t;
+	internal static int t;
 
-	private static int v;
+	internal static int v;
 
-	private static int ymax = 269;
+	internal static int ymax = 269;
 
-	private static float a;
+	internal static float a;
 
-	private static int[] mang_x = new int[3];
+	internal static int[] mang_x = new int[3];
 
-	private static int[] mang_y = new int[3];
+	internal static int[] mang_y = new int[3];
 
-	private static bool st = false;
+	internal static bool st = false;
 
-	private static long last = 0L;
+	internal static long last = 0L;
 
-	private static long delay = 150L;
+	internal static long delay = 150L;
 
 	public static void preDraw()
 	{

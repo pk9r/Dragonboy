@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class Sound
 {
-	private const int INTERVAL = 5;
+	internal const int INTERVAL = 5;
 
-	private const int MAXTIME = 100;
+	internal const int MAXTIME = 100;
 
 	public static int status;
 
@@ -13,9 +13,9 @@ public class Sound
 
 	public static int timestart;
 
-	private static string filenametemp;
+	internal static string filenametemp;
 
-	private static float volumetem;
+	internal static float volumetem;
 
 	public static bool isSound = true;
 
@@ -294,7 +294,7 @@ public class Sound
 			_load(filename, pos);
 	}
 
-	private static void _load(string filename, int pos)
+	internal static void _load(string filename, int pos)
 	{
 		if (status != 0)
 		{
@@ -319,7 +319,7 @@ public class Sound
 		Cout.Log("Load Audio " + filename + " done in " + i * 5 + "ms");
 	}
 
-	private static void __load(string filename, int pos)
+	internal static void __load(string filename, int pos)
 	{
 		music[pos] = (AudioClip)Resources.Load(filename, typeof(AudioClip));
 		GameObject.Find("Main Camera").AddComponent<AudioSource>();

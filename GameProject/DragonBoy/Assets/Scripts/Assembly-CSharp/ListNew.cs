@@ -24,25 +24,25 @@ public class ListNew
 
 	public int cmxLim;
 
-	private int pointerDownTime;
+	internal int pointerDownTime;
 
-	private int pointerDownFirstX;
+	internal int pointerDownFirstX;
 
-	private int[] pointerDownLastX = new int[3];
+	internal int[] pointerDownLastX = new int[3];
 
 	public bool pointerIsDowning;
 
 	public bool isDownWhenRunning;
 
-	private int cmRun;
+	internal int cmRun;
 
-	private MyVector vecCmd;
+	internal MyVector vecCmd;
 
 	public int w;
 
-	private int cmvx;
+	internal int cmvx;
 
-	private int cmdx;
+	internal int cmdx;
 
 	public ListNew()
 	{

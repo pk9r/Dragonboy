@@ -2,9 +2,9 @@ public class Message
 {
 	public sbyte command;
 
-	private myReader dis;
+	internal myReader dis;
 
-	private myWriter dos;
+	internal myWriter dos;
 
 	public Message(int command)
 	{
