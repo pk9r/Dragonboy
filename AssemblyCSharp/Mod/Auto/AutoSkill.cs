@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace Mod.Auto
 {
@@ -48,13 +49,15 @@ namespace Mod.Auto
 
         private static Char getDeadCharInMap()
         {
-            for (int i = 0; i < GameScr.vCharInMap.size(); i++)
+            int i = 0;
+            for (; i < GameScr.vCharInMap.size(); i++)
             {
                 var @char = (Char)GameScr.vCharInMap.elementAt(i);
 
                 if (isValidTarget(@char) && CharUtilities.isCharDead(@char)) return @char;
             }
-
+            if (i == GameScr.vCharInMap.size() && isValidTarget(Char.myCharz()) && CharUtilities.isCharDead(Char.myCharz()))
+                return Char.myCharz();
             return null;
         }
 
