@@ -13,6 +13,7 @@ internal static class ControllerInput
     static Vector2 dPad, joystick1, joystick2;
 
     static bool isResetMoveMyChar;
+    static bool isNextMap;
     static bool isResetCamera;
 
     internal static bool IsLeftButtonPressed => leftButton;
@@ -179,17 +180,20 @@ internal static class ControllerInput
             ResetMoveButtons();
             if (IsJoystickButton1Pressed)
             {
-                if (angle >= 45 && angle <= 135)
-                    Utils.ChangeMapMiddle();
-                else if (angle >= 135 && angle <= 225)
-                    Utils.ChangeMapLeft();
-                else if (angle <= 45 || angle >= 315)
-                    Utils.ChangeMapRight();
-                else if (angle >= 225 && angle <= 315)
-                    Utils.DonTho();
-                joystickButton1 = false;
+                if (!isNextMap)
+                {
+                    if (angle >= 45 && angle <= 135)
+                        Utils.ChangeMapMiddle();
+                    else if (angle >= 135 && angle <= 225)
+                        Utils.ChangeMapLeft();
+                    else if (angle <= 45 || angle >= 315)
+                        Utils.ChangeMapRight();
+                    else if (angle >= 225 && angle <= 315)
+                        Utils.DonTho();
+                    isNextMap = true;
+                }
             }
-            else
+            else if(!isNextMap)
             {
                 if (angle >= 45 && angle <= 135)
                     ButtonUpHold = ButtonUp = true;
@@ -201,10 +205,15 @@ internal static class ControllerInput
                     ButtonRightHold = ButtonRight = true;
             }
         }
-        else if (isResetMoveMyChar)
+        else
         {
-            isResetMoveMyChar = false;
-            ResetMoveButtons();
+            if (isNextMap)
+                isNextMap = false;
+            if (isResetMoveMyChar)
+            {
+                isResetMoveMyChar = false;
+                ResetMoveButtons();
+            }
         }
     }
 
