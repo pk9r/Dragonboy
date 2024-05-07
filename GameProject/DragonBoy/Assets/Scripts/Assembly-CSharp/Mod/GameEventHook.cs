@@ -187,9 +187,9 @@ namespace Mod
 
         static void Command__ctor_hook(Command _this, string caption, IActionListener actionListener, int action, object p)
         {
-            if (caption == mResources.change_account)
-                ;// Command__ctor_original(_this, Strings.accounts, new InGameAccountManager.ActionListener(), action, p);
-            else
+            //if (caption == mResources.change_account)
+                //Command__ctor_original(_this, Strings.accounts, new InGameAccountManager.ActionListener(), action, p);
+            //else
                 Command__ctor_original(_this, caption, actionListener, action, p);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -738,7 +738,7 @@ namespace Mod
         static void ServerListScreen_switchToMe_hook(ServerListScreen _this)
         {
             ServerListScreen_switchToMe_original(_this);
-            _this.cmd[1 + _this.nCmdPlay].caption = Strings.accounts;
+            //_this.cmd[1 + _this.nCmdPlay].caption = Strings.accounts;
             GameEvents.OnServerListScreenLoaded();
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
