@@ -10,11 +10,20 @@ using UnityEditor.Build.Reporting;
 
 namespace UnityBuilderAction
 {
+    enum MyBuildTarget
+    {
+        StandaloneWindowsX86,
+        StandaloneWindowsX86_64,
+        StandaloneWindowsArm64,
+        Android,
+        StandaloneLinuxX86_64,
+    }
+
     public static class BuildScript
     {
-        private static readonly string Eol = Environment.NewLine;
+        static readonly string Eol = Environment.NewLine;
 
-        private static readonly string[] Secrets =
+        static readonly string[] Secrets =
             {"androidKeystorePass", "androidKeyaliasName", "androidKeyaliasPass"};
 
         public static void Build()
@@ -24,23 +33,17 @@ namespace UnityBuilderAction
 #endif
             // Gather values from args
             Dictionary<string, string> options = GetValidatedOptions();
-            var buildTarget = Enum.Parse<BuildTarget>(options["buildTarget"]);
+            MyBuildTarget buildTarget = Enum.Parse<MyBuildTarget>(options["buildTarget"]);
 
-#if UNITY_2023
-            OSArchitecture osArchitecture = 0;
-            if (options.ContainsKey("architecture"))
-                osArchitecture = Enum.Parse<OSArchitecture>(options["architecture"]);
-            BuildTargetGroup buildTargetGroup = 0;
-#endif
             ScriptingImplementation scriptingBackend = 0;
             if (options.ContainsKey("scriptingBackend"))
                 scriptingBackend = Enum.Parse<ScriptingImplementation>(options["scriptingBackend"]);
-            PlayerSettings.SetScriptingBackend(NamedBuildTarget.FromBuildTargetGroup(ConvertBuildTarget(buildTarget)), scriptingBackend);
+            PlayerSettings.SetScriptingBackend(GetNamedBuildTarget(buildTarget), scriptingBackend);
 
             // Apply build target
             switch (buildTarget)
             {
-                case BuildTarget.Android:
+                case MyBuildTarget.Android:
                 {
                     PlayerSettings.bundleVersion = options["buildVersion"];
                     PlayerSettings.Android.bundleVersionCode = int.Parse(options["androidVersionCode"]);
@@ -66,8 +69,7 @@ namespace UnityBuilderAction
                         var targetSdkVersion = AndroidSdkVersions.AndroidApiLevelAuto;
                         try
                         {
-                            targetSdkVersion =
-                                (AndroidSdkVersions)Enum.Parse(typeof(AndroidSdkVersions), androidTargetSdkVersion);
+                            targetSdkVersion = Enum.Parse<AndroidSdkVersions>(androidTargetSdkVersion);
                         }
                         catch
                         {
@@ -79,23 +81,7 @@ namespace UnityBuilderAction
 
                     break;
                 }
-                case BuildTarget.StandaloneOSX:
-                    PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
-                    break;
             }
-#if UNITY_2023 && UNITY_STANDALONE_WIN
-            // ARM64
-            if (buildTarget == BuildTarget.StandaloneWindows || buildTarget == BuildTarget.StandaloneWindows64)
-            {
-                if (osArchitecture == OSArchitecture.ARM64)
-                    UnityEditor.WindowsStandalone.UserBuildSettings.architecture = osArchitecture;
-                else if (buildTarget == BuildTarget.StandaloneWindows64)
-                    UnityEditor.WindowsStandalone.UserBuildSettings.architecture = OSArchitecture.x64;
-                else if (buildTarget == BuildTarget.StandaloneWindows)
-                    UnityEditor.WindowsStandalone.UserBuildSettings.architecture = OSArchitecture.x86;
-                buildTargetGroup = BuildTargetGroup.Standalone;
-            }
-#endif
             // Determine subtarget
             int buildSubtarget = 0;
 #if UNITY_2021_2_OR_NEWER
@@ -105,16 +91,11 @@ namespace UnityBuilderAction
             }
             buildSubtarget = (int)buildSubtargetValue;
 #endif
-
-// Custom build
-#if UNITY_2023
-            Build(buildTarget, buildTargetGroup, buildSubtarget, options["customBuildPath"]);
-#else
+            // Custom build
             Build(buildTarget, buildSubtarget, options["customBuildPath"]);
-#endif
         }
 
-        private static Dictionary<string, string> GetValidatedOptions()
+        static Dictionary<string, string> GetValidatedOptions()
         {
             ParseCommandLineArguments(out Dictionary<string, string> validatedOptions);
 
@@ -157,7 +138,7 @@ namespace UnityBuilderAction
             return validatedOptions;
         }
 
-        private static void ParseCommandLineArguments(out Dictionary<string, string> providedArguments)
+        static void ParseCommandLineArguments(out Dictionary<string, string> providedArguments)
         {
             providedArguments = new Dictionary<string, string>();
             string[] args = Environment.GetCommandLineArgs();
@@ -190,34 +171,29 @@ namespace UnityBuilderAction
             }
         }
 
-#if UNITY_2023
-        private static void Build(BuildTarget buildTarget, BuildTargetGroup buildTargetGroup, int buildSubtarget, string filePath)
-#else 
-        private static void Build(BuildTarget buildTarget, int buildSubtarget, string filePath)
-#endif
+        static void Build(MyBuildTarget buildTarget, int buildSubtarget, string filePath)
         {
             string[] scenes = EditorBuildSettings.scenes.Where(scene => scene.enabled).Select(s => s.path).ToArray();
             var buildPlayerOptions = new BuildPlayerOptions
             {
                 scenes = scenes,
-                target = buildTarget,
+                target = GetBuildTarget(buildTarget),
                 locationPathName = filePath,
                 //                options = UnityEditor.BuildOptions.Development
 #if UNITY_2021_2_OR_NEWER
                 subtarget = buildSubtarget
 #endif
             };
-#if UNITY_2023
-            //targetGroup = BuildPipeline.GetBuildTargetGroup(buildTarget),
+            BuildTargetGroup buildTargetGroup = GetBuildTargetGroup(buildTarget);
             if (buildTargetGroup > 0)
                 buildPlayerOptions.targetGroup = buildTargetGroup;
-#endif
+
             BuildSummary buildSummary = BuildPipeline.BuildPlayer(buildPlayerOptions).summary;
             ReportSummary(buildSummary);
             ExitWithResult(buildSummary.result);
         }
 
-        private static void ReportSummary(BuildSummary summary)
+        static void ReportSummary(BuildSummary summary)
         {
             Console.WriteLine(
                 $"{Eol}" +
@@ -233,7 +209,7 @@ namespace UnityBuilderAction
             );
         }
 
-        private static void ExitWithResult(BuildResult result)
+        static void ExitWithResult(BuildResult result)
         {
             switch (result)
             {
@@ -257,49 +233,55 @@ namespace UnityBuilderAction
             }
         }
 
-#pragma warning disable 618
-        static BuildTargetGroup ConvertBuildTarget(BuildTarget buildTarget)
+        static NamedBuildTarget GetNamedBuildTarget(MyBuildTarget buildTarget)
         {
             switch (buildTarget)
             {
-                case BuildTarget.StandaloneOSX:
-                case BuildTarget.iOS:
-                    return BuildTargetGroup.iOS;
-                case BuildTarget.StandaloneWindows:
-                case BuildTarget.StandaloneLinux:
-                case BuildTarget.StandaloneWindows64:
-                case BuildTarget.StandaloneLinux64:
-                case BuildTarget.StandaloneLinuxUniversal:
-                    return BuildTargetGroup.Standalone;
-                case BuildTarget.Android:
-                    return BuildTargetGroup.Android;
-                case BuildTarget.WebGL:
-                    return BuildTargetGroup.WebGL;
-                case BuildTarget.WSAPlayer:
-                    return BuildTargetGroup.WSA;
-                case BuildTarget.Tizen:
-                    return BuildTargetGroup.Tizen;
-                case BuildTarget.PSP2:
-                    return BuildTargetGroup.PSP2;
-                case BuildTarget.PS4:
-                    return BuildTargetGroup.PS4;
-                case BuildTarget.PSM:
-                    return BuildTargetGroup.PSM;
-                case BuildTarget.XboxOne:
-                    return BuildTargetGroup.XboxOne;
-                case BuildTarget.N3DS:
-                    return BuildTargetGroup.N3DS;
-                case BuildTarget.WiiU:
-                    return BuildTargetGroup.WiiU;
-                case BuildTarget.tvOS:
-                    return BuildTargetGroup.tvOS;
-                case BuildTarget.Switch:
-                    return BuildTargetGroup.Switch;
-                case BuildTarget.NoTarget:
+                case MyBuildTarget.StandaloneWindowsX86:
+                case MyBuildTarget.StandaloneWindowsX86_64:
+                case MyBuildTarget.StandaloneWindowsArm64:
+                case MyBuildTarget.StandaloneLinuxX86_64:
+                    return NamedBuildTarget.Standalone;
+                case MyBuildTarget.Android:
+                    return NamedBuildTarget.Android;
                 default:
-                    return BuildTargetGroup.Standalone;
+                    return NamedBuildTarget.Unknown;
             }
         }
-#pragma warning restore 618
+
+        static BuildTarget GetBuildTarget(MyBuildTarget buildTarget)
+        {
+            switch (buildTarget)
+            {
+                case MyBuildTarget.StandaloneWindowsX86:
+                    return BuildTarget.StandaloneWindows;
+                case MyBuildTarget.StandaloneWindowsX86_64:
+                    return BuildTarget.StandaloneWindows64;
+                case MyBuildTarget.StandaloneWindowsArm64:
+                    return BuildTarget.StandaloneWindows64;
+                case MyBuildTarget.StandaloneLinuxX86_64:
+                    return BuildTarget.StandaloneLinux64;
+                case MyBuildTarget.Android:
+                    return BuildTarget.Android;
+                default:
+                    return BuildTarget.NoTarget;
+            }
+        }
+
+        static BuildTargetGroup GetBuildTargetGroup(MyBuildTarget buildTarget)
+        {
+            switch (buildTarget)
+            {
+                case MyBuildTarget.StandaloneWindowsX86:
+                case MyBuildTarget.StandaloneWindowsX86_64:
+                case MyBuildTarget.StandaloneWindowsArm64:
+                case MyBuildTarget.StandaloneLinuxX86_64:
+                    return BuildTargetGroup.Standalone;
+                case MyBuildTarget.Android:
+                    return BuildTargetGroup.Android;
+                default:
+                    return BuildTargetGroup.Unknown;
+            }
+        }
     }
 }
