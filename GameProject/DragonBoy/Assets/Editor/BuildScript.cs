@@ -166,8 +166,16 @@ namespace UnityBuilderAction
                 string displayValue = secret ? "*HIDDEN*" : "\"" + value + "\"";
 
                 // Assign
-                Console.WriteLine($"Found flag \"{flag}\" with value {displayValue}.");
-                providedArguments.Add(flag, value);
+                if (providedArguments.ContainsKey(flag))
+                {
+                    Console.WriteLine($"Flag \"{flag}\" is already defined. Overwriting value with {displayValue}.");
+                    providedArguments[flag] = value;
+                }
+                else
+                {
+                    Console.WriteLine($"Found flag \"{flag}\" with value {displayValue}.");
+                    providedArguments.Add(flag, value);
+                }
             }
         }
 
