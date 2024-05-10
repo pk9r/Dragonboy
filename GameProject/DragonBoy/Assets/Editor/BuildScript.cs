@@ -111,9 +111,9 @@ namespace UnityBuilderAction
                 EditorApplication.Exit(120);
             }
 
-            if (!Enum.IsDefined(typeof(BuildTarget), buildTarget ?? string.Empty))
+            if (!Enum.IsDefined(typeof(MyBuildTarget), buildTarget ?? string.Empty))
             {
-                Console.WriteLine($"{buildTarget} is not a defined {nameof(BuildTarget)}");
+                Console.WriteLine($"{buildTarget} is not a defined {nameof(MyBuildTarget)}");
                 EditorApplication.Exit(121);
             }
 
