@@ -2,5 +2,5 @@ using UnityEngine.Scripting;
 
 [assembly: Preserve]
 #if ENABLE_IL2CPP
-[assembly: Unity.IL2CPP.CompilerServices.Il2CppSetOption(Option.NullChecks, false)]
+[assembly: Unity.IL2CPP.CompilerServices.Il2CppSetOption(Unity.IL2CPP.CompilerServices.Option.DivideByZeroChecks, false)]
 #endif
