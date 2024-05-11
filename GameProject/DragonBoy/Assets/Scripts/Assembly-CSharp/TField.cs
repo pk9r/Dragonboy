@@ -928,6 +928,26 @@ public class TField : IActionListener
                     }
                     selectStartIndex = -1;
                     break;
+                case KeyCode.Home:
+                    if (Event.current.shift)
+                    {
+                        if (selectStartIndex == -1)
+                            selectStartIndex = caretPos;
+                    }
+                    else
+                        selectStartIndex = -1;
+                    caretPos = 0;
+                    break;
+                case KeyCode.End:
+                    if (Event.current.shift)
+                    {
+                        if (selectStartIndex == -1)
+                            selectStartIndex = caretPos;
+                    }
+                    else
+                        selectStartIndex = -1;
+                    caretPos = text.Length;
+                    break;
                 default:
                     if (Event.current.control)
                     {
