@@ -84,6 +84,8 @@ namespace Mod.AccountManager
                     case CommandType.SelectAccountToLogin:
                         selectedAccountIndex = scrollableMenuAccounts.CurrentItemIndex;
                         SaveDataAccounts();
+                        Rms.saveRMSString("acc", SelectedAccount.Username);
+                        Rms.saveRMSString("pass", SelectedAccount.Password);
                         Session_ME.gI().close();
                         Session_ME2.gI().close();
                         GameCanvas.connect();
