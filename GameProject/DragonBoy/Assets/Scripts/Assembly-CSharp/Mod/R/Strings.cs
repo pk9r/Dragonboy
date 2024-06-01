@@ -223,13 +223,34 @@ namespace Mod.R
         internal static string vnInputDiacritics = "";
         internal static string vnInputConsumeRepeatKey = "";
         internal static string vnInputEnable = "";
-        internal static string accounts;
-        internal static string lastLogin;
-        internal static string justNow;
-        internal static string minutesAgo;
-        internal static string hoursAgo;
-        internal static string todayAt;
-        internal static string yesterdayAt;
+        internal static string accounts = "";
+        internal static string lastLogin = "";
+        internal static string justNow = "";
+        internal static string minutesAgo = "";
+        internal static string hoursAgo = "";
+        internal static string yesterdayAt = "";
+        internal static string back = "";
+        internal static string haventLoggedInYet = "";
+        internal static string info = "";
+        internal static string master = "";
+        internal static string gender = "";
+        internal static string name = "";
+        internal static string edit = "";
+        internal static string select = "";
+        internal static string save = "";
+        internal static string logout = "";
+        internal static string inGameAccountManagerConfirmDeleteAcc = "";
+        internal static string inGameAccountManagerAddAccount = "";
+        internal static string inGameAccountManagerEditAccount = "";
+        internal static string inGameAccountManagerServerBlank = "";
+        internal static string inGameAccountManagerEditServer = "";
+        internal static string inGameAccountManagerServerName = "";
+        internal static string inGameAccountManagerServerAddress = "";
+        internal static string inGameAccountManagerServerPort = "";
+        internal static string inGameAccountManagerServerNameBlank = "";
+        internal static string inGameAccountManagerServerAddressBlank = "";
+        internal static string inGameAccountManagerServerPortBlank = "";
+        internal static string inGameAccountManagerServerPortInvalid = "";
         #endregion
 
         internal static void LoadLanguage(sbyte newLanguage)
@@ -294,11 +315,20 @@ namespace Mod.R
             level = "Mức";
             accounts = "Tài khoản";
             lastLogin = "Lần đăng nhập cuối";
+            haventLoggedInYet = "Chưa đăng nhập lần nào";
             justNow = "Vài giây trước";
             minutesAgo = "{0} phút trước";
             hoursAgo = "{0} giờ trước";
-            todayAt = "Hôm nay lúc {0}";
             yesterdayAt = "Hôm qua lúc {0}";
+            back = "Quay lại";
+            info = "Thông tin";
+            master = "Sư phụ";
+            gender = "Hệ";
+            name = "Tên";
+            edit = "Sửa";
+            select = "Chọn";
+            save = "Lưu";
+            logout = "Đăng xuất";
             //---------------------------------------------------
             inputFPS = "Nhập số khung hình trên giây";
             inputTimeChangeBg = "Nhập thời gian thay đổi hình nền";
@@ -400,6 +430,18 @@ namespace Mod.R
             vnInputDiacritics = "Kiểu đặt dấu";
             vnInputInputMethod = "Kiểu gõ";
             vnInputConsumeRepeatKey = "Bỏ qua phím đặt dấu lặp";
+            inGameAccountManagerAddAccount = "Thêm tài khoản";
+            inGameAccountManagerEditAccount = "Sửa tài khoản";
+            inGameAccountManagerConfirmDeleteAcc = "Bạn có chắc chắn muốn xoá tài khoản này khỏi danh sách không?";
+            inGameAccountManagerServerBlank = "Bạn chưa chọn server";
+            inGameAccountManagerEditServer = "Sửa server";
+            inGameAccountManagerServerName = "Tên server";
+            inGameAccountManagerServerAddress = "Địa chỉ";
+            inGameAccountManagerServerPort = "Cổng";
+            inGameAccountManagerServerNameBlank = "Tên server không được để trống";
+            inGameAccountManagerServerAddressBlank = "Địa chỉ server không được để trống";
+            inGameAccountManagerServerPortBlank = "Cổng server không được để trống";
+            inGameAccountManagerServerPortInvalid = "Cổng server không hợp lệ";
             //---------------------------------------------------
             //mod menu
             modMenuPanelTabName = new string[][]
@@ -557,11 +599,20 @@ namespace Mod.R
             level = "Level";
             accounts = "Accounts";
             lastLogin = "Last login";
+            haventLoggedInYet = "Haven't logged in yet";
             justNow = "Just now";
             minutesAgo = "{0} minute(s) ago";
             hoursAgo = "{0} hour(s) ago";
-            todayAt = "Today at {0}";
             yesterdayAt = "Yesterday at {0}";
+            back = "Back";
+            info = "Info";
+            master = "Master";
+            gender = "Gender";
+            name = "Name";
+            edit = "Edit";
+            select = "Select";
+            save = "Save";
+            logout = "Logout";
             //---------------------------------------------------
             inputFPS = "Input the number of frames per second";
             inputTimeChangeBg = "Input the background interval";
@@ -659,6 +710,23 @@ namespace Mod.R
             teleportMenuInputCharIDTextFieldName = "Input character ID";
             teleportMenuInputCharIDTextFieldHint = "ID";
             teleportMenuAddedCharacterWithID = "Character with ID {0} has been added to the list";
+
+            vnInputEnable = "Vietnamese input mode";
+            vnInputDiacritics = "Diacritics type";
+            vnInputInputMethod = "Input method";
+            vnInputConsumeRepeatKey = "Consume repeat key";
+            inGameAccountManagerAddAccount = "Add account";
+            inGameAccountManagerEditAccount = "Edit account";
+            inGameAccountManagerConfirmDeleteAcc = "Are you sure you want to delete this account from the list?";
+            inGameAccountManagerServerBlank = "You haven't selected a server";
+            inGameAccountManagerEditServer = "Edit server";
+            inGameAccountManagerServerName = "Server name";
+            inGameAccountManagerServerAddress = "Address";
+            inGameAccountManagerServerPort = "Port";
+            inGameAccountManagerServerNameBlank = "Server name can't be blank";
+            inGameAccountManagerServerAddressBlank = "Server address can't be blank";
+            inGameAccountManagerServerPortBlank = "Server port can't be blank";
+            inGameAccountManagerServerPortInvalid = "Invalid server port";
             //---------------------------------------------------
             //mod menu
             modMenuPanelTabName = new string[][]
@@ -767,10 +835,6 @@ namespace Mod.R
             openSetsMenuDescription = "Open the Sets menu (\"set\" command or \'`\' key)";
             openVietnameseInputMenuTitle = "Vietnamese input menu";
             openVietnameseInputMenuDescription = "Open the Vietnamese input menu, use when having issues with external Vietnamese input programs (UniKey, VietKey, etc.)";
-            vnInputEnable = "Vietnamese input mode";
-            vnInputDiacritics = "Diacritics type";
-            vnInputInputMethod = "Input method";
-            vnInputConsumeRepeatKey = "Consume repeat key";
         }
     }
 }

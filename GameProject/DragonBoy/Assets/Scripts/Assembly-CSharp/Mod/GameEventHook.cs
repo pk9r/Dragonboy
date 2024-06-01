@@ -5,9 +5,6 @@ using Mod.Graphics;
 using MonoHook;
 using UnityEngine;
 using Mod.R;
-using Mod.AccountManager;
-
-
 
 #if UNITY_EDITOR
 using Mono.Cecil;
@@ -167,33 +164,44 @@ namespace Mod
             TryInstallHook<Action<mGraphics>, Action<mGraphics>>(TileMap.paintOutTilemap, TileMap_paintOutTilemap_hook, TileMap_paintOutTilemap_original);
             TryInstallHook<Action<mGraphics>, Action<Npc, mGraphics>>(npc.paint, Npc_paint_hook, Npc_paint_original);
             TryInstallHook<Action<mGraphics>, Action<ServerEffect, mGraphics>>(serverEffect.paint, ServerEffect_paint_hook, ServerEffect_paint_original);
-            TryInstallHook(typeof(Command).GetConstructor(new Type[] { typeof(string), typeof(IActionListener), typeof(int), typeof(object) }), new Action<Command, string, IActionListener, int, object>(Command__ctor_hook).Method, new Action<Command, string, IActionListener, int, object>(Command__ctor_original).Method);
-            TryInstallHook<Action, Action<ServerListScreen>>(serverListScreen.switchToMe2, ServerListScreen_switchToMe2_hook, ServerListScreen_switchToMe2_original);
+            TryInstallHook<Action, Action<ServerListScreen>>(serverListScreen.initCommand, ServerListScreen_initCommand_hook, ServerListScreen_initCommand_original);
+            TryInstallHook<Action, Action<Panel>>(panel.doFireTool, Panel_doFireTool_hook, Panel_doFireTool_original);
+            TryInstallHook<Action, Action<SoundMn>>(soundMn.getSoundOption, SoundMn_getSoundOption_hook, SoundMn_getSoundOption_original);
+
 
             //TryInstallHook<Action, Action>(, _hook, _original);
         }
-
         #region Hooks
-        static void ServerListScreen_switchToMe2_hook(ServerListScreen _this)
+
+        static void SoundMn_getSoundOption_hook(SoundMn _this)
         {
-            ServerListScreen_switchToMe2_original(_this);
-            //_this.cmd[1 + _this.nCmdPlay].caption = Strings.accounts;
+            if (!GameEvents.OnGetSoundOption())
+                SoundMn_getSoundOption_original(_this);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
-        static void ServerListScreen_switchToMe2_original(ServerListScreen _this)
+        static void SoundMn_getSoundOption_original(SoundMn _this)
         {
             Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
-        static void Command__ctor_hook(Command _this, string caption, IActionListener actionListener, int action, object p)
+        static void Panel_doFireTool_hook(Panel _this)
         {
-            //if (caption == mResources.change_account)
-                //Command__ctor_original(_this, Strings.accounts, new InGameAccountManager.ActionListener(), action, p);
-            //else
-                Command__ctor_original(_this, caption, actionListener, action, p);
+            if (!GameEvents.OnPanelFireTool(_this))
+                Panel_doFireTool_original(_this);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
-        static void Command__ctor_original(Command _this, string caption, IActionListener actionListener, int action, object p)
+        static void Panel_doFireTool_original(Panel _this)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void ServerListScreen_initCommand_hook(ServerListScreen _this)
+        {
+            if (!GameEvents.OnServerListScreenInitCommand(_this))
+                ServerListScreen_initCommand_original(_this);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void ServerListScreen_initCommand_original(ServerListScreen _this)
         {
             Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
@@ -738,7 +746,7 @@ namespace Mod
         static void ServerListScreen_switchToMe_hook(ServerListScreen _this)
         {
             ServerListScreen_switchToMe_original(_this);
-            //_this.cmd[1 + _this.nCmdPlay].caption = Strings.accounts;
+            _this.cmd[1 + _this.nCmdPlay].caption = Strings.accounts;
             GameEvents.OnServerListScreenLoaded();
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]

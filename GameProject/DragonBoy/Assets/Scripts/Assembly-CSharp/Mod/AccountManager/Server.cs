@@ -7,7 +7,7 @@ namespace Mod.AccountManager
         internal int index;
         internal string name;
         internal string hostnameOrIPAddress;
-        internal short port;
+        internal ushort port;
 
         internal Server(int index)
         {
@@ -16,7 +16,7 @@ namespace Mod.AccountManager
             port = 0;
         }
 
-        internal Server(string name, string hostnameOrIPAddress, short port)
+        internal Server(string name, string hostnameOrIPAddress, ushort port)
         {
             index = -1;
             this.name = name;
@@ -26,22 +26,29 @@ namespace Mod.AccountManager
 
         internal Server(string serverInfo)
         {
-            index = -1;
-            string[] data = serverInfo.Split(':');
-            if (data.Length == 2)
-            {
-                name = "";
-                hostnameOrIPAddress = data[0];
-                port = short.Parse(data[1]);
-            }
-            else if (data.Length == 3)
-            {
-                name = data[0];
-                hostnameOrIPAddress = data[1];
-                port = short.Parse(data[2]);
-            }
+            name = "";
+            hostnameOrIPAddress = "";
+            port = 0;
+            if (int.TryParse(serverInfo, out index))
+                return;
             else
-                throw new ArgumentException();
+            {
+                index = -1;
+                string[] info = serverInfo.Split(':');
+                if (info.Length == 2)
+                {
+                    hostnameOrIPAddress = info[0];
+                    port = ushort.Parse(info[1]);
+                }
+                else if (info.Length == 3)
+                {
+                    name = info[0];
+                    hostnameOrIPAddress = info[1];
+                    port = ushort.Parse(info[2]);
+                }
+                else
+                    throw new ArgumentException();
+            }
         }
 
         public override string ToString()
@@ -54,5 +61,26 @@ namespace Mod.AccountManager
         internal string GetIPPort() => $"{hostnameOrIPAddress}:{port}".TrimStart(' ');
 
         internal bool IsCustomIP() => index == -1;
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Server server)
+            {
+                if (server.IsCustomIP() != IsCustomIP())
+                    return false;
+                if (IsCustomIP())
+                    return server.hostnameOrIPAddress == hostnameOrIPAddress && server.port == port;
+                return server.index == index;
+            }
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(index, name, hostnameOrIPAddress, port);
+        }
+
+        public static bool operator ==(Server a, Server b) => a.Equals(b);
+        public static bool operator !=(Server a, Server b) => !a.Equals(b);
     }
 }

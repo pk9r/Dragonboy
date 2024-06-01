@@ -263,7 +263,7 @@ PlayerSettings:
   AndroidTargetDevices: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: '{dedicated}: Documents/DragonBoy-pk9r327-UnityProject.keystore'
+  AndroidKeystoreName: '{dedicated}: DragonBoy-pk9r327-UnityProject.keystore'
   AndroidKeyaliasName: dragonboy-pk9r327-unityproject
   AndroidEnableArmv9SecurityFeatures: 0
   AndroidEnableArm64MTE: 0

@@ -44,9 +44,9 @@ public class GameMidlet
 		SplashScr.loadImg();
 		SplashScr.loadSplashScr();
 		GameCanvas.currentScreen = new SplashScr();
-	}
+    }
 
-	public void exit()
+    public void exit()
 	{
 		if (Main.typeClient == 6)
 		{

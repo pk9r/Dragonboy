@@ -40,6 +40,9 @@ namespace Mod
 
         internal static System.Random random = new System.Random();
 
+        static bool isOpenedByExternalAccountManager;
+        internal static bool IsOpenedByExternalAccountManager => isOpenedByExternalAccountManager;
+
         /// <summary>
         /// Kiểm tra xem game đang chạy trên Android hay không.
         /// </summary>
@@ -870,7 +873,7 @@ namespace Mod
             double scaled = number * Math.Pow(1000, -degree);
             return $"{scaled:0.##}{prefix[degree]}";
         }
-
+        
         internal static void ResetTextField(ChatTextField chatTextField)
         {
             if (chatTextField == null)

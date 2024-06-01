@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if false
+using System;
 using UnityEngine;
 
 namespace Mod.AccountManager
@@ -107,3 +108,5 @@ namespace Mod.AccountManager
         }
     }
 }
+
+#endif

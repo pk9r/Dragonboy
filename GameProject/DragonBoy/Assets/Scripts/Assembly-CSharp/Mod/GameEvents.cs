@@ -79,6 +79,8 @@ namespace Mod
             //UIReportersManager.AddReporter(ListCharsInMap.Paint);
             //ShareInfo.gI.toggle(true);
             VietnameseInput.LoadData();
+            if (!Utils.IsOpenedByExternalAccountManager)
+                InGameAccountManager.OnStart();
         }
 
         /// <summary>
@@ -142,6 +144,8 @@ namespace Mod
             SetDo.SaveData();
             VietnameseInput.SaveData();
             //UIReportersManager.ClearReporters();
+            if (!Utils.IsOpenedByExternalAccountManager)
+                InGameAccountManager.OnClose();
         }
 
         internal static void OnFixedUpdateMain()
@@ -178,9 +182,13 @@ namespace Mod
                 Utils.ResetTextField(ChatTextField.gI());
                 GameScr.gamePad?.SetGamePadZone();
                 GameScr.loadCamera(false, -1, -1);
+                //if (GameCanvas.currentScreen is not GameScr)
+                //    GameCanvas.loadBG(0);
                 if (GameCanvas.panel2 != null)
                     GameCanvas.panel2.EmulateSetTypePanel(1);
                 ModMenuMain.UpdatePosition();
+                if (!Utils.IsOpenedByExternalAccountManager)
+                    InGameAccountManager.UpdateSizeAndPos();
             }
 #if UNITY_ANDROID && !UNITY_EDITOR
             EHVN.FileChooser.Update();
@@ -332,6 +340,36 @@ namespace Mod
         /// </summary>
         internal static void OnUpdateGameScr()
         {
+            if (!Utils.IsOpenedByExternalAccountManager && GameCanvas.gameTick % (60 * Time.timeScale) == 0)
+            {
+                Account account = InGameAccountManager.SelectedAccount;
+                if (account != null)
+                {
+                    account.Gold = Char.myCharz().xu;
+                    account.Gem = Char.myCharz().luong;
+                    account.Ruby = Char.myCharz().luongKhoa;
+
+                    account.Info.Name = Char.myCharz().cName;
+                    account.Info.CharID = Char.myCharz().charID;
+                    account.Info.Gender = (sbyte)Char.myCharz().cgender;   
+                    account.Info.EXP = Char.myCharz().cPower;
+                    account.Info.MaxHP = Char.myCharz().cHPFull;
+                    account.Info.MaxMP = Char.myCharz().cMPFull;
+                    account.Info.Icon = Char.myCharz().avatarz();
+                    if (Char.myCharz().havePet)
+                    {
+                        if (account.PetInfo == null)
+                            account.PetInfo = new AccountManager.CharacterInfo();
+                        account.PetInfo.Name = Char.myPetz().cName;
+                        account.PetInfo.CharID = Char.myPetz().charID;
+                        account.PetInfo.Gender = (sbyte)Char.myPetz().cgender;
+                        account.PetInfo.EXP = Char.myPetz().cPower;
+                        account.PetInfo.MaxHP = Char.myPetz().cHPFull;
+                        account.PetInfo.MaxMP = Char.myPetz().cMPFull;
+                        account.PetInfo.Icon = Char.myPetz().avatarz();
+                    }
+                }
+            }
             if (GameCanvas.gameTick % (10 * Time.timeScale) == 0)
             {
                 //Service.gI().openUIZone();
@@ -372,14 +410,26 @@ namespace Mod
         /// <param name="type"></param>
         internal static void OnLogin(ref string username, ref string pass, ref sbyte type)
         {
-            username = Utils.username == "" ? username : Utils.username;
-            if (username.StartsWith("User"))
+            if (!Utils.IsOpenedByExternalAccountManager)
             {
-                pass = string.Empty;
-                type = 1;
+                Account acc = InGameAccountManager.SelectedAccount;
+                if (acc == null)
+                    return;
+                username = acc.Username;
+                pass = acc.Password;
+                acc.LastTimeLogin = DateTime.Now;
             }
             else
-                pass = Utils.password == "" ? pass : Utils.password;
+            {
+                username = Utils.username == "" ? username : Utils.username;
+                if (username.StartsWith("User"))
+                {
+                    pass = string.Empty;
+                    type = 1;
+                }
+                else
+                    pass = Utils.password == "" ? pass : Utils.password;
+            }
         }
 
         /// <summary>
@@ -405,10 +455,30 @@ namespace Mod
         /// <param name="port"></param>
         internal static void OnSessionConnecting(ref string host, ref int port)
         {
-            if (Utils.server != null)
+            if (!Utils.IsOpenedByExternalAccountManager)
             {
-                host = (string)Utils.server["ip"];
-                port = (int)Utils.server["port"];
+                Account acc = InGameAccountManager.SelectedAccount;
+                if (acc == null)
+                    return;
+                if (acc.Server.IsCustomIP())
+                {
+                    host = acc.Server.hostnameOrIPAddress;
+                    port = acc.Server.port;
+                }
+                else
+                {
+                    host = ServerListScreen.address[acc.Server.index];
+                    port = ServerListScreen.port[acc.Server.index];
+                    ServerListScreen.ipSelect = acc.Server.index;
+                }
+            }
+            else
+            {
+                if (Utils.server != null)
+                {
+                    host = (string)Utils.server["ip"];
+                    port = (int)Utils.server["port"];
+                }
             }
         }
 
@@ -419,6 +489,8 @@ namespace Mod
 
         internal static bool OnCheckZoomLevel(int w, int h)
         {
+            //mGraphics.zoomLevel = 3;
+            //return true;
             if (Utils.IsAndroidBuild())
             {
                 if (w * h >= 2073600)
@@ -1003,7 +1075,9 @@ namespace Mod
             mFont.tahoma_7b_white.drawString(g, Strings.communityMod, 60, 4, mFont.LEFT, mFont.tahoma_7b_dark);
             mFont.tahoma_7_yellow.drawString(g, Strings.gameVersion + ": v" + GameMidlet.VERSION, 60, 16, mFont.LEFT, mFont.tahoma_7_grey);
             mFont.tahoma_7_yellow.drawString(g, mResources.character + ": " + Char.myCharz().cName, 60, 27, mFont.LEFT, mFont.tahoma_7_grey);
-            mFont.tahoma_7_yellow.drawString(g, mResources.account + " " + mResources.account_server.ToLower() + " " + ServerListScreen.nameServer[ServerListScreen.ipSelect], 60, 39, mFont.LEFT, mFont.tahoma_7_grey);
+            Account account = InGameAccountManager.SelectedAccount;
+            string serverName = account.Server.IsCustomIP() ? account.Server.name : ServerListScreen.nameServer[account.Server.index];
+            mFont.tahoma_7_yellow.drawString(g, mResources.account + " " + mResources.account_server.ToLower() + " " + serverName, 60, 39, mFont.LEFT, mFont.tahoma_7_grey);
             return true;
         }
 
@@ -1744,5 +1818,211 @@ namespace Mod
                 }
             }
         }
+
+        internal static bool OnServerListScreenInitCommand(ServerListScreen screen)
+        {
+            screen.nCmdPlay = 0;
+            string text = Rms.loadRMSString("acc");
+            sbyte[] userAo = Rms.loadRMS("userAo" + ServerListScreen.ipSelect);
+            if (text == null)
+            {
+                if (userAo != null)
+                    screen.nCmdPlay = 1;
+            }
+            else if (text.Equals(string.Empty))
+            {
+                if (userAo != null)
+                    screen.nCmdPlay = 1;
+            }
+            else
+            {
+                screen.nCmdPlay = 1;
+            }
+            screen.cmd = new Command[4 + screen.nCmdPlay];
+            int num = GameCanvas.hh - 15 * screen.cmd.Length + 28;
+            for (int i = 0; i < screen.cmd.Length; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        screen.cmd[0] = new Command(string.Empty, screen, 3, null);
+                        if (text == null)
+                        {
+                            screen.cmd[0].caption = mResources.playNew;
+                            if (Rms.loadRMS("userAo" + ServerListScreen.ipSelect) != null)
+                                screen.cmd[0].caption = mResources.choitiep;
+                            break;
+                        }
+                        if (text.Equals(string.Empty))
+                        {
+                            screen.cmd[0].caption = mResources.playNew;
+                            if (Rms.loadRMS("userAo" + ServerListScreen.ipSelect) != null)
+                                screen.cmd[0].caption = mResources.choitiep;
+                            break;
+                        }
+                        if (!Utils.IsOpenedByExternalAccountManager)
+                        {
+                            Account acc = InGameAccountManager.SelectedAccount;
+                            if (acc == null)
+                                screen.cmd[0].caption = mResources.playAcc + ": " + new string('*', text.Length);
+                            else
+                                screen.cmd[0].caption = mResources.playAcc + ": " + acc.Info.Name;
+                        }
+                        else
+                            screen.cmd[0].caption = mResources.playAcc + ": " + new string('*', text.Length);
+                        if (screen.cmd[0].caption.Length > 23)
+                        {
+                            screen.cmd[0].caption = screen.cmd[0].caption.Substring(0, 23);
+                            screen.cmd[0].caption += "...";
+                        }
+                        break;
+                    case 1:
+                        if (screen.nCmdPlay == 1)
+                        {
+                            screen.cmd[1] = new Command(string.Empty, screen, 10100, null);
+                            screen.cmd[1].caption = mResources.playNew;
+                        }
+                        else
+                        {
+                            if (!Utils.IsOpenedByExternalAccountManager)
+                                screen.cmd[1] = new Command(Strings.accounts, new InGameAccountManager.ActionListener(), 7, null);
+                            else
+                                screen.cmd[1] = new Command(mResources.change_account, screen, 7, null);
+                        }
+                        break;
+                    case 2:
+                        if (screen.nCmdPlay == 1)
+                        {
+                            if (!Utils.IsOpenedByExternalAccountManager)
+                                screen.cmd[2] = new Command(Strings.accounts, new InGameAccountManager.ActionListener(), 7, null);
+                            else
+                                screen.cmd[2] = new Command(mResources.change_account, screen, 7, null);
+                        }
+                        else
+                            screen.cmd[2] = new Command(string.Empty, screen, 17, null);
+                        break;
+                    case 3:
+                        if (screen.nCmdPlay == 1)
+                            screen.cmd[3] = new Command(string.Empty, screen, 17, null);
+                        else
+                            screen.cmd[3] = new Command(mResources.option, screen, 8, null);
+                        break;
+                    case 4:
+                        screen.cmd[4] = new Command(mResources.option, screen, 8, null);
+                        break;
+                }
+                screen.cmd[i].y = num;
+                screen.cmd[i].setType();
+                screen.cmd[i].x = (GameCanvas.w - screen.cmd[i].w) / 2;
+                num += 30;
+            }
+            return true;
+        }
+
+        internal static bool OnPanelFireTool(Panel panel)
+        {
+            if (panel.selected < 0)
+                return false;
+            if (SoundMn.IsDelAcc && panel.selected == Panel.strTool.Length - 1)
+                return false;
+            if (!Char.myCharz().havePet)
+            {
+                switch (panel.selected)
+                {
+                    case 8:
+                        GameCanvas.timeBreakLoading = mSystem.currentTimeMillis() + 30000;
+                        ServerListScreen.countDieConnect = 0;
+                        GameCanvas.instance.resetToLoginScr = false;
+                        GameCanvas.instance.doResetToLoginScr(GameCanvas.serverScreen);
+                        return true;
+                }
+            }
+            switch (panel.selected)
+            {
+                case 9:
+                    GameCanvas.timeBreakLoading = mSystem.currentTimeMillis() + 30000;
+                    ServerListScreen.countDieConnect = 0;
+                    GameCanvas.instance.resetToLoginScr = false;
+                    GameCanvas.instance.doResetToLoginScr(GameCanvas.serverScreen);
+                    return true;
+            }
+            return false;
+        }
+
+        internal static bool OnGetSoundOption()
+        {
+            if (GameCanvas.loginScr.isLogin2 && Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId >= 2)
+            {
+                Panel.strTool = new string[10]
+                {
+                mResources.radaCard,
+                mResources.quayso,
+                mResources.gameInfo,
+                mResources.change_flag,
+                mResources.change_zone,
+                mResources.chat_world,
+                mResources.account,
+                mResources.option,
+                Utils.IsOpenedByExternalAccountManager ? mResources.change_account : Strings.logout,
+                mResources.REGISTOPROTECT
+                };
+                if (Char.myCharz().havePet)
+                    Panel.strTool = new string[11]
+                    {
+                    mResources.radaCard,
+                    mResources.quayso,
+                    mResources.gameInfo,
+                    mResources.pet,
+                    mResources.change_flag,
+                    mResources.change_zone,
+                    mResources.chat_world,
+                    mResources.account,
+                    mResources.option,
+                    Utils.IsOpenedByExternalAccountManager ? mResources.change_account : Strings.logout,
+                    mResources.REGISTOPROTECT
+                    };
+            }
+            else
+            {
+                Panel.strTool = new string[9]
+                {
+                mResources.radaCard,
+                mResources.quayso,
+                mResources.gameInfo,
+                mResources.change_flag,
+                mResources.change_zone,
+                mResources.chat_world,
+                mResources.account,
+                mResources.option,
+                Utils.IsOpenedByExternalAccountManager ? mResources.change_account : Strings.logout
+                };
+                if (Char.myCharz().havePet)
+                    Panel.strTool = new string[10]
+                    {
+                    mResources.radaCard,
+                    mResources.quayso,
+                    mResources.gameInfo,
+                    mResources.pet,
+                    mResources.change_flag,
+                    mResources.change_zone,
+                    mResources.chat_world,
+                    mResources.account,
+                    mResources.option,
+                    Utils.IsOpenedByExternalAccountManager ? mResources.change_account : Strings.logout
+                    };
+            }
+            if (SoundMn.IsDelAcc)
+            {
+                string[] array = new string[Panel.strTool.Length + 1];
+                for (int i = 0; i < Panel.strTool.Length; i++)
+                {
+                    array[i] = Panel.strTool[i];
+                }
+                array[Panel.strTool.Length] = mResources.delacc;
+                Panel.strTool = array;
+            }
+            return true;
+        }
+
     }
 }
