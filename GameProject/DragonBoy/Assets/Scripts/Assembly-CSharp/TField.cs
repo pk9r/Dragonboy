@@ -1033,6 +1033,10 @@ public class TField : IActionListener
                         return;
                     if (c == '\n' && !multiline && !Event.current.alt)
                         return;
+                    if (inputType == INPUT_TYPE_NUMERIC && !char.IsNumber(c) && c != '.' && c != '-' && c != ',')
+                        return;
+                    if (text.Length >= maxTextLenght)
+                        return;
                     Font font = mFont.tahoma_7b_focus.myFont;
                     if (!font)
                         font = GUI.skin.font;
