@@ -94,7 +94,7 @@ namespace Mod.AccountManager
                     case CommandType.FinishInputAccount:
                         if (string.IsNullOrEmpty(tfUser.getText()))
                         {
-                            GameCanvas.startOKDlg(mResources.userBlank + '!');
+                            GameCanvas.startOKDlg(mResources.userBlank);
                             break;
                         }
                         if (string.IsNullOrEmpty(tfPass.getText()))
@@ -287,7 +287,6 @@ namespace Mod.AccountManager
             scrollableMenuAccounts.Width = width;
             scrollableMenuAccounts.Height = height;
             scrollableMenuAccounts.Reset();
-            scrollableMenuAccounts.CurrentItemIndex = selectedAccountIndex;
             selectAccountToLogin = new Command(Strings.select, ActionListener.gI(), (int)CommandType.SelectAccountToLogin, null);
             addAccount = new Command("", ActionListener.gI(), (int)CommandType.AddAccount, null)
             {
@@ -402,6 +401,7 @@ namespace Mod.AccountManager
             else
                 UpdateKeyMain();
             base.updateKey();
+            GameCanvas.clearKeyPressed();
         }
 
         public override void keyPress(int keyCode)
@@ -646,7 +646,7 @@ namespace Mod.AccountManager
             }
             if (cancelInputAccount.isPointerPressInside())
                 cancelInputAccount.performAction();
-            if (GameCanvas.keyPressed[(!Main.isPC) ? 2 : 21] || GameCanvas.keyPressed[(!Main.isPC) ? 8 : 22] || GameCanvas.keyPressed[16])
+            if (GameCanvas.keyPressed[16])
             {
                 GameCanvas.clearKeyPressed();
                 if (tfUser.isFocus)

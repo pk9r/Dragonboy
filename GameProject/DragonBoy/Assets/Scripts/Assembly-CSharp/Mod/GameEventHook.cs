@@ -171,8 +171,8 @@ namespace Mod
 
             //TryInstallHook<Action, Action>(, _hook, _original);
         }
-        #region Hooks
 
+        #region Hooks
         static void SoundMn_getSoundOption_hook(SoundMn _this)
         {
             if (!GameEvents.OnGetSoundOption())
