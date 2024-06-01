@@ -251,6 +251,7 @@ namespace Mod.R
         internal static string inGameAccountManagerServerAddressBlank = "";
         internal static string inGameAccountManagerServerPortBlank = "";
         internal static string inGameAccountManagerServerPortInvalid = "";
+        internal static string custom;
         #endregion
 
         internal static void LoadLanguage(sbyte newLanguage)
@@ -329,6 +330,7 @@ namespace Mod.R
             select = "Chọn";
             save = "Lưu";
             logout = "Đăng xuất";
+            custom = "Tùy chỉnh";
             //---------------------------------------------------
             inputFPS = "Nhập số khung hình trên giây";
             inputTimeChangeBg = "Nhập thời gian thay đổi hình nền";
@@ -613,6 +615,7 @@ namespace Mod.R
             select = "Select";
             save = "Save";
             logout = "Logout";
+            custom = "Custom";
             //---------------------------------------------------
             inputFPS = "Input the number of frames per second";
             inputTimeChangeBg = "Input the background interval";

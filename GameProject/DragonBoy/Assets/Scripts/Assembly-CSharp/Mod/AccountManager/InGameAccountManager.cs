@@ -299,7 +299,7 @@ namespace Mod.AccountManager
             finishEditCustomServer = new Command(Strings.save, ActionListener.gI(), (int)CommandType.FinishEditCustomServer, null);
             cancelEditCustomServer = new Command(mResources.CANCEL, ActionListener.gI(), (int)CommandType.CancelEditCustomServer, null);
             cancelInputAccount = new Command(mResources.CANCEL, ActionListener.gI(), (int)CommandType.CloseInputAccount, null);
-            selectServer = new ComboBox(mResources.server, ServerListScreen.nameServer.ToList().Append("Tuỳ chỉnh...").ToList());
+            selectServer = new ComboBox(mResources.server, ServerListScreen.nameServer.ToList().Append(Strings.custom).ToList());
             addAccount.img.texture = add;
             addAccount.w = add.width / mGraphics.zoomLevel;
             addAccount.h = add.height / mGraphics.zoomLevel;
