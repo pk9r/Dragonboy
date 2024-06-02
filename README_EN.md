@@ -10,4 +10,4 @@ Use Visual Studio to compile the Account Manager and Unity Editor version `2023.
 
 
 ## License
-The source code is released under the [GNU Affero General Public License](https://www.gnu.org/licenses/agpl-3.0.en.html).
+The source code is released under the [GNU Affero General Public License version 3](https://www.gnu.org/licenses/agpl-3.0.en.html). Please read the license content carefully before using the source code for personal or commercial purposes to avoid license violation.
