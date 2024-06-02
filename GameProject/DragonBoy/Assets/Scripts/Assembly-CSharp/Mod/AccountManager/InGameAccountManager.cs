@@ -24,6 +24,9 @@ namespace Mod.AccountManager
             EditCustomServer,
             FinishEditCustomServer,
             CancelEditCustomServer,
+            ToggleHidePassword,
+            MoveAccountUp,
+            MoveAccountDown,
         }
 
         internal class ActionListener : IActionListener
@@ -52,6 +55,8 @@ namespace Mod.AccountManager
                         tfPass.isFocus = false;
                         tfUser.setText("");
                         tfPass.setText("");
+                        tfPass.setIputType(TField.INPUT_TYPE_PASSWORD);
+                        toggleHidePassword.img.texture = show;
                         break;
                     case CommandType.EditAccount:
                         isEditingAccount = true;
@@ -59,6 +64,8 @@ namespace Mod.AccountManager
                         tfPass.isFocus = false;
                         tfUser.setText(accounts[scrollableMenuAccounts.CurrentItemIndex].Username);
                         tfPass.setText(accounts[scrollableMenuAccounts.CurrentItemIndex].Password);
+                        tfPass.setIputType(TField.INPUT_TYPE_PASSWORD);
+                        toggleHidePassword.img.texture = show;
                         Server server = accounts[scrollableMenuAccounts.CurrentItemIndex].Server;
                         if (server.IsCustomIP())
                         {
@@ -183,6 +190,30 @@ namespace Mod.AccountManager
                     case CommandType.CancelEditCustomServer:
                         isEditingCustomServer = false;
                         break;
+                    case CommandType.ToggleHidePassword:
+                        tfPass.setIputType(tfPass.inputType == TField.INPUT_TYPE_PASSWORD ? TField.INPUT_TYPE_ANY : TField.INPUT_TYPE_PASSWORD);
+                        toggleHidePassword.img.texture = tfPass.inputType == TField.INPUT_TYPE_PASSWORD ? show : hide;
+                        break;
+                    case CommandType.MoveAccountUp:
+                        if (scrollableMenuAccounts.CurrentItemIndex > 0)
+                        {
+                            Account acc = accounts[scrollableMenuAccounts.CurrentItemIndex];
+                            accounts.RemoveAt(scrollableMenuAccounts.CurrentItemIndex);
+                            accounts.Insert(scrollableMenuAccounts.CurrentItemIndex - 1, acc);
+                            scrollableMenuAccounts.CurrentItemIndex--;
+                            SaveDataAccounts();
+                        }
+                        break;
+                    case CommandType.MoveAccountDown:
+                        if (scrollableMenuAccounts.CurrentItemIndex < accounts.Count - 1)
+                        {
+                            Account acc = accounts[scrollableMenuAccounts.CurrentItemIndex];
+                            accounts.RemoveAt(scrollableMenuAccounts.CurrentItemIndex);
+                            accounts.Insert(scrollableMenuAccounts.CurrentItemIndex + 1, acc);
+                            scrollableMenuAccounts.CurrentItemIndex++;
+                            SaveDataAccounts();
+                        }
+                        break;
                 }
             }
         }
@@ -191,6 +222,11 @@ namespace Mod.AccountManager
         static Texture2D namekOverlay = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(namekOverlay));
         static Texture2D saiyanOverlay = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(saiyanOverlay));
         static Texture2D add = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(add));
+        static Texture2D hide = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(hide));
+        static Texture2D show = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(show));
+        static Texture2D up = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(up));
+        static Texture2D down = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(down));
+        static Dictionary<int, Texture2D> icons = new Dictionary<int, Texture2D>();
 
         static Command closeAccountManager = new Command("", ActionListener.gI(), (int)CommandType.CloseAccountManager, null)
         {
@@ -209,16 +245,15 @@ namespace Mod.AccountManager
             imgFocus = new Image(),
         };
         static Command cancelInputAccount;
-
-        static Command viewSensitiveInfo;
+        static Command toggleHidePassword;
+        static Command moveAccountUp;
+        static Command moveAccountDown;
 
         static ComboBox selectServer;
 
         internal static Account SelectedAccount => selectedAccountIndex == -1 ? null : accounts[selectedAccountIndex];
         static List<Account> accounts = new List<Account>();
         static ScrollableMenuItems<Account> scrollableMenuAccounts;
-
-        static Dictionary<int, Texture2D> icons = new Dictionary<int, Texture2D>();
 
         static TField tfUser;
         static TField tfPass;
@@ -237,11 +272,11 @@ namespace Mod.AccountManager
         static bool isEditingCustomServer;
 
         static readonly int TITLE_HEIGHT = 30;
-        static readonly int ACCOUNT_HEIGHT = 40;
+        static readonly int ACCOUNT_HEIGHT = 34;
         static readonly int X_LIST_ACCOUNTS = 50;
         static readonly int Y_LIST_ACCOUNTS = 30;
         static readonly int DEFAULT_STEP_SCROLL = 70;
-        static readonly int WIDTH_ACCOUNT_INFO = 215;
+        static readonly int WIDTH_ACCOUNT_INFO = 160;
         static readonly int INPUT_ACCOUNT_WIDTH = 200;
         static readonly int INPUT_ACCOUNT_HEIGHT = 180;
         static readonly int SELECT_SERVER_WIDTH = 500;
@@ -287,23 +322,24 @@ namespace Mod.AccountManager
             scrollableMenuAccounts.Width = width;
             scrollableMenuAccounts.Height = height;
             scrollableMenuAccounts.Reset();
-            selectAccountToLogin = new Command(Strings.select, ActionListener.gI(), (int)CommandType.SelectAccountToLogin, null);
-            addAccount = new Command("", ActionListener.gI(), (int)CommandType.AddAccount, null)
+            editAccount = new Command(Strings.edit, ActionListener.gI(), (int)CommandType.EditAccount, null)
             {
-                img = Image.createImage(add.width, add.height),
-                imgFocus = new Image(),
+                w = 50,
             };
-            editAccount = new Command(Strings.edit, ActionListener.gI(), (int)CommandType.EditAccount, null);
-            deleteAccount = new Command(Strings.delete, ActionListener.gI(), (int)CommandType.ConfirmDeleteAccount, null);
+            deleteAccount = new Command(Strings.delete, ActionListener.gI(), (int)CommandType.ConfirmDeleteAccount, null)
+            {
+                w = 50,
+            };
+            selectAccountToLogin = new Command(Strings.select, ActionListener.gI(), (int)CommandType.SelectAccountToLogin, null)
+            {
+                w = 50,
+            };
             finishInputAccount = new Command(Strings.save, ActionListener.gI(), (int)CommandType.FinishInputAccount, null);
             editCustomServer = new Command(Strings.inGameAccountManagerEditServer, ActionListener.gI(), (int)CommandType.EditCustomServer, null);
             finishEditCustomServer = new Command(Strings.save, ActionListener.gI(), (int)CommandType.FinishEditCustomServer, null);
             cancelEditCustomServer = new Command(mResources.CANCEL, ActionListener.gI(), (int)CommandType.CancelEditCustomServer, null);
             cancelInputAccount = new Command(mResources.CANCEL, ActionListener.gI(), (int)CommandType.CloseInputAccount, null);
             selectServer = new ComboBox(mResources.server, ServerListScreen.nameServer.ToList().Append(Strings.custom).ToList());
-            addAccount.img.texture = add;
-            addAccount.w = add.width / mGraphics.zoomLevel;
-            addAccount.h = add.height / mGraphics.zoomLevel;
 
             tfUser = new TField
             {
@@ -445,6 +481,11 @@ namespace Mod.AccountManager
             PopUp.paintPopUp(g, x - 10, y - 10, width + 20, TITLE_HEIGHT + 50, 0, true);
             mFont.tahoma_7b_dark.drawString(g, Strings.accounts, x + 10, y, 0);
             addAccount.paint(g);
+            if (scrollableMenuAccounts.CurrentItemIndex > -1)
+            {
+                moveAccountDown.paint(g);
+                moveAccountUp.paint(g);
+            }
             PopUp.paintPopUp(g, x - 10, y + TITLE_HEIGHT - 10, width + 20, height - TITLE_HEIGHT + 20, 0, true);
             GetAccountsArea(out _, out y, out _, out height, true);
             if (accounts.Count > height / ACCOUNT_HEIGHT)
@@ -476,7 +517,7 @@ namespace Mod.AccountManager
             editAccount.paint(g);
             deleteAccount.paint(g);
             selectAccountToLogin.paint(g);
-
+            g.setClip(currentAccountInfoX, y, WIDTH_ACCOUNT_INFO, height);
             if (scrollableMenuAccounts.CurrentItemIndex == -1)
                 return;
             Account account = accounts[scrollableMenuAccounts.CurrentItemIndex];
@@ -486,7 +527,7 @@ namespace Mod.AccountManager
             if (icon != null)
             {
                 float iconWidth = ACCOUNT_HEIGHT * icon.width / (float)icon.height;
-                offsetXAccountMainInfo += 70;
+                offsetXAccountMainInfo += 65;
                 DrawTexture(currentAccountInfoX + 10, y + 10, iconWidth, ACCOUNT_HEIGHT, icon, ScaleMode.ScaleToFit);
                 if (account.PetInfo != null)
                 {
@@ -494,37 +535,38 @@ namespace Mod.AccountManager
                     Texture2D petIcon = icons[account.PetInfo.Icon];
                     if (petIcon != null)
                     {
-                        float petIconWidth = ACCOUNT_HEIGHT / 2 * petIcon.width / (float)petIcon.height;
+                        float petIconWidth = ACCOUNT_HEIGHT / 2f * petIcon.width / petIcon.height;
                         offsetXAccountMainInfo -= ACCOUNT_HEIGHT / 2;
                         offsetXAccountMainInfo += 30;
-                        DrawTexture(currentAccountInfoX + 47, y + 10 + ACCOUNT_HEIGHT / 2, petIconWidth, ACCOUNT_HEIGHT / 2, petIcon, ScaleMode.ScaleToFit);
+                        DrawTexture(currentAccountInfoX + 47, y + 10 + ACCOUNT_HEIGHT / 2f, petIconWidth, ACCOUNT_HEIGHT / 2f, petIcon, ScaleMode.ScaleToFit);
                     }
                 }
             }
             else
                 offsetXAccountMainInfo += 20;
-            mFont.tahoma_7b_dark.drawString(g, account.Info.Name, offsetXAccountMainInfo, y + 8, 0);
+            mFont.tahoma_7b_dark.drawString(g, account.Info.Name, offsetXAccountMainInfo, y + 5, 0);
             string serverName = account.Server.IsCustomIP() ? account.Server.name : ServerListScreen.nameServer[account.Server.index];
             string lastTimeLogin = (account.LastTimeLogin != DateTime.MinValue ? (Strings.lastLogin + ": ") : "") + account.GetLastTimeLogin();
             if (mFont.tahoma_7_greySmall.getWidth(lastTimeLogin) + offsetXAccountMainInfo - currentAccountInfoX > WIDTH_ACCOUNT_INFO)
             {
-                g.setColor(new Color(0, 0, 0, .3f));
-                g.fillRect(offsetXAccountMainInfo - 1, y + 19, 75, 1);
-                mFont.tahoma_7_greySmall.drawString(g, mResources.server + ' ' + serverName, offsetXAccountMainInfo, y + 20, 0);
-                mFont.tahoma_7_greySmall.drawString(g, Strings.lastLogin + ":", offsetXAccountMainInfo, y + 30, 0);
-                mFont.tahoma_7_greySmall.drawString(g, account.GetLastTimeLogin(), offsetXAccountMainInfo, y + 40, 0);
+                //g.setColor(new Color(0, 0, 0, .3f));
+                //g.fillRect(offsetXAccountMainInfo - 1, y + 19, 75, 1);
+                mFont.tahoma_7_greySmall.drawString(g, mResources.server + ' ' + serverName, offsetXAccountMainInfo, y + 15, 0);
+                mFont.tahoma_7_greySmall.drawString(g, Strings.lastLogin + ":", offsetXAccountMainInfo, y + 25, 0);
+                mFont.tahoma_7_greySmall.drawString(g, account.GetLastTimeLogin(), offsetXAccountMainInfo, y + 35, 0);
             }
             else
             {
-                g.setColor(new Color(0, 0, 0, .3f));
-                g.fillRect(offsetXAccountMainInfo - 1, y + 24, 75, 1);
-                mFont.tahoma_7_greySmall.drawString(g, mResources.server + ' ' + serverName, offsetXAccountMainInfo, y + 30, 0);
-                mFont.tahoma_7_greySmall.drawString(g, lastTimeLogin, offsetXAccountMainInfo, y + 40, 0);
+                //g.setColor(new Color(0, 0, 0, .3f));
+                //g.fillRect(offsetXAccountMainInfo - 1, y + 24, 75, 1);
+                mFont.tahoma_7_greySmall.drawString(g, mResources.server + ' ' + serverName, offsetXAccountMainInfo, y + 15, 0);
+                mFont.tahoma_7_greySmall.drawString(g, lastTimeLogin, offsetXAccountMainInfo, y + 25, 0);
             }
 
-            g.fillRect(currentAccountInfoX + 20, y + 55, WIDTH_ACCOUNT_INFO - 40, 1);
-            mFont.tahoma_7b_dark.drawString(g, Strings.info, currentAccountInfoX + WIDTH_ACCOUNT_INFO / 2 - mFont.tahoma_7b_dark.getWidth(Strings.info) / 2, y + 60, mFont.LEFT);
-            int offsetY = 75;
+            g.setColor(new Color(0, 0, 0, .3f));
+            g.fillRect(currentAccountInfoX + 20, y + 50, WIDTH_ACCOUNT_INFO - 40, 1);
+            mFont.tahoma_7b_dark.drawString(g, Strings.info, currentAccountInfoX + WIDTH_ACCOUNT_INFO / 2 - mFont.tahoma_7b_dark.getWidth(Strings.info) / 2, y + 55, mFont.LEFT);
+            int offsetY = 65;
             int offsetX = currentAccountInfoX;
             if (account.PetInfo != null)
             {
@@ -533,8 +575,8 @@ namespace Mod.AccountManager
                 mFont.tahoma_7b_focus.drawString(g, Strings.master, currentAccountInfoX + WIDTH_ACCOUNT_INFO / 4 - mFont.tahoma_7b_focus.getWidth(Strings.master) / 2, y + offsetY, 0);
                 mFont.tahoma_7b_focus.drawString(g, mResources.pet, currentAccountInfoX + WIDTH_ACCOUNT_INFO * 3 / 4 - mFont.tahoma_7b_focus.getWidth(mResources.pet) / 2, y + offsetY, 0);
                 offsetY += 5;
-                g.fillRect(center, y + offsetY, 1, 60);
-                offsetY += 10;
+                g.fillRect(center, y + offsetY, 1, 58);
+                offsetY += 7;
                 mFont.tahoma_7_greySmall.drawString(g, "CharID: " + account.Info.CharID, currentAccountInfoX + 10, y + offsetY, 0);
                 mFont.tahoma_7_greySmall.drawString(g, Strings.name + ": " + account.PetInfo.Name, currentAccountInfoX + 10 + WIDTH_ACCOUNT_INFO / 2, y + offsetY, 0);
                 offsetY += 10;
@@ -553,6 +595,7 @@ namespace Mod.AccountManager
             }
             else
             {
+                offsetY += 2;
                 offsetX += 20;
                 mFont.tahoma_7_greySmall.drawString(g, "CharID: " + account.Info.CharID, currentAccountInfoX + 20, y + offsetY, 0);
                 offsetY += 10;
@@ -588,12 +631,13 @@ namespace Mod.AccountManager
             g.setColor(new Color(0, 0, 0, .5f));
             g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
             GetInputAccountArea(out int x, out int y, out int width, out int height, false);
-            PopUp.paintPopUp(g, x, y, width, height, -1, true);
+            PopUp.paintPopUp(g, x, y, width, TITLE_HEIGHT + 10, -1, true);
             if (isAddingAccount)
                 mFont.tahoma_7b_dark.drawString(g, Strings.inGameAccountManagerAddAccount, x + width / 2, y + 10, mFont.CENTER);
             else if (isEditingAccount)
                 mFont.tahoma_7b_dark.drawString(g, Strings.inGameAccountManagerEditAccount, x + width / 2, y + 10, mFont.CENTER);
             closeInputAccount.paint(g);
+            toggleHidePassword.paint(g);
             GetInputAccountArea(out _, out y, out _, out height, true);
             PopUp.paintPopUp(g, x, y, width, height, -1, true);
             tfUser.paint(g);
@@ -633,6 +677,8 @@ namespace Mod.AccountManager
                 return;
             if (closeInputAccount.isPointerPressInside())
                 closeInputAccount.performAction();
+            if (toggleHidePassword.isPointerPressInside())
+                toggleHidePassword.performAction();
             bool shouldEditServer = !selectServer.IsShowingListItems && selectServer.SelectedIndex == selectServer.Items.Count - 1;
             if (shouldEditServer)
             {
@@ -706,6 +752,13 @@ namespace Mod.AccountManager
                 selectAccountToLogin.performAction();
             if (addAccount.isPointerPressInside())
                 addAccount.performAction();
+            if (scrollableMenuAccounts.CurrentItemIndex > -1)
+            {
+                if (moveAccountUp.isPointerPressInside())
+                    moveAccountUp.performAction();
+                if (moveAccountDown.isPointerPressInside())
+                    moveAccountDown.performAction();
+            }
 
             if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
             {
@@ -735,21 +788,23 @@ namespace Mod.AccountManager
         static void UpdateButtonsPos()
         {
             closeAccountManager.x = GameCanvas.w - 63;
-            closeAccountManager.y = 25;
+            closeAccountManager.y = addAccount.y = moveAccountDown.y = moveAccountUp.y = 25;
             int currentAccountInfoWidth = GameCanvas.w - currentAccountInfoX;
             if (currentAccountInfoWidth > 0)
                 closeAccountManager.x -= currentAccountInfoWidth - 20;
             addAccount.x = closeAccountManager.x - addAccount.w - 5;
-            addAccount.y = closeAccountManager.y;
+            moveAccountDown.x = addAccount.x - moveAccountUp.w - 5;
+            moveAccountUp.x = moveAccountDown.x - moveAccountUp.w - 5;
+
+            editAccount.y = deleteAccount.y = selectAccountToLogin.y = GameCanvas.h - 50;
             editAccount.x = currentAccountInfoX;
-            editAccount.y = GameCanvas.h - 50;
             deleteAccount.x = currentAccountInfoX + (WIDTH_ACCOUNT_INFO - deleteAccount.w) / 2;
-            deleteAccount.y = GameCanvas.h - 50;
             selectAccountToLogin.x = currentAccountInfoX + WIDTH_ACCOUNT_INFO - selectAccountToLogin.w;
-            selectAccountToLogin.y = GameCanvas.h - 50;
+
             GetInputAccountArea(out int x, out int y, out int width, out int height, false);
+            closeInputAccount.y = toggleHidePassword.y = y + 5;
             closeInputAccount.x = x + width - closeInputAccount.img.getWidth() - 5;
-            closeInputAccount.y = y + 5;
+            toggleHidePassword.x = closeInputAccount.x - toggleHidePassword.img.getWidth() - 5;
 
             finishInputAccount.x = editCustomServer.x = finishEditCustomServer.x = x + 10;
             cancelInputAccount.x = cancelEditCustomServer.x = x + width - cancelInputAccount.w - 10;
@@ -761,6 +816,10 @@ namespace Mod.AccountManager
         {
             closeAccountManager.img = closeInputAccount.img = GameCanvas.loadImage("/mainImage/myTexture2dbtX.png");
             add = CustomGraphics.Resize(add, add.width * mGraphics.zoomLevel / 4, add.height * mGraphics.zoomLevel / 4);
+            hide = CustomGraphics.Resize(hide, hide.width * mGraphics.zoomLevel / 4, hide.height * mGraphics.zoomLevel / 4);
+            show = CustomGraphics.Resize(show, show.width * mGraphics.zoomLevel / 4, show.height * mGraphics.zoomLevel / 4);
+            up = CustomGraphics.Resize(up, up.width * mGraphics.zoomLevel / 4, up.height * mGraphics.zoomLevel / 4);
+            down = CustomGraphics.Resize(down, down.width * mGraphics.zoomLevel / 4, down.height * mGraphics.zoomLevel / 4);
             LoadDataAccounts();
             scrollableMenuAccounts = new ScrollableMenuItems<Account>(accounts)
             {
@@ -769,9 +828,41 @@ namespace Mod.AccountManager
                 ItemHeight = ACCOUNT_HEIGHT,
                 StepScroll = DEFAULT_STEP_SCROLL,
             };
+            addAccount = new Command("", ActionListener.gI(), (int)CommandType.AddAccount, null)
+            {
+                img = Image.createImage(add.width, add.height),
+                imgFocus = new Image(),
+                w = add.width / mGraphics.zoomLevel,
+                h = add.height / mGraphics.zoomLevel
+            };
+            addAccount.img.texture = add;
+            toggleHidePassword = new Command("", ActionListener.gI(), (int)CommandType.ToggleHidePassword, null)
+            {
+                img = Image.createImage(show.width, show.height),
+                imgFocus = new Image(),
+                w = show.width / mGraphics.zoomLevel,
+                h = show.height / mGraphics.zoomLevel
+            };
+            toggleHidePassword.img.texture = show;
+            moveAccountUp = new Command("", ActionListener.gI(), (int)CommandType.MoveAccountUp, null)
+            {
+                img = Image.createImage(up.width, up.height),
+                imgFocus = new Image(),
+                w = up.width / mGraphics.zoomLevel,
+                h = up.height / mGraphics.zoomLevel
+            };
+            moveAccountUp.img.texture = up;
+            moveAccountDown = new Command("", ActionListener.gI(), (int)CommandType.MoveAccountDown, null)
+            {
+                img = Image.createImage(down.width, down.height),
+                imgFocus = new Image(),
+                w = down.width / mGraphics.zoomLevel,
+                h = down.height / mGraphics.zoomLevel
+            };
+            moveAccountDown.img.texture = down;
         }
 
-        internal static void OnClose()
+        internal static void OnCloseAndPause()
         {
             SaveDataAccounts();
         }
@@ -794,9 +885,9 @@ namespace Mod.AccountManager
                 Texture2D petIcon = icons[account.PetInfo.Icon];
                 if (petIcon != null)
                 {
-                    float iconWidth = height / 2 * petIcon.width / (float)petIcon.height;
+                    float iconWidth = height / 2f * petIcon.width / petIcon.height;
                     BeginGroup(scrollableMenuAccounts.X, scrollableMenuAccounts.Y, scrollableMenuAccounts.Width, scrollableMenuAccounts.Height);
-                    DrawTexture(45, i * height - scrollableMenuAccounts.CurrentOffset + height / 2, iconWidth, height / 2, petIcon, ScaleMode.ScaleToFit);
+                    DrawTexture(45, i * height - scrollableMenuAccounts.CurrentOffset + height / 2f, iconWidth, height / 2f, petIcon, ScaleMode.ScaleToFit);
                     GUI.EndGroup();
                 }
             }
@@ -813,8 +904,8 @@ namespace Mod.AccountManager
             string serverName = account.Server.IsCustomIP() ? account.Server.name : ServerListScreen.nameServer[account.Server.index];
             mFont.tahoma_7_greySmall.drawString(g, account.GetLastTimeLogin(), x + 80, y + height - 12, 0);
             mFont.tahoma_7_greySmall.drawString(g, mResources.server + ' ' + serverName, x + 80, y + height - 22, 0);
-            g.setColor(new Color(0, 0, 0, .3f));
-            g.fillRect(x + 79, y + height - 25, 75, 1);
+            //g.setColor(new Color(0, 0, 0, .3f));
+            //g.fillRect(x + 79, y + height - 25, 75, 1);
         }
 
         static void EnsureSmallImage(int id)

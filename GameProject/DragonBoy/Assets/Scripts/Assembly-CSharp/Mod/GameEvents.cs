@@ -121,6 +121,8 @@ namespace Mod
             {
                 ModMenuMain.SaveData();
                 CustomBackground.SaveData();
+                if (!Utils.IsOpenedByExternalAccountManager)
+                    InGameAccountManager.OnCloseAndPause();
             }
             lastTimeGamePause = mSystem.currentTimeMillis();
             if (isFirstPause)
@@ -145,7 +147,7 @@ namespace Mod
             VietnameseInput.SaveData();
             //UIReportersManager.ClearReporters();
             if (!Utils.IsOpenedByExternalAccountManager)
-                InGameAccountManager.OnClose();
+                InGameAccountManager.OnCloseAndPause();
         }
 
         internal static void OnFixedUpdateMain()
