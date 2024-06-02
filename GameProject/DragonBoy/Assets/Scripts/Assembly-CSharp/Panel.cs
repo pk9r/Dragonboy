@@ -7051,7 +7051,7 @@ public class Panel : IActionListener, IChatable
 		InfoDlg.showWait();
 		Service.gI().petInfo();
 		timeShow = 20;
-	}
+    }
 
 	internal void searchClan()
 	{

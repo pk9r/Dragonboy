@@ -34,6 +34,10 @@ namespace Mod
         static float _previousHeight = Screen.height;
         static bool isHaveSelectSkill_old;
         static long lastTimeGamePause;
+        static long lastTimeRequestPetInfo;
+        static long delayRequestPetInfo = 1000;
+        static long lastTimeRequestZoneInfo;
+        static long delayRequestZoneInfo = 100;
         static bool isFirstPause = true;
         static GUIStyle style;
 
@@ -372,11 +376,19 @@ namespace Mod
                     }
                 }
             }
-            if (GameCanvas.gameTick % (10 * Time.timeScale) == 0)
+            if (mSystem.currentTimeMillis() - lastTimeRequestPetInfo > delayRequestPetInfo)
             {
-                //Service.gI().openUIZone();
-                //Service.gI().petInfo();
+                delayRequestPetInfo = Res.random(750, 1000);
+                lastTimeRequestPetInfo = mSystem.currentTimeMillis();
+                Service.gI().petInfo();
             }
+            if (mSystem.currentTimeMillis() - lastTimeRequestZoneInfo > delayRequestZoneInfo)
+            {
+                delayRequestZoneInfo = Res.random(75, 125);
+                lastTimeRequestZoneInfo = mSystem.currentTimeMillis();
+                Service.gI().openUIZone();
+            }
+
             Char.myCharz().cspeed = Utils.speedRun;
 
             CharEffectMain.Update();
@@ -1931,6 +1943,9 @@ namespace Mod
             {
                 switch (panel.selected)
                 {
+                    case 4:
+                        Utils.menuZone();
+                        return true;
                     case 8:
                         GameCanvas.timeBreakLoading = mSystem.currentTimeMillis() + 30000;
                         ServerListScreen.countDieConnect = 0;
@@ -1941,6 +1956,9 @@ namespace Mod
             }
             switch (panel.selected)
             {
+                case 5:
+                    Utils.menuZone();
+                    return true;
                 case 9:
                     GameCanvas.timeBreakLoading = mSystem.currentTimeMillis() + 30000;
                     ServerListScreen.countDieConnect = 0;
@@ -2026,5 +2044,39 @@ namespace Mod
             return true;
         }
 
+        internal static bool OnOpenUIZone(GameScr instance, Message message)
+        {
+            InfoDlg.hide();
+            try
+            {
+                instance.zones = new int[message.reader().readByte()];
+                instance.pts = new int[instance.zones.Length];
+                instance.numPlayer = new int[instance.zones.Length];
+                instance.maxPlayer = new int[instance.zones.Length];
+                instance.rank1 = new int[instance.zones.Length];
+                instance.rankName1 = new string[instance.zones.Length];
+                instance.rank2 = new int[instance.zones.Length];
+                instance.rankName2 = new string[instance.zones.Length];
+                for (int i = 0; i < instance.zones.Length; i++)
+                {
+                    instance.zones[i] = message.reader().readByte();
+                    instance.pts[i] = message.reader().readByte();
+                    instance.numPlayer[i] = message.reader().readByte();
+                    instance.maxPlayer[i] = message.reader().readByte();
+                    if (message.reader().readByte() == 1)
+                    {
+                        instance.rankName1[i] = message.reader().readUTF();
+                        instance.rank1[i] = message.reader().readInt();
+                        instance.rankName2[i] = message.reader().readUTF();
+                        instance.rank2[i] = message.reader().readInt();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Cout.LogError("Loi ham OPEN UIZONE " + ex.ToString());
+            }
+            return true;
+        }
     }
 }

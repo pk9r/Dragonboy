@@ -167,12 +167,49 @@ namespace Mod
             TryInstallHook<Action, Action<ServerListScreen>>(serverListScreen.initCommand, ServerListScreen_initCommand_hook, ServerListScreen_initCommand_original);
             TryInstallHook<Action, Action<Panel>>(panel.doFireTool, Panel_doFireTool_hook, Panel_doFireTool_original);
             TryInstallHook<Action, Action<SoundMn>>(soundMn.getSoundOption, SoundMn_getSoundOption_hook, SoundMn_getSoundOption_original);
-
+            TryInstallHook<Action, Action<Panel>>(panel.doFirePet, Panel_doFirePet_hook, Panel_doFirePet_original);
+            TryInstallHook<Action<Message>, Action<GameScr, Message>>(gameScr.openUIZone, GameScr_openUIZone_hook, GameScr_openUIZone_original);
 
             //TryInstallHook<Action, Action>(, _hook, _original);
         }
 
         #region Hooks
+        static void GameScr_openUIZone_hook(GameScr _this, Message message)
+        {
+            if (!GameEvents.OnOpenUIZone(_this, message))
+                GameScr_openUIZone_original(_this, message);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void GameScr_openUIZone_original(GameScr _this, Message message)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Panel_doFirePet_hook(Panel _this)
+        {
+            Panel_doFirePet_original(_this);
+            if (GameCanvas.w > 2 * Panel.WIDTH_PANEL)
+            {
+                GameCanvas.panel2 = new Panel();
+                GameCanvas.panel2.tabName[7] = new string[1][] { new string[1] { string.Empty } };
+                GameCanvas.panel2.setTypeBodyOnly();
+                GameCanvas.panel2.show();
+                GameCanvas.panel.setTypePetMain();
+                GameCanvas.panel.show();
+            }
+            else
+            {
+                GameCanvas.panel.tabName[21] = mResources.petMainTab;
+                GameCanvas.panel.setTypePetMain();
+                GameCanvas.panel.show();
+            }
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Panel_doFirePet_original(Panel _this)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
         static void SoundMn_getSoundOption_hook(SoundMn _this)
         {
             if (!GameEvents.OnGetSoundOption())
