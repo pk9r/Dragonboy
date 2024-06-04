@@ -134,14 +134,21 @@ namespace Mod.AccountManager
                             Account acc = accounts[scrollableMenuAccounts.CurrentItemIndex];
                             string userName = tfUser.getText();
                             string password = tfPass.getText();
-                            if (acc.Server == customServer && acc.Username == userName && acc.Password == password)
-                                break;
+                            if (acc.Username == userName && acc.Password == password)
+                            {
+                                if (!acc.Server.IsCustomIP() && acc.Server.index == selectServer.SelectedIndex)
+                                    break;
+                                if (acc.Server.IsCustomIP() && customServer != null && acc.Server == customServer)
+                                    break;
+                            }
                             accounts[scrollableMenuAccounts.CurrentItemIndex] = new Account()
                             {
                                 Username = userName,
                                 Password = password,
                                 Server = customServer,
                             };
+                            if (selectServer.SelectedIndex != selectServer.Items.Count - 1)
+                                accounts[scrollableMenuAccounts.CurrentItemIndex].Server = defaultServers[selectServer.SelectedIndex];
                         }
                         isAddingAccount = isEditingAccount = false;
                         SaveDataAccounts();
