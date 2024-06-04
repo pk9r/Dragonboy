@@ -39,6 +39,7 @@ namespace Mod
         static long lastTimeRequestZoneInfo;
         static long delayRequestZoneInfo = 100;
         static bool isFirstPause = true;
+        static bool isOpenZoneUI;
         static GUIStyle style;
 
         internal static void OnAwake()
@@ -376,7 +377,7 @@ namespace Mod
                     }
                 }
             }
-            if (mSystem.currentTimeMillis() - lastTimeRequestPetInfo > delayRequestPetInfo)
+            if (Char.myCharz().havePet && mSystem.currentTimeMillis() - lastTimeRequestPetInfo > delayRequestPetInfo)
             {
                 delayRequestPetInfo = Res.random(750, 1000);
                 lastTimeRequestPetInfo = mSystem.currentTimeMillis();
@@ -579,6 +580,7 @@ namespace Mod
         internal static void OnInfoMapLoaded()
         {
             Utils.UpdateWaypointChangeMap();
+            GameScr.gI().pts = null;
         }
 
         internal static void OnPaintGameScr(mGraphics g)
@@ -1944,7 +1946,9 @@ namespace Mod
                 switch (panel.selected)
                 {
                     case 4:
-                        Utils.menuZone();
+                        if (GameScr.gI().pts != null)
+                            Utils.menuZone();
+                        isOpenZoneUI = true;
                         return true;
                     case 8:
                         GameCanvas.timeBreakLoading = mSystem.currentTimeMillis() + 30000;
@@ -1957,7 +1961,9 @@ namespace Mod
             switch (panel.selected)
             {
                 case 5:
-                    Utils.menuZone();
+                    if (GameScr.gI().pts != null)
+                        Utils.menuZone();
+                    isOpenZoneUI = true;
                     return true;
                 case 9:
                     GameCanvas.timeBreakLoading = mSystem.currentTimeMillis() + 30000;
@@ -2077,6 +2083,32 @@ namespace Mod
                 Cout.LogError("Loi ham OPEN UIZONE " + ex.ToString());
             }
             return true;
+        }
+
+        internal static bool OnStartOKDlg(string info)
+        {
+            if (info == LocalizedString.cantChangeZoneInThisMap)
+            {
+                if (isOpenZoneUI)
+                {
+                    isOpenZoneUI = false;
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        internal static bool OnRequestChangeMap()
+        {
+            isOpenZoneUI = false;
+            return false;
+        }
+
+        internal static bool OnGetMapOffline()
+        {
+            isOpenZoneUI = false;
+            return false;
         }
     }
 }

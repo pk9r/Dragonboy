@@ -169,11 +169,48 @@ namespace Mod
             TryInstallHook<Action, Action<SoundMn>>(soundMn.getSoundOption, SoundMn_getSoundOption_hook, SoundMn_getSoundOption_original);
             TryInstallHook<Action, Action<Panel>>(panel.doFirePet, Panel_doFirePet_hook, Panel_doFirePet_original);
             TryInstallHook<Action<Message>, Action<GameScr, Message>>(gameScr.openUIZone, GameScr_openUIZone_hook, GameScr_openUIZone_original);
+            TryInstallHook<Action<string>, Action<string>>(GameCanvas.startOKDlg, GameCanvas_startOKDlg_hook, GameCanvas_startOKDlg_original);
+            TryInstallHook<Action, Action<Service>>(service.requestChangeMap, Service_requestChangeMap_hook, Service_requestChangeMap_original);
+            TryInstallHook<Action, Action<Service>>(service.getMapOffline, Service_getMapOffline_hook, Service_getMapOffline_original);
 
             //TryInstallHook<Action, Action>(, _hook, _original);
         }
 
         #region Hooks
+        static void Service_getMapOffline_hook(Service _this)
+        {
+            if (!GameEvents.OnGetMapOffline())
+                Service_getMapOffline_original(_this);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Service_getMapOffline_original(Service _this)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void Service_requestChangeMap_hook(Service _this)
+        {
+            if (!GameEvents.OnRequestChangeMap())
+                Service_requestChangeMap_original(_this);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void Service_requestChangeMap_original(Service _this)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
+        static void GameCanvas_startOKDlg_hook(string info)
+        {
+            if (!GameEvents.OnStartOKDlg(info))
+                GameCanvas_startOKDlg_original(info);
+
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void GameCanvas_startOKDlg_original(string info)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
         static void GameScr_openUIZone_hook(GameScr _this, Message message)
         {
             if (!GameEvents.OnOpenUIZone(_this, message))

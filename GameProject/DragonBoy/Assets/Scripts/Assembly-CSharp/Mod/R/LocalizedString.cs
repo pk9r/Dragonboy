@@ -102,6 +102,12 @@ namespace Mod.R
             "Arbitration",
             "Arbitration"
         };
+        internal static LocalizedString cantChangeZoneInThisMap = new string[3]
+        {
+            "Không thể đổi khu vực trong map này",
+            "Can not change zone in this map",
+            "Tidak bisa mengganti zone di map ini"
+        };
 
         #region Methods and fields
         string[] strings;
