@@ -6,7 +6,7 @@ Guide to adding features to the mod: https://youtu.be/9sCof2eQH3Q
 Discord Q&A server: https://discord.gg/zdvBdVxRh6
 
 ## Compilation
-Use Visual Studio to compile the Account Manager and Unity Editor version `2023.2.19f1` to compile the game. If you are unable to compile it yourself, you can download pre-compiled versions of the game and Account Manager from [Dragonboy-CommunityMod-Builds](https://github.com/ElectroHeavenVN/Dragonboy-CommunityMod-Builds) hosted by [@ElectroHeavenVN](https://github.com/ElectroHeavenVN).
+Use Visual Studio to compile the Account Manager and Unity Editor version `2023.2.20f1` to compile the game. If you are unable to compile it yourself, you can download pre-compiled versions of the game and Account Manager from [Dragonboy-CommunityMod-Builds](https://github.com/ElectroHeavenVN/Dragonboy-CommunityMod-Builds) hosted by [@ElectroHeavenVN](https://github.com/ElectroHeavenVN).
 
 
 ## License
