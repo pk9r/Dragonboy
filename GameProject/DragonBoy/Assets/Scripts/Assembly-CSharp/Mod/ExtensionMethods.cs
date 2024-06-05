@@ -172,6 +172,8 @@ namespace Mod
 
         internal static bool IsFromMyClan(this Char ch)
         {
+            if (Char.myCharz().clan == null)
+                return false;
             if (ch.charID == Char.myCharz().charID)
                 return true;
             else if (ch.charID == -Char.myCharz().charID)

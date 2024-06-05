@@ -385,7 +385,7 @@ namespace Mod
             }
             if (mSystem.currentTimeMillis() - lastTimeRequestZoneInfo > delayRequestZoneInfo)
             {
-                delayRequestZoneInfo = Res.random(75, 125);
+                delayRequestZoneInfo = Res.random(200, 300);
                 lastTimeRequestZoneInfo = mSystem.currentTimeMillis();
                 Service.gI().openUIZone();
             }
