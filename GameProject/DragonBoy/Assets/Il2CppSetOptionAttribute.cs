@@ -1,4 +1,3 @@
-#if ENABLE_IL2CPP
 using System;
 
 namespace Unity.IL2CPP.CompilerServices
@@ -73,4 +72,3 @@ namespace Unity.IL2CPP.CompilerServices
         }
     }
 }
-#endif

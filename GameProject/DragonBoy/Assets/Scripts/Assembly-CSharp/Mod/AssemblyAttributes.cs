@@ -1,6 +1,5 @@
+using Unity.IL2CPP.CompilerServices;
 using UnityEngine.Scripting;
 
 [assembly: Preserve]
-#if ENABLE_IL2CPP
-[assembly: Unity.IL2CPP.CompilerServices.Il2CppSetOption(Unity.IL2CPP.CompilerServices.Option.DivideByZeroChecks, false)]
-#endif
+[assembly: Il2CppSetOption(Option.DivideByZeroChecks, false)]
