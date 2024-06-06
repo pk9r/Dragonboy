@@ -105,13 +105,6 @@ namespace Mod
         /// </summary>
         internal static void OnMainStart()
         {
-            if (Main.started)
-                return;
-            if (Thread.CurrentThread.Name != "Main")
-                Thread.CurrentThread.Name = "Main";
-            Main.mainThreadName = Thread.CurrentThread.Name;
-            Main.isPC = true;
-            Main.started = true;
             UIImage.OnStart();
             if (Rms.loadRMSInt("svselect") == -1)
             {

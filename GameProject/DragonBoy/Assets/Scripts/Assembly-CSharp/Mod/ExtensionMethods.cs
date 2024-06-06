@@ -547,6 +547,18 @@ namespace Mod
 
         internal static bool IsNRD(this ItemMap item) => item.template.id >= 372 && item.template.id <= 378;
 
+        internal static void SetColor(this mGraphics g, uint color)
+        {
+            uint num = color & 0xFF;
+            uint num2 = (color >> 8) & 0xFF;
+            uint num3 = (color >> 16) & 0xFF;
+            uint num4 = (color >> 24) & 0xFF;
+            g.a = num / 255f;
+            g.b = num2 / 256f;
+            g.g = num3 / 256f;
+            g.r = num4 / 256f;
+        }
+
 #if UNITY_EDITOR
         internal static bool IsLdcI4(this Instruction instruction) => instruction.OpCode.Code - 21 <= Code.Stloc_1;
 
