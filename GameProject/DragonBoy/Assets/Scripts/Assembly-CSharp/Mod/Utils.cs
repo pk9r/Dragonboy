@@ -162,18 +162,6 @@ namespace Mod
         internal static bool isUsingTDLT() =>
             ItemTime.isExistItem(ID_ICON_ITEM_TDLT);
 
-        internal static int getXWayPoint(Waypoint waypoint)
-        {
-            return waypoint.maxX < 60 ? 15 :
-                waypoint.minX > TileMap.pxw - 60 ? TileMap.pxw - 15 :
-                waypoint.minX + ((waypoint.maxX - waypoint.minX) / 2);
-        }
-
-        internal static int getYWayPoint(Waypoint waypoint)
-        {
-            return waypoint.maxY;
-        }
-
         /// <summary>
         /// Sử dụng một item có id là một trong số các id truyền vào.
         /// </summary>
@@ -508,7 +496,7 @@ namespace Mod
         {
             if (waypoint != null)
             {
-                TeleportMyChar(getXWayPoint(waypoint), getYWayPoint(waypoint));
+                TeleportMyChar(waypoint.GetX(), waypoint.GetY());
                 requestChangeMap(waypoint);
             }
         }
@@ -781,10 +769,7 @@ namespace Mod
 
         internal static void DoDoubleClickToObj(IMapObject mapObject) => GameScr.gI().doDoubleClickToObj(mapObject);
 
-        internal static bool canNextMap()
-        {
-            return !Char.isLoadingMap && !Char.ischangingMap && !Controller.isStopReadMessage;
-        }
+        internal static bool CanNextMap() => !Char.isLoadingMap && !Char.ischangingMap && !Controller.isStopReadMessage;
 
         internal static bool HasStarOption(Item item, out uint star, out uint starE)
         {
@@ -925,5 +910,7 @@ namespace Mod
                 result = Application.persistentDataPath;
             return result;
         }
+
+        internal static double Distance(double x1, double y1, double x2, double y2) => Math.Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
     }
 }

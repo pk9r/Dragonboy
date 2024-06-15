@@ -251,7 +251,16 @@ namespace Mod.R
         internal static string inGameAccountManagerServerAddressBlank = "";
         internal static string inGameAccountManagerServerPortBlank = "";
         internal static string inGameAccountManagerServerPortInvalid = "";
-        internal static string custom;
+        internal static string custom = "";
+        internal static string settings = "";
+        internal static string xmapTimeout = "";
+        internal static string xmapUseAStar = "";
+        internal static string xmapEditTimeout = "";
+        internal static string timeout = "";
+        internal static string xmapUseNormalCapsuleDescription = "";
+        internal static string xmapUseSpecialCapsuleDescription = "";
+        internal static string xmapUseAStarDescription = "";
+        internal static string setXmapTimeoutDescription = "";
         #endregion
 
         internal static void LoadLanguage(sbyte newLanguage)
@@ -331,6 +340,8 @@ namespace Mod.R
             save = "Lưu";
             logout = "Đăng xuất";
             custom = "Tùy chỉnh";
+            settings = "Cài đặt";
+            timeout = "Thời gian chờ";
             //---------------------------------------------------
             inputFPS = "Nhập số khung hình trên giây";
             inputTimeChangeBg = "Nhập thời gian thay đổi hình nền";
@@ -403,12 +414,15 @@ namespace Mod.R
             introInputVolume = "Nhập âm lượng intro";
             introInputVolumeHint = "Âm lượng";
             introNoVideo = "Đường dẫn video intro chưa được đặt";
-            xmapUseSpecialCapsule = "Sử dụng capsule đặc biệt để Xmap";
-            xmapUseNormalCapsule = "Sử dụng capsule thường để Xmap";
+            xmapUseSpecialCapsule = "Sử dụng capsule đặc biệt khi Xmap";
+            xmapUseNormalCapsule = "Sử dụng capsule thường khi Xmap";
             xmapCanceled = "Đã huỷ Xmap";
             xmapChatPopup = "XmapNRO by Phucprotein\nMap hiện tại: {0}, ID: {1}\nVui lòng chọn nơi muốn đến";
             xmapCantFindWay = "Không thể tìm thấy đường đi";
             xmapDestinationReached = "Đã đến nơi";
+            xmapTimeout = "Thời gian chờ xmap";
+            xmapUseAStar = "Xmap chạy bộ";
+            xmapEditTimeout = "Thay đổi thời gian chờ xmap";
             teleportMenuOpenSavedCharList = "Nhân vật đã lưu";
             teleportMenuCharacterAdded = "Đã thêm {0} vào danh sách";
             teleportMenuCantRemoveTargetChar = "Không thể xóa nhân vật đang auto dịch chuyển tới";
@@ -471,6 +485,9 @@ namespace Mod.R
             notifyBossDescription = "Hiển thị danh sách thông báo boss";
             introTitle = "Video intro";
             introDescription = "Phát một đoạn video ngắn khi mở game";
+            xmapUseNormalCapsuleDescription = "Sử dụng capsule thường khi xmap, không nên bật nếu bạn không muốn tốn capsule thường";
+            xmapUseSpecialCapsuleDescription = "Sử dụng capsule đặc biệt khi xmap";
+            xmapUseAStarDescription = "Sử dụng thuật toán A* để tìm đường đi thay vì dịch chuyển";
             pickMobTitle = "Tàn sát";
             pickMobDescription = "Tự động đánh quái";
             avoidSuperMobTitle = "Né siêu quái khi tàn sát";
@@ -533,6 +550,7 @@ namespace Mod.R
             setAutoRescueSkill3Null = "Bạn chưa có kỹ năng Trị thương";
             setAutoRescueSkill3BuffInvalid = "Skill 3 của bạn không phải kỹ năng Trị thương";
             customBgDefaultScaleModeTitle = "Chế độ vẽ ảnh nền mặc định";
+            setXmapTimeoutDescription = "Điều chỉnh thời gian chờ (giây) trước khi chuyển sang chế độ dịch chuyển khi sử dụng xmap chạy bộ";
             setTimeChangeCustomBgTitle = "Thời gian đổi hình nền";
             setTimeChangeCustomBgDescription = "Điều chỉnh thời gian thay đổi hình nền (giây)";
             setIntroVolumeTitle = "Âm lượng intro";
@@ -616,6 +634,8 @@ namespace Mod.R
             save = "Save";
             logout = "Logout";
             custom = "Custom";
+            settings = "Settings";
+            timeout = "Timeout";
             //---------------------------------------------------
             inputFPS = "Input the number of frames per second";
             inputTimeChangeBg = "Input the background interval";
@@ -688,12 +708,15 @@ namespace Mod.R
             introInputVolume = "Input intro volume";
             introInputVolumeHint = "Volume";
             introNoVideo = "Intro video path has not been set";
-            xmapUseSpecialCapsule = "Use special capsule to Xmap";
-            xmapUseNormalCapsule = "Use normal capsule to Xmap";
+            xmapUseSpecialCapsule = "Use special capsule when Xmap";
+            xmapUseNormalCapsule = "Use normal capsule when Xmap";
             xmapCanceled = "Xmap canceled";
             xmapChatPopup = "XmapNRO by Phucprotein\nCurrent map: {0}, ID: {1}\nPlease select the destination";
             xmapCantFindWay = "No possible way was found";
             xmapDestinationReached = "Destination reached";
+            xmapTimeout = "Xmap timeout";
+            xmapUseAStar = "Use pathfinding when using Xmap";
+            xmapEditTimeout = "Edit Xmap timeout";
             teleportMenuOpenSavedCharList = "Saved characters";
             teleportMenuCharacterAdded = "{0} has been added to the list";
             teleportMenuCantRemoveTargetChar = "Can't remove the character that you are auto teleporting to";
@@ -757,6 +780,9 @@ namespace Mod.R
             notifyBossDescription = "Show boss notification list";
             introTitle = "Intro video";
             introDescription = "Play a short video when opening the game";
+            xmapUseNormalCapsuleDescription = "Use normal capsule when xmap, do not enable if you don't want to waste your normal capsules";
+            xmapUseSpecialCapsuleDescription = "Use special capsule when xmap";
+            xmapUseAStarDescription = "Use A* algorithm to find the path instead of teleporting to the destination";
             pickMobTitle = "Slaughter";
             pickMobDescription = "Auto attack monsters";
             avoidSuperMobTitle = "Avoid super monsters";
@@ -819,6 +845,7 @@ namespace Mod.R
             setAutoRescueSkill3Null = "You don't have Rescue skill";
             setAutoRescueSkill3BuffInvalid = "Your third skill is not Rescue";
             customBgDefaultScaleModeTitle = "Default background scale mode";
+            setXmapTimeoutDescription = "Edit the timeout (seconds) before switching to the teleporting mode when using xmap";
             setTimeChangeCustomBgTitle = "Background duration";
             setTimeChangeCustomBgDescription = "Adjust the time to switch background (seconds)";
             setIntroVolumeTitle = "Change intro volume";

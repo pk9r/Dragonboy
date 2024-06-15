@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Mod.Xmap
 {
-    public struct MapNext
+    internal struct MapNext
     {
-        public int mapStart;
-        public int to;
-        public TypeMapNext type;
-        public int[] info;
+        internal int mapStart;
+        internal int to;
+        internal TypeMapNext type;
+        internal int[] info;
 
-        public MapNext(int mapStart, int to, TypeMapNext type, int[] info)
+        internal MapNext(int mapStart, int to, TypeMapNext type, int[] info)
         {
             this.mapStart = mapStart;
             this.to = to;
@@ -18,20 +19,20 @@ namespace Mod.Xmap
         }
     }
 
-    public struct GroupMap
+    internal struct GroupMap
     {
-        public string[] names;
+        internal string[] names;
 
-        public List<int> maps;
+        internal List<int> maps;
 
-        public GroupMap(string[] nameGroup, List<int> maps)
+        internal GroupMap(string[] nameGroup, List<int> maps)
         {
             names = nameGroup;
             this.maps = maps;
         }
     }
 
-    public enum TypeMapNext
+    internal enum TypeMapNext
     {
         None = -1,
         AutoWaypoint,
@@ -39,5 +40,17 @@ namespace Mod.Xmap
         NpcPanel,
         Position,
         Capsule
+    }
+
+    internal class Tile
+    {
+        internal int x;
+        internal int y;
+
+        internal Tile(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
     }
 }

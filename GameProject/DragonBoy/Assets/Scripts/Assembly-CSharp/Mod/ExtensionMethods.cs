@@ -559,6 +559,26 @@ namespace Mod
             g.r = num4 / 256f;
         }
 
+
+        internal static int GetX(this Waypoint waypoint)
+        {
+            return waypoint.maxX < 60 ? 15 :
+                waypoint.minX > TileMap.pxw - 60 ? TileMap.pxw - 15 :
+                waypoint.minX + ((waypoint.maxX - waypoint.minX) / 2);
+        }
+        
+        internal static int GetXInsideMap(this Waypoint waypoint)
+        {
+            return waypoint.maxX < TileMap.size ? TileMap.size :
+                waypoint.minX > TileMap.pxw - TileMap.size ? TileMap.pxw - TileMap.size :
+                waypoint.minX + ((waypoint.maxX - waypoint.minX) / 2);
+        }
+
+        internal static int GetY(this Waypoint waypoint)
+        {
+            return waypoint.maxY;
+        }
+
 #if UNITY_EDITOR
         internal static bool IsLdcI4(this Instruction instruction) => instruction.OpCode.Code - 21 <= Code.Stloc_1;
 

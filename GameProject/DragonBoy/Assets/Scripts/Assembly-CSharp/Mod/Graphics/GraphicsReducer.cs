@@ -473,34 +473,30 @@ namespace Mod.Graphics
 
         internal static void PaintTileMap(mGraphics g)
         {
-            bool IsTileMapICantEnter(int px, int py) => TileMap.tileTypeAt(px, py, 4) || TileMap.tileTypeAt(px, py, 8) || TileMap.tileTypeAt(px, py, 8192);
-
             InitializeTileMap(_level == ReduceGraphicsLevel.Level1);
             //vertical
             for (int x = 2; x < TileMap.tmw - 2; x++)
             {
                 for (int y = 0; y < TileMap.tmh - 1; y++)
                 {
-                    if (TileMap.maps[y * TileMap.tmw + x] != 0)
+                    if (TileMap.maps[y * TileMap.tmw + x] == 0)
+                        continue;
+                    if (!TileMap.tileTypeAt(x * TileMap.size, y * TileMap.size, 2) && (_level >= ReduceGraphicsLevel.Level2 || !IsTileMapICantEnter(x * TileMap.size, y * TileMap.size)))
+                        continue;
+                    int maxy2 = 0;
+                    for (int y2 = y + 1; y2 < TileMap.tmh - 1; y2++)
                     {
-                        if (TileMap.tileTypeAt(x * 24, y * 24, 2) || (_level < ReduceGraphicsLevel.Level2 && IsTileMapICantEnter(x * 24, y * 24)))
-                        {
-                            int maxy2 = 0;
-                            for (int y2 = y + 1; y2 < TileMap.tmh - 1; y2++)
-                            {
-                                if (TileMap.maps[y2 * TileMap.tmw + x] == 0)
-                                    break;
-                                if (x + 1 < TileMap.tmw && (TileMap.tileTypeAt((x + 1) * 24, y2 * 24, 2) || (_level < ReduceGraphicsLevel.Level2 && IsTileMapICantEnter((x + 1) * 24, y2 * 24))))
-                                    maxy2 = Math.Max(maxy2, y2);
-                                if (x > 0 && (TileMap.tileTypeAt((x - 1) * 24, y2 * 24, 2) || (_level < ReduceGraphicsLevel.Level2 && IsTileMapICantEnter((x - 1) * 24, y2 * 24))))
-                                    maxy2 = Math.Max(maxy2, y2);
-                            }
-                            for (int i = y; i < maxy2 + 1; i++)
-                            {
-                                if (x >= GameScr.gssx && x <= GameScr.gssxe && i >= GameScr.gssy && i <= GameScr.gssye)
-                                    g.drawImage(mapTile, x * TileMap.size, i * TileMap.size + 8);
-                            }
-                        }
+                        if (TileMap.maps[y2 * TileMap.tmw + x] == 0)
+                            break;
+                        if (x + 1 < TileMap.tmw && (TileMap.tileTypeAt((x + 1) * TileMap.size, y2 * TileMap.size, 2) || (_level < ReduceGraphicsLevel.Level2 && IsTileMapICantEnter((x + 1) * TileMap.size, y2 * TileMap.size))))
+                            maxy2 = Math.Max(maxy2, y2);
+                        if (x > 0 && (TileMap.tileTypeAt((x - 1) * TileMap.size, y2 * TileMap.size, 2) || (_level < ReduceGraphicsLevel.Level2 && IsTileMapICantEnter((x - 1) * TileMap.size, y2 * TileMap.size))))
+                            maxy2 = Math.Max(maxy2, y2);
+                    }
+                    for (int i = y; i < maxy2 + 1; i++)
+                    {
+                        if (x >= GameScr.gssx && x <= GameScr.gssxe && i >= GameScr.gssy && i <= GameScr.gssye)
+                            g.drawImage(mapTile, x * TileMap.size, i * TileMap.size + 8);
                     }
                 }
             }
@@ -509,14 +505,15 @@ namespace Mod.Graphics
             {
                 for (int y = GameScr.gssy; y < GameScr.gssye; y++)
                 {
-                    if (TileMap.maps[y * TileMap.tmw + x] != 0)
-                    {
-                        if (TileMap.tileTypeAt(x * 24, y * 24, 2) || (_level < ReduceGraphicsLevel.Level2 && IsTileMapICantEnter(x * 24, y * 24)))
-                            g.drawImage(mapTile, x * TileMap.size, y * TileMap.size + 8);
-                    }
+                    if (TileMap.maps[y * TileMap.tmw + x] == 0)
+                        continue;
+                    if (TileMap.tileTypeAt(x * TileMap.size, y * TileMap.size, 2) || (_level < ReduceGraphicsLevel.Level2 && IsTileMapICantEnter(x * TileMap.size, y * TileMap.size)))
+                        g.drawImage(mapTile, x * TileMap.size, y * TileMap.size + 8);
                 }
             }
         }
+
+        static bool IsTileMapICantEnter(int px, int py) => TileMap.tileTypeAt(px, py, 4) || TileMap.tileTypeAt(px, py, 8) || TileMap.tileTypeAt(px, py, 8192);
     }
 
     internal enum ReduceGraphicsLevel

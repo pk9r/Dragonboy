@@ -187,6 +187,33 @@ namespace Mod.ModMenu
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
+                    ID = "Xmap_UseNormalCapsule_Toggle",
+                    Title = Strings.xmapUseNormalCapsule,
+                    Description = Strings.xmapUseNormalCapsuleDescription,
+                    GetValueFunc = () => Pk9rXmap.isUseCapsuleNormal,
+                    SetValueAction = value => Pk9rXmap.isUseCapsuleNormal = value,
+                    RMSName = "xmap_use_normal_capsule"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "Xmap_UseCapsuleVIP_Toggle",
+                    Title = Strings.xmapUseSpecialCapsule,
+                    Description = Strings.xmapUseSpecialCapsuleDescription,
+                    GetValueFunc = () => Pk9rXmap.isUseCapsuleVip,
+                    SetValueAction = value => Pk9rXmap.isUseCapsuleVip = value,
+                    RMSName = "xmap_use_capsule_vip"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "Xmap_UseAStar_Toggle",
+                    Title = Strings.xmapUseAStar,
+                    Description = Strings.xmapUseAStarDescription,
+                    GetValueFunc = () => Pk9rXmap.isXmapAStar,
+                    SetValueAction = value => Pk9rXmap.isXmapAStar = value,
+                    RMSName = "xmap_use_astar"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
                     ID = "PickMob_Toggle",
                     Title = Strings.pickMobTitle,
                     Description = Strings.pickMobDescription,
@@ -371,6 +398,19 @@ namespace Mod.ModMenu
                 }),
                 new ModMenuItemValues(new ModMenuItemValuesConfig()
                 {
+                    ID = "Set_XmapTimeout",
+                    Title = Strings.xmapTimeout,
+                    Description = Strings.setXmapTimeoutDescription,
+                    GetValueFunc = () => Pk9rXmap.aStarTimeout,
+                    SetValueAction = value => Pk9rXmap.aStarTimeout = value,
+                    MinValue = 10,
+                    MaxValue = 300,
+                    RMSName = "xmap_astar_timeout",
+                    TextFieldTitle = Strings.xmapTimeout,
+                    TextFieldHint = Strings.xmapEditTimeout + " (10-300s)"
+                }),
+                new ModMenuItemValues(new ModMenuItemValuesConfig()
+                {
                     ID = "Set_BgScaleMode",
                     Title = Strings.customBgDefaultScaleModeTitle,
                     Values = new string[3]
@@ -415,7 +455,7 @@ namespace Mod.ModMenu
                     ID = "OpenXmapMenu",
                     Title = Strings.openXmapMenuTitle,
                     Description = Strings.openXmapMenuDescription,
-                    Action = Pk9rXmap.showXmapMenu
+                    Action = Pk9rXmap.ShowXmapMenu
                 }),
                 new ModMenuItemFunction(new ModMenuItemFunctionConfig()
                 {

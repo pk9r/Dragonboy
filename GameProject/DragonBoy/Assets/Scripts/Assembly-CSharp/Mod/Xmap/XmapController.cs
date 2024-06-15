@@ -39,8 +39,8 @@ namespace Mod.Xmap
                 try
                 {
                     way = XmapAlgorithm.findWay(TileMap.mapID, mapEnd);
-                    if (way != null)
-                        LogMod.writeLine($"[xmap][dbg] bestWay: {JsonConvert.SerializeObject(way.Select(x => x.to).ToArray())}");
+                    //if (way != null)
+                        //LogMod.writeLine($"[xmap][dbg] bestWay: {JsonConvert.SerializeObject(way.Select(x => x.to).ToArray())}");
                 }
                 catch (Exception ex)
                 {
@@ -73,10 +73,10 @@ namespace Mod.Xmap
                     isNextMapFailed = true;
                     way = null;
                 }
-                else if (Utils.canNextMap())
+                else if (Utils.CanNextMap())
                 {
                     MainThreadDispatcher.dispatch(() =>
-                        Pk9rXmap.nextMap(way[indexWay]));
+                        Pk9rXmap.NextMap(way[indexWay]));
                     LogMod.writeLine($"[xmap][dbg] nextMap: {way[indexWay].to}");
                 }
                 Thread.Sleep(500);

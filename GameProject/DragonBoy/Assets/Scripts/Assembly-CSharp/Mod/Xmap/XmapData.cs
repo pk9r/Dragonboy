@@ -168,12 +168,12 @@ namespace Mod.Xmap
 
         internal void LoadLinkMapCapsule()
         {
-            if (Pk9rXmap.canUseCapsuleVip())
+            if (Pk9rXmap.CanUseCapsuleVip())
             {
                 LogMod.writeLine($"[xmap][dbg] Sử dụng capsule đặc biệt");
                 Service.gI().useItem(0, 1, -1, XmapUtils.ID_ITEM_CAPSULE_VIP);
             }
-            else if (Pk9rXmap.canUseCapsuleNormal())
+            else if (Pk9rXmap.CanUseCapsuleNormal())
             {
                 LogMod.writeLine($"[xmap][dbg] Sử dụng capsule thường");
                 Service.gI().useItem(0, 1, -1, XmapUtils.ID_ITEM_CAPSULE_NORMAL);
