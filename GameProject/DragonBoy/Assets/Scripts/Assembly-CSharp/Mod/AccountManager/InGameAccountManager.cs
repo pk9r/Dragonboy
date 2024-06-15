@@ -274,6 +274,7 @@ namespace Mod.AccountManager
         static int selectedAccountIndex = -1;
         static int currentAccountInfoX;
 
+        static bool isSwitchedToMe;
         static bool isAddingAccount;
         static bool isEditingAccount;
         static bool isEditingCustomServer;
@@ -292,6 +293,7 @@ namespace Mod.AccountManager
         //[name]:[address]:[port]:[language]:[typesv]:[isnew],...
         //Super 2:dragon11.teamobi.com:17001:0:1:1,0,0
         static InGameAccountManager instance;
+
         internal static InGameAccountManager gI()
         {
             if (instance == null)
@@ -316,6 +318,7 @@ namespace Mod.AccountManager
 
         public override void switchToMe()
         {
+            isSwitchedToMe = true;
             if (defaultServers == null)
             {
                 defaultServers = new Server[ServerListScreen.nameServer.Length];
@@ -794,6 +797,8 @@ namespace Mod.AccountManager
 
         static void UpdateButtonsPos()
         {
+            if (!isSwitchedToMe)
+                return;
             closeAccountManager.x = GameCanvas.w - 63;
             closeAccountManager.y = addAccount.y = moveAccountDown.y = moveAccountUp.y = 25;
             int currentAccountInfoWidth = GameCanvas.w - currentAccountInfoX;
