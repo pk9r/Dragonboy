@@ -10,3 +10,10 @@ Sử dụng Visual Studio để biên dịch QLTK, Unity Editor phiên bản `20
 
 ## Giấy phép
 Mã nguồn được phát hành dưới giấy phép [GNU AGPLv3](https://www.gnu.org/licenses/agpl-3.0.en.html). Vui lòng đọc kỹ nội dung giấy phép trước khi sử dụng mã nguồn cho mục đích cá nhân hoặc thương mại để tránh vi phạm giấy phép.
+
+## Credit
+- [Misaka Mikoto](https://github.com/Misaka-Mikoto-Tech/)[[?](https://toaruvietnamese.fandom.com/vi/wiki/Misaka_Mikoto)], tác giả dự án [MonoHook](https://github.com/Misaka-Mikoto-Tech/MonoHook)
+- [Gökhan Gökçe](https://github.com/gkngkc/), tác giả dự án [UnityStandaloneFileBrowser](https://github.com/gkngkc/UnityStandaloneFileBrowser)
+- [Gwaredd](https://github.com/gwaredd/), tác giả dự án [mgGif](https://github.com/gwaredd/mgGif)
+- [Quan Nguyen](https://sourceforge.net/u/nguyenq/profile/), tác giả dự án [VietPad](https://sourceforge.net/projects/vietpad/)
+- [Val Antonini](https://github.com/valantonini/), tác giả dự án [AStar](https://github.com/valantonini/AStar)
