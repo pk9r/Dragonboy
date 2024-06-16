@@ -4177,7 +4177,7 @@ public class GameScr : mScreen, IChatable
 			GameCanvas.keyPressed[16] = false;
 			Char.myCharz().findNextFocusByKey();
 		}
-		if (GameCanvas.keyPressed[13] && !GameCanvas.panel.isShow)
+		if (GameCanvas.keyPressed[13] && !GameCanvas.panel.isShow && (GameCanvas.panel2 == null || !GameCanvas.panel2.isShow))
 		{
 			GameCanvas.keyPressed[13] = false;
 			Char.myCharz().findNextFocusByKey();
