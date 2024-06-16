@@ -42,6 +42,7 @@ namespace Mod.Xmap
         internal static bool isUseCapsuleVip = true;
         internal static bool isXmapAStar = false;
         static bool isChangingMap;
+        static bool isMovingMyChar;
         internal static int aStarTimeout = 30;
 
         static Random random = new Random();
@@ -122,7 +123,7 @@ namespace Mod.Xmap
                     GameScr.info1.addInfo(Strings.xmapCanceled, 0);
                 }
                 else if (text == LocalizedString.errorOccurred)
-                    TeleportMyChar(XmapUtils.getX(2), XmapUtils.getY(2));
+                    MoveMyChar(XmapUtils.getX(2), XmapUtils.getY(2));
             }
         }
 
@@ -232,9 +233,12 @@ namespace Mod.Xmap
         {
             var xPos = mapNext.info[0];
             var yPos = mapNext.info[1];
-            TeleportMyChar(xPos, yPos);
-            Service.gI().requestChangeMap();
-            Service.gI().getMapOffline();
+            MoveMyChar(xPos, yPos);
+            if (Utils.Distance(Char.myCharz().cx, Char.myCharz().cy, xPos, yPos) <= TileMap.size)
+            {
+                Service.gI().requestChangeMap();
+                Service.gI().getMapOffline();
+            }
         }
 
         internal static void NextMapCapsule(MapNext mapNext)
@@ -244,12 +248,75 @@ namespace Mod.Xmap
             Service.gI().requestMapSelect(select);
         }
 
-        static void TeleportMyChar(int x, int y)
+        static void MoveMyChar(int x, int y)
         {
-            //if (isXmapAStar)
-            //    ;
-            //else
-            Utils.TeleportMyChar(x, y);
+            if (isXmapAStar)
+            {
+                if (isMovingMyChar)
+                    return;
+                isMovingMyChar = true;
+                new Thread(() =>
+                {
+                    try
+                    {
+                        long startTime = mSystem.currentTimeMillis();
+                        int size = TileMap.size;
+                        Tile start = new Tile(Char.myCharz().cx / size, Char.myCharz().cy / size - 1);
+                        Tile destination = new Tile(x / size, y / size);
+                        var path = XmapAStar.FindPath(start, destination);
+                        if (path.Count == 0)
+                        {
+                            XmapController.finishXmap();
+                            GameScr.info1.addInfo(Strings.xmapCantFindWay, 0);
+                            isMovingMyChar = false;
+                        }
+                        while (path.Count > 0)
+                        {
+                            if (!XmapController.gI.IsActing)
+                                break;
+                            if (mSystem.currentTimeMillis() - startTime > aStarTimeout * 1000)
+                            {
+                                isMovingMyChar = false;
+                                return;
+                            }
+                            var tile = path.Pop();
+                            int sleep = 0;
+                            int xEnd = tile.x * size;
+                            int yEnd = tile.y * size;
+                            Char.myCharz().currentMovePoint = new MovePoint(xEnd, yEnd);
+                            while (Utils.Distance(Char.myCharz().cx, Char.myCharz().cy, xEnd, yEnd) > size * 2)
+                            {
+                                if (!XmapController.gI.IsActing)
+                                    break;
+                                if (mSystem.currentTimeMillis() - startTime > aStarTimeout * 1000)
+                                {
+                                    isMovingMyChar = false;
+                                    return;
+                                }
+                                if (sleep % 500 == 0)
+                                {
+                                    if (sleep >= 2000)
+                                    {
+                                        xEnd = tile.x * size + random.Next(size / -2, size / 2);
+                                        yEnd = tile.y * size + random.Next(size / -2, size / 2);
+                                        sleep = 0;
+                                    }
+                                    if (Char.myCharz().currentMovePoint == null || Char.myCharz().currentMovePoint.xEnd != xEnd || Char.myCharz().currentMovePoint.yEnd != tile.y * size + yEnd)
+                                        Char.myCharz().currentMovePoint = new MovePoint(xEnd, yEnd);
+                                }
+                                Thread.Sleep(100);
+                                sleep += 100;
+                            }
+                        }
+                        Thread.Sleep(500);
+                    }
+                    catch (Exception ex) { UnityEngine.Debug.LogException(ex); }
+                    isMovingMyChar = false;
+                })
+                { IsBackground = true }.Start();
+            }
+            else
+                Utils.TeleportMyChar(x, y);
         }
 
         static void ChangeMap(Waypoint waypoint)
@@ -265,7 +332,6 @@ namespace Mod.Xmap
                     {
                         long startTime = mSystem.currentTimeMillis();
                         int size = TileMap.size;
-                        int groundOffset = size - (Char.myCharz().cy - Char.myCharz().cy / size * size);
                         Tile start = new Tile(Char.myCharz().cx / size, Char.myCharz().cy / size - 1);
                         Tile destination = new Tile(waypoint.GetXInsideMap() / size, waypoint.minY / size);
                         var path = XmapAStar.FindPath(start, destination);
@@ -287,7 +353,10 @@ namespace Mod.Xmap
                             }
                             var tile = path.Pop();
                             int sleep = 0;
-                            while (Utils.Distance(Char.myCharz().cx, Char.myCharz().cy, tile.x * size, tile.y * size + groundOffset) > size * 2 && path.Count > 0)
+                            int xEnd = tile.x * size;
+                            int yEnd = tile.y * size;
+                            Char.myCharz().currentMovePoint = new MovePoint(xEnd, yEnd);
+                            while (Utils.Distance(Char.myCharz().cx, Char.myCharz().cy, xEnd, yEnd) > size * 2)
                             {
                                 if (!XmapController.gI.IsActing)
                                     break;
@@ -297,11 +366,16 @@ namespace Mod.Xmap
                                     isChangingMap = false;
                                     return;
                                 }
-                                if (sleep >= 500)
+                                if (sleep % 500 == 0)
                                 {
-                                    if (Char.myCharz().currentMovePoint == null || Char.myCharz().currentMovePoint.xEnd != tile.x * size || Char.myCharz().currentMovePoint.yEnd != tile.y * size + groundOffset)
-                                        Char.myCharz().currentMovePoint = new MovePoint(tile.x * size, tile.y * size + groundOffset);
-                                    sleep = 0;
+                                    if (sleep >= 2000)
+                                    {
+                                        xEnd = tile.x * size + random.Next(size / -2, size / 2);
+                                        yEnd = tile.y * size + random.Next(size / -2, size / 2);
+                                        sleep = 0;
+                                    }
+                                    if (Char.myCharz().currentMovePoint == null || Char.myCharz().currentMovePoint.xEnd != xEnd || Char.myCharz().currentMovePoint.yEnd != tile.y * size + yEnd)
+                                        Char.myCharz().currentMovePoint = new MovePoint(xEnd, yEnd);
                                 }
                                 Thread.Sleep(100);
                                 sleep += 100;

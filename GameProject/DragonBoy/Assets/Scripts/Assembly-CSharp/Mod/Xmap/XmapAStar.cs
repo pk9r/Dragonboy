@@ -23,9 +23,9 @@ namespace Mod.Xmap
                 {
                     tiles[y, x] = 1;
                     //if (x < 1 || x >= TileMap.tmw - 1)
-                        //tiles[y, x] = 0;
+                    //tiles[y, x] = 0;
                     //else if (y >= TileMap.tmh - 1)
-                        //tiles[y, x] = 0;
+                    //tiles[y, x] = 0;
                     //else 
                     if (TileMap.maps[y * TileMap.tmw + x] == 0)
                     { }
@@ -39,28 +39,49 @@ namespace Mod.Xmap
             WorldGrid worldGrid = new WorldGrid(tiles);
             PathFinder pathfinder = new PathFinder(worldGrid, pathfinderOptions);
             List<AStar.Point> points = pathfinder.FindPath(new AStar.Point(start.x, start.y), new AStar.Point(destination.x, destination.y)).ToList();
-
-            //string str = "path: \r\n";
-            //for (int y = 0; y < TileMap.tmh; y++)
-            //{
-            //    for (int x = 0; x < TileMap.tmw; x++)
-            //    {
-            //        string v = (tiles[y, x] == 1 ? "_" : "1") + " ";
-            //        if (x == start.x && y == start.y)
-            //            v = "<color=yellow>" + v + "</color>";
-            //        if (x == destination.x && y == destination.y)
-            //            v = "<color=red>" + v + "</color>";
-            //        if (points.Any(p => p.X == x && p.Y == y))
-            //            v = "<color=green>" + v + "</color>";
-            //        str += v;
-            //    }
-            //    str += Environment.NewLine;
-            //}
-            //Debug.Log(str);
-
+#if UNITY_EDITOR
+            string str = "path: \r\n<color=black>";
+            for (int y = 0; y < TileMap.tmh; y++)
+            {
+                bool lastWhite = false;
+                for (int x = 0; x < TileMap.tmw; x++)
+                {
+                    string v = "";
+                    if (tiles[y, x] == 1)
+                    {
+                        if (lastWhite)
+                            v = "</color>";
+                        lastWhite = false;
+                    }
+                    else
+                    {
+                        if (!lastWhite)
+                            v = "<color=white>";
+                        lastWhite = true;
+                    }
+                    if (x == start.x && y == start.y)
+                        v += "<color=yellow>_ </color>";
+                    else if (x == destination.x && y == destination.y)
+                        v += "<color=red>_ </color>";
+                    else if (points.Any(p => p.X == x && p.Y == y))
+                        v += "<color=green>_ </color>";
+                    else 
+                        v += "_ ";
+                    str += v;
+                }
+                if (lastWhite)
+                    str += "</color>";
+                str += Environment.NewLine;
+            }
+            str += "</color>";
+            UnityEngine.Debug.Log(str);
+#endif
+            if (points.Count <= 0)
+                return new Stack<Tile>();
             for (int i = points.Count - 3; i >= 0; i--)
                 if (IsStraightLine(points[i], points[i + 1], points[i + 2]))
                     points.RemoveAt(i + 1);
+            points.RemoveAt(0); //start point
             return new Stack<Tile>(points.Reverse<AStar.Point>().Select(p => new Tile(p.X, p.Y)));
         }
 
