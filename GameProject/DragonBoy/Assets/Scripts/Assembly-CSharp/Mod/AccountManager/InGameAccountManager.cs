@@ -779,6 +779,8 @@ namespace Mod.AccountManager
 
         internal static void UpdateSizeAndPos()
         {
+            if (!isSwitchedToMe)
+                return;
             if (scrollableMenuAccounts.CurrentItemIndex != -1)
                 currentAccountInfoX = GameCanvas.w - WIDTH_ACCOUNT_INFO - 40;
             else
@@ -797,8 +799,6 @@ namespace Mod.AccountManager
 
         static void UpdateButtonsPos()
         {
-            if (!isSwitchedToMe)
-                return;
             closeAccountManager.x = GameCanvas.w - 63;
             closeAccountManager.y = addAccount.y = moveAccountDown.y = moveAccountUp.y = 25;
             int currentAccountInfoWidth = GameCanvas.w - currentAccountInfoX;
