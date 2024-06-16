@@ -43,7 +43,7 @@ namespace Mod.Xmap
         internal static bool isXmapAStar = false;
         static bool isChangingMap;
         static bool isMovingMyChar;
-        internal static int aStarTimeout = 30;
+        internal static int aStarTimeout = 60;
 
         static Random random = new Random();
 
@@ -330,7 +330,6 @@ namespace Mod.Xmap
                 {
                     try
                     {
-                        long startTime = mSystem.currentTimeMillis();
                         int size = TileMap.size;
                         Tile start = new Tile(Char.myCharz().cx / size, Char.myCharz().cy / size - 1);
                         Tile destination = new Tile(waypoint.GetXInsideMap() / size, waypoint.minY / size);
@@ -340,10 +339,15 @@ namespace Mod.Xmap
                             XmapController.finishXmap();
                             GameScr.info1.addInfo(Strings.xmapCantFindWay, 0);
                             isChangingMap = false;
+                            return;
                         }
+                        long startTime = mSystem.currentTimeMillis();
+                        int mapId = TileMap.mapID;
                         while (path.Count > 0)
                         {
                             if (!XmapController.gI.IsActing)
+                                break;
+                            if (TileMap.mapID != mapId)
                                 break;
                             if (mSystem.currentTimeMillis() - startTime > aStarTimeout * 1000)
                             {
@@ -360,6 +364,8 @@ namespace Mod.Xmap
                             {
                                 if (!XmapController.gI.IsActing)
                                     break;
+                                if (TileMap.mapID != mapId)
+                                    break;
                                 if (mSystem.currentTimeMillis() - startTime > aStarTimeout * 1000)
                                 {
                                     Utils.ChangeMap(waypoint);
@@ -368,11 +374,31 @@ namespace Mod.Xmap
                                 }
                                 if (sleep % 500 == 0)
                                 {
-                                    if (sleep >= 2000)
+                                    if (sleep >= 1500)
                                     {
-                                        xEnd = tile.x * size + random.Next(size / -2, size / 2);
-                                        yEnd = tile.y * size + random.Next(size / -2, size / 2);
+                                        int mutation;
+                                        do
+                                            mutation = random.Next(-2, 3);
+                                        while (mutation == 0);
+                                        xEnd = tile.x * size + mutation * size / 2;
+                                        do
+                                            mutation = random.Next(-2, 3);
+                                        while (mutation == 0);
+                                        yEnd = tile.y * size + mutation * size / 2;
+                                    }
+                                    if (sleep >= 5000)
+                                    {
+                                        start = new Tile(Char.myCharz().cx / size, Char.myCharz().cy / size - 1);
+                                        path = XmapAStar.FindPath(start, destination);
+                                        if (path.Count == 0)
+                                        {
+                                            XmapController.finishXmap();
+                                            GameScr.info1.addInfo(Strings.xmapCantFindWay, 0);
+                                            isChangingMap = false;
+                                            return;
+                                        }
                                         sleep = 0;
+                                        break;
                                     }
                                     if (Char.myCharz().currentMovePoint == null || Char.myCharz().currentMovePoint.xEnd != xEnd || Char.myCharz().currentMovePoint.yEnd != tile.y * size + yEnd)
                                         Char.myCharz().currentMovePoint = new MovePoint(xEnd, yEnd);
@@ -381,7 +407,8 @@ namespace Mod.Xmap
                                 sleep += 100;
                             }
                         }
-                        waypoint.popup.command.performAction();
+                        if (Utils.Distance(Char.myCharz().cx, Char.myCharz().cy, waypoint.GetXInsideMap(), waypoint.minY) <= size * 2)
+                            waypoint.popup.command.performAction();
                         Thread.Sleep(500);
                         //Utils.requestChangeMap(waypoint);
                     }
