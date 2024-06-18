@@ -416,8 +416,11 @@ namespace Mod.AccountManager
             }
             else if (isAddingAccount || isEditingAccount)
             {
-                tfUser.update();
-                tfPass.update();
+                if (!selectServer.IsShowingListItems)
+                {
+                    tfUser.update();
+                    tfPass.update();
+                }
             }
             scrollableMenuAccounts.Update();
             selectServer.Update();
@@ -768,7 +771,7 @@ namespace Mod.AccountManager
                 finishEditCustomServer.performAction();
             if (cancelEditCustomServer.isPointerPressInside())
                 cancelEditCustomServer.performAction();
-            if (GameCanvas.keyPressed[(!Main.isPC) ? 2 : 21] || GameCanvas.keyPressed[(!Main.isPC) ? 8 : 22] || GameCanvas.keyPressed[16])
+            if (GameCanvas.keyPressed[16])
             {
                 GameCanvas.clearKeyPressed();
                 if (tfCustomServerName.isFocus)
@@ -790,6 +793,8 @@ namespace Mod.AccountManager
 
         static void UpdateKeyMain()
         {
+            if (GameCanvas.keyPressed[13] && scrollableMenuAccounts.CurrentItemIndex == -1)
+                closeAccountManager.performAction();
             GetAccountsArea(out int x, out int y, out int width, out int height, true);
             scrollableMenuAccounts.UpdateKey();
             if (closeAccountManager.isPointerPressInside())
@@ -879,6 +884,7 @@ namespace Mod.AccountManager
                 CurrentItemIndex = -1,
                 ItemHeight = ACCOUNT_HEIGHT,
                 StepScroll = DEFAULT_STEP_SCROLL,
+                AllowSelectNone = true,
             };
             addAccount = new Command("", ActionListener.gI(), (int)CommandType.AddAccount, null)
             {
