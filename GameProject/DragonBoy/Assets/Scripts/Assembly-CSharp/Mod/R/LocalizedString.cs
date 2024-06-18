@@ -108,6 +108,12 @@ namespace Mod.R
             "Can not change zone in this map",
             "Tidak bisa mengganti zone di map ini"
         };
+        internal static LocalizedString senzuTreeUpgrading = new string[3]
+        {
+            "Đang nâng cấp",
+            "Upgrading",
+            "Sedang mengupgrade"
+        };
 
         #region Methods and fields
         string[] strings;

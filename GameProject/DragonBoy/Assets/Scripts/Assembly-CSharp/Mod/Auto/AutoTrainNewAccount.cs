@@ -106,7 +106,7 @@ namespace Mod.Auto
                         Service.gI().openMenu(4);
                         Service.gI().confirmMenu(4, 0);
                     }
-                    if (Char.myCharz().xu >= 5000 && GameScr.gI().magicTree.level == 1 && !GameScr.gI().magicTree.isUpdateTree && GameCanvas.gameTick % (30f * Time.timeScale) == 0f)
+                    if (Char.myCharz().xu >= 5000 && GameScr.gI().magicTree.level == 1 && GameScr.gI().magicTree.strInfo != LocalizedString.senzuTreeUpgrading && GameCanvas.gameTick % (60f * Time.timeScale) == 0f)
                     {
                         Service.gI().openMenu(4);
                         Service.gI().confirmMenu(4, 1);
@@ -314,6 +314,8 @@ namespace Mod.Auto
             mySkill.lastTimeUseThisSkill = mSystem.currentTimeMillis();
             MyVector myVector = new MyVector();
             Mob mob = ClosestMob();
+            if (mob == null)
+                return;
             Char.myCharz().mobFocus = mob;
             myVector.addElement(mob);
             if (mSystem.currentTimeMillis() - lastTimeCheckTN > 3000)
@@ -657,7 +659,7 @@ namespace Mod.Auto
         /// </summary>
         static void AutoNV7()
         {
-            if (Char.myCharz().cPower <= 70000)
+            if (Char.myCharz().cPower <= 78000 || Char.myCharz().taskMaint.index == 0)
             {
                 if (myMinHP != 15)
 					myMinHP = 15;
