@@ -30,14 +30,11 @@ namespace Mod.Graphics
         bool isShowingListItems;
         int x, y, w, h;
         int offset;
+        int lastMouseY = -1;
         ScrollableMenuItems<string> scrollableMenuItems;
 
-        internal int SelectedIndex
-        {
-            get => scrollableMenuItems.CurrentItemIndex;
-            set => scrollableMenuItems.CurrentItemIndex = value;
-        }
         internal bool IsShowingListItems => isShowingListItems;
+        internal int SelectedIndex { get; set; }
         internal bool IsFocus { get; set; }
         internal string Hint { get; set; } = "";
         internal List<string> Items => items;
@@ -108,7 +105,12 @@ namespace Mod.Graphics
                 ItemHeight = h,
                 Height = h * 4,
                 PaintItemAction = PaintItem,
-                StepScroll = h * 2
+                StepScroll = h * 2,
+                ItemSelected = () =>
+                {
+                    isShowingListItems = false;
+                    SelectedIndex = scrollableMenuItems.CurrentItemIndex;
+                },
             };
             SelectedIndex = 0;
         }
@@ -231,29 +233,55 @@ namespace Mod.Graphics
 
         internal void UpdateKey()
         {
-            if (!IsFocus && GameCanvas.isPointerHoldIn(x, y, w, h) && GameCanvas.isPointerJustRelease)
+            if (!IsFocus && GameCanvas.isPointerHoldIn(x, y, w, h))
             {
-                IsFocus = true;
+                if (!GameCanvas.isPointerMove || !GameCanvas.isPointerJustRelease)
+                {
+                    if (GameCanvas.isPointerSelect && (lastMouseY == GameCanvas.pyMouse || lastMouseY == -1))
+                    {
+                        GameCanvas.isPointerJustDown = false;
+                        GameScr.gI().isPointerDowning = false;
+                        IsFocus = true;
+                        GameCanvas.clearAllPointerEvent();
+                        return;
+                    }
+                }
                 return;
             }
-            if (isShowingListItems && GameCanvas.isPointerHoldIn(0, 0, GameCanvas.w, GameCanvas.h) && !GameCanvas.isPointerHoldIn(scrollableMenuItems.X, scrollableMenuItems.Y, scrollableMenuItems.Width, scrollableMenuItems.Height) && GameCanvas.isPointerJustRelease)
+            if (GameCanvas.isPointerJustDown && lastMouseY == -1 && IsPointerIn(x, y, scrollableMenuItems.Width, scrollableMenuItems.Height))
+                lastMouseY = GameCanvas.pyMouse;
+            if (isShowingListItems && GameCanvas.isPointerHoldIn(0, 0, GameCanvas.w, GameCanvas.h) && !GameCanvas.isPointerHoldIn(scrollableMenuItems.X, scrollableMenuItems.Y, scrollableMenuItems.Width, scrollableMenuItems.Height))
             {
-                isShowingListItems = false;
-                GameCanvas.clearAllPointerEvent();
-                return;
+                if (!GameCanvas.isPointerMove || !GameCanvas.isPointerJustRelease)
+                {
+                    if (GameCanvas.isPointerSelect && (lastMouseY == GameCanvas.pyMouse || lastMouseY == -1))
+                    {
+                        GameCanvas.isPointerJustDown = false;
+                        GameScr.gI().isPointerDowning = false;
+                        isShowingListItems = false;
+                        GameCanvas.clearAllPointerEvent();
+                        return;
+                    }
+                }
             }
-            if (!isShowingListItems || !GameCanvas.isPointerHoldIn(scrollableMenuItems.X, scrollableMenuItems.Y, scrollableMenuItems.Width, scrollableMenuItems.Height))
+            if (!isShowingListItems || GameCanvas.isPointerJustRelease)
+                lastMouseY = -1;
+            if (!isShowingListItems)
+            {
                 if (IsFocus && GameCanvas.isPointerHoldIn(0, 0, GameCanvas.w, GameCanvas.h) && !GameCanvas.isPointerHoldIn(x, y, w, h) && GameCanvas.isPointerJustRelease)
                 {
                     IsFocus = false;
                     return;
                 }
-                else if (expandListItems.isPointerPressInside())
+                else if (expandListItems.isPointerPressInside() || GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
                     expandListItems.performAction();
-            if (isShowingListItems)
+            }
+            else 
                 scrollableMenuItems.UpdateKey();
         }
 
         internal string GetSelectedValue() => items[SelectedIndex];
+
+        static bool IsPointerIn(int x, int y, int w, int h) => GameCanvas.pxMouse >= x && GameCanvas.pxMouse <= x + w && GameCanvas.pyMouse >= y && GameCanvas.pyMouse <= y + h;
     }
 }

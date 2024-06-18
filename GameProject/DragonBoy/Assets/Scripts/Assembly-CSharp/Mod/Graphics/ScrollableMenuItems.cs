@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 namespace Mod.Graphics
@@ -63,6 +64,8 @@ namespace Mod.Graphics
         }
         internal int CurrentOffset => currentOffset;
         internal List<T> Items => items;
+        internal bool AllowSelectNone { get; set; }
+        internal Action ItemSelected { get; set; }
 
         internal ScrollableMenuItems(List<T> values)
         {
@@ -72,7 +75,10 @@ namespace Mod.Graphics
 
         internal void Reset()
         {
-            currentItemIndex = -1;
+            if (AllowSelectNone || items.Count == 0)
+                currentItemIndex = -1;
+            else
+                currentItemIndex = 0;
             currentOffset = currentOffsetTo = 0;
             currentStepScroll = stepScroll;
             isPressKey = false;
@@ -111,22 +117,24 @@ namespace Mod.Graphics
 
         internal void UpdateKey()
         {
-            if (items.Count > (float)height / itemHeight && IsPointerIn(x, y, width, height))
+            if (items.Count > (float)height / itemHeight)
             {
                 if (GameCanvas.pXYScrollMouse != 0)
                 {
-                    currentStepScroll = stepScroll;
-                    if (GameCanvas.pXYScrollMouse < 0)
-                        currentOffsetTo += stepScroll;
-                    else if (GameCanvas.pXYScrollMouse > 0)
-                        currentOffsetTo -= stepScroll;
-                    isPressKey = false;
+                    if (IsPointerIn(x, y, width, height))
+                    {
+                        currentStepScroll = stepScroll;
+                        if (GameCanvas.pXYScrollMouse < 0)
+                            currentOffsetTo += stepScroll;
+                        else if (GameCanvas.pXYScrollMouse > 0)
+                            currentOffsetTo -= stepScroll;
+                        isPressKey = false;
+                    }
                 }
                 else
                 {
-                    if (GameCanvas.isPointerJustDown && lastMouseY == -1)
+                    if (GameCanvas.isPointerJustDown && lastMouseY == -1 && IsPointerIn(x, y, width, height))
                     {
-                        GameCanvas.isPointerJustDown = false;
                         lastMouseY = GameCanvas.pyMouse;
                         currentStepScroll = stepScroll;
                         lastOffsetTo = currentOffsetTo = currentOffset;
@@ -156,7 +164,15 @@ namespace Mod.Graphics
                         if (selectedIndex != currentItemIndex && selectedIndex < items.Count)
                             currentItemIndex = selectedIndex;
                         else
-                            currentItemIndex = -1;
+                        {
+                            if (AllowSelectNone || items.Count == 0)
+                                currentItemIndex = -1;
+                        }
+                        new Thread( () =>
+                        {
+                            Thread.Sleep(50);
+                            ItemSelected?.Invoke();
+                        }).Start();
                     }
                     //GameCanvas.clearAllPointerEvent();
                 }
@@ -247,8 +263,16 @@ namespace Mod.Graphics
             if (GameCanvas.keyPressed[13])
             {
                 GameCanvas.keyPressed[13] = false;
-                currentItemIndex = -1;
+                if (AllowSelectNone || items.Count == 0)
+                    currentItemIndex = -1;
                 isPressKey = false;
+            }
+            if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
+            {
+                new Thread(() =>
+                {
+                    ItemSelected?.Invoke();
+                }).Start();
             }
         }
 
