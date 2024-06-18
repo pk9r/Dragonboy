@@ -243,6 +243,7 @@ namespace Mod.R
         internal static string inGameAccountManagerAddAccount = "";
         internal static string inGameAccountManagerEditAccount = "";
         internal static string inGameAccountManagerServerBlank = "";
+        internal static string inGameAccountManagerUnregisteredAccountMustBeOnTeaMobiServer = "";
         internal static string inGameAccountManagerEditServer = "";
         internal static string inGameAccountManagerServerName = "";
         internal static string inGameAccountManagerServerAddress = "";
@@ -251,6 +252,8 @@ namespace Mod.R
         internal static string inGameAccountManagerServerAddressBlank = "";
         internal static string inGameAccountManagerServerPortBlank = "";
         internal static string inGameAccountManagerServerPortInvalid = "";
+        internal static string inGameAccountManagerUnregisteredAccountAlreadyAdded = "";
+        internal static string inGameAccountManagerAccountAdded = "";
         internal static string custom = "";
         internal static string settings = "";
         internal static string xmapTimeout = "";
@@ -261,6 +264,10 @@ namespace Mod.R
         internal static string xmapUseSpecialCapsuleDescription = "";
         internal static string xmapUseAStarDescription = "";
         internal static string setXmapTimeoutDescription = "";
+        internal static string addUserAoToAccountManagerTitle = "";
+        internal static string addUserAoToAccountManagerDescription = "";
+        internal static string openedByExternalAccountManager = "";
+        internal static string accountAlreadyRegistered = "";
         #endregion
 
         internal static void LoadLanguage(sbyte newLanguage)
@@ -450,6 +457,7 @@ namespace Mod.R
             inGameAccountManagerEditAccount = "Sửa tài khoản";
             inGameAccountManagerConfirmDeleteAcc = "Bạn có chắc chắn muốn xoá tài khoản này khỏi danh sách không?";
             inGameAccountManagerServerBlank = "Bạn chưa chọn server";
+            inGameAccountManagerUnregisteredAccountMustBeOnTeaMobiServer = "Tài khoản chưa đăng ký phải ở server TeaMobi";
             inGameAccountManagerEditServer = "Sửa server";
             inGameAccountManagerServerName = "Tên server";
             inGameAccountManagerServerAddress = "Địa chỉ";
@@ -458,6 +466,8 @@ namespace Mod.R
             inGameAccountManagerServerAddressBlank = "Địa chỉ server không được để trống";
             inGameAccountManagerServerPortBlank = "Cổng server không được để trống";
             inGameAccountManagerServerPortInvalid = "Cổng server không hợp lệ";
+            inGameAccountManagerUnregisteredAccountAlreadyAdded = "Tài khoản đã có trong danh sách";
+            inGameAccountManagerAccountAdded = "Đã thêm tài khoản vào danh sách";
             //---------------------------------------------------
             //mod menu
             modMenuPanelTabName = new string[][]
@@ -570,6 +580,10 @@ namespace Mod.R
             openSetsMenuDescription = "Mở menu set đồ (lệnh \"set\" hoặc nút \'`\')";
             openVietnameseInputMenuTitle = "Menu gõ tiếng Việt";
             openVietnameseInputMenuDescription = "Mở menu gõ tiếng Việt, sử dụng khi có vấn đề với trình gõ tiếng Việt bên ngoài (UniKey, VietKey, ...)";
+            addUserAoToAccountManagerTitle = "Thêm tài khoản hiện tại vào danh sách";
+            addUserAoToAccountManagerDescription = "Thêm tài khoản chưa đăng ký hiện tại vào danh sách tài khoản";
+            openedByExternalAccountManager = "Tài khoản được quản lý bởi Quản lý tài khoản bên ngoài";
+            accountAlreadyRegistered = "Tài khoản đã được đăng ký";
         }
 
         static void LoadLanguageEN()
@@ -745,6 +759,7 @@ namespace Mod.R
             inGameAccountManagerEditAccount = "Edit account";
             inGameAccountManagerConfirmDeleteAcc = "Are you sure you want to delete this account from the list?";
             inGameAccountManagerServerBlank = "You haven't selected a server";
+            inGameAccountManagerUnregisteredAccountMustBeOnTeaMobiServer = "Unregistered accounts must be on TeaMobi server";
             inGameAccountManagerEditServer = "Edit server";
             inGameAccountManagerServerName = "Server name";
             inGameAccountManagerServerAddress = "Address";
@@ -753,6 +768,8 @@ namespace Mod.R
             inGameAccountManagerServerAddressBlank = "Server address can't be blank";
             inGameAccountManagerServerPortBlank = "Server port can't be blank";
             inGameAccountManagerServerPortInvalid = "Invalid server port";
+            inGameAccountManagerUnregisteredAccountAlreadyAdded = "Account has already been added";
+            inGameAccountManagerAccountAdded = "Account has been added to the account list";
             //---------------------------------------------------
             //mod menu
             modMenuPanelTabName = new string[][]
@@ -865,6 +882,10 @@ namespace Mod.R
             openSetsMenuDescription = "Open the Sets menu (\"set\" command or \'`\' key)";
             openVietnameseInputMenuTitle = "Vietnamese input menu";
             openVietnameseInputMenuDescription = "Open the Vietnamese input menu, use when having issues with external Vietnamese input programs (UniKey, VietKey, etc.)";
+            addUserAoToAccountManagerTitle = "Add current account to the account list";
+            addUserAoToAccountManagerDescription = "Add the current unregistered account to the account list";
+            openedByExternalAccountManager = "Your account is managed by external Account manager";
+            accountAlreadyRegistered = "Account already registered";
         }
     }
 }

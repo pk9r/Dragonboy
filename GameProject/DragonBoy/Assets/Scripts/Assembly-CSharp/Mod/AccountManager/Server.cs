@@ -2,7 +2,7 @@ using System;
 
 namespace Mod.AccountManager
 {
-    internal struct Server
+    internal class Server
     {
         internal int index;
         internal string name;
@@ -80,7 +80,18 @@ namespace Mod.AccountManager
             return HashCode.Combine(index, name, hostnameOrIPAddress, port);
         }
 
-        public static bool operator ==(Server a, Server b) => a.Equals(b);
-        public static bool operator !=(Server a, Server b) => !a.Equals(b);
+        public static bool operator ==(Server a, Server b)
+        {
+            if (a is null)
+                return b is null;
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Server a, Server b)
+        {
+            if (a is null)
+                return b is not null;
+            return !a.Equals(b);
+        }
     }
 }

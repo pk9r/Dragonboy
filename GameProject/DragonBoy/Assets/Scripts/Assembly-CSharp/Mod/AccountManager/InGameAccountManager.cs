@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Mod.Graphics;
 using Mod.R;
 using Newtonsoft.Json;
@@ -91,8 +92,9 @@ namespace Mod.AccountManager
                     case CommandType.SelectAccountToLogin:
                         selectedAccountIndex = scrollableMenuAccounts.CurrentItemIndex;
                         SaveDataAccounts();
-                        Rms.saveRMSString("acc", SelectedAccount.Username);
-                        Rms.saveRMSString("pass", SelectedAccount.Password);
+                        SelectedServer = SelectedAccount.Server;
+                        Rms.saveRMSString("acc", "acc");
+                        Rms.saveRMSString("pass", "pass");
                         Session_ME.gI().close();
                         Session_ME2.gI().close();
                         GameCanvas.connect();
@@ -104,7 +106,8 @@ namespace Mod.AccountManager
                             GameCanvas.startOKDlg(mResources.userBlank);
                             break;
                         }
-                        if (string.IsNullOrEmpty(tfPass.getText()))
+                        bool isUserAo = regexMatchUserAo.IsMatch(tfUser.getText());
+                        if (string.IsNullOrEmpty(tfPass.getText()) && !isUserAo)
                         {
                             GameCanvas.startOKDlg(mResources.passwordBlank + '!');
                             break;
@@ -112,6 +115,11 @@ namespace Mod.AccountManager
                         if (selectServer.SelectedIndex == -1)
                         {
                             GameCanvas.startOKDlg(Strings.inGameAccountManagerServerBlank + '!');
+                            break;
+                        }
+                        if (isUserAo && selectServer.SelectedIndex == selectServer.Items.Count - 1)
+                        {
+                            GameCanvas.startOKDlg(Strings.inGameAccountManagerUnregisteredAccountMustBeOnTeaMobiServer + '!');
                             break;
                         }
                         if (isAddingAccount)
@@ -225,6 +233,8 @@ namespace Mod.AccountManager
             }
         }
 
+        static Regex regexMatchUserAo = new Regex("^User[0-9]{1,}$", RegexOptions.Compiled);
+
         static Texture2D earthOverlay = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(earthOverlay));
         static Texture2D namekOverlay = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(namekOverlay));
         static Texture2D saiyanOverlay = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(saiyanOverlay));
@@ -268,6 +278,7 @@ namespace Mod.AccountManager
         static TField tfCustomServerAddress;
         static TField tfCustomServerPort;
 
+        internal static Server SelectedServer { get; set; }
         static Server[] defaultServers;
         static Server customServer;
 
@@ -483,6 +494,35 @@ namespace Mod.AccountManager
         {
             Utils.SaveData("account_manager_accounts", JsonConvert.SerializeObject(accounts));
             Utils.SaveData("account_manager_selected_account_index", selectedAccountIndex);
+        }
+
+        internal static void AddUserAoToAccountManager()
+        {
+            string userAo = Rms.loadRMSString("userAo" + ServerListScreen.ipSelect);
+            if (string.IsNullOrEmpty(userAo))
+                return;
+            if (accounts.Any(acc => acc.Username == userAo))
+            {
+                GameCanvas.startOKDlg(Strings.inGameAccountManagerUnregisteredAccountAlreadyAdded + '!');
+                return;
+            }
+            Account account = new Account()
+            {
+                Username = userAo,
+                Server = new Server(ServerListScreen.ipSelect),
+                LastTimeLogin = DateTime.Now,
+            };
+            accounts.Add(account);
+            selectedAccountIndex = accounts.Count - 1;
+            Rms.DeleteStorage("userAo" + ServerListScreen.ipSelect);
+            SaveDataAccounts();
+            GameScr.info1.addInfo(Strings.inGameAccountManagerAccountAdded, 0);
+        }
+
+        internal static void ResetSelectedAccountIndex()
+        {
+            selectedAccountIndex = -1;
+            SaveDataAccounts();
         }
 
         static void PaintListAccounts(mGraphics g)

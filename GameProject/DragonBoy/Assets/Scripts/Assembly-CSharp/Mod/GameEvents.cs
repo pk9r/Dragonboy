@@ -202,6 +202,8 @@ namespace Mod
         {
             //if (filename == "acc" || filename == "pass")
             //    data = "pk9r327";
+            if (filename.StartsWith("userAo") && string.IsNullOrEmpty(data))
+                filename = "";
         }
 
         internal static void OnLoadLanguage(sbyte newLanguage)
@@ -420,11 +422,20 @@ namespace Mod
         {
             if (!Utils.IsOpenedByExternalAccountManager)
             {
+                if (type == 1)
+                {
+                    InGameAccountManager.ResetSelectedAccountIndex();
+                    return;
+                }
                 Account acc = InGameAccountManager.SelectedAccount;
                 if (acc == null)
                     return;
+                type = (sbyte)acc.Type;
                 username = acc.Username;
-                pass = acc.Password;
+                if (acc.Type == AccountType.Registered)
+                    pass = acc.Password;
+                else
+                    pass = string.Empty;
                 acc.LastTimeLogin = DateTime.Now;
             }
             else
@@ -465,19 +476,22 @@ namespace Mod
         {
             if (!Utils.IsOpenedByExternalAccountManager)
             {
-                Account acc = InGameAccountManager.SelectedAccount;
-                if (acc == null)
+                if (InGameAccountManager.SelectedAccount == null)
                     return;
-                if (acc.Server.IsCustomIP())
+                Server server = InGameAccountManager.SelectedServer;
+                if (server == null)
+                    return;
+                InGameAccountManager.SelectedServer = null;
+                if (server.IsCustomIP())
                 {
-                    host = acc.Server.hostnameOrIPAddress;
-                    port = acc.Server.port;
+                    host = server.hostnameOrIPAddress;
+                    port = server.port;
                 }
                 else
                 {
-                    host = ServerListScreen.address[acc.Server.index];
-                    port = ServerListScreen.port[acc.Server.index];
-                    ServerListScreen.ipSelect = acc.Server.index;
+                    host = ServerListScreen.address[server.index];
+                    port = ServerListScreen.port[server.index];
+                    ServerListScreen.ipSelect = server.index;
                 }
             }
             else
@@ -1855,21 +1869,13 @@ namespace Mod
                 {
                     case 0:
                         screen.cmd[0] = new Command(string.Empty, screen, 3, null);
-                        if (text == null)
+                        if (string.IsNullOrEmpty(text))
                         {
-                            screen.cmd[0].caption = mResources.playNew;
+                            screen.cmd[0].caption = mResources.playNew + "";
                             if (Rms.loadRMS("userAo" + ServerListScreen.ipSelect) != null)
-                                screen.cmd[0].caption = mResources.choitiep;
-                            break;
+                                screen.cmd[0].caption = mResources.choitiep + "";
                         }
-                        if (text.Equals(string.Empty))
-                        {
-                            screen.cmd[0].caption = mResources.playNew;
-                            if (Rms.loadRMS("userAo" + ServerListScreen.ipSelect) != null)
-                                screen.cmd[0].caption = mResources.choitiep;
-                            break;
-                        }
-                        if (!Utils.IsOpenedByExternalAccountManager)
+                        else if (!Utils.IsOpenedByExternalAccountManager)
                         {
                             Account acc = InGameAccountManager.SelectedAccount;
                             if (acc == null)

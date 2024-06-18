@@ -1,4 +1,5 @@
 ﻿using System;
+using Mod.AccountManager;
 using Mod.Auto;
 using Mod.Background;
 using Mod.CharEffect;
@@ -501,6 +502,29 @@ namespace Mod.ModMenu
                     Description = Strings.openVietnameseInputMenuDescription,
                     Action = VietnameseInput.ShowMenu,
                 }),
+                new ModMenuItemFunction(new ModMenuItemFunctionConfig()
+                {
+                    ID = "AddUserAoToAccountManager",
+                    Title = Strings.addUserAoToAccountManagerTitle,
+                    Description = Strings.addUserAoToAccountManagerDescription,
+                    Action = InGameAccountManager.AddUserAoToAccountManager,
+                    GetIsDisabled = () =>
+                    {
+                        if (Utils.IsOpenedByExternalAccountManager)
+                            return true;
+                        if (InGameAccountManager.SelectedAccount != null)
+                            return true;
+                        return string.IsNullOrEmpty(Rms.loadRMSString("userAo" + ServerListScreen.ipSelect));
+                    },
+                    GetDisabledReason = () =>
+                    {
+                        if (Utils.IsOpenedByExternalAccountManager)
+                            return Strings.openedByExternalAccountManager + '!';
+                        if (InGameAccountManager.SelectedAccount != null)
+                            return Strings.inGameAccountManagerUnregisteredAccountAlreadyAdded + '!';
+                        return Strings.accountAlreadyRegistered + '!';
+                    }
+                }),
                 //new ModMenuItemFunction("Menu AutoItem", "Mở menu AutoItem (lệnh \"item\" hoặc bấm nút I)", AutoItem.ShowMenu),
                 //new ModMenuItemFunction("Menu Custom Logo", "Mở menu logo tùy chỉnh", CustomLogo.ShowMenu),
                 //new ModMenuItemFunction("Menu Custom Cursor", "Mở menu con trỏ tùy chỉnh", CustomCursor.ShowMenu),
@@ -580,7 +604,7 @@ namespace Mod.ModMenu
 
         static void DoFireModMenuBools(Panel panel)
         {
-            if (panel.selected < 0) 
+            if (panel.selected < 0)
                 return;
             if (!modMenuItemBools[panel.selected].IsDisabled)
             {
@@ -591,10 +615,10 @@ namespace Mod.ModMenu
 
         static void DoFireModMenuValues(Panel panel)
         {
-            if (panel.selected < 0) 
+            if (panel.selected < 0)
                 return;
             int selected = panel.selected;
-            if (modMenuItemValues[selected].IsDisabled) 
+            if (modMenuItemValues[selected].IsDisabled)
                 return;
             if (modMenuItemValues[selected].Values != null)
                 modMenuItemValues[selected].SwitchSelection();
@@ -609,19 +633,19 @@ namespace Mod.ModMenu
                 return;
             if (panel.currentTabIndex == 0)
             {
-                if (!modMenuItemBools[selected].IsDisabled) 
+                if (!modMenuItemBools[selected].IsDisabled)
                     return;
                 GameScr.info1.addInfo(modMenuItemBools[selected].DisabledReason, 0);
             }
             else if (panel.currentTabIndex == 1)
             {
-                if (!modMenuItemValues[selected].IsDisabled) 
+                if (!modMenuItemValues[selected].IsDisabled)
                     return;
                 GameScr.info1.addInfo(modMenuItemValues[selected].DisabledReason, 0);
             }
             else if (panel.currentTabIndex == 2)
             {
-                if (!modMenuItemFunctions[selected].IsDisabled) 
+                if (!modMenuItemFunctions[selected].IsDisabled)
                     return;
                 GameScr.info1.addInfo(modMenuItemFunctions[selected].DisabledReason, 0);
             }
@@ -641,7 +665,7 @@ namespace Mod.ModMenu
 
         static void PaintModMenuBools(Panel panel, mGraphics g)
         {
-            if (modMenuItemBools == null || modMenuItemBools.Length != panel.currentListLength) 
+            if (modMenuItemBools == null || modMenuItemBools.Length != panel.currentListLength)
                 return;
             int offset = Math.Max(panel.cmy / panel.ITEM_HEIGHT, 0);
             bool isReset = true;
@@ -654,7 +678,7 @@ namespace Mod.ModMenu
                 int wScroll = panel.wScroll;
                 int itemHeight = panel.ITEM_HEIGHT - 1;
                 ModMenuItemBoolean modMenuItem = modMenuItemBools[i];
-                if (!modMenuItem.IsDisabled) 
+                if (!modMenuItem.IsDisabled)
                     g.setColor((i != panel.selected) ? 0xE7DFD2 : 0xF9FF4A);
                 else
                     g.setColor((i != panel.selected) ? 0xb7afa2 : 0xd0d73b);
@@ -671,7 +695,7 @@ namespace Mod.ModMenu
                     mFont.tahoma_7_blue.drawString(g, Utils.TrimUntilFit(modMenuItem.Description, style, panel.wScroll - 5), xScroll + 7, yScroll + 11, 0);
                 if (modMenuItem.Value)
                     g.setColor(0x00b000);
-                else 
+                else
                     g.setColor(0xe00000);
                 g.fillRect(xScroll, yScroll, 2, itemHeight);
             }
@@ -744,7 +768,7 @@ namespace Mod.ModMenu
 
         static void PaintModMenuFunctions(Panel panel, mGraphics g)
         {
-            if (modMenuItemFunctions == null || modMenuItemFunctions.Length != panel.currentListLength) 
+            if (modMenuItemFunctions == null || modMenuItemFunctions.Length != panel.currentListLength)
                 return;
             int offset = Math.Max(panel.cmy / panel.ITEM_HEIGHT, 0);
             bool isReset = true;
@@ -759,7 +783,7 @@ namespace Mod.ModMenu
                 ModMenuItemFunction modMenuItem = modMenuItemFunctions[i];
                 if (!modMenuItem.IsDisabled)
                     g.setColor((i != panel.selected) ? 0xE7DFD2 : 0xF9FF4A);
-                else 
+                else
                     g.setColor((i != panel.selected) ? 0xb7afa2 : 0xd0d73b);
                 g.fillRect(num, num2, num3, num4);
                 mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + modMenuItem.Title, num + 5, num2, 0);
@@ -770,10 +794,10 @@ namespace Mod.ModMenu
                     x = num + 5;
                     y = num2 + 11;
                 }
-                else 
+                else
                     mFont.tahoma_7_blue.drawString(g, Utils.TrimUntilFit(modMenuItem.Description, style, panel.wScroll - 5), num + 5, num2 + 11, 0);
             }
-            if (isReset) 
+            if (isReset)
                 TextInfo.reset();
             else
             {
@@ -786,7 +810,7 @@ namespace Mod.ModMenu
 
         internal static void SaveData()
         {
-            foreach (ModMenuItemBoolean modMenuItem in modMenuItemBools) 
+            foreach (ModMenuItemBoolean modMenuItem in modMenuItemBools)
                 if (!string.IsNullOrEmpty(modMenuItem.RMSName))
                     Utils.SaveData(modMenuItem.RMSName, modMenuItem.Value);
             foreach (ModMenuItemValues modMenuItem in modMenuItemValues)

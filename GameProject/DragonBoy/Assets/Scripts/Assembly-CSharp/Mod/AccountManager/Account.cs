@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using Mod.R;
 using Newtonsoft.Json;
 
@@ -6,12 +7,13 @@ namespace Mod.AccountManager
 {
     internal class Account
     {
+        static Regex regexMatchUserAo = new Regex("^User[0-9]{1,}$", RegexOptions.Compiled);
+
         [JsonProperty("username")]
         internal string Username { get; set; } = "";
         [JsonProperty("password")]
         internal string Password { get; set; } = "";
-        [JsonProperty("server")]
-        [JsonConverter(typeof(ServerConverter))]
+        [JsonProperty("server"), JsonConverter(typeof(ServerConverter))]
         internal Server Server { get; set; }
         [JsonProperty("last_time_login")]
         internal DateTime LastTimeLogin { get; set; } = DateTime.MinValue;
@@ -26,6 +28,16 @@ namespace Mod.AccountManager
         internal CharacterInfo Info { get; set; } = new CharacterInfo();
         [JsonProperty("info_pet")]
         internal CharacterInfo PetInfo { get; set; }
+        [JsonIgnore]
+        internal AccountType Type
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Password) && regexMatchUserAo.IsMatch(Username) && !Server.IsCustomIP())
+                    return AccountType.Unregistered;
+                return AccountType.Registered;
+            }
+        }
 
         internal string GetLastTimeLogin()
         {
