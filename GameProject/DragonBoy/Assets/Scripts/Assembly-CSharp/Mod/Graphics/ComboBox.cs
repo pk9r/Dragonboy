@@ -248,6 +248,8 @@ namespace Mod.Graphics
                 }
                 return;
             }
+            if (!IsFocus)
+                return;
             if (GameCanvas.isPointerJustDown && lastMouseY == -1 && IsPointerIn(x, y, scrollableMenuItems.Width, scrollableMenuItems.Height))
                 lastMouseY = GameCanvas.pyMouse;
             if (isShowingListItems && GameCanvas.isPointerHoldIn(0, 0, GameCanvas.w, GameCanvas.h) && !GameCanvas.isPointerHoldIn(scrollableMenuItems.X, scrollableMenuItems.Y, scrollableMenuItems.Width, scrollableMenuItems.Height))

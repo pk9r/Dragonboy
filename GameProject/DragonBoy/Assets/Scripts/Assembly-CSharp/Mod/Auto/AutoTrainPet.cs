@@ -126,7 +126,7 @@ namespace Mod.Auto
                 isAssignedLastXPet = false;
                 Utils.TeleportMyChar(lastXPet);
             }
-            if (mSystem.currentTimeMillis() - lastTimePetFollow > 600000 || GameScr.findCharInMap(-Char.myCharz().charID) != null && Utils.getDistance(Char.myCharz(), GameScr.findCharInMap(-Char.myCharz().charID)) > 400)
+            if (mSystem.currentTimeMillis() - lastTimePetFollow > 600000 || GameScr.findCharInMap(-Char.myCharz().charID) != null && Utils.Distance(Char.myCharz(), GameScr.findCharInMap(-Char.myCharz().charID)) > 400)
             {
                 lastTimePetFollow = mSystem.currentTimeMillis();
                 Service.gI().petStatus(0);
@@ -337,7 +337,7 @@ namespace Mod.Auto
                         lastTimePick = mSystem.currentTimeMillis();
                         return;
                     }
-                    int distance = Utils.getDistance(itemMap, Char.myCharz());
+                    int distance = Utils.Distance(itemMap, Char.myCharz());
                     if (itemMap.playerId == Char.myCharz().charID || itemMap.playerId == -1)
                     {
                         hasPickableItem = true;

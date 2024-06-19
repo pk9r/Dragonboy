@@ -425,6 +425,8 @@ namespace Mod
                 if (type == 1)
                 {
                     InGameAccountManager.ResetSelectedAccountIndex();
+                    Rms.DeleteStorage("acc");
+                    Rms.DeleteStorage("pass");
                     return;
                 }
                 Account acc = InGameAccountManager.SelectedAccount;
@@ -435,7 +437,10 @@ namespace Mod
                 if (acc.Type == AccountType.Registered)
                     pass = acc.Password;
                 else
+                {
                     pass = string.Empty;
+                    Rms.DeleteStorage("userAo" + acc.Server.index);
+                }
                 acc.LastTimeLogin = DateTime.Now;
             }
             else
@@ -607,9 +612,9 @@ namespace Mod
         internal static void OnAddInfoMe(string str)
         {
             Pk9rXmap.Info(str);
-            if (str.StartsWith("Bạn vừa thu hoạch") && !AutoTrainNewAccount.isNeedMorePean)
+            if (LocalizedString.senzuBeanHarvested.StartsWithReversed(str) && !AutoTrainNewAccount.isNeedMorePean)
                 AutoTrainNewAccount.isHarvestingPean = false;
-            if (str.ToLower().Contains("bạn vừa nhận thưởng bùa"))
+            if (LocalizedString.free1hCharmReceived.ContainsReversed(str))
                 AutoTrainNewAccount.isNhanBua = true;
         }
 
@@ -1240,6 +1245,16 @@ namespace Mod
 
         internal static bool OnUpdatePanel(Panel instance)
         {
+            if (instance == GameCanvas.panel)
+            {
+                ModMenuMain.UpdateTouch();
+                Panel panel = ModMenuMain.currentPanel;
+                if (panel != null && panel.isShow && GameCanvas.isPointerJustRelease && !GameCanvas.isPointer(instance.X, instance.Y, instance.W, instance.H) && !GameCanvas.isPointer(panel.X, panel.Y, panel.W, panel.H) && !instance.pointerIsDowning)
+                {
+                    instance.hide();
+                    return false;
+                }
+            }
             if (instance.type == CustomPanelMenu.TYPE_CUSTOM_PANEL_MENU)
             {
                 if ((instance.chatTField == null || !instance.chatTField.isShow) && !instance.isKiguiXu && !instance.isKiguiLuong && (instance.tabIcon == null || !instance.tabIcon.isShow) && instance.waitToPerform > 0)
@@ -1679,7 +1694,7 @@ namespace Mod
             else if (panel.type == 2 && panel.currentTabIndex == 0) //box
             {
                 Item[] arrItemBox = Char.myCharz().arrItemBox;
-                int offset = Math.Max(panel.cmy / panel.ITEM_HEIGHT, 0);
+                int offset = Math.Max(panel.cmy / panel.ITEM_HEIGHT - 1, 0);
                 for (int i = offset; i < Mathf.Clamp(offset + panel.hScroll / panel.ITEM_HEIGHT + 2, 0, arrItemBox.Length); i++)
                 {
                     int y = panel.yScroll + (i + 1) * panel.ITEM_HEIGHT;
@@ -1976,9 +1991,10 @@ namespace Mod
 
         internal static bool OnGetSoundOption()
         {
-            if (GameCanvas.loginScr.isLogin2 && Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId >= 2)
+            bool canRegister = GameCanvas.loginScr.isLogin2 || (!Utils.IsOpenedByExternalAccountManager && InGameAccountManager.SelectedAccount != null && InGameAccountManager.SelectedAccount.Type == AccountType.Unregistered);
+            if (canRegister && Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId >= 2)
             {
-                Panel.strTool = new string[10]
+                Panel.strTool = new string[]
                 {
                 mResources.radaCard,
                 mResources.quayso,
@@ -1992,7 +2008,7 @@ namespace Mod
                 mResources.REGISTOPROTECT
                 };
                 if (Char.myCharz().havePet)
-                    Panel.strTool = new string[11]
+                    Panel.strTool = new string[]
                     {
                     mResources.radaCard,
                     mResources.quayso,
@@ -2009,7 +2025,7 @@ namespace Mod
             }
             else
             {
-                Panel.strTool = new string[9]
+                Panel.strTool = new string[]
                 {
                 mResources.radaCard,
                 mResources.quayso,
@@ -2022,7 +2038,7 @@ namespace Mod
                 Utils.IsOpenedByExternalAccountManager ? mResources.change_account : Strings.logout
                 };
                 if (Char.myCharz().havePet)
-                    Panel.strTool = new string[10]
+                    Panel.strTool = new string[]
                     {
                     mResources.radaCard,
                     mResources.quayso,

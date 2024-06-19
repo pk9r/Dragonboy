@@ -168,11 +168,12 @@ namespace Mod.Graphics
                             if (AllowSelectNone || items.Count == 0)
                                 currentItemIndex = -1;
                         }
-                        new Thread( () =>
-                        {
-                            Thread.Sleep(50);
-                            ItemSelected?.Invoke();
-                        }).Start();
+                        if (AllowSelectNone || currentItemIndex != -1)
+                            new Thread(() =>
+                            {
+                                Thread.Sleep(50);
+                                ItemSelected?.Invoke();
+                            }).Start();
                     }
                     //GameCanvas.clearAllPointerEvent();
                 }
@@ -269,10 +270,11 @@ namespace Mod.Graphics
             }
             if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
             {
-                new Thread(() =>
-                {
-                    ItemSelected?.Invoke();
-                }).Start();
+                if (AllowSelectNone || currentItemIndex != -1)
+                    new Thread(() =>
+                    {
+                        ItemSelected?.Invoke();
+                    }).Start();
             }
         }
 

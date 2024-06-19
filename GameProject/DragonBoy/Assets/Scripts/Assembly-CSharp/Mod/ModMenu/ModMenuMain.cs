@@ -144,7 +144,7 @@ namespace Mod.ModMenu
                     Title = Strings.autoTrainForNewbieTitle,
                     Description = Strings.autoTrainForNewbieDescription,
                     GetValueFunc = () => AutoTrainNewAccount.isEnabled,
-                    SetValueAction = AutoTrainNewAccount.setState,
+                    SetValueAction = AutoTrainNewAccount.SetState,
                     GetIsDisabled = () => Char.myCharz().taskMaint == null || Char.myCharz().taskMaint.taskId > 11,
                     GetDisabledReason = () => Strings.noLongerNewAccount + '!'
                 }),
@@ -553,8 +553,6 @@ namespace Mod.ModMenu
                 return;
             if (GameCanvas.menu.showMenu)
                 return;
-            if (GameCanvas.panel.isShow)
-                return;
             if (GameCanvas.panel2 != null && GameCanvas.panel2.isShow)
                 return;
             cmdOpenModMenu?.paint(g);
@@ -565,6 +563,14 @@ namespace Mod.ModMenu
         internal static void UpdateTouch()
         {
             if (cmdOpenModMenu == null)
+                return;
+            if (Char.isLoadingMap)
+                return;
+            if (ChatTextField.gI().isShow)
+                return;
+            if (GameCanvas.menu.showMenu)
+                return;
+            if (GameCanvas.panel2 != null && GameCanvas.panel2.isShow)
                 return;
             if (GameCanvas.isPointerHoldIn((int)(cmdOpenModMenu.x - cmdOpenModMenu.w * 1.5), cmdOpenModMenu.y, (int)(cmdOpenModMenu.w * 2.5), cmdOpenModMenu.h) && GameCanvas.isPointerClick)
             {

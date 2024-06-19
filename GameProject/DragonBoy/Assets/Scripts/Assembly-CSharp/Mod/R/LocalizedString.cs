@@ -114,6 +114,18 @@ namespace Mod.R
             "Upgrading",
             "Sedang mengupgrade"
         };
+        internal static LocalizedString senzuBeanHarvested = new string[3]
+        {
+            "Bạn vừa thu hoạch được",
+            "You just harvested",
+            "Kamu baru saja memanen"
+        };
+        internal static LocalizedString free1hCharmReceived = new string[3]
+        {
+            "Bạn vừa nhận thưởng bùa",
+            "You receive award",
+            "Kamu menerima hadiah"
+        };
 
         #region Methods and fields
         string[] strings;
@@ -168,6 +180,7 @@ namespace Mod.R
         internal bool IsEqual(string str) => strings.Any(s => !string.IsNullOrEmpty(s) && s == str);
 
         public static implicit operator LocalizedString(string[] str) => new LocalizedString(str);
+        public static implicit operator string(LocalizedString localized) => localized.strings[0];
         public static bool operator ==(LocalizedString localized, string str) => localized.IsEqual(str);
         public static bool operator !=(LocalizedString localized, string str) => !localized.IsEqual(str);
         public static bool operator ==(string str, LocalizedString localized) => localized.IsEqual(str);

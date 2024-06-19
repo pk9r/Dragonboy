@@ -82,9 +82,13 @@ namespace Mod.AccountManager
                     case CommandType.DeleteAccount:
                         accounts.RemoveAt(scrollableMenuAccounts.CurrentItemIndex);
                         if (accounts.Count == 0)
-                            scrollableMenuAccounts.CurrentItemIndex = -1;
+                            selectedAccountIndex = scrollableMenuAccounts.CurrentItemIndex = -1;
                         else if (scrollableMenuAccounts.CurrentItemIndex > accounts.Count - 1)
+                        {
+                            if (selectedAccountIndex == scrollableMenuAccounts.CurrentItemIndex)
+                                selectedAccountIndex = accounts.Count - 1;
                             scrollableMenuAccounts.CurrentItemIndex = accounts.Count - 1;
+                        }
                         InfoDlg.hide();
                         GameCanvas.currentDialog = null;
                         SaveDataAccounts();
@@ -517,7 +521,7 @@ namespace Mod.AccountManager
             };
             accounts.Add(account);
             selectedAccountIndex = accounts.Count - 1;
-            Rms.DeleteStorage("userAo" + ServerListScreen.ipSelect);
+            Rms.DeleteStorage("userAo" + account.Server.index);
             SaveDataAccounts();
             GameScr.info1.addInfo(Strings.inGameAccountManagerAccountAdded, 0);
         }
@@ -564,16 +568,18 @@ namespace Mod.AccountManager
                 return;
             int y = Y_LIST_ACCOUNTS;
             int height = GameCanvas.h - y * 2;
-            PopUp.paintPopUp(g, currentAccountInfoX - 10, y - 10, WIDTH_ACCOUNT_INFO + 20, height + 20, 0, true);
+            Account account = null;
+            if (scrollableMenuAccounts.CurrentItemIndex != -1)
+                account = accounts[scrollableMenuAccounts.CurrentItemIndex];
+            PopUp.paintPopUp(g, currentAccountInfoX - 10, y - 10, WIDTH_ACCOUNT_INFO + 20, height + 20, account == null ? 0 : (int)account.Type, true);
             height -= editAccount.h;
             PopUp.paintPopUp(g, currentAccountInfoX, y, WIDTH_ACCOUNT_INFO, height, 0xffffff, false);
             editAccount.paint(g);
             deleteAccount.paint(g);
             selectAccountToLogin.paint(g);
-            g.setClip(currentAccountInfoX, y, WIDTH_ACCOUNT_INFO, height);
             if (scrollableMenuAccounts.CurrentItemIndex == -1)
                 return;
-            Account account = accounts[scrollableMenuAccounts.CurrentItemIndex];
+            g.setClip(currentAccountInfoX, y, WIDTH_ACCOUNT_INFO, height);
             EnsureSmallImage(account.Info.Icon);
             int offsetXAccountMainInfo = currentAccountInfoX;
             Texture2D icon = icons[account.Info.Icon];
@@ -597,7 +603,10 @@ namespace Mod.AccountManager
             }
             else
                 offsetXAccountMainInfo += 20;
-            mFont.tahoma_7b_dark.drawString(g, account.Info.Name, offsetXAccountMainInfo, y + 5, 0);
+            mFont mfont = mFont.tahoma_7b_dark;
+            if (account.Type == AccountType.Unregistered)
+                mfont = mFont.tahoma_7b_green2;
+            mfont.drawString(g, account.Info.Name, offsetXAccountMainInfo, y + 5, 0);
             string serverName = account.Server.IsCustomIP() ? account.Server.name : ServerListScreen.nameServer[account.Server.index];
             string lastTimeLogin = (account.LastTimeLogin != DateTime.MinValue ? (Strings.lastLogin + ": ") : "") + account.GetLastTimeLogin();
             if (mFont.tahoma_7_greySmall.getWidth(lastTimeLogin) + offsetXAccountMainInfo - currentAccountInfoX > WIDTH_ACCOUNT_INFO)
@@ -957,7 +966,10 @@ namespace Mod.AccountManager
                 DrawTexture(width - overlayWidth, i * height - scrollableMenuAccounts.CurrentOffset + 1, overlayWidth, height - 1, overlay, ScaleMode.ScaleToFit);
                 GUI.EndGroup();
             }
-            mFont.tahoma_7b_dark.drawString(g, account.Info.Name, x + 80, y + 2, 0);
+            mFont mfont = mFont.tahoma_7b_dark;
+            if (account.Type == AccountType.Unregistered)
+                mfont = mFont.tahoma_7b_green2;
+            mfont.drawString(g, account.Info.Name, x + 80, y + 2, 0);
 
             string serverName = account.Server.IsCustomIP() ? account.Server.name : ServerListScreen.nameServer[account.Server.index];
             mFont.tahoma_7_greySmall.drawString(g, account.GetLastTimeLogin(), x + 80, y + height - 12, 0);
