@@ -612,7 +612,7 @@ namespace Mod
         internal static void OnAddInfoMe(string str)
         {
             Pk9rXmap.Info(str);
-            if (LocalizedString.senzuBeanHarvested.StartsWithReversed(str) && !AutoTrainNewAccount.isNeedMorePean)
+            if (LocalizedString.senzuBeanHarvested.StartsWithReversed(str))
                 AutoTrainNewAccount.isHarvestingPean = false;
             if (LocalizedString.free1hCharmReceived.ContainsReversed(str))
                 AutoTrainNewAccount.isNhanBua = true;
