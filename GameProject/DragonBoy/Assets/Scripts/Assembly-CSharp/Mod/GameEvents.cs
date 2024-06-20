@@ -740,7 +740,7 @@ namespace Mod
             {
                 Command command1 = (Command)menuItems.elementAt(0);
                 Command command2 = (Command)menuItems.elementAt(1);
-                if (command1.caption == "Nhận quà" && command2.caption == "Từ chối")
+                if (command1.caption == LocalizedString.getGift && command2.caption == LocalizedString.rejectGift)
                 {
                     GameCanvas.menu.menuSelectedItem = 0;
                     command1.performAction();

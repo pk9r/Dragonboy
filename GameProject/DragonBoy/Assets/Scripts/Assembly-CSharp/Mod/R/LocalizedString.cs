@@ -126,7 +126,18 @@ namespace Mod.R
             "You receive award",
             "Kamu menerima hadiah"
         };
-
+        internal static LocalizedString getGift = new string[3]
+        {
+            "Nhận quà",
+            "Get Gift",
+            "Menerima Gift"
+        };
+        internal static LocalizedString rejectGift = new string[3]
+        {
+            "Từ chối",
+            "Reject",
+            "Tolak"
+        };
         #region Methods and fields
         string[] strings;
 
