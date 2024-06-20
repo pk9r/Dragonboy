@@ -80,7 +80,7 @@ namespace Mod.Auto
                     if (!isHarvestingPean)
                         isHarvestingPean = true;
                     IsTanSat = false;
-                    if (!XmapController.gI.IsActing)
+                    if (TileMap.mapID != Char.myCharz().cgender + 21 && !XmapController.gI.IsActing)
                         XmapController.start(Char.myCharz().cgender + 21);
                 }
                 if ((Char.myCharz().cMP < myMinMP || Char.myCharz().cHP < myMinHP) && !isHarvestingPean && (TileMap.mapID != Char.myCharz().cgender + 21 || Char.myCharz().taskMaint.taskId < 3) && mSystem.currentTimeMillis() - lastTimeEatPean > 2000)
@@ -790,6 +790,10 @@ namespace Mod.Auto
                 TrainUntilMeStrongEnough(500);
             else if (Char.myCharz().taskMaint.index == 1)
             {
+                if (myMinHP != 50)
+                    myMinHP = 50;
+                if (myMinMP != 15)
+                    myMinMP = 15;
                 if (!XmapController.gI.IsActing)
                 {
                     if (Char.myCharz().cgender == 0 && TileMap.mapID != 12)
@@ -946,7 +950,7 @@ namespace Mod.Auto
             {
                 if (TileMap.mapID == 47)
                     Service.gI().openMenu(17);
-                if (!XmapController.gI.IsActing)
+                else if (!XmapController.gI.IsActing)
                     XmapController.start(47);
             }
             else if (Char.myCharz().taskMaint.index == 3)
