@@ -26,7 +26,6 @@ namespace Mod.Auto
         internal static bool isPicking;
         static long lastTimePickedItem;
         internal static bool isNhapCodeTanThu;
-        internal static bool isNeedMorePean;
         internal static bool isHarvestingPean;
         static int myMinMP = 15;
         static long lastTimeEatPean;
@@ -43,6 +42,7 @@ namespace Mod.Auto
         static bool _isTanSatInternal;
         static bool isPKThanMeo;
         static bool isPKT77;
+        static int minPeans;
 
         internal static void Update()
         {
@@ -73,17 +73,17 @@ namespace Mod.Auto
                     Char.chatPopup = null;
                     isNhapCodeTanThu = false;
                 }
-                if (isNeedMorePean && (Char.myCharz().cgender != 1 && GameScr.hpPotion >= 20 || Char.myCharz().cgender == 1 && GameScr.hpPotion >= 30))
-                    isNeedMorePean = false;
-                if (GameScr.hpPotion == 0 && (Char.myCharz().cMP < 15 || Char.myCharz().cHP < 15))
+                //if (isNeedMorePean && (Char.myCharz().cgender != 1 && GameScr.hpPotion >= 20 || Char.myCharz().cgender == 1 && GameScr.hpPotion >= 30))
+                //isNeedMorePean = false;
+                if (GameScr.hpPotion <= 0 && (Char.myCharz().cMP < 15 || Char.myCharz().cHP < 15))
                 {
                     if (!isHarvestingPean)
                         isHarvestingPean = true;
-                    IsTanSat = false;
+                    IsTanSat = isPKThanMeo = isPKT77 = false;
                     if (TileMap.mapID != Char.myCharz().cgender + 21 && !XmapController.gI.IsActing)
                         XmapController.start(Char.myCharz().cgender + 21);
                 }
-                if ((Char.myCharz().cMP < myMinMP || Char.myCharz().cHP < myMinHP) && !isHarvestingPean && (TileMap.mapID != Char.myCharz().cgender + 21 || Char.myCharz().taskMaint.taskId < 3) && mSystem.currentTimeMillis() - lastTimeEatPean > 2000)
+                if ((Char.myCharz().cMP < myMinMP || Char.myCharz().cHP < myMinHP) && !isHarvestingPean && (TileMap.mapID != Char.myCharz().cgender + 21 || Char.myCharz().taskMaint.taskId < 3) && mSystem.currentTimeMillis() - lastTimeEatPean > 2000 && (minPeans <= 0 || GameScr.hpPotion >= minPeans))
                 {
                     lastTimeEatPean = mSystem.currentTimeMillis();
                     GameScr.gI().doUseHP();
@@ -92,6 +92,8 @@ namespace Mod.Auto
                     Service.gI().returnTownFromDead();
                 if (TileMap.mapID == Char.myCharz().cgender + 21)
                 {
+                    if (!isHarvestingPean && minPeans > 0 && GameScr.hpPotion < minPeans)
+                        isHarvestingPean = true;
                     if (GameScr.vItemMap.size() > 0)
                     {
                         ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(0);
@@ -101,7 +103,12 @@ namespace Mod.Auto
                             Service.gI().pickItem(itemMap.itemMapID);
                         }
                     }
-                    if (GameScr.gI().magicTree.currPeas == 0 || Char.myCharz().cgender == 1 && GameScr.hpPotion >= 30 || Char.myCharz().cgender != 1 && GameScr.hpPotion >= 20)
+                    if (minPeans <= 0)
+                    {
+                        if (GameScr.gI().magicTree.currPeas == 0 || Char.myCharz().cgender == 1 && GameScr.hpPotion >= 30 || Char.myCharz().cgender != 1 && GameScr.hpPotion >= 20)
+                            isHarvestingPean = false;
+                    }
+                    else if (GameScr.hpPotion >= minPeans)
                         isHarvestingPean = false;
                     if (Char.myCharz().taskMaint.taskId >= 2 && GameScr.gI().magicTree.currPeas > 0 && (Char.myCharz().cgender == 1 && GameScr.hpPotion < 30 || Char.myCharz().cgender != 1 && GameScr.hpPotion < 20) && GameCanvas.gameTick % (30f * Time.timeScale) == 0f)
                     {
@@ -119,7 +126,7 @@ namespace Mod.Auto
                     if (GameCanvas.menu.showMenu)
                         GameCanvas.menu.doCloseMenu();
                 }
-                if (!isNhapCodeTanThu && !isNeedMorePean && !isHarvestingPean && !isPicking && GameCanvas.gameTick % (30 * (int)Time.timeScale) == 0 && Char.myCharz().cHP > 1 && !GameScr.gI().isBagFull() && stepXuLyDo > 1 && Char.myCharz().taskMaint.taskId <= 11)
+                if (!isNhapCodeTanThu && !isHarvestingPean && !isPicking && GameCanvas.gameTick % (30 * (int)Time.timeScale) == 0 && Char.myCharz().cHP > 1 && !GameScr.gI().isBagFull() && stepXuLyDo > 1 && Char.myCharz().taskMaint.taskId <= 11)
                     AutoNV();
                 if (Char.myCharz().taskMaint.taskId > 3 && Char.myCharz().taskMaint.taskId <= 11)
                     AutoPoint();
@@ -127,7 +134,7 @@ namespace Mod.Auto
                     stepXuLyDo = 0;
                 if (stepXuLyDo < 2)
                     XuLyDo();
-                if (!XmapController.gI.IsActing)
+                if (!XmapController.gI.IsActing && !isNhapCodeTanThu && !isHarvestingPean && Char.myCharz().cHP > 1 && !GameScr.gI().isBagFull() && stepXuLyDo > 1 && Char.myCharz().taskMaint.taskId <= 11 && (minPeans <= 0 || GameScr.hpPotion >= minPeans))
                 {
                     if (IsTanSat && !AutoPick())
                         TanSat();
@@ -248,23 +255,16 @@ namespace Mod.Auto
             if (mSystem.currentTimeMillis() - lastTimeAutoPoint >= 1000)
             {
                 lastTimeAutoPoint = mSystem.currentTimeMillis();
-                if ((Char.myCharz().cHPGoc < 400 || Char.myCharz().cDamGoc >= 40 && Char.myCharz().cHPGoc < 700) && Char.myCharz().cTiemNang > Char.myCharz().cHPGoc + 1000)
+                if ((Char.myCharz().cHPGoc < 400 || Char.myCharz().cDamGoc >= 40 && Char.myCharz().cHPGoc < 500) && Char.myCharz().cTiemNang > Char.myCharz().cHPGoc + 1000)
                     Service.gI().upPotential(0, 1);
                 else if (Char.myCharz().cMPGoc < 300 && Char.myCharz().cDamGoc >= 25 && Char.myCharz().cTiemNang > Char.myCharz().cMPGoc + 1000)
                     Service.gI().upPotential(1, 1);
-                else if (Char.myCharz().cDamGoc < 40 && Char.myCharz().cTiemNang > Char.myCharz().cDamGoc * 100)
+                else if (Char.myCharz().cDamGoc < 70 && Char.myCharz().cTiemNang > Char.myCharz().cDamGoc * 100)
                     Service.gI().upPotential(2, 1);
-                //if (Char.myCharz().cHPGoc >= 500)
-                //{
-                //  if (Char.myCharz().cMPGoc < 500 && Char.myCharz().cTiemNang > Char.myCharz().cMPGoc + 1000)
-                //Service.gI().upPotential(1, 1);
-                //  if (Char.myCharz().cMPGoc >= 500 && Char.myCharz().cTiemNang > Char.myCharz().cDamGoc * 100)
-                //Service.gI().upPotential(2, 1);
-                //}
             }
         }
 
-        internal static bool AutoPick()
+        static bool AutoPick()
         {
             if (GameScr.vItemMap.size() == 0)
             {
@@ -333,11 +333,8 @@ namespace Mod.Auto
             }
             if (mob.getTemplate().type == 4)    //quái bay
             {
-                if (Math.Abs(Char.myCharz().cx - mob.x) > 100)
-                {
+                if (Math.Abs(Char.myCharz().cx - mob.x) > 70)
                     Utils.TeleportMyChar(mob.x);
-                    return;
-                }
                 else
                 {
                     Char.myCharz().cx = mob.x + Res.random(-5, 5);
@@ -347,7 +344,7 @@ namespace Mod.Auto
             }
             else
                 Char.myCharz().currentMovePoint = new MovePoint(mob.x, mob.y);
-            if (Utils.Distance(Char.myCharz(), mob) <= 50)
+            if (Utils.Distance(Char.myCharz(), mob) <= 50 || (mob.getTemplate().type == 4 && Math.Abs(Char.myCharz().cx - mob.x) <= 70))
             {
                 mySkill.lastTimeUseThisSkill = mSystem.currentTimeMillis();
                 Char.myCharz().mobFocus = mob;
@@ -435,7 +432,7 @@ namespace Mod.Auto
             return result;
         }
 
-        internal static void AutoNV()
+        static void AutoNV()
         {
             switch (Char.myCharz().taskMaint.taskId)
             {
@@ -735,6 +732,10 @@ namespace Mod.Auto
             {
                 if (TileMap.mapID == 3 || TileMap.mapID == 11 || TileMap.mapID == 17)
                 {
+                    if (myMinHP != 45)
+                        myMinHP = 45;
+                    if (myMinMP != 15)
+                        myMinHP = 15;
                     if (maxHPMob != 600)
                         maxHPMob = 600;
                     if (minHPMob != 599)
@@ -790,8 +791,8 @@ namespace Mod.Auto
                 TrainUntilMeStrongEnough(500);
             else if (Char.myCharz().taskMaint.index == 1)
             {
-                if (myMinHP != 50)
-                    myMinHP = 50;
+                if (myMinHP != 60)
+                    myMinHP = 60;
                 if (myMinMP != 15)
                     myMinMP = 15;
                 if (!XmapController.gI.IsActing)
@@ -842,24 +843,36 @@ namespace Mod.Auto
             {
                 if (TileMap.mapID == 47)
                     Service.gI().openMenu(17);
-                if (TileMap.mapID != 1 && !XmapController.gI.IsActing)
-                    XmapController.start(1);
-                if (TileMap.mapID == 1 && !XmapController.gI.IsActing)
+                else if (!XmapController.gI.IsActing)
                     XmapController.start(47);
             }
             else if (Char.myCharz().taskMaint.index == 2)
             {
-                if (TileMap.mapID != 47 && !XmapController.gI.IsActing)
-                    XmapController.start(47);
-                else if (Math.Abs(Char.myCharz().cx - 600) >= 20)
-                    Utils.TeleportMyChar(600, 336);
-                else if (Char.myCharz().currentMovePoint == null || (Char.myCharz().currentMovePoint.xEnd != 600 && Char.myCharz().currentMovePoint.yEnd != 10))
-                    Char.myCharz().currentMovePoint = new MovePoint(600, 10);
+                if (TileMap.mapID != 47)
+                {
+                    if (!XmapController.gI.IsActing)
+                        XmapController.start(47);
+                }
+                else
+                {
+                    if (Math.Abs(Char.myCharz().cx - 600) >= 20)
+                        Utils.TeleportMyChar(600, 336);
+                    else if (Char.myCharz().currentMovePoint == null || (Char.myCharz().currentMovePoint.xEnd != 600 && Char.myCharz().currentMovePoint.yEnd != 10))
+                        Char.myCharz().currentMovePoint = new MovePoint(600, 10);
+                }
             }
             else if (Char.myCharz().taskMaint.index == 3)
             {
                 if (TileMap.mapID == 46)
-                    Service.gI().openMenu(18);
+                {
+                    if (GameCanvas.menu.showMenu && GameCanvas.menu.menuItems.size() == 1)
+                    {
+                        Service.gI().confirmMenu(18, 0);
+                        GameCanvas.menu.doCloseMenu();
+                    }
+                    else
+                        Service.gI().openMenu(18);
+                }
                 else if (TileMap.mapID == 47)
                 {
                     if (Math.Abs(Char.myCharz().cx - 600) >= 20)
@@ -879,33 +892,31 @@ namespace Mod.Auto
         {
             isPKThanMeo = false;
             isPKT77 = false;
+            minPeans = Char.myCharz().taskMaint.index > 1 ? 0 : 7;
             if (Char.myCharz().taskMaint.index == 0)
             {
                 if (TileMap.mapID == 46)
                 {
                     if (GameScr.findNPCInMap(18) == null || GameScr.findNPCInMap(18).isHide)
-                    {
                         isPKThanMeo = true;
-                        if (GameCanvas.menu.showMenu)
-                            GameCanvas.menu.doCloseMenu();
-                        Char.chatPopup = null;
-                    }
                     else
                     {
                         if (Char.myCharz().cx != 421 || Char.myCharz().cy != 408)
                             Utils.TeleportMyChar(421, 408);
-                        if (!GameCanvas.menu.showMenu)
-                            Service.gI().openMenu(18);
-                        if (GameCanvas.menu.menuItems.size() == 4 && ((Command)GameCanvas.menu.menuItems.elementAt(3)).caption.Replace('\n', ' ').ToLower() == LocalizedString.challengeKarin)
+                        else
                         {
-                            Service.gI().confirmMenu(18, 3);
-                            Service.gI().confirmMenu(18, 0);
+                            if (!GameCanvas.menu.showMenu)
+                                Service.gI().openMenu(18);
+                            else
+                            {
+                                if (GameCanvas.menu.menuItems.size() == 4 && ((Command)GameCanvas.menu.menuItems.elementAt(3)).caption.Replace('\n', ' ').ToLower() == LocalizedString.challengeKarin)
+                                    Service.gI().confirmMenu(18, 3);
+                                else if (GameCanvas.menu.menuItems.size() == 2 && ((Command)GameCanvas.menu.menuItems.elementAt(0)).caption.Replace('\n', ' ').ToLower() == LocalizedString.acceptChallenge)
+                                    Service.gI().confirmMenu(18, 0);
+                                GameCanvas.menu.doCloseMenu();
+                                Char.chatPopup = null;
+                            }
                         }
-                        //else if (GameCanvas.menu.menuItems.size() == 2 && ((Command)GameCanvas.menu.menuItems.elementAt(0)).caption.Replace('\n', ' ').ToLower() == LocalizedString.acceptChallenge)
-                        //Service.gI().confirmMenu(18, 0);
-                        if (GameCanvas.menu.showMenu)
-                            GameCanvas.menu.doCloseMenu();
-                        Char.chatPopup = null;
                     }
                 }
                 else
@@ -955,7 +966,7 @@ namespace Mod.Auto
             }
             else if (Char.myCharz().taskMaint.index == 3)
             {
-                if (TileMap.mapID < 21 || TileMap.mapID > 23)
+                if (TileMap.mapID != Char.myCharz().cgender + 21)
                 {
                     if (!XmapController.gI.IsActing)
                         XmapController.start(Char.myCharz().cgender + 21);
@@ -995,8 +1006,6 @@ namespace Mod.Auto
 
         static void PKThanMeo()
         {
-            if (!isNeedMorePean && GameScr.hpPotion < 15)
-                isNeedMorePean = true;
             if (myMinHP != 60)
                 myMinHP = 60;
             if (myMinMP != 20)
@@ -1026,8 +1035,6 @@ namespace Mod.Auto
 
         static void PKT77()
         {
-            if (!isNeedMorePean && GameScr.hpPotion < 15)
-                isNeedMorePean = true;
             if (myMinHP != 100)
                 myMinHP = 100;
             if (myMinMP != 20)
