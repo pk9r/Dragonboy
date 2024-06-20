@@ -523,7 +523,7 @@ namespace Mod.AccountManager
             selectedAccountIndex = accounts.Count - 1;
             Rms.DeleteStorage("userAo" + account.Server.index);
             SaveDataAccounts();
-            GameScr.info1.addInfo(Strings.inGameAccountManagerAccountAdded, 0);
+            GameScr.info1.addInfo(Strings.inGameAccountManagerAccountAdded + '!', 0);
         }
 
         internal static void ResetSelectedAccountIndex()
