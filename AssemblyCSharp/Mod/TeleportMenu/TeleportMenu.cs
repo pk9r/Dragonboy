@@ -425,7 +425,7 @@ namespace Mod.TeleportMenu
             if (panel.selected < 0) return;
             string str = "";
             Action action = null;
-            var teleportChar = listTeleportChars.OrderBy(tC => tC.cName).ToList()[panel.selected];
+            var teleportChar = listTeleportChars[panel.selected];
 
             switch (currentTeleportStatus)
             {
@@ -478,7 +478,7 @@ namespace Mod.TeleportMenu
             panel.cp.isClip = false;
             panel.cp.sayWidth = 180;
             panel.cp.cx = 3 + panel.X - (panel.X != 0 ? Res.abs(panel.cp.sayWidth - panel.W) + 8 : 0);
-            panel.cp.says = mFont.tahoma_7_red.splitFontArray("|0|2|" + listTeleportChars.OrderBy(tC => tC.cName).ToList()[panel.selected].cName + "\n|6|CharID: " + listTeleportChars.OrderBy(tC => tC.cName).ToList()[panel.selected].charID, panel.cp.sayWidth - 10);
+            panel.cp.says = mFont.tahoma_7_red.splitFontArray("|0|2|" + listTeleportChars[panel.selected].cName + "\n|6|CharID: " + listTeleportChars[panel.selected].charID, panel.cp.sayWidth - 10);
             panel.cp.delay = 10000000;
             panel.cp.c = null;
             panel.cp.sayRun = 7;
