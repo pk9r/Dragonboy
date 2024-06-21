@@ -138,6 +138,18 @@ namespace Mod.R
             "Reject",
             "Tolak"
         };
+        internal static LocalizedString talk = new string[3]
+        {
+            "Nói chuyện",
+            "Talk",
+            "Bicara"
+        };
+        internal static LocalizedString mission = new string[3]
+        {
+            "Nhiệm vụ",
+            "Quest",
+            "Misi"
+        };
         #region Methods and fields
         string[] strings;
 
