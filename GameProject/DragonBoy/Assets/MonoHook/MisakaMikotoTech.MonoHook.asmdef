@@ -1,0 +1,16 @@
+{
+    "name": "MisakaMikotoTech.MonoHook",
+    "rootNamespace": "MonoHook",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [
+        "iOS"
+    ],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
