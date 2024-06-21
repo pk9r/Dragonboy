@@ -40,7 +40,7 @@ namespace Mod.Auto
         static long lastTN;
         static long lastTimeCheckTN;
         static bool _isTanSatInternal;
-        static bool isPKThanMeo;
+        static bool isPKKarinSama;
         static bool isPKT77;
         static int minPeans;
 
@@ -79,7 +79,7 @@ namespace Mod.Auto
                 {
                     if (!isHarvestingPean)
                         isHarvestingPean = true;
-                    IsTanSat = isPKThanMeo = isPKT77 = false;
+                    IsTanSat = isPKKarinSama = isPKT77 = false;
                     if (TileMap.mapID != Char.myCharz().cgender + 21 && !XmapController.gI.IsActing)
                         XmapController.start(Char.myCharz().cgender + 21);
                 }
@@ -115,12 +115,13 @@ namespace Mod.Auto
                         Service.gI().openMenu(4);
                         Service.gI().confirmMenu(4, 0);
                     }
-                    if (Char.myCharz().xu >= 5000 && GameScr.gI().magicTree.level == 1 && GameScr.gI().magicTree.strInfo != LocalizedString.senzuTreeUpgrading && GameCanvas.gameTick % (60f * Time.timeScale) == 0f)
+                    if (Char.myCharz().xu >= 5000 && GameScr.gI().magicTree.level == 1 && (GameScr.gI().magicTree.strInfo != LocalizedString.senzuTreeUpgrading || !GameScr.gI().magicTree.isUpdate) && GameCanvas.gameTick % (60f * Time.timeScale) == 0f)
                     {
                         Service.gI().openMenu(4);
                         Service.gI().confirmMenu(4, 1);
                         Service.gI().confirmMenu(5, 0);
                         GameScr.gI().magicTree.strInfo = LocalizedString.senzuTreeUpgrading;
+                        GameScr.gI().magicTree.isUpdate = true;
                         isHarvestingPean = false;
                     }
                     if (GameCanvas.menu.showMenu)
@@ -138,7 +139,7 @@ namespace Mod.Auto
                 {
                     if (IsTanSat && !AutoPick())
                         TanSat();
-                    if (isPKThanMeo)
+                    if (isPKKarinSama)
                         PKThanMeo();
                     else if (isPKT77)
                         PKT77();
@@ -664,42 +665,37 @@ namespace Mod.Auto
                 maxHPMob = 500;
             if (minHPMob != 499)
                 minHPMob = 499;
-            if (Char.myCharz().taskMaint.index == 0)
+            if (Char.myCharz().taskMaint.index < 3)
             {
-                if (TileMap.mapID == 2 + Char.myCharz().cgender * 7)
+                //0  1  2
+                //TD NM XD  0
+                //NM TD XD  1
+                //XD TD NM  2
+                int mapID = 2 + Char.myCharz().cgender * 7;
+                if (Char.myCharz().taskMaint.index == 1) 
+                {
+                    if (Char.myCharz().cgender == 0)
+                        mapID = 9;
+                    else
+                        mapID = 2;
+                }
+                if (Char.myCharz().taskMaint.index == 2) 
+                {
+                    if (Char.myCharz().cgender == 2)
+                        mapID = 9;
+                    else
+                        mapID = 16;
+                } 
+                if (TileMap.mapID == mapID)
                     IsTanSat = true;
                 else
                 {
                     IsTanSat = false;
                     if (!XmapController.gI.IsActing)
-                        XmapController.start(2 + Char.myCharz().cgender * 7);
+                        XmapController.start(mapID);
                 }
             }
-            else if (Char.myCharz().taskMaint.index == 1)
-            {
-                int num = (Char.myCharz().cgender + 1) % 3;
-                if (TileMap.mapID == 2 + num * 7)
-                    IsTanSat = true;
-                else
-                {
-                    IsTanSat = false;
-                    if (!XmapController.gI.IsActing)
-                        XmapController.start(2 + num * 7);
-                }
-            }
-            else if (Char.myCharz().taskMaint.index == 2)
-            {
-                int num2 = (Char.myCharz().cgender + 2) % 3;
-                if (TileMap.mapID == 2 + num2 * 7)
-                    IsTanSat = true;
-                else
-                {
-                    IsTanSat = false;
-                    if (!XmapController.gI.IsActing)
-                        XmapController.start(2 + num2 * 7);
-                }
-            }
-            else if (Char.myCharz().taskMaint.index == 3)
+            else
             {
                 IsTanSat = false;
                 maxHPMob = int.MaxValue;
@@ -890,15 +886,16 @@ namespace Mod.Auto
         /// </summary>
         static void AutoNV10()
         {
-            isPKThanMeo = false;
+            isPKKarinSama = false;
             isPKT77 = false;
             minPeans = Char.myCharz().taskMaint.index > 1 ? 0 : 7;
             if (Char.myCharz().taskMaint.index == 0)
             {
                 if (TileMap.mapID == 46)
                 {
-                    if (GameScr.findNPCInMap(18) == null || GameScr.findNPCInMap(18).isHide)
-                        isPKThanMeo = true;
+                    Npc karinSama = GameScr.findNPCInMap(18);
+                    if (karinSama == null || karinSama.isHide)
+                        isPKKarinSama = true;
                     else
                     {
                         if (Char.myCharz().cx != 421 || Char.myCharz().cy != 408)
@@ -988,20 +985,30 @@ namespace Mod.Auto
         /// </summary>
         static void AutoNV11()
         {
-            if (Char.myCharz().cgender == 0)
-            {
-                if (TileMap.mapID != 5 && !XmapController.gI.IsActing)
-                    XmapController.start(5);
-            }
-            else if (Char.myCharz().cgender == 1)
-            {
-                if (TileMap.mapID != 13 && !XmapController.gI.IsActing)
-                    XmapController.start(13);
-            }
-            else if (Char.myCharz().cgender == 2 && TileMap.mapID != 20 && !XmapController.gI.IsActing)
+            if (XmapController.gI.IsActing)
+                return;
+            if (Char.myCharz().cgender == 0 && TileMap.mapID != 5)
+                XmapController.start(5);
+            else if (Char.myCharz().cgender == 1 && TileMap.mapID != 13)
+                XmapController.start(13);
+            else if (Char.myCharz().cgender == 2 && TileMap.mapID != 20)
                 XmapController.start(20);
-            if (TileMap.mapID == 5 || TileMap.mapID == 13 || TileMap.mapID == 20)
-                Service.gI().openMenu(13 + Char.myCharz().cgender);
+            else if (TileMap.mapID == 5 || TileMap.mapID == 13 || TileMap.mapID == 20)
+            {
+                if (!GameCanvas.menu.showMenu)
+                    Service.gI().openMenu(13 + Char.myCharz().cgender);
+                else
+                {
+                    if (GameCanvas.menu.menuItems.size() > 0)
+                    {
+                        Command command = (Command)GameCanvas.menu.menuItems.elementAt(0);
+                        if (command.caption.Replace('\n', ' ') == LocalizedString.talk || command.caption.Replace('\n', ' ') == LocalizedString.mission)
+                            command.performAction();
+                    }
+                    GameCanvas.menu.doCloseMenu();
+                    Char.chatPopup = null;
+                }
+            }
         }
 
         static void PKThanMeo()
