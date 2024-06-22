@@ -34,6 +34,8 @@
         internal static string showPetInCharListDescription = "";
         internal static string autoTrainForNewbieTitle = "";
         internal static string autoTrainForNewbieDescription = "";
+        internal static string autoSellTrashItemsTitle = "";
+        internal static string autoSellTrashItemsDescription = "";
         internal static string noLongerNewAccount = "";
         internal static string customBackgroundTitle = "";
         internal static string customBackgroundDescription = "";
@@ -261,6 +263,7 @@
         internal static string addUserAoToAccountManagerDescription = "";
         internal static string openedByExternalAccountManager = "";
         internal static string accountAlreadyRegistered = "";
+        internal static string autoSellTrashItemsBoxFull = "";
         #endregion
 
         internal static void LoadLanguage(sbyte newLanguage)
@@ -461,6 +464,7 @@
             inGameAccountManagerServerPortInvalid = "Cổng server không hợp lệ";
             inGameAccountManagerUnregisteredAccountAlreadyAdded = "Tài khoản đã có trong danh sách";
             inGameAccountManagerAccountAdded = "Đã thêm tài khoản vào danh sách";
+            autoSellTrashItemsBoxFull = "Rương đã đầy, không thể chứa thêm đồ";
             //---------------------------------------------------
             //mod menu
             modMenuPanelTabName = new string[][]
@@ -480,6 +484,8 @@
             autoTrainForNewbieTitle = "Tự động up SS";
             autoTrainForNewbieDescription = "Tự động up acc mới đến nhiệm vụ vào bang";
             noLongerNewAccount = "Bạn đã qua nhiệm vụ vào bang";
+            autoSellTrashItemsTitle = "Tự động bán đồ rác";
+            autoSellTrashItemsDescription = "Tự động bán vật phẩm không cần thiết khi hành trang đầy và cất đồ giá trị vào rương, bạn nên dọn sạch hành trang của mình trước khi bật để tránh bị mất vật phẩm";
             customBackgroundTitle = "Hình nền tùy chỉnh";
             customBackgroundDescription = "Thay thế hình nền mặc định của game bằng hình nền tùy chỉnh";
             skipSpaceshipTitle = "Bỏ qua tàu vũ trụ";
@@ -763,6 +769,7 @@
             inGameAccountManagerServerPortInvalid = "Invalid server port";
             inGameAccountManagerUnregisteredAccountAlreadyAdded = "Account has already been added";
             inGameAccountManagerAccountAdded = "Account has been added to the account list";
+            autoSellTrashItemsBoxFull = "Your chest is full, new items can't be stored";
             //---------------------------------------------------
             //mod menu
             modMenuPanelTabName = new string[][]
@@ -782,6 +789,8 @@
             autoTrainForNewbieTitle = "Auto train new account";
             autoTrainForNewbieDescription = "Auto train new account until the clan mission";
             noLongerNewAccount = "You have completed the clan mission";
+            autoSellTrashItemsTitle = "Auto sell trash items";
+            autoSellTrashItemsDescription = "Automatically sell unnecessary items when the inventory is full and store valuable items in the chest, you should clean your inventory before enabling this feature to avoid losing items";
             customBackgroundTitle = "Custom background";
             customBackgroundDescription = "Replace the game default background with custom background";
             skipSpaceshipTitle = "Skip spaceship";

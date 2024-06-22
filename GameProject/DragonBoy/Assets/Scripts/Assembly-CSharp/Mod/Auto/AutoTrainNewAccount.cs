@@ -1,6 +1,5 @@
 ﻿using System;
 using Assets.src.g;
-using Mod.ModMenu;
 using Mod.R;
 using Mod.Xmap;
 using UnityEngine;
@@ -22,7 +21,6 @@ namespace Mod.Auto
                 _isTanSatInternal = value;
             }
         }
-        static long lastTimeDoubleClick;
         internal static bool isPicking;
         static long lastTimePickedItem;
         internal static bool isNhapCodeTanThu;
@@ -30,8 +28,6 @@ namespace Mod.Auto
         static int myMinMP = 15;
         static long lastTimeEatPean;
         static int myMinHP = 15;
-        static int stepXuLyDo = 2;
-        static long lastTimeXuLyDo;
         static long lastTimeAutoPoint;
         static int minHPMob;
         static int maxHPMob = int.MaxValue;
@@ -73,8 +69,6 @@ namespace Mod.Auto
                     Char.chatPopup = null;
                     isNhapCodeTanThu = false;
                 }
-                //if (isNeedMorePean && (Char.myCharz().cgender != 1 && GameScr.hpPotion >= 20 || Char.myCharz().cgender == 1 && GameScr.hpPotion >= 30))
-                //isNeedMorePean = false;
                 if (GameScr.hpPotion <= 0 && (Char.myCharz().cMP < 15 || Char.myCharz().cHP < 15))
                 {
                     if (!isHarvestingPean)
@@ -127,15 +121,11 @@ namespace Mod.Auto
                     if (GameCanvas.menu.showMenu)
                         GameCanvas.menu.doCloseMenu();
                 }
-                if (!isNhapCodeTanThu && !isHarvestingPean && !isPicking && GameCanvas.gameTick % (30 * (int)Time.timeScale) == 0 && Char.myCharz().cHP > 1 && !GameScr.gI().isBagFull() && stepXuLyDo > 1 && Char.myCharz().taskMaint.taskId <= 11)
+                if (!isNhapCodeTanThu && !isHarvestingPean && !isPicking && GameCanvas.gameTick % (30 * (int)Time.timeScale) == 0 && Char.myCharz().cHP > 1 && !GameScr.gI().isBagFull() && Char.myCharz().taskMaint.taskId <= 11)
                     AutoNV();
                 if (Char.myCharz().taskMaint.taskId > 3 && Char.myCharz().taskMaint.taskId <= 11)
                     AutoPoint();
-                if (GameScr.gI().isBagFull())
-                    stepXuLyDo = 0;
-                if (stepXuLyDo < 2)
-                    XuLyDo();
-                if (!XmapController.gI.IsActing && !isNhapCodeTanThu && !isHarvestingPean && Char.myCharz().cHP > 1 && !GameScr.gI().isBagFull() && stepXuLyDo > 1 && Char.myCharz().taskMaint.taskId <= 11 && (minPeans <= 0 || GameScr.hpPotion >= minPeans))
+                if (!XmapController.gI.IsActing && !isNhapCodeTanThu && !isHarvestingPean && Char.myCharz().cHP > 1 && !GameScr.gI().isBagFull() && Char.myCharz().taskMaint.taskId <= 11 && (minPeans <= 0 || GameScr.hpPotion >= minPeans))
                 {
                     if (IsTanSat && !AutoPick())
                         TanSat();
@@ -146,109 +136,6 @@ namespace Mod.Auto
                 }
             }
             catch (Exception ex) { Debug.LogException(ex); }
-        }
-
-        static bool IsItemVip(Item item)
-        {
-            if (item.template.type <= 4)
-            {
-                for (int i = 0; i < item.itemOption.Length; i++)
-                {
-                    ItemOption itemOption = item.itemOption[i];
-                    if (itemOption.optionTemplate.name.StartsWith("$")
-                        || itemOption.optionTemplate.id == 107)
-                        return true;
-                }
-                return false;
-            }
-            if (item.template.type == 23)
-                return false;
-            if (item.template.type != 6)
-                return item.template.id != 225;
-            return false;
-        }
-
-        static void XuLyDo()
-        {
-            IsTanSat = false;
-            if (stepXuLyDo == 0 && !HasAnyVipItem())
-                stepXuLyDo++;
-            if (stepXuLyDo == 0)
-            {
-                if (TileMap.mapID != Char.myCharz().cgender + 21)
-                {
-                    if (!XmapController.gI.IsActing)
-                        XmapController.start(Char.myCharz().cgender + 21);
-                }
-                else
-                {
-                    if (Char.myCharz().cgender == 0 && (Math.Abs(Char.myCharz().cx - 85) > 10 || Math.Abs(Char.myCharz().cy - 336) > 10))
-                        Utils.TeleportMyChar(85, 336);
-                    if (Char.myCharz().cgender == 2 && (Math.Abs(Char.myCharz().cx - 94) > 10 || Math.Abs(Char.myCharz().cy - 336) > 10))
-                        Utils.TeleportMyChar(94, 336);
-                    if (Char.myCharz().cgender == 1 && (Math.Abs(Char.myCharz().cx - 638) > 10 || Math.Abs(Char.myCharz().cy - 336) > 10))
-                        Utils.TeleportMyChar(638, 336);
-                }
-                if (mSystem.currentTimeMillis() - lastTimeXuLyDo > 750)
-                {
-                    lastTimeXuLyDo = mSystem.currentTimeMillis();
-                    bool isCatDoVaoRuongXong = false;
-                    for (int i = Char.myCharz().arrItemBag.Length - 1; i >= 0; i--)
-                    {
-                        Item item = Char.myCharz().arrItemBag[i];
-                        if (item != null && IsItemVip(item))
-                        {
-                            Service.gI().getItem(1, (sbyte)i);
-                            isCatDoVaoRuongXong = true;
-                            break;
-                        }
-                    }
-                    if (!isCatDoVaoRuongXong)
-                        stepXuLyDo++;
-                }
-            }
-            if (stepXuLyDo != 1)
-                return;
-            if (TileMap.mapID != Char.myCharz().cgender + 24)
-            {
-                if (!XmapController.gI.IsActing)
-                    XmapController.start(Char.myCharz().cgender + 24);
-                return;
-            }
-            if (TileMap.mapID == 24)
-            {
-                if (Char.myCharz().cx != 389 || Char.myCharz().cy != 336)
-                    Utils.TeleportMyChar(389, 336);
-            }
-            else if (TileMap.mapID == 25)
-            {
-                if (Char.myCharz().cx != 508 || Char.myCharz().cy != 336)
-                    Utils.TeleportMyChar(508, 336);
-            }
-            else if (TileMap.mapID == 26 && (Char.myCharz().cx != 511 || Char.myCharz().cy != 336))
-                Utils.TeleportMyChar(511, 336);
-            if (!GameCanvas.panel.isShow)
-                Service.gI().openMenu(16);
-            else
-            {
-                if (mSystem.currentTimeMillis() - lastTimeXuLyDo <= 750)
-                    return;
-                lastTimeXuLyDo = mSystem.currentTimeMillis();
-                bool isBanDoXong = false;
-                for (int i = Char.myCharz().arrItemBag.Length - 1; i >= 0; i--)
-                {
-                    Item item2 = Char.myCharz().arrItemBag[i];
-                    if (item2 != null && !IsItemVip(item2) && item2.template.type != 23)
-                    {
-                        Service.gI().saleItem(0, 1, (short)i);
-                        Service.gI().saleItem(1, 1, (short)i);
-                        isBanDoXong = true;
-                        break;
-                    }
-                }
-                if (!isBanDoXong)
-                    stepXuLyDo++;
-            }
         }
 
         static void AutoPoint()
@@ -1068,17 +955,6 @@ namespace Mod.Auto
                 }
                 break;
             }
-        }
-
-        static bool HasAnyVipItem()
-        {
-            for (int num = Char.myCharz().arrItemBag.Length - 1; num >= 0; num--)
-            {
-                Item item = Char.myCharz().arrItemBag[num];
-                if (item != null && IsItemVip(item))
-                    return true;
-            }
-            return false;
         }
 
         internal static void SetState(bool value) => isEnabled = value;

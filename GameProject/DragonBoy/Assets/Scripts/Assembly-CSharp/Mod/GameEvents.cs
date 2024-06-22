@@ -391,11 +391,12 @@ namespace Mod
             TeleportMenuMain.Update();
             //ListCharsInMap.Update();
             AutoGoback.update();
-            AutoTrainNewAccount.Update();
+            if (!AutoSellTrashItems.IsRunning)
+                AutoTrainNewAccount.Update();
             //AutoItem.update();
             AutoTrainPet.Update();
             //SuicideRange.update();
-            //if (!AutoSS.isAutoSS && !AutoT77.isAutoT77)
+            AutoSellTrashItems.Update();
             if (!AutoTrainNewAccount.isEnabled && !AutoGoback.isGoingBack)
             {
                 if (Pk9rPickMob.IsTanSat)

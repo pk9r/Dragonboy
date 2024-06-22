@@ -159,6 +159,14 @@ namespace Mod.ModMenu
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
+                    ID = "AutoSellTrashItems_Toggle",
+                    Title = Strings.autoSellTrashItemsTitle,
+                    Description = Strings.autoSellTrashItemsDescription,
+                    GetValueFunc = () => AutoSellTrashItems.isEnabled,
+                    SetValueAction = AutoSellTrashItems.SetState
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
                     ID = "ShowTargetInfo_Toggle",
                     Title = Strings.showTargetInfoTitle,
                     Description = Strings.showTargetInfoDescription,

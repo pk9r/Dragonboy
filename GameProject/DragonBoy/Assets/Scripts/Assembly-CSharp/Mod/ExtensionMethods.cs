@@ -68,7 +68,7 @@ namespace Mod
                 for (int i = 0; i < item.itemOption.Length; i++)
                     if (item.itemOption[i].optionTemplate.id == 72)
                     {
-                        text = text + " [+" + item.itemOption[i].param.ToString() + "]";
+                        text = $"{text} [+{item.itemOption[i].param}]";
                         break;
                     }
             if (item.itemOption != null)
@@ -77,19 +77,19 @@ namespace Mod
                     {
                         string optionColor = item.itemOption[j].getOptiongColor();
                         if (item.itemOption[j].param == 1)
-                            text = text + "\n" + optionColor;
+                            text = $"{text}\n{optionColor}";
                         if (item.itemOption[j].param == 0)
-                            text = text + "\n" + optionColor;
+                            text = $"{text}\n{optionColor}";
                     }
                     else
                     {
                         string optionString = item.itemOption[j].getOptionString();
-                        if (!optionString.Equals(string.Empty) && item.itemOption[j].optionTemplate.id != 72)
-                            text = text + "\n" + optionString;
+                        if (!string.IsNullOrEmpty(optionString) && item.itemOption[j].optionTemplate.id != 72)
+                            text = $"{text}\n{optionString}";
                     }
             if (item.template.strRequire > 1)
-                text += "\n" + mResources.pow_request + ": " + item.template.strRequire.ToString();
-            return text + "\n" + item.template.description;
+                text += $"\n{mResources.pow_request}: {item.template.strRequire}";
+            return $"{text}\n{item.template.description}";
         }
 
         internal static T getValueProperty<T>(this object obj, string name)
@@ -320,7 +320,7 @@ namespace Mod
                     if (ch.charEffectTime.isHypnotizedByMe)
                         num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point + 5;
                 }
-                else if (Char.myCharz().cgender == 0) 
+                else if (Char.myCharz().cgender == 0)
                     num = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[6]).point + 5;
             }
             catch
@@ -417,7 +417,7 @@ namespace Mod
             {
                 if (ch.cgender == 0)
                     return "<color=#0080ffff>TĐ</color>";
-                else if (ch.cgender == 1) 
+                else if (ch.cgender == 1)
                     return "<color=#00c000ff>NM</color>";
                 else if (ch.cgender == 2)
                     return "<color=#ffff80ff>XD</color>";
@@ -566,7 +566,7 @@ namespace Mod
                 waypoint.minX > TileMap.pxw - 60 ? TileMap.pxw - 15 :
                 waypoint.minX + ((waypoint.maxX - waypoint.minX) / 2);
         }
-        
+
         internal static int GetXInsideMap(this Waypoint waypoint)
         {
             return waypoint.maxX < TileMap.size ? TileMap.size :
@@ -577,6 +577,20 @@ namespace Mod
         internal static int GetY(this Waypoint waypoint)
         {
             return waypoint.maxY;
+        }
+
+        internal static bool IsWearableAndVip(this Item item)
+        {
+            if (item.template.type <= 4)
+            {
+                for (int i = 0; i < item.itemOption.Length; i++)
+                {
+                    ItemOption itemOption = item.itemOption[i];
+                    if ((itemOption.optionTemplate.id >= 127 && itemOption.optionTemplate.id <= 135) || (itemOption.optionTemplate.id <= 36 && itemOption.optionTemplate.id >= 34) || itemOption.optionTemplate.name.StartsWith("$") || itemOption.optionTemplate.id == 107)
+                        return true;
+                }
+            }
+            return false;
         }
 
 #if UNITY_EDITOR
