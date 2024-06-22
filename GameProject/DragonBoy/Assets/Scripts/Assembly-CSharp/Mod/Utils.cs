@@ -12,6 +12,9 @@ namespace Mod
 {
     internal static class Utils
     {
+        static string persistentDataPath = Application.persistentDataPath;
+        internal static string PersistentDataPath => persistentDataPath;
+
         internal static readonly string dataPath = Path.Combine(GetRootDataPath(), "CommonModData");
 
         internal static readonly string PathAutoChat = Path.Combine(dataPath, "autochat.txt");
@@ -42,6 +45,7 @@ namespace Mod
 
         static bool isOpenedByExternalAccountManager;
         internal static bool IsOpenedByExternalAccountManager => isOpenedByExternalAccountManager;
+
 
         /// <summary>
         /// Kiểm tra xem game đang chạy trên Android hay không.
@@ -406,7 +410,7 @@ namespace Mod
         {
             if (IsMeInNRDMap() || waypointLeft == null)
                 TeleportMyChar(60);
-            else 
+            else
                 ChangeMap(waypointLeft);
         }
 
@@ -451,7 +455,7 @@ namespace Mod
             }
             else if (waypointMiddle == null)
                 TeleportMyChar(TileMap.pxw / 2);
-            else 
+            else
                 ChangeMap(waypointMiddle);
         }
 
@@ -460,7 +464,7 @@ namespace Mod
         {
             if (IsMeInNRDMap() || waypointRight == null)
                 TeleportMyChar(TileMap.pxw - 60);
-            else 
+            else
                 ChangeMap(waypointRight);
         }
 
@@ -532,7 +536,7 @@ namespace Mod
             string path = dataPath;
             if (!isCommon)
                 path = Path.Combine(Rms.GetiPhoneDocumentsPath(), "ModData");
-            FileStream fileStream = new FileStream(Path.Combine(path, name), FileMode.Open); 
+            FileStream fileStream = new FileStream(Path.Combine(path, name), FileMode.Open);
             StreamReader streamReader = new StreamReader(fileStream);
             string result = streamReader.ReadToEnd();
             streamReader.Close();
@@ -545,7 +549,7 @@ namespace Mod
             string path = dataPath;
             if (!isCommon)
                 path = Path.Combine(Rms.GetiPhoneDocumentsPath(), "ModData");
-            FileStream fileStream = new FileStream(Path.Combine(path, name), FileMode.Open); 
+            FileStream fileStream = new FileStream(Path.Combine(path, name), FileMode.Open);
             byte[] array = new byte[4];
             fileStream.Read(array, 0, 4);
             fileStream.Close();
@@ -573,7 +577,7 @@ namespace Mod
                 return true;
             }
             catch (Exception ex) { Debug.LogException(ex); }
-            return false; 
+            return false;
         }
 
         internal static bool TryLoadDataString(string name, out string value, bool isCommon = true)
@@ -858,7 +862,7 @@ namespace Mod
             double scaled = number * Math.Pow(1000, -degree);
             return $"{scaled:0.##}{prefix[degree]}";
         }
-        
+
         internal static void ResetTextField(ChatTextField chatTextField)
         {
             if (chatTextField == null)
@@ -907,7 +911,7 @@ namespace Mod
         {
             string result = Path.Combine(Path.GetDirectoryName(Application.dataPath), "Data");
             if (IsEditor() || IsAndroidBuild())
-                result = Application.persistentDataPath;
+                result = PersistentDataPath;
             return result;
         }
 

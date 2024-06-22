@@ -353,7 +353,7 @@ namespace Mod
 
                     account.Info.Name = Char.myCharz().cName;
                     account.Info.CharID = Char.myCharz().charID;
-                    account.Info.Gender = (sbyte)Char.myCharz().cgender;   
+                    account.Info.Gender = (sbyte)Char.myCharz().cgender;
                     account.Info.EXP = Char.myCharz().cPower;
                     account.Info.MaxHP = Char.myCharz().cHPFull;
                     account.Info.MaxMP = Char.myCharz().cMPFull;
@@ -789,7 +789,7 @@ namespace Mod
         {
             string streamingAssetsPath = Application.streamingAssetsPath;
             if (Utils.IsAndroidBuild())
-                streamingAssetsPath = Path.Combine(Application.persistentDataPath, "StreamingAssets");
+                streamingAssetsPath = Path.Combine(Utils.PersistentDataPath, "StreamingAssets");
             string customAssetsPath = Path.Combine(streamingAssetsPath, "CustomAssets");
             image = new Image();
             Texture2D texture2D;

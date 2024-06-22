@@ -65,10 +65,12 @@ public class PipelineBuild : IPostBuildPlayerScriptDLLs
         getMethodFromHandle.Parameters.Add(new ParameterDefinition("handle", ParameterAttributes.None, runtimeMethodHandle));
 
         //TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod, T2 originalProxyMethod)
-        MethodDefinition tryInstallHookGeneric = gameEventHook.Methods.First(m => m.Name == "TryInstallHook" && m.GenericParameters.Count == 2);    
+        MethodDefinition tryInstallHookGeneric_withTrampoline = gameEventHook.Methods.First(m => m.Name == "TryInstallHook" && m.GenericParameters.Count == 2 && m.Parameters.Count == 3);
+        //TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod)
+        MethodDefinition tryInstallHookGeneric = gameEventHook.Methods.First(m => m.Name == "TryInstallHook" && m.GenericParameters.Count == 2 && m.Parameters.Count == 2);
 
         //TryInstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
-        MethodDefinition tryInstallHook = gameEventHook.Methods.First(m => m.Name == "TryInstallHook" && m.GenericParameters.Count == 0);    
+        MethodDefinition tryInstallHook = gameEventHook.Methods.First(m => m.Name == "TryInstallHook" && m.GenericParameters.Count == 0);
 
         List<Instruction> instructions = new List<Instruction>();
         int paramCount = 0;
@@ -78,7 +80,7 @@ public class PipelineBuild : IPostBuildPlayerScriptDLLs
             if (instruction.OpCode == OpCodes.Ldftn)
             {
                 //ldftn     <target/hook/trampoline method>
-                if (instruction.Operand is MethodDefinition methodDef)    
+                if (instruction.Operand is MethodDefinition methodDef)
                 {
                     instructions.Add(Instruction.Create(OpCodes.Ldtoken, methodDef));
                     instructions.Add(Instruction.Create(OpCodes.Call, getMethodFromHandle));
@@ -89,7 +91,7 @@ public class PipelineBuild : IPostBuildPlayerScriptDLLs
             else if (instruction.OpCode == OpCodes.Ldvirtftn)
             {
                 //ldvirtftn     <target method (virtual)>
-                if (i >= 2 && instruction.Operand is MethodDefinition methodDef)    
+                if (i >= 2 && instruction.Operand is MethodDefinition methodDef)
                 {
                     Instruction instruction1 = installAll.Body.Instructions[i - 1];
                     Instruction instruction2 = installAll.Body.Instructions[i - 2];
@@ -106,7 +108,7 @@ public class PipelineBuild : IPostBuildPlayerScriptDLLs
             else if (instruction.OpCode == OpCodes.Ldtoken)
             {
                 //ldtoken       <some type>
-                if (i + 4 < installAll.Body.Instructions.Count && instruction.Operand is TypeDefinition typeToGetConstructor)    
+                if (i + 4 < installAll.Body.Instructions.Count && instruction.Operand is TypeDefinition typeToGetConstructor)
                 {
                     Instruction instruction2 = installAll.Body.Instructions[i + 1];
                     Instruction instruction3 = installAll.Body.Instructions[i + 2];
@@ -115,7 +117,7 @@ public class PipelineBuild : IPostBuildPlayerScriptDLLs
                     if (instruction2.OpCode == OpCodes.Call && instruction2.Operand is MethodReference getTypeFromHandle && getTypeFromHandle.Name == nameof(Type.GetTypeFromHandle))
                     {
                         //typeof(<some type>).GetConstructor(new Type[<some number>] {typeof(...), ... })
-                        if (instruction3.IsLdcI4() && 
+                        if (instruction3.IsLdcI4() &&
                             instruction4.OpCode == OpCodes.Newarr && instruction4.Operand is TypeReference typeReference2 && typeReference2.Name == nameof(Type))
                         {
                             //ldc.i4     <number of types>
@@ -144,9 +146,9 @@ public class PipelineBuild : IPostBuildPlayerScriptDLLs
                             paramCount++;
                         }
                         //typeof(<some type>).GetConstructors()[0]
-                        else if (instruction3.OpCode == OpCodes.Call && instruction3.Operand is MethodReference getConstructors && getConstructors.Name == nameof(Type.GetConstructors) && 
-                            instruction4.OpCode == OpCodes.Ldc_I4_0 && 
-                            instruction5.OpCode == OpCodes.Ldelem_Ref)    
+                        else if (instruction3.OpCode == OpCodes.Call && instruction3.Operand is MethodReference getConstructors && getConstructors.Name == nameof(Type.GetConstructors) &&
+                            instruction4.OpCode == OpCodes.Ldc_I4_0 &&
+                            instruction5.OpCode == OpCodes.Ldelem_Ref)
                         {
                             instructions.Add(Instruction.Create(OpCodes.Ldtoken, typeToGetConstructor.Methods.First(m => m.IsConstructor)));
                             instructions.Add(Instruction.Create(OpCodes.Call, getMethodFromHandle));
@@ -158,14 +160,28 @@ public class PipelineBuild : IPostBuildPlayerScriptDLLs
             }
             else if (instruction.OpCode == OpCodes.Call)
             {
-                //call      TryInstallHook<T1, T2>(.....)
-                if (instruction.Operand is MethodSpecification methodSpec && methodSpec.Resolve() == tryInstallHookGeneric)    
+                if (instruction.Operand is MethodSpecification methodSpec)
                 {
-                    instructions.Add(Instruction.Create(OpCodes.Call, tryInstallHook));
-                    paramCount = 0; //param count always equals 3 so no need to check
+                    //call      TryInstallHook<T1, T2>([target method], [hook method], [trampoline method])
+                    if (methodSpec.Resolve() == tryInstallHookGeneric_withTrampoline && paramCount == 3)
+                    {
+                        instructions.Add(Instruction.Create(OpCodes.Call, tryInstallHook));
+                        paramCount = 0;
+                    }
+                    //call      TryInstallHook<T1, T2>([target method], [hook method])
+                    else if (methodSpec.Resolve() == tryInstallHookGeneric && paramCount == 2)
+                    {
+                        while (paramCount < 3)
+                        {
+                            instructions.Add(Instruction.Create(OpCodes.Ldnull));
+                            paramCount++;
+                        }
+                        instructions.Add(Instruction.Create(OpCodes.Call, tryInstallHook));
+                        paramCount = 0;
+                    }
                 }
                 //call      TryInstallHook(.....)
-                else if (instruction.Operand is MethodDefinition methodDefinition && methodDefinition == tryInstallHook)   
+                else if (instruction.Operand is MethodDefinition methodDefinition && methodDefinition == tryInstallHook)
                 {
                     //trampoline method can be null
                     while (paramCount < 3)

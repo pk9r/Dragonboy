@@ -63,8 +63,11 @@ namespace Mod
             TryInstallHook<Func<string, Image>, Func<string, Image>>(Image.createImage, Image_createImage_hook, Image_createImage_original);
             TryInstallHook<Func<string>, Func<string>>(Rms.GetiPhoneDocumentsPath, Rms_GetiPhoneDocumentsPath_hook, Rms_GetiPhoneDocumentsPath_original);
             TryInstallHook<Action<string, string>, Action<string, string>>(Rms.saveRMSString, Rms_saveRMSString_hook, Rms_saveRMSString_original);
-            TryInstallHook(new Action(ServerListScreen.saveIP).Method, new Action(ServerListScreen_saveIP_hook).Method, null);
-            TryInstallHook(new Action(ServerListScreen.loadIP).Method, new Action(ServerListScreen_loadIP_hook).Method, null);
+            TryInstallHook<Action<string, sbyte[]>, Action<string, sbyte[]>>(Rms.saveRMS, Rms_saveRMS_hook);
+            TryInstallHook<Func<string, sbyte[]>, Func<string, sbyte[]>>(Rms.loadRMS, Rms_loadRMS_hook);
+            TryInstallHook<Action, Action>(ServerListScreen.saveIP, ServerListScreen_saveIP_hook);
+            TryInstallHook<Action, Action>(ServerListScreen.loadIP, ServerListScreen_loadIP_hook);
+            TryInstallHook<Action<string>, Action<string>>(ServerListScreen.getServerList, ServerListScreen_getServerList_hook, ServerListScreen_getServerList_original);
             TryInstallHook(typeof(Panel).GetConstructor(new Type[0]), new Action<Panel>(Panel_ctor_hook).Method, new Action<Panel>(Panel__ctor_original).Method);
 
             TryInstallHook<Action, Action<GameScr>>(gameScr.updateKey, GameScr_updateKey_hook, GameScr_updateKey_original);
@@ -680,6 +683,16 @@ namespace Mod
             Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
         }
 
+        static sbyte[] Rms_loadRMS_hook(string filename)
+        {
+            return Rms.__loadRMS(filename);
+        }
+
+        static void Rms_saveRMS_hook(string filename, sbyte[] data)
+        {
+            Rms.__saveRMS(filename, data);
+        }
+
         static void GameScr_updateKey_hook(GameScr _this)
         {
             if (!Controller.isStopReadMessage && !Char.myCharz().isTeleport && !Char.myCharz().isPaintNewSkill && !InfoDlg.isLock)
@@ -1207,6 +1220,16 @@ namespace Mod
             GameEvents.OnLoadIP();
         }
 
+        static void ServerListScreen_getServerList_hook(string obj)
+        {
+            ServerListScreen_getServerList_original(Strings.DEFAULT_IP_SERVERS);
+        }
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static void ServerListScreen_getServerList_original(string obj)
+        {
+            Debug.LogError("If you see this line of text in your log file, it means your hook is not installed, cannot be installed, or is installed incorrectly!");
+        }
+
         static void LoginScr_switchToMe_hook(LoginScr _this)
         {
             LoginScr_switchToMe_original(_this);
@@ -1485,7 +1508,9 @@ namespace Mod
             MethodDefinition installAll_d = gameEventHook_d.Methods.First(m => m.Name == nameof(InstallAll));
 
             //TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod, T2 originalProxyMethod)
-            MethodDefinition tryInstallHookGeneric_d = gameEventHook_d.Methods.First(m => m.Name == nameof(TryInstallHook) && m.GenericParameters.Count == 2);
+            MethodDefinition tryInstallHookGeneric_withTrampoline_d = gameEventHook_d.Methods.First(m => m.Name == nameof(TryInstallHook) && m.GenericParameters.Count == 2 && m.Parameters.Count == 3);
+            //TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod)
+            MethodDefinition tryInstallHookGeneric_d = gameEventHook_d.Methods.First(m => m.Name == nameof(TryInstallHook) && m.GenericParameters.Count == 2 && m.Parameters.Count == 2);
 
             //TryInstallHook(MethodBase hookTargetMethod, MethodBase hookMethod, MethodBase originalProxyMethod)
             MethodDefinition tryInstallHook_d = gameEventHook_d.Methods.First(m => m.Name == nameof(TryInstallHook) && m.GenericParameters.Count == 0);
@@ -1590,11 +1615,25 @@ namespace Mod
                 }
                 else if (instruction.OpCode == OpCodes.Call)
                 {
-                    //call      TryInstallHook<T1, T2>(.....)
-                    if (instruction.Operand is MethodSpecification methodSpec && methodSpec.Resolve() == tryInstallHookGeneric_d)
+                    if (instruction.Operand is MethodSpecification methodSpec)
                     {
-                        il.Emit(ROpCodes.Call, tryInstallHook);
-                        paramCount = 0; //param count always equals 3 so no need to check
+                        //call      TryInstallHook<T1, T2>([target method], [hook method], [trampoline method])
+                        if (methodSpec.Resolve() == tryInstallHookGeneric_withTrampoline_d && paramCount == 3)
+                        {
+                            il.Emit(ROpCodes.Call, tryInstallHook);
+                            paramCount = 0;
+                        }
+                        //call      TryInstallHook<T1, T2>([target method], [hook method])
+                        else if (methodSpec.Resolve() == tryInstallHookGeneric_d && paramCount == 2)
+                        {
+                            while (paramCount < 3)
+                            {
+                                il.Emit(ROpCodes.Ldnull);
+                                paramCount++;
+                            }
+                            il.Emit(ROpCodes.Call, tryInstallHook);
+                            paramCount = 0;
+                        }
                     }
                     //call      TryInstallHook(.....)
                     else if (instruction.Operand is MethodDefinition methodDefinition && methodDefinition == tryInstallHook_d)
@@ -1616,6 +1655,15 @@ namespace Mod
             return installAllDynamic;
         }
 #endif
+
+        /// <summary>
+        /// Thử cài đặt 1 hook.
+        /// </summary>
+        /// <typeparam name="T1">Loại <see cref="Delegate"/> của <paramref name="hookTargetMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
+        /// <typeparam name="T2">Loại <see cref="Delegate"/> của <paramref name="hookMethod"/> và <paramref name="originalProxyMethod"/>, là <see cref="Action"/> nếu hàm không trả về giá trị và <see cref="Func{TResult}"/> nếu hàm trả về giá trị.</typeparam>
+        /// <param name="hookTargetMethod">Hàm để hook vào.</param>
+        /// <param name="hookMethod">Hàm mới được gọi thay thế hàm bị hook.</param>
+        static void TryInstallHook<T1, T2>(T1 hookTargetMethod, T2 hookMethod) where T1 : Delegate where T2 : Delegate => TryInstallHook(hookTargetMethod.Method, hookMethod.Method, null);
 
         /// <summary>
         /// Thử cài đặt 1 hook.
