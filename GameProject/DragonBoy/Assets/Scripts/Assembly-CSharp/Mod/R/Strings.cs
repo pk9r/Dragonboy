@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mod.TeleportMenu;
-
-namespace Mod.R
+﻿namespace Mod.R
 {
     internal static class Strings
     {
-        internal static readonly string DEFAULT_IP_SERVERS = "Vũ trụ 1:dragon1.teamobi.com:14445:0:0:0,Vũ trụ 2:dragon2.teamobi.com:14445:0:0:0,Vũ trụ 3:dragon3.teamobi.com:14445:0:0:0,Vũ trụ 4:dragon4.teamobi.com:14445:0:0:0,Vũ trụ 5:dragon5.teamobi.com:14445:0:0:0,Vũ trụ 6:dragon6.teamobi.com:14445:0:0:0,Vũ trụ 7:dragon7.teamobi.com:14445:0:0:0,Vũ trụ 8:dragon10.teamobi.com:14446:0:0:0,Vũ trụ 9:dragon10.teamobi.com:14447:0:0:0,Vũ trụ 10:dragon10.teamobi.com:14445:0:0:0,Vũ trụ 11:dragon11.teamobi.com:14445:0:0:0,Vũ trụ 12:dragon12.teamobi.com:14445:0:0:0,Vũ trụ 13:dragon13.teamobi.com:14446:0:0:1,Võ đài liên vũ trụ:dragonwar.teamobi.com:20000:0:0:0,Universe 1:dragon.indonaga.com:14445:1:0:0,Naga:dragon.indonaga.com:14446:2:0:0,Super 1:dragon11.teamobi.com:14446:0:1:1,Super 2:dragon11.teamobi.com:17001:0:1:1,0,0";
+        internal static readonly string DEFAULT_IP_SERVERS = "Vũ trụ 1:dragon1.teamobi.com:14445:0:0:0,Vũ trụ 2:dragon2.teamobi.com:14445:0:0:0,Vũ trụ 3:dragon3.teamobi.com:14445:0:0:0,Vũ trụ 4:dragon4.teamobi.com:14445:0:0:0,Vũ trụ 5:dragon5.teamobi.com:14445:0:0:0,Vũ trụ 6:dragon6.teamobi.com:14445:0:0:0,Vũ trụ 7:dragon7.teamobi.com:14445:0:0:0,Vũ trụ 8:dragon10.teamobi.com:14446:0:0:0,Vũ trụ 9:dragon10.teamobi.com:14447:0:0:0,Vũ trụ 10:dragon10.teamobi.com:14445:0:0:0,Vũ trụ 11:dragon11.teamobi.com:14445:0:0:0,Vũ trụ 12:dragon12.teamobi.com:14445:0:0:0,Vũ trụ 13:dragon13.teamobi.com:14446:0:0:0,Super 1:dragon11.teamobi.com:14446:0:1:0,Super 2:dragon11.teamobi.com:17001:0:1:0,Võ đài liên vũ trụ:dragonwar.teamobi.com:20000:0:0:0,Universe 1:dragon.indonaga.com:14445:1:0:0,Naga:dragon.indonaga.com:14446:2:0:0,0,0";
         #region Fields
         internal static string communityMod = "";
         internal static string gameVersion = "";
@@ -533,24 +526,24 @@ namespace Mod.R
                 "Đang bật (đến map, khu và tọa độ cố định khi chết)",
             };
             setAutoTrainPetTitle = "Auto up đệ tử";
-            setAutoTrainPetChoices = new string[] 
+            setAutoTrainPetChoices = new string[]
             {
                 "Đang tắt",
-                "Đang bật (up đệ thường)", 
+                "Đang bật (up đệ thường)",
                 "Đang bật (up đệ né siêu quái)",
-                "Đang bật (up đệ Kaioken)" 
+                "Đang bật (up đệ Kaioken)"
             };
             youDontHaveDisciple = "Bạn không có đệ tử";
             setAutoAttackWhenDiscipleNeededTitle = "Đánh khi đệ kêu";
-            setAutoAttackWhenDiscipleNeededChoices = new string[] 
+            setAutoAttackWhenDiscipleNeededChoices = new string[]
             {
                 "Đánh quái gần nhất",
                 "Đánh đệ tử (tự động bật cờ xám)",
-                "Đánh bản thân (tự động bật cờ xám)" 
+                "Đánh bản thân (tự động bật cờ xám)"
             };
             setAutoRescueTitle = "Auto trị thương";
             setAutoRescueChoices = new string[]
-            { 
+            {
                 "Đang tắt",
                 "Đang bật (trị thương mọi người)",
                 "Đang bật (chỉ thành viên trong bang hội)",
