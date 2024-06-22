@@ -1,4 +1,4 @@
-# Dragonboy Unity Project - EN | [VI](../../tree/Unity-project/README.md)
+# Dragonboy Unity Project - EN | [VI](./README.md)
 DBO Community Mod Project (currently in development state).
 
 Guide to adding features to the mod: https://youtu.be/9sCof2eQH3Q
