@@ -1,15 +1,10 @@
 using System;
-using System.Runtime.CompilerServices;
 using Assets.src.e;
 using Assets.src.g;
-using Mod;
-using Mod.CharEffect;
 
 public class Char : IMapObject
 {
-    internal CharEffectTime charEffectTime = new CharEffectTime();
-
-    public string xuStr;
+	public string xuStr;
 
 	public string luongStr;
 
@@ -1262,7 +1257,7 @@ public class Char : IMapObject
 
 	internal MainImage mainImg;
 
-    public Char()
+	public Char()
 	{
 		statusMe = 6;
 	}
@@ -1409,8 +1404,7 @@ public class Char : IMapObject
 		lastS = (currS = mSystem.currentTimeMillis());
 	}
 
-    [MethodImpl(MethodImplOptions.NoOptimization)]
-    public void addInfo(string info)
+	public void addInfo(string info)
 	{
 		if (chatInfo == null)
 			chatInfo = new Info();
@@ -4882,7 +4876,7 @@ public class Char : IMapObject
 				effect.paint(g);
 		}
 	}
-	
+
 	internal void paintSuperEffBehind(mGraphics g)
 	{
 		if ((me && !isPaintAura2) || idAuraEff > -1 || (statusMe != 1 && statusMe != 6) || mSystem.currentTimeMillis() - timeBlue <= 0 || isCopy || clevel < 16)
@@ -6019,8 +6013,7 @@ public class Char : IMapObject
 		return cTypePk == 4 || cTypePk == 3;
 	}
 
-    [MethodImpl(MethodImplOptions.NoOptimization)]
-    public void setHoldChar(Char r)
+	public void setHoldChar(Char r)
 	{
 		if (cx < r.cx)
 			cdir = 1;
@@ -6030,8 +6023,7 @@ public class Char : IMapObject
 		holder = true;
 	}
 
-    [MethodImpl(MethodImplOptions.NoOptimization)]
-    public void setHoldMob(Mob r)
+	public void setHoldMob(Mob r)
 	{
 		if (cx < r.x)
 			cdir = 1;
@@ -6497,8 +6489,7 @@ public class Char : IMapObject
 		}
 	}
 
-    [MethodImpl(MethodImplOptions.NoOptimization)]
-    public void removeHoleEff()
+	public void removeHoleEff()
 	{
 		if (holder)
 		{

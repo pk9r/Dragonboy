@@ -729,7 +729,7 @@ public class mFont
 			gUIStyle.alignment = TextAnchor.UpperCenter;
 			break;
 		}
-		gUIStyle.normal.textColor = gUIStyle.hover.textColor = color1;
+		gUIStyle.normal.textColor = color1;
 		g.drawString(st, (int)num, (int)num2, gUIStyle);
 	}
 

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+using System;
 using Assets.src.e;
 using Assets.src.g;
 using UnityEngine;
 
 public class GameCanvas : IActionListener
 {
-    public static long timeNow = 0L;
+	public static long timeNow = 0L;
 
 	public static bool open3Hour;
 
@@ -514,8 +513,8 @@ public class GameCanvas : IActionListener
 		{
 			if (currentScreen == GameScr.gI())
 			{
-				//if (Char.isLoadingMap)
-				//	Char.isLoadingMap = false;
+				if (Char.isLoadingMap)
+					Char.isLoadingMap = false;
 				if (ServerListScreen.waitToLogin)
 					ServerListScreen.waitToLogin = false;
 			}
@@ -642,11 +641,11 @@ public class GameCanvas : IActionListener
 					if (isPointer(panel.X + panel.W, panel.Y, w - panel.W * 2, panel.H) && isPointerJustRelease && panel.isDoneCombine)
 						panel.hide();
 				}
-                debug("E", 0);
+				debug("E", 0);
 				if (!isLoading)
 					currentScreen.update();
 				debug("F", 0);
-				if (!panel.isShow && (panel2 == null || !panel2.isShow) && ChatPopup.serverChatPopUp == null)
+				if (!panel.isShow && ChatPopup.serverChatPopUp == null)
 					currentScreen.updateKey();
 				Hint.update();
 				SoundMn.gI().update();
@@ -743,9 +742,8 @@ public class GameCanvas : IActionListener
 			}
 			isPointerSelect = false;
 		}
-		catch (Exception ex)
+		catch (Exception)
 		{
-			Debug.LogException(ex);
 		}
 	}
 
@@ -1832,7 +1830,7 @@ public class GameCanvas : IActionListener
 	public void keyPressedz(int keyCode)
 	{
 		lastTimePress = mSystem.currentTimeMillis();
-		//if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 122) || keyCode == 10 || keyCode == 8 || keyCode == 13 || keyCode == 32 || keyCode == 31)
+		if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 122) || keyCode == 10 || keyCode == 8 || keyCode == 13 || keyCode == 32 || keyCode == 31)
 			keyAsciiPress = keyCode;
 		mapKeyPress(keyCode);
 	}
@@ -2032,8 +2030,7 @@ public class GameCanvas : IActionListener
 		}
 	}
 
-    [MethodImpl(MethodImplOptions.NoOptimization)]
-    public void keyReleasedz(int keyCode)
+	public void keyReleasedz(int keyCode)
 	{
 		keyAsciiPress = 0;
 		mapKeyRelease(keyCode);
@@ -2192,11 +2189,9 @@ public class GameCanvas : IActionListener
 	public void scrollMouse(int a)
 	{
 		pXYScrollMouse = a;
-        if (panel != null && panel.isShow)
-            panel.updateScroolMouse(a);
-        if (panel2 != null && panel2.isShow)
-            panel2.updateScroolMouse(a);
-    }
+		if (panel != null && panel.isShow)
+			panel.updateScroolMouse(a);
+	}
 
 	public void pointerDragged(int x, int y)
 	{
@@ -2332,7 +2327,7 @@ public class GameCanvas : IActionListener
 				if (panel2 != null && panel2.chatTField != null && panel2.chatTField.isShow)
 					panel2.chatTField.paint(g);
 			}
-            Res.paintOnScreenDebug(g);
+			Res.paintOnScreenDebug(g);
 			InfoDlg.paint(g);
 			if (currentDialog != null)
 			{
@@ -2404,9 +2399,8 @@ public class GameCanvas : IActionListener
 				g.setClip(0, 0, w, h);
 			}
 		}
-		catch (Exception ex)
+		catch (Exception)
 		{
-			Debug.LogException(ex);
 		}
 	}
 

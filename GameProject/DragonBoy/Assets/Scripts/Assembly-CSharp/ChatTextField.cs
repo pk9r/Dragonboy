@@ -1,4 +1,4 @@
-﻿public class ChatTextField : IActionListener
+public class ChatTextField : IActionListener
 {
 	internal static ChatTextField instance;
 
@@ -164,7 +164,7 @@
 			tfChat.isFocus = true;
 			if (!Main.isPC)
 			{
-				//ipKeyboard.openKeyBoard(strChat, ipKeyboard.TEXT, string.Empty, cmdChat);
+				ipKeyboard.openKeyBoard(strChat, ipKeyboard.TEXT, string.Empty, cmdChat);
 				tfChat.setFocusWithKb(true);
 			}
 		}
@@ -187,7 +187,7 @@
 			isShow = true;
 			if (!Main.isPC)
 			{
-				//ipKeyboard.openKeyBoard(strChat, ipKeyboard.TEXT, string.Empty, cmdChat2);
+				ipKeyboard.openKeyBoard(strChat, ipKeyboard.TEXT, string.Empty, cmdChat2);
 				tfChat.setFocusWithKb(true);
 			}
 		}

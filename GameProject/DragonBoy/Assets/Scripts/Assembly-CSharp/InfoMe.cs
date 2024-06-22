@@ -297,9 +297,4 @@ public class InfoMe
 		}
 		isDone = false;
 	}
-
-    internal void addInfo(object disableAutoChat, int v)
-    {
-        throw new System.NotImplementedException();
-    }
 }

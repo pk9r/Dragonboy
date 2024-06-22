@@ -1,6 +1,6 @@
-﻿public class MotherCanvas
+public class MotherCanvas
 {
-    public static MotherCanvas instance;
+	public static MotherCanvas instance;
 
 	public GameCanvas tCanvas;
 

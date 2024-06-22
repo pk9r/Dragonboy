@@ -52,7 +52,7 @@ public class BackgroudEffect
 
 	internal static Image imgFire2;
 
-    internal int[] type;
+	internal int[] type;
 
 	internal int sum;
 

@@ -1,13 +1,9 @@
 using System;
-using System.Runtime.CompilerServices;
 using Assets.src.g;
 
 public class Mob : IMapObject
 {
-    public int countDie;
-    public long lastTimeDie;
-
-    public const sbyte TYPE_DUNG = 0;
+	public const sbyte TYPE_DUNG = 0;
 
 	public const sbyte TYPE_DI = 1;
 
@@ -1282,8 +1278,7 @@ public class Mob : IMapObject
 		return 16711680;
 	}
 
-    [MethodImpl(MethodImplOptions.NoOptimization)]
-    public void startDie()
+	public void startDie()
 	{
 		hp = 0;
 		injureThenDie = true;

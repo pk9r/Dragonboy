@@ -2,7 +2,7 @@ using System;
 
 public class ServerListScreen : mScreen, IActionListener
 {
-    public static string[] nameServer;
+	public static string[] nameServer;
 
 	public static string[] address;
 
@@ -961,7 +961,6 @@ public class ServerListScreen : mScreen, IActionListener
 
 	public void setLinkDefault(sbyte language)
 	{
-		return;
 		if (language == 2)
 		{
 			if (mSystem.clientType == 1)

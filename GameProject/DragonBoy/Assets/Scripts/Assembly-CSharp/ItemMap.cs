@@ -1,10 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-
 public class ItemMap : IMapObject
 {
-	public int countAutoPick;
-
-    public int x;
+	public int x;
 
 	public int y;
 
@@ -92,8 +88,7 @@ public class ItemMap : IMapObject
 		}
 	}
 
-    [MethodImpl(MethodImplOptions.NoOptimization)]
-    public void setPoint(int xEnd, int yEnd)
+	public void setPoint(int xEnd, int yEnd)
 	{
 		this.xEnd = xEnd;
 		this.yEnd = yEnd;

@@ -5,13 +5,7 @@ using UnityEngine;
 
 public class mGraphics
 {
-    public static int addYWhenOpenKeyBoard
-    {
-        get => 0;
-        set { }
-    }
-
-    public static int HCENTER = 1;
+	public static int HCENTER = 1;
 
 	public static int VCENTER = 2;
 
@@ -77,7 +71,7 @@ public class mGraphics
 
 	public static Hashtable cachedTextures = new Hashtable();
 
-	//public static int addYWhenOpenKeyBoard;
+	public static int addYWhenOpenKeyBoard;
 
 	internal int clipTX;
 
@@ -347,7 +341,6 @@ public class mGraphics
 		b = color.b;
 		g = color.g;
 		r = color.r;
-		a = color.a;
 	}
 
 	public void setBgColor(int rgb)
@@ -945,7 +938,7 @@ public class mGraphics
 
 	public static int getImageWidth(Image image)
 	{
-        return image.getWidth();
+		return image.getWidth();
 	}
 
 	public static int getImageHeight(Image image)

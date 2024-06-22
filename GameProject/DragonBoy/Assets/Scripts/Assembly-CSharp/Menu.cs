@@ -254,8 +254,16 @@ public class Menu
 		if (!disableClose && GameCanvas.isPointerJustRelease && !GameCanvas.isPointer(menuX, menuY, w, menuH) && !pointerIsDowning && !GameScr.gI().isRongThanMenu() && flag2)
 		{
 			if (!isScrolling())
-                closeMenu();
-            return;
+			{
+				pointerDownTime = (pointerDownFirstX = 0);
+				pointerIsDowning = false;
+				GameCanvas.clearAllPointerEvent();
+				Res.outz("menu select= " + menuSelectedItem);
+				isClose = true;
+				close = true;
+				SoundMn.gI().buttonClose();
+			}
+			return;
 		}
 		if (GameCanvas.isPointerDown)
 		{
@@ -340,7 +348,7 @@ public class Menu
 		GameCanvas.clearKeyHold();
 	}
 
-    public void moveCamera()
+	public void moveCamera()
 	{
 		if (cmRun != 0 && !pointerIsDowning)
 		{
@@ -507,15 +515,4 @@ public class Menu
 	public void perform(int idAction, object p)
 	{
 	}
-
-    internal void closeMenu()
-    {
-        pointerDownTime = pointerDownFirstX = 0;
-        pointerIsDowning = false;
-        GameCanvas.clearAllPointerEvent();
-        Res.outz("menu select= " + menuSelectedItem);
-        isClose = true;
-        close = true;
-        SoundMn.gI().buttonClose();
-    }
 }

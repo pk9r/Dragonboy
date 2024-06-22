@@ -1,6 +1,5 @@
 using System;
 using Assets.src.g;
-using UnityEngine;
 
 public class GameScr : mScreen, IChatable
 {
@@ -664,7 +663,7 @@ public class GameScr : mScreen, IChatable
 
 	internal static int xC;
 
-    internal static int yC;
+	internal static int yC;
 
 	internal static int xL;
 
@@ -680,7 +679,7 @@ public class GameScr : mScreen, IChatable
 
 	internal static int xF;
 
-    internal static int yF;
+	internal static int yF;
 
 	public static int xHP;
 
@@ -4177,7 +4176,7 @@ public class GameScr : mScreen, IChatable
 			GameCanvas.keyPressed[16] = false;
 			Char.myCharz().findNextFocusByKey();
 		}
-		if (GameCanvas.keyPressed[13] && !GameCanvas.panel.isShow && (GameCanvas.panel2 == null || !GameCanvas.panel2.isShow))
+		if (GameCanvas.keyPressed[13] && !GameCanvas.panel.isShow)
 		{
 			GameCanvas.keyPressed[13] = false;
 			Char.myCharz().findNextFocusByKey();

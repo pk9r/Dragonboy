@@ -1,6 +1,6 @@
-﻿public class Npc : Char
+public class Npc : Char
 {
-    public const sbyte BINH_KHI = 0;
+	public const sbyte BINH_KHI = 0;
 
 	public const sbyte PHONG_CU = 1;
 

@@ -1,16 +1,14 @@
-﻿using System;
+using System;
 
 public class GamePad
 {
-    bool isResetKeyHold = true;
+	internal int xC;
 
-    internal int xC;
+	internal int yC;
 
-    internal int yC;
+	internal int xM;
 
-    internal int xM;
-
-    internal int yM;
+	internal int yM;
 
 	internal int xMLast;
 
@@ -100,8 +98,7 @@ public class GamePad
 				return;
 			if (GameCanvas.isPointerDown && !GameCanvas.isPointerJustRelease)
 			{
-                isResetKeyHold = true;
-                xTemp = GameCanvas.pxFirst;
+				xTemp = GameCanvas.pxFirst;
 				yTemp = GameCanvas.pyFirst;
 				if (xTemp < xZone || xTemp > wZone || yTemp < yZone || yTemp > hZone)
 					return;
@@ -207,12 +204,8 @@ public class GamePad
 				else
 					yM = (yC = GameCanvas.h - 45);
 				isGamePad = false;
-                if (isResetKeyHold)
-                {
-                    resetHold();
-                    isResetKeyHold = false;
-                }
-            }
+				resetHold();
+			}
 		}
 		catch (Exception)
 		{

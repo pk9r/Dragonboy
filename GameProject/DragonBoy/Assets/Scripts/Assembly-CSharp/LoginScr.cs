@@ -1,9 +1,8 @@
 using System;
-using UnityEngine;
 
 public class LoginScr : mScreen, IActionListener
 {
-    public TField tfUser;
+	public TField tfUser;
 
 	public TField tfPass;
 
@@ -270,7 +269,7 @@ public class LoginScr : mScreen, IActionListener
 		if (GameCanvas.isTouch)
 			tfUser.isFocus = false;
 		GameCanvas.loadBG(0);
-        base.switchToMe();
+		base.switchToMe();
 	}
 
 	public void setUserPass()

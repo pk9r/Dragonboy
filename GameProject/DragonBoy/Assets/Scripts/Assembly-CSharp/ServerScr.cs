@@ -254,14 +254,9 @@ public class ServerScr : mScreen, IActionListener
 	public override void updateKey()
 	{
 		base.updateKey();
-
-		//int num = mainSelect % numw;
-		//int num2 = mainSelect / numw;
-        //fix division by 0
-        int num = mainSelect % (numw == 0 ? 1 : numw);
-        int num2 = mainSelect / (numw == 0 ? 1 : numw);
-		//--------------------------------------
-        if (GameCanvas.keyPressed[4])
+		int num = mainSelect % numw;
+		int num2 = mainSelect / numw;
+		if (GameCanvas.keyPressed[4])
 		{
 			if (num > 0)
 				mainSelect--;

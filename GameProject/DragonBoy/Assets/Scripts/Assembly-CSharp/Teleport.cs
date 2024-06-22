@@ -1,6 +1,6 @@
-﻿public class Teleport
+public class Teleport
 {
-    public static MyVector vTeleport = new MyVector();
+	public static MyVector vTeleport = new MyVector();
 
 	public int x;
 

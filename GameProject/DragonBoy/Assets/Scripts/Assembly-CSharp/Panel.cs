@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Assets.src.g;
 using UnityEngine;
 
 public class Panel : IActionListener, IChatable
 {
-    public class PlayerChat
+	public class PlayerChat
 	{
 		public string name;
 
@@ -2333,7 +2333,7 @@ public class Panel : IActionListener, IChatable
 	public void updateScroolMouse(int a)
 	{
 		bool flag = false;
-		if (GameCanvas.pxMouse > X + wScroll || GameCanvas.pxMouse < X)
+		if (GameCanvas.pxMouse > wScroll)
 			return;
 		if (indexMouse == -1)
 			indexMouse = selected;
@@ -3447,16 +3447,15 @@ public class Panel : IActionListener, IChatable
 			paintAuto(g);
 			break;
 		}
-		//moved to Panel_paint_hook
-		//GameScr.resetTranslate(g);
-		//paintDetail(g);
-		//if (cmx == cmtoX && !GameCanvas.menu.showMenu)
-		//	cmdClose.paint(g);
-		//if (tabIcon != null && tabIcon.isShow)
-		//	tabIcon.paint(g);
-		//g.translate(-g.getTranslateX(), -g.getTranslateY());
-		//g.translate(X, Y);
-		//g.translate(-cmx, 0);
+		GameScr.resetTranslate(g);
+		paintDetail(g);
+		if (cmx == cmtoX && !GameCanvas.menu.showMenu)
+			cmdClose.paint(g);
+		if (tabIcon != null && tabIcon.isShow)
+			tabIcon.paint(g);
+		g.translate(-g.getTranslateX(), -g.getTranslateY());
+		g.translate(X, Y);
+		g.translate(-cmx, 0);
 	}
 
 	internal void paintShop(mGraphics g)
@@ -5349,7 +5348,7 @@ public class Panel : IActionListener, IChatable
 				g.drawImage(ItemMap.imageFlare, startTabPos + 3 * TAB_W + TAB_W / 2, 77, mGraphics.BOTTOM | mGraphics.HCENTER);
 		}
 		g.setColor(13524492);
-		g.fillRect(X + 1, 78, W - 2, 1);
+		g.fillRect(1, 78, W - 2, 1);
 	}
 
 	internal void paintBottomMoneyInfo(mGraphics g)
@@ -7051,7 +7050,7 @@ public class Panel : IActionListener, IChatable
 		InfoDlg.showWait();
 		Service.gI().petInfo();
 		timeShow = 20;
-    }
+	}
 
 	internal void searchClan()
 	{
@@ -9270,23 +9269,16 @@ public class Panel : IActionListener, IChatable
 
 	public static int GetColor_ItemBg(int id)
 	{
-		switch (id)
+		return id switch
 		{
-			case 4:
-				return 1269146;
-			case 1:
-				return 2786816;
-			case 5:
-				return 13279744;
-			case 3:
-				return 12537346;
-			case 2:
-				return 7078041;
-			case 6:
-				return 11599872;
-			default:
-				return -1;
-		}
+			4 => 1269146, 
+			1 => 2786816, 
+			5 => 13279744, 
+			3 => 12537346, 
+			2 => 7078041, 
+			6 => 11599872, 
+			_ => -1, 
+		};
 	}
 
 	public static sbyte GetColor_Item_Upgrade(int lv)
@@ -9405,44 +9397,27 @@ public class Panel : IActionListener, IChatable
 	public static mFont setTextColor(int id, int type)
 	{
 		if (type == 0)
-		{
-			switch (id)
+			return id switch
 			{
-				case 0:
-					return mFont.bigNumber_While;
-				case 1:
-					return mFont.bigNumber_green;
-				case 3:
-					return mFont.bigNumber_orange;
-				case 4:
-					return mFont.bigNumber_blue;
-				case 5:
-					return mFont.bigNumber_yellow;
-				case 6:
-					return mFont.bigNumber_red;
-				default:
-					return mFont.bigNumber_While;
-			}
-		}
-		switch (id)
+				0 => mFont.bigNumber_While, 
+				1 => mFont.bigNumber_green, 
+				3 => mFont.bigNumber_orange, 
+				4 => mFont.bigNumber_blue, 
+				5 => mFont.bigNumber_yellow, 
+				6 => mFont.bigNumber_red, 
+				_ => mFont.bigNumber_While, 
+			};
+		return id switch
 		{
-			case 0:
-				return mFont.tahoma_7b_white;
-			case 1:
-				return mFont.tahoma_7b_green;
-			case 3:
-				return mFont.tahoma_7b_yellowSmall2;
-			case 4:
-				return mFont.tahoma_7b_blue;
-			case 5:
-				return mFont.tahoma_7b_yellow;
-			case 6:
-				return mFont.tahoma_7b_red;
-			case 7:
-				return mFont.tahoma_7b_dark;
-			default:
-				return mFont.tahoma_7b_white;
-		}
+			0 => mFont.tahoma_7b_white, 
+			1 => mFont.tahoma_7b_green, 
+			3 => mFont.tahoma_7b_yellowSmall2, 
+			4 => mFont.tahoma_7b_blue, 
+			5 => mFont.tahoma_7b_yellow, 
+			6 => mFont.tahoma_7b_red, 
+			7 => mFont.tahoma_7b_dark, 
+			_ => mFont.tahoma_7b_white, 
+		};
 	}
 
 	internal bool GetInventorySelect_isbody(int select, int subSelect, Item[] arrItem)
