@@ -495,6 +495,13 @@ namespace Mod.AccountManager
                 accounts = JsonConvert.DeserializeObject<List<Account>>(jsonData) ?? new List<Account>();
             if (Utils.TryLoadDataInt("account_manager_selected_account_index", out int value))
                 selectedAccountIndex = value;
+            if (selectedAccountIndex >= accounts.Count)
+                selectedAccountIndex = -1;
+            if (selectedAccountIndex != -1 && !SelectedAccount.Server.IsCustomIP())
+            {
+                ServerListScreen.ipSelect = SelectedAccount.Server.index;
+                Rms.saveRMSInt("svselect", SelectedAccount.Server.index);
+            }
         }
 
         static void SaveDataAccounts()
