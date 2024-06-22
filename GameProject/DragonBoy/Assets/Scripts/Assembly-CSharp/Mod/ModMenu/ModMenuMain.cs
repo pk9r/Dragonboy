@@ -90,6 +90,7 @@ namespace Mod.ModMenu
         {
             modMenuItemBools = new ModMenuItemBoolean[]
             {
+                // Main switches
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
                     ID = "VSync_Toggle",
@@ -101,15 +102,6 @@ namespace Mod.ModMenu
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
-                    ID = "ShowTargetInfo_Toggle",
-                    Title = Strings.showTargetInfoTitle,
-                    Description = Strings.showTargetInfoDescription,
-                    GetValueFunc = () => CharEffectMain.isEnabled,
-                    SetValueAction = CharEffectMain.setState,
-                    RMSName = "show_target_info"
-                }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
-                {
                     ID = "AutoSendAttack_Toggle",
                     Title = Strings.autoAttack,
                     Description = Strings.autoSendAttackDescription,
@@ -118,55 +110,13 @@ namespace Mod.ModMenu
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
-                    ID = "ShowCharList_Toggle",
-                    Title = Strings.showCharListTitle,
-                    Description = Strings.showCharListDescription,
-                    GetValueFunc =  () => ListCharsInMap.isEnabled,
-                    SetValueAction = ListCharsInMap.setState,
-                    RMSName = "show_char_list",
-                    GetIsDisabled = () => true,
-                    GetDisabledReason = () => "This feature is currently in development state"
-                }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
-                {
-                    ID = "ShowPetInCharList_Toggle",
-                    Title = Strings.showPetInCharListTitle,
-                    Description = Strings.showPetInCharListDescription,
-                    GetValueFunc = () => ListCharsInMap.isShowPet,
-                    SetValueAction = ListCharsInMap.setStatePet,
-                    RMSName = "show_pets_in_char_list",
-                    GetIsDisabled = () => !ListCharsInMap.isEnabled,
-                    GetDisabledReason = () => string.Format(Strings.functionShouldBeEnabled, Strings.showCharListTitle)
-                }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
-                {
-                    ID = "AutoTrainForNewbie_Toggle",
-                    Title = Strings.autoTrainForNewbieTitle,
-                    Description = Strings.autoTrainForNewbieDescription,
-                    GetValueFunc = () => AutoTrainNewAccount.isEnabled,
-                    SetValueAction = AutoTrainNewAccount.SetState,
-                    GetIsDisabled = () => Char.myCharz().taskMaint == null || Char.myCharz().taskMaint.taskId > 11,
-                    GetDisabledReason = () => Strings.noLongerNewAccount + '!'
-                }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
-                {
-                    ID = "SkipSpaceship_Toggle",
-                    Title = Strings.skipSpaceshipTitle,
-                    Description = Strings.skipSpaceshipDescription,
-                    GetValueFunc = () => SpaceshipSkip.isEnabled,
-                    SetValueAction = value => SpaceshipSkip.isEnabled = value,
-                    RMSName = "skip_spaceship"
-                }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
-                {
-                    ID = "NotifyBoss_Toggle",
-                    Title = Strings.notifyBossTitle,
-                    Description = Strings.notifyBossDescription,
-                    GetValueFunc = () => Boss.isEnabled,
-                    SetValueAction = Boss.setState,
-                    RMSName = "notify_boss",
-                    GetIsDisabled = () => true,
-                    GetDisabledReason = () => "This feature is currently in development state"
+                    ID = "PickMob_Toggle",
+                    Title = Strings.pickMobTitle,
+                    Description = Strings.pickMobDescription,
+                    GetValueFunc = () => Pk9rPickMob.IsTanSat,
+                    SetValueAction = Pk9rPickMob.SetSlaughter,
+                    GetIsDisabled = () => AutoTrainNewAccount.isEnabled,
+                    GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.autoTrainForNewbieTitle)
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
@@ -188,61 +138,6 @@ namespace Mod.ModMenu
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
-                    ID = "Xmap_UseNormalCapsule_Toggle",
-                    Title = Strings.xmapUseNormalCapsule,
-                    Description = Strings.xmapUseNormalCapsuleDescription,
-                    GetValueFunc = () => Pk9rXmap.isUseCapsuleNormal,
-                    SetValueAction = value => Pk9rXmap.isUseCapsuleNormal = value,
-                    RMSName = "xmap_use_normal_capsule"
-                }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
-                {
-                    ID = "Xmap_UseCapsuleVIP_Toggle",
-                    Title = Strings.xmapUseSpecialCapsule,
-                    Description = Strings.xmapUseSpecialCapsuleDescription,
-                    GetValueFunc = () => Pk9rXmap.isUseCapsuleVip,
-                    SetValueAction = value => Pk9rXmap.isUseCapsuleVip = value,
-                    RMSName = "xmap_use_capsule_vip"
-                }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
-                {
-                    ID = "Xmap_UseAStar_Toggle",
-                    Title = Strings.xmapUseAStar,
-                    Description = Strings.xmapUseAStarDescription,
-                    GetValueFunc = () => Pk9rXmap.isXmapAStar,
-                    SetValueAction = value => Pk9rXmap.isXmapAStar = value,
-                    RMSName = "xmap_use_astar"
-                }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
-                {
-                    ID = "PickMob_Toggle",
-                    Title = Strings.pickMobTitle,
-                    Description = Strings.pickMobDescription,
-                    GetValueFunc = () => Pk9rPickMob.IsTanSat,
-                    SetValueAction = Pk9rPickMob.SetSlaughter,
-                    GetIsDisabled = () => AutoTrainNewAccount.isEnabled,
-                    GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.autoTrainForNewbieTitle)
-                }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
-                {
-                    ID = "PickMob_AvoidSuperMob_Toggle",
-                    Title = Strings.avoidSuperMobTitle,
-                    Description = Strings.avoidSuperMobDescription,
-                    GetValueFunc = () => Pk9rPickMob.IsNeSieuQuai,
-                    SetValueAction = Pk9rPickMob.SetAvoidSuperMonster,
-                    RMSName = "pickmob_avoid_super_mob"
-                }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
-                {
-                    ID = "PickMob_VDH_Toggle",
-                    Title = Strings.vdhTitle,
-                    Description = Strings.vdhDescription,
-                    GetValueFunc = () => Pk9rPickMob.IsVuotDiaHinh,
-                    SetValueAction = Pk9rPickMob.SetCrossTerrain,
-                    RMSName = "pickmob_cross_terrain"
-                }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
-                {
                     ID = "PickMob_AutoPickItem_Toggle",
                     Title = Strings.autoPickItemTitle,
                     Description = Strings.autoPickItemDescription,
@@ -254,21 +149,31 @@ namespace Mod.ModMenu
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
-                    ID = "PickMob_PickMyItemOnly_Toggle",
-                    Title = Strings.pickMyItemOnlyTitle,
-                    Description = Strings.pickMyItemOnlyDescription,
-                    GetValueFunc = () => Pk9rPickMob.IsItemMe,
-                    SetValueAction = Pk9rPickMob.SetAutoPickItemsFromOthers,
-                    RMSName = "pickmob_pick_my_item_only"
+                    ID = "AutoTrainForNewbie_Toggle",
+                    Title = Strings.autoTrainForNewbieTitle,
+                    Description = Strings.autoTrainForNewbieDescription,
+                    GetValueFunc = () => AutoTrainNewAccount.isEnabled,
+                    SetValueAction = AutoTrainNewAccount.SetState,
+                    GetIsDisabled = () => Char.myCharz().taskMaint == null || Char.myCharz().taskMaint.taskId > 11,
+                    GetDisabledReason = () => Strings.noLongerNewAccount + '!'
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
-                    ID = "PickMob_LimitPickTimes_Toggle",
-                    Title = Strings.limitPickTimesTitle,
-                    Description = Strings.limitPickTimesDescription,
-                    GetValueFunc = () => Pk9rPickMob.IsLimitTimesPickItem,
-                    SetValueAction = Pk9rPickMob.SetPickUpLimited,
-                    RMSName = "pickmob_limit_pick_item_times"
+                    ID = "ShowTargetInfo_Toggle",
+                    Title = Strings.showTargetInfoTitle,
+                    Description = Strings.showTargetInfoDescription,
+                    GetValueFunc = () => CharEffectMain.isEnabled,
+                    SetValueAction = CharEffectMain.setState,
+                    RMSName = "show_target_info"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "SkipSpaceship_Toggle",
+                    Title = Strings.skipSpaceshipTitle,
+                    Description = Strings.skipSpaceshipDescription,
+                    GetValueFunc = () => SpaceshipSkip.isEnabled,
+                    SetValueAction = value => SpaceshipSkip.isEnabled = value,
+                    RMSName = "skip_spaceship"
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
@@ -300,6 +205,104 @@ namespace Mod.ModMenu
                     GetValueFunc = () => AutoPean.isAutoHarvest,
                     SetValueAction = value => AutoPean.isAutoHarvest = value,
                     RMSName = "auto_harvest_peans"
+                }),
+                // Auxiliary switches
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "Xmap_UseNormalCapsule_Toggle",
+                    Title = Strings.xmapUseNormalCapsule,
+                    Description = Strings.xmapUseNormalCapsuleDescription,
+                    GetValueFunc = () => Pk9rXmap.isUseCapsuleNormal,
+                    SetValueAction = value => Pk9rXmap.isUseCapsuleNormal = value,
+                    RMSName = "xmap_use_normal_capsule"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "Xmap_UseCapsuleVIP_Toggle",
+                    Title = Strings.xmapUseSpecialCapsule,
+                    Description = Strings.xmapUseSpecialCapsuleDescription,
+                    GetValueFunc = () => Pk9rXmap.isUseCapsuleVip,
+                    SetValueAction = value => Pk9rXmap.isUseCapsuleVip = value,
+                    RMSName = "xmap_use_capsule_vip"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "Xmap_UseAStar_Toggle",
+                    Title = Strings.xmapUseAStar,
+                    Description = Strings.xmapUseAStarDescription,
+                    GetValueFunc = () => Pk9rXmap.isXmapAStar,
+                    SetValueAction = value => Pk9rXmap.isXmapAStar = value,
+                    RMSName = "xmap_use_astar"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "PickMob_AvoidSuperMob_Toggle",
+                    Title = Strings.avoidSuperMobTitle,
+                    Description = Strings.avoidSuperMobDescription,
+                    GetValueFunc = () => Pk9rPickMob.IsNeSieuQuai,
+                    SetValueAction = Pk9rPickMob.SetAvoidSuperMonster,
+                    RMSName = "pickmob_avoid_super_mob"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "PickMob_VDH_Toggle",
+                    Title = Strings.vdhTitle,
+                    Description = Strings.vdhDescription,
+                    GetValueFunc = () => Pk9rPickMob.IsVuotDiaHinh,
+                    SetValueAction = Pk9rPickMob.SetCrossTerrain,
+                    RMSName = "pickmob_cross_terrain"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "PickMob_PickMyItemOnly_Toggle",
+                    Title = Strings.pickMyItemOnlyTitle,
+                    Description = Strings.pickMyItemOnlyDescription,
+                    GetValueFunc = () => Pk9rPickMob.IsItemMe,
+                    SetValueAction = Pk9rPickMob.SetAutoPickItemsFromOthers,
+                    RMSName = "pickmob_pick_my_item_only"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "PickMob_LimitPickTimes_Toggle",
+                    Title = Strings.limitPickTimesTitle,
+                    Description = Strings.limitPickTimesDescription,
+                    GetValueFunc = () => Pk9rPickMob.IsLimitTimesPickItem,
+                    SetValueAction = Pk9rPickMob.SetPickUpLimited,
+                    RMSName = "pickmob_limit_pick_item_times"
+                }),
+                // Development state
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "NotifyBoss_Toggle",
+                    Title = Strings.notifyBossTitle,
+                    Description = Strings.notifyBossDescription,
+                    GetValueFunc = () => Boss.isEnabled,
+                    SetValueAction = Boss.setState,
+                    RMSName = "notify_boss",
+                    GetIsDisabled = () => true,
+                    GetDisabledReason = () => "This feature is currently in development state"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "ShowCharList_Toggle",
+                    Title = Strings.showCharListTitle,
+                    Description = Strings.showCharListDescription,
+                    GetValueFunc =  () => ListCharsInMap.isEnabled,
+                    SetValueAction = ListCharsInMap.setState,
+                    RMSName = "show_char_list",
+                    GetIsDisabled = () => true,
+                    GetDisabledReason = () => "This feature is currently in development state"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "ShowPetInCharList_Toggle",
+                    Title = Strings.showPetInCharListTitle,
+                    Description = Strings.showPetInCharListDescription,
+                    GetValueFunc = () => ListCharsInMap.isShowPet,
+                    SetValueAction = ListCharsInMap.setStatePet,
+                    RMSName = "show_pets_in_char_list",
+                    GetIsDisabled = () => !ListCharsInMap.isEnabled,
+                    GetDisabledReason = () => string.Format(Strings.functionShouldBeEnabled, Strings.showCharListTitle)
                 }),
             };
             modMenuItemValues = new ModMenuItemValues[]
@@ -488,19 +491,19 @@ namespace Mod.ModMenu
                 }),
                 new ModMenuItemFunction(new ModMenuItemFunctionConfig()
                 {
+                    ID = "OpenVietnameseInputMenu",
+                    Title = Strings.openVietnameseInputMenuTitle,
+                    Description = Strings.openVietnameseInputMenuDescription,
+                    Action = VietnameseInput.ShowMenu,
+                }),
+                new ModMenuItemFunction(new ModMenuItemFunctionConfig()
+                {
                     ID = "OpenSetsMenu",
                     Title = Strings.openSetsMenuTitle,
                     Description = Strings.openSetsMenuDescription,
                     Action = SetDo.ShowMenu,
                     GetIsDisabled = () => true,
                     GetDisabledReason = () => "This feature is currently in development state"
-                }),
-                new ModMenuItemFunction(new ModMenuItemFunctionConfig()
-                {
-                    ID = "OpenVietnameseInputMenu",
-                    Title = Strings.openVietnameseInputMenuTitle,
-                    Description = Strings.openVietnameseInputMenuDescription,
-                    Action = VietnameseInput.ShowMenu,
                 }),
                 new ModMenuItemFunction(new ModMenuItemFunctionConfig()
                 {
