@@ -102,14 +102,6 @@ namespace Mod.ModMenu
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
-                    ID = "AutoSendAttack_Toggle",
-                    Title = Strings.autoAttack,
-                    Description = Strings.autoSendAttackDescription,
-                    GetValueFunc = () => AutoSendAttack.gI.IsActing,
-                    SetValueAction = AutoSendAttack.toggle
-                }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
-                {
                     ID = "PickMob_Toggle",
                     Title = Strings.pickMobTitle,
                     Description = Strings.pickMobDescription,
@@ -117,24 +109,6 @@ namespace Mod.ModMenu
                     SetValueAction = Pk9rPickMob.SetSlaughter,
                     GetIsDisabled = () => AutoTrainNewAccount.isEnabled,
                     GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.autoTrainForNewbieTitle)
-                }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
-                {
-                    ID = "CustomBg_Toggle",
-                    Title = Strings.customBackgroundTitle,
-                    Description = Strings.customBackgroundDescription,
-                    GetValueFunc = () => CustomBackground.isEnabled,
-                    SetValueAction = CustomBackground.SetState,
-                    RMSName = "custom_bg"
-                }),
-                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
-                {
-                    ID = "Intro_Toggle",
-                    Title = Strings.introTitle,
-                    Description = Strings.introDescription,
-                    GetValueFunc = () => IntroPlayer.isEnabled,
-                    SetValueAction = value => IntroPlayer.isEnabled = value,
-                    RMSName = "intro_enabled"
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
@@ -164,6 +138,24 @@ namespace Mod.ModMenu
                     Description = Strings.autoSellTrashItemsDescription,
                     GetValueFunc = () => AutoSellTrashItems.isEnabled,
                     SetValueAction = AutoSellTrashItems.SetState
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "AutoSendAttack_Toggle",
+                    Title = Strings.autoAttack,
+                    Description = Strings.autoSendAttackDescription,
+                    GetValueFunc = () => AutoSendAttack.gI.IsActing,
+                    SetValueAction = AutoSendAttack.toggle,
+                    GetIsDisabled = () => Pk9rPickMob.IsTanSat,
+                    GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.pickMobTitle) + '!'
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "AutoLogin_Toggle",
+                    Title = Strings.autoLoginTitle,
+                    Description = Strings.autoLoginDescription,
+                    GetValueFunc = () => AutoLogin.isEnabled,
+                    SetValueAction = AutoLogin.SetState
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
@@ -213,6 +205,24 @@ namespace Mod.ModMenu
                     GetValueFunc = () => AutoPean.isAutoHarvest,
                     SetValueAction = value => AutoPean.isAutoHarvest = value,
                     RMSName = "auto_harvest_peans"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "CustomBg_Toggle",
+                    Title = Strings.customBackgroundTitle,
+                    Description = Strings.customBackgroundDescription,
+                    GetValueFunc = () => CustomBackground.isEnabled,
+                    SetValueAction = CustomBackground.SetState,
+                    RMSName = "custom_bg"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
+                    ID = "Intro_Toggle",
+                    Title = Strings.introTitle,
+                    Description = Strings.introDescription,
+                    GetValueFunc = () => IntroPlayer.isEnabled,
+                    SetValueAction = value => IntroPlayer.isEnabled = value,
+                    RMSName = "intro_enabled"
                 }),
                 // Auxiliary switches
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()

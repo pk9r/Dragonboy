@@ -1,4 +1,6 @@
-﻿namespace Mod.R
+﻿using System;
+
+namespace Mod.R
 {
     internal static class Strings
     {
@@ -28,6 +30,8 @@
         internal static string showTargetInfoTitle = "";
         internal static string showTargetInfoDescription = "";
         internal static string autoSendAttackDescription = "";
+        internal static string autoLoginTitle = "";
+        internal static string autoLoginDescription = "";
         internal static string showCharListTitle = "";
         internal static string showCharListDescription = "";
         internal static string showPetInCharListTitle = "";
@@ -277,6 +281,7 @@
         internal static string openedByExternalAccountManager = "";
         internal static string accountAlreadyRegistered = "";
         internal static string autoSellTrashItemsBoxFull = "";
+        internal static string autoLoginReattemptLoginIn = "";
         #endregion
 
         internal static void LoadLanguage(sbyte newLanguage)
@@ -484,6 +489,7 @@
             inGameAccountManagerUnregisteredAccountAlreadyAdded = "Tài khoản đã có trong danh sách";
             inGameAccountManagerAccountAdded = "Đã thêm tài khoản vào danh sách";
             autoSellTrashItemsBoxFull = "Rương đã đầy, không thể chứa thêm đồ";
+            autoLoginReattemptLoginIn = "Đăng nhập lại trong {0} giây";
             //---------------------------------------------------
             //mod menu
             modMenuPanelTabName = new string[][]
@@ -496,6 +502,8 @@
             showTargetInfoTitle = "Thông tin đối thủ";
             showTargetInfoDescription = "Hiện gần chính xác thời gian NRD, khiên, khỉ, huýt sáo... của đối thủ";
             autoSendAttackDescription = "Tự động gửi lệnh tấn công mục tiêu mà không di chuyển nhân vật";
+            autoLoginTitle = "Đăng nhập lại khi mất kết nối";
+            autoLoginDescription = "Tự động đăng nhập lại khi kết nối tới máy chủ bị gián đoạn";
             showCharListTitle = "Danh sách nhân vật";
             showCharListDescription = "Hiện danh sách nhân vật trong khu hiện tại";
             showPetInCharListTitle = "Hiện đệ tử trong danh sách nhân vật";
@@ -801,6 +809,7 @@
             inGameAccountManagerUnregisteredAccountAlreadyAdded = "Account has already been added";
             inGameAccountManagerAccountAdded = "Account has been added to the account list";
             autoSellTrashItemsBoxFull = "Your chest is full, new items can't be stored";
+            autoLoginReattemptLoginIn = "Reattempt login in {0} seconds";
             //---------------------------------------------------
             //mod menu
             modMenuPanelTabName = new string[][]
@@ -813,6 +822,8 @@
             showTargetInfoTitle = "Target's effect information";
             showTargetInfoDescription = "Show the near-accurate duration of Black Star Dragonball, Energy Shield, Super Monkey, Whistle, etc. of the target character";
             autoSendAttackDescription = "Automatically send attack commands to the target character without moving your character";
+            autoLoginTitle = "Auto login";
+            autoLoginDescription = "Automatically attempt to log in when the connection to the server is lost";
             showCharListTitle = "Character list";
             showCharListDescription = "Show the character list in the current zone";
             showPetInCharListTitle = "Include disciples in the character list";

@@ -194,6 +194,7 @@ namespace Mod
 #endif
             MainThreadDispatcher.update();
             ControllerInput.OnUpdate();
+            AutoLogin.Update();
             //CustomCursor.Update();
         }
 
@@ -396,6 +397,7 @@ namespace Mod
             AutoTrainPet.Update();
             //SuicideRange.update();
             AutoSellTrashItems.Update();
+            AutoLogin.OnGameScrUpdate();
             if (!AutoTrainNewAccount.isEnabled && !AutoGoback.isGoingBack)
             {
                 if (Pk9rPickMob.IsTanSat)
@@ -470,6 +472,7 @@ namespace Mod
             //GameCanvas.startWaitDlg();
             TeleportMenuMain.LoadData();
             AutoTrainPet.isFirstTimeCheckPet = true;
+            AutoLogin.OnServerListScreenLoaded();
         }
 
         /// <summary>
