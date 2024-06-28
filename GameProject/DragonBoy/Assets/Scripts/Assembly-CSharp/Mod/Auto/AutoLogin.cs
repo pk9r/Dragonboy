@@ -21,6 +21,7 @@ namespace Mod.Auto
             lastTimeAttemptLogin = mSystem.currentTimeMillis();
             if (GameCanvas.loginScr == null)
                 GameCanvas.loginScr = new LoginScr();
+            GameCanvas.connect();
             GameCanvas.loginScr.switchToMe();
             Service.gI().login(Rms.loadRMSString("acc"), Rms.loadRMSString("pass"), GameMidlet.VERSION, 0);
             GameCanvas.startWaitDlg();
