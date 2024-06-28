@@ -17,12 +17,13 @@ namespace Mod.PickMob
         static readonly short[] IdItemBlockBase =
             { 225, 353, 354, 355, 356, 357, 358, 359, 360, 362 };
 
-        internal static bool IsTanSat = false;
+        internal static bool IsTanSat { get; set; }
         internal static bool IsNeSieuQuai { get; set; } = true;
         internal static bool IsVuotDiaHinh { get; set; } = true;
         internal static bool IsAutoPickItems { get; set; } = true;
         internal static bool IsItemMe { get; set; } = true;
         internal static bool IsLimitTimesPickItem { get; set; } = true;
+        internal static bool IsAttackMonsterBySendCommand { get; set; }
 
         internal static List<int> IdMobsTanSat = new List<int>();
         internal static List<int> TypeMobsTanSat = new List<int>();
@@ -48,6 +49,7 @@ namespace Mod.PickMob
         internal static void SetAutoPickItems(bool newState) => IsAutoPickItems = newState;
         internal static void SetAutoPickItemsFromOthers(bool newState) => IsItemMe = newState;
         internal static void SetPickUpLimited(bool newState) => IsLimitTimesPickItem = newState;
+        internal static void SetAttackMonsterBySendCommand(bool newState) => IsAttackMonsterBySendCommand = newState;
 
         [ChatCommand("ts")]
         internal static void ToggleSlaughter()
@@ -154,14 +156,14 @@ namespace Mod.PickMob
         internal static void ToggleCrossTerrain()
         {
             SetCrossTerrain(!IsVuotDiaHinh);
-            GameScr.info1.addInfo(Strings.vdhTitle + ": " + Strings.OnOffStatus(IsVuotDiaHinh), 0);
+            GameScr.info1.addInfo(Strings.pickMobVDHTitle + ": " + Strings.OnOffStatus(IsVuotDiaHinh), 0);
         }
 
         [ChatCommand("nsq")]
         internal static void ToggleAvoidSuperMonsters()
         {
             SetAvoidSuperMonster(!IsNeSieuQuai);
-            GameScr.info1.addInfo(Strings.avoidSuperMobTitle + ": " + Strings.OnOffStatus(IsNeSieuQuai), 0);
+            GameScr.info1.addInfo(Strings.pickMobAvoidSuperMobTitle + ": " + Strings.OnOffStatus(IsNeSieuQuai), 0);
         }
 
         [ChatCommand("anhat")]
@@ -175,21 +177,21 @@ namespace Mod.PickMob
         internal static void ToggleFilterOtherCharItems()
         {
             SetAutoPickItemsFromOthers(!IsItemMe);
-            GameScr.info1.addInfo(Strings.pickMyItemOnlyTitle + ": " + Strings.OnOffStatus(IsItemMe), 0);
+            GameScr.info1.addInfo(Strings.pickMobPickMyItemOnlyTitle + ": " + Strings.OnOffStatus(IsItemMe), 0);
         }
 
         [ChatCommand("sln")]
         internal static void TogglePickUpLimit()
         {
             SetPickUpLimited(!IsLimitTimesPickItem);
-            GameScr.info1.addInfo(Strings.limitPickTimesTitle + ": " + Strings.OnOffStatus(IsLimitTimesPickItem) + (IsLimitTimesPickItem ? (", " + TimesAutoPickItemMax) : ""), 0);
+            GameScr.info1.addInfo(Strings.pickMobLimitPickTimesTitle + ": " + Strings.OnOffStatus(IsLimitTimesPickItem) + (IsLimitTimesPickItem ? (", " + TimesAutoPickItemMax) : ""), 0);
         }
 
         [ChatCommand("sln")]
         internal static void SetPickUpLimit(int limit)
         {
             TimesAutoPickItemMax = limit;
-            GameScr.info1.addInfo(Strings.limitPickTimesTitle + ": " + TimesAutoPickItemMax, 0);
+            GameScr.info1.addInfo(Strings.pickMobLimitPickTimesTitle + ": " + TimesAutoPickItemMax, 0);
         }
 
         [ChatCommand("clri")]

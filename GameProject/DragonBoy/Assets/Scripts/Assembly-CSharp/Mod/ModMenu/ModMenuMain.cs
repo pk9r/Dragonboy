@@ -255,7 +255,7 @@ namespace Mod.ModMenu
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
                     ID = "PickMob_AvoidSuperMob_Toggle",
-                    Title = Strings.avoidSuperMobTitle,
+                    Title = Strings.pickMobAvoidSuperMobTitle,
                     Description = Strings.avoidSuperMobDescription,
                     GetValueFunc = () => Pk9rPickMob.IsNeSieuQuai,
                     SetValueAction = Pk9rPickMob.SetAvoidSuperMonster,
@@ -264,17 +264,26 @@ namespace Mod.ModMenu
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
                     ID = "PickMob_VDH_Toggle",
-                    Title = Strings.vdhTitle,
-                    Description = Strings.vdhDescription,
+                    Title = Strings.pickMobVDHTitle,
+                    Description = Strings.pickMobVDHDescription,
                     GetValueFunc = () => Pk9rPickMob.IsVuotDiaHinh,
                     SetValueAction = Pk9rPickMob.SetCrossTerrain,
                     RMSName = "pickmob_cross_terrain"
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
+                    ID = "PickMob_AttackMonsterBySendCommand_Toggle",
+                    Title = Strings.pickMobAttackMonsterBySendCommandTitle,
+                    Description = Strings.pickMobAttackMonsterBySendCommandDescription,
+                    GetValueFunc = () => Pk9rPickMob.IsAttackMonsterBySendCommand,
+                    SetValueAction = Pk9rPickMob.SetAttackMonsterBySendCommand,
+                    RMSName = "pickmob_attack_monster_by_send_command"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
                     ID = "PickMob_PickMyItemOnly_Toggle",
-                    Title = Strings.pickMyItemOnlyTitle,
-                    Description = Strings.pickMyItemOnlyDescription,
+                    Title = Strings.pickMobPickMyItemOnlyTitle,
+                    Description = Strings.pickMobPickMyItemOnlyDescription,
                     GetValueFunc = () => Pk9rPickMob.IsItemMe,
                     SetValueAction = Pk9rPickMob.SetAutoPickItemsFromOthers,
                     RMSName = "pickmob_pick_my_item_only"
@@ -282,8 +291,8 @@ namespace Mod.ModMenu
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
                     ID = "PickMob_LimitPickTimes_Toggle",
-                    Title = Strings.limitPickTimesTitle,
-                    Description = Strings.limitPickTimesDescription,
+                    Title = Strings.pickMobLimitPickTimesTitle,
+                    Description = Strings.pickMobLimitPickTimesDescription,
                     GetValueFunc = () => Pk9rPickMob.IsLimitTimesPickItem,
                     SetValueAction = Pk9rPickMob.SetPickUpLimited,
                     RMSName = "pickmob_limit_pick_item_times"

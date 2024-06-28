@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Mod.PickMob
@@ -130,15 +131,51 @@ namespace Mod.PickMob
                             Mob mobFocus = myChar.mobFocus;
                             mobFocus.x = mobFocus.xFirst;
                             mobFocus.y = mobFocus.yFirst;
-                            GameScr.gI().doSelectSkill(skill, true);
-                            if (Res.distance(mobFocus.xFirst, mobFocus.yFirst, myChar.cx, myChar.cy) <= 48)
+                            if (Pk9rPickMob.IsAttackMonsterBySendCommand)
                             {
-                                myChar.focusManualTo(mobFocus);
-                                Utils.DoDoubleClickToObj(mobFocus);
+                                if (Char.myCharz().myskill != skill)
+                                {
+                                    Service.gI().selectSkill(skill.template.id);
+                                    Char.myCharz().myskill = skill;
+                                }
+                                if (mobFocus.getTemplate().type == 4)
+                                {
+                                    if (Math.Abs(Char.myCharz().cx - mobFocus.x) > 70)
+                                        Move(mobFocus.x, Utils.GetYGround(mobFocus.x));
+                                    else
+                                    {
+                                        Char.myCharz().currentMovePoint = null;
+                                        Char.myCharz().cx = mobFocus.x + Res.random(-5, 5);
+                                        Char.myCharz().cy = mobFocus.y + Res.random(-5, 5);
+                                        Service.gI().charMove();
+                                    }
+                                }
+                                else
+                                    Move(mobFocus.xFirst, mobFocus.yFirst);
+                                if (Utils.Distance(Char.myCharz(), mobFocus) <= 50 || (mobFocus.getTemplate().type == 4 && Math.Abs(Char.myCharz().cx - mobFocus.x) <= 70))
+                                {
+                                    if (mSystem.currentTimeMillis() - skill.lastTimeUseThisSkill > skill.coolDown + 100L)
+                                    {
+                                        Char.myCharz().mobFocus = mobFocus;
+                                        skill.lastTimeUseThisSkill = mSystem.currentTimeMillis();
+                                        MyVector myVector = new MyVector();
+                                        myVector.addElement(mobFocus);
+                                        Service.gI().sendPlayerAttack(myVector, new MyVector(), -1);
+                                    }
+                                }
                             }
                             else
                             {
-                                Move(mobFocus.xFirst , mobFocus.yFirst);
+                                GameScr.gI().doSelectSkill(skill, true);
+                                if (Res.distance(mobFocus.xFirst, mobFocus.yFirst, myChar.cx, myChar.cy) <= 48)
+                                {
+                                    myChar.focusManualTo(mobFocus);
+                                    Utils.DoDoubleClickToObj(mobFocus);
+                                }
+                                else
+                                {
+                                    Move(mobFocus.xFirst, mobFocus.yFirst);
+                                }
                             }
                         }
                     }
