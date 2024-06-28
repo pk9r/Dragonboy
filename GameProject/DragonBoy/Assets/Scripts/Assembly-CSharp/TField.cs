@@ -309,6 +309,7 @@ public class TField : IActionListener
         text = string.Empty;
         if (kb != null)
             kb.text = string.Empty;
+        selectStartIndex = -1;
         caretPos = 0;
         setOffset(0);
         setPasswordTest();
