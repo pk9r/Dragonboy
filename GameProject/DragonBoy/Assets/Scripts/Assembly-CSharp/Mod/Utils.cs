@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using Mod.Constants;
 using Mod.ModHelper.CommandMod.Chat;
 using Mod.ModHelper.CommandMod.Hotkey;
 using Mod.ModHelper.Menu;
@@ -28,7 +29,7 @@ namespace Mod
 
         internal static string status = "Đã kết nối";
 
-        internal static int speedRun = 8;
+        internal static int myCharSpeed = 8;
 
         internal static Waypoint waypointLeft;
         internal static Waypoint waypointMiddle;
@@ -277,7 +278,7 @@ namespace Mod
         [ChatCommand("tdc"), ChatCommand("cspeed")]
         internal static void setSpeedRun(int speed)
         {
-            speedRun = speed;
+            myCharSpeed = speed;
 
             GameScr.info1.addInfo("Tốc độ chạy: " + speed, 0);
         }
@@ -507,16 +508,16 @@ namespace Mod
 
         internal static bool IsMeInNRDMap() => TileMap.mapID >= 85 && TileMap.mapID <= 91;
 
-        internal static int LoadDataInt(string name, bool isCommon = true)
+        internal static long LoadDataLong(string name, bool isCommon = true)
         {
             string path = dataPath;
             if (!isCommon)
                 path = Path.Combine(Rms.GetiPhoneDocumentsPath(), "ModData");
             FileStream fileStream = new FileStream(Path.Combine(path, name), FileMode.Open);
-            byte[] array = new byte[4];
-            fileStream.Read(array, 0, 4);
+            byte[] array = new byte[8];
+            fileStream.Read(array, 0, array.Length);
             fileStream.Close();
-            return BitConverter.ToInt32(array, 0);
+            return BitConverter.ToInt64(array, 0);
         }
 
         internal static bool LoadDataBool(string name, bool isCommon = true)
@@ -544,24 +545,24 @@ namespace Mod
             return result;
         }
 
-        internal static float LoadDataFloat(string name, bool isCommon = true)
+        internal static double LoadDataDouble(string name, bool isCommon = true)
         {
             string path = dataPath;
             if (!isCommon)
                 path = Path.Combine(Rms.GetiPhoneDocumentsPath(), "ModData");
             FileStream fileStream = new FileStream(Path.Combine(path, name), FileMode.Open);
-            byte[] array = new byte[4];
-            fileStream.Read(array, 0, 4);
+            byte[] array = new byte[8];
+            fileStream.Read(array, 0, array.Length);
             fileStream.Close();
-            return BitConverter.ToSingle(array, 0);
+            return BitConverter.ToDouble(array, 0);
         }
 
-        internal static bool TryLoadDataInt(string name, out int value, bool isCommon = true)
+        internal static bool TryLoadDataLong(string name, out long value, bool isCommon = true)
         {
             value = default;
             try
             {
-                value = LoadDataInt(name, isCommon);
+                value = LoadDataLong(name, isCommon);
                 return true;
             }
             catch (Exception ex) { Debug.LogException(ex); }
@@ -592,19 +593,19 @@ namespace Mod
             return false;
         }
 
-        internal static bool TryLoadDataFloat(string name, out float value, bool isCommon = true)
+        internal static bool TryLoadDataDouble(string name, out double value, bool isCommon = true)
         {
             value = default;
             try
             {
-                value = LoadDataFloat(name, isCommon);
+                value = LoadDataDouble(name, isCommon);
                 return true;
             }
             catch (Exception ex) { Debug.LogException(ex); }
             return false;
         }
 
-        internal static void SaveData(string name, int value, bool isCommon = true)
+        internal static void SaveData(string name, long value, bool isCommon = true)
         {
             string path = dataPath;
             if (!isCommon)
@@ -612,7 +613,7 @@ namespace Mod
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             FileStream fileStream = new FileStream(Path.Combine(path, name), FileMode.Create);
-            fileStream.Write(BitConverter.GetBytes(value), 0, 4);
+            fileStream.Write(BitConverter.GetBytes(value), 0, 8);
             fileStream.Flush();
             fileStream.Close();
         }
@@ -644,7 +645,7 @@ namespace Mod
             fileStream.Close();
         }
 
-        internal static void SaveData(string name, float value, bool isCommon = true)
+        internal static void SaveData(string name, double value, bool isCommon = true)
         {
             string path = dataPath;
             if (!isCommon)
@@ -652,7 +653,7 @@ namespace Mod
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             FileStream fileStream = new FileStream(Path.Combine(path, name), FileMode.Create);
-            fileStream.Write(BitConverter.GetBytes(value), 0, 4);
+            fileStream.Write(BitConverter.GetBytes(value), 0, 8);
             fileStream.Flush();
             fileStream.Close();
         }
@@ -782,7 +783,7 @@ namespace Mod
             bool result = false;
             if (item.itemOption == null)
                 return result;
-            if (item.template.type != 0 && item.template.type != 1 && item.template.type != 2 && item.template.type != 3 && item.template.type != 4 && item.template.type != 32)
+            if ((item.template.type <= ItemTemplateType.Shirt || item.template.type >= ItemTemplateType.Radar) && item.template.type != ItemTemplateType.TrainingSuite)
                 return result;
             for (int i = 0; i < item.itemOption.Length; i++)
             {

@@ -68,8 +68,8 @@ namespace Mod
         {
             if (Utils.TryLoadDataBool("vn_input_enabled", out bool value))
                 VietKeyHandler.VietModeEnabled = value;
-            if (Utils.TryLoadDataInt("vn_input_input_method", out int value2))
-                VietKeyHandler.InputMethod = (InputMethods)value2;
+            if (Utils.TryLoadDataLong("vn_input_input_method", out long value2))
+                VietKeyHandler.InputMethod = (InputMethods)(int)value2;
             if (Utils.TryLoadDataBool("vn_input_diacritics", out bool value3))
                 VietKeyHandler.DiacriticsPosClassic = value3;
             if (Utils.TryLoadDataBool("vn_input_consume_repeat_key", out bool value4))

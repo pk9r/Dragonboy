@@ -1,4 +1,5 @@
 using System;
+using Mod.Constants;
 using UnityEngine;
 
 namespace Mod.Graphics
@@ -162,7 +163,7 @@ namespace Mod.Graphics
 
         internal static bool OnItemMapPaint(ItemMap _this, mGraphics g)
         {
-            if (_this.template.type != 22) //!isAuraItem()
+            if (_this.template.type != ItemTemplateType.Satellite) //!isAuraItem()
                 return false;
             if (_level > ReduceGraphicsLevel.Level2)
                 return true;

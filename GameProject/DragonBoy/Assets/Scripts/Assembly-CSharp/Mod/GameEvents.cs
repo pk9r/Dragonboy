@@ -75,7 +75,6 @@ namespace Mod
             //ChatCommandHandler.loadDefault();
             //HotkeyCommandHandler.loadDefault();
             //SocketClient.gI.initSender();
-            CustomBackground.LoadData();
             //CustomLogo.LoadData();
             //CustomCursor.LoadData();
             SetDo.LoadData();
@@ -364,7 +363,7 @@ namespace Mod
                             account.PetInfo = new AccountManager.CharacterInfo();
                         account.PetInfo.Name = Char.myPetz().cName;
                         account.PetInfo.CharID = Char.myPetz().charID;
-                        account.PetInfo.Gender = (sbyte)Char.myPetz().cgender;
+                        account.PetInfo.Gender = (sbyte)Utils.GetPetGender();
                         account.PetInfo.EXP = Char.myPetz().cPower;
                         account.PetInfo.MaxHP = Char.myPetz().cHPFull;
                         account.PetInfo.MaxMP = Char.myPetz().cMPFull;
@@ -385,7 +384,7 @@ namespace Mod
                 Service.gI().openUIZone();
             }
 
-            Char.myCharz().cspeed = Utils.speedRun;
+            Char.myCharz().cspeed = Utils.myCharSpeed;
 
             CharEffectMain.Update();
             TeleportMenuMain.Update();

@@ -2,6 +2,8 @@
 using Mod.CustomPanel;
 using Mod.R;
 using UnityEngine;
+using Mod.Constants;
+
 
 #if UNITY_EDITOR
 using Mono.Cecil.Cil;
@@ -581,7 +583,7 @@ namespace Mod
 
         internal static bool IsWearableAndVip(this Item item)
         {
-            if (item.template.type <= 4)
+            if (item.template.type <= ItemTemplateType.Radar)
             {
                 for (int i = 0; i < item.itemOption.Length; i++)
                 {

@@ -1,3 +1,4 @@
+using Mod.Constants;
 using Mod.PickMob;
 using Mod.R;
 using Mod.Xmap;
@@ -10,18 +11,19 @@ namespace Mod.Auto
         internal static bool IsRunning => steps > 0;
         static int steps;
         static long lastTimeUpdate;
-        static int lastSellItemIndex = -1;
+        static int lastRemoveItemIndex = -1;
         static int lastMapID;
         static int lastZoneID;
         static int lastX;
         static int lastY;
         static bool lastPickMobState;
+        static int removeAttempts;
 
         internal static void Update()
         {
             if (!isEnabled)
                 return;
-            if (mSystem.currentTimeMillis() - lastTimeUpdate <= 500)
+            if (mSystem.currentTimeMillis() - lastTimeUpdate <= 750)
                 return;
             lastTimeUpdate = mSystem.currentTimeMillis();
             switch (steps)
@@ -43,6 +45,9 @@ namespace Mod.Auto
                     SellTrashItems();
                     break;
                 case 5:
+                    ThrowTrashItems();
+                    break;
+                case 6:
                     GotoLastMapAndZone();
                     break;
             }
@@ -57,7 +62,16 @@ namespace Mod.Auto
             lastZoneID = TileMap.zoneID;
             lastX = Char.myCharz().cx;
             lastY = Char.myCharz().cy;
-            steps = 1;
+            for (int i = 0; i < Char.myCharz().arrItemBag.Length; i++)
+            {
+                Item item = Char.myCharz().arrItemBag[i];
+                if (item != null && ShouldMoveItemToChest(item))
+                {
+                    steps = 1;
+                    return;
+                }
+            }
+            steps = 3;
         }
 
         static void GoHome()
@@ -82,7 +96,8 @@ namespace Mod.Auto
             else if (GameCanvas.panel.hasUse >= Char.myCharz().arrItemBox.Length)
             {
                 GameCanvas.startOKDlg(Strings.autoSellTrashItemsBoxFull + '!');
-                isEnabled = false;
+                //isEnabled = false;
+                steps = 3;
             }
             else
             {
@@ -90,7 +105,7 @@ namespace Mod.Auto
                 for (; i >= 0; i--)
                 {
                     Item item = Char.myCharz().arrItemBag[i];
-                    if (item != null && item.IsWearableAndVip())
+                    if (item != null && ShouldMoveItemToChest(item))
                     {
                         Service.gI().getItem(1, (sbyte)i);
                         break;
@@ -140,31 +155,81 @@ namespace Mod.Auto
             }
             if (!GameCanvas.panel.isShow)
                 Service.gI().openMenu(16);
-            else if (GameCanvas.currentDialog != null && lastSellItemIndex > -1)
+            else if (GameCanvas.currentDialog != null && lastRemoveItemIndex > -1)
             {
-                Service.gI().saleItem(1, 1, (short)lastSellItemIndex);
+                Service.gI().saleItem(1, 1, (short)lastRemoveItemIndex);
                 GameCanvas.endDlg();
             }
             else
             {
                 int i = Char.myCharz().arrItemBag.Length - 1;
-                if (lastSellItemIndex != -1)
-                    i = lastSellItemIndex;
+                if (lastRemoveItemIndex != -1)
+                    i = lastRemoveItemIndex;
                 for (; i >= 0; i--)
                 {
-                    Item item2 = Char.myCharz().arrItemBag[i];
-                    if (item2 != null && !item2.IsWearableAndVip() && item2.template.type != 23 && item2.template.type != 6)
+                    Item item = Char.myCharz().arrItemBag[i];
+                    if (item != null && !ShouldKeepItem(item))
                     {
                         Service.gI().saleItem(0, 1, (short)i);
-                        lastSellItemIndex = i;
+                        if (i == lastRemoveItemIndex)
+                            removeAttempts++;
+                        else
+                            removeAttempts = 0;
+                        if (removeAttempts >= 5)
+                            lastRemoveItemIndex = i - 1;
+                        else 
+                            lastRemoveItemIndex = i;
                         break;
                     }
                 }
-                if (i == -1)
+                if (i < 0)
                 {
-                    lastSellItemIndex = -1;
+                    GameCanvas.panel?.hide();
+                    GameCanvas.panel2?.hide();
+                    removeAttempts = 0;
+                    lastRemoveItemIndex = -1;
                     steps = 5;
                 }
+            }
+        }
+
+        static void ThrowTrashItems()
+        {
+            if (Char.myCharz().arrItemBag.Length == 0)
+            {
+                steps = 6;
+                return;
+            }
+            if (Char.myCharz().cPower < 1_500_000)
+            {
+                steps = 6;
+                return;
+            }
+            int i = Char.myCharz().arrItemBag.Length - 1;
+            if (lastRemoveItemIndex != -1)
+                i = lastRemoveItemIndex;
+            for (; i >= 0; i--)
+            {
+                Item item = Char.myCharz().arrItemBag[i];
+                if (item != null && !ShouldKeepItem(item))
+                {
+                    Service.gI().useItem(1, 1, (sbyte)i, -1);
+                    if (i == lastRemoveItemIndex)
+                        removeAttempts++;
+                    else
+                        removeAttempts = 0;
+                    if (removeAttempts >= 5)
+                        lastRemoveItemIndex = i - 1;
+                    else
+                        lastRemoveItemIndex = i;
+                    break;
+                }
+            }
+            if (i < 0)
+            {
+                removeAttempts = 0;
+                lastRemoveItemIndex = -1;
+                steps = 6;
             }
         }
 
@@ -181,6 +246,7 @@ namespace Mod.Auto
                 Utils.TeleportMyChar(lastX, lastY);
             else
             {
+                Char.chatPopup = null;
                 ResumePickMob();
                 steps = 0;
             }
@@ -193,6 +259,9 @@ namespace Mod.Auto
         }
 
         static void ResumePickMob() => Pk9rPickMob.IsTanSat = lastPickMobState;
+
+        static bool ShouldMoveItemToChest(Item item) => item.IsWearableAndVip() || item.template.type == ItemTemplateType.FlyPlatform || item.template.type == ItemTemplateType.VIPFlyPlatform || item.template.type == ItemTemplateType.Backpack || item.template.type == ItemTemplateType.AvatarAndDisguise || item.template.type == ItemTemplateType.UpgradeStone || item.template.type == ItemTemplateType.DragonBall || item.template.type == ItemTemplateType.ConsumableBuffItem || item.template.type == ItemTemplateType.Miscellaneous;
+        static bool ShouldKeepItem(Item item) => ShouldMoveItemToChest(item) || item.template.type == ItemTemplateType.SenzuBean;
 
         internal static void SetState(bool value)
         {

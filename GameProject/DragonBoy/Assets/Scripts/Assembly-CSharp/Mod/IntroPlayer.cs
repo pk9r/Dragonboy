@@ -59,7 +59,7 @@ namespace Mod
             videoPlayer = GameObject.Find("Main Camera").GetComponent<VideoPlayer>();
             Utils.TryLoadDataBool("intro_enabled", out isEnabled);
             Utils.TryLoadDataString("intro_path", out path);
-            if (Utils.TryLoadDataInt("intro_volume", out int vol))
+            if (Utils.TryLoadDataLong("intro_volume", out long vol))
                 volume = vol / 100f;
         }
 

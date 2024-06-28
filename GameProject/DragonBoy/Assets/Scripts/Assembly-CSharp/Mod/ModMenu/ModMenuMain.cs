@@ -323,14 +323,52 @@ namespace Mod.ModMenu
                     GetValueFunc = () => Application.targetFrameRate,
                     SetValueAction = value =>
                     {
-                        if (value > 5 && value <= Screen.currentResolution.refreshRateRatio.value)
-                            Application.targetFrameRate = value;
+                        if (value >= 5 && value <= Screen.currentResolution.refreshRateRatio.value)
+                            Application.targetFrameRate = (int)value;
                     },
+                    MinValue = 5,
+                    MaxValue = Screen.currentResolution.refreshRateRatio.value,
                     RMSName = "target_fps",
                     GetIsDisabled = () => QualitySettings.vSyncCount == 1,
                     GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, "VSync"),
                     TextFieldTitle = Strings.inputFPS,
                     TextFieldHint = "FPS",
+                }),
+                new ModMenuItemValues(new ModMenuItemValuesConfig()
+                {
+                    ID = "Set_GameSpeed",
+                    Title = Strings.setGameSpeedTitle,
+                    Description = Strings.setGameSpeedDescription,
+                    IsFloatingPoint = true,
+                    GetValueFunc = () => Time.timeScale,
+                    SetValueAction = value =>
+                    {
+                        if (value >= .25d && value <= 20)
+                            Time.timeScale = (float)value;
+                    },
+                    MinValue = 0.25d,
+                    MaxValue = 20,
+                    RMSName = "game_speed",
+                    TextFieldTitle = Strings.inputGameSpeed,
+                    TextFieldHint = Strings.inputGameSpeedHint,
+                }),
+                new ModMenuItemValues(new ModMenuItemValuesConfig()
+                {
+                    ID = "Set_GameDelay",
+                    Title = Strings.setGameDelayTitle,
+                    Description = Strings.setGameDelayDescription,
+                    IsFloatingPoint = true,
+                    GetValueFunc = () => Math.Round(Time.fixedDeltaTime * 100f, 3),
+                    SetValueAction = value =>
+                    {
+                        if (value >= 1 && value <= 5)
+                            Time.fixedDeltaTime = (float)value / 100f;
+                    },
+                    MinValue = 1,
+                    MaxValue = 5,
+                    RMSName = "game_delay",
+                    TextFieldTitle = Strings.inputGameDelay,
+                    TextFieldHint = Strings.inputGameDelayHint,
                 }),
                 new ModMenuItemValues(new ModMenuItemValuesConfig()
                 {
@@ -343,11 +381,24 @@ namespace Mod.ModMenu
                 }),
                 new ModMenuItemValues(new ModMenuItemValuesConfig()
                 {
+                    ID = "Set_MyCharSpeed",
+                    Title = Strings.setMyCharSpeedTitle,
+                    Description = Strings.setMyCharSpeedDescription,
+                    GetValueFunc = () => Char.myCharz().cspeed,
+                    SetValueAction = value => Utils.myCharSpeed = (int)value,
+                    RMSName = "my_char_speed",
+                    MinValue = 0,
+                    MaxValue = 25,
+                    TextFieldTitle = Strings.inputMyCharSpeed,
+                    TextFieldHint = Strings.inputMyCharSpeedHint,
+                }),
+                new ModMenuItemValues(new ModMenuItemValuesConfig()
+                {
                     ID = "Set_GoBack",
                     Title = "GoBack",
                     Values = Strings.setGoBackChoices,
                     GetValueFunc = () => (int)AutoGoback.mode,
-                    SetValueAction = AutoGoback.setState,
+                    SetValueAction = value => AutoGoback.setState((int)value),
                     GetIsDisabled = () => AutoTrainNewAccount.isEnabled,
                     GetDisabledReason = () => string.Format(Strings.functionShouldBeDisabled, Strings.autoTrainForNewbieTitle)
                 }),
@@ -357,7 +408,7 @@ namespace Mod.ModMenu
                     Title = Strings.setAutoTrainPetTitle,
                     Values = Strings.setAutoTrainPetChoices,
                     GetValueFunc = () => (int)AutoTrainPet.Mode,
-                    SetValueAction = AutoTrainPet.SetState,
+                    SetValueAction = value => AutoTrainPet.SetState((int)value),
                     GetIsDisabled = () => !Char.myCharz().havePet || AutoTrainNewAccount.isEnabled,
                     GetDisabledReason = () =>
                     {
@@ -375,7 +426,7 @@ namespace Mod.ModMenu
                     Title = Strings.setAutoAttackWhenDiscipleNeededTitle,
                     Values = Strings.setAutoAttackWhenDiscipleNeededChoices,
                     GetValueFunc = () => (int)AutoTrainPet.ModeAttackWhenNeeded,
-                    SetValueAction = AutoTrainPet.SetAttackState,
+                    SetValueAction = value => AutoTrainPet.SetAttackState((int)value),
                     RMSName = "auto_pet_mode",
                     GetIsDisabled = () => AutoTrainPet.Mode <= AutoTrainPetMode.Disabled,
                     GetDisabledReason = () => string.Format(Strings.functionShouldBeEnabled, Strings.setAutoTrainPetTitle)
@@ -386,7 +437,7 @@ namespace Mod.ModMenu
                     Title = Strings.setAutoRescueTitle,
                     Values = Strings.setAutoRescueChoices,
                     GetValueFunc = () => (int)AutoSkill.targetMode,
-                    SetValueAction = AutoSkill.setReviveTargetMode,
+                    SetValueAction = value => AutoSkill.setReviveTargetMode((int)value),
                     GetIsDisabled = () =>
                     {
                         if (Char.myCharz().cgender != 1)
@@ -414,7 +465,7 @@ namespace Mod.ModMenu
                     Title = Strings.xmapTimeout,
                     Description = Strings.setXmapTimeoutDescription,
                     GetValueFunc = () => Pk9rXmap.aStarTimeout,
-                    SetValueAction = value => Pk9rXmap.aStarTimeout = value,
+                    SetValueAction = value => Pk9rXmap.aStarTimeout = (int)value,
                     MinValue = 10,
                     MaxValue = 300,
                     RMSName = "xmap_astar_timeout",
@@ -433,7 +484,7 @@ namespace Mod.ModMenu
                     },
                     GetValueFunc = () => (int)CustomBackground.DefaultScaleMode,
                     SetValueAction = value => CustomBackground.DefaultScaleMode = (ScaleMode)value,
-                    RMSName = "custom_bg_default_scale_mode"
+                    //RMSName = "custom_bg_default_scale_mode"
                 }),
                 new ModMenuItemValues(new ModMenuItemValuesConfig()
                 {
@@ -441,8 +492,8 @@ namespace Mod.ModMenu
                     Title = Strings.setTimeChangeCustomBgTitle,
                     Description = Strings.setTimeChangeCustomBgDescription,
                     GetValueFunc = () => CustomBackground.intervalChangeBg / 1000,
-                    SetValueAction = value => CustomBackground.intervalChangeBg = value * 1000,
-                    RMSName = "custom_bg_interval",
+                    SetValueAction = value => CustomBackground.intervalChangeBg = (int)value * 1000,
+                    //RMSName = "custom_bg_interval",
                     TextFieldTitle = Strings.inputTimeChangeBg,
                     TextFieldHint = Strings.inputTimeChangeBgHint
                 }),
@@ -452,7 +503,7 @@ namespace Mod.ModMenu
                     Title = Strings.setIntroVolumeTitle,
                     Description = Strings.setIntroVolumeDescription,
                     GetValueFunc = () => (int)(IntroPlayer.volume * 100),
-                    SetValueAction = value => IntroPlayer.volume = value / 100f,
+                    SetValueAction = value => IntroPlayer.volume = (float)value / 100f,
                     RMSName = "intro_volume",
                     TextFieldTitle = Strings.introInputVolume,
                     TextFieldHint = Strings.introInputVolumeHint,
@@ -734,7 +785,8 @@ namespace Mod.ModMenu
             int offset = Math.Max(panel.cmy / panel.ITEM_HEIGHT, 0);
             bool isReset = true;
             string descriptionTextInfo = string.Empty;
-            int x = 0, y = 0, currSelectedValue = 0;
+            int x = 0, y = 0;
+            double currSelectedValue = 0;
             for (int i = offset; i < Mathf.Clamp(offset + panel.hScroll / panel.ITEM_HEIGHT + 2, 0, panel.currentListLength); i++)
             {
                 int num = panel.xScroll;
@@ -831,8 +883,14 @@ namespace Mod.ModMenu
                 if (!string.IsNullOrEmpty(modMenuItem.RMSName))
                     Utils.SaveData(modMenuItem.RMSName, modMenuItem.Value);
             foreach (ModMenuItemValues modMenuItem in modMenuItemValues)
-                if (!string.IsNullOrEmpty(modMenuItem.RMSName))
+            {
+                if (string.IsNullOrEmpty(modMenuItem.RMSName))
+                    continue;
+                if (modMenuItem.IsFloatingPoint)
                     Utils.SaveData(modMenuItem.RMSName, modMenuItem.SelectedValue);
+                else 
+                    Utils.SaveData(modMenuItem.RMSName, (long)modMenuItem.SelectedValue);
+            }
         }
 
         internal static void LoadData()
@@ -844,8 +902,12 @@ namespace Mod.ModMenu
             }
             foreach (ModMenuItemValues modMenuItem in modMenuItemValues)
             {
-                if (!string.IsNullOrEmpty(modMenuItem.RMSName) && Utils.TryLoadDataInt(modMenuItem.RMSName, out int data))
+                if (string.IsNullOrEmpty(modMenuItem.RMSName))
+                    continue;
+                if (modMenuItem.IsFloatingPoint && Utils.TryLoadDataDouble(modMenuItem.RMSName, out double data))
                     modMenuItem.SelectedValue = data;
+                else if (Utils.TryLoadDataLong(modMenuItem.RMSName, out long data2))
+                    modMenuItem.SelectedValue = data2;
             }
         }
 

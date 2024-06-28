@@ -335,16 +335,18 @@ namespace Mod.Background
                 }
                 isAllBgsLoaded = false;
                 Utils.TryLoadDataBool("custom_bg_change", out isChangeBg);
-                Utils.TryLoadDataInt("custom_bg_index", out bgIndex);
-                if (Utils.TryLoadDataInt("custom_bg_default_scale_mode", out int value))
-                    DefaultScaleMode = (ScaleMode)value;
+                if (Utils.TryLoadDataLong("custom_bg_index", out long value))
+                    bgIndex = (int)value;
+                if (Utils.TryLoadDataLong("custom_bg_default_scale_mode", out long value2))
+                    _defaultScaleMode = (ScaleMode)(int)value2;
                 if (bgIndex >= customBgs.Count)
                     bgIndex = 0;
-                if (Utils.TryLoadDataFloat("custom_bg_gif_speed", out float value2))
-                    speed = Mathf.Clamp(value2, 0, 100);
+                if (Utils.TryLoadDataDouble("custom_bg_gif_speed", out double value3))
+                    speed = Mathf.Clamp((float)value3, 0, 100);
+                if (Utils.TryLoadDataLong("custom_bg_interval", out long value4))
+                    intervalChangeBg = (int)value4;
             }
-            catch (Exception)
-            { }
+            catch (Exception ex) { Debug.LogException(ex); }
         }
 
         internal static void SaveData()
@@ -354,6 +356,7 @@ namespace Mod.Background
             Utils.SaveData("custom_bg_change", isChangeBg);
             Utils.SaveData("custom_bg_index", bgIndex);
             Utils.SaveData("custom_bg_gif_speed", speed);
+            Utils.SaveData("custom_bg_interval", intervalChangeBg);
             Utils.SaveData("custom_bg_default_scale_mode", (int)DefaultScaleMode);
             Utils.SaveData("custom_bg_override_scale_modes", string.Join(Environment.NewLine, overrideScaleMode.Select(kVP => kVP.Key + '|' + kVP.Value)));
         }

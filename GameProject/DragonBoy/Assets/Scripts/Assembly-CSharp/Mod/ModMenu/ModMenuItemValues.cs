@@ -5,28 +5,35 @@ namespace Mod.ModMenu
 {
     internal class ModMenuItemValues : ModMenuItem, IChatable
     {
-        internal int SelectedValue
+        internal double SelectedValue
         {
             get => GetValueFunc();
-            set => SetValueAction(value);
+            set
+            {
+                if (value < MinValue || value > MaxValue)
+                    return;
+                SetValueAction(value);
+            }
         }
 
         /// <summary>Danh sách giá trị để lựa chọn</summary>
         internal string[] Values => _config.Values;
         /// <summary>Tên tệp lưu dữ liệu</summary>
         internal string RMSName => _config.RMSName;
-        /// <summary>Hàm được gọi để lấy giá trị hiện tại, không có đối số và trả về giá trị kiểu <see cref="int"/>.</summary>
-        internal Action<int> SetValueAction => _config.SetValueAction;
-        /// <summary>Hàm được gọi để gán giá trị mới, có 1 đối số kiểu <see cref="int"/> và không trả về giá trị.</summary>
-        internal Func<int> GetValueFunc => _config.GetValueFunc;
+        /// <summary>Hàm được gọi để lấy giá trị hiện tại, không có đối số và trả về giá trị kiểu <see cref="double"/>.</summary>
+        internal Action<double> SetValueAction => _config.SetValueAction;
+        /// <summary>Hàm được gọi để gán giá trị mới, có 1 đối số kiểu <see cref="double"/> và không trả về giá trị.</summary>
+        internal Func<double> GetValueFunc => _config.GetValueFunc;
         /// <summary>Tiêu đề của trường nhập liệu <see cref="ChatTextField"/></summary>
         internal string TextFieldName => _config.TextFieldTitle;
         /// <summary>Gợi ý cho trường nhập liệu <see cref="ChatTextField"/></summary>
         internal string TextFieldHint => _config.TextFieldHint;
         /// <summary>Giá trị tối thiểu của <see cref="ModMenuItemValues"/>, chỉ có hiệu lực khi nhập giá trị bằng <see cref="ChatTextField"/></summary>
-        internal int MinValue => _config.MinValue;
+        internal double MinValue => _config.MinValue;
         /// <summary>Giá trị tối đa của <see cref="ModMenuItemValues"/>, chỉ có hiệu lực khi nhập giá trị bằng <see cref="ChatTextField"/></summary>
-        internal int MaxValue => _config.MaxValue;
+        internal double MaxValue => _config.MaxValue;
+        /// <summary> Quyết định giá trị của <see cref="ModMenuItemValues"/> có phải là số thực hay không. </summary>
+        internal bool IsFloatingPoint => _config.IsFloatingPoint;
 
         ModMenuItemValuesConfig _config;
         ChatTextField currentCTF;
@@ -43,7 +50,7 @@ namespace Mod.ModMenu
             _config = config;
         }
 
-        internal string getSelectedValue() => Values[SelectedValue];
+        internal string getSelectedValue() => Values[(int)SelectedValue];
 
         internal void SwitchSelection()
         {
@@ -75,7 +82,16 @@ namespace Mod.ModMenu
                 onCancelChat();
                 return;
             }
-            if (int.TryParse(text, out int value))
+            double value = 0;
+            bool isNumber = double.TryParse(text, out value);
+            if (isNumber)
+            {
+                int value2 = 0;
+                isNumber = IsFloatingPoint || int.TryParse(text, out value2);
+                if (!IsFloatingPoint && isNumber)
+                    value = value2;
+            }
+            if (isNumber)
             {
                 if (MinValue != MaxValue && (value < MinValue || value > MaxValue))
                     GameCanvas.startOKDlg(string.Format(Strings.inputNumberOutOfRange, MinValue, MaxValue) + '!');

@@ -493,8 +493,8 @@ namespace Mod.AccountManager
         {
             if (Utils.TryLoadDataString("account_manager_accounts", out string jsonData))
                 accounts = JsonConvert.DeserializeObject<List<Account>>(jsonData) ?? new List<Account>();
-            if (Utils.TryLoadDataInt("account_manager_selected_account_index", out int value))
-                selectedAccountIndex = value;
+            if (Utils.TryLoadDataLong("account_manager_selected_account_index", out long value))
+                selectedAccountIndex = (int)value;
             if (selectedAccountIndex >= accounts.Count)
                 selectedAccountIndex = -1;
             if (selectedAccountIndex != -1 && !SelectedAccount.Server.IsCustomIP())

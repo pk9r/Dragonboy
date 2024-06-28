@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Linq;
+using Mod.Constants;
 using Mod.R;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace Mod.Auto
         {
             targetMode = (TargetMode)target;
 
-            if (shouldReviveDeadChars && Char.myCharz().cgender != CharGender.Namek)
+            if (shouldReviveDeadChars && Char.myCharz().cgender != CharGender.Namekian)
             {
                 targetMode = TargetMode.None;
                 GameScr.info1.addInfo(Strings.youAreNotNamekian + '!', 0);
@@ -26,7 +27,7 @@ namespace Mod.Auto
             if (!shouldReviveDeadChars || GameCanvas.gameTick % (30 * Time.timeScale) != 0)
                 return;
             var deadChar = getDeadCharInMap();
-            var skillRescue = Char.myCharz().getSkill(new SkillTemplate { id = Ability.Rescue });
+            var skillRescue = Char.myCharz().getSkill(Char.myCharz().nClass.skillTemplates[2]);
             if (deadChar == null || !skillRescue.CanUse())
                 return;
             if (canHealChar(deadChar) && skillRescue.point <= 1)
