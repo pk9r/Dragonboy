@@ -63,9 +63,14 @@
         internal static string autoHarvestPeansTitle = "";
         internal static string autoHarvestPeansDescription = "";
         internal static string setFPSDescription = "";
+        internal static string setGameSpeedTitle = "";
+        internal static string setGameSpeedDescription = "";
         internal static string setReduceGraphicsTitle = "";
         internal static string level = "";
         internal static string[] setReduceGraphicsChoices = new string[0];
+        internal static string setMyCharSpeedTitle = "";
+        internal static string setMyCharSpeedDescription = "";
+
         internal static string[] setGoBackChoices = new string[0];
         internal static string setAutoTrainPetTitle = "";
         internal static string[] setAutoTrainPetChoices = new string[0];
@@ -90,6 +95,14 @@
         internal static string valueChanged = "";
         internal static string invalidValue = "";
         internal static string inputFPS = "";
+        internal static string inputGameSpeed = "";
+        internal static string inputGameSpeedHint = "";
+        internal static string setGameDelayTitle = "";
+        internal static string setGameDelayDescription = "";
+        internal static string inputGameDelay = "";
+        internal static string inputGameDelayHint = "";
+        internal static string inputMyCharSpeed = "";
+        internal static string inputMyCharSpeedHint = "";
         internal static string inputTimeChangeBg = "";
         internal static string inputTimeChangeBgHint = "";
         internal static string customBgChatPopup = "";
@@ -347,6 +360,12 @@
             timeout = "Thời gian chờ";
             //---------------------------------------------------
             inputFPS = "Nhập số khung hình trên giây";
+            inputGameSpeed = "Nhập tốc độ game";
+            inputGameSpeedHint = "Tốc độ, có thể nhập số thập phân";
+            inputGameDelay = "Nhập thời gian delay";
+            inputGameDelayHint = "Thời gian delay, có thể nhập số thập phân";
+            inputMyCharSpeed = "Nhập tốc độ nhân vật";
+            inputMyCharSpeedHint = "Tốc độ";
             inputTimeChangeBg = "Nhập thời gian thay đổi hình nền";
             inputTimeChangeBgHint = "Thời gian (giây)";
             customBgChatPopup = "Loại hình nền được hỗ trợ: ảnh (*.jpg, *.png), ảnh động (*.gif), video (*.mp4).\nẢnh động và video tiêu tốn nhiều tài nguyên của hệ thống, nên cân nhắc trước khi sử dụng.";
@@ -517,6 +536,10 @@
             autoHarvestPeansTitle = "Auto vặt đậu";
             autoHarvestPeansDescription = "Tự động thu hoạch đậu thần từ cây đậu thần ở nhà";
             setFPSDescription = "Điều chỉnh số lượng khung hình trên giây của game";
+            setGameSpeedTitle = "Tốc độ game";
+            setGameSpeedDescription = "Điều chỉnh tốc độ game";
+            setGameDelayTitle = "Delay game";
+            setGameDelayDescription = "Điều chỉnh thời gian chờ của game";
             setReduceGraphicsTitle = "Giảm đồ họa";
             setReduceGraphicsChoices = new string[]
             {
@@ -525,6 +548,8 @@
                 $"Đang bật ({level.ToLower()} 2)",
                 $"Đang bật ({level.ToLower()} 3)",
             };
+            setMyCharSpeedTitle = "Tốc độ nhân vật";
+            setMyCharSpeedDescription = "Điều chỉnh tốc độ di chuyển của nhân vật";
             setGoBackChoices = new string[]
             {
                 "Đang tắt",
@@ -599,9 +624,9 @@
             communityMod = "DBO Community Mod";
             gameVersion = "Game version";
             registered = "Registered";
-            inputContent = "Input content";
+            inputContent = "Enter the content";
             viewContent = "View content";
-            inputDelay = "Input delay time";
+            inputDelay = "Enter the delay time";
             timeMilliseconds = "Time (ms)";
             errorOccurred = "Error occurred";
             contentSaved = "Content saved";
@@ -650,8 +675,14 @@
             settings = "Settings";
             timeout = "Timeout";
             //---------------------------------------------------
-            inputFPS = "Input the number of frames per second";
-            inputTimeChangeBg = "Input the background interval";
+            inputFPS = "Enter the number of frames per second";
+            inputGameSpeed = "Enter the game speed";
+            inputGameSpeedHint = "Game speed, can be decimal number";
+            inputGameDelay = "Enter game delay";
+            inputGameDelayHint = "Delay, can be decimal number";
+            inputMyCharSpeed = "Enter the speed of my character";
+            inputMyCharSpeedHint = "Speed";
+            inputTimeChangeBg = "Enter the background interval";
             inputTimeChangeBgHint = "Time (seconds)";
             customBgChatPopup = "Supported background types: static images (*.jpg, *.png), animated images (*.gif), videos (*.mp4).\nAnimated images and videos consume a lot of system resources, which you should consider before using them.";
             customBgOpenBgList = "Open background list";
@@ -664,7 +695,7 @@
             customBgSetTimeChange = "Change background interval";
             customBgChangeGifSpeed = "Change animated background speed";
             customBgSelectBgFiles = "Select background files";
-            customBgInputGifSpeed = "Input animated background speed";
+            customBgInputGifSpeed = "Enter the speed of animated backgrounds";
             customBgSwitchToThisBg = "Switch to this background";
             customBgRemovedBg = "Background \"{0}\" has been removed";
             customBgList = "Custom background list";
@@ -718,7 +749,7 @@
             pickMobSkillList = "Skill list used to attack monsters";
             introCurrentPath = "Current video path";
             introChangeVideoPath = "Change video path";
-            introInputVolume = "Input intro volume";
+            introInputVolume = "Enter the volume of the intro video";
             introInputVolumeHint = "Volume";
             introNoVideo = "Intro video path has not been set";
             xmapUseSpecialCapsule = "Use special capsule when Xmap";
@@ -746,7 +777,7 @@
             teleportMenuNoRemovableChar = "No character that can be removed in the list";
             teleportMenuAutoTeleportTo = "Auto teleport";
             teleportMenuCharacterList = "Character list";
-            teleportMenuInputCharIDTextFieldName = "Input character ID";
+            teleportMenuInputCharIDTextFieldName = "Enter character ID";
             teleportMenuInputCharIDTextFieldHint = "ID";
             teleportMenuAddedCharacterWithID = "Character with ID {0} has been added to the list";
 
@@ -822,6 +853,10 @@
             autoHarvestPeansTitle = "Auto harvest Senzu beans";
             autoHarvestPeansDescription = "Automatically harvest Senzu beans from the Senzu tree at home";
             setFPSDescription = "Adjust the number of frames per second of the game";
+            setGameSpeedTitle = "Game speed";
+            setGameSpeedDescription = "Adjust the game speed";
+            setGameDelayTitle = "Game delay";
+            setGameDelayDescription = "Adjust the game delay time";
             setReduceGraphicsTitle = "Reduce graphics quality";
             setReduceGraphicsChoices = new string[]
             {
@@ -830,6 +865,8 @@
                 $"Enabled ({level.ToLower()} 2)",
                 $"Enabled ({level.ToLower()} 3)",
             };
+            setMyCharSpeedTitle = "Character speed";
+            setMyCharSpeedDescription = "Adjust the movement speed of my character";
             setGoBackChoices = new string[]
             {
                 "Disabled",
@@ -882,8 +919,8 @@
             introSelectFile = "Select video file";
             openSetsMenuTitle = "Sets menu";
             openSetsMenuDescription = "Open the Sets menu (\"set\" command or \'`\' key)";
-            openVietnameseInputMenuTitle = "Vietnamese input menu";
-            openVietnameseInputMenuDescription = "Open the Vietnamese input menu, use when having issues with external Vietnamese input programs (UniKey, VietKey, etc.)";
+            openVietnameseInputMenuTitle = "Vietnamese typing menu";
+            openVietnameseInputMenuDescription = "Open the Vietnamese typing menu, useful when external Vietnamese typing programs (UniKey, VietKey, etc.) doesn't work";
             addUserAoToAccountManagerTitle = "Add current account to the account list";
             addUserAoToAccountManagerDescription = "Add the current unregistered account to the account list";
             openedByExternalAccountManager = "Your account is managed by external Account manager";
