@@ -70,6 +70,7 @@ namespace Mod.Auto
                   Service.gI().requestChangeZone(goingBackTo.zoneID, 0);
                 else 
                 {
+                    Char.chatPopup = null;
                     if (mode != GoBackMode.GoBackToWhereIDied && Char.myCharz().cx != goingBackTo.x || Char.myCharz().cy != goingBackTo.y)
                         Utils.TeleportMyChar(goingBackTo.x, goingBackTo.y);
                     else
