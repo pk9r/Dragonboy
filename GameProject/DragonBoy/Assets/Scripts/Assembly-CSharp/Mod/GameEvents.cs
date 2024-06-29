@@ -398,7 +398,7 @@ namespace Mod
             //SuicideRange.update();
             AutoSellTrashItems.Update();
             AutoLogin.OnGameScrUpdate();
-            if (!AutoTrainNewAccount.isEnabled && !AutoGoback.IsGoingBack)
+            if (!AutoTrainNewAccount.isEnabled && !AutoGoback.IsGoingBack && !AutoSellTrashItems.IsRunning && !AutoLogin.IsRunning)
             {
                 if (Pk9rPickMob.IsTanSat)
                     GameScr.isAutoPlay = GameScr.canAutoPlay = false;
@@ -472,7 +472,6 @@ namespace Mod
             //GameCanvas.startWaitDlg();
             TeleportMenuMain.LoadData();
             AutoTrainPet.isFirstTimeCheckPet = true;
-            AutoLogin.OnServerListScreenLoaded();
         }
 
         /// <summary>
@@ -571,7 +570,7 @@ namespace Mod
 
         internal static bool OnChatPopupMultiLine(string chat)
         {
-            if (AutoTrainNewAccount.isEnabled || AutoSellTrashItems.IsRunning || AutoGoback.IsGoingBack)
+            if (AutoTrainNewAccount.isEnabled || AutoSellTrashItems.IsRunning || AutoGoback.IsGoingBack || AutoLogin.IsRunning)
             {
                 GameScr.info1.addInfo(chat, 0);
                 return true;
@@ -1975,19 +1974,22 @@ namespace Mod
                         return true;
                 }
             }
-            switch (panel.selected)
+            else
             {
-                case 5:
-                    if (GameScr.gI().pts != null)
-                        Utils.menuZone();
-                    isOpenZoneUI = true;
-                    return true;
-                case 9:
-                    GameCanvas.timeBreakLoading = mSystem.currentTimeMillis() + 30000;
-                    ServerListScreen.countDieConnect = 0;
-                    GameCanvas.instance.resetToLoginScr = false;
-                    GameCanvas.instance.doResetToLoginScr(GameCanvas.serverScreen);
-                    return true;
+                switch (panel.selected)
+                {
+                    case 5:
+                        if (GameScr.gI().pts != null)
+                            Utils.menuZone();
+                        isOpenZoneUI = true;
+                        return true;
+                    case 9:
+                        GameCanvas.timeBreakLoading = mSystem.currentTimeMillis() + 30000;
+                        ServerListScreen.countDieConnect = 0;
+                        GameCanvas.instance.resetToLoginScr = false;
+                        GameCanvas.instance.doResetToLoginScr(GameCanvas.serverScreen);
+                        return true;
+                }
             }
             return false;
         }

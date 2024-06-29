@@ -506,7 +506,7 @@ namespace Mod.R
             showTargetInfoDescription = "Hiện gần chính xác thời gian NRD, khiên, khỉ, huýt sáo... của đối thủ";
             autoSendAttackDescription = "Tự động gửi lệnh tấn công mục tiêu mà không di chuyển nhân vật";
             autoLoginTitle = "Đăng nhập lại khi mất kết nối";
-            autoLoginDescription = "Tự động đăng nhập lại khi kết nối tới máy chủ bị gián đoạn";
+            autoLoginDescription = "Tự động đăng nhập lại và quay lại map, khu và vị trí cũ khi kết nối tới máy chủ bị gián đoạn";
             showCharListTitle = "Danh sách nhân vật";
             showCharListDescription = "Hiện danh sách nhân vật trong khu hiện tại";
             showPetInCharListTitle = "Hiện đệ tử trong danh sách nhân vật";
@@ -829,7 +829,7 @@ namespace Mod.R
             showTargetInfoDescription = "Show the near-accurate duration of Black Star Dragonball, Energy Shield, Super Monkey, Whistle, etc. of the target character";
             autoSendAttackDescription = "Automatically send attack commands to the target character without moving your character";
             autoLoginTitle = "Auto login";
-            autoLoginDescription = "Automatically attempt to log in when the connection to the server is lost";
+            autoLoginDescription = "Automatically attempt to log in and return to the last map, zone and position when the connection to the server is lost";
             showCharListTitle = "Character list";
             showCharListDescription = "Show the character list in the current zone";
             showPetInCharListTitle = "Include disciples in the character list";
