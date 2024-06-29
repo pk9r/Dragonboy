@@ -583,7 +583,7 @@ namespace Mod
 
         internal static bool IsWearableAndVip(this Item item)
         {
-            if (item.template.type <= ItemTemplateType.Radar)
+            if (item.template.type <= ItemTemplateType.Radar || item.template.type == ItemTemplateType.TrainingSuite)
             {
                 for (int i = 0; i < item.itemOption.Length; i++)
                 {
