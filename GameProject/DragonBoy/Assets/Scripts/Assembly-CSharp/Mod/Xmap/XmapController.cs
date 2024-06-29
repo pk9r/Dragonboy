@@ -26,13 +26,13 @@ namespace Mod.Xmap
                 if (!isNextMapFailed)
                 {
                     string mapName = TileMap.mapNames[mapEnd];
-                    MainThreadDispatcher.dispatch(() =>
+                    MainThreadDispatcher.Dispatch(() =>
                         GameScr.info1.addInfo(Strings.goTo + ": " + mapName, 0));
                 }
 
                 LogMod.writeLine($"[xmap][dbg] Đang tạo dữ liệu map");
                 XmapAlgorithm.xmapData = new XmapData();
-                MainThreadDispatcher.dispatch(XmapAlgorithm.xmapData.Load);
+                MainThreadDispatcher.Dispatch(XmapAlgorithm.xmapData.Load);
                 while (!XmapAlgorithm.xmapData.isLoaded)
                     Thread.Sleep(100);
                 XmapAlgorithm.xmapData.LoadLinkMapCapsule();
@@ -50,7 +50,7 @@ namespace Mod.Xmap
 
                 if (way == null)
                 {
-                    MainThreadDispatcher.dispatch(() =>
+                    MainThreadDispatcher.Dispatch(() =>
                         GameScr.info1.addInfo(Strings.xmapCantFindWay + '!', 0));
                     finishXmap();
                     return;
@@ -59,7 +59,7 @@ namespace Mod.Xmap
 
             if (TileMap.mapID == way[way.Count - 1].to && !Char.myCharz().IsCharDead())
             {
-                MainThreadDispatcher.dispatch(() =>
+                MainThreadDispatcher.Dispatch(() =>
                     GameScr.info1.addInfo(Strings.xmapDestinationReached + '!', 0));
                 finishXmap();
                 return;
@@ -75,7 +75,7 @@ namespace Mod.Xmap
                 }
                 else if (Utils.CanNextMap())
                 {
-                    MainThreadDispatcher.dispatch(() =>
+                    MainThreadDispatcher.Dispatch(() =>
                         Pk9rXmap.NextMap(way[indexWay]));
                     LogMod.writeLine($"[xmap][dbg] nextMap: {way[indexWay].to}");
                 }

@@ -153,7 +153,7 @@ namespace Mod.ModHelper
                     continue;
                 }
 
-                MainThreadDispatcher.dispatch(() => onMessage(msg));
+                MainThreadDispatcher.Dispatch(() => onMessage(msg));
                 //try
                 //{
                 //    onMessage(msg);

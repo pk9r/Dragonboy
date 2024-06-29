@@ -13,7 +13,7 @@ namespace Mod.ModHelper
         /// Thực hiện các hành động trong Thread chính của game tránh xung đột
         /// </summary>
         /// <param name="action"></param>
-        public static void dispatch(Action action)
+        public static void Dispatch(Action action)
         {
             Queue.Enqueue(action);
         }

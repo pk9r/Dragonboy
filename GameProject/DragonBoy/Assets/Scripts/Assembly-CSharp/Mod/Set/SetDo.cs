@@ -272,7 +272,7 @@ namespace Mod.Set
                 Item item = arrItemBag[i];
                 if (itemSet.fullName == item.GetFullInfo())
                 {
-                    MainThreadDispatcher.dispatch(() => Service.gI().getItem(type, (sbyte)item.indexUI));
+                    MainThreadDispatcher.Dispatch(() => Service.gI().getItem(type, (sbyte)item.indexUI));
                     return true;
                 }
             }

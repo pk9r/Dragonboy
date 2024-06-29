@@ -35,7 +35,7 @@ namespace Mod.Background
                 do
                 {
                     bool completed = false;
-                    MainThreadDispatcher.dispatch(() =>
+                    MainThreadDispatcher.Dispatch(() =>
                     {
                         frames.Add(img.CreateTexture());
                         delays.Add(img.Delay);
