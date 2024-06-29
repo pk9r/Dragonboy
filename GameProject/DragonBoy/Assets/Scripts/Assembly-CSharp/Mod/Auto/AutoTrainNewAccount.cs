@@ -1,5 +1,6 @@
 ﻿using System;
 using Assets.src.g;
+using Mod.Constants;
 using Mod.R;
 using Mod.Xmap;
 using UnityEngine;
@@ -219,7 +220,7 @@ namespace Mod.Auto
                     Utils.TeleportMyChar(Char.myCharz());
                 lastTN = Char.myCharz().cTiemNang;
             }
-            if (mob.getTemplate().type == 4)    //quái bay
+            if (mob.getTemplate().type == MonsterType.Fly)
             {
                 if (Math.Abs(Char.myCharz().cx - mob.x) > 70)
                     Utils.TeleportMyChar(mob.x);
@@ -232,7 +233,7 @@ namespace Mod.Auto
             }
             else
                 Char.myCharz().currentMovePoint = new MovePoint(mob.x, mob.y);
-            if (Utils.Distance(Char.myCharz(), mob) <= 50 || (mob.getTemplate().type == 4 && Math.Abs(Char.myCharz().cx - mob.x) <= 70))
+            if (Utils.Distance(Char.myCharz(), mob) <= 50 || (mob.getTemplate().type == MonsterType.Fly && Math.Abs(Char.myCharz().cx - mob.x) <= 70))
             {
                 mySkill.lastTimeUseThisSkill = mSystem.currentTimeMillis();
                 Char.myCharz().mobFocus = mob;

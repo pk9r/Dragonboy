@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mod.Constants;
 
 namespace Mod.PickMob
 {
@@ -138,7 +139,7 @@ namespace Mod.PickMob
                                     Service.gI().selectSkill(skill.template.id);
                                     Char.myCharz().myskill = skill;
                                 }
-                                if (mobFocus.getTemplate().type == 4)
+                                if (mobFocus.getTemplate().type == MonsterType.Fly)
                                 {
                                     if (Math.Abs(Char.myCharz().cx - mobFocus.x) > 70)
                                         Move(mobFocus.x, Utils.GetYGround(mobFocus.x));
@@ -152,7 +153,7 @@ namespace Mod.PickMob
                                 }
                                 else
                                     Move(mobFocus.xFirst, mobFocus.yFirst);
-                                if (Utils.Distance(Char.myCharz(), mobFocus) <= 50 || (mobFocus.getTemplate().type == 4 && Math.Abs(Char.myCharz().cx - mobFocus.x) <= 70))
+                                if (Utils.Distance(Char.myCharz(), mobFocus) <= 50 || (mobFocus.getTemplate().type == MonsterType.Fly && Math.Abs(Char.myCharz().cx - mobFocus.x) <= 70))
                                 {
                                     if (mSystem.currentTimeMillis() - skill.lastTimeUseThisSkill > skill.coolDown + 100L)
                                     {
