@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using Mod.AccountManager;
 using Mod.Auto;
 using Mod.Background;
 using Mod.CharEffect;
 using Mod.CustomPanel;
+using Mod.DeveloperFunctions;
 using Mod.Graphics;
 using Mod.PickMob;
 using Mod.R;
@@ -34,6 +36,7 @@ namespace Mod.ModMenu
         internal static ModMenuItemBoolean[] modMenuItemBools;
         internal static ModMenuItemValues[] modMenuItemValues;
         internal static ModMenuItemFunction[] modMenuItemFunctions;
+        internal static ModMenuItemFunction[] modMenuItemDeveloperFunctions;
 
         static ModMenuMainActionListener actionListener = new ModMenuMainActionListener();
         static sbyte lastLanguage = -1;
@@ -610,6 +613,16 @@ namespace Mod.ModMenu
                 //new ModMenuItemFunction("Menu Custom Logo", "Mở menu logo tùy chỉnh", CustomLogo.ShowMenu),
                 //new ModMenuItemFunction("Menu Custom Cursor", "Mở menu con trỏ tùy chỉnh", CustomCursor.ShowMenu),
             };
+            modMenuItemDeveloperFunctions = new ModMenuItemFunction[]
+            {
+                new ModMenuItemFunction(new ModMenuItemFunctionConfig()
+                {
+                    ID = "GetGameData",
+                    Title = "Extract data from the game",
+                    Description = "Extract information from the game (maps, monsters, NPCs, items, etc.) as JSON data",
+                    Action = GameData.ShowMenu,
+                })
+            };
         }
 
         internal static void ShowPanel()
@@ -666,7 +679,7 @@ namespace Mod.ModMenu
 
         internal static void SetTabModMenu(Panel panel)
         {
-            SetTabPanelTemplates.setTabListTemplate(panel, modMenuItemBools, modMenuItemValues, modMenuItemFunctions);
+            SetTabPanelTemplates.setTabListTemplate(panel, modMenuItemBools, modMenuItemValues, modMenuItemFunctions, modMenuItemDeveloperFunctions);
         }
 
         internal static void DoFireModMenu(Panel panel)
@@ -677,27 +690,37 @@ namespace Mod.ModMenu
                 DoFireModMenuValues(panel);
             else if (panel.currentTabIndex == 2)
                 DoFireModMenuFunctions(panel);
+            else if (panel.currentTabIndex == 3)
+                DoFireModMenuDeveloperFunctions(panel);
             NotifySelectDisabledItem(panel);
         }
 
         static void DoFireModMenuFunctions(Panel panel)
         {
-            if (!modMenuItemFunctions[panel.selected].IsDisabled)
-            {
-                panel.hide();
-                modMenuItemFunctions[panel.selected].Action?.Invoke();
-            }
+            if (modMenuItemFunctions[panel.selected].IsDisabled)
+                return;
+            panel.hide();
+            modMenuItemFunctions[panel.selected].Action?.Invoke();
+        }
+
+        static void DoFireModMenuDeveloperFunctions(Panel panel)
+        {
+            if (panel.selected < 0)
+                return;
+            if (modMenuItemDeveloperFunctions[panel.selected].IsDisabled)
+                return;
+            panel.hide();
+            modMenuItemDeveloperFunctions[panel.selected].Action?.Invoke();
         }
 
         static void DoFireModMenuBools(Panel panel)
         {
             if (panel.selected < 0)
                 return;
-            if (!modMenuItemBools[panel.selected].IsDisabled)
-            {
-                modMenuItemBools[panel.selected].SwitchSelection();
-                GameScr.info1.addInfo(modMenuItemBools[panel.selected].Title + ": " + Strings.OnOffStatus(modMenuItemBools[panel.selected].Value), 0);
-            }
+            if (modMenuItemBools[panel.selected].IsDisabled)
+                return;
+            modMenuItemBools[panel.selected].SwitchSelection();
+            GameScr.info1.addInfo(modMenuItemBools[panel.selected].Title + ": " + Strings.OnOffStatus(modMenuItemBools[panel.selected].Value), 0);
         }
 
         static void DoFireModMenuValues(Panel panel)
@@ -736,6 +759,12 @@ namespace Mod.ModMenu
                     return;
                 GameScr.info1.addInfo(modMenuItemFunctions[selected].DisabledReason, 0);
             }
+            else if (panel.currentTabIndex == 3)
+            {
+                if (!modMenuItemDeveloperFunctions[selected].IsDisabled)
+                    return;
+                GameScr.info1.addInfo(modMenuItemDeveloperFunctions[selected].DisabledReason, 0);
+            }
         }
 
         internal static void PaintModMenu(Panel panel, mGraphics g)
@@ -748,6 +777,8 @@ namespace Mod.ModMenu
                 PaintModMenuValues(panel, g);
             else if (panel.currentTabIndex == 2)
                 PaintModMenuFunctions(panel, g);
+            else if (panel.currentTabIndex == 3)
+                PaintModMenuDeveloperFunctions(panel, g);
         }
 
         static void PaintModMenuBools(Panel panel, mGraphics g)
@@ -895,6 +926,48 @@ namespace Mod.ModMenu
             }
             panel.paintScrollArrow(g);
         }
+        
+        static void PaintModMenuDeveloperFunctions(Panel panel, mGraphics g)
+        {
+            if (modMenuItemDeveloperFunctions == null || modMenuItemDeveloperFunctions.Length != panel.currentListLength)
+                return;
+            int offset = Math.Max(panel.cmy / panel.ITEM_HEIGHT, 0);
+            bool isReset = true;
+            string descriptionTextInfo = string.Empty;
+            int x = 0, y = 0;
+            for (int i = offset; i < Mathf.Clamp(offset + panel.hScroll / panel.ITEM_HEIGHT + 2, 0, panel.currentListLength); i++)
+            {
+                int num = panel.xScroll;
+                int num2 = panel.yScroll + i * panel.ITEM_HEIGHT;
+                int num3 = panel.wScroll;
+                int num4 = panel.ITEM_HEIGHT - 1;
+                ModMenuItemFunction modMenuItem = modMenuItemDeveloperFunctions[i];
+                if (!modMenuItem.IsDisabled)
+                    g.setColor((i != panel.selected) ? 0xE7DFD2 : 0xF9FF4A);
+                else
+                    g.setColor((i != panel.selected) ? 0xb7afa2 : 0xd0d73b);
+                g.fillRect(num, num2, num3, num4);
+                mFont.tahoma_7_green2.drawString(g, i + 1 + ". " + modMenuItem.Title, num + 5, num2, 0);
+                if (i == panel.selected && mFont.tahoma_7_blue.getWidth(modMenuItem.Description) > panel.wScroll - 5 && !panel.isClose)
+                {
+                    isReset = false;
+                    descriptionTextInfo = modMenuItem.Description;
+                    x = num + 5;
+                    y = num2 + 11;
+                }
+                else
+                    mFont.tahoma_7_blue.drawString(g, Utils.TrimUntilFit(modMenuItem.Description, style, panel.wScroll - 5), num + 5, num2 + 11, 0);
+            }
+            if (isReset)
+                TextInfo.reset();
+            else
+            {
+                TextInfo.paint(g, descriptionTextInfo, x, y, panel.wScroll - 5, 15, mFont.tahoma_7_blue);
+                g.setClip(panel.xScroll, panel.yScroll, panel.wScroll, panel.hScroll);
+                g.translate(0, -panel.cmy);
+            }
+            panel.paintScrollArrow(g);
+        }
 
         internal static void SaveData()
         {
@@ -930,50 +1003,18 @@ namespace Mod.ModMenu
             }
         }
 
-        internal static ModMenuItem GetModMenuItem(string id)
-        {
-            foreach (ModMenuItemBoolean item in modMenuItemBools)
-            {
-                if (item.ID == id)
-                    return item;
-            }
-            foreach (ModMenuItemValues item in modMenuItemValues)
-            {
-                if (item.ID == id)
-                    return item;
-            }
-            foreach (ModMenuItemFunction item in modMenuItemFunctions)
-            {
-                if (item.ID == id)
-                    return item;
-            }
-            return null;
-        }
+        internal static ModMenuItem GetModMenuItem(string id) => modMenuItemBools.Concat<ModMenuItem>(modMenuItemValues).Concat(modMenuItemValues).Concat(modMenuItemFunctions).Concat(modMenuItemDeveloperFunctions).FirstOrDefault(item => item.ID == id);
 
         internal static T GetModMenuItem<T>(string id) where T : ModMenuItem
         {
             if (typeof(T) == typeof(ModMenuItemBoolean))
-            {
-                foreach (ModMenuItemBoolean item in modMenuItemBools)
-                {
-                    if (item.ID == id)
-                        return item as T;
-                }
-            }
+            return modMenuItemBools.FirstOrDefault(item => item.ID == id) as T;
             if (typeof(T) == typeof(ModMenuItemValues))
-            {
-                foreach (ModMenuItemValues item in modMenuItemValues)
-                {
-                    if (item.ID == id)
-                        return item as T;
-                }
-            }
+                return modMenuItemValues.FirstOrDefault(item => item.ID == id) as T;
             if (typeof(T) == typeof(ModMenuItemFunction))
-                foreach (ModMenuItemFunction item in modMenuItemFunctions)
-                {
-                    if (item.ID == id)
-                        return item as T;
-                }
+                return modMenuItemFunctions.FirstOrDefault(item => item.ID == id) as T;
+            if (typeof(T) == typeof(ModMenuItemFunction))
+                return modMenuItemDeveloperFunctions.FirstOrDefault(item => item.ID == id) as T;
             return null;
         }
     }

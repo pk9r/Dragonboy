@@ -499,6 +499,7 @@ namespace Mod.R
                 new string[]{ "Bật/tắt", "" },
                 new string[]{ "Điều", "chỉnh" },
                 new string[]{ "Chức", "năng" },
+                new string[]{ "Nhà phát", "triển" },
             };
             vSyncDescription = "Tự động giới hạn FPS theo tốc độ khung hình của màn hình";
             showTargetInfoTitle = "Thông tin đối thủ";
@@ -821,6 +822,7 @@ namespace Mod.R
                 new string[]{ "Toggle", "" },
                 new string[]{ "Adjust", "" },
                 new string[]{ "Func-", "tions" },
+                new string[]{ "Deve-", "loper" },
             };
             vSyncDescription = "Automatically limit the FPS according to the monitor's refresh rate";
             showTargetInfoTitle = "Target's effect information";
