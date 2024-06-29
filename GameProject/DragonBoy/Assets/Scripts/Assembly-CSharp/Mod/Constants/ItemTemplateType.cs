@@ -66,17 +66,17 @@ namespace Mod.Constants
         internal static readonly sbyte Backpack = 11;
 
         /// <summary>
-        /// Dragonball 1–7 stars that can be used to summon Shenron.
+        /// Dragonball 1–7 stars, which can be used to summon Shenron.
         /// </summary>
         internal static readonly sbyte DragonBall = 12;
 
         /// <summary>
-        /// Different kind of charms that can be bought from Urinai Obaba.
+        /// Charms that are sold at Urinai Obaba NPC.
         /// </summary>
         internal static readonly sbyte Charm = 13;
 
         /// <summary>
-        /// Different kind of stones that can be used to upgrade your equipment (Emerald, Sapphire, Ruby, Titan, etc.).
+        /// Stones used to upgrade your equipment (Emerald, Sapphire, Ruby, Titan, etc.).
         /// </summary>
         internal static readonly sbyte UpgradeStone = 14;
 
@@ -146,12 +146,12 @@ namespace Mod.Constants
         internal static readonly sbyte TrainingSuite = 32;
 
         /// <summary>
-        /// Collection card that can be added to the collection book.
+        /// Collection card, upon picking will be added to the collection book.
         /// </summary>
         internal static readonly sbyte CollectionCard = 33;
 
         /// <summary>
-        /// New type of gem that spawns on the ground and can be picked up, but can't be given to other people (locked gem).
+        /// New type of gem that spawns on the ground and can be picked up, but unlike <see cref="GreenGem"/>, it cannot be given to other people and cannot be used to buy gem consignment items from the consignment shop (locked gem).
         /// </summary>
         internal static readonly sbyte Ruby = 34;
 
