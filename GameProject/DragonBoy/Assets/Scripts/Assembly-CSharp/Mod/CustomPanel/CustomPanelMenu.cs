@@ -44,7 +44,7 @@ namespace Mod.CustomPanel
             SoundMn.gI().getSoundOption();
             if (config.SetTabAction.Method == new Action<Panel>(ModMenuMain.SetTabModMenu).Method) //Mod menu main
             {
-                panel.tabName[TYPE_CUSTOM_PANEL_MENU] = Strings.modMenuPanelTabName;
+                panel.mainTabName = panel.tabName[TYPE_CUSTOM_PANEL_MENU] = Strings.modMenuPanelTabName;
                 panel.currentTabName = panel.tabName[TYPE_CUSTOM_PANEL_MENU];
                 panel.currentTabIndex = Mathf.Clamp(panel.currentTabIndex, 0, Strings.modMenuPanelTabName.Length - 1);
                 //panel.EmulateSetTypePanel(panel == GameCanvas.panel ? 0 : 1);
