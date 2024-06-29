@@ -390,7 +390,7 @@ namespace Mod
             CharEffectMain.Update();
             TeleportMenuMain.Update();
             //ListCharsInMap.Update();
-            AutoGoback.update();
+            AutoGoback.Update();
             if (!AutoSellTrashItems.IsRunning)
                 AutoTrainNewAccount.Update();
             //AutoItem.update();
@@ -398,7 +398,7 @@ namespace Mod
             //SuicideRange.update();
             AutoSellTrashItems.Update();
             AutoLogin.OnGameScrUpdate();
-            if (!AutoTrainNewAccount.isEnabled && !AutoGoback.isGoingBack)
+            if (!AutoTrainNewAccount.isEnabled && !AutoGoback.IsGoingBack)
             {
                 if (Pk9rPickMob.IsTanSat)
                     GameScr.isAutoPlay = GameScr.canAutoPlay = false;
@@ -571,7 +571,7 @@ namespace Mod
 
         internal static bool OnChatPopupMultiLine(string chat)
         {
-            if (chat.ToLower().Contains("chưa thể chuyển khu") || AutoTrainNewAccount.isEnabled)
+            if (AutoTrainNewAccount.isEnabled || AutoSellTrashItems.IsRunning || AutoGoback.IsGoingBack)
             {
                 GameScr.info1.addInfo(chat, 0);
                 return true;
