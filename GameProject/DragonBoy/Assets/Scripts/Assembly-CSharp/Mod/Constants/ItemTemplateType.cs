@@ -25,7 +25,6 @@ namespace Mod.Constants
         internal static readonly int TenRadarsPack = 25;
         internal static readonly int Miscellaneous = 27;
         internal static readonly int EventItem = 27;
-        internal static readonly int DiscipleRelatedItem  = 27;
         internal static readonly int Flag = 28;
         internal static readonly int ConsumableBuffItem = 29;
         internal static readonly int Crystal = 30;
