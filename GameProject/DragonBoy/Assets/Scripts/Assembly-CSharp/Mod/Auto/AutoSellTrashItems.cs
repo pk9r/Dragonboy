@@ -247,6 +247,7 @@ namespace Mod.Auto
             else
             {
                 Char.chatPopup = null;
+                ChatPopup.currChatPopup = null;
                 ResumePickMob();
                 steps = 0;
             }
@@ -260,8 +261,8 @@ namespace Mod.Auto
 
         static void ResumePickMob() => Pk9rPickMob.IsTanSat = lastPickMobState;
 
-        static bool ShouldMoveItemToChest(Item item) => item.IsWearableAndVip() || item.template.type == ItemTemplateType.FlyPlatform || item.template.type == ItemTemplateType.VIPFlyPlatform || item.template.type == ItemTemplateType.Backpack || item.template.type == ItemTemplateType.AvatarAndDisguise || item.template.type == ItemTemplateType.UpgradeStone || item.template.type == ItemTemplateType.DragonBall || item.template.type == ItemTemplateType.ConsumableBuffItem || item.template.type == ItemTemplateType.Miscellaneous;
-        static bool ShouldKeepItem(Item item) => ShouldMoveItemToChest(item) || item.template.type == ItemTemplateType.SenzuBean;
+        static bool ShouldMoveItemToChest(Item item) => item.IsWearableAndVip() || item.template.type == ItemTemplateType.FlyPlatform || item.template.type == ItemTemplateType.VIPFlyPlatform || item.template.type == ItemTemplateType.Backpack || item.template.type == ItemTemplateType.AvatarAndDisguise || item.template.type == ItemTemplateType.UpgradeStone || item.template.type == ItemTemplateType.DragonBall || item.template.type == ItemTemplateType.ConsumableBuffItem || (item.template.type == ItemTemplateType.Miscellaneous && item.template.id != 521);
+        static bool ShouldKeepItem(Item item) => ShouldMoveItemToChest(item) || item.template.type == ItemTemplateType.SenzuBean || item.template.id == 521;
 
         internal static void SetState(bool value)
         {
