@@ -406,7 +406,7 @@ namespace Mod.ModMenu
                     ID = "Set_MyCharSpeed",
                     Title = Strings.setMyCharSpeedTitle,
                     Description = Strings.setMyCharSpeedDescription,
-                    GetValueFunc = () => Char.myCharz().cspeed,
+                    GetValueFunc = () => Utils.myCharSpeed,
                     SetValueAction = value => Utils.myCharSpeed = (int)value,
                     RMSName = "my_char_speed",
                     MinValue = 0,
