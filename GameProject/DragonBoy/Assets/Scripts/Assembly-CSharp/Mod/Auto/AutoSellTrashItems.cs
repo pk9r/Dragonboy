@@ -8,7 +8,7 @@ namespace Mod.Auto
     internal class AutoSellTrashItems
     {
         internal static bool isEnabled;
-        internal static bool IsRunning => steps > 0;
+        internal static bool IsRunning => isEnabled && steps > 0;
         static int steps;
         static long lastTimeUpdate;
         static int lastRemoveItemIndex = -1;
