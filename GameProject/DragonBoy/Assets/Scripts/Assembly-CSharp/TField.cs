@@ -754,7 +754,7 @@ public class TField : IActionListener
             TouchScreenKeyboard.hideInput = !currentTField.showSubTextField;
             TouchScreenKeyboardType t = TouchScreenKeyboardType.Default;
             if (inputType == INPUT_TYPE_NUMERIC)
-                t = TouchScreenKeyboardType.NumberPad;
+                t = TouchScreenKeyboardType.NumbersAndPunctuation;
             bool type = false;
             if (inputType == INPUT_TYPE_PASSWORD)
                 type = true;
