@@ -82,6 +82,7 @@ namespace Mod.ModMenu
                 onCancelChat();
                 return;
             }
+            text = text.Replace('.', ',');
             double value = 0;
             bool isNumber = double.TryParse(text, out value);
             if (isNumber)
