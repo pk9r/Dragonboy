@@ -1,13 +1,13 @@
 ﻿using Mod.R;
 using Mod.Xmap;
-using UnityEngine;
 
 namespace Mod.Auto
 {
     internal class AutoGoback
     {
         internal static InfoGoBack goingBackTo = new InfoGoBack();
-        internal static bool isGoingBack = false;
+        internal static bool IsGoingBack => isGoingBack;
+        static bool isGoingBack;
         internal static GoBackMode mode { get; set; }
         static long lastTimeGoBack;
         static long lastTimeUpdate;
@@ -18,12 +18,12 @@ namespace Mod.Auto
         {
             mode = (GoBackMode)value;
             if (isEnabled)
-                enable();
+                Enable();
             else
-                disable();
+                Disable();
         }
 
-        internal static void enable()
+        internal static void Enable()
         {
             if (mode != GoBackMode.GoBackToFixedLocation) 
                 return;
@@ -31,13 +31,13 @@ namespace Mod.Auto
             GameScr.info1.addInfo(string.Format(Strings.gobackTo, TileMap.mapName, TileMap.zoneID, goingBackTo.x, goingBackTo.y) + '!', 0);
         }
 
-        internal static void disable()
+        internal static void Disable()
         {
             isGoingBack = false;
             XmapController.finishXmap();
         }
 
-        internal static void update()
+        internal static void Update()
         {
             if (!isEnabled || XmapController.gI.IsActing)
                 return;
@@ -45,12 +45,12 @@ namespace Mod.Auto
                 return;
             lastTimeUpdate = mSystem.currentTimeMillis();
             if (Char.myCharz().IsCharDead())
-                handleDeath();
+                HandleDeath();
             else if (isGoingBack)
-                handleGoingBack();
+                HandleGoingBack();
         }
 
-        static void handleGoingBack()
+        static void HandleGoingBack()
         {
             if (Utils.IsMyCharHome())
             {
@@ -79,7 +79,7 @@ namespace Mod.Auto
             }
         }
 
-        static void handleDeath()
+        static void HandleDeath()
         {
             long now = mSystem.currentTimeMillis();
             long timeSinceDeath = now - lastTimeGoBack;
@@ -97,10 +97,7 @@ namespace Mod.Auto
             }
         }
 
-        static bool hasChicken()
-        {
-            return GameScr.vItemMap.size() > 0;
-        }
+        static bool HasChicken() => GameScr.vItemMap.size() > 0;
 
         internal struct InfoGoBack
         {
