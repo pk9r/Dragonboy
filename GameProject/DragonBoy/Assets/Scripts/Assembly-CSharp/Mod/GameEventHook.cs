@@ -827,7 +827,7 @@ namespace Mod
         {
             ServerListScreen_switchToMe_original(_this);
             _this.cmd[1 + _this.nCmdPlay].caption = Strings.accounts;
-            GameEvents.OnServerListScreenLoaded();
+            GameEvents.OnServerListScreenLoaded(_this);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void ServerListScreen_switchToMe_original(ServerListScreen _this)

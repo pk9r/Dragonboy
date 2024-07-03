@@ -107,7 +107,7 @@ namespace Mod.AccountManager
                     case CommandType.FinishInputAccount:
                         if (string.IsNullOrEmpty(tfUser.getText()))
                         {
-                            GameCanvas.startOKDlg(mResources.userBlank);
+                            GameCanvas.startOKDlg(mResources.userBlank.TrimEnd('.') + '!');
                             break;
                         }
                         bool isUserAo = regexMatchUserAo.IsMatch(tfUser.getText());
@@ -149,9 +149,9 @@ namespace Mod.AccountManager
                             if (acc.Username == userName && acc.Password == password)
                             {
                                 if (!acc.Server.IsCustomIP() && acc.Server.index == selectServer.SelectedIndex)
-                                    break;
+                                    goto closeAndSaveData;
                                 if (acc.Server.IsCustomIP() && customServer != null && acc.Server == customServer)
-                                    break;
+                                    goto closeAndSaveData;
                             }
                             accounts[scrollableMenuAccounts.CurrentItemIndex] = new Account()
                             {
@@ -162,6 +162,7 @@ namespace Mod.AccountManager
                             if (selectServer.SelectedIndex != selectServer.Items.Count - 1)
                                 accounts[scrollableMenuAccounts.CurrentItemIndex].Server = defaultServers[selectServer.SelectedIndex];
                         }
+                    closeAndSaveData:;
                         isAddingAccount = isEditingAccount = false;
                         SaveDataAccounts();
                         break;
@@ -200,7 +201,7 @@ namespace Mod.AccountManager
                         }
                         else if (port < ushort.MinValue || port > ushort.MaxValue)
                         {
-                            GameCanvas.startOKDlg(string.Format(Strings.inputNumberOutOfRange, ushort.MinValue, ushort.MaxValue));
+                            GameCanvas.startOKDlg(string.Format(Strings.inputNumberOutOfRange, ushort.MinValue, ushort.MaxValue) + '!');
                             break;
                         }
                         customServer = new Server(tfCustomServerName.getText(), tfCustomServerAddress.getText(), (ushort)port);

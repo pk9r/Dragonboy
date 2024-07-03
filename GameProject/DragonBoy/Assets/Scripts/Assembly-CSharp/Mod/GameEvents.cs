@@ -41,6 +41,9 @@ namespace Mod
         static bool isFirstPause = true;
         static bool isOpenZoneUI;
         static GUIStyle style;
+        static string nameCustomServer = "";
+        static string currentHost = "";
+        static ushort currentPort = 0;
 
         internal static void OnAwake()
         {
@@ -345,7 +348,7 @@ namespace Mod
             if (!Utils.IsOpenedByExternalAccountManager && GameCanvas.gameTick % (60 * Time.timeScale) == 0)
             {
                 Account account = InGameAccountManager.SelectedAccount;
-                if (account != null)
+                if (account != null && account.Server.hostnameOrIPAddress == currentHost && account.Server.port == currentPort)
                 {
                     account.Gold = Char.myCharz().xu;
                     account.Gem = Char.myCharz().luong;
@@ -370,6 +373,8 @@ namespace Mod
                         account.PetInfo.MaxMP = Char.myPetz().cMPFull;
                         account.PetInfo.Icon = Char.myPetz().avatarz();
                     }
+                    else
+                        account.PetInfo = null;
                 }
             }
             if (Char.myCharz().havePet && mSystem.currentTimeMillis() - lastTimeRequestPetInfo > delayRequestPetInfo)
@@ -461,7 +466,7 @@ namespace Mod
         /// <summary>
         /// Kích hoạt sau khi màn hình chọn server được load.
         /// </summary>
-        internal static void OnServerListScreenLoaded()
+        internal static void OnServerListScreenLoaded(ServerListScreen serverListScreen)
         {
             ModMenuMain.Initialize();
 
@@ -472,6 +477,12 @@ namespace Mod
             //GameCanvas.startWaitDlg();
             TeleportMenuMain.LoadData();
             AutoTrainPet.isFirstTimeCheckPet = true;
+            if (!Utils.IsOpenedByExternalAccountManager)
+            {
+                if (string.IsNullOrEmpty(nameCustomServer))
+                    return;
+                serverListScreen.cmd[2 + serverListScreen.nCmdPlay].caption = mResources.server + ": [custom] " + nameCustomServer;
+            }
         }
 
         /// <summary>
@@ -483,6 +494,7 @@ namespace Mod
         {
             if (!Utils.IsOpenedByExternalAccountManager)
             {
+                nameCustomServer = "";
                 if (InGameAccountManager.SelectedAccount == null)
                     return;
                 Server server = InGameAccountManager.SelectedServer;
@@ -491,13 +503,14 @@ namespace Mod
                 InGameAccountManager.SelectedServer = null;
                 if (server.IsCustomIP())
                 {
-                    host = server.hostnameOrIPAddress;
-                    port = server.port;
+                    host = currentHost = server.hostnameOrIPAddress;
+                    port = currentPort = server.port;
+                    nameCustomServer = server.name;
                 }
                 else
                 {
-                    host = ServerListScreen.address[server.index];
-                    port = ServerListScreen.port[server.index];
+                    host = currentHost = ServerListScreen.address[server.index];
+                    port = currentPort = (ushort)ServerListScreen.port[server.index];
                     ServerListScreen.ipSelect = server.index;
                 }
             }
