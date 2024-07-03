@@ -1126,10 +1126,9 @@ namespace Mod
                 g.fillRect(realX, realY, 22, 22);
                 float coolDownRatio = 1 - coolingDown / (float)skill.coolDown;
                 CustomGraphics.drawCooldownRect(x, y, 22, 22, coolDownRatio, color);
-                string cooldownStr = $"{(skill.coolDown - coolingDown) / 1000f:#.0}";
+                string cooldownStr = $"{(skill.coolDown - coolingDown) / 1000f:#.0}".Replace(',', '.');
                 if (cooldownStr.Length > 4)
-                    cooldownStr = cooldownStr.Substring(0, cooldownStr.IndexOf(','));
-                cooldownStr = cooldownStr.Replace(',', '.');
+                    cooldownStr = cooldownStr.Substring(0, cooldownStr.IndexOf('.'));
                 mFont.tahoma_7_yellow.drawString(g, cooldownStr, x + 1, y - 12 + mFont.tahoma_7.getHeight() / 2, mFont.CENTER);
             }
             else
