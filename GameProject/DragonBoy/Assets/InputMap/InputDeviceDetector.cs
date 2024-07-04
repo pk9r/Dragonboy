@@ -5,8 +5,6 @@ namespace InputMap
 {
     public class InputDeviceDetector : MonoBehaviour
 	{
-		InputDevice currentDevice;
-
 		static InputDeviceDetector instance;
 
 		void Awake()
@@ -29,8 +27,7 @@ namespace InputMap
 		{
 			if (change == InputActionChange.ActionPerformed)
 			{
-				currentDevice = ((InputAction)obj).activeControl.device;
-				Debug.Log("Current Device: " + currentDevice.GetType().Name);
+                InputDevice currentDevice = ((InputAction)obj).activeControl.device;
                 if (currentDevice is Keyboard || currentDevice is Mouse)
                     ShowCursor();
                 else
