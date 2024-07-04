@@ -99,21 +99,19 @@ namespace InputMap
                 Utils.useCapsule();
                 northButton = false;
             }
-            else if (IsSelectButtonPressed)
+            else if (IsLeftButtonPressed && GameCanvas.currentScreen is GameScr)
             {
                 if (!GameCanvas.panel.isShow)
                     GameScr.gI().cmdMenu.performAction();
-                selectButton = false;
             }
-            else if (IsStartButtonPressed)
+            else if (IsRightButtonPressed && GameCanvas.currentScreen is GameScr)
             {
                 if (GameCanvas.panel2 == null || (GameCanvas.panel2 != null && !GameCanvas.panel2.isShow))
                     ModMenuMain.ShowPanel();
-                startButton = false;
             }
             else if (CanControlGameScr())
             {
-                if (IsLeftButtonPressed)
+                if (LeftTriggerValue > 0)
                 {
                     int index = Array.IndexOf(GameScr.keySkill, Char.myCharz().myskill);
                     int count = 0;
@@ -127,9 +125,10 @@ namespace InputMap
                     Skill skill = Char.myCharz().myskill = GameScr.keySkill[index];
                     Service.gI().selectSkill(skill.template.id);
                     GameScr.gI().saveRMSCurrentSkill(skill.template.id);
-                    GameScr.gI().resetButton(); leftButton = false;
+                    GameScr.gI().resetButton(); 
+                    leftButton = false;
                 }
-                else if (IsRightButtonPressed)
+                else if (RightTriggerValue > 0)
                 {
                     int index = Array.IndexOf(GameScr.keySkill, Char.myCharz().myskill);
                     int count = 0;
