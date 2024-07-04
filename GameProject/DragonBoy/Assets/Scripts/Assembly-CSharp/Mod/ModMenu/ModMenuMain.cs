@@ -220,6 +220,15 @@ namespace Mod.ModMenu
                 }),
                 new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
                 {
+                    ID = "HideGameUI_Toggle",
+                    Title = Strings.hideGameUITitle,
+                    Description = Strings.hideGameUIDescription,
+                    GetValueFunc = () => HideGameUI.isEnabled,
+                    SetValueAction = HideGameUI.SetState,
+                    RMSName = "hide_game_ui"
+                }),
+                new ModMenuItemBoolean(new ModMenuItemBooleanConfig()
+                {
                     ID = "Intro_Toggle",
                     Title = Strings.introTitle,
                     Description = Strings.introDescription,

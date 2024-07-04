@@ -42,6 +42,8 @@ namespace Mod.R
         internal static string autoSellTrashItemsDescription = "";
         internal static string noLongerNewAccount = "";
         internal static string customBackgroundTitle = "";
+        internal static string hideGameUITitle = "";
+        internal static string hideGameUIDescription = "";
         internal static string customBackgroundDescription = "";
         internal static string notifyBossTitle = "";
         internal static string notifyBossDescription = "";
@@ -518,6 +520,8 @@ namespace Mod.R
             autoSellTrashItemsDescription = "Tự động bán vật phẩm không cần thiết khi hành trang đầy và cất đồ giá trị vào rương, bạn nên dọn sạch hành trang của mình trước khi bật để tránh bị mất vật phẩm";
             customBackgroundTitle = "Hình nền tùy chỉnh";
             customBackgroundDescription = "Thay thế hình nền mặc định của game bằng hình nền tùy chỉnh";
+            hideGameUITitle = "Ẩn UI";
+            hideGameUIDescription = "Ẩn giao diện game (các nút vẫn có thể bấm)";
             skipSpaceshipTitle = "Bỏ qua tàu vũ trụ";
             skipSpaceshipDescription = "Bỏ qua hoạt ảnh tàu vũ trụ";
             notifyBossTitle = "Thông báo Boss";
@@ -841,6 +845,8 @@ namespace Mod.R
             autoSellTrashItemsDescription = "Automatically sell unnecessary items when the inventory is full and store valuable items in the chest, you should clean your inventory before enabling this feature to avoid losing items";
             customBackgroundTitle = "Custom background";
             customBackgroundDescription = "Replace the game default background with custom background";
+            hideGameUITitle = "Hide UI";
+            hideGameUIDescription = "Hide the game UI (buttons are still clickable)";
             skipSpaceshipTitle = "Skip spaceship";
             skipSpaceshipDescription = "Skip spaceship animation";
             notifyBossTitle = "Boss notification";

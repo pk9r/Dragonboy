@@ -1039,7 +1039,7 @@ namespace Mod
 
         internal static void OnGameScrPaintSelectedSkill(GameScr instance, mGraphics g)
         {
-            if (!GameScr.isHaveSelectSkill)
+            if (!GameScr.isHaveSelectSkill || HideGameUI.isEnabled)
                 return;
             isHaveSelectSkill_old = GameScr.isHaveSelectSkill;
             GameScr.isHaveSelectSkill = false;
@@ -1125,7 +1125,8 @@ namespace Mod
 
         internal static bool OnSkillPaint(Skill skill, int x, int y, mGraphics g)
         {
-            SmallImage.drawSmallImage(g, skill.template.iconId, x, y, 0, StaticObj.VCENTER_HCENTER);
+            if (!HideGameUI.isEnabled)
+                SmallImage.drawSmallImage(g, skill.template.iconId, x, y, 0, StaticObj.VCENTER_HCENTER);
             long coolingDown = mSystem.currentTimeMillis() - skill.lastTimeUseThisSkill;
             if (coolingDown < skill.coolDown)
             {
@@ -2139,6 +2140,15 @@ namespace Mod
         internal static bool OnGetMapOffline()
         {
             isOpenZoneUI = false;
+            return false;
+        }
+
+        internal static bool OnmGraphicsDrawImage(Image image)
+        {
+            if (HideGameUI.isEnabled && !HideGameUI.ShouldDrawImage(image))
+                return true;
+            if (GraphicsReducer.IsEnabled && !GraphicsReducer.ShouldDrawImage(image))
+                return true;
             return false;
         }
     }

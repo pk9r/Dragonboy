@@ -8,7 +8,7 @@ namespace Mod.Graphics
     {
         static bool lastIsFill;
         static Image mapTile = new Image();
-        static Color colorMap = new Color(0.93f, 0.27f, 0f);
+        static Color colorMap = new Color(0f, 0.21f, 0.78f, 1f);
 
         static ReduceGraphicsLevel _level;
         internal static ReduceGraphicsLevel Level
@@ -16,6 +16,8 @@ namespace Mod.Graphics
             get => _level;
             set => _level = value;
         }
+
+        internal static bool IsEnabled => _level != ReduceGraphicsLevel.Off;
 
         #region Events
         internal static bool OnServerEffectPaint()
@@ -196,13 +198,6 @@ namespace Mod.Graphics
             g.drawRect(_this.cmtoX - 10, _this.cmtoY - 4 + ((GameCanvas.gameTick % 10 <= 5) ? 0 : 1), 15, 15);
             g.translate(-g.getTranslateX(), -g.getTranslateY());
             return true;
-        }
-
-        internal static bool OnmGraphicsDrawImage(Image image)
-        {
-            if (_level > ReduceGraphicsLevel.Level1 && image == TileMap.imgLight)
-                return true;
-            return false;
         }
 
         internal static bool OnGameScrPaintBgItem()
@@ -444,6 +439,8 @@ namespace Mod.Graphics
             }
             return false;
         }
+
+        internal static bool ShouldDrawImage(Image image) => IsEnabled && image != TileMap.imgLight;
         #endregion
 
         internal static void InitializeTileMap(bool isFill)

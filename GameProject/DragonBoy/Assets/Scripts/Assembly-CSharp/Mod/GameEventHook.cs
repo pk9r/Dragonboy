@@ -366,7 +366,7 @@ namespace Mod
 
         static void mGraphics_drawImage_hook(mGraphics g, Image image, int x, int y, int anchor)
         {
-            if (!GraphicsReducer.OnmGraphicsDrawImage(image))
+            if (!GameEvents.OnmGraphicsDrawImage(image))
                 mGraphics_drawImage_original(g, image, x, y, anchor);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
