@@ -98,7 +98,7 @@ namespace Mod
         {
             if (videoPlayer.isPlaying && isPlaying)
                 GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), videoPlayer.texture, ScaleMode.ScaleToFit);
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) || GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
             {
                 videoPlayer.Stop();
                 SceneManager.LoadScene("NROL");

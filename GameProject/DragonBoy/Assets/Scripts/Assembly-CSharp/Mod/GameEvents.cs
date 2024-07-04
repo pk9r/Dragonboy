@@ -47,7 +47,7 @@ namespace Mod
 
         internal static void OnAwake()
         {
-            ControllerInput.OnAwake();
+
         }
 
         /// <summary>
@@ -196,7 +196,6 @@ namespace Mod
             EHVN.FileChooser.Update();
 #endif
             MainThreadDispatcher.update();
-            ControllerInput.OnUpdate();
             AutoLogin.Update();
             //CustomCursor.Update();
         }
