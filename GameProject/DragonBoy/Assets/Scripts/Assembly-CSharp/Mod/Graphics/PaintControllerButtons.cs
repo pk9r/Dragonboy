@@ -63,58 +63,50 @@ namespace Mod.Graphics
                 return;
             if (Char.myCharz().statusMe == 14)
                 return;
-            if (!GameScr.isudungCapsun4 && !GameScr.isudungCapsun3)
-                return;
             if (!InputDeviceDetector.IsXboxController())
                 return;
-            Image image = (mScreen.keyTouch != 14) ? GameScr.imgNut : GameScr.imgNutF;
             int x, y, width, anchor;
             int height = 12 * mGraphics.zoomLevel;
             Texture2D texture;
-
-            void ConvXY()
+            if (GameScr.isudungCapsun4 || GameScr.isudungCapsun3)
             {
-                x += g.translateX;
-                y += g.translateY;
-                x *= mGraphics.zoomLevel;
-                y *= mGraphics.zoomLevel;
-            }
-            if (GameScr.gamePad.isSmallGamePad)
-            {
-                if (GameScr.isAnalog != 1)
+                texture = XboxControllerIcons.Y;
+                Image image = (mScreen.keyTouch != 14) ? GameScr.imgNut : GameScr.imgNutF;
+                if (GameScr.gamePad.isSmallGamePad)
                 {
-                    x = GameScr.xHP + 5;
-                    y = GameScr.yHP - 6 - 40 + 10;
-                    anchor = 0;
-                    texture = XboxControllerIcons.Y;
+                    if (GameScr.isAnalog != 1)
+                    {
+                        x = GameScr.xHP + 5;
+                        y = GameScr.yHP - 6 - 40 + 10;
+                        anchor = 0;
+                    }
+                    else
+                    {
+                        x = GameScr.xHP + 20 + 5;
+                        y = GameScr.yHP + 20 - 6 - 40 + 10;
+                        anchor = HCENTER | VCENTER;
+                    }
+                }
+                else if (GameScr.isAnalog != 1)
+                {
+                    x = GameScr.xHP + 20;
+                    y = GameScr.yHP + 20 - 6 - 40;
+                    anchor = HCENTER | VCENTER;
                 }
                 else
                 {
                     x = GameScr.xHP + 20 + 5;
                     y = GameScr.yHP + 20 - 6 - 40 + 10;
                     anchor = HCENTER | VCENTER;
-                    texture = XboxControllerIcons.Y;
                 }
+                x += g.translateX;
+                y += g.translateY;
+                x *= mGraphics.zoomLevel;
+                y *= mGraphics.zoomLevel;
+                width = GetWidth(texture, height);
+                GetStartingPoint(image, ref x, ref y, anchor);
+                DrawTexture(x + image.texture.width, y, width, height, texture, LEFT);
             }
-            else if (GameScr.isAnalog != 1)
-            {
-                x = GameScr.xHP + 20;
-                y = GameScr.yHP + 20 - 6 - 40;
-                anchor = HCENTER | VCENTER;
-                texture = XboxControllerIcons.Y;
-            }
-            else
-            {
-                x = GameScr.xHP + 20 + 5;
-                y = GameScr.yHP + 20 - 6 - 40 + 10;
-                anchor = HCENTER | VCENTER;
-                texture = XboxControllerIcons.Y;
-            }
-
-            width = GetWidth(texture, height);
-            ConvXY();
-            GetStartingPoint(image, ref x, ref y, anchor);
-            DrawTexture(x + image.texture.width, y, width, height, texture, LEFT);
             if (GameScr.gamePad.isLargeGamePad)
             {
                 Skill[] array;
