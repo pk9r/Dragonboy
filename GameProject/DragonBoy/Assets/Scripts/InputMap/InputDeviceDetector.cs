@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.DualShock;
-using UnityEngine.InputSystem.Switch;
 using UnityEngine.InputSystem.XInput;
 
 namespace InputMap
@@ -47,6 +46,11 @@ namespace InputMap
 		internal static bool IsController() => currentDevice is Gamepad;
 		internal static bool IsXboxController() => currentDevice is XInputController;
         internal static bool IsDualShockController() => currentDevice is DualShockGamepad;
-        internal static bool IsSwitchController() => currentDevice is SwitchProControllerHID;
+        internal static bool IsSwitchController() =>
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+            currentDevice is UnityEngine.InputSystem.Switch.SwitchProControllerHID;
+#else
+            false;
+#endif
     }
 }
