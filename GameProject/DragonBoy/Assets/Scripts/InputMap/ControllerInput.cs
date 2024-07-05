@@ -17,6 +17,9 @@ namespace InputMap
         static bool isNextMap;
         static bool isResetCamera;
 
+        static bool isLeftTriggerCanceled;
+        static bool isRightTriggerCanceled;
+
         internal static bool IsLeftButtonPressed => leftButton;
         internal static bool IsRightButtonPressed => rightButton;
         internal static bool IsSelectButtonPressed => selectButton;
@@ -113,38 +116,48 @@ namespace InputMap
             {
                 if (LeftTriggerValue > 0)
                 {
-                    int index = Array.IndexOf(GameScr.keySkill, Char.myCharz().myskill);
-                    int count = 0;
-                    do
+                    if (isLeftTriggerCanceled)
                     {
-                        if (--index < 0)
-                            index = GameScr.keySkill.Length - 1;
-                        count++;
+                        int index = Array.IndexOf(GameScr.keySkill, Char.myCharz().myskill);
+                        int count = 0;
+                        do
+                        {
+                            if (--index < 0)
+                                index = GameScr.keySkill.Length - 1;
+                            count++;
+                        }
+                        while (GameScr.keySkill[index] == null && count < GameScr.keySkill.Length);
+                        Skill skill = Char.myCharz().myskill = GameScr.keySkill[index];
+                        Service.gI().selectSkill(skill.template.id);
+                        GameScr.gI().saveRMSCurrentSkill(skill.template.id);
+                        GameScr.gI().resetButton();
+                        isLeftTriggerCanceled = false;
                     }
-                    while (GameScr.keySkill[index] == null && count < GameScr.keySkill.Length);
-                    Skill skill = Char.myCharz().myskill = GameScr.keySkill[index];
-                    Service.gI().selectSkill(skill.template.id);
-                    GameScr.gI().saveRMSCurrentSkill(skill.template.id);
-                    GameScr.gI().resetButton(); 
-                    leftButton = false;
                 }
-                else if (RightTriggerValue > 0)
+                else
+                    isLeftTriggerCanceled = true;
+                if (RightTriggerValue > 0)
                 {
-                    int index = Array.IndexOf(GameScr.keySkill, Char.myCharz().myskill);
-                    int count = 0;
-                    do
+                    if (isRightTriggerCanceled)
                     {
-                        if (++index == GameScr.keySkill.Length)
-                            index = 0;
-                        count++;
+                        int index = Array.IndexOf(GameScr.keySkill, Char.myCharz().myskill);
+                        int count = 0;
+                        do
+                        {
+                            if (++index == GameScr.keySkill.Length)
+                                index = 0;
+                            count++;
+                        }
+                        while (GameScr.keySkill[index] == null && count < GameScr.keySkill.Length);
+                        Skill skill = Char.myCharz().myskill = GameScr.keySkill[index];
+                        Service.gI().selectSkill(skill.template.id);
+                        GameScr.gI().saveRMSCurrentSkill(skill.template.id);
+                        GameScr.gI().resetButton();
+                        isRightTriggerCanceled = false;
                     }
-                    while (GameScr.keySkill[index] == null && count < GameScr.keySkill.Length);
-                    Skill skill = Char.myCharz().myskill = GameScr.keySkill[index];
-                    Service.gI().selectSkill(skill.template.id);
-                    GameScr.gI().saveRMSCurrentSkill(skill.template.id);
-                    GameScr.gI().resetButton();
-                    rightButton = false;
                 }
+                else
+                    isRightTriggerCanceled = true;
             }
         }
 

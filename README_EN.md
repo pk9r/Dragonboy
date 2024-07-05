@@ -17,3 +17,4 @@ The source code is released under the [GNU Affero General Public License version
 - [Gwaredd](https://github.com/gwaredd/), author of [mgGif](https://github.com/gwaredd/mgGif) project
 - [Quan Nguyen](https://sourceforge.net/u/nguyenq/profile/), author of [VietPad](https://sourceforge.net/projects/vietpad/) project
 - [Val Antonini](https://github.com/valantonini/), author of [AStar](https://github.com/valantonini/AStar) project
+- [ElDuderino](https://opengameart.org/users/elduderino), author of [Xbox Controller input icons](https://opengameart.org/content/controller-input-icons)

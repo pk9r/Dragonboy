@@ -38,6 +38,8 @@ namespace Mod.ModMenu
         internal static ModMenuItemFunction[] modMenuItemFunctions;
         internal static ModMenuItemFunction[] modMenuItemDeveloperFunctions;
 
+        internal static Texture2D imgMenu;
+
         static ModMenuMainActionListener actionListener = new ModMenuMainActionListener();
         static sbyte lastLanguage = -1;
         static GUIStyle style = new GUIStyle() { font = Resources.Load<Font>($"FontSys/x{mGraphics.zoomLevel}/chelthm") };
@@ -56,7 +58,8 @@ namespace Mod.ModMenu
                 return;
             cmdOpenModMenu = new Command("", actionListener, 1, null);
             cmdOpenModMenu.img = new Image();
-            cmdOpenModMenu.img.texture = CustomGraphics.FlipTextureHorizontally(GameScr.imgMenu.texture);
+            imgMenu = CustomGraphics.FlipTextureHorizontally(GameScr.imgMenu.texture);
+            cmdOpenModMenu.img.texture = imgMenu;
             cmdOpenModMenu.img.w = cmdOpenModMenu.img.texture.width;
             cmdOpenModMenu.img.h = cmdOpenModMenu.img.texture.height;
             cmdOpenModMenu.isPlaySoundButton = false;

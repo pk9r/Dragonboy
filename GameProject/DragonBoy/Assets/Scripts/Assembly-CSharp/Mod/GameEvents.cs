@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading;
+using InputMap;
 using Mod.AccountManager;
 using Mod.Auto;
 using Mod.Auto.AutoChat;
@@ -884,7 +885,7 @@ namespace Mod
             return true;
         }
 
-        internal static bool OnPaintGamePad(mGraphics g)
+        internal static bool OnGameScrPaintGamePad(mGraphics g)
         {
             GameScr.isHaveSelectSkill = isHaveSelectSkill_old;
             if (GameScr.isAnalog != 0 && Char.myCharz().statusMe != 14)
@@ -959,6 +960,8 @@ namespace Mod
                     GameScr.wSkill = 40;
             }
             GameScr.xSkill = 17;
+            if (InputDeviceDetector.IsController() && GameScr.gamePad.isLargeGamePad)
+                GameScr.xSkill = 40;
             GameScr.ySkill = GameCanvas.h - 40;
             if (GameScr.gamePad.isSmallGamePad && GameScr.isAnalog == 1)
             {
@@ -1030,8 +1033,11 @@ namespace Mod
         {
             if (GameScr.isAnalog != 0)
             {
-                g.drawImage(GameScr.imgAnalog1, instance.xC, instance.yC, mGraphics.HCENTER | mGraphics.VCENTER);
-                g.drawImage(GameScr.imgAnalog2, instance.xM, instance.yM, mGraphics.HCENTER | mGraphics.VCENTER);
+                if (!InputDeviceDetector.IsController())
+                {
+                    g.drawImage(GameScr.imgAnalog1, instance.xC, instance.yC, mGraphics.HCENTER | mGraphics.VCENTER);
+                    g.drawImage(GameScr.imgAnalog2, instance.xM, instance.yM, mGraphics.HCENTER | mGraphics.VCENTER);
+                }
                 return true;
             }
             return false;
@@ -1039,10 +1045,12 @@ namespace Mod
 
         internal static void OnGameScrPaintSelectedSkill(GameScr instance, mGraphics g)
         {
-            if (!GameScr.isHaveSelectSkill || HideGameUI.isEnabled)
+            if (!GameScr.isHaveSelectSkill)
                 return;
             isHaveSelectSkill_old = GameScr.isHaveSelectSkill;
             GameScr.isHaveSelectSkill = false;
+            if (HideGameUI.isEnabled)
+                return;
             Skill[] array;
             if (Main.isPC)
                 array = GameScr.keySkill;
@@ -1110,6 +1118,12 @@ namespace Mod
                 if ((i == instance.selectedIndexSkill && !instance.isPaintUI() && GameCanvas.gameTick % 10 > 5) || i == instance.keyTouchSkill)
                     g.drawImage(ItemMap.imageFlare, GameScr.xSkill + GameScr.xS[i] + 13, GameScr.yS[i] + 14, 3);
             }
+        }
+
+        internal static void AfterGameScrPaintSelectedSkill(GameScr instance, mGraphics g)
+        {
+            if (!HideGameUI.isEnabled && InputDeviceDetector.IsController())
+                PaintControllerButtons.PaintSelectedSkill(instance, g);
         }
 
         internal static bool OnPanelPaintToolInfo(mGraphics g)
@@ -2143,13 +2157,19 @@ namespace Mod
             return false;
         }
 
-        internal static bool OnmGraphicsDrawImage(Image image)
+        internal static bool OnMGraphicsDrawImage(Image image, int x, int y, int anchor)
         {
             if (HideGameUI.isEnabled && !HideGameUI.ShouldDrawImage(image))
                 return true;
             if (GraphicsReducer.IsEnabled && !GraphicsReducer.ShouldDrawImage(image))
                 return true;
             return false;
+        }
+
+        internal static void AfterMGraphicsDrawImage(Image image, int x, int y, int anchor)
+        {
+            if (!HideGameUI.isEnabled && InputDeviceDetector.IsController())
+                PaintControllerButtons.PaintByImage(image, x, y, anchor);
         }
     }
 }

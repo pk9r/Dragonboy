@@ -1,17 +1,14 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.DualShock;
+using UnityEngine.InputSystem.Switch;
+using UnityEngine.InputSystem.XInput;
 
 namespace InputMap
 {
-    public class InputDeviceDetector : MonoBehaviour
+    internal class InputDeviceDetector : MonoBehaviour
 	{
-		static InputDeviceDetector instance;
-
-		void Awake()
-		{
-			if (instance == null)
-				instance = this;
-		}
+		internal static InputDevice currentDevice;
 
 		void OnEnable()
 		{
@@ -27,7 +24,7 @@ namespace InputMap
 		{
 			if (change == InputActionChange.ActionPerformed)
 			{
-                InputDevice currentDevice = ((InputAction)obj).activeControl.device;
+                currentDevice = ((InputAction)obj).activeControl.device;
                 if (currentDevice is Keyboard || currentDevice is Mouse)
                     ShowCursor();
                 else
@@ -35,16 +32,21 @@ namespace InputMap
             }
 		}
 
-		public static void ShowCursor()
+        internal static void ShowCursor()
 		{
 			Cursor.visible = true;
 			Cursor.lockState = CursorLockMode.None;
 		}
 
-		public static void HideCursor()
+        internal static void HideCursor()
 		{
 			Cursor.visible = false;
 			Cursor.lockState = CursorLockMode.Confined;
 		}
-	}
+
+		internal static bool IsController() => currentDevice is Gamepad;
+		internal static bool IsXboxController() => currentDevice is XInputController;
+        internal static bool IsDualShockController() => currentDevice is DualShockGamepad;
+        internal static bool IsSwitchController() => currentDevice is SwitchProControllerHID;
+    }
 }

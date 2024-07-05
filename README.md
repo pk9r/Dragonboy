@@ -17,3 +17,4 @@ Mã nguồn được phát hành dưới giấy phép [GNU AGPLv3](https://www.g
 - [Gwaredd](https://github.com/gwaredd/), tác giả dự án [mgGif](https://github.com/gwaredd/mgGif)
 - [Quan Nguyen](https://sourceforge.net/u/nguyenq/profile/), tác giả dự án [VietPad](https://sourceforge.net/projects/vietpad/)
 - [Val Antonini](https://github.com/valantonini/), tác giả dự án [AStar](https://github.com/valantonini/AStar)
+- [ElDuderino](https://opengameart.org/users/elduderino), tác giả của [Icon tay cầm Xbox](https://opengameart.org/content/controller-input-icons)

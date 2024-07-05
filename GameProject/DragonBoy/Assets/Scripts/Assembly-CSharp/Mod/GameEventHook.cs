@@ -366,8 +366,11 @@ namespace Mod
 
         static void mGraphics_drawImage_hook(mGraphics g, Image image, int x, int y, int anchor)
         {
-            if (!GameEvents.OnmGraphicsDrawImage(image))
+            if (!GameEvents.OnMGraphicsDrawImage(image, x, y, anchor))
+            {
                 mGraphics_drawImage_original(g, image, x, y, anchor);
+                GameEvents.AfterMGraphicsDrawImage(image, x, y, anchor);
+            }
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void mGraphics_drawImage_original(mGraphics g, Image image, int x, int y, int anchor)
@@ -1108,7 +1111,7 @@ namespace Mod
 
         static void GameScr_paintGamePad_hook(GameScr _this, mGraphics g)
         {
-            if (!GameEvents.OnPaintGamePad(g))
+            if (!GameEvents.OnGameScrPaintGamePad(g))
                 GameScr_paintGamePad_original(_this, g);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -1178,6 +1181,7 @@ namespace Mod
                 return;
             GameEvents.OnGameScrPaintSelectedSkill(_this, g);
             GameScr_paintSelectedSkill_original(_this, g);
+            GameEvents.AfterGameScrPaintSelectedSkill(_this, g);
         }
         [MethodImpl(MethodImplOptions.NoOptimization)]
         static void GameScr_paintSelectedSkill_original(GameScr _this, mGraphics g)
