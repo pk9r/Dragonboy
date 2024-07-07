@@ -44,7 +44,7 @@ namespace InputMap.Icons
             Right = Resources.Load<Texture2D>("Controller/Xbox/" + nameof(Right) + "_dark");
             Up = Resources.Load<Texture2D>("Controller/Xbox/" + nameof(Up) + "_dark");
             Down = Resources.Load<Texture2D>("Controller/Xbox/" + nameof(Down) + "_dark");
-            DPadUp = Resources.Load<Texture2D>("Controller/Xbox/Digipad_dark");
+            DPad = Resources.Load<Texture2D>("Controller/Xbox/Digipad_dark");
             DPadUp = Resources.Load<Texture2D>("Controller/Xbox/Digipad_up_dark");
             DPadDown = Resources.Load<Texture2D>("Controller/Xbox/Digipad_down_dark");
             DPadLeft = Resources.Load<Texture2D>("Controller/Xbox/Digipad_left_dark");
