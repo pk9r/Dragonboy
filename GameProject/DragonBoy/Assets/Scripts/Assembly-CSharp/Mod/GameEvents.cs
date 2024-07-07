@@ -614,6 +614,7 @@ namespace Mod
         {
             ModMenuMain.Paint(g);
             CharEffectMain.Paint(g);
+            PaintControllerButtons.PaintHelp(g);
             //UIReportersManager.handlePaintGameScr(g);
         }
 

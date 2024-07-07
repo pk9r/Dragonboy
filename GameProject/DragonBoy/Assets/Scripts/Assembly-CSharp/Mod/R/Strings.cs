@@ -286,6 +286,11 @@ namespace Mod.R
         internal static string accountAlreadyRegistered = "";
         internal static string autoSellTrashItemsBoxFull = "";
         internal static string autoLoginReattemptLoginIn = "";
+        internal static string paintControllerButtonsDPadArrowKeys = "";
+        internal static string paintControllerButtonsLeftStickMove = "";
+        internal static string paintControllerButtonsLeftStickButtonTeleport = "";
+        internal static string paintControllerButtonsRightStickMoveCamera = "";
+        internal static string paintControllerButtonsRightStickButtonLockCamera = "";
         #endregion
 
         internal static void LoadLanguage(sbyte newLanguage)
@@ -494,6 +499,11 @@ namespace Mod.R
             inGameAccountManagerAccountAdded = "Đã thêm tài khoản vào danh sách";
             autoSellTrashItemsBoxFull = "Rương đã đầy, không thể chứa thêm đồ";
             autoLoginReattemptLoginIn = "Đăng nhập lại trong {0} giây";
+            paintControllerButtonsDPadArrowKeys = "Mũi tên";
+            paintControllerButtonsLeftStickMove = "Di chuyển";
+            paintControllerButtonsLeftStickButtonTeleport = "Dịch chuyển";
+            paintControllerButtonsRightStickMoveCamera = "Di chuyển góc nhìn";
+            paintControllerButtonsRightStickButtonLockCamera = "Khóa góc nhìn";
             //---------------------------------------------------
             //mod menu
             modMenuPanelTabName = new string[][]
@@ -819,6 +829,11 @@ namespace Mod.R
             inGameAccountManagerAccountAdded = "Account has been added to the account list";
             autoSellTrashItemsBoxFull = "Your chest is full, new items can't be stored";
             autoLoginReattemptLoginIn = "Reattempt login in {0} seconds";
+            paintControllerButtonsDPadArrowKeys = "Arrow keys";
+            paintControllerButtonsLeftStickMove = "Move";
+            paintControllerButtonsLeftStickButtonTeleport = "Teleport";
+            paintControllerButtonsRightStickMoveCamera = "Move camera";
+            paintControllerButtonsRightStickButtonLockCamera = "Lock camera";
             //---------------------------------------------------
             //mod menu
             modMenuPanelTabName = new string[][]

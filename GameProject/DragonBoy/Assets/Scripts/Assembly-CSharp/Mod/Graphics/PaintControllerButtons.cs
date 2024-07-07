@@ -2,6 +2,8 @@ using System;
 using InputMap;
 using InputMap.Icons;
 using Mod.ModMenu;
+using Mod.R;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace Mod.Graphics
@@ -12,6 +14,9 @@ namespace Mod.Graphics
         static readonly int VCENTER = 2;
         static readonly int LEFT = 8;
         static readonly int TOP = 32;
+
+        static long lastTimePaintHelp;
+        static bool lastControllerState;
 
         internal static void PaintByImage(Image image, int x, int y, int anchor)
         {
@@ -147,6 +152,82 @@ namespace Mod.Graphics
                 width = GetWidth(texture, height);
                 DrawTexture(maxXS + width, triggerY, width, height, texture, VCENTER | HCENTER);
             }
+        }
+
+        internal static void PaintHelp(mGraphics g)
+        {
+            if (mGraphics.zoomLevel == 1)
+                return;
+            if (!GameScr.gamePad.isLargeGamePad)
+                return;
+            if (InputDeviceDetector.IsXboxController() != lastControllerState)
+                lastTimePaintHelp = mSystem.currentTimeMillis();
+            lastControllerState = InputDeviceDetector.IsXboxController();
+            if (!InputDeviceDetector.IsController()) 
+                return;
+            if (mSystem.currentTimeMillis() - lastTimePaintHelp > 5000)
+                return;
+            int y;
+            if (GameScr.isAnalog == 1)
+                y = GameCanvas.h - 30;
+            else
+            {
+                y = GameScr.ySkill - 25;
+                Skill[] array;
+                if (Main.isPC)
+                    array = GameScr.keySkill;
+                else if (GameCanvas.isTouch)
+                    array = GameScr.onScreenSkill;
+                else
+                    array = GameScr.keySkill;
+                int num = GameScr.gI().nSkill;
+                if (Main.isPC || !GameCanvas.isTouch)
+                    num = array.Length;
+                bool hasSkillsInTopRow = false;
+                bool isStartHasSkill = false;
+                for (int i = num - 1; i >= 0; i--)
+                {
+                    if (array[i] != null)
+                        isStartHasSkill = true;
+                    if (isStartHasSkill)
+                    {
+                        if (GameScr.yS[i] == GameScr.ySkill - 32)
+                        {
+                            hasSkillsInTopRow = true;
+                            break;
+                        }
+                    }
+                }
+                if (hasSkillsInTopRow)
+                    y -= GameScr.imgSkill.getHeight() + 5;
+            }
+            int height = 10 * mGraphics.zoomLevel;
+            g.SetColor(0x00000080);
+            g.fillRect(5, y - 48, mResources.language == 0 ? 100 : 75, 62);
+            Texture2D texture = XboxControllerIcons.RightStickButton;
+            int width = GetWidth(texture, height);
+            DrawTexture(15 * mGraphics.zoomLevel, y * mGraphics.zoomLevel + mFont.tahoma_7b_yellow.getHeight() / 2, width, height, texture, HCENTER);
+            mFont.tahoma_7_yellow.drawString(g, ": " + Strings.paintControllerButtonsRightStickButtonLockCamera, 10 + width / mGraphics.zoomLevel + 5, y, mFont.LEFT, mFont.tahoma_7_grey);
+            y -= 12;
+            texture = XboxControllerIcons.RightStick;
+            width = GetWidth(texture, height);
+            DrawTexture(15 * mGraphics.zoomLevel, y * mGraphics.zoomLevel + mFont.tahoma_7b_yellow.getHeight() / 2, width, height, texture, HCENTER);
+            mFont.tahoma_7_yellow.drawString(g, ": " + Strings.paintControllerButtonsRightStickMoveCamera, 10 + width / mGraphics.zoomLevel + 5, y, mFont.LEFT, mFont.tahoma_7_grey);
+            y -= 12;
+            texture = XboxControllerIcons.LeftStickButton;
+            width = GetWidth(texture, height);
+            DrawTexture(15 * mGraphics.zoomLevel, y * mGraphics.zoomLevel + mFont.tahoma_7b_yellow.getHeight() / 2, width, height, texture, HCENTER);
+            mFont.tahoma_7_yellow.drawString(g, ": " + Strings.paintControllerButtonsLeftStickButtonTeleport, 10 + width / mGraphics.zoomLevel + 5, y, mFont.LEFT, mFont.tahoma_7_grey);
+            y -= 12;
+            texture = XboxControllerIcons.LeftStick;
+            width = GetWidth(texture, height);
+            DrawTexture(15 * mGraphics.zoomLevel, y * mGraphics.zoomLevel + mFont.tahoma_7b_yellow.getHeight() / 2, width, height, texture, HCENTER);
+            mFont.tahoma_7_yellow.drawString(g, ": " + Strings.paintControllerButtonsLeftStickMove, 10 + width / mGraphics.zoomLevel + 5, y, mFont.LEFT, mFont.tahoma_7_grey);
+            y -= 12;
+            texture = XboxControllerIcons.DPad;
+            width = GetWidth(texture, height);
+            DrawTexture(15 * mGraphics.zoomLevel, y * mGraphics.zoomLevel + mFont.tahoma_7b_yellow.getHeight() / 2, width, height, texture, HCENTER);
+            mFont.tahoma_7_yellow.drawString(g, ": " + Strings.paintControllerButtonsDPadArrowKeys, 10 + width / mGraphics.zoomLevel + 5, y, mFont.LEFT, mFont.tahoma_7_grey);
         }
 
         static void DrawTexture(int x, int y, int width, int height, Texture2D texture, int anchor)
