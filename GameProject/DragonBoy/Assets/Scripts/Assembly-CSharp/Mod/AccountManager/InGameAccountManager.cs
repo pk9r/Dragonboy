@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Mod.Graphics;
 using Mod.R;
 using Newtonsoft.Json;
@@ -28,6 +29,10 @@ namespace Mod.AccountManager
             ToggleHidePassword,
             MoveAccountUp,
             MoveAccountDown,
+            ImportAccounts,
+            HelpImportAccounts,
+            FinishImportAccounts,
+            CloseImportAccounts,
         }
 
         internal class ActionListener : IActionListener
@@ -234,6 +239,109 @@ namespace Mod.AccountManager
                             SaveDataAccounts();
                         }
                         break;
+                    case CommandType.ImportAccounts:
+                        selectServer.X = tfInputDataImportAccounts.x;
+                        selectServer.Y = tfInputRegexMatchAccountInfoImportAccounts.y + ITEM_HEIGHT + 15;
+                        selectServer.Width = tfInputDataImportAccounts.width;
+                        isImportingAccounts = true;
+                        break;
+                    case CommandType.HelpImportAccounts:
+                        GameCanvas.startOKDlg(Strings.inGameAccountManagerImportAccountsHelp);
+                        break;
+                    case CommandType.FinishImportAccounts:
+                        string data = tfInputDataImportAccounts.getText();
+                        if (string.IsNullOrWhiteSpace(data))
+                        {
+                            GameCanvas.startOKDlg(Strings.inGameAccountManagerImportAccountsInputDataBlank + '!');
+                            break;
+                        }
+                        string linesPattern = tfInputRegexMatchLinesImportAccounts.getText();
+                        if (string.IsNullOrWhiteSpace(linesPattern))
+                        {
+                            GameCanvas.startOKDlg(Strings.inGameAccountManagerRegexMatchLinesBlank + '!');
+                            break;
+                        }
+                        Regex linesRegex = new Regex(linesPattern);
+                        string accountInfoPattern = tfInputRegexMatchAccountInfoImportAccounts.getText();
+                        if (string.IsNullOrWhiteSpace(accountInfoPattern))
+                        {
+                            GameCanvas.startOKDlg(Strings.inGameAccountManagerRegexMatchAccountInfoBlank + '!');
+                            break;
+                        }
+                        InfoDlg.showWait();
+                        new Thread(() =>
+                        {
+                            Regex accountInfoRegex = new Regex(accountInfoPattern);
+                            int countAccountAdded = 0;
+                            int countAccountMissed = 0;
+                            while (true)
+                            {
+                                Match lineMatch = linesRegex.Match(data);
+                                Match accountInfoMatch;
+                                if (lineMatch == Match.Empty && string.IsNullOrWhiteSpace(data))
+                                    break;
+                                if (lineMatch == Match.Empty)
+                                    accountInfoMatch = accountInfoRegex.Match(data);
+                                else
+                                    accountInfoMatch = accountInfoRegex.Match(lineMatch.Groups[1].Value);
+                                if (accountInfoMatch == Match.Empty)
+                                {
+                                    countAccountMissed++;
+                                    data = data.Substring(lineMatch.Index + lineMatch.Length);
+                                    continue;
+                                }
+                                try
+                                {
+                                    Account account = new Account()
+                                    {
+                                        Username = accountInfoMatch.Groups[1].Value,
+                                        Password = accountInfoMatch.Groups[2].Value,
+                                    };
+                                    try
+                                    {
+                                        int index = int.Parse(accountInfoMatch.Groups[3].Value);
+                                        if (index < 0 || index >= defaultServers.Length)
+                                            throw new IndexOutOfRangeException();
+                                        account.Server = new Server(index);
+                                    }
+                                    catch
+                                    {
+                                        account.Server = defaultServers[selectServer.SelectedIndex];
+                                    }
+                                    if (scrollableMenuAccounts.CurrentItemIndex == -1)
+                                        accounts.Add(account);
+                                    else
+                                        accounts.Insert(scrollableMenuAccounts.CurrentItemIndex + 1, account);
+                                    if (lineMatch == Match.Empty)
+                                        data = data.Substring(accountInfoMatch.Index + accountInfoMatch.Length);
+                                    else
+                                        data = data.Substring(lineMatch.Index + lineMatch.Length);
+                                    countAccountAdded++;
+                                }
+                                catch
+                                {
+                                    countAccountMissed++;
+                                    data = data.Substring(lineMatch.Index + lineMatch.Length);
+                                    continue;
+                                }
+                            }
+                            InfoDlg.hide();
+                            GameCanvas.startOKDlg(string.Format(Strings.inGameAccountManagerImportAccountsResult, countAccountAdded, countAccountAdded * 100f / (countAccountAdded + countAccountMissed), countAccountMissed, countAccountMissed * 100f / (countAccountAdded + countAccountMissed)) + '!');
+                            GetInputAccountArea(out int x, out int y, out int width, out int height, true);
+                            selectServer.X = x + 10;
+                            selectServer.Y = tfCustomServerPort.y = y + 15 + ITEM_HEIGHT + 15 + ITEM_HEIGHT + 15;
+                            selectServer.Width = width - 20;
+                            isImportingAccounts = false;
+                        })
+                        { IsBackground = true }.Start();
+                        break;
+                    case CommandType.CloseImportAccounts:
+                        GetInputAccountArea(out int x, out int y, out int width, out int height, true);
+                        selectServer.X = x + 10;
+                        selectServer.Y = tfCustomServerPort.y = y + 15 + ITEM_HEIGHT + 15 + ITEM_HEIGHT + 15;
+                        selectServer.Width = width - 20;
+                        isImportingAccounts = false;
+                        break;
                 }
             }
         }
@@ -244,10 +352,12 @@ namespace Mod.AccountManager
         static Texture2D namekOverlay = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(namekOverlay));
         static Texture2D saiyanOverlay = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(saiyanOverlay));
         static Texture2D add = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(add));
+        static Texture2D addMultiple = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(addMultiple));
         static Texture2D hide = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(hide));
         static Texture2D show = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(show));
         static Texture2D up = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(up));
         static Texture2D down = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(down));
+        static Texture2D help = Resources.Load<Texture2D>("InGameAccountManager/img/" + nameof(help));
         static Dictionary<int, Texture2D> icons = new Dictionary<int, Texture2D>();
 
         static Command closeAccountManager = new Command("", ActionListener.gI(), (int)CommandType.CloseAccountManager, null)
@@ -268,8 +378,16 @@ namespace Mod.AccountManager
         };
         static Command cancelInputAccount;
         static Command toggleHidePassword;
+        static Command importAccounts;
         static Command moveAccountUp;
         static Command moveAccountDown;
+        static Command helpImportAccounts;
+        static Command finishImportAccounts;
+        static Command cancelImportAccounts;
+        static Command closeImportAccounts = new Command("", ActionListener.gI(), (int)CommandType.CloseImportAccounts, null)
+        {
+            imgFocus = new Image(),
+        };
 
         static ComboBox selectServer;
 
@@ -282,6 +400,9 @@ namespace Mod.AccountManager
         static TField tfCustomServerName;
         static TField tfCustomServerAddress;
         static TField tfCustomServerPort;
+        static TField tfInputDataImportAccounts;
+        static TField tfInputRegexMatchLinesImportAccounts;
+        static TField tfInputRegexMatchAccountInfoImportAccounts;
 
         internal static Server SelectedServer { get; set; }
         static Server[] defaultServers;
@@ -294,6 +415,7 @@ namespace Mod.AccountManager
         static bool isAddingAccount;
         static bool isEditingAccount;
         static bool isEditingCustomServer;
+        static bool isImportingAccounts;
 
         static readonly int TITLE_HEIGHT = 30;
         static readonly int ACCOUNT_HEIGHT = 34;
@@ -305,6 +427,8 @@ namespace Mod.AccountManager
         static readonly int INPUT_ACCOUNT_HEIGHT = 180;
         static readonly int SELECT_SERVER_WIDTH = 500;
         static readonly int SELECT_SERVER_HEIGHT = 300;
+        static readonly int IMPORT_ACCOUNTS_WIDTH = 250;
+        static readonly int IMPORT_ACCOUNTS_HEIGHT = 215;
 
         //[name]:[address]:[port]:[language]:[typesv]:[isnew],...
         //Super 2:dragon11.teamobi.com:17001:0:1:1,0,0
@@ -326,7 +450,9 @@ namespace Mod.AccountManager
             PaintListAccounts(g);
             PaintCurrentAccountInfo(g);
             base.paint(g);
-            if (isEditingCustomServer)
+            if (isImportingAccounts)
+                PaintImportAccounts(g);
+            else if (isEditingCustomServer)
                 PaintEditCustomServer(g);
             else if (isAddingAccount || isEditingAccount)
                 PaintInputAccount(g);
@@ -366,6 +492,8 @@ namespace Mod.AccountManager
             cancelEditCustomServer = new Command(mResources.CANCEL, ActionListener.gI(), (int)CommandType.CancelEditCustomServer, null);
             cancelInputAccount = new Command(mResources.CANCEL, ActionListener.gI(), (int)CommandType.CloseInputAccount, null);
             selectServer = new ComboBox(mResources.server, ServerListScreen.nameServer.ToList().Append(Strings.custom).ToList());
+            finishImportAccounts = new Command(Strings.import, ActionListener.gI(), (int)CommandType.FinishImportAccounts, null);
+            cancelImportAccounts = new Command(mResources.CANCEL, ActionListener.gI(), (int)CommandType.CloseImportAccounts, null);
 
             tfUser = new TField
             {
@@ -400,9 +528,34 @@ namespace Mod.AccountManager
                 width = SELECT_SERVER_WIDTH - 10,
                 height = ITEM_HEIGHT + 2,
             };
+            tfInputDataImportAccounts = new TField
+            {
+                name = Strings.inGameAccountManagerImportAccountsInputData,
+                width = IMPORT_ACCOUNTS_WIDTH - 10,
+                height = ITEM_HEIGHT + 2,
+                multiline = true,
+            };
+            tfInputRegexMatchLinesImportAccounts = new TField
+            {
+                name = Strings.inGameAccountManagerRegexMatchLines,
+                width = IMPORT_ACCOUNTS_WIDTH - 10,
+                height = ITEM_HEIGHT + 2,
+            };
+            tfInputRegexMatchAccountInfoImportAccounts = new TField
+            {
+                name = Strings.inGameAccountManagerRegexMatchAccountInfo,
+                width = IMPORT_ACCOUNTS_WIDTH - 10,
+                height = ITEM_HEIGHT + 2,
+            };
+
             tfCustomServerName.setIputType(TField.INPUT_TYPE_ANY);
             tfCustomServerAddress.setIputType(TField.INPUT_TYPE_ANY);
             tfCustomServerPort.setIputType(TField.INPUT_TYPE_NUMERIC);
+            tfInputDataImportAccounts.setIputType(TField.INPUT_TYPE_ANY);
+            tfInputRegexMatchLinesImportAccounts.setIputType(TField.INPUT_TYPE_ANY);
+            tfInputRegexMatchAccountInfoImportAccounts.setIputType(TField.INPUT_TYPE_ANY);
+
+            tfInputDataImportAccounts.setMaxTextLenght(int.MaxValue);
 
             UpdateSizeAndPos();
             base.switchToMe();
@@ -413,7 +566,16 @@ namespace Mod.AccountManager
             GameScr.cmx++;
             if (GameScr.cmx > GameCanvas.w * 3 + 100)
                 GameScr.cmx = 100;
-            if (isEditingCustomServer)
+            if (isImportingAccounts && !selectServer.IsShowingListItems)
+            {
+                if (!InfoDlg.isLock)
+                {
+                    tfInputDataImportAccounts.update();
+                    tfInputRegexMatchLinesImportAccounts.update();
+                    tfInputRegexMatchAccountInfoImportAccounts.update();
+                }
+            }
+            else if (isEditingCustomServer)
             {
                 tfCustomServerName.update();
                 tfCustomServerAddress.update();
@@ -429,6 +591,8 @@ namespace Mod.AccountManager
             }
             scrollableMenuAccounts.Update();
             selectServer.Update();
+            if (isImportingAccounts && selectServer.SelectedIndex == selectServer.Items.Count - 1)
+                selectServer.SelectedIndex = 0;
             GetAccountsArea(out _, out _, out int width, out int height, true);
             scrollableMenuAccounts.Width = width;
             scrollableMenuAccounts.Height = height;
@@ -459,7 +623,9 @@ namespace Mod.AccountManager
 
         public override void updateKey()
         {
-            if (isEditingCustomServer)
+            if (isImportingAccounts)
+                UpdateKeyImportAccounts();
+            else if (isEditingCustomServer)
                 UpdateKeyEditCustomServer();
             else if (isAddingAccount || isEditingAccount)
                 UpdateKeyInputAccount();
@@ -471,7 +637,16 @@ namespace Mod.AccountManager
 
         public override void keyPress(int keyCode)
         {
-            if (isEditingCustomServer)
+            if (isImportingAccounts)
+            {
+                if (tfInputDataImportAccounts.isFocus)
+                    tfInputDataImportAccounts.keyPressed(keyCode);
+                else if (tfInputRegexMatchLinesImportAccounts.isFocus)
+                    tfInputRegexMatchLinesImportAccounts.keyPressed(keyCode);
+                else if (tfInputRegexMatchAccountInfoImportAccounts.isFocus)
+                    tfInputRegexMatchAccountInfoImportAccounts.keyPressed(keyCode);
+            }
+            else if (isEditingCustomServer)
             {
                 if (tfCustomServerName.isFocus)
                     tfCustomServerName.keyPressed(keyCode);
@@ -503,6 +678,7 @@ namespace Mod.AccountManager
                 ServerListScreen.ipSelect = SelectedAccount.Server.index;
                 Rms.saveRMSInt("svselect", SelectedAccount.Server.index);
             }
+            SelectedServer = SelectedAccount.Server;
         }
 
         static void SaveDataAccounts()
@@ -708,6 +884,7 @@ namespace Mod.AccountManager
                 mFont.tahoma_7b_dark.drawString(g, Strings.inGameAccountManagerEditAccount, x + width / 2, y + 10, mFont.CENTER);
             closeInputAccount.paint(g);
             toggleHidePassword.paint(g);
+            importAccounts.paint(g);
             GetInputAccountArea(out _, out y, out _, out height, true);
             PopUp.paintPopUp(g, x, y, width, height, -1, true);
             tfUser.paint(g);
@@ -740,6 +917,27 @@ namespace Mod.AccountManager
             cancelEditCustomServer.paint(g);
         }
 
+        static void PaintImportAccounts(mGraphics g)
+        {
+            g.setColor(new Color(0, 0, 0, .75f));
+            g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
+            GetImportAccountsArea(out int x, out int y, out int width, out int height, false);
+            PopUp.paintPopUp(g, x, y, width, height, -1, true);
+            mFont.tahoma_7b_dark.drawString(g, Strings.inGameAccountManagerImportAccounts, x + width / 2, y + 10, mFont.CENTER);
+            helpImportAccounts.paint(g);
+            closeImportAccounts.paint(g);
+            GetImportAccountsArea(out _, out y, out _, out height, true);
+            PopUp.paintPopUp(g, x, y, width, height, -1, true);
+            tfInputDataImportAccounts.paint(g);
+            tfInputRegexMatchLinesImportAccounts.paint(g);
+            tfInputRegexMatchAccountInfoImportAccounts.paint(g);
+            g.reset();
+            finishImportAccounts.paint(g);
+            cancelImportAccounts.paint(g);
+            g.reset();
+            selectServer.Paint(g);
+        }
+
         static void UpdateKeyInputAccount()
         {
             selectServer.UpdateKey();
@@ -749,6 +947,8 @@ namespace Mod.AccountManager
                 closeInputAccount.performAction();
             if (toggleHidePassword.isPointerPressInside())
                 toggleHidePassword.performAction();
+            if (importAccounts.isPointerPressInside())
+                importAccounts.performAction();
             bool shouldEditServer = !selectServer.IsShowingListItems && selectServer.SelectedIndex == selectServer.Items.Count - 1;
             if (shouldEditServer)
             {
@@ -808,6 +1008,41 @@ namespace Mod.AccountManager
             }
         }
 
+        static void UpdateKeyImportAccounts()
+        {
+            if (InfoDlg.isLock)
+                return;
+            selectServer.UpdateKey();
+            if (selectServer.IsShowingListItems)
+                return;
+            if (finishImportAccounts.isPointerPressInside())
+                finishImportAccounts.performAction();
+            if (cancelImportAccounts.isPointerPressInside())
+                cancelImportAccounts.performAction();
+            if (closeImportAccounts.isPointerPressInside())
+                closeImportAccounts.performAction();
+            if (helpImportAccounts.isPointerPressInside())
+                helpImportAccounts.performAction();
+            if (GameCanvas.keyPressed[16])
+            {
+                GameCanvas.clearKeyPressed();
+                if (tfInputDataImportAccounts.isFocus)
+                {
+                    tfInputDataImportAccounts.isFocus = false;
+                    tfInputRegexMatchLinesImportAccounts.isFocus = true;
+                }
+                else if (tfInputRegexMatchLinesImportAccounts.isFocus)
+                {
+                    tfInputRegexMatchLinesImportAccounts.isFocus = false;
+                    tfInputRegexMatchAccountInfoImportAccounts.isFocus = true;
+                }
+                else if (tfInputRegexMatchAccountInfoImportAccounts.isFocus)
+                    tfInputRegexMatchAccountInfoImportAccounts.isFocus = false;
+                else
+                    tfInputDataImportAccounts.isFocus = true;
+            }
+        }
+
         static void UpdateKeyMain()
         {
             if (GameCanvas.keyPressed[13] && scrollableMenuAccounts.CurrentItemIndex == -1)
@@ -848,12 +1083,27 @@ namespace Mod.AccountManager
             else
                 currentAccountInfoX = GameCanvas.w;
             UpdateButtonsPos();
+
             GetInputAccountArea(out int x, out int y, out int width, out int height, true);
             tfUser.x = tfPass.x = selectServer.X = tfCustomServerName.x = tfCustomServerAddress.x = tfCustomServerPort.x = x + 10;
             tfUser.y = tfCustomServerName.y = y + 15;
             tfPass.y = tfCustomServerAddress.y = tfUser.y + ITEM_HEIGHT + 15;
             selectServer.Y = tfCustomServerPort.y = tfPass.y + ITEM_HEIGHT + 15;
             tfUser.width = tfPass.width = selectServer.Width = tfCustomServerName.width = tfCustomServerAddress.width = tfCustomServerPort.width = width - 20;
+
+            GetImportAccountsArea(out x, out y, out width, out height, true);
+            tfInputDataImportAccounts.x = tfInputRegexMatchLinesImportAccounts.x = tfInputRegexMatchAccountInfoImportAccounts.x = x + 10;
+            tfInputDataImportAccounts.y = y + 15;
+            tfInputRegexMatchLinesImportAccounts.y = tfInputDataImportAccounts.y + ITEM_HEIGHT + 15;
+            tfInputRegexMatchAccountInfoImportAccounts.y = tfInputRegexMatchLinesImportAccounts.y + ITEM_HEIGHT + 15;
+            tfInputDataImportAccounts.width = tfInputRegexMatchLinesImportAccounts.width = tfInputRegexMatchAccountInfoImportAccounts.width = width - 20;
+            if (isImportingAccounts)
+            {
+                selectServer.X = tfInputDataImportAccounts.x;
+                selectServer.Y = tfInputRegexMatchAccountInfoImportAccounts.y + ITEM_HEIGHT + 15;
+                selectServer.Width = tfInputDataImportAccounts.width;
+            }
+
             GetAccountsArea(out _, out _, out width, out height, true);
             scrollableMenuAccounts.Width = width;
             scrollableMenuAccounts.Height = height;
@@ -876,24 +1126,35 @@ namespace Mod.AccountManager
             selectAccountToLogin.x = currentAccountInfoX + WIDTH_ACCOUNT_INFO - selectAccountToLogin.w;
 
             GetInputAccountArea(out int x, out int y, out int width, out int height, false);
-            closeInputAccount.y = toggleHidePassword.y = y + 5;
+            closeInputAccount.y = toggleHidePassword.y = importAccounts.y = y + 5;
             closeInputAccount.x = x + width - closeInputAccount.img.getWidth() - 5;
             toggleHidePassword.x = closeInputAccount.x - toggleHidePassword.img.getWidth() - 5;
-
+            importAccounts.x = x + 5;
             finishInputAccount.x = editCustomServer.x = finishEditCustomServer.x = x + 10;
             cancelInputAccount.x = cancelEditCustomServer.x = x + width - cancelInputAccount.w - 10;
             finishInputAccount.y = cancelInputAccount.y = editCustomServer.y = finishEditCustomServer.y = cancelEditCustomServer.y = y + height - finishInputAccount.h - 10;
             finishInputAccount.w = editCustomServer.w = cancelInputAccount.w = finishEditCustomServer.w = cancelEditCustomServer.w = (width - 30) / 2;
+
+            GetImportAccountsArea(out x, out y, out width, out height, false);
+            closeImportAccounts.y = helpImportAccounts.y = y + 5;
+            closeImportAccounts.x = x + width - closeImportAccounts.img.getWidth() - 5;
+            helpImportAccounts.x = x + 5;
+            finishImportAccounts.x = x + 10;
+            cancelImportAccounts.x = x + width - cancelImportAccounts.w - 10;
+            finishImportAccounts.y = cancelImportAccounts.y = y + height - finishImportAccounts.h - 10;
+            finishImportAccounts.w = cancelImportAccounts.w = (width - 30) / 2;
         }
 
         internal static void OnStart()
         {
-            closeAccountManager.img = closeInputAccount.img = GameCanvas.loadImage("/mainImage/myTexture2dbtX.png");
+            closeAccountManager.img = closeInputAccount.img = closeImportAccounts.img = GameCanvas.loadImage("/mainImage/myTexture2dbtX.png");
             add = CustomGraphics.Resize(add, add.width * mGraphics.zoomLevel / 4, add.height * mGraphics.zoomLevel / 4);
             hide = CustomGraphics.Resize(hide, hide.width * mGraphics.zoomLevel / 4, hide.height * mGraphics.zoomLevel / 4);
             show = CustomGraphics.Resize(show, show.width * mGraphics.zoomLevel / 4, show.height * mGraphics.zoomLevel / 4);
             up = CustomGraphics.Resize(up, up.width * mGraphics.zoomLevel / 4, up.height * mGraphics.zoomLevel / 4);
             down = CustomGraphics.Resize(down, down.width * mGraphics.zoomLevel / 4, down.height * mGraphics.zoomLevel / 4);
+            addMultiple = CustomGraphics.Resize(addMultiple, addMultiple.width * mGraphics.zoomLevel / 4, addMultiple.height * mGraphics.zoomLevel / 4);
+            help = CustomGraphics.Resize(help, help.width * mGraphics.zoomLevel / 4, help.height * mGraphics.zoomLevel / 4);
             LoadDataAccounts();
             scrollableMenuAccounts = new ScrollableMenuItems<Account>(accounts)
             {
@@ -919,6 +1180,22 @@ namespace Mod.AccountManager
                 h = show.height / mGraphics.zoomLevel
             };
             toggleHidePassword.img.texture = show;
+            importAccounts = new Command("", ActionListener.gI(), (int)CommandType.ImportAccounts, null)
+            {
+                img = Image.createImage(addMultiple.width, addMultiple.height),
+                imgFocus = new Image(),
+                w = addMultiple.width / mGraphics.zoomLevel,
+                h = addMultiple.height / mGraphics.zoomLevel
+            };
+            importAccounts.img.texture = addMultiple;
+            helpImportAccounts = new Command("", ActionListener.gI(), (int)CommandType.HelpImportAccounts, null)
+            {
+                img = Image.createImage(help.width, help.height),
+                imgFocus = new Image(),
+                w = help.width / mGraphics.zoomLevel,
+                h = help.height / mGraphics.zoomLevel
+            };
+            helpImportAccounts.img.texture = help;
             moveAccountUp = new Command("", ActionListener.gI(), (int)CommandType.MoveAccountUp, null)
             {
                 img = Image.createImage(up.width, up.height),
@@ -1051,6 +1328,19 @@ namespace Mod.AccountManager
             y = GameCanvas.h / 2 - INPUT_ACCOUNT_HEIGHT / 2;
             width = INPUT_ACCOUNT_WIDTH;
             height = INPUT_ACCOUNT_HEIGHT;
+            if (withoutTitle)
+            {
+                y += TITLE_HEIGHT;
+                height -= TITLE_HEIGHT;
+            }
+        }
+
+        static void GetImportAccountsArea(out int x, out int y, out int width, out int height, bool withoutTitle)
+        {
+            x = GameCanvas.w / 2 - IMPORT_ACCOUNTS_WIDTH / 2;
+            y = GameCanvas.h / 2 - IMPORT_ACCOUNTS_HEIGHT / 2;
+            width = IMPORT_ACCOUNTS_WIDTH;
+            height = IMPORT_ACCOUNTS_HEIGHT;
             if (withoutTitle)
             {
                 y += TITLE_HEIGHT;

@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class TField : IActionListener
 {
+    public bool multiline;
+
     int selectStartIndex = -1;
 
     bool _isFocus;
@@ -350,6 +352,8 @@ public class TField : IActionListener
                 paintedText = passwordText;
             else
                 paintedText = text;
+            if (multiline)
+                paintedText = paintedText.Replace('\r', '\t').Replace('\n', '\t');
             if (offsetX < 0 && mFont.tahoma_8b.getWidth(paintedText) + offsetX < width - TEXT_GAP_X - 13 - typingModeAreaWidth)
                 offsetX = width - 10 - typingModeAreaWidth - mFont.tahoma_8b.getWidth(paintedText);
             if (offsetX + mFont.tahoma_8b.getWidth(paintedText.Substring(0, caretPos)) <= 0)
@@ -539,6 +543,8 @@ public class TField : IActionListener
             paintedText = passwordText;
         else
             paintedText = text;
+        if (multiline)
+            paintedText = paintedText.Replace('\r', '\t').Replace('\n', '\t');
         int num = mFont.tahoma_8b.getWidth(paintedText.Substring(0, caretPos));
         if (index == -1)
         {
@@ -619,6 +625,8 @@ public class TField : IActionListener
             paintedText = passwordText;
         else
             paintedText = text;
+        if (multiline)
+            paintedText = paintedText.Replace('\r', '\t').Replace('\n', '\t');
         paintInputTf(g, flag, x, y - 1, width, height + 5, TEXT_GAP_X + offsetX + x + 1, y + (height - mFont.tahoma_8b.getHeight()) / 2 + 2, paintedText, name);
         g.setClip(x + 3, y + 1, width - 4, height - 2);
         g.setColor(0);
@@ -786,6 +794,8 @@ public class TField : IActionListener
             indexOfActiveChar = 0;
             this.text = text;
             paintedText = text;
+            if (multiline)
+                paintedText = paintedText.Replace('\r', '\t').Replace('\n', '\t');
             if (text == string.Empty && kb != null)
                 kb.text = "";
             setPasswordTest();
@@ -829,7 +839,7 @@ public class TField : IActionListener
             clear();
     }
 
-    internal void HandleInputText(bool multiline)
+    internal void HandleInputText()
     {
         if (mSystem.currentTimeMillis() - lastTimeCheckVisible > 300)
             isVisible = false;

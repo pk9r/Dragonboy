@@ -283,7 +283,7 @@ public class Main : MonoBehaviour
 		}
 
         if (TField.currentTField != null && TField.currentTField.isFocus)
-            TField.currentTField.HandleInputText(false);
+            TField.currentTField.HandleInputText();
 
         if (Input.anyKeyDown && Event.current.type == EventType.KeyDown)
 		{
