@@ -678,7 +678,8 @@ namespace Mod.AccountManager
                 ServerListScreen.ipSelect = SelectedAccount.Server.index;
                 Rms.saveRMSInt("svselect", SelectedAccount.Server.index);
             }
-            SelectedServer = SelectedAccount.Server;
+            if (selectedAccountIndex != -1)
+                SelectedServer = SelectedAccount.Server;
         }
 
         static void SaveDataAccounts()
